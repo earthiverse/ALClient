@@ -1,0 +1,27 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "lib": [
+            "ES2020",
+            "DOM"
+        ],
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "target": "ES2020",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "outDir": "build",
+        "removeComments": true,
+        "rootDir": "source",
+        "sourceMap": true,
+        "watch": false
+    },
+    "include": [
+        "source"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
