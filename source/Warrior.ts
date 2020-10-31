@@ -1,6 +1,6 @@
 import { TIMEOUT } from "./Constants"
 import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Warrior extends PingCompensatedPlayer {
     // TODO: Investigate why the cooldown check doesn't work.

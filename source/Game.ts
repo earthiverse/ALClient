@@ -2,14 +2,14 @@ import axios from "axios"
 import fs from "fs"
 import { ServerData, CharacterListData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
-import { Ranger } from "./Ranger.js"
-import { Observer } from "./Observer.js"
-import { Player } from "./Player.js"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
-import { Mage } from "./Mage.js"
-import { Merchant } from "./Merchant.js"
-import { Priest } from "./Priest.js"
-import { Warrior } from "./Warrior.js"
+import { Ranger } from "./Ranger"
+import { Observer } from "./Observer"
+import { Player } from "./Player"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { Mage } from "./Mage"
+import { Merchant } from "./Merchant"
+import { Priest } from "./Priest"
+import { Warrior } from "./Warrior"
 import { Rogue } from "./Rogue"
 
 export class Game {
@@ -193,6 +193,7 @@ export class Game {
     }
 
     static async updateServersAndCharacters(): Promise<boolean> {
+        if (!this.user) return Promise.reject("You must login first.")
         const data = await axios.post("http://adventure.land/api/servers_and_characters", "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         if (data.status == 200) {

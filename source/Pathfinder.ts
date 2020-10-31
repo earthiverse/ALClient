@@ -1,10 +1,10 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { BASE, DOOR_REACH_DISTANCE, TRANSPORTER_REACH_DISTANCE } from "./Constants.js"
+import { BASE, DOOR_REACH_DISTANCE, TRANSPORTER_REACH_DISTANCE } from "./Constants"
 import { GData, MapName, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
-import { Game } from "./Game.js"
-import { Tools } from "./Tools.js"
+import { Game } from "./Game"
+import { Tools } from "./Tools"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2

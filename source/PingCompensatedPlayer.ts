@@ -1,7 +1,7 @@
 import { CharacterData, EntitiesData } from "./definitions/adventureland-server"
 import { SkillName, ConditionName } from "./definitions/adventureland"
-import { Tools } from "./Tools.js"
-import { Player } from "./Player.js"
+import { Tools } from "./Tools"
+import { Player } from "./Player"
 import { MAX_PINGS, PING_EVERY_MS } from "./Constants"
 
 export class PingCompensatedPlayer extends Player {

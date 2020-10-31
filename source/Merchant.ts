@@ -1,6 +1,6 @@
 import { CharacterData, EntitiesData, GameResponseData } from "./definitions/adventureland-server"
 import { TradeSlotType } from "./definitions/adventureland"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 import { TIMEOUT } from "./Constants"
 
 export class Merchant extends PingCompensatedPlayer {

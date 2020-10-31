@@ -1,6 +1,6 @@
 import { TIMEOUT } from "./Constants"
 import { ActionData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Priest extends PingCompensatedPlayer {
     public curse(target: string): Promise<unknown> {

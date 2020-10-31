@@ -1,7 +1,7 @@
 import { TIMEOUT } from "./Constants"
 import { EvalData, GameResponseData } from "./definitions/adventureland-server"
-import { Pathfinder } from "./pathfinder.js"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { Pathfinder } from "./pathfinder"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Mage extends PingCompensatedPlayer {
     // TODO: Add promises

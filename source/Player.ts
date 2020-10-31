@@ -1,11 +1,11 @@
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, EntityData, PlayerData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData } from "./definitions/adventureland-server"
 import { GData, SkillName, BankInfo, ConditionName, MapName, ItemInfo, ItemName, SlotType, MonsterName, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, StatType } from "./definitions/adventureland"
-import { Tools } from "./Tools.js"
-import { Pathfinder } from "./pathfinder.js"
+import { Tools } from "./Tools"
+import { Pathfinder } from "./pathfinder"
 import { LinkData, NodeData } from "./definitions/pathfinder"
-import { MAX_PINGS, NPC_INTERACTION_DISTANCE, TIMEOUT } from "./Constants.js"
-import { Observer } from "./Observer.js"
-import { Mage } from "./Mage.js"
+import { MAX_PINGS, NPC_INTERACTION_DISTANCE, TIMEOUT } from "./Constants"
+import { Observer } from "./Observer"
+import { Mage } from "./Mage"
 
 
 export class Player extends Observer {
@@ -882,7 +882,7 @@ export class Player extends Observer {
                 cost *= 3 // Three of the current level items are required
                 let scrollLevel = 0
                 for (const grade of gInfo.grades) {
-                    if (item.level < grade) {
+                    if (i + 1 < grade) {
                         const scrollInfo = this.G.items[`cscroll${scrollLevel}` as ItemName]
                         cost += scrollInfo.g
                         break
@@ -894,7 +894,7 @@ export class Player extends Observer {
             for (let i = 0; i < item.level; i++) {
                 let scrollLevel = 0
                 for (const grade of gInfo.grades) {
-                    if (item.level < grade) {
+                    if (i + 1 < grade) {
                         const scrollInfo = this.G.items[`scroll${scrollLevel}` as ItemName]
                         cost += scrollInfo.g
                         break

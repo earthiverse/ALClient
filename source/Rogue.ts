@@ -1,6 +1,6 @@
-import { TIMEOUT } from "./Constants.js"
-import { EvalData } from "./definitions/adventureland-server.js"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { TIMEOUT } from "./Constants"
+import { EvalData } from "./definitions/adventureland-server"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Rogue extends PingCompensatedPlayer {
     // NOTE: UNTESTED

@@ -1,6 +1,6 @@
 import { TIMEOUT } from "./Constants"
 import { ActionData, EvalData } from "./definitions/adventureland-server"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer.js"
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Ranger extends PingCompensatedPlayer {
     public fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
