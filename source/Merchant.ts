@@ -1,7 +1,7 @@
 import { CharacterData, EntitiesData, GameResponseData } from "./definitions/adventureland-server"
 import { TradeSlotType } from "./definitions/adventureland"
+import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
-import { TIMEOUT } from "./Constants"
 
 export class Merchant extends PingCompensatedPlayer {
     public closeMerchantStand(): Promise<unknown> {
@@ -18,8 +18,8 @@ export class Merchant extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("player", checkStand)
-                reject(`closeMerchantStand timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`closeMerchantStand timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", checkStand)
         })
 
@@ -83,8 +83,8 @@ export class Merchant extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("entities", mluckCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`mluck timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`mluck timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("entities", mluckCheck)
             this.socket.on("game_response", failCheck)
         })
@@ -116,8 +116,8 @@ export class Merchant extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("player", checkStand)
-                reject(`openMerchantStand timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`openMerchantStand timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", checkStand)
         })
 

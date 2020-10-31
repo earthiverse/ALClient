@@ -1,5 +1,5 @@
-import { TIMEOUT } from "./Constants"
 import { EvalData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Rogue extends PingCompensatedPlayer {
@@ -21,8 +21,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`mentalburst timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`mentalburst timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -44,8 +44,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`poisoncoat timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`poisoncoat timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -66,8 +66,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`quickpunch timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`quickpunch timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -89,8 +89,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`quickstab timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`quickstab timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -113,8 +113,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`rspeed timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`rspeed timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -138,8 +138,8 @@ export class Rogue extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`shadowstrike timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`shadowstrike timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {

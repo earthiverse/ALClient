@@ -1,8 +1,8 @@
 import { CharacterData, EntitiesData } from "./definitions/adventureland-server"
 import { SkillName, ConditionName } from "./definitions/adventureland"
-import { Tools } from "./Tools"
+import { Constants } from "./Constants"
 import { Player } from "./Player"
-import { MAX_PINGS, PING_EVERY_MS } from "./Constants"
+import { Tools } from "./Tools"
 
 export class PingCompensatedPlayer extends Player {
     async connect(): Promise<unknown> {
@@ -107,8 +107,8 @@ export class PingCompensatedPlayer extends Player {
     protected pingLoop(): void {
         if (this.socket.connected) {
             this.sendPing()
-            if (this.pings.length > MAX_PINGS / 10) {
-                this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, PING_EVERY_MS))
+            if (this.pings.length > Constants.MAX_PINGS / 10) {
+                this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, Constants.PING_EVERY_MS))
             } else {
                 this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, 1000))
             }

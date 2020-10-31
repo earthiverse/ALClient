@@ -1,11 +1,11 @@
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, EntityData, PlayerData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData } from "./definitions/adventureland-server"
 import { GData, SkillName, BankInfo, ConditionName, MapName, ItemInfo, ItemName, SlotType, MonsterName, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, StatType } from "./definitions/adventureland"
-import { Tools } from "./Tools"
-import { Pathfinder } from "./pathfinder"
 import { LinkData, NodeData } from "./definitions/pathfinder"
-import { MAX_PINGS, NPC_INTERACTION_DISTANCE, TIMEOUT } from "./Constants"
-import { Observer } from "./Observer"
+import { Constants } from "./Constants"
 import { Mage } from "./Mage"
+import { Observer } from "./Observer"
+import { Pathfinder } from "./index"
+import { Tools } from "./Tools"
 
 
 export class Player extends Observer {
@@ -182,7 +182,7 @@ export class Player extends Observer {
                 console.log(`Ping: ${ping}`)
 
                 // Remove the oldest ping
-                if (this.pings.length > MAX_PINGS)
+                if (this.pings.length > Constants.MAX_PINGS)
                     this.pings.shift()
 
                 // Remove the ping from the map
@@ -569,8 +569,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("player", checkPlayerEvent)
-                reject(`requestPlayerData timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`requestPlayerData timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", checkPlayerEvent)
 
             this.socket.emit("property", { typing: true })
@@ -606,8 +606,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("new_map", magiportCheck)
-                reject(`acceptMagiport timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`acceptMagiport timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("new_map", magiportCheck)
         })
 
@@ -658,8 +658,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("party_update", partyCheck)
                 this.socket.removeListener("game_log", unableCheck)
-                reject(`acceptPartyInvite timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`acceptPartyInvite timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("party_update", partyCheck)
             this.socket.on("game_log", unableCheck)
         })
@@ -681,8 +681,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("party_update", partyCheck)
-                reject(`acceptPartyRequest timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`acceptPartyRequest timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("party_update", partyCheck)
         })
 
@@ -747,8 +747,8 @@ export class Player extends Observer {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("death", deathCheck)
-                reject(`attack timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`attack timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("game_response", failCheck)
             this.socket.on("death", deathCheck)
@@ -799,8 +799,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("player", buyCheck1)
                 this.socket.removeListener("game_response", buyCheck2)
-                reject(`buy timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`buy timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", buyCheck1)
             this.socket.on("game_response", buyCheck2)
         })
@@ -822,7 +822,7 @@ export class Player extends Observer {
         const merchant = this.players.get(id)
         if (!merchant)
             return Promise.reject(`We can not see ${id} nearby.`)
-        if (Tools.distance(this.character, merchant) > NPC_INTERACTION_DISTANCE)
+        if (Tools.distance(this.character, merchant) > Constants.NPC_INTERACTION_DISTANCE)
             return Promise.reject(`We are too far away from ${id} to buy from.`)
 
         const item = merchant.slots[slot]
@@ -947,7 +947,7 @@ export class Player extends Observer {
                     for (const i of this.G.npcs[npc.id].items) {
                         if (i == item) {
                             buyable = true
-                            if (Tools.distance(this.character, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < NPC_INTERACTION_DISTANCE)
+                            if (Tools.distance(this.character, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
                                 close = true
                             break
                         }
@@ -1296,8 +1296,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("player", checkDeposit)
-                reject(`depositItem timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`depositItem timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", checkDeposit)
         })
 
@@ -1347,8 +1347,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("player", equipCheck)
                 this.socket.removeListener("disappearing_text", cantEquipCheck)
-                reject(`equip timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`equip timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", equipCheck)
             this.socket.on("disappearing_text", cantEquipCheck)
         })
@@ -1389,8 +1389,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("upgrade", completeCheck)
                 this.socket.removeListener("game_response", bankCheck)
-                reject(`exchange timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`exchange timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("game_response", bankCheck)
             this.socket.on("upgrade", completeCheck)
         })
@@ -1412,7 +1412,7 @@ export class Player extends Observer {
         for (const npc of this.G.maps[this.character.map].npcs) {
             if (npc.id !== "monsterhunter")
                 continue
-            if (Tools.distance(this.character, { x: npc.position[0], y: npc.position[1] }) <= NPC_INTERACTION_DISTANCE) {
+            if (Tools.distance(this.character, { x: npc.position[0], y: npc.position[1] }) <= Constants.NPC_INTERACTION_DISTANCE) {
                 close = true
                 break
             }
@@ -1454,8 +1454,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("player", successCheck)
-                reject(`getMonsterHuntQuest timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`getMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("game_response", failCheck)
             this.socket.on("player", successCheck)
         })
@@ -1483,8 +1483,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("game_response", distanceCheck)
                 this.socket.removeListener("secondhands", secondhandsItems)
-                reject(`getPontyItems timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`getPontyItems timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("secondhands", secondhandsItems)
             this.socket.on("game_response", distanceCheck)
         })
@@ -1513,8 +1513,8 @@ export class Player extends Observer {
             })
 
             setTimeout(() => {
-                reject(`leaveMap timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`leaveMap timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
         })
 
         this.socket.emit("leave")
@@ -1607,8 +1607,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("chest_opened", openCheck)
-                reject(`openChest timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`openChest timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("chest_opened", openCheck)
         })
         this.socket.emit("open_chest", { id: id })
@@ -1625,8 +1625,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("eval", regenCheck)
-                reject(`regenHP timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`regenHP timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", regenCheck)
         })
 
@@ -1645,8 +1645,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("eval", regenCheck)
-                reject(`regenMP timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`regenMP timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", regenCheck)
         })
 
@@ -1681,8 +1681,8 @@ export class Player extends Observer {
             setTimeout(() => {
                 this.socket.removeListener("ui", idsCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`scare timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`scare timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("ui", idsCheck)
             this.socket.on("eval", cooldownCheck)
         })
@@ -1722,8 +1722,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("game_response", sentCheck)
-                reject(`sendGold timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`sendGold timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
         })
         this.socket.emit("send", { name: to, gold: amount })
@@ -1756,8 +1756,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("game_response", sentCheck)
-                reject(`sendItem timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`sendItem timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
         })
 
@@ -2007,8 +2007,8 @@ export class Player extends Observer {
             })
 
             setTimeout(() => {
-                reject(`transport timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`transport timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
         })
 
         this.socket.emit("transport", { to: map, s: spawn })
@@ -2030,8 +2030,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("player", unequipCheck)
-                reject(`unequip timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`unequip timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
         })
 
         this.socket.emit("unequip", { slot: slot })
@@ -2146,8 +2146,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("eval", healCheck)
-                reject(`useHPPot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", healCheck)
         })
 
@@ -2169,8 +2169,8 @@ export class Player extends Observer {
             }
             setTimeout(() => {
                 this.socket.removeListener("eval", healCheck)
-                reject(`useMPPot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`useMPPot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", healCheck)
         })
 
@@ -2259,8 +2259,8 @@ export class Player extends Observer {
 
             setTimeout(() => {
                 this.socket.removeListener("player", checkWithdrawal)
-                reject(`withdrawItem timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`withdrawItem timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", checkWithdrawal)
         })
 

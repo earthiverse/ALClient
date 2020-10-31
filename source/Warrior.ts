@@ -1,5 +1,5 @@
-import { TIMEOUT } from "./Constants"
 import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Warrior extends PingCompensatedPlayer {
@@ -25,8 +25,8 @@ export class Warrior extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`agitate timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`agitate timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
             this.socket.on("game_response", failCheck)
         })
@@ -65,8 +65,8 @@ export class Warrior extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("player", successCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`charge timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`charge timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", successCheck)
             this.socket.on("game_response", failCheck)
         })
@@ -99,8 +99,8 @@ export class Warrior extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`cleave timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`cleave timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
             this.socket.on("game_response", failCheck)
         })
@@ -156,8 +156,8 @@ export class Warrior extends PingCompensatedPlayer {
                 this.socket.removeListener("player", successCheck)
                 this.socket.removeListener("eval", cooldownCheck)
                 this.socket.removeListener("game_response", responseCheck)
-                reject(`hardshell timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`hardshell timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("player", successCheck)
             this.socket.on("eval", cooldownCheck)
             this.socket.on("game_response", responseCheck)
@@ -191,8 +191,8 @@ export class Warrior extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`stomp timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`stomp timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
             this.socket.on("game_response", failCheck)
         })
@@ -236,8 +236,8 @@ export class Warrior extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", tauntCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`taunt timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`taunt timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", tauntCheck)
             this.socket.on("game_response", failCheck)
         })

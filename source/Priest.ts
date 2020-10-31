@@ -1,5 +1,5 @@
-import { TIMEOUT } from "./Constants"
 import { ActionData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Priest extends PingCompensatedPlayer {
@@ -14,8 +14,8 @@ export class Priest extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`curse timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`curse timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
 
@@ -71,8 +71,8 @@ export class Priest extends PingCompensatedPlayer {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("death", deathCheck)
-                reject(`heal timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`heal timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("game_response", failCheck)
             this.socket.on("death", deathCheck)
@@ -93,8 +93,8 @@ export class Priest extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`partyHeal timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`partyHeal timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
 

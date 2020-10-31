@@ -1,8 +1,8 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { BASE, DOOR_REACH_DISTANCE, TRANSPORTER_REACH_DISTANCE } from "./Constants"
 import { GData, MapName, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
+import { Constants } from "./Constants"
 import { Game } from "./Game"
 import { Tools } from "./Tools"
 
@@ -186,8 +186,8 @@ export class Pathfinder {
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
-            for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - BASE.vn); y <= yLine[0] - this.G.geometry[map].min_y + BASE.v && y < height; y++) {
-                for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - BASE.h); x <= yLine[2] - this.G.geometry[map].min_x + BASE.h && x < width; x++) {
+            for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= yLine[0] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
+                for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - Constants.BASE.h); x <= yLine[2] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
                     grid[y][x] = UNWALKABLE
                 }
             }
@@ -195,8 +195,8 @@ export class Pathfinder {
 
         // Make the x_lines unwalkable
         for (const xLine of this.G.geometry[map].x_lines) {
-            for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - BASE.h); x <= xLine[0] - this.G.geometry[map].min_x + BASE.h && x < width; x++) {
-                for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - BASE.vn); y <= xLine[2] - this.G.geometry[map].min_y + BASE.v && y < height; y++) {
+            for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - Constants.BASE.h); x <= xLine[0] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
+                for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= xLine[2] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
                     grid[y][x] = UNWALKABLE
                 }
             }
@@ -353,7 +353,7 @@ export class Pathfinder {
             // Check if we can reach a door
             for (const door of doors) {
                 if (door[4] == "test") continue
-                if (this.doorDistance(walkableNodes[i].data, door) > DOOR_REACH_DISTANCE) continue // Door is too far away
+                if (this.doorDistance(walkableNodes[i].data, door) > Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
@@ -363,7 +363,7 @@ export class Pathfinder {
 
             // Add destination nodes and links to maps that are reachable through the transporter
             for (const npc of transporters) {
-                if (Tools.distance(fromNode.data, { x: npc.position[0], y: npc.position[1] }) > TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
+                if (Tools.distance(fromNode.data, { x: npc.position[0], y: npc.position[1] }) > Constants.TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
                 for (const toMap in this.G.npcs.transporter.places) {
                     if (map == toMap) continue // Don't add links to ourself
                     if (map == "test") continue // Skip the test map to save ourselves some processing.

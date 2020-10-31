@@ -1,5 +1,5 @@
-import { TIMEOUT } from "./Constants"
 import { ActionData, EvalData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Ranger extends PingCompensatedPlayer {
@@ -27,8 +27,8 @@ export class Ranger extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`5shot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`5shot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
         })
@@ -54,8 +54,8 @@ export class Ranger extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`fourfinger timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`fourfinger timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -76,8 +76,8 @@ export class Ranger extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`supershot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`supershot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
@@ -113,8 +113,8 @@ export class Ranger extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`piercingshot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`piercingshot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
         })
@@ -149,8 +149,8 @@ export class Ranger extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`poisonarrow timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`poisonarrow timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
         })
@@ -185,8 +185,8 @@ export class Ranger extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`supershot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`supershot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
         })
@@ -219,8 +219,8 @@ export class Ranger extends PingCompensatedPlayer {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`3shot timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`3shot timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
         })

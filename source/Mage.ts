@@ -1,6 +1,6 @@
-import { TIMEOUT } from "./Constants"
 import { EvalData, GameResponseData } from "./definitions/adventureland-server"
-import { Pathfinder } from "./pathfinder"
+import { Constants } from "./Constants"
+import { Pathfinder } from "./index"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Mage extends PingCompensatedPlayer {
@@ -28,8 +28,8 @@ export class Mage extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`cburst timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`cburst timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
 
@@ -48,8 +48,8 @@ export class Mage extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`energize timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`energize timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
 
@@ -73,8 +73,8 @@ export class Mage extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("game_response", magiportCheck)
-                reject(`magiport timeout (${TIMEOUT}ms)`)
-            }, TIMEOUT)
+                reject(`magiport timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
             this.socket.on("game_response", magiportCheck)
         })
 
