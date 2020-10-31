@@ -25,7 +25,7 @@ export class Game {
 
     public static G: GData
 
-    private constructor() {
+    protected constructor() {
         // Private to force static methods
     }
 
