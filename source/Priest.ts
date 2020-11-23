@@ -4,7 +4,7 @@ import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Priest extends PingCompensatedPlayer {
     public curse(target: string): Promise<unknown> {
-        const curseStarted = new Promise<string[]>((resolve, reject) => {
+        const curseStarted = new Promise((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -21,6 +21,26 @@ export class Priest extends PingCompensatedPlayer {
 
         this.socket.emit("skill", { name: "curse", id: target })
         return curseStarted
+    }
+
+    public darkBlessing(): Promise<unknown> {
+        const darkBlessed = new Promise((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("eval", cooldownCheck)
+                reject(`darkblessing timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
+        this.socket.emit("skill", { name: "darkblessing" })
+        return darkBlessed
     }
 
     public heal(id: string): Promise<string> {
@@ -100,5 +120,25 @@ export class Priest extends PingCompensatedPlayer {
 
         this.socket.emit("skill", { name: "partyheal" })
         return healStarted
+    }
+
+    public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<unknown> {
+        const revived = new Promise<string[]>((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("eval", cooldownCheck)
+                reject(`revive timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
+        this.socket.emit("skill", { name: "revive", id: target, num: essenceoflife })
+        return revived
     }
 }

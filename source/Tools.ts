@@ -29,7 +29,6 @@ export class Tools {
         return [baseDamage * 0.9, baseDamage * 1.1]
     }
 
-
     /**
      * Returns the distance between two positions.
      * @param a Position 1
@@ -39,33 +38,5 @@ export class Tools {
         if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE
 
         return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
-    }
-
-    /**
-     * Returns true if the entity will burn to death without taking any additional damage
-     * TODO: Check if the entity has healing abilities
-     * @param entity The entity to check
-     */
-    public static willBurnToDeath(entity: EntityData): boolean {
-        if (entity.s.burned) {
-            const burnTime = Math.max(0, (entity.s.burned.ms - 500)) / 1000
-            const burnDamage = burnTime * entity.s.burned.intensity
-            if (burnDamage > entity.hp) return true
-        }
-        return false
-    }
-
-    /**
-     * Returns true if the entity will die to the already incoming projectiles
-     * @param entity 
-     * @param projectiles 
-     */
-    public static willDieToProjectiles(entity: EntityData, projectiles: Map<string, ActionData>): boolean {
-        let incomingProjectileDamage = 0
-        for (const projectile of projectiles.values()) {
-            if (projectile.target == entity.id) incomingProjectileDamage += projectile.damage * 0.9
-            if (incomingProjectileDamage > entity.hp) return true
-        }
-        return false
     }
 }

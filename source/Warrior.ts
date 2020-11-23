@@ -246,8 +246,23 @@ export class Warrior extends PingCompensatedPlayer {
         return tauntStarted
     }
 
-    // TODO: Add promises and checks
-    public warcry() {
+    public warcry(): Promise<unknown> {
+        const warcried = new Promise((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]warcry['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("eval", cooldownCheck)
+                reject(`warcry timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
         this.socket.emit("skill", { name: "warcry" })
+        return warcried
     }
 }

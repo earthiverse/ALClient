@@ -6,7 +6,7 @@ import { Mage } from "./Mage"
 import { Observer } from "./Observer"
 import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
-
+import { Entity } from "./Entity"
 
 export class Player extends Observer {
     protected userID: string;
@@ -22,7 +22,7 @@ export class Player extends Observer {
     public bank: BankInfo = { gold: 0 };
     public character: CharacterData;
     public chests = new Map<string, ChestData>();
-    public entities = new Map<string, EntityData>();
+    public entities = new Map<string, Entity>();
     public nextSkill = new Map<SkillName, Date>();
     public party: PartyData;
     public pings: number[] = [];
@@ -301,52 +301,13 @@ export class Player extends Observer {
 
         for (const monster of data.monsters) {
             if (!this.entities.has(monster.id)) {
-                // Set soft properties
-                if (monster.level === undefined)
-                    monster.level = 1
-                if (monster.max_hp === undefined)
-                    monster.max_hp = this.G.monsters[monster.type]["hp"]
-                if (monster.max_mp === undefined)
-                    monster.max_mp = this.G.monsters[monster.type]["mp"]
-                if (monster.map === undefined)
-                    monster.map = data.map
-
-                if (monster["1hp"] === undefined)
-                    monster["1hp"] = this.G.monsters[monster.type]["1hp"]
-                if (monster.apiercing === undefined)
-                    monster.apiercing = this.G.monsters[monster.type].apiercing
-                if (monster.attack === undefined)
-                    monster.attack = this.G.monsters[monster.type].attack
-                if (monster.cooperative === undefined)
-                    monster.cooperative = this.G.monsters[monster.type].cooperative
-                if (monster.damage_type === undefined)
-                    monster.damage_type = this.G.monsters[monster.type].damage_type
-                if (monster.evasion === undefined)
-                    monster.evasion = this.G.monsters[monster.type].evasion
-                if (monster.frequency === undefined)
-                    monster.frequency = this.G.monsters[monster.type].frequency
-                if (monster.hp === undefined)
-                    monster.hp = this.G.monsters[monster.type].hp
-                if (monster.immune === undefined)
-                    monster.immune = this.G.monsters[monster.type].immune
-                if (monster.mp === undefined)
-                    monster.mp = this.G.monsters[monster.type].mp
-                if (monster.range === undefined)
-                    monster.range = this.G.monsters[monster.type].range
-                if (monster.reflection === undefined)
-                    monster.reflection = this.G.monsters[monster.type].reflection
-                if (monster.speed === undefined)
-                    monster.speed = this.G.monsters[monster.type].speed
-                if (monster.xp === undefined)
-                    monster.xp = this.G.monsters[monster.type].xp
-
-                // Set everything else
-                this.entities.set(monster.id, monster)
+                // Create the entity and add it to our list
+                const e = new Entity(monster, data.map, this.G)
+                this.entities.set(monster.id, e)
             } else {
                 // Update everything
-                const entity = this.entities.get(monster.id)
-                for (const attr in monster)
-                    entity[attr] = monster[attr]
+                const e = this.entities.get(monster.id)
+                e.updateData(monster)
             }
         }
         for (const player of data.players) {

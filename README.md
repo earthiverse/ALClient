@@ -10,5 +10,32 @@ This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull
 * Node
     * Tested with **14.13.1**
 
-# Installation
-TODO: Updated installation using `npm install`.
+# Basic Usage
+1. Install the package using `npm install alclient`.
+2. Add a `credentials.json` file that looks like this:
+```javascript
+{
+    "email": "hyprkookeez@gmail.com",
+    "password": "thisisnotmyrealpasswordlol"
+}
+```
+3. Copy and run this example script that prepares the pathfinder, logs in, moves your character around to different maps, then disconnects.
+```typescript
+import alclient from "alclient"
+const { Game, Pathfinder } = alclient
+
+async function run() {
+    await Promise.all([Game.loginJSONFile("../credentials.json"), Pathfinder.prepare()])
+
+    const merchant = await Game.startMerchant("earthMer2", "ASIA", "I")
+    console.log("Moving to main")
+    await merchant.smartMove("main")
+    console.log("Moving to cyberland")
+    await merchant.smartMove("cyberland")
+    console.log("Moving to halloween")
+    await merchant.smartMove("halloween")
+
+    Game.disconnect()
+}
+run()
+```
