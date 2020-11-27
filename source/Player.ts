@@ -456,8 +456,8 @@ export class Player extends Observer {
         this.lastPositionUpdate = Date.now()
     }
 
-    public async connect(): Promise<unknown> {
-        const connected = new Promise<unknown>((resolve, reject) => {
+    public async connect(): Promise<void> {
+        const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
                     reject(`Failed to connect: ${data}`)
@@ -520,7 +520,7 @@ export class Player extends Observer {
      * This function is a hack to get the server to respond with a player data update. It will respond with two...
      */
     public async requestPlayerData(): Promise<CharacterData> {
-        return new Promise((resolve, reject) => {
+        return new Promise<CharacterData>((resolve, reject) => {
             const checkPlayerEvent = (data: CharacterData) => {
                 if (data.s.typing) {
                     this.socket.removeListener("player", checkPlayerEvent)
@@ -777,7 +777,7 @@ export class Player extends Observer {
     }
 
     // TODO: Add promises
-    public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<unknown> {
+    public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<void> {
         if (quantity <= 0)
             return Promise.reject(`We can not buy a quantity of ${quantity}.`)
         const merchant = this.players.get(id)
@@ -1118,7 +1118,7 @@ export class Player extends Observer {
 
     // TODO: Add promises
     // TODO: Unverified. Might not work.
-    public craft(item: ItemName): Promise<unknown> {
+    public craft(item: ItemName): Promise<void> {
         const gInfo = this.G.craft[item]
         if (!gInfo)
             return Promise.reject(`Can not find a recipe for ${item}.`)
@@ -1238,7 +1238,7 @@ export class Player extends Observer {
         }
 
         const bankItemCount = this.countItem(item.name, this.bank[bankPack])
-        const swapped = new Promise((resolve, reject) => {
+        const swapped = new Promise<void>((resolve, reject) => {
             const checkDeposit = (data: CharacterData) => {
                 if (!data.user) {
                     if (data.map !== "bank" && data.map !== "bank_b" && data.map !== "bank_u") {
@@ -1266,14 +1266,14 @@ export class Player extends Observer {
         return swapped
     }
 
-    public equip(inventoryPos: number, equipSlot?: SlotType): Promise<unknown> {
+    public equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
         if (!this.character.items[inventoryPos])
             return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
 
         const iInfo = this.character.items[inventoryPos]
         // const gInfo = this.game.G.items[iInfo.name]
         // const beforeSlots = this.game.character.slots
-        const equipFinished = new Promise((resolve, reject) => {
+        const equipFinished = new Promise<void>((resolve, reject) => {
             const equipCheck = (data: CharacterData) => {
                 if (equipSlot) {
                     // Check the slot we equipped it to
@@ -1318,11 +1318,11 @@ export class Player extends Observer {
         return equipFinished
     }
 
-    public exchange(inventoryPos: number): Promise<unknown> {
+    public exchange(inventoryPos: number): Promise<boolean> {
         if (!this.character.items[inventoryPos])
             return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
 
-        const exchangeFinished = new Promise((resolve, reject) => {
+        const exchangeFinished = new Promise<boolean>((resolve, reject) => {
             const completeCheck = (data: UpgradeData) => {
                 if (data.type == "exchange") {
                     this.socket.removeListener("upgrade", completeCheck)
@@ -1365,7 +1365,7 @@ export class Player extends Observer {
         this.socket.emit("monsterhunt")
     }
 
-    public getMonsterHuntQuest(): Promise<unknown> {
+    public getMonsterHuntQuest(): Promise<void> {
         if (this.character.ctype == "merchant")
             return Promise.reject("Merchants can't do Monster Hunts.")
         let close = false
@@ -1388,7 +1388,7 @@ export class Player extends Observer {
             this.finishMonsterHuntQuest()
         }
 
-        const questGot = new Promise((resolve, reject) => {
+        const questGot = new Promise<void>((resolve, reject) => {
             const failCheck = (data: GameResponseData) => {
                 if (data == "ecu_get_closer") {
                     this.socket.removeListener("game_response", failCheck)
@@ -1464,8 +1464,8 @@ export class Player extends Observer {
     /**
      * For use on 'cyberland' and 'jail' to leave the map. You will be transported to the spawn on "main".
      */
-    public leaveMap(): Promise<unknown> {
-        const leaveComplete = new Promise((resolve, reject) => {
+    public leaveMap(): Promise<void> {
+        const leaveComplete = new Promise<void>((resolve, reject) => {
             this.socket.once("new_map", (data: NewMapData) => {
                 if (data.name == "main")
                     resolve()
@@ -1576,8 +1576,8 @@ export class Player extends Observer {
         return chestOpened
     }
 
-    public regenHP(): Promise<unknown> {
-        const regenReceived = new Promise((resolve, reject) => {
+    public regenHP(): Promise<void> {
+        const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.removeListener("eval", regenCheck)
@@ -1595,9 +1595,9 @@ export class Player extends Observer {
         return regenReceived
     }
 
-    public regenMP(): Promise<unknown> {
+    public regenMP(): Promise<void> {
         // if (this.game.nextSkill.get("use_mp")?.getTime() > Date.now()) return Promise.reject("use_mp is on cooldown")
-        const regenReceived = new Promise((resolve, reject) => {
+        const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.removeListener("eval", regenCheck)
@@ -1668,7 +1668,7 @@ export class Player extends Observer {
         if (!this.players.has(to))
             return Promise.reject(`We can not see ${to} to send gold.`)
 
-        const goldSent: Promise<number> = new Promise((resolve, reject) => {
+        const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
                 if (data == "trade_get_closer") {
                     this.socket.removeListener("game_response", sentCheck)
@@ -1691,7 +1691,7 @@ export class Player extends Observer {
         return goldSent
     }
 
-    public sendItem(to: string, inventoryPos: number, quantity = 1): Promise<unknown> {
+    public sendItem(to: string, inventoryPos: number, quantity = 1): Promise<void> {
         if (!this.players.has(to))
             return Promise.reject(`"${to}" is not nearby.`)
         if (!this.character.items[inventoryPos])
@@ -1701,7 +1701,7 @@ export class Player extends Observer {
 
         const item = this.character.items[inventoryPos]
 
-        const itemSent = new Promise((resolve, reject) => {
+        const itemSent = new Promise<void>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
                 if (data == "trade_get_closer") {
                     this.socket.removeListener("game_response", sentCheck)
@@ -1958,8 +1958,8 @@ export class Player extends Observer {
         this.socket.emit("stop", { action: "town" })
     }
 
-    public transport(map: MapName, spawn: number): Promise<unknown> {
-        const transportComplete = new Promise((resolve, reject) => {
+    public transport(map: MapName, spawn: number): Promise<void> {
+        const transportComplete = new Promise<void>((resolve, reject) => {
             this.socket.once("new_map", (data: NewMapData) => {
                 if (data.name == map)
                     resolve()
@@ -1976,13 +1976,13 @@ export class Player extends Observer {
         return transportComplete
     }
 
-    public unequip(slot: SlotType | TradeSlotType): Promise<unknown> {
+    public unequip(slot: SlotType | TradeSlotType): Promise<void> {
         if (this.character.slots[slot] === null)
             return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.character.slots[slot] === undefined)
             return Promise.reject(`Slot ${slot} does not exist.`)
 
-        const unequipped = new Promise((resolve, reject) => {
+        const unequipped = new Promise<void>((resolve, reject) => {
             const unequipCheck = (data: CharacterData) => {
                 if (data.slots[slot] === null) {
                     this.socket.removeListener("player", unequipCheck)
@@ -2094,11 +2094,11 @@ export class Player extends Observer {
     }
 
     // TODO: Check if it's an HP Pot
-    public useHPPot(itemPos: number): Promise<unknown> {
+    public useHPPot(itemPos: number): Promise<void> {
         if (!this.character.items[itemPos])
             return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
 
-        const healReceived = new Promise((resolve, reject) => {
+        const healReceived = new Promise<void>((resolve, reject) => {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.removeListener("eval", healCheck)
@@ -2117,11 +2117,11 @@ export class Player extends Observer {
     }
 
     // TODO: Check if it's an MP Pot
-    public useMPPot(itemPos: number): Promise<unknown> {
+    public useMPPot(itemPos: number): Promise<void> {
         if (!this.character.items[itemPos])
             return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
 
-        const healReceived = new Promise((resolve, reject) => {
+        const healReceived = new Promise<void>((resolve, reject) => {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.removeListener("eval", healCheck)
@@ -2207,7 +2207,7 @@ export class Player extends Observer {
 
         const itemCount = this.countItem(item.name)
 
-        const swapped = new Promise((resolve, reject) => {
+        const swapped = new Promise<void>((resolve, reject) => {
             // TODO: Resolve
             const checkWithdrawal = (data: CharacterData) => {
                 const newCount = this.countItem(item.name, data.items)

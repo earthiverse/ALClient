@@ -4,8 +4,8 @@ import { Pathfinder } from "./index"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Mage extends PingCompensatedPlayer {
-    public alchemy(): Promise<unknown> {
-        const alchemied = new Promise((resolve, reject) => {
+    public alchemy(): Promise<void> {
+        const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -35,8 +35,8 @@ export class Mage extends PingCompensatedPlayer {
     }
 
     // NOTE: UNTESTED
-    public burst(target: string): Promise<unknown> {
-        const bursted = new Promise((resolve, reject) => {
+    public burst(target: string): Promise<void> {
+        const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]burst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -59,8 +59,8 @@ export class Mage extends PingCompensatedPlayer {
      *
      * @param targets Put in pairs of entity IDs, and how much mp to spend attacking each target. E.g.: [["12345", "100"]]
      */
-    public cburst(targets: [string, number][]): Promise<unknown> {
-        const cbursted = new Promise((resolve, reject) => {
+    public cburst(targets: [string, number][]): Promise<void> {
+        const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -79,8 +79,8 @@ export class Mage extends PingCompensatedPlayer {
         return cbursted
     }
 
-    public energize(target: string): Promise<unknown> {
-        const energized = new Promise((resolve, reject) => {
+    public energize(target: string): Promise<void> {
+        const energized = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]energize['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -100,10 +100,10 @@ export class Mage extends PingCompensatedPlayer {
     }
 
     // NOTE: UNTESTED
-    public entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<unknown> {
+    public entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<void> {
         if (essenceofnature === undefined) return Promise.reject("We need an essenceofnature in order to entangle.")
 
-        const tangled = new Promise((resolve, reject) => {
+        const tangled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]entangle['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -125,8 +125,8 @@ export class Mage extends PingCompensatedPlayer {
         return tangled
     }
 
-    public light(): Promise<unknown> {
-        const lit = new Promise((resolve, reject) => {
+    public light(): Promise<void> {
+        const lit = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]light['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -146,8 +146,8 @@ export class Mage extends PingCompensatedPlayer {
         return lit
     }
 
-    public magiport(target: string): Promise<unknown> {
-        const magiportOfferSent = new Promise((resolve, reject) => {
+    public magiport(target: string): Promise<void> {
+        const magiportOfferSent = new Promise<void>((resolve, reject) => {
             const magiportCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "magiport_failed" && data.id == target) {
@@ -155,7 +155,7 @@ export class Mage extends PingCompensatedPlayer {
                         reject(`Magiport for '${target}' failed.`)
                     } else if (data.response == "magiport_sent" && data.id == target) {
                         this.socket.removeListener("game_response", magiportCheck)
-                        resolve(`Magiport request sent to ${target}.`)
+                        resolve()
                     }
                 }
             }
@@ -171,8 +171,8 @@ export class Mage extends PingCompensatedPlayer {
         return magiportOfferSent
     }
 
-    public reflection(target: string): Promise<unknown> {
-        const relectioned = new Promise((resolve, reject) => {
+    public reflection(target: string): Promise<void> {
+        const relectioned = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)

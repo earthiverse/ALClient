@@ -41,10 +41,10 @@ export class Ranger extends PingCompensatedPlayer {
     }
 
     // NOTE: UNTESTED
-    public fourFinger(target: string): Promise<unknown> {
+    public fourFinger(target: string): Promise<void> {
         // TODO: Check that the target is not a monster.
 
-        const marked = new Promise((resolve, reject) => {
+        const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]4fingers['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -65,8 +65,8 @@ export class Ranger extends PingCompensatedPlayer {
         return marked
     }
 
-    public huntersMark(target: string): Promise<unknown> {
-        const marked = new Promise((resolve, reject) => {
+    public huntersMark(target: string): Promise<void> {
+        const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]huntersmark['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)

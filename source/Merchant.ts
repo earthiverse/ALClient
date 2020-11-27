@@ -4,11 +4,11 @@ import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Merchant extends PingCompensatedPlayer {
-    public closeMerchantStand(): Promise<unknown> {
+    public closeMerchantStand(): Promise<void> {
         if (!this.character.stand)
             return Promise.resolve() // It's already closed
 
-        const closed = new Promise((resolve, reject) => {
+        const closed = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
                 if (!data.stand) {
                     this.socket.removeListener("player", checkStand)
@@ -41,7 +41,7 @@ export class Merchant extends PingCompensatedPlayer {
         })
     }
 
-    public mluck(target: string): Promise<unknown> {
+    public mluck(target: string): Promise<void> {
         if (target !== this.character.id) {
             const player = this.players.get(target)
             if (!player)
@@ -52,7 +52,7 @@ export class Merchant extends PingCompensatedPlayer {
                 return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
         }
 
-        const mlucked = new Promise((resolve, reject) => {
+        const mlucked = new Promise<void>((resolve, reject) => {
             const mluckCheck = (data: EntitiesData) => {
                 for (const player of data.players) {
                     if (player.id == target
@@ -92,7 +92,7 @@ export class Merchant extends PingCompensatedPlayer {
         return mlucked
     }
 
-    public openMerchantStand(): Promise<unknown> {
+    public openMerchantStand(): Promise<void> {
         if (this.character.stand)
             return Promise.resolve() // It's already open
 
@@ -106,7 +106,7 @@ export class Merchant extends PingCompensatedPlayer {
                 return Promise.reject("Could not find merchant stand ('stand0') or computer in inventory.")
         }
 
-        const opened = new Promise((resolve, reject) => {
+        const opened = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
                 if (data.stand) {
                     this.socket.removeListener("player", checkStand)

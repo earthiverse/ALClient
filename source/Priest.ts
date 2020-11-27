@@ -3,8 +3,8 @@ import { Constants } from "./Constants"
 import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Priest extends PingCompensatedPlayer {
-    public curse(target: string): Promise<unknown> {
-        const curseStarted = new Promise((resolve, reject) => {
+    public curse(target: string): Promise<void> {
+        const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -23,8 +23,8 @@ export class Priest extends PingCompensatedPlayer {
         return curseStarted
     }
 
-    public darkBlessing(): Promise<unknown> {
-        const darkBlessed = new Promise((resolve, reject) => {
+    public darkBlessing(): Promise<void> {
+        const darkBlessed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -102,8 +102,8 @@ export class Priest extends PingCompensatedPlayer {
         return healStarted
     }
 
-    public partyHeal(): Promise<string[]> {
-        const healStarted = new Promise<string[]>((resolve, reject) => {
+    public partyHeal(): Promise<void> {
+        const healStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]partyheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -122,8 +122,8 @@ export class Priest extends PingCompensatedPlayer {
         return healStarted
     }
 
-    public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<unknown> {
-        const revived = new Promise<string[]>((resolve, reject) => {
+    public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<void> {
+        const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)

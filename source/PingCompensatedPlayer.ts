@@ -5,7 +5,7 @@ import { Player } from "./Player"
 import { Tools } from "./Tools"
 
 export class PingCompensatedPlayer extends Player {
-    async connect(): Promise<unknown> {
+    async connect(): Promise<void> {
         const promise = super.connect()
         return promise.then(async () => { this.pingLoop() })
     }

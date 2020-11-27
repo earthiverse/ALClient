@@ -4,8 +4,8 @@ import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
 
 export class Warrior extends PingCompensatedPlayer {
     // TODO: Investigate why the cooldown check doesn't work.
-    public agitate(): Promise<unknown> {
-        const agitated = new Promise((resolve, reject) => {
+    public agitate(): Promise<void> {
+        const agitated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]agitate['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -37,8 +37,8 @@ export class Warrior extends PingCompensatedPlayer {
         return agitated
     }
 
-    public charge(): Promise<unknown> {
-        const charged = new Promise((resolve, reject) => {
+    public charge(): Promise<void> {
+        const charged = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (!data.hitchhikers)
                     return
@@ -75,11 +75,11 @@ export class Warrior extends PingCompensatedPlayer {
         return charged
     }
 
-    public cleave(): Promise<unknown> {
+    public cleave(): Promise<void> {
         if (this.G.skills.cleave.mp > this.character.mp)
             return Promise.reject("Not enough MP to use cleave")
 
-        const cleaved = new Promise((resolve, reject) => {
+        const cleaved = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cleave['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -111,8 +111,8 @@ export class Warrior extends PingCompensatedPlayer {
         return cleaved
     }
 
-    public hardshell(): Promise<unknown> {
-        const hardshelled = new Promise((resolve, reject) => {
+    public hardshell(): Promise<void> {
+        const hardshelled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]hardshell['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("player", successCheck)
@@ -170,8 +170,8 @@ export class Warrior extends PingCompensatedPlayer {
     }
 
     // TODO: Return ids of those monsters & players that are now stomped
-    public stomp(): Promise<unknown> {
-        const stomped = new Promise((resolve, reject) => {
+    public stomp(): Promise<void> {
+        const stomped = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]stomp['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -246,8 +246,8 @@ export class Warrior extends PingCompensatedPlayer {
         return tauntStarted
     }
 
-    public warcry(): Promise<unknown> {
-        const warcried = new Promise((resolve, reject) => {
+    public warcry(): Promise<void> {
+        const warcried = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]warcry['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
