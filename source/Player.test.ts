@@ -9,7 +9,13 @@ beforeAll(async () => {
     player = new Player(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
 }, 30000)
 
-test("Player.calculateItemCost", () => {
+test("Player.calculateItemCost", async () => {
+    // The costs below assume these G costs, so check that they're still good
+    expect(G.items.scroll0.g).toBe(1000)
+    expect(G.items.scroll1.g).toBe(40000)
+    expect(G.items.pants.g).toBe(7800)
+    expect(G.items.dexring.g).toBe(24000)
+
     // Normal item
     expect(player.calculateItemCost({ name: "scroll0" })).toBe(1000)
     expect(player.calculateItemCost({ name: "scroll1" })).toBe(40000)
