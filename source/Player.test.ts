@@ -9,6 +9,10 @@ beforeAll(async () => {
     player = new Player(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
 }, 30000)
 
+afterAll(async () => {
+    Game.disconnect()
+})
+
 test("Player.calculateItemCost", async () => {
     // The costs below assume these G costs, so check that they're still good
     expect(G.items.scroll0.g).toBe(1000)

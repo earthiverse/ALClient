@@ -1,5 +1,6 @@
 import { DamageType, GData, MapName, MonsterName, SkillName, StatusInfo } from "./definitions/adventureland";
 import { ActionData, EntityData } from "./definitions/adventureland-server";
+import { PingCompensatedPlayer } from "./PingCompensatedPlayer";
 
 export class Entity implements EntityData {
     protected G: GData
@@ -16,6 +17,7 @@ export class Entity implements EntityData {
     public move_num: any
     public moving: boolean
     public resistance: number
+    public target: string
     public x: number
     public y: number
     public s: StatusInfo
@@ -76,6 +78,47 @@ export class Entity implements EntityData {
 
         // Set everything
         for (const key in data) this[key] = data[key]
+    }
+
+    /**
+     * Returns true if the monster is attacking the player, or one of its party members
+     * @param player The player whose party to check if the monster is attacking
+     */
+    public isAttackingPartyMember(player: PingCompensatedPlayer): boolean {
+        // Check if the entity is targeting anything
+        if (this.target === undefined) return false
+
+        // Check if the entity is attacking us
+        // NOTE: I don't want to get in to the semantics if we are actually in a party, I'm assuming if we aren't in a party, we're a party of "1".
+        if (this.isAttackingUs(player)) return true
+
+        // Check if the entity is targeting a party member
+        if (!player.party) return false
+        if (!player.party.list) return false
+        if (player.party.list.includes(this.target)) return true
+    }
+
+    /**
+     * Returns true if the monster is attacking us specifically, false otherwise
+     * @param player The player to check if the monster is attacking
+     */
+    public isAttackingUs(player: PingCompensatedPlayer): boolean {
+        return this.target === player.character.id
+    }
+
+    // TODO: Check if we can taunt when the entity is attacking another player we control (i.e. same account), but we're not partied.
+    /**
+     * Returns whether or not the Warrior could taunt this monster
+     * @param by The player that will perform the taunt
+     */
+    public isTauntable(by: PingCompensatedPlayer): boolean {
+        // If this entity has no target, it is tauntable
+        if (this.target === undefined) return true
+
+        // If this entity is attacking a party member, it is tauntable
+        if (this.isAttackingPartyMember(by)) return true
+
+        return false
     }
 
     /**
