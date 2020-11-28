@@ -7,6 +7,7 @@ import { Observer } from "./Observer"
 import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
+import { DeathModel } from "./database/deaths/deaths.model"
 
 export class Player extends Observer {
     protected userID: string;
@@ -123,6 +124,23 @@ export class Player extends Observer {
                 console.error(data)
             }
             this.disconnect()
+        })
+
+        this.socket.on("game_log", (data: { message: string; color: string; }) => {
+            const result = /^Slain by (.+)$/.exec(data.message)
+            if (result) {
+                DeathModel.insertMany([{
+                    name: this.character.id,
+                    cause: result[1],
+                    map: this.character.map,
+                    x: this.character.x,
+                    y: this.character.y,
+                    serverRegion: this.server.region,
+                    serverIdentifier: this.server.name,
+                    time: Date.now()
+                }])
+
+            }
         })
 
         this.socket.on("game_response", (data: GameResponseData) => {
@@ -331,6 +349,17 @@ export class Player extends Observer {
                     const cooldown = data.ms
                     this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
                 }
+            } else if (data.response == "defeated_by_a_monster") {
+                DeathModel.insertMany([{
+                    name: this.character.id,
+                    cause: data.monster,
+                    map: this.character.map,
+                    x: this.character.x,
+                    y: this.character.y,
+                    serverRegion: this.server.region,
+                    serverIdentifier: this.server.name,
+                    time: Date.now()
+                }])
             } else if (data.response == "ex_condition") {
                 // The condition expired
                 delete this.character.s[data.name]
@@ -469,7 +498,6 @@ export class Player extends Observer {
             const startCheck = () => {
                 resolve()
             }
-
 
             setTimeout(() => {
                 this.socket.removeListener("start", startCheck)

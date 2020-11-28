@@ -1,5 +1,6 @@
 import axios from "axios"
 import fs from "fs"
+import { connect, disconnect } from "./database/database"
 import { ServerData, CharacterListData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
@@ -11,6 +12,9 @@ import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
+
+// Connect to Mongo
+connect()
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -29,12 +33,15 @@ export class Game {
         // Private to force static methods
     }
 
-    public static async disconnect(): Promise<void> {
+    public static async disconnect(mongo = true): Promise<void> {
         // Stop all characters
         await this.stopAllCharacters()
 
         // Stop all observers
         await this.stopAllObservers()
+
+        // Disconnect from the database
+        if (mongo) disconnect()
     }
 
     static async getGData(): Promise<GData> {

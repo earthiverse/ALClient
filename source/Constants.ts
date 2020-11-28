@@ -1,3 +1,5 @@
+import { MonsterName } from "./definitions/adventureland"
+
 export class Constants {
     /** Various client related things */
     static MAX_PINGS = 100
@@ -13,4 +15,7 @@ export class Constants {
         v: 7,
         vn: 2
     }
+
+    /** Monsters that are worth tracking in our database */
+    static SPECIAL_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "tinyp", "wabbit"]
 }
