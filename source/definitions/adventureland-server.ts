@@ -192,7 +192,8 @@ export type DeathData = {
 export type DisappearData = {
     id: string
     reason: "transport" | string
-    s: number
+    /** s can be a spawn (single number), or [x,y,orientation (up/down/left/right)] */
+    s: number | [number, number, number?]
     to: MapName
 }
 

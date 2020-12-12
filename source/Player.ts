@@ -73,7 +73,36 @@ export class Player extends Observer {
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
-            this.players.delete(data.id)
+            const player = this.players.get(data.id)
+            const entity = this.entities.get(data.id)
+            if (player) {
+                player.map = data.to
+                if (typeof (data.s) == "number") {
+                    // It's a spawn
+                    const location = this.G.maps[data.to].spawns[data.s]
+                    player.x = location[0]
+                    player.y = location[1]
+                } else if (Array.isArray(data.s)) {
+                    // It's a location
+                    player.x = data.s[0]
+                    player.y = data.s[1]
+                }
+                this.players.set(data.id, player)
+            } else if (entity) {
+                entity.map = data.to
+                if (typeof (data.s) == "number") {
+                    // It's a spawn
+                    const location = this.G.maps[data.to].spawns[data.s]
+                    entity.x = location[0]
+                    entity.y = location[1]
+                } else if (Array.isArray(data.s)) {
+                    // It's a location
+                    entity.x = data.s[0]
+                    entity.y = data.s[1]
+                }
+                this.entities.set(data.id, entity)
+            }
+            this.updatePositions()
         })
 
         this.socket.on("disconnect", () => {
@@ -435,7 +464,7 @@ export class Player extends Observer {
             }
         }
 
-        // Erase all players and entities that are more than 600 units away
+        // Erase all entities that are more than 600 units away
         let toDelete: string[] = []
         for (const [id, entity] of this.entities) {
             if (Tools.distance(this.character, entity) < 600)
@@ -444,6 +473,8 @@ export class Player extends Observer {
         }
         for (const id of toDelete)
             this.entities.delete(id)
+
+        // Erase all players that are more than 600 units away
         toDelete = []
         for (const [id, player] of this.players) {
             if (Tools.distance(this.character, player) < 600)
