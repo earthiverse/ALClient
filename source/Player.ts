@@ -73,34 +73,51 @@ export class Player extends Observer {
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
-            const player = this.players.get(data.id)
-            const entity = this.entities.get(data.id)
-            if (player) {
-                player.map = data.to
-                if (typeof (data.s) == "number") {
-                    // It's a spawn
-                    const location = this.G.maps[data.to].spawns[data.s]
+            if (data.reason == "disconnect") {
+                // Only players can disconnects
+                this.players.delete(data.id)
+            } else if (data.reason == "transport" && (typeof data.s == "number" || typeof data.s == "undefined")) {
+                // Only players can transport
+                const player = this.players.get(data.id)
+                if (player) {
+                    const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
                     player.x = location[0]
                     player.y = location[1]
-                } else if (Array.isArray(data.s)) {
-                    // It's a location
-                    player.x = data.s[0]
-                    player.y = data.s[1]
+                    this.players.set(data.id, player)
                 }
-                this.players.set(data.id, player)
-            } else if (entity) {
-                entity.map = data.to
-                if (typeof (data.s) == "number") {
-                    // It's a spawn
-                    const location = this.G.maps[data.to].spawns[data.s]
-                    entity.x = location[0]
-                    entity.y = location[1]
-                } else if (Array.isArray(data.s)) {
-                    // It's a location
-                    entity.x = data.s[0]
-                    entity.y = data.s[1]
+            } else if (data.reason == undefined) {
+                // This probably meant that the entity
+                this.entities.delete(data.id)
+            } else if (data.reason == "invis") {
+                // This probably means the rogue went invisible 
+                this.players.delete(data.id)
+                this.entities.delete(data.id)
+            } else {
+                const player = this.players.get(data.id)
+                if (player) {
+                    if (Array.isArray(data.s)) {
+                        player.x = data.s[0]
+                        player.y = data.s[1]
+                    } else {
+                        const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
+                        player.x = location[0]
+                        player.y = location[1]
+                    }
+                    this.players.set(data.id, player)
+                } else {
+                    const entity = this.entities.get(data.id)
+                    if (entity) {
+                        if (Array.isArray(data.s)) {
+                            entity.x = data.s[0]
+                            entity.y = data.s[1]
+                        } else {
+                            const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
+                            entity.x = location[0]
+                            entity.y = location[1]
+                        }
+                        this.entities.set(data.id, entity)
+                    }
                 }
-                this.entities.set(data.id, entity)
             }
             this.updatePositions()
         })
