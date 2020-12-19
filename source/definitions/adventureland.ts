@@ -113,6 +113,8 @@ export type GData = {
     cooldown: number;
     cooldown_multiplier?: number;
     damage_multiplier?: number;
+    /** If true, we can't use this skill in a safe zone */
+    hostile?: boolean;
     level?: number;
     /** Can we use this skill on monsters? */
     monster?: boolean;
@@ -159,8 +161,12 @@ export type GMonster = {
   damage_type: DamageType
   evasion?: number
   frequency: number
+  /** If true, when the monster dies, the chest will drop on the player's location, not where the monster died */
+  global?: boolean
   hp: number
   immune?: boolean
+  /** TODO: Confirm || boosts the amount of XP obtained when you kill this monster? */
+  lucrativeness?: number
   mp: number
   range: number
   reflection?: number
@@ -255,6 +261,7 @@ export type Entity = PositionMovable & {
   evasion: number;
   /** Related to attack speed, I think it's equal to attacks per second */
   frequency: number;
+  humanoid?: boolean;
   hp: number;
   /** This value is also the key for the object in parent.entities */
   id: string;
@@ -467,14 +474,23 @@ export type StatType =
   | "armor"
   | "attack"
   | "dex"
+  /** fire resistance */
+  | "firesistance"
+  /** fortitude */
   | "for"
+  /** attack speed */
   | "frequency"
+  /** freeze resistance */
+  | "fzresistance"
   | "gold"
   | "hp"
   | "int"
   | "lifesteal"
   | "luck"
   | "mp_cost"
+  | "mp_reduction"
+  /** poison resistance */
+  | "pnresistance"
   | "range"
   | "resistance"
   | "speed"
@@ -834,6 +850,7 @@ export type ItemName =
   | "dexearringx"
   | "dexring"
   | "dexscroll"
+  | "dkey"
   | "dragondagger"
   | "drapes"
   | "dreturnscroll"
@@ -877,6 +894,7 @@ export type ItemName =
   | "essenceoflife"
   | "essenceofnature"
   | "evasionscroll"
+  | "exoarm"
   | "fallen"
   | "fcape"
   | "fclaw"
@@ -888,6 +906,7 @@ export type ItemName =
   | "firebow"
   | "firecrackers"
   | "firestaff"
+  | "firestars"
   | "flute"
   | "forscroll"
   | "frankypants"
@@ -901,6 +920,7 @@ export type ItemName =
   | "funtoken"
   | "fury"
   | "gbow"
+  | "gcape"
   | "gem0"
   | "gem1"
   | "gem2"
@@ -930,6 +950,7 @@ export type ItemName =
   | "harmor"
   | "hboots"
   | "hbow"
+  | "hdagger"
   | "heartwood"
   | "helmet"
   | "helmet1"
@@ -942,6 +963,7 @@ export type ItemName =
   | "hpot0"
   | "hpot1"
   | "hpotx"
+  | "iceskates"
   | "ijx"
   | "ink"
   | "intamulet"
@@ -975,6 +997,7 @@ export type ItemName =
   | "mcgloves"
   | "mchat"
   | "mcpants"
+  | "mearring"
   | "merry"
   | "mistletoe"
   | "mittens"
@@ -995,6 +1018,9 @@ export type ItemName =
   | "mpotx"
   | "mppants"
   | "mpshoes"
+  | "mpxamulet"
+  | "mpxbelt"
+  | "mpxgloves"
   | "mrarmor"
   | "mrboots"
   | "mrgloves"
@@ -1015,6 +1041,7 @@ export type ItemName =
   | "mysterybox"
   | "networkcard"
   | "nheart"
+  | "northstar"
   | "offering"
   | "offeringp"
   | "offeringx"
@@ -1084,6 +1111,9 @@ export type ItemName =
   | "smush"
   | "snakefang"
   | "snakeoil"
+  | "snowball"
+  | "snowboots"
+  | "snowflakes"
   | "snring"
   | "solitaire"
   | "spear"
@@ -1187,6 +1217,7 @@ export type ItemName =
   | "xbox"
   | "xgloves"
   | "xhelmet"
+  | "xmace"
   | "xmashat"
   | "xmaspants"
   | "xmasshoes"
