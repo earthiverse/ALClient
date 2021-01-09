@@ -1,6 +1,6 @@
 import { Character } from "./Character"
 import { CharacterType, GData, MapName, SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { EntityData, PlayerData } from "./definitions/adventureland-server"
+import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
     protected G: GData
