@@ -240,6 +240,7 @@ export type EntityData = {
     "1hp"?: boolean
     apiercing?: number
     attack?: number
+    charge?: number
     cooperative?: boolean
     damage_type?: DamageType
     evasion?: number
@@ -481,9 +482,9 @@ export type PlayerData = {
     move_num?: number
     moving?: boolean
     mp: number
-    mp_cost: number
     npc?: string
     owner: string
+    party?: string
     // TODO: Figure out what this is
     pdps: number
     q: {

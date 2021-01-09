@@ -76,6 +76,8 @@ export type GData = {
     mount: boolean;
     no_bounds?: boolean;
     npcs: GMapsNPC[];
+    /** If set to true, the map is PvP in ALL servers */
+    pvp?: boolean;
     on_death: number;
     ref: {
       [id: string]: IPosition & {
@@ -115,6 +117,8 @@ export type GData = {
     damage_multiplier?: number;
     /** If true, we can't use this skill in a safe zone */
     hostile?: boolean;
+    /** Items that this we need to use the skill */
+    inventory?: ItemName[];
     level?: number;
     /** Can we use this skill on monsters? */
     monster?: boolean;
@@ -156,6 +160,8 @@ export type GMonster = {
   abilities?: { [T in SkillName]?: any }
   apiercing?: number
   attack: number
+  /** If set, the monster will run this fast when it is targeting a player */
+  charge?: number
   /** If set to true, all players that deal damage to this monster will share the loot */
   cooperative?: boolean
   damage_type: DamageType
@@ -1522,6 +1528,7 @@ export type SkillName =
   | "selfheal"
   | "shadowstrike"
   | "snippet"
+  | "snowball"
   | "stack"
   | "stomp"
   | "stone"

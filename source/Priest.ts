@@ -1,8 +1,8 @@
 import { ActionData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Priest extends PingCompensatedPlayer {
+export class Priest extends PingCompensatedCharacter {
     public curse(target: string): Promise<void> {
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {

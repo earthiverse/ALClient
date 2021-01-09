@@ -1,8 +1,8 @@
 import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Warrior extends PingCompensatedPlayer {
+export class Warrior extends PingCompensatedCharacter {
     // TODO: Investigate why the cooldown check doesn't work.
     public agitate(): Promise<void> {
         const agitated = new Promise<void>((resolve, reject) => {

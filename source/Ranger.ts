@@ -1,8 +1,8 @@
 import { ActionData, EvalData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Ranger extends PingCompensatedPlayer {
+export class Ranger extends PingCompensatedCharacter {
     public fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
@@ -76,7 +76,7 @@ export class Ranger extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`supershot timeout (${Constants.TIMEOUT}ms)`)
+                reject(`huntersmark timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })

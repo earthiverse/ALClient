@@ -5,8 +5,8 @@ import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definiti
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
-import { Player } from "./Player"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Character } from "./Character"
 import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
@@ -20,7 +20,7 @@ export class Game {
     // TODO: Move this type to type definitions
     protected static characters: { [T in string]?: CharacterListData } = {}
 
-    public static players: { [T in string]: Player } = {}
+    public static players: { [T in string]: Character } = {}
     public static observers: { [T in string]: Observer } = {}
 
     public static G: GData
@@ -100,7 +100,7 @@ export class Game {
         return this.login(data.email, data.password)
     }
 
-    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedPlayer> {
+    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
         if (!this.user) return Promise.reject("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
@@ -111,14 +111,14 @@ export class Game {
 
         try {
             // Create the player and connect
-            let player: PingCompensatedPlayer
+            let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "merchant") player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "priest") player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "ranger") player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "rogue") player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "warrior") player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else player = new PingCompensatedPlayer(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+            else player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
 
             // Handle disconnects
             player.socket.on("disconnect", () => {

@@ -1,10 +1,10 @@
 import { CharacterData, EntitiesData } from "./definitions/adventureland-server"
 import { SkillName, ConditionName } from "./definitions/adventureland"
 import { Constants } from "./Constants"
-import { Player } from "./Player"
+import { Character } from "./Character"
 import { Tools } from "./Tools"
 
-export class PingCompensatedPlayer extends Player {
+export class PingCompensatedCharacter extends Character {
     async connect(): Promise<void> {
         const promise = super.connect()
         return promise.then(async () => { this.pingLoop() })

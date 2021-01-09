@@ -1,19 +1,19 @@
 import { GData } from "./definitions/adventureland"
 import { Game } from "./Game"
-import { Player } from "./Player"
+import { Character } from "./Character"
 
 let G: GData
-let player: Player
+let player: Character
 beforeAll(async () => {
     G = await Game.getGData()
-    player = new Player(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
+    player = new Character(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
 }, 30000)
 
 afterAll(async () => {
     Game.disconnect()
 })
 
-test("Player.calculateItemCost", async () => {
+test("Character.calculateItemCost", async () => {
     // The costs below assume these G costs, so check that they're still good
     expect(G.items.scroll0.g).toBe(1000)
     expect(G.items.scroll1.g).toBe(40000)

@@ -1,9 +1,9 @@
 import { CharacterData, EntitiesData, GameResponseData } from "./definitions/adventureland-server"
 import { TradeSlotType } from "./definitions/adventureland"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Merchant extends PingCompensatedPlayer {
+export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
         if (!this.character.stand)
             return Promise.resolve() // It's already closed

@@ -1,6 +1,6 @@
-import { DamageType, GData, MapName, MonsterName, SkillName, StatusInfo } from "./definitions/adventureland";
-import { ActionData, EntityData } from "./definitions/adventureland-server";
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer";
+import { DamageType, GData, MapName, MonsterName, SkillName, StatusInfo } from "./definitions/adventureland"
+import { ActionData, EntityData } from "./definitions/adventureland-server"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Entity implements EntityData {
     protected G: GData
@@ -32,6 +32,7 @@ export class Entity implements EntityData {
     public "1hp": boolean
     public apiercing: number
     public attack: number
+    public charge: number
     public cooperative: boolean
     public damage_type: DamageType
     public evasion: number
@@ -73,7 +74,7 @@ export class Entity implements EntityData {
         this.updateData(data)
     }
 
-    public updateData(data: EntityData) {
+    public updateData(data: EntityData): void {
         if (this.id !== undefined && this.id !== data.id) throw Error("The entity's ID does not match")
 
         // Set everything
@@ -84,7 +85,7 @@ export class Entity implements EntityData {
      * Returns true if the monster is attacking the player, or one of its party members
      * @param player The player whose party to check if the monster is attacking
      */
-    public isAttackingPartyMember(player: PingCompensatedPlayer): boolean {
+    public isAttackingPartyMember(player: PingCompensatedCharacter): boolean {
         // Check if the entity is targeting anything
         if (this.target === undefined) return false
 
@@ -102,7 +103,7 @@ export class Entity implements EntityData {
      * Returns true if the monster is attacking us specifically, false otherwise
      * @param player The player to check if the monster is attacking
      */
-    public isAttackingUs(player: PingCompensatedPlayer): boolean {
+    public isAttackingUs(player: PingCompensatedCharacter): boolean {
         return this.target === player.character.id
     }
 
@@ -111,7 +112,7 @@ export class Entity implements EntityData {
      * Returns whether or not the Warrior could taunt this monster
      * @param by The player that will perform the taunt
      */
-    public isTauntable(by: PingCompensatedPlayer): boolean {
+    public isTauntable(by: PingCompensatedCharacter): boolean {
         // If this entity has no target, it is tauntable
         if (this.target === undefined) return true
 

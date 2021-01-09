@@ -1,9 +1,9 @@
 import { EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Pathfinder } from "./index"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Mage extends PingCompensatedPlayer {
+export class Mage extends PingCompensatedCharacter {
     public alchemy(): Promise<void> {
         const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {

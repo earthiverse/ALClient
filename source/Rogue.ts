@@ -1,8 +1,8 @@
 import { EvalData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Rogue extends PingCompensatedPlayer {
+export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     // TODO: Add promises
     public invis() {
