@@ -293,6 +293,28 @@ export class Character extends Observer {
                 success: 1
             } as LoadedData)
         })
+
+        this.updateLoop()
+    }
+
+    protected updateLoop(): void {
+        if (this.socket.connected) {
+            if (this.lastPositionUpdate) {
+                const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
+                if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
+                    // Update now
+                    this.updatePositions()
+                    this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+                } else {
+                    // Update in a bit
+                    this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+                }
+            } else {
+                // Update now
+                this.updatePositions()
+                this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            }
+        }
     }
 
     protected parseCharacter(data: CharacterData): void {
