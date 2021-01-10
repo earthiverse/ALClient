@@ -324,8 +324,16 @@ export type ChestInfo = PositionReal & {
 }
 
 export type ItemInfo = {
+  // TODO: Figure out what this is
+  acc?: number
+  // TODO: Figure out what this is (I think it might be similar to 'p', but for achievements)
+  ach?: TitleName
   /** If true, the entity is buying this item */
   b?: boolean;
+  // TODO: Figure out what this is (Probably related to 'expires')
+  ex?: boolean;
+  /** If the item expires (booster, elixir), this will be set to a date string */
+  expires?: string;
   /** Set if the item is compoundable or upgradable */
   level?: number;
   name: ItemName;
@@ -339,8 +347,11 @@ export type ItemInfo = {
     scroll: ItemName;
     nums: number[];
   } | TitleName;
+  ps?: TitleName[]
   /** If set, the item is for sale, or purchase */
   rid?: string;
+  /** If the item has this property, this type of scroll has been applied */
+  stat_type?: StatType
   // TODO: Confirm
   /** If set, the item might drop if we die to another player's attacks (i.e. die to PvP) */
   v?: boolean
@@ -479,7 +490,12 @@ export type ItemType =
 export type StatType =
   | "armor"
   | "attack"
+  /** AOE */
+  | "blast"
   | "dex"
+  /** Damage Return */
+  | "dreturn"
+  | "explosion"
   /** fire resistance */
   | "firesistance"
   /** fortitude */
@@ -493,6 +509,8 @@ export type StatType =
   | "int"
   | "lifesteal"
   | "luck"
+  /** Miss chance */
+  | "miss"
   | "mp_cost"
   | "mp_reduction"
   /** poison resistance */
@@ -501,11 +519,13 @@ export type StatType =
   | "resistance"
   | "speed"
   | "str"
+  | "stun"
   | "vit"
 
 /** These can be placed on items. They respond to the keys in `G.titles`. */
 export type TitleName =
   | "critmonger"
+  | "festive"
   | "firehazard"
   | "glitched"
   | "gooped"

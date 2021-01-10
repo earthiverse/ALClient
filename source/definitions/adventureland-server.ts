@@ -74,9 +74,13 @@ export type CharacterData = {
             num: number
         }
     }
+    abs: boolean
     age: number
+    angle: number
+    blast: number
     pdps: number
     id: string
+    name: string
     x: number
     y: number
     going_x?: number
@@ -90,6 +94,13 @@ export type CharacterData = {
     slots: SlotInfo
     ctype: CharacterType
     owner: string
+    party?: string
+    explosion: number
+    firesistance: number
+    fzresistance: number
+    mp_reduction: number
+    pnresistance: number
+    stun: number
     int: number
     str: number
     dex: number
@@ -99,6 +110,7 @@ export type CharacterData = {
     max_xp: number
     goldm: number
     xpm: number
+    xp: number
     luckm: number
     map: MapName
     in: string
@@ -110,9 +122,11 @@ export type CharacterData = {
     cash: number
     /** This number is the number of monsters currently targeting you */
     targets: number
+    target?: string
     m: number
     evasion: number
     miss: number
+    move_num: number
     reflection: number
     lifesteal: number
     manasteal: number
@@ -125,12 +139,13 @@ export type CharacterData = {
     xrange: number
     items: ItemInfo[]
     cc: number
-    ipass: string
+    
+    ipass?: string
     // TODO: Figure this out
-    friends: any
+    friends?: any
     // TODO: Figure this out
-    acx: any
-    xcx: string[]
+    acx?: any
+    xcx?: string[]
     /** Extra events (e.g. ["game_response", {response: "upgrade_success", level: 4, num: 8}]) */
     hitchhikers?: [string, any][]
     /** Holds bank information when the character is inside the bank */
@@ -462,6 +477,7 @@ export type PlayerData = {
     abs: boolean
     angle: number
     armor: number
+    attack: number
     // TODO: Figure out what this is
     c: any
     cid: number
@@ -471,8 +487,6 @@ export type PlayerData = {
     frequency: number
     x: number
     y: number
-    map: MapName
-    in: MapName
     going_x: number
     going_y: number
     hp: number
@@ -510,6 +524,10 @@ export type PlayerData = {
     speed: number
     stand?: boolean | "cstand" | "stand0"
     tp?: boolean
+
+    // Soft Properties
+    map?: MapName
+    in?: MapName
 }
 
 export type QData = {

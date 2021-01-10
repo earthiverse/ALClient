@@ -94,9 +94,9 @@ export class Entity implements EntityData {
         if (this.isAttackingUs(player)) return true
 
         // Check if the entity is targeting a party member
-        if (!player.party) return false
-        if (!player.party.list) return false
-        if (player.party.list.includes(this.target)) return true
+        if (player.party && player.party.list && player.party.list.includes(this.target)) return true
+
+        return false
     }
 
     /**

@@ -10,6 +10,7 @@ export class Player implements PlayerData {
     public abs: boolean
     public angle: number
     public armor: number
+    public attack: number
     public cid: number
     public frequency: number
     public going_x: number
@@ -17,18 +18,16 @@ export class Player implements PlayerData {
     public level: number
     public move_num: any
     public moving: boolean
+    public party: string
     public resistance: number
     public target: string
     public x: number
     public y: number
     public s: StatusInfo
 
-    // Soft Properties
     c: any;
     cx: any;
     focus?: string;
-    map: MapName;
-    in: MapName;
     hp: number;
     max_hp: number;
     max_mp: number;
@@ -44,6 +43,10 @@ export class Player implements PlayerData {
     speed: number;
     stand?: boolean | "cstand" | "stand0";
     tp?: boolean;
+
+    // Soft Properties
+    in: MapName;
+    map: MapName;
 
     public constructor(data: PlayerData, map: MapName, G: GData) {
         this.G = G
@@ -70,8 +73,8 @@ export class Player implements PlayerData {
         // Check if we're the owner
         if (bot.character.owner == this.owner) return true
 
-        // Check if we're in a party with the character
-        if (bot.party && bot.party.list && bot.party.list.includes(this.id)) return true
+        // Check if we're in the same party
+        if (bot.character.party == this.party) return true
 
         // TODO: Check if they're in our friends list
 
