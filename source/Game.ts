@@ -120,11 +120,6 @@ export class Game {
             else if (cType == "warrior") player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
 
-            // Handle disconnects
-            player.socket.on("disconnect", () => {
-                Game.stopCharacter(cName)
-            })
-
             await player.connect()
 
             this.players[cName] = player
