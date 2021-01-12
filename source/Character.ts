@@ -80,14 +80,17 @@ export class Character extends Observer {
             } else if (data.reason == "transport" && (typeof data.s == "number" || typeof data.s == "undefined")) {
                 // Only players can transport
                 const player = this.players.get(data.id)
-                if (player) {
+                if (player && data.to) {
                     const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
                     player.x = location[0]
                     player.y = location[1]
                     this.players.set(data.id, player)
+                } else if (data.to == undefined) {
+                    // They moved somewhere unknown (TODO: Is this because they are wearing a stealth cape?)
+                    this.players.delete(data.id)
                 }
             } else if (data.reason == undefined) {
-                // This probably meant that the entity
+                // This probably meant that the entity ran in to a wall
                 this.entities.delete(data.id)
             } else if (data.reason == "invis") {
                 // This probably means the rogue went invisible 
