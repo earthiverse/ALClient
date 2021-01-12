@@ -1,5 +1,5 @@
 import { MapName } from "./definitions/adventureland"
-import { ActionData, CharacterData, EntityData } from "./definitions/adventureland-server"
+import { CharacterData, EntityData } from "./definitions/adventureland-server"
 
 export class Tools {
     /**
@@ -35,7 +35,8 @@ export class Tools {
      * @param b Position 2
      */
     public static distance(a: { x: number, y: number, map?: MapName }, b: { x: number, y: number, map?: MapName }): number {
-        if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE
+        if (!a || !b) return Number.MAX_VALUE // No data for one of the objects
+        if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE // Different map
 
         return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
     }

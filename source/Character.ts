@@ -1879,7 +1879,7 @@ export class Character extends Observer {
                         continue
 
                     // Set `to` to the closest spawn for these monsters
-                    const locations = this.locateMonsters(mtype as MonsterName)
+                    const locations = this.locateMonster(mtype as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
                         const potentialPath = await Pathfinder.getPath(this.character, location)
@@ -2667,7 +2667,7 @@ export class Character extends Observer {
         return found
     }
 
-    public locateMonsters(mType: MonsterName): NodeData[] {
+    public locateMonster(mType: MonsterName): NodeData[] {
         const locations: NodeData[] = []
 
         // Known special monster spawns

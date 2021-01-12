@@ -71,7 +71,7 @@ export class Pathfinder {
      */
     public static canWalk(from: IPosition, to: IPosition): boolean {
         if (!this.G) throw new Error("Prepare pathfinding before querying canWalk()!")
-        if (from.map != to.map) return false // We can't walk across maps
+        if (from.map !== to.map) return false // We can't walk across maps
 
         const grid = this.getGrid(from.map)
 
@@ -220,14 +220,14 @@ export class Pathfinder {
                     if (!spanAbove && y > 0 && grid[y - 1][x1] == UNKNOWN) {
                         stack.push([y - 1, x1])
                         spanAbove = 1
-                    } else if (spanAbove && y > 0 && grid[y - 1][x1] != UNKNOWN) {
+                    } else if (spanAbove && y > 0 && grid[y - 1][x1] !== UNKNOWN) {
                         spanAbove = 0
                     }
 
                     if (!spanBelow && y < height - 1 && grid[y + 1][x1] == UNKNOWN) {
                         stack.push([y + 1, x1])
                         spanBelow = 1
-                    } else if (spanBelow && y < height - 1 && grid[y + 1][x1] != UNKNOWN) {
+                    } else if (spanBelow && y < height - 1 && grid[y + 1][x1] !== UNKNOWN) {
                         spanBelow = 0
                     }
                     x1++
@@ -408,6 +408,10 @@ export class Pathfinder {
         this.graph.forEachNode((node) => {
             if (node.data.map == map) {
                 const distance = Tools.distance(from, node.data)
+
+                // If we're further than one we can already walk to, don't check further
+                if (distance > closest.distance) return
+
                 const walkable = this.canWalk(from, node.data)
 
                 if (distance < closest.distance) closest = { distance, node }
@@ -506,7 +510,7 @@ export class Pathfinder {
      * @param to 
      */
     public static getSafeWalkTo(from: IPosition, to: IPosition): IPosition {
-        if (from.map != to.map) throw new Error("We can't walk across maps.")
+        if (from.map !== to.map) throw new Error("We can't walk across maps.")
         if (!this.G) throw new Error("Prepare pathfinding before querying getSafeWalkTo()!")
 
         const grid = this.getGrid(from.map)
