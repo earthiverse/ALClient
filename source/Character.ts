@@ -2431,8 +2431,8 @@ export class Character extends Observer {
         return cooldown
     }
 
-    public getNearestMonster(mtype?: MonsterName): { monster: EntityData; distance: number; } {
-        let closest: EntityData
+    public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
+        let closest: Entity
         let closestD = Number.MAX_VALUE
         this.entities.forEach((entity) => {
             if (mtype && entity.type != mtype)
@@ -2447,11 +2447,11 @@ export class Character extends Observer {
             return { monster: closest, distance: closestD }
     }
 
-    public getNearestAttackablePlayer(): { player: PlayerData; distance: number; } {
+    public getNearestAttackablePlayer(): { player: Player; distance: number; } {
         if (!this.isPVP())
             return undefined
 
-        let closest: PlayerData
+        let closest: Player
         let closestD = Number.MAX_VALUE
         this.players.forEach((player) => {
             if (player.s?.invincible)

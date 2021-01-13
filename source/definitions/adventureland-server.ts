@@ -139,7 +139,7 @@ export type CharacterData = {
     xrange: number
     items: ItemInfo[]
     cc: number
-    
+
     ipass?: string
     // TODO: Figure this out
     friends?: any
