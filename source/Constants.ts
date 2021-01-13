@@ -6,6 +6,7 @@ export class Constants {
     static TIMEOUT = 1000
 
     /** Various distance related things */
+    static MAX_VISIBLE_RANGE = 600
     static NPC_INTERACTION_DISTANCE = 400
     static DOOR_REACH_DISTANCE = 40
     static TRANSPORTER_REACH_DISTANCE = 75

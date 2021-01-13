@@ -1,5 +1,5 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, EntityData, PlayerData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData } from "./definitions/adventureland-server"
-import { GData, SkillName, BankInfo, ConditionName, MapName, ItemInfo, ItemName, SlotType, MonsterName, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, StatType } from "./definitions/adventureland"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData } from "./definitions/adventureland-server"
+import { GData, SkillName, BankInfo, ConditionName, MapName, ItemInfo, ItemName, SlotType, MonsterName, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, StatType, CharacterType, SlotInfo, StatusInfo, DamageType } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -9,7 +9,7 @@ import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 
-export class Character extends Observer {
+export class Character extends Observer implements CharacterData {
     protected userID: string;
     protected userAuth: string;
     protected characterID: string;
@@ -21,16 +21,113 @@ export class Character extends Observer {
 
     public achievements = new Map<string, AchievementProgressData>();
     public bank: BankInfo = { gold: 0 };
-    public character: CharacterData;
     public chests = new Map<string, ChestData>();
     public entities = new Map<string, Entity>();
     public nextSkill = new Map<SkillName, Date>();
-    public party: PartyData;
+    public partyData: PartyData;
     public pings: number[] = [];
     public players = new Map<string, Player>();
     public projectiles = new Map<string, ActionData & { date: Date; }>();
     public server: WelcomeData;
     public S: SInfo;
+
+    // CharacterData
+    public afk: string
+    public age: number
+    public apiercing = 0
+    public blast = 0
+    public controller: string
+    public x: number
+    public y: number
+    public map: MapName
+    public in: MapName
+    public name: string
+    public id: string
+    public ctype: CharacterType
+    public abs: boolean
+    public angle: number
+    public armor = 0
+    public attack = 0
+    public c: any
+    public cid: number
+    public cx: any
+    public damage_type: DamageType
+    public focus?: string
+    public frequency: number
+    public going_x: number
+    public going_y: number
+    public gold = 0
+    public hp = 0
+    public level = 1
+    public m: number
+    public mp_cost: number
+    public max_hp = 1
+    public max_mp = 1
+    public move_num: number
+    public moving = false
+    public mp = 1
+    public npc?: string
+    public owner: string
+    public party?: string
+    public pdps: number
+    public q: {
+        compound?: { len: number; ms: number; num: number; nums: number[] };
+        upgrade?: {
+            len: number // Send a response that we're ready to go
+            // Send a response that we're ready to go
+            // console.log("socket: loaded...")
+            ms: number; num: number // console.log("socket: loaded...")
+        }
+    }
+    public range = 1
+    public resistance = 0
+    public rip = true
+    public rpiercing = 0
+    public s: StatusInfo
+    public skin: string
+    public slots: SlotInfo
+    public speed = 1
+    public stand?: boolean | "cstand" | "stand0"
+    public tp = false
+    explosion: number
+    firesistance: number
+    fzresistance: number
+    mp_reduction: number
+    pnresistance: number
+    stun: number
+    int: number
+    str: number
+    dex: number
+    vit: number
+    for: number
+    max_xp: number
+    goldm: number
+    xpm: number
+    xp: number
+    luckm: number
+    isize: number
+    esize: number
+    cash: number
+    targets: number
+    target?: string
+    evasion: number
+    miss: number
+    reflection: number
+    lifesteal: number
+    manasteal: number
+    crit: number
+    critdamage: number
+    dreturn: number
+    tax: number
+    xrange: number
+    items: ItemInfo[]
+    cc: number
+    ipass?: string
+    friends?: any
+    acx?: any
+    xcx?: string[]
+    hitchhikers?: [string, any][]
+    user?: BankInfo
 
     constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
         super(serverData, g)
@@ -39,11 +136,13 @@ export class Character extends Observer {
         this.characterID = characterID
 
         this.socket.on("start", (data: StartData) => {
-            // console.log("socket: start!")
-            // console.log(data)
-            this.parseCharacter(data)
-            if (data.entities)
-                this.parseEntities(data.entities)
+            this.going_x = data.x
+            this.going_y = data.y
+            this.moving = false
+            this.damage_type = this.G.classes[data.ctype].damage_type
+
+            this.updateCharacter(data)
+            if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
         })
 
@@ -210,18 +309,16 @@ export class Character extends Observer {
 
             this.parseEntities(data.entities)
 
-            if (this.character) {
-                this.character.x = data.x
-                this.character.y = data.y
-                this.character.in = data.in
-                this.character.map = data.name
-                this.character.m = data.m
-            }
+            this.x = data.x
+            this.y = data.y
+            this.in = data.in
+            this.map = data.name
+            this.m = data.m
         })
 
         // TODO: Confirm this works for leave_party(), too.
         this.socket.on("party_update", (data: PartyData) => {
-            this.party = data
+            this.partyData = data
         })
 
         this.socket.on("ping_ack", (data: { id: string; }) => {
@@ -241,14 +338,14 @@ export class Character extends Observer {
         })
 
         this.socket.on("player", (data: CharacterData) => {
-            this.parseCharacter(data)
+            this.updateCharacter(data)
         })
 
         this.socket.on("q_data", (data: QData) => {
             if (data.q.upgrade)
-                this.character.q.upgrade = data.q.upgrade
+                this.q.upgrade = data.q.upgrade
             if (data.q.compound)
-                this.character.q.compound = data.q.compound
+                this.q.compound = data.q.compound
         })
 
         this.socket.on("server_info", (data: SInfo) => {
@@ -267,12 +364,12 @@ export class Character extends Observer {
         })
 
         this.socket.on("upgrade", (data: UpgradeData) => {
-            if (data.type == "compound" && this.character.q.compound)
-                delete this.character.q.compound
+            if (data.type == "compound" && this.q.compound)
+                delete this.q.compound
 
-            // else if (data.type == "exchange" && this.character.q.exchange) delete this.character.q.exchange
-            else if (data.type == "upgrade" && this.character.q.upgrade)
-                delete this.character.q.upgrade
+            // else if (data.type == "exchange" && this.q.exchange) delete this.q.exchange
+            else if (data.type == "upgrade" && this.q.upgrade)
+                delete this.q.upgrade
         })
 
         this.socket.on("welcome", (data: WelcomeData) => {
@@ -320,24 +417,7 @@ export class Character extends Observer {
         }
     }
 
-    protected parseCharacter(data: CharacterData): void {
-        // Create the character if we don't have one
-        if (!this.character) {
-            this.character = data
-            delete this.character["base_gold"]
-            delete this.character["entities"]
-            delete this.character["hitchhikers"]
-            delete this.character["info"]
-            delete this.character["s_info"]
-            delete this.character["user"]
-
-            // Add going_to variables
-            this.character.going_x = data.x
-            this.character.going_y = data.y
-            this.character.moving = false
-            this.character.damage_type = this.G.classes[data.ctype].damage_type
-        }
-
+    public updateCharacter(data: CharacterData): void {
         // Update all the character information we can
         for (const datum in data) {
             if (datum == "hitchhikers") {
@@ -356,7 +436,7 @@ export class Character extends Observer {
                 this.bank = data.user
             } else {
                 // Normal attribute
-                this.character[datum] = data[datum]
+                this[datum] = data[datum]
             }
         }
     }
@@ -366,7 +446,7 @@ export class Character extends Observer {
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
-        } else if (this.character) {
+        } else {
             // Update all positions
             this.updatePositions()
         }
@@ -407,7 +487,7 @@ export class Character extends Observer {
                 }
             } else if (data.response == "ex_condition") {
                 // The condition expired
-                delete this.character.s[data.name]
+                delete this.s[data.name]
             } else if (data.response == "skill_success") {
                 const cooldown = this.G.skills[data.name].cooldown
                 if (cooldown) {
@@ -489,34 +569,34 @@ export class Character extends Observer {
             }
 
             // Update character
-            if (this.character.moving) {
-                const distanceTravelled = this.character.speed * msSinceLastUpdate / 1000
-                const angle = Math.atan2(this.character.going_y - this.character.y, this.character.going_x - this.character.x)
-                const distanceToGoal = Tools.distance({ x: this.character.x, y: this.character.y }, { x: this.character.going_x, y: this.character.going_y })
+            if (this.moving) {
+                const distanceTravelled = this.speed * msSinceLastUpdate / 1000
+                const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
+                const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
                 if (distanceTravelled > distanceToGoal) {
-                    this.character.moving = false
-                    this.character.x = this.character.going_x
-                    this.character.y = this.character.going_y
+                    this.moving = false
+                    this.x = this.going_x
+                    this.y = this.going_y
                 } else {
-                    this.character.x = this.character.x + Math.cos(angle) * distanceTravelled
-                    this.character.y = this.character.y + Math.sin(angle) * distanceTravelled
+                    this.x = this.x + Math.cos(angle) * distanceTravelled
+                    this.y = this.y + Math.sin(angle) * distanceTravelled
                 }
             }
 
             // Update conditions
-            for (const condition in this.character.s) {
-                const newCooldown = this.character.s[condition as ConditionName].ms - msSinceLastUpdate
+            for (const condition in this.s) {
+                const newCooldown = this.s[condition as ConditionName].ms - msSinceLastUpdate
                 if (newCooldown <= 0)
-                    delete this.character.s[condition as ConditionName]
+                    delete this.s[condition as ConditionName]
                 else
-                    this.character.s[condition as ConditionName].ms = newCooldown
+                    this.s[condition as ConditionName].ms = newCooldown
             }
         }
 
         // Erase all entities that are more than 600 units away
         let toDelete: string[] = []
         for (const [id, entity] of this.entities) {
-            if (Tools.distance(this.character, entity) < 600)
+            if (Tools.distance(this, entity) < 600)
                 continue
             toDelete.push(id)
         }
@@ -526,7 +606,7 @@ export class Character extends Observer {
         // Erase all players that are more than 600 units away
         toDelete = []
         for (const [id, player] of this.players) {
-            if (Tools.distance(this.character, player) < 600)
+            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE)
                 continue
             toDelete.push(id)
         }
@@ -684,7 +764,7 @@ export class Character extends Observer {
     public acceptPartyInvite(id: string): Promise<PartyData> {
         const acceptedInvite = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
-                if (data.list.includes(this.character.id)
+                if (data.list.includes(this.id)
                     && data.list.includes(id)) {
                     this.socket.removeListener("party_update", partyCheck)
                     this.socket.removeListener("game_log", unableCheck)
@@ -703,12 +783,12 @@ export class Character extends Observer {
                     this.socket.removeListener("game_log", unableCheck)
                     reject(data)
                 } else if (data == "Already partying") {
-                    if (this.party.list.includes(this.character.id)
-                        && this.party.list.includes(id)) {
+                    if (this.partyData.list.includes(this.id)
+                        && this.partyData.list.includes(id)) {
                         // NOTE: We resolve the promise even if we have already accepted it if we're in the correct party.
                         this.socket.removeListener("party_update", partyCheck)
                         this.socket.removeListener("game_log", unableCheck)
-                        resolve(this.party)
+                        resolve(this.partyData)
                     } else {
                         this.socket.removeListener("party_update", partyCheck)
                         this.socket.removeListener("game_log", unableCheck)
@@ -734,7 +814,7 @@ export class Character extends Observer {
     public acceptPartyRequest(id: string): Promise<PartyData> {
         const acceptedRequest = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
-                if (data.list.includes(this.character.id)
+                if (data.list.includes(this.id)
                     && data.list.includes(id)) {
                     this.socket.removeListener("party_update", partyCheck)
                     resolve(data)
@@ -754,8 +834,12 @@ export class Character extends Observer {
 
     // TODO: Add 'notthere' (e.g. calling attack("12345") returns ["notthere", {place: "attack"}])
     // TODO: Check if cooldown is sent after attack
-    public attack(id: string): Promise<string> {
-        if (this.character.mp_cost > this.character.mp)
+    /**
+     * NOTE: We can't name this function `attack` because of the property `attack` that specifies damage.s
+     * @param id The ID of the entity or player to attack
+     */
+    public basicAttack(id: string): Promise<string> {
+        if (this.mp_cost > this.mp)
             return Promise.reject("Not enough MP to attack")
 
         const attackStarted = new Promise<string>((resolve, reject) => {
@@ -798,7 +882,7 @@ export class Character extends Observer {
                 }
             }
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id && data.target == id && data.type == "attack") {
+                if (data.attacker == this.id && data.target == id && data.type == "attack") {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("game_response", failCheck)
                     this.socket.removeListener("death", deathCheck)
@@ -822,8 +906,8 @@ export class Character extends Observer {
 
     // TODO: Return buy info
     public buy(itemName: ItemName, quantity = 1): Promise<number> {
-        if (this.character.gold < this.G.items[itemName].g)
-            return Promise.reject(`Insufficient gold. We have ${this.character.gold}, but the item costs ${this.G.items[itemName].g}`)
+        if (this.gold < this.G.items[itemName].g)
+            return Promise.reject(`Insufficient gold. We have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
 
         const itemReceived = new Promise<number>((resolve, reject) => {
             const buyCheck1 = (data: CharacterData) => {
@@ -884,7 +968,7 @@ export class Character extends Observer {
         const merchant = this.players.get(id)
         if (!merchant)
             return Promise.reject(`We can not see ${id} nearby.`)
-        if (Tools.distance(this.character, merchant) > Constants.NPC_INTERACTION_DISTANCE)
+        if (Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE)
             return Promise.reject(`We are too far away from ${id} to buy from.`)
 
         const item = merchant.slots[slot]
@@ -903,12 +987,12 @@ export class Character extends Observer {
             quantity = merchant.slots[slot].q
         }
 
-        if (this.character.gold < merchant.slots[slot].price * quantity) {
-            if (this.character.gold < merchant.slots[slot].price)
-                return Promise.reject(`We don't have enough gold. It costs ${merchant.slots[slot].price}, but we only have ${this.character.gold}`)
+        if (this.gold < merchant.slots[slot].price * quantity) {
+            if (this.gold < merchant.slots[slot].price)
+                return Promise.reject(`We don't have enough gold. It costs ${merchant.slots[slot].price}, but we only have ${this.gold}`)
 
             // Determine how many we *can* buy.
-            const buyableQuantity = Math.floor(this.character.gold / merchant.slots[slot].price)
+            const buyableQuantity = Math.floor(this.gold / merchant.slots[slot].price)
             console.warn(`We don't have enough gold to buy ${quantity}, we can only buy ${buyableQuantity}, so we're doing that.`)
             quantity = buyableQuantity
         }
@@ -922,7 +1006,7 @@ export class Character extends Observer {
         if (!item.rid)
             return Promise.reject("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * (item.q ? item.q : 1)
-        if (price > this.character.gold)
+        if (price > this.gold)
             return Promise.reject("We don't have enough gold to buy this.")
         this.socket.emit("sbuy", { rid: item.rid })
     }
@@ -985,7 +1069,7 @@ export class Character extends Observer {
             return false // We are full
 
         const gInfo = this.G.items[item]
-        if (this.character.gold < gInfo.g)
+        if (this.gold < gInfo.g)
             return false // We can't afford it
 
         const computerAvailable = this.locateItem("computer") !== undefined
@@ -997,7 +1081,7 @@ export class Character extends Observer {
             for (const map in this.G.maps) {
                 if (buyable !== undefined)
                     break
-                if (!computerAvailable && map !== this.character.map)
+                if (!computerAvailable && map !== this.map)
                     continue // We aren't close, and we don't have a computer, so don't check this map
                 if (this.G.maps[map as MapName].ignore)
                     continue
@@ -1009,7 +1093,7 @@ export class Character extends Observer {
                     for (const i of this.G.npcs[npc.id].items) {
                         if (i == item) {
                             buyable = true
-                            if (Tools.distance(this.character, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
+                            if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
                                 close = true
                             break
                         }
@@ -1029,41 +1113,41 @@ export class Character extends Observer {
     /**
      * Returns true if it's a guaranteed kill in one hit
      */
-    public canKillInOneShot(entity: EntityData): boolean {
+    public canKillInOneShot(entity: Entity): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
         if (gInfo.abilities && gInfo.abilities.self_healing) return false
 
-        if (this.character.damage_type == "magical" && entity.reflection !== undefined) return false
-        if (this.character.damage_type == "physical" && entity.evasion !== undefined) return false
+        if (this.damage_type == "magical" && entity.reflection !== undefined) return false
+        if (this.damage_type == "physical" && entity.evasion !== undefined) return false
 
         if (entity["1hp"]) {
             if (entity.hp == 1) return true
             else return false
         }
 
-        return Tools.calculateDamageRange(this.character, entity)[0] > entity.hp
+        return Tools.calculateDamageRange(this, entity)[0] > entity.hp
     }
 
     public canUse(skill: SkillName): boolean {
-        if (this.character.rip)
+        if (this.rip)
             return false // We are dead
-        if (this.character.s.stoned)
+        if (this.s.stoned)
             return false // We are 'stoned' (oneeye condition)
         if (this.getCooldown(skill) > 0)
             return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
-        if (gInfoSkill.mp !== undefined && this.character.mp < gInfoSkill.mp)
+        if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp)
             return false // Not enough MP
-        if (skill == "attack" && this.character.mp < this.character.mp_cost)
+        if (skill == "attack" && this.mp < this.mp_cost)
             return false // Not enough MP (attack)
-        if (gInfoSkill.level !== undefined && this.character.level < gInfoSkill.level)
+        if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level)
             return false // Not a high enough level
         if (gInfoSkill.wtype) {
             // The skill requires a certain weapon type
-            if (!this.character.slots.mainhand)
+            if (!this.slots.mainhand)
                 return false // We don't have any weapon equipped
-            const gInfoWeapon = this.G.items[this.character.slots.mainhand.name]
+            const gInfoWeapon = this.G.items[this.slots.mainhand.name]
             if (typeof gInfoSkill.wtype == "object") {
                 // There's a list of acceptable weapon types
                 let isAcceptableWeapon = false
@@ -1089,9 +1173,9 @@ export class Character extends Observer {
         if (gInfoSkill.slot) {
             // The skill requires a certain item
             for (const [slot, item] of gInfoSkill.slot) {
-                if (!this.character.slots[slot])
+                if (!this.slots[slot])
                     return false // We don't have anything equipped in one of the slots required
-                if (this.character.slots[slot].name !== item)
+                if (this.slots[slot].name !== item)
                     return false // We don't have the right item equipped in the slot
             }
         }
@@ -1099,7 +1183,7 @@ export class Character extends Observer {
             // The skill is only available to certain classes
             let compatibleClass = false
             for (const c of gInfoSkill.class) {
-                if (c == this.character.ctype) {
+                if (c == this.ctype) {
                     compatibleClass = true // We are compatible!
                     break
                 }
@@ -1111,24 +1195,24 @@ export class Character extends Observer {
             // This skill has stat requirements
             for (const s in gInfoSkill.requirements) {
                 const stat = s as StatType
-                if (this.character[stat] < gInfoSkill.requirements[stat])
+                if (this[stat] < gInfoSkill.requirements[stat])
                     return false
             }
         }
 
         // Special circumstance -- we can't use blink if we're being dampened
-        if (this.character.s.dampened) {
+        if (this.s.dampened) {
             if (skill == "blink")
                 return false
         }
 
         // Special circumstance -- merchants can't attack unless they have a dartgun
-        if (this.character.ctype == "merchant" && skill == "attack") {
-            if (!this.character.slots.mainhand)
+        if (this.ctype == "merchant" && skill == "attack") {
+            if (!this.slots.mainhand)
                 return false // No weapon
-            if (this.character.slots.mainhand.name !== "dartgun")
+            if (this.slots.mainhand.name !== "dartgun")
                 return false // Wrong weapon
-            if (this.character.gold < 100)
+            if (this.gold < 100)
                 return false // Not enough gold to shoot
         }
 
@@ -1138,10 +1222,10 @@ export class Character extends Observer {
     // TODO: Return better compound info
     // TODO: Add offering
     public compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
-        const item1Info = this.character.items[item1Pos]
-        const item2Info = this.character.items[item2Pos]
-        const item3Info = this.character.items[item3Pos]
-        const cscrollInfo = this.character.items[cscrollPos]
+        const item1Info = this.items[item1Pos]
+        const item2Info = this.items[item2Pos]
+        const item3Info = this.items[item3Pos]
+        const cscrollInfo = this.items[cscrollPos]
         if (!item1Info)
             return Promise.reject(`There is no item in inventory slot ${item1Pos} (item1).`)
         if (!item2Info)
@@ -1228,7 +1312,7 @@ export class Character extends Observer {
         const gInfo = this.G.craft[item]
         if (!gInfo)
             return Promise.reject(`Can not find a recipe for ${item}.`)
-        if (gInfo.cost > this.character.gold)
+        if (gInfo.cost > this.gold)
             return Promise.reject(`We don't have enough gold to craft ${item}.`)
 
         const itemPositions: number[] = []
@@ -1242,7 +1326,7 @@ export class Character extends Observer {
                 level: lookLevel
             }
 
-            const itemPos = this.locateItem(lookName, this.character.items, searchArgs)
+            const itemPos = this.locateItem(lookName, this.items, searchArgs)
             if (itemPos == undefined)
                 return Promise.reject(`We don't have ${lookQ} ${lookName} to craft ${item}.`)
 
@@ -1256,46 +1340,46 @@ export class Character extends Observer {
     // TODO: Add promises
     public depositGold(gold: number): unknown {
         // TODO: Check if you can be in the basement and deposit gold
-        if (this.character.map !== "bank")
+        if (this.map !== "bank")
             return Promise.reject("We need to be in 'bank' to deposit gold.")
         if (gold <= 0)
             return Promise.reject("We can't deposit 0 or less gold")
 
-        if (gold > this.character.gold) {
-            gold = this.character.gold
+        if (gold > this.gold) {
+            gold = this.gold
             console.warn(`We are only going to deposit ${gold} gold.`)
         }
         this.socket.emit("bank", { operation: "deposit", amount: gold })
     }
 
     public depositItem(inventoryPos: number, bankPack?: Exclude<BankPackType, "gold">, bankSlot = -1): unknown {
-        if (this.character.map !== "bank" && this.character.map !== "bank_b" && this.character.map !== "bank_u")
-            return Promise.reject(`We're not in the bank (we're in '${this.character.map}')`)
+        if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
+            return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
 
-        const item = this.character.items[inventoryPos]
+        const item = this.items[inventoryPos]
         if (!item)
             return Promise.reject(`There is no item in inventory slot ${inventoryPos}.`)
 
         if (bankPack) {
             // Check if we can access the supplied bankPack
             const bankPackNum = Number.parseInt(bankPack.substr(5, 2))
-            if ((this.character.map == "bank" && bankPackNum < 0 && bankPackNum > 7)
-                || (this.character.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
-                || (this.character.map == "bank_u" && bankPackNum < 24 && bankPackNum > 47)) {
-                return Promise.reject(`We can not access ${bankPack} on ${this.character.map}.`)
+            if ((this.map == "bank" && bankPackNum < 0 && bankPackNum > 7)
+                || (this.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
+                || (this.map == "bank_u" && bankPackNum < 24 && bankPackNum > 47)) {
+                return Promise.reject(`We can not access ${bankPack} on ${this.map}.`)
             }
         } else {
             // Look for a good bankPack
             bankSlot = undefined
             let packFrom: number
             let packTo: number
-            if (this.character.map == "bank") {
+            if (this.map == "bank") {
                 packFrom = 0
                 packTo = 7
-            } else if (this.character.map == "bank_b") {
+            } else if (this.map == "bank_b") {
                 packFrom = 8
                 packTo = 23
-            } else if (this.character.map == "bank_u") {
+            } else if (this.map == "bank_u") {
                 packFrom = 24
                 packTo = 47
             }
@@ -1373,10 +1457,10 @@ export class Character extends Observer {
     }
 
     public equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
-        if (!this.character.items[inventoryPos])
+        if (!this.items[inventoryPos])
             return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
 
-        const iInfo = this.character.items[inventoryPos]
+        const iInfo = this.items[inventoryPos]
         // const gInfo = this.game.G.items[iInfo.name]
         // const beforeSlots = this.game.character.slots
         const equipFinished = new Promise<void>((resolve, reject) => {
@@ -1405,7 +1489,7 @@ export class Character extends Observer {
                 }
             }
             const cantEquipCheck = (data: DisappearingTextData) => {
-                if (data.id == this.character.id && data.message == "CAN'T EQUIP") {
+                if (data.id == this.id && data.message == "CAN'T EQUIP") {
                     this.socket.removeListener("player", equipCheck)
                     this.socket.removeListener("disappearing_text", cantEquipCheck)
                     reject(`Can't equip '${inventoryPos}' (${iInfo.name})`)
@@ -1425,7 +1509,7 @@ export class Character extends Observer {
     }
 
     public exchange(inventoryPos: number): Promise<boolean> {
-        if (!this.character.items[inventoryPos])
+        if (!this.items[inventoryPos])
             return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
 
         const exchangeFinished = new Promise<boolean>((resolve, reject) => {
@@ -1462,7 +1546,7 @@ export class Character extends Observer {
             this.socket.on("upgrade", completeCheck)
         })
 
-        this.socket.emit("exchange", { item_num: inventoryPos, q: this.character.items[inventoryPos]?.q })
+        this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
         return exchangeFinished
     }
 
@@ -1472,24 +1556,24 @@ export class Character extends Observer {
     }
 
     public getMonsterHuntQuest(): Promise<void> {
-        if (this.character.ctype == "merchant")
+        if (this.ctype == "merchant")
             return Promise.reject("Merchants can't do Monster Hunts.")
         let close = false
         // Look for a monsterhunter on the current map
-        for (const npc of this.G.maps[this.character.map].npcs) {
+        for (const npc of this.G.maps[this.map].npcs) {
             if (npc.id !== "monsterhunter")
                 continue
-            if (Tools.distance(this.character, { x: npc.position[0], y: npc.position[1] }) <= Constants.NPC_INTERACTION_DISTANCE) {
+            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) <= Constants.NPC_INTERACTION_DISTANCE) {
                 close = true
                 break
             }
         }
         if (!close)
             return Promise.reject("We are too far away from the Monster Hunter NPC.")
-        if (this.character.s.monsterhunt && this.character.s.monsterhunt.c > 0)
-            return Promise.reject(`We can't get a new monsterhunt. We have ${this.character.s.monsterhunt.ms}ms left to kill ${this.character.s.monsterhunt.c} ${this.character.s.monsterhunt.id}s.`)
+        if (this.s.monsterhunt && this.s.monsterhunt.c > 0)
+            return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}s.`)
 
-        if (this.character.s.monsterhunt && this.character.s.monsterhunt.c == 0) {
+        if (this.s.monsterhunt && this.s.monsterhunt.c == 0) {
             console.warn("We are going to complete the current monster quest first")
             this.finishMonsterHuntQuest()
         }
@@ -1564,7 +1648,7 @@ export class Character extends Observer {
      * Returns true if our inventory is full, false otherwise
      */
     public isFull(): boolean {
-        return this.character.esize >= this.character.isize
+        return this.esize >= this.isize
     }
 
     /**
@@ -1595,20 +1679,20 @@ export class Character extends Observer {
 
     public async move(x: number, y: number, safetyCheck = true): Promise<NodeData> {
         // Check if we're already there
-        if (this.character.x == x && this.character.y == y)
-            return Promise.resolve({ map: this.character.map, y: this.character.y, x: this.character.x })
+        if (this.x == x && this.y == y)
+            return Promise.resolve({ map: this.map, y: this.y, x: this.x })
 
-        let to: IPosition = { map: this.character.map, x: x, y: y }
+        let to: IPosition = { map: this.map, x: x, y: y }
         if (safetyCheck) {
             to = Pathfinder.getSafeWalkTo(
-                { map: this.character.map, x: this.character.x, y: this.character.y },
-                { map: this.character.map, x, y })
+                { map: this.map, x: this.x, y: this.y },
+                { map: this.map, x, y })
             if (to.x !== x || to.y !== y) {
                 console.warn(`move: We can't move to {x: ${x}, y: ${y}} safely. We will move to {x: ${to.x}, y: ${to.y}}.`)
             }
         }
         const moveFinished = new Promise<NodeData>((resolve, reject) => {
-            let timeToFinishMove = 1 + Tools.distance(this.character, { x: to.x, y: to.y }) / this.character.speed
+            let timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
                 if (!data.moving || data.going_x != to.x || data.going_y != to.y) {
@@ -1621,7 +1705,7 @@ export class Character extends Observer {
                     }
                 } else {
                     // We're still moving in the right direction
-                    timeToFinishMove = Tools.distance(this.character, { x: data.x, y: data.y }) / data.speed
+                    timeToFinishMove = Tools.distance(this, { x: data.x, y: data.y }) / data.speed
                     clearTimeout(timeout)
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 }
@@ -1630,19 +1714,19 @@ export class Character extends Observer {
             const checkPosition = () => {
                 // Force an update of the character position
                 this.updatePositions()
-                timeToFinishMove = 1 + Tools.distance(this.character, { x: to.x, y: to.y }) / this.character.speed
+                timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
-                if (this.character.x == to.x && this.character.y == to.y) {
+                if (this.x == to.x && this.y == to.y) {
                     // We are here!
                     this.socket.removeListener("player", checkPlayer)
-                    resolve(this.character)
-                } else if (this.character.moving && this.character.going_x == to.x && this.character.going_y == to.y) {
+                    resolve({ x: x, y: y, map: this.map })
+                } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
                     this.socket.removeListener("player", checkPlayer)
-                    reject(`move to ${to.x}, ${to.y} failed (we're currently going to ${this.character.going_x}, ${this.character.going_y})`)
+                    reject(`move to ${to.x}, ${to.y} failed (we're currently going to ${this.going_x}, ${this.going_y})`)
                 }
             }
             let timeout = setTimeout(checkPosition, timeToFinishMove)
@@ -1651,16 +1735,16 @@ export class Character extends Observer {
         })
 
         this.socket.emit("move", {
-            x: this.character.x,
-            y: this.character.y,
+            x: this.x,
+            y: this.y,
             going_x: to.x,
             going_y: to.y,
-            m: this.character.m
+            m: this.m
         })
         this.updatePositions()
-        this.character.going_x = to.x
-        this.character.going_y = to.y
-        this.character.moving = true
+        this.going_x = to.x
+        this.going_y = to.y
+        this.moving = true
         return moveFinished
     }
 
@@ -1769,7 +1853,7 @@ export class Character extends Observer {
     }
 
     public async sendGold(to: string, amount: number): Promise<number> {
-        if (this.character.gold == 0)
+        if (this.gold == 0)
             return Promise.reject("We have no gold to send.")
         if (!this.players.has(to))
             return Promise.reject(`We can not see ${to} to send gold.`)
@@ -1800,12 +1884,12 @@ export class Character extends Observer {
     public sendItem(to: string, inventoryPos: number, quantity = 1): Promise<void> {
         if (!this.players.has(to))
             return Promise.reject(`"${to}" is not nearby.`)
-        if (!this.character.items[inventoryPos])
+        if (!this.items[inventoryPos])
             return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
-        if (this.character.items[inventoryPos]?.q < quantity)
-            return Promise.reject(`We only have a quantity of ${this.character.items[inventoryPos].q}, not ${quantity}.`)
+        if (this.items[inventoryPos]?.q < quantity)
+            return Promise.reject(`We only have a quantity of ${this.items[inventoryPos].q}, not ${quantity}.`)
 
-        const item = this.character.items[inventoryPos]
+        const item = this.items[inventoryPos]
 
         const itemSent = new Promise<void>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
@@ -1885,7 +1969,7 @@ export class Character extends Observer {
                     const locations = this.locateMonster(mtype as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this.character, location)
+                        const potentialPath = await Pathfinder.getPath(this, location)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -1910,7 +1994,7 @@ export class Character extends Observer {
                         const locations = this.locateNPCs(npc.id)
                         let closestDistance: number = Number.MAX_VALUE
                         for (const location of locations) {
-                            const potentialPath = await Pathfinder.getPath(this.character, location)
+                            const potentialPath = await Pathfinder.getPath(this, location)
                             const distance = Pathfinder.computePathCost(potentialPath)
                             if (distance < closestDistance) {
                                 path = potentialPath
@@ -1929,19 +2013,19 @@ export class Character extends Observer {
             if (to.map)
                 fixedTo = to as NodeData
             else
-                fixedTo = { map: this.character.map, x: to.x, y: to.y }
+                fixedTo = { map: this.map, x: to.x, y: to.y }
         } else {
             console.log(to)
             return Promise.reject("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
         }
 
         // Check if we're already close enough
-        if (options && options.getWithin !== undefined && Tools.distance(this.character, fixedTo) <= options.getWithin)
-            return Promise.resolve(this.character)
+        if (options && options.getWithin !== undefined && Tools.distance(this, fixedTo) <= options.getWithin)
+            return Promise.resolve({ x: this.x, y: this.y, map: this.map })
 
         // If we don't have the path yet, get it
         if (!path)
-            path = await Pathfinder.getPath(this.character, fixedTo)
+            path = await Pathfinder.getPath(this, fixedTo)
 
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
@@ -1954,20 +2038,20 @@ export class Character extends Observer {
                     return Promise.reject(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
             }
 
-            if (Tools.distance(this.character, fixedTo) < options.getWithin) {
+            if (Tools.distance(this, fixedTo) < options.getWithin) {
                 break // We're already close enough!
             }
 
             // Check if we can walk to a spot close to the goal if that's OK
-            if (currentMove.type == "move" && this.character.map == fixedTo.map && options.getWithin > 0) {
-                const angle = Math.atan2(this.character.y - fixedTo.y, this.character.x - fixedTo.x)
+            if (currentMove.type == "move" && this.map == fixedTo.map && options.getWithin > 0) {
+                const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
                 const potentialMove: LinkData = {
                     type: "move",
-                    map: this.character.map,
+                    map: this.map,
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
                     y: fixedTo.y + Math.sin(angle) * options.getWithin
                 }
-                if (Pathfinder.canWalk(this.character, potentialMove)) {
+                if (Pathfinder.canWalk(this, potentialMove)) {
                     // console.log("walk close success!")
                     i = path.length
                     currentMove = potentialMove
@@ -1983,7 +2067,7 @@ export class Character extends Observer {
                     if (potentialMove.type == "town")
                         break
 
-                    if (potentialMove.type == "move" && Pathfinder.canWalk(this.character, potentialMove)) {
+                    if (potentialMove.type == "move" && Pathfinder.canWalk(this, potentialMove)) {
                         console.log("skip check success!")
                         i = j
                         currentMove = potentialMove
@@ -2015,7 +2099,7 @@ export class Character extends Observer {
             //     const lastMove = path[j - 1]
             //     const nextMove = path[j]
             //     if (nextMove.type == "move") {
-            //         time += 2 * Tools.distance(lastMove, nextMove) / this.character.speed
+            //         time += 2 * Tools.distance(lastMove, nextMove) / this.speed
             //     } else if (nextMove.type == "transport" || nextMove.type == "leave") {
             //         time += Math.min(...this.pings)
             //     } else if (nextMove.type == "town") {
@@ -2032,8 +2116,8 @@ export class Character extends Observer {
                 if (currentMove.type == "leave") {
                     await this.leaveMap()
                 } else if (currentMove.type == "move") {
-                    if (currentMove.map !== this.character.map) {
-                        return Promise.reject(`We are supposed to be in ${currentMove.map}, but we are in ${this.character.map}`)
+                    if (currentMove.map !== this.map) {
+                        return Promise.reject(`We are supposed to be in ${currentMove.map}, but we are in ${this.map}`)
                     }
                     await this.move(currentMove.x, currentMove.y, false)
                 } else if (currentMove.type == "town") {
@@ -2051,12 +2135,12 @@ export class Character extends Observer {
             }
         }
 
-        return { map: this.character.map, x: this.character.x, y: this.character.y }
+        return { map: this.map, x: this.x, y: this.y }
     }
 
     public async stopSmartMove(): Promise<NodeData> {
         this.lastSmartMove = Date.now()
-        return this.move(this.character.x, this.character.y)
+        return this.move(this.x, this.y)
     }
 
     // TODO: Add promises
@@ -2065,14 +2149,14 @@ export class Character extends Observer {
     }
 
     public throwSnowball(target: string): Promise<string> {
-        if (this.G.skills.snowball.mp > this.character.mp)
+        if (this.G.skills.snowball.mp > this.mp)
             return Promise.reject("Not enough MP to throw snowball")
 
         const throwStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "snowball"
                     && data.target == target) {
                     projectile = data.pid
@@ -2119,9 +2203,9 @@ export class Character extends Observer {
     }
 
     public unequip(slot: SlotType | TradeSlotType): Promise<void> {
-        if (this.character.slots[slot] === null)
+        if (this.slots[slot] === null)
             return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
-        if (this.character.slots[slot] === undefined)
+        if (this.slots[slot] === undefined)
             return Promise.reject(`Slot ${slot} does not exist.`)
 
         const unequipped = new Promise<void>((resolve, reject) => {
@@ -2143,11 +2227,11 @@ export class Character extends Observer {
 
     // TODO: Add offering support
     public upgrade(itemPos: number, scrollPos: number): Promise<boolean> {
-        if (this.character.map.startsWith("bank"))
+        if (this.map.startsWith("bank"))
             return Promise.reject("We can't upgrade things in the bank.")
 
-        const itemInfo = this.character.items[itemPos]
-        const scrollInfo = this.character.items[scrollPos]
+        const itemInfo = this.items[itemPos]
+        const scrollInfo = this.items[scrollPos]
         if (!itemInfo)
             return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[itemInfo.name].upgrade == undefined)
@@ -2231,13 +2315,13 @@ export class Character extends Observer {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, clevel: this.character.items[itemPos].level })
+        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, clevel: this.items[itemPos].level })
         return upgradeComplete
     }
 
     // TODO: Check if it's an HP Pot
     public useHPPot(itemPos: number): Promise<void> {
-        if (!this.character.items[itemPos])
+        if (!this.items[itemPos])
             return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
@@ -2260,7 +2344,7 @@ export class Character extends Observer {
 
     // TODO: Check if it's an MP Pot
     public useMPPot(itemPos: number): Promise<void> {
-        if (!this.character.items[itemPos])
+        if (!this.items[itemPos])
             return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
@@ -2322,7 +2406,7 @@ export class Character extends Observer {
 
     public withdrawGold(gold: number): unknown {
         // TODO: Check if you can be in the basement and withdraw gold
-        if (this.character.map !== "bank")
+        if (this.map !== "bank")
             return Promise.reject("We need to be in 'bank' to withdraw gold.")
         if (gold <= 0)
             return Promise.reject("We can't withdraw 0 or less gold.")
@@ -2341,10 +2425,10 @@ export class Character extends Observer {
             return Promise.reject(`There is no item in bank ${bankPack}[${bankPos}]`)
 
         const bankPackNum = Number.parseInt(bankPack.substr(5, 2))
-        if ((this.character.map == "bank" && bankPackNum < 0 && bankPackNum > 7)
-            || (this.character.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
-            || (this.character.map == "bank_u" && bankPackNum < 24 && bankPackNum > 47)) {
-            return Promise.reject(`We can not access ${bankPack} on ${this.character.map}.`)
+        if ((this.map == "bank" && bankPackNum < 0 && bankPackNum > 7)
+            || (this.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
+            || (this.map == "bank_u" && bankPackNum < 24 && bankPackNum > 47)) {
+            return Promise.reject(`We can not access ${bankPack} on ${this.map}.`)
         }
 
         const itemCount = this.countItem(item.name)
@@ -2378,7 +2462,7 @@ export class Character extends Observer {
      * @param inventory Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public countItem(item: ItemName, inventory = this.character.items,
+    public countItem(item: ItemName, inventory = this.items,
         args?: {
             levelGreaterThan?: number;
             levelLessThan?: number;
@@ -2437,7 +2521,7 @@ export class Character extends Observer {
         this.entities.forEach((entity) => {
             if (mtype && entity.type != mtype)
                 return
-            const d = Tools.distance(this.character, entity)
+            const d = Tools.distance(this, entity)
             if (d < closestD) {
                 closest = entity
                 closestD = d
@@ -2458,7 +2542,7 @@ export class Character extends Observer {
                 return
             if (player.npc)
                 return
-            const d = Tools.distance(this.character, player)
+            const d = Tools.distance(this, player)
             if (d < closestD) {
                 closest = player
                 closestD = d
@@ -2473,7 +2557,7 @@ export class Character extends Observer {
      * @param iN The item to look for
      * @param inv Where to look for the item
      */
-    public hasItem(iN: ItemName, inv = this.character.items,
+    public hasItem(iN: ItemName, inv = this.items,
         args?: {
             levelGreaterThan?: number;
             levelLessThan?: number;
@@ -2509,10 +2593,10 @@ export class Character extends Observer {
      * @param itemName The item to look for
      */
     public isEquipped(itemName: ItemName): boolean {
-        for (const slot in this.character.slots) {
-            if (!this.character.slots[slot as SlotType])
+        for (const slot in this.slots) {
+            if (!this.slots[slot as SlotType])
                 continue // Nothing equipped in this slot
-            if (this.character.slots[slot as SlotType].name == itemName)
+            if (this.slots[slot as SlotType].name == itemName)
                 return true
         }
         return false
@@ -2522,12 +2606,12 @@ export class Character extends Observer {
      * Returns a boolean corresponding to whether or not we can attack other players
      */
     public isPVP(): boolean {
-        if (this.G[this.character.map].pvp)
+        if (this.G[this.map].pvp)
             return true
         return this.server.pvp
     }
 
-    public locateDuplicateItems(inventory = this.character.items): {
+    public locateDuplicateItems(inventory = this.items): {
         [T in ItemName]?: number[];
     } {
         const items: (ItemInfo & { slotNum: number; })[] = []
@@ -2586,7 +2670,7 @@ export class Character extends Observer {
      * @param inv Where to look for the item
      * @param args Filters to help search for specific properties on items
      */
-    public locateItem(iN: ItemName, inv = this.character.items,
+    public locateItem(iN: ItemName, inv = this.items,
         args?: {
             level?: number;
             levelGreaterThan?: number;
@@ -2637,7 +2721,7 @@ export class Character extends Observer {
      * @param inventory Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItems(itemName: ItemName, inventory = this.character.items,
+    public locateItems(itemName: ItemName, inventory = this.items,
         filters?: {
             levelGreaterThan?: number;
             levelLessThan?: number;

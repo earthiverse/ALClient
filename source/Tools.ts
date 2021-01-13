@@ -1,5 +1,7 @@
+import { Character } from "./Character"
 import { MapName } from "./definitions/adventureland"
-import { CharacterData, EntityData } from "./definitions/adventureland-server"
+import { Entity } from "./Entity"
+import { Player } from "./Player"
 
 export class Tools {
     /**
@@ -7,7 +9,7 @@ export class Tools {
      * @param attacker 
      * @param defender 
      */
-    public static calculateDamageRange(attacker: EntityData | CharacterData, defender: EntityData | CharacterData): [number, number] {
+    public static calculateDamageRange(attacker: Entity | Player | Character, defender: Entity | Player | Character): [number, number] {
         /**
          * From Adventureland's common_functions.js
          * @param a The difference between armor and armor piercing, or resistance and resistance piercing.
@@ -22,7 +24,7 @@ export class Tools {
 
         let baseDamage: number = attacker.attack
 
-        if ((attacker as CharacterData).ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
+        if ((attacker as Player).ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
         if (attacker.damage_type == "physical") baseDamage *= damage_multiplier(defender.armor - attacker.apiercing)
         else if (attacker.damage_type == "magical") baseDamage *= damage_multiplier(defender.resistance - attacker.rpiercing)

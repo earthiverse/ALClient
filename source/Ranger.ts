@@ -8,7 +8,7 @@ export class Ranger extends PingCompensatedCharacter {
             const projectiles: string[] = []
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "5shot"
                     && (data.target == target1 || data.target == target2 || data.target == target3 || data.target == target4 || data.target == target5)) {
                     projectiles.push(data.pid)
@@ -88,14 +88,14 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public piercingShot(target: string): Promise<string> {
-        if (this.G.skills.piercingshot.mp > this.character.mp)
+        if (this.G.skills.piercingshot.mp > this.mp)
             return Promise.reject("Not enough MP to use piercingShot")
 
         const piercingShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "piercingshot"
                     && data.target == target) {
                     projectile = data.pid
@@ -131,7 +131,7 @@ export class Ranger extends PingCompensatedCharacter {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "poisonarrow"
                     && data.target == target) {
                     projectile = data.pid
@@ -160,14 +160,14 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public superShot(target: string): Promise<string> {
-        if (this.G.skills.supershot.mp > this.character.mp)
+        if (this.G.skills.supershot.mp > this.mp)
             return Promise.reject("Not enough MP to use superShot")
 
         const superShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "supershot"
                     && data.target == target) {
                     projectile = data.pid
@@ -200,7 +200,7 @@ export class Ranger extends PingCompensatedCharacter {
             const projectiles: string[] = []
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "3shot"
                     && (data.target == target1 || data.target == target2 || data.target == target3)) {
                     projectiles.push(data.pid)

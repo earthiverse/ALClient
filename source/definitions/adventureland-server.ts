@@ -1,4 +1,4 @@
-import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, MapName, MonsterName, ItemName, ServerRegion, ServerIdentifier, BankPackType, BankInfo, SkillName, SInfo, DamageType } from "./adventureland"
+import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, MapName, MonsterName, ItemName, ServerRegion, ServerIdentifier, BankPackType, BankInfo, SkillName, SInfo, DamageType, StatType } from "./adventureland"
 
 export type AchievementProgressData = {
     name: string
@@ -43,7 +43,7 @@ export type AuthData = {
     code_slot?: number
 }
 
-export type CharacterData = {
+export type CharacterData = PlayerData & {
     hp: number
     max_hp: number
     mp: number
@@ -86,11 +86,8 @@ export type CharacterData = {
     going_x?: number
     going_y?: number
     moving: boolean
-    cid: number
     stand?: boolean | "cstand" | "stand0",
-    controller: string
     skin: string
-    cx: any
     slots: SlotInfo
     ctype: CharacterType
     owner: string
@@ -140,6 +137,11 @@ export type CharacterData = {
     items: ItemInfo[]
     cc: number
 
+    // (Probably) GUI Related things
+    cid: number
+    controller: string
+    cx: any
+
     ipass?: string
     // TODO: Figure this out
     friends?: any
@@ -150,9 +152,6 @@ export type CharacterData = {
     hitchhikers?: [string, any][]
     /** Holds bank information when the character is inside the bank */
     user?: BankInfo
-
-    // The following are soft properties. We need to use the values from G.classes for these if there are none available.
-    damage_type?: DamageType
 }
 
 export type CharacterListData = {
@@ -237,6 +236,7 @@ export type EntityData = {
     abs: boolean
     angle: number
     armor: number
+    // TODO: Figure out what this is
     cid: number
     frequency: number
     going_x: number
@@ -475,6 +475,7 @@ export type PlayerData = {
     ctype: CharacterType | NPCType
 
     abs: boolean
+    afk?: string
     angle: number
     armor: number
     attack: number

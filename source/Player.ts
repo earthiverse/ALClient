@@ -1,17 +1,20 @@
 import { Character } from "./Character"
-import { CharacterType, GData, MapName, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { CharacterType, DamageType, GData, MapName, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
     protected G: GData
 
+    public afk: string
     public id: string
     public ctype: CharacterType
     public abs: boolean
     public angle: number
     public armor: number
+    public apiercing = 0
     public attack: number
     public cid: number
+    public damage_type: DamageType
     public frequency: number
     public going_x: number
     public going_y: number
@@ -20,6 +23,7 @@ export class Player implements PlayerData {
     public moving: boolean
     public party: string
     public resistance: number
+    public rpiercing = 0
     public target: string
     public x: number
     public y: number
@@ -53,6 +57,7 @@ export class Player implements PlayerData {
 
         // Set soft properties
         this.map = map
+        this.damage_type = this.G.classes[data.ctype].damage_type
 
         // Set everything else
         this.updateData(data)
@@ -71,10 +76,10 @@ export class Player implements PlayerData {
      */
     public isFriendly(bot: Character): boolean {
         // Check if we're the owner
-        if (bot.character.owner == this.owner) return true
+        if (bot.owner == this.owner) return true
 
         // Check if we're in the same party
-        if (bot.character.party == this.party) return true
+        if (bot.party == this.party) return true
 
         // TODO: Check if they're in our friends list
 

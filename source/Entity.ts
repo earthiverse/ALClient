@@ -94,7 +94,7 @@ export class Entity implements EntityData {
         if (this.isAttackingUs(player)) return true
 
         // Check if the entity is targeting a party member
-        if (player.party && player.party.list && player.party.list.includes(this.target)) return true
+        if (player.partyData && player.partyData.list && player.partyData.list.includes(this.target)) return true
 
         return false
     }
@@ -104,7 +104,7 @@ export class Entity implements EntityData {
      * @param player The player to check if the monster is attacking
      */
     public isAttackingUs(player: PingCompensatedCharacter): boolean {
-        return this.target === player.character.id
+        return this.target === player.id
     }
 
     // TODO: Check if we can taunt when the entity is attacking another player we control (i.e. same account), but we're not partied.

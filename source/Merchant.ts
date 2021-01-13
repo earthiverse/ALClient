@@ -5,7 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
-        if (!this.character.stand)
+        if (!this.stand)
             return Promise.resolve() // It's already closed
 
         const closed = new Promise<void>((resolve, reject) => {
@@ -29,7 +29,7 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
-        const itemInfo = this.character.items[itemPos]
+        const itemInfo = this.items[itemPos]
         if (!itemInfo)
             return Promise.reject(`We do not have an item in slot ${itemPos}`)
 
@@ -42,13 +42,13 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public mluck(target: string): Promise<void> {
-        if (target !== this.character.id) {
+        if (target !== this.id) {
             const player = this.players.get(target)
             if (!player)
                 return Promise.reject(`Could not find ${target} to mluck.`)
             if (player.npc)
                 return Promise.reject(`${target} is an NPC. You can't mluck NPCs.`)
-            if (player.s.mluck && player.s.mluck.strong && player.s.mluck.f !== this.character.id)
+            if (player.s.mluck && player.s.mluck.strong && player.s.mluck.f !== this.id)
                 return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
         }
 
@@ -57,7 +57,7 @@ export class Merchant extends PingCompensatedCharacter {
                 for (const player of data.players) {
                     if (player.id == target
                         && player.s.mluck
-                        && player.s.mluck.f == this.character.id) {
+                        && player.s.mluck.f == this.id) {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
                         resolve()
@@ -93,7 +93,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public openMerchantStand(): Promise<void> {
-        if (this.character.stand)
+        if (this.stand)
             return Promise.resolve() // It's already open
 
 

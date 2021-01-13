@@ -76,30 +76,30 @@ export class PingCompensatedCharacter extends Character {
         }
     }
 
-    protected parseCharacter(data: CharacterData): void {
-        super.parseCharacter(data)
+    public updateCharacter(data: CharacterData): void {
+        super.updateCharacter(data)
 
         const pingCompensation = Math.min(...this.pings) / 2
 
         // Compensate movement
-        if (this.character.moving) {
-            const distanceTravelled = this.character.speed * pingCompensation / 1000
-            const angle = Math.atan2(this.character.going_y - this.character.y, this.character.going_x - this.character.x)
-            const distanceToGoal = Tools.distance({ x: this.character.x, y: this.character.y }, { x: this.character.going_x, y: this.character.going_y })
+        if (this.moving) {
+            const distanceTravelled = this.speed * pingCompensation / 1000
+            const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
+            const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
             if (distanceTravelled > distanceToGoal) {
-                this.character.moving = false
-                this.character.x = this.character.going_x
-                this.character.y = this.character.going_y
+                this.moving = false
+                this.x = this.going_x
+                this.y = this.going_y
             } else {
-                this.character.x = this.character.x + Math.cos(angle) * distanceTravelled
-                this.character.y = this.character.y + Math.sin(angle) * distanceTravelled
+                this.x = this.x + Math.cos(angle) * distanceTravelled
+                this.y = this.y + Math.sin(angle) * distanceTravelled
             }
         }
 
         // Compensate conditions
-        for (const condition in this.character.s) {
-            if (this.character.s[condition as ConditionName].ms) {
-                this.character.s[condition as ConditionName].ms -= pingCompensation
+        for (const condition in this.s) {
+            if (this.s[condition as ConditionName].ms) {
+                this.s[condition as ConditionName].ms -= pingCompensation
             }
         }
     }
