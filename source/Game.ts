@@ -1,6 +1,6 @@
 import axios from "axios"
 import fs from "fs"
-import { ServerData, CharacterListData } from "./definitions/adventureland-server"
+import { ServerData, CharacterListData, MailData, MailMessageData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
@@ -52,6 +52,35 @@ export class Game {
             console.error(response)
             console.error("Error fetching http://adventure.land/data.js")
         }
+    }
+
+    static async getMail(all = true): Promise<MailMessageData[]> {
+        if (!this.user) return Promise.reject("You must login first.")
+        let data = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const mail: MailMessageData[] = []
+
+        while (data.data.length > 0) {
+            mail.push(...data.data[0].mail)
+
+            // Get more mail
+            if (all && data.data[0].more) {
+                data = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${data.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+            } else {
+                break
+            }
+        }
+
+        return mail
+    }
+
+    /**
+     * The following function will tell the server that we've read the following mail message
+     * @param mailID The mail message to mark as 'read'
+     */
+    static async markMailAsRead(mailID: string): Promise<void> {
+        if (!this.user) return Promise.reject("You must login first.")
+        const data = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        return data.data[0]
     }
 
     static async login(email: string, password: string): Promise<boolean> {

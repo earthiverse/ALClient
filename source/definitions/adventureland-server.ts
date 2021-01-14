@@ -436,6 +436,34 @@ export type LoadedData = {
     success: 1 | number
 }
 
+export type MailData = {
+    /** We can use this cursor to retrieve more mail */
+    cursor: string
+    /** If false, we are on the first page of mail. If true, we are scrolling through mail */
+    cursored: boolean
+    mail: MailMessageData[]
+    /** If true, there is more mail which you can retrieve by using the cursor */
+    more: boolean
+    type: "mail"
+}
+
+export type MailMessageData = {
+    /** The mail's ID */
+    id: string
+    /** From */
+    fro: string
+    /** To */
+    to: string
+    /** The time this message was sent */
+    sent: string
+    /** If true, we have taken the item attached to this mail. */
+    message: string
+
+    /** A string containing a JSON object that represents the item that was sent in the mail */
+    item?: string
+    taken?: boolean
+}
+
 export type NewMapData = {
     direction: number
     effect: number | "magiport"
