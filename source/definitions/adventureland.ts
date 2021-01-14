@@ -157,28 +157,64 @@ export type GMapsNPC = {
 }
 
 export type GMonster = {
-  abilities?: { [T in SkillName]?: any }
-  apiercing?: number
-  attack: number
-  /** If set, the monster will run this fast when it is targeting a player */
+  /** If set, the monster will only take 1 damage from attacks */
+  "1hp"?: true
+  // TODO: Improve this to separate the damage and heal in to respective types
+  abilities?: { [T in SkillName]?: {
+    cooldown?: number
+    damage?: number
+    heal?: number
+  } }
+  /**
+   * This is a list of Tracktrix achievements you can get by killing these monsters
+   * [0]: # of monsters you need to kill to get this level of achievement
+   * [1]: TODO: Looks to be just "stat" at this point
+   * [2]: The StatType that gets an improvement
+   * [3]: The amount of that StatType that gets improved
+   */
+  achievevments?: [number, "stat", StatType, number][]
+  aggro: number
+  /** If set, the monster will have this speed set when it is targeting a player */
   charge?: number
   /** If set to true, all players that deal damage to this monster will share the loot */
-  cooperative?: boolean
+  cooperative?: true
   damage_type: DamageType
-  evasion?: number
-  frequency: number
   /** If true, when the monster dies, the chest will drop on the player's location, not where the monster died */
-  global?: boolean
-  hp: number
-  immune?: boolean
+  global?: true
+  /** If true, the monster can only be damaged using basic attacks.
+   * NOTE: Immunity doesn't prevent the monster from being stunned */
+  immune?: true
   /** TODO: Confirm || boosts the amount of XP obtained when you kill this monster? */
   lucrativeness?: number
+  name: string
+  rage: number
+  /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
+   * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
+   * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
+   */
+  respawn: number
+  spawns?: [number, MonsterName][]
+  special?: true
+  xspawns?: [number, MonsterName][]
+
+  // GUI related things
+  aa?: number // TODO: Conirm what this is
+  announce: string
+  hit?: string
+  projectile?: string
+  skin: string
+  size?: number // TODO: Confirm that size doesn't affect things
+
+  // The following stats are available on all monsterss
+  attack: number
+  frequency: number
+  hp: number
   mp: number
   range: number
-  reflection?: number
-  speed: number
   xp: number
-}
+} & {
+    [T in StatType]?: number
+  }
 
 export type GItem = {
   buy?: boolean;
@@ -488,13 +524,17 @@ export type ItemType =
 
 // TODO: Get all stat types
 export type StatType =
+  /** Armor Piercing */
+  | "apiercing"
   | "armor"
   | "attack"
   /** AOE */
   | "blast"
+  | "cuteness"
   | "dex"
   /** Damage Return */
   | "dreturn"
+  | "evasion"
   | "explosion"
   /** fire resistance */
   | "firesistance"
@@ -511,16 +551,19 @@ export type StatType =
   | "luck"
   /** Miss chance */
   | "miss"
+  | "mp"
   | "mp_cost"
   | "mp_reduction"
   /** poison resistance */
   | "pnresistance"
   | "range"
+  | "reflection"
   | "resistance"
   | "speed"
   | "str"
   | "stun"
   | "vit"
+  | "xp"
 
 /** These can be placed on items. They respond to the keys in `G.titles`. */
 export type TitleName =

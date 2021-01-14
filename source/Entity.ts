@@ -5,21 +5,15 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Entity implements EntityData {
     protected G: GData
 
-    public id: string
     public type: MonsterName
     public abs: boolean
     public angle: number
-    public armor: number
     public cid: number
     public frequency: number
     public going_x: number
     public going_y: number
     public move_num: any
-    public moving: boolean
-    public resistance: number
-    public target: string
-    public x: number
-    public y: number
+    public target?: string
     public s: StatusInfo
 
     // Soft properties
@@ -28,27 +22,39 @@ export class Entity implements EntityData {
     public max_hp: number
     public max_mp: number
     public map: MapName
-
     public "1hp": boolean
     public apiercing: number
-    public attack: number
     public charge: number
     public cooperative: boolean
     public damage_type: DamageType
     public evasion: number
-    public hp: number
     public immune: boolean
-    public mp: number
     public range: number
     public reflection: number
     public rpiercing: number
-    public speed: number
     public xp: number
+
+    // Confirmed "hard" properties
+    public id: string
+
+    public x: number
+    public y: number
+
+    public mp: number
+
+    // Confirmed "soft" properties
+    public armor = 0
+    public attack = 0
+    public resistance = 0
+    public hp = 1
+    public speed = 1
+    public moving = false
 
     public constructor(data: EntityData, map: MapName, G: GData) {
         this.G = G
 
         // Set soft properties
+        // NOTE: If the `data` contains different values, they will overwrite these
         this.abilities = G.monsters[data.type].abilities
         this.level = 1
         this.max_hp = G.monsters[data.type]["hp"]
@@ -69,6 +75,8 @@ export class Entity implements EntityData {
         this.reflection = G.monsters[data.type].reflection
         this.speed = G.monsters[data.type].speed
         this.xp = G.monsters[data.type].xp
+
+        this.armor = G.monsters[data.type].armor
 
         // Set everything else
         this.updateData(data)

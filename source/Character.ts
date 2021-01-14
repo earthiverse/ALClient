@@ -427,6 +427,8 @@ export class Character extends Observer implements CharacterData {
                         this.parseGameResponse(datum)
                     }
                 }
+            } else if (datum == "entities") {
+                this.parseEntities(data[datum])
             } else if (datum == "moving") {
                 // We'll handle moving...
             } else if (datum == "tp") {
@@ -513,12 +515,11 @@ export class Character extends Observer implements CharacterData {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
 
             // Update entities
-            for (const entity of this.entities.values()) {
+            for (const [, entity] of this.entities) {
                 if (!entity.moving)
                     continue
 
-                let speed = entity.speed
-                if (entity.target !== undefined && entity.charge !== undefined) speed = entity.charge
+                const speed = entity.speed
 
                 const distanceTravelled = speed * msSinceLastUpdate / 1000
                 const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)

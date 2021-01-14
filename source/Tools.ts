@@ -6,6 +6,7 @@ import { Player } from "./Player"
 export class Tools {
     /**
      * The first element is the minimum damage the attacker could do. The second element is the maximum damage the attacker could do.
+     * NOTE: This function does not apply crit (TODO: Should it? It should probably, no?)
      * @param attacker 
      * @param defender 
      */
