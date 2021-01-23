@@ -29,6 +29,7 @@ export class Entity implements EntityData {
     public damage_type: DamageType
     public evasion: number
     public immune: boolean
+    public lifesteal: number
     public range: number
     public reflection: number
     public rpiercing: number
@@ -136,6 +137,7 @@ export class Entity implements EntityData {
      */
     public willBurnToDeath(): boolean {
         if (this["1hp"]) return false
+        if (this.lifesteal !== undefined) return false
         if (this.abilities && this.abilities.self_healing) return false
 
         if (this.s.burned) {

@@ -1129,6 +1129,7 @@ export class Character extends Observer implements CharacterData {
     public canKillInOneShot(entity: Entity): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
+        if (gInfo.lifesteal !== undefined) return false
         if (gInfo.abilities && gInfo.abilities.self_healing) return false
 
         if (this.damage_type == "magical" && entity.reflection !== undefined) return false
