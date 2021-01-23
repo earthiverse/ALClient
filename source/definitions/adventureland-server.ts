@@ -331,6 +331,8 @@ export type GameResponseDataObject = {
     item: ItemName
     q: number
 } | {
+    response: "mail_item_taken"
+} | {
     response: "magiport_failed"
     // User ID the magiport offer was sent to
     id: string

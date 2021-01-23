@@ -227,6 +227,7 @@ export type GItem = {
   e?: number;
   /** Cost of the item in gold, if an NPC were to sell this item */
   g: number;
+  gives: ["hp" | "mp", number][]
   /** The first number refers to what level the item begins being "high" grade, the second for "rare" */
   grades?: [number, number];
   /** The full name of the item */
@@ -520,6 +521,7 @@ export type ItemType =
   | "gem"
   | "material"
   | "misc"
+  | "pot"
   | "quest"
 
 // TODO: Get all stat types
@@ -941,10 +943,13 @@ export type ItemName =
   | "elixirdex0"
   | "elixirdex1"
   | "elixirdex2"
+  | "elixirfires"
+  | "elixirfzres"
   | "elixirint0"
   | "elixirint1"
   | "elixirint2"
   | "elixirluck"
+  | "elixirpnres"
   | "elixirstr0"
   | "elixirstr1"
   | "elixirstr2"
@@ -1012,6 +1017,7 @@ export type ItemName =
   | "gphelmet"
   | "greenbomb"
   | "gslime"
+  | "gstaff"
   | "gum"
   | "hammer"
   | "handofmidas"
@@ -1138,6 +1144,7 @@ export type ItemName =
   | "pmace"
   | "poison"
   | "poker"
+  | "pouchbow"
   | "powerglove"
   | "pstem"
   | "pumpkinspice"
@@ -1232,6 +1239,7 @@ export type ItemName =
   | "test_orb"
   | "throwingstars"
   | "tracker"
+  | "trigger"
   | "trinkets"
   | "tristone"
   | "troll"

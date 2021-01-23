@@ -123,6 +123,8 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<void> {
+        if (essenceoflife === undefined) return Promise.reject("We don't have any essenceoflife in our inventory.")
+
         const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
