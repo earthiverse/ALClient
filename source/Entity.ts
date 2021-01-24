@@ -5,79 +5,63 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Entity implements EntityData {
     protected G: GData
 
-    public type: MonsterName
-    public abs: boolean
-    public angle: number
-    public cid: number
-    public frequency: number
-    public going_x: number
-    public going_y: number
-    public move_num: any
-    public target?: string
-    public s: StatusInfo
-
-    // Soft properties
-    public abilities: { [T in SkillName]?: any }
-    public level: number
-    public max_hp: number
-    public max_mp: number
+    // Position
     public map: MapName
-    public "1hp": boolean
-    public apiercing: number
-    public charge: number
-    public cooperative: boolean
-    public damage_type: DamageType
-    public evasion: number
-    public immune: boolean
-    public lifesteal: number
-    public range: number
-    public reflection: number
-    public rpiercing: number
-    public xp: number
-
-    // Confirmed "hard" properties
-    public id: string
-
     public x: number
     public y: number
+    public going_x: number
+    public going_y: number
+    public angle: number
+    public moving = false
+    public move_num: number
 
+    public type: MonsterName
+    public id: string
+    public level: number
+
+    public abs: boolean
+    public cid: number
+    public target: string
+    public s: StatusInfo
+
+    public abilities: { [T in SkillName]?: any }
+    public max_hp: number
+    public max_mp: number
+    public "1hp" = false
+    public aggro = 0
+    public apiercing = 0
+    public charge: number
+    public cooperative = false
+    public damage_type: DamageType
+    public evasion = 0
+    public frequency: number
+    public immune = false
+    public lifesteal = 0
+    public range: number
+    public reflection = 0
+    public rpiercing = 0
+    public speed: number
+    public xp: number
+
+    public hp: number
     public mp: number
 
-    // Confirmed "soft" properties
     public armor = 0
     public attack = 0
     public resistance = 0
-    public hp = 1
-    public speed = 1
-    public moving = false
+    public rage = 0
 
     public constructor(data: EntityData, map: MapName, G: GData) {
         this.G = G
 
         // Set soft properties
-        // NOTE: If the `data` contains different values, they will overwrite these
-        this.abilities = G.monsters[data.type].abilities
-        this.level = 1
+        // NOTE: If `data` contains different values, we will overwrite these
         this.max_hp = G.monsters[data.type]["hp"]
         this.max_mp = G.monsters[data.type]["mp"]
         this.map = map
-
-        this["1hp"] = G.monsters[data.type]["1hp"]
-        this.apiercing = G.monsters[data.type].apiercing
-        this.attack = G.monsters[data.type].attack
-        this.cooperative = G.monsters[data.type].cooperative
-        this.damage_type = G.monsters[data.type].damage_type
-        this.evasion = G.monsters[data.type].evasion
-        this.frequency = G.monsters[data.type].frequency
-        this.hp = G.monsters[data.type].hp
-        this.immune = G.monsters[data.type].immune
-        this.mp = G.monsters[data.type].mp
-        this.range = G.monsters[data.type].range
-        this.reflection = G.monsters[data.type].reflection
-        this.speed = G.monsters[data.type].speed
-        this.xp = G.monsters[data.type].xp
-
-        this.armor = G.monsters[data.type].armor
+        for (const gDatum in G.monsters[data.type]) {
+            this[gDatum] = G.monsters[data.type][gDatum]
+        }
 
         // Set everything else
         this.updateData(data)
@@ -141,7 +125,7 @@ export class Entity implements EntityData {
         if (this.abilities && this.abilities.self_healing) return false
 
         if (this.s.burned) {
-            const burnTime = Math.max(0, (this.s.burned.ms - 500)) / 1000
+            const burnTime = Math.max(0, (this.s.burned.ms - (this.G.conditions.burned.interval * 2))) / 1000
             const burnDamage = burnTime * this.s.burned.intensity
             if (burnDamage > this.hp) return true
         }

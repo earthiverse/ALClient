@@ -25,6 +25,14 @@ export class Tools {
 
         let baseDamage: number = attacker.attack
 
+        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        if (defender.s.cursed) {
+            baseDamage *= 1.2
+        }
+        if (defender.s.marked) {
+            baseDamage *= 1.1
+        }
+
         if ((attacker as Player).ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
         if (attacker.damage_type == "physical") baseDamage *= damage_multiplier(defender.armor - attacker.apiercing)
