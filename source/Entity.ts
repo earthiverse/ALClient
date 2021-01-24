@@ -22,9 +22,9 @@ export class Entity implements EntityData {
     public abs: boolean
     public cid: number
     public target: string
-    public s: StatusInfo
+    public s: StatusInfo = {}
 
-    public abilities: { [T in SkillName]?: any }
+    public abilities: { [T in SkillName]?: any } = {}
     public max_hp: number
     public max_mp: number
     public "1hp" = false
