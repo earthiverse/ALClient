@@ -1855,7 +1855,7 @@ export class Character extends Observer implements CharacterData {
     public async sendGold(to: string, amount: number): Promise<number> {
         if (this.gold == 0) return Promise.reject("We have no gold to send.")
         if (!this.players.has(to)) return Promise.reject(`We can't see ${to} nearby to send gold.`)
-        if (Tools.distance(this, this.players.get(to)) < Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`We are too far away from ${to} to send gold.`)
+        if (Tools.distance(this, this.players.get(to)) > Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`We are too far away from ${to} to send gold.`)
 
         const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
