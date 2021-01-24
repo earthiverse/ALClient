@@ -27,9 +27,9 @@ export class Player implements PlayerData {
     public target: string
     public x: number
     public y: number
-    public s: StatusInfo
+    public s: StatusInfo = {}
 
-    c: any;
+    c: any = {}
     cx: any;
     focus?: string;
     hp: number;
@@ -39,7 +39,7 @@ export class Player implements PlayerData {
     npc?: string;
     owner: string;
     pdps: number;
-    q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; };
+    q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; } = {}
     range: number;
     rip: boolean;
     skin: string;
@@ -57,7 +57,7 @@ export class Player implements PlayerData {
 
         // Set soft properties
         this.map = map
-        this.damage_type = this.G.classes[data.ctype].damage_type
+        if (!this.npc) this.damage_type = this.G.classes[data.ctype].damage_type
 
         // Set everything else
         this.updateData(data)
