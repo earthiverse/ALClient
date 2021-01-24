@@ -17,7 +17,7 @@ export class Entity implements EntityData {
 
     public type: MonsterName
     public id: string
-    public level: number
+    public level = 1
 
     public abs: boolean
     public cid: number

@@ -18,7 +18,7 @@ export class Player implements PlayerData {
     public frequency: number
     public going_x: number
     public going_y: number
-    public level: number
+    public level = 1
     public move_num: any
     public moving: boolean
     public party: string
@@ -57,7 +57,7 @@ export class Player implements PlayerData {
 
         // Set soft properties
         this.map = map
-        if (!this.npc) this.damage_type = this.G.classes[data.ctype].damage_type
+        if (!data.npc) this.damage_type = this.G.classes[data.ctype].damage_type
 
         // Set everything else
         this.updateData(data)
