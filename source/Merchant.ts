@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, GameResponseData } from "./definitions/adventureland-server"
+import { CharacterData, EntitiesData, GameResponseData, PlayerData } from "./definitions/adventureland-server"
 import { TradeSlotType } from "./definitions/adventureland"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
@@ -44,24 +44,32 @@ export class Merchant extends PingCompensatedCharacter {
     public mluck(target: string): Promise<void> {
         if (target !== this.id) {
             const player = this.players.get(target)
-            if (!player)
-                return Promise.reject(`Could not find ${target} to mluck.`)
-            if (player.npc)
-                return Promise.reject(`${target} is an NPC. You can't mluck NPCs.`)
-            if (player.s.mluck && player.s.mluck.strong && player.s.mluck.f !== this.id)
-                return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
+            if (!player) return Promise.reject(`Could not find ${target} to mluck.`)
+            if (player.npc) return Promise.reject(`${target} is an NPC. You can't mluck NPCs.`)
+            if (player.s.mluck && player.s.mluck.strong && player.s.mluck.f !== this.id) return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
         }
 
         const mlucked = new Promise<void>((resolve, reject) => {
             const mluckCheck = (data: EntitiesData) => {
                 for (const player of data.players) {
                     if (player.id == target
-                        && player.s.mluck
-                        && player.s.mluck.f == this.id) {
+                        && player.s?.mluck?.f == this.id
+                        && player.s?.mluck?.ms == this.G.conditions.mluck.duration) {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("player", selfMluckCheck)
                         resolve()
                     }
+                }
+            }
+
+            const selfMluckCheck = (data: PlayerData) => {
+                if (data.s?.mluck?.f == this.id
+                    && data.s?.mluck?.ms == this.G.conditions.mluck.duration) {
+                    this.socket.removeListener("entities", mluckCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("player", selfMluckCheck)
+                    resolve()
                 }
             }
 
@@ -70,11 +78,13 @@ export class Merchant extends PingCompensatedCharacter {
                     if (data == "skill_too_far") {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("player", selfMluckCheck)
                         await this.requestPlayerData()
                         reject(`We are too far from ${target} to mluck.`)
                     } else if (data == "no_level") {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("player", selfMluckCheck)
                         reject("We aren't a high enough level to use mluck.")
                     }
                 }
@@ -83,10 +93,12 @@ export class Merchant extends PingCompensatedCharacter {
             setTimeout(() => {
                 this.socket.removeListener("entities", mluckCheck)
                 this.socket.removeListener("game_response", failCheck)
+                this.socket.removeListener("player", selfMluckCheck)
                 reject(`mluck timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
-            this.socket.on("entities", mluckCheck)
             this.socket.on("game_response", failCheck)
+            this.socket.on("player", selfMluckCheck)
+            this.socket.on("entities", mluckCheck)
         })
         this.socket.emit("skill", { name: "mluck", id: target })
         return mlucked

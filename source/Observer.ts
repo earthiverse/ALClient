@@ -23,16 +23,6 @@ export class Observer {
             reconnection: reconnect,
             transports: ["websocket"]
         })
-
-        this.socket.on("welcome", () => {
-            // Send a response that we're ready to go
-            this.socket.emit("loaded", {
-                height: 1080,
-                width: 1920,
-                scale: 2,
-                success: 1
-            } as LoadedData)
-        })
     }
 
     public async connect(): Promise<void> {
@@ -41,9 +31,15 @@ export class Observer {
             this.socket.on("welcome", (data: WelcomeData) => {
                 if (data.region !== this.serverRegion || data.name !== this.serverIdentifier) {
                     reject(`We wanted the server ${this.serverRegion}${this.serverIdentifier}, but we are on ${data.region}${data.name}.`)
+                } else {
+                    this.socket.emit("loaded", {
+                        height: 1080,
+                        width: 1920,
+                        scale: 2,
+                        success: 1
+                    } as LoadedData)
+                    resolve()
                 }
-
-                resolve()
             })
 
             setTimeout(() => {

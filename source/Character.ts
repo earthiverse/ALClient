@@ -237,12 +237,6 @@ export class Character extends Observer implements CharacterData {
             this.updatePositions()
         })
 
-        this.socket.on("disconnect", () => {
-            // console.log("We are disconnecting!?")
-            // NOTE: We will try to automatically reconnect
-            // this.disconnect()
-        })
-
         this.socket.on("drop", (data: ChestData) => {
             this.chests.set(data.id, data)
         })
