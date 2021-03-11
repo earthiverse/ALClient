@@ -1,6 +1,6 @@
 import axios from "axios"
 import fs from "fs"
-import { ServerData, CharacterListData, MailData, MailMessageData } from "./definitions/adventureland-server"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantCharData, PullMerchantData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
@@ -62,8 +62,8 @@ export class Game {
         while (data.data.length > 0) {
             mail.push(...data.data[0].mail)
 
-            // Get more mail
             if (all && data.data[0].more) {
+                // Get more mail
                 data = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${data.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
             } else {
                 break
@@ -71,6 +71,23 @@ export class Game {
         }
 
         return mail
+    }
+
+    static async getMerchants(): Promise<PullMerchantCharData[]> {
+        if (!this.user) return Promise.reject("You must login first.")
+        //const merchants: PullMerchantsData[] = []
+        const merchants: PullMerchantCharData[] = []
+
+        const data = await axios.post<PullMerchantData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        for(const datum of data.data) {
+            if(datum.type == "merchants") {
+                for(const char of datum.chars) {
+                    merchants.push(char)
+                }
+            }
+        }
+
+        return merchants
     }
 
     /**

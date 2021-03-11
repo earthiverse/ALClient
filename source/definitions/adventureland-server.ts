@@ -1,4 +1,9 @@
-import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, MapName, MonsterName, ItemName, ServerRegion, ServerIdentifier, BankPackType, BankInfo, SkillName, SInfo, DamageType, StatType } from "./adventureland"
+/**
+ * This file aims to contain definitions for socket related things that the main
+ * game uses to interact with the server.
+ */
+
+import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, MapName, MonsterName, ItemName, ServerRegion, ServerIdentifier, BankPackType, BankInfo, SkillName, SInfo, DamageType, StatType, TradeSlotType } from "./adventureland"
 
 export type AchievementProgressData = {
     name: string
@@ -466,6 +471,35 @@ export type MailMessageData = {
     taken?: boolean
 }
 
+export type PullMerchantData = {
+    type: "merchants"
+    chars: PullMerchantCharData[]
+}
+
+export type PullMerchantCharData = {
+    map: MapName
+    x: number
+    y: number
+    afk: boolean
+    /** Follows the following format: `${ServerRegion} ${ServerIdentifier}` */
+    server: string
+    stand: ItemName
+    /** Merchant name */
+    name: string
+    /** Merchant level */
+    level: number
+    /** Items for sale */
+    slots: { [T in TradeSlotType]?: ItemInfo & {
+        /** Number of minutes remaining for giveaway items */
+        giveaway?: number;
+        /** List of character IDs that are in the giveaway */
+        list?: string[];
+        price: number;
+        rid: string;
+    }
+    }
+}
+
 export type NewMapData = {
     direction: number
     effect: number | "magiport"
@@ -607,6 +641,9 @@ export type StartData = CharacterData & {
 }
 
 export type UIData = {
+    type: "massproduction"
+    name: string
+} | {
     type: "mluck"
     from: string
     to: string

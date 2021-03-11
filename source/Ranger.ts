@@ -159,6 +159,13 @@ export class Ranger extends PingCompensatedCharacter {
         return poisonArrowed
     }
 
+    /**
+     * TODO: Add a fail check for when we supershot an entitiy that doesn't exist (probably already killed)
+     *
+     * @param {string} target
+     * @return {*}  {Promise<string>}
+     * @memberof Ranger
+     */
     public superShot(target: string): Promise<string> {
         if (this.G.skills.supershot.mp > this.mp)
             return Promise.reject("Not enough MP to use superShot")

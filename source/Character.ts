@@ -617,6 +617,12 @@ export class Character extends Observer implements CharacterData {
         this.lastPositionUpdate = Date.now()
     }
 
+    /**
+     * TODO: Add fail check for logging in with too many characters to one server
+     *
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
     public async connect(): Promise<void> {
         const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
@@ -1013,7 +1019,10 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns the *minimum* gold required to obtain the given item.
-     * @param item 
+     *
+     * @param {ItemInfo} item - The item to calculate the minimum cost for
+     * @return {*}  {number} - The cost of the item
+     * @memberof Character
      */
     public calculateItemCost(item: ItemInfo): number {
         const gInfo = this.G.items[item.name]
@@ -1055,12 +1064,12 @@ export class Character extends Observer implements CharacterData {
     public calculateItemGrade(item: ItemInfo): number {
         const gInfo = this.G.items[item.name]
         if (!gInfo.grades) return
-        let level = 0
-        for (const grade of gInfo.grades) {
-            if (item.level < grade) break
-            level++
+        let grade = 0
+        for (const level of gInfo.grades) {
+            if (item.level < level) break
+            grade++
         }
-        return level
+        return grade
     }
 
     public canBuy(item: ItemName): boolean {
