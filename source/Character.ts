@@ -1680,6 +1680,19 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("party", { event: "leave" })
     }
 
+    /**
+     * Moves the character to a given location. If the character can not move there safely,
+     * i.e. there's a wall in the way, then we will move to the closest we can walk there in
+     * a straight line.
+     * 
+     * If you want this funnction to return after we complete the move, use `await`.
+     * 
+     * @param {number} x
+     * @param {number} y
+     * @param {boolean} [safetyCheck=true] If set to false, move() will not check map bounds
+     * @return {*}  {Promise<NodeData>} The position where we finish
+     * @memberof Character
+     */
     public async move(x: number, y: number, safetyCheck = true): Promise<NodeData> {
         // Check if we're already there
         if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, y: this.y, x: this.x })
@@ -1935,8 +1948,20 @@ export class Character extends Observer implements CharacterData {
 
     protected lastSmartMove: number = Date.now();
     /**
-     * A function that moves to, and returns when we move to a given location
-     * @param to Where to move to. If given a string, we will try to navigate to the proper location.
+     * Used to move long distances strategically, i.e. avoiding walking through walls.
+     * You can use this function to move across maps.
+     * 
+     * If you want this funnction to return after we complete the move, use `await`.
+     * 
+     * TODO: This function is currently a little buggy and sometimes walks through walls
+     *       which could send your character to 'jail'.
+     * @param {(MapName | MonsterName | NPCType | IPosition)} to
+     * @param {{ getWithin?: number; useBlink?: boolean; }} [options={
+     *         getWithin: 0,
+     *         useBlink: false
+     *     }]
+     * @return {*}  {Promise<NodeData>} The destination where our character finished
+     * @memberof Character
      */
     public async smartMove(to: MapName | MonsterName | NPCType | IPosition, options: { getWithin?: number; useBlink?: boolean; } = {
         getWithin: 0,
