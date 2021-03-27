@@ -4,6 +4,7 @@ import { Pathfinder } from "./index"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Mage extends PingCompensatedCharacter {
+    // NOTE: UNTESTED
     public alchemy(): Promise<void> {
         const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -15,7 +16,7 @@ export class Mage extends PingCompensatedCharacter {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`entangle timeout (${Constants.TIMEOUT}ms)`)
+                reject(`alchemy timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
@@ -27,10 +28,11 @@ export class Mage extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public blink(x: number, y: number): void {
-        const blinkTo = { map: this.map, x: x, y: y }
         // TODO: We should have an isWalkable(NodeData) position.
-        if (Pathfinder.canWalk(blinkTo, blinkTo)) {
+        if (Pathfinder.canStand({ map: this.map, x: x, y: y })) {
             this.socket.emit("skill", { name: "blink", x: x, y: y })
+        } else {
+            throw Error(`We cannot blink to ${this.map} ${x},${y}`)
         }
     }
 

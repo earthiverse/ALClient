@@ -1322,22 +1322,21 @@ export class Character extends Observer implements CharacterData {
         if (!gInfo) return Promise.reject(`Can not find a recipe for ${item}.`)
         if (gInfo.cost > this.gold) return Promise.reject(`We don't have enough gold to craft ${item}.`)
 
-        const itemPositions: number[] = []
+        const itemPositions: [number, number][] = []
         for (let i = 0; i < gInfo.items.length; i++) {
-            const lookQ = gInfo.items[i][0]
-            const lookName = gInfo.items[i][1]
-            const lookLevel = gInfo.items[i][2]
+            const requiredQuantity = gInfo.items[i][0]
+            const requiredName = gInfo.items[i][1]
+            const requiredLevel = gInfo.items[i][2]
 
             const searchArgs = {
-                quantityGreaterThan: lookQ > 1 ? lookQ : undefined,
-                level: lookLevel
+                quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity : undefined,
+                level: requiredLevel
             }
 
-            const itemPos = this.locateItem(lookName, this.items, searchArgs)
-            if (itemPos == undefined)
-                return Promise.reject(`We don't have ${lookQ} ${lookName} to craft ${item}.`)
+            const itemPos = this.locateItem(requiredName, this.items, searchArgs)
+            if (itemPos == undefined) return Promise.reject(`We don't have ${requiredQuantity} ${requiredName} to craft ${item}.`)
 
-            itemPositions.push(itemPos)
+            itemPositions.push([i, itemPos])
         }
 
         this.socket.emit("craft", { items: itemPositions })
@@ -2075,7 +2074,7 @@ export class Character extends Observer implements CharacterData {
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
                     y: fixedTo.y + Math.sin(angle) * options.getWithin
                 }
-                if (Pathfinder.canWalk(this, potentialMove)) {
+                if (Pathfinder.canWalkPath(this, potentialMove)) {
                     // console.log("walk close success!")
                     i = path.length
                     currentMove = potentialMove
@@ -2091,7 +2090,7 @@ export class Character extends Observer implements CharacterData {
                     if (potentialMove.type == "town")
                         break
 
-                    if (potentialMove.type == "move" && Pathfinder.canWalk(this, potentialMove)) {
+                    if (potentialMove.type == "move" && Pathfinder.canWalkPath(this, potentialMove)) {
                         console.log("skip check success!")
                         i = j
                         currentMove = potentialMove

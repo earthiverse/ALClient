@@ -65,12 +65,36 @@ export class Pathfinder {
     }
 
     /**
-     * Checks if we can walk from `from` to `to`.
+     * Checks if we can stand at the given location. Useful for `blink()`.
+     *
+     * @static
+     * @param {IPosition} location Position to check if we can stand there
+     * @return {*}  {boolean}
+     * @memberof Pathfinder
+     */
+    public static canStand(location: IPosition): boolean {
+        if (!this.G) throw new Error("Prepare pathfinding before querying canStand()!")
+
+        const y = Math.trunc(location.y) - this.G.geometry[location.map].min_y
+        const x = Math.trunc(location.x) - this.G.geometry[location.map].min_x
+
+        try {
+            const grid = this.getGrid(location.map)
+            if (grid[y][x] == WALKABLE) return true
+        } catch (e) {
+            return false
+        }
+
+        return false
+    }
+
+    /**
+     * Checks if we can walk from `from` to `to`. Useful for `move()`.
      * @param from The starting position (where we start walking from)
      * @param to The ending position (where we walk to)
      */
-    public static canWalk(from: IPosition, to: IPosition): boolean {
-        if (!this.G) throw new Error("Prepare pathfinding before querying canWalk()!")
+    public static canWalkPath(from: IPosition, to: IPosition): boolean {
+        if (!this.G) throw new Error("Prepare pathfinding before querying canWalkPath()!")
         if (from.map !== to.map) return false // We can't walk across maps
 
         const grid = this.getGrid(from.map)
@@ -344,7 +368,7 @@ export class Pathfinder {
 
             // Check if we can walk to another node
             for (let j = i + 1; j < walkableNodes.length; j++) {
-                if (this.canWalk(fromNode.data, walkableNodes[j].data)) {
+                if (this.canWalkPath(fromNode.data, walkableNodes[j].data)) {
                     this.addLinkToGraph(fromNode, walkableNodes[j])
                     this.addLinkToGraph(walkableNodes[j], fromNode)
                 }
@@ -412,7 +436,7 @@ export class Pathfinder {
                 // If we're further than one we can already walk to, don't check further
                 if (distance > closest.distance) return
 
-                const walkable = this.canWalk(from, node.data)
+                const walkable = this.canWalkPath(from, node.data)
 
                 if (distance < closest.distance) closest = { distance, node }
                 if (walkable && distance < closestWalkable.distance) closestWalkable = { distance, node }
@@ -450,7 +474,7 @@ export class Pathfinder {
 
         const path: LinkData[] = []
 
-        if (from.map == to.map && this.canWalk(from, to)) {
+        if (from.map == to.map && this.canWalkPath(from, to)) {
             // Return a straight line to the destination
             return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
         }
