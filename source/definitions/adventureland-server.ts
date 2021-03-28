@@ -118,7 +118,7 @@ export type CharacterData = PlayerData & {
     in: string
     /** The size of the character's inventory */
     isize: number
-    /** The number of items in the character's inventory */
+    /** The number of empty inventory slots */
     esize: number
     gold: number
     cash: number
@@ -311,6 +311,9 @@ export type GameResponseDataObject = {
     place: SkillName
     id: string
     ms: number
+} | {
+    response: "craft"
+    name: ItemName
 } | {
     response: "defeated_by_a_monster"
     xp: number

@@ -42,3 +42,19 @@ test("Character.calculateItemCost", async () => {
     expect(character.calculateItemCost({ name: "dexring", level: 4 })).toBe(3134400)
     expect(character.calculateItemCost({ name: "dexring", level: 5 })).toBe(18603200)
 })
+
+test("Character.locateItem", async () => {
+    // Create the character's inventory for testing
+    character.esize = 2
+    character.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, undefined]
+    character.isize = character.items.length
+
+    expect(character.locateItem("pants")).toBeTruthy()
+    expect(character.locateItem("pants", character.items, { level: 0 })).toBe(3)
+    expect(character.locateItem("pants", character.items, { level: 0 })).toBe(3)
+    expect(character.locateItem("pants", character.items, { levelGreaterThan: 0 })).toBe(4)
+    expect(character.locateItem("pants", character.items, { levelLessThan: 0 })).toBe(undefined)
+
+    expect(character.locateItem("mpot0")).toBeTruthy()
+    expect(character.locateItem("mpot0", character.items, { quantityGreaterThan: 1 })).toBe(2)
+})

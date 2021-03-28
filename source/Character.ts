@@ -1339,7 +1339,24 @@ export class Character extends Observer implements CharacterData {
             itemPositions.push([i, itemPos])
         }
 
+        const crafted = new Promise<void>((resolve, reject) => {
+            const successCheck = async (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "craft" && data.name == item) {
+                        this.socket.removeListener("game_response", successCheck)
+                        resolve()
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("game_response", successCheck)
+                reject(`craft timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+        })
+
         this.socket.emit("craft", { items: itemPositions })
+        return crafted
     }
 
     // TODO: Add promises
@@ -1353,6 +1370,7 @@ export class Character extends Observer implements CharacterData {
             gold = this.gold
             console.warn(`We are only going to deposit ${gold} gold.`)
         }
+
 
         this.socket.emit("bank", { operation: "deposit", amount: gold })
     }
@@ -2732,46 +2750,43 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns the index of the item in the given inventory
-     * @param iN The item to look for
-     * @param inv Where to look for the item
-     * @param args Filters to help search for specific properties on items
+     * @param itemName The item to look for
+     * @param inventory Where to look for the item
+     * @param filters Filters to help search for specific properties on items
      */
-    public locateItem(iN: ItemName, inv = this.items,
-        args?: {
+    public locateItem(itemName: ItemName, inventory = this.items,
+        filters?: {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
-            locateHighestLevel?: number;
             quantityGreaterThan?: number;
         }): number {
-        for (let i = 0; i < inv.length; i++) {
-            const item = inv[i]
-            if (!item)
-                continue
-            if (item.name !== iN)
-                continue
+        for (let i = 0; i < inventory.length; i++) {
+            const item = inventory[i]
+            if (!item) continue
+            if (item.name !== itemName) continue
 
-            if (args) {
-                if (args.level !== undefined) {
-                    if (item.level !== args.level)
+            if (filters) {
+                if (filters.level !== undefined) {
+                    if (item.level !== filters.level)
                         continue // The item's level doesn't match
                 }
-                if (args.levelGreaterThan !== undefined) {
+                if (filters.levelGreaterThan !== undefined) {
                     if (item.level == undefined)
                         continue // This item doesn't have a level
-                    if (item.level <= args.levelGreaterThan)
+                    if (item.level <= filters.levelGreaterThan)
                         continue // This item is a lower level than desired
                 }
-                if (args.levelLessThan !== undefined) {
+                if (filters.levelLessThan !== undefined) {
                     if (item.level == undefined)
                         continue // This item doesn't have a level
-                    if (item.level >= args.levelLessThan)
+                    if (item.level >= filters.levelLessThan)
                         continue // This item is a higher level than desired
                 }
-                if (args.quantityGreaterThan !== undefined) {
+                if (filters.quantityGreaterThan !== undefined) {
                     if (item.q == undefined)
                         continue // This item doesn't have a quantity
-                    if (item.q <= args.quantityGreaterThan)
+                    if (item.q <= filters.quantityGreaterThan)
                         continue // There isn't enough items in this stack
                 }
             }
@@ -2789,14 +2804,16 @@ export class Character extends Observer implements CharacterData {
      */
     public locateItems(itemName: ItemName, inventory = this.items,
         filters?: {
+            level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
+            quantityGreaterThan?: number;
         }): number[] {
         const found: number[] = []
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
-            if (!item)
-                continue
+            if (!item) continue
+            if (item.name !== itemName) continue
 
             if (filters) {
                 if (filters.levelGreaterThan) {
@@ -2811,11 +2828,21 @@ export class Character extends Observer implements CharacterData {
                     if (item.level >= filters.levelLessThan)
                         continue // This item is a higher level than desired
                 }
+                if (filters.levelLessThan !== undefined) {
+                    if (item.level == undefined)
+                        continue // This item doesn't have a level
+                    if (item.level >= filters.levelLessThan)
+                        continue // This item is a higher level than desired
+                }
+                if (filters.quantityGreaterThan !== undefined) {
+                    if (item.q == undefined)
+                        continue // This item doesn't have a quantity
+                    if (item.q <= filters.quantityGreaterThan)
+                        continue // There isn't enough items in this stack
+                }
             }
 
-            if (item.name == itemName) {
-                found.push(i)
-            }
+            found.push(i)
         }
         return found
     }
