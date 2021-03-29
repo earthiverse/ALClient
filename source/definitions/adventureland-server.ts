@@ -78,6 +78,11 @@ export type CharacterData = PlayerData & {
             ms: number
             num: number
         }
+        exchange?: {
+            len: number
+            ms: number
+            // TODO: add more variables
+        }
     }
     abs: boolean
     age: number

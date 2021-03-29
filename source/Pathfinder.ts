@@ -425,7 +425,7 @@ export class Pathfinder {
         return grid
     }
 
-    protected static findClosestNode(map: MapName, x: number, y: number): Node<NodeData> {
+    public static findClosestNode(map: MapName, x: number, y: number): Node<NodeData> {
         let closest: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
         let closestWalkable: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
         const from = { map, x, y }
