@@ -5,6 +5,7 @@ import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Game } from "./Game"
 import { Tools } from "./Tools"
+import { nextTick } from "process"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -494,7 +495,7 @@ export class Pathfinder {
             if (link.data) {
                 if (i == rawPath.length - 1 && link.data.type == "transport") {
                     // We have to move to the transport first
-                    path.push({ type: "move", map: from.map, x: link.data.x, y: link.data.y })
+                    path.push({ type: "move", map: currentNode.data.map, x: currentNode.data.x, y: currentNode.data.y })
                 }
                 path.push(link.data)
                 if (link.data.type == "town") {
@@ -520,6 +521,21 @@ export class Pathfinder {
             }
         }
         path.push({ type: "move", map: to.map, x: to.x, y: to.y })
+
+        // Clean the path
+        for (let i = 0; i < path.length - 1; i++) {
+            const current = path[i]
+            const next = path[i + 1]
+
+            // If anything is different, continue
+            if (current.type !== next.type) continue
+            if (current.map !== next.map) continue
+            if (current.x !== next.x) continue
+            if (current.y !== next.y) continue
+
+            // The two nodes are the same, remove one
+            path.splice(i, 1)
+        }
 
         console.log(`Path from ${fromNode.id} to ${toNode.id} found! (${path.length} steps)`)
         console.log(path)
