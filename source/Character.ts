@@ -2826,17 +2826,15 @@ export class Character extends Observer implements CharacterData {
             if (item.name !== itemName) continue
 
             if (filters) {
-                if (filters.levelGreaterThan) {
+                if (filters.level !== undefined) {
+                    if (item.level !== filters.level)
+                        continue // The item's level doesn't match
+                }
+                if (filters.levelGreaterThan !== undefined) {
                     if (item.level == undefined)
                         continue // This item doesn't have a level
                     if (item.level <= filters.levelGreaterThan)
                         continue // This item is a lower level than desired
-                }
-                if (filters.levelLessThan) {
-                    if (item.level == undefined)
-                        continue // This item doesn't have a level
-                    if (item.level >= filters.levelLessThan)
-                        continue // This item is a higher level than desired
                 }
                 if (filters.levelLessThan !== undefined) {
                     if (item.level == undefined)

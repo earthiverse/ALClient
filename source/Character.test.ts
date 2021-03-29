@@ -46,15 +46,32 @@ test("Character.calculateItemCost", async () => {
 test("Character.locateItem", async () => {
     // Create the character's inventory for testing
     character.esize = 2
-    character.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, undefined]
+    character.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
     character.isize = character.items.length
 
     expect(character.locateItem("pants")).toBeTruthy()
+    expect(character.locateItem("coat")).toBeTruthy()
     expect(character.locateItem("pants", character.items, { level: 0 })).toBe(3)
-    expect(character.locateItem("pants", character.items, { level: 0 })).toBe(3)
+    expect(character.locateItem("coat", character.items, { level: 0 })).toBe(6)
     expect(character.locateItem("pants", character.items, { levelGreaterThan: 0 })).toBe(4)
+    expect(character.locateItem("coat", character.items, { levelGreaterThan: 0 })).toBe(5)
     expect(character.locateItem("pants", character.items, { levelLessThan: 0 })).toBe(undefined)
 
     expect(character.locateItem("mpot0")).toBeTruthy()
     expect(character.locateItem("mpot0", character.items, { quantityGreaterThan: 1 })).toBe(2)
+})
+
+test("Character.locateItems", async () => {
+    // Create the character's inventory for testing
+    character.esize = 2
+    character.items = [{ name: "mpot0", q: 1 }, undefined, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined, { name: "mpot0", q: 10 }]
+    character.isize = character.items.length
+
+    expect(character.locateItems("pants").length).toBe(2)
+    expect(character.locateItems("pants", character.items, { level: 0 }).length).toBe(1)
+    expect(character.locateItems("pants", character.items, { levelLessThan: 0 }).length).toBe(0)
+    expect(character.locateItems("pants", character.items, { levelLessThan: 1 }).length).toBe(1)
+    expect(character.locateItems("pants", character.items, { levelLessThan: 2 }).length).toBe(2)
+    expect(character.locateItems("pants", character.items, { levelGreaterThan: 0 }).length).toBe(1)
+    expect(character.locateItems("mpot0", character.items, { quantityGreaterThan: 1 }).length).toBe(2)
 })
