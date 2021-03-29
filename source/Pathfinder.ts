@@ -469,23 +469,22 @@ export class Pathfinder {
     public static getPath(from: NodeData, to: NodeData): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
 
-        const fromNode = this.findClosestNode(from.map, from.x, from.y)
-        const toNode = this.findClosestNode(to.map, to.x, to.y)
-
-        const path: LinkData[] = []
-
         if (from.map == to.map && this.canWalkPath(from, to)) {
             // Return a straight line to the destination
             return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
         }
+
+        const fromNode = this.findClosestNode(from.map, from.x, from.y)
+        const toNode = this.findClosestNode(to.map, to.x, to.y)
+
+        const path: LinkData[] = []
 
         console.log(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
         const rawPath = this.path.find(fromNode.id, toNode.id)
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
         }
-        path.push({ type: "move", map: from.map, x: from.x, y: from.y })
-
+        path.push({ type: "move", map: fromNode.data.map, x: fromNode.data.x, y: fromNode.data.y })
         for (let i = rawPath.length - 1; i > 0; i--) {
             const currentNode = rawPath[i]
             const nextNode = rawPath[i - 1]
