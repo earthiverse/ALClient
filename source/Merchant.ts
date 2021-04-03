@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server"
+import { CharacterData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server"
 import { TradeSlotType } from "./definitions/adventureland"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
@@ -25,6 +25,72 @@ export class Merchant extends PingCompensatedCharacter {
 
         this.socket.emit("merchant", { close: 1 })
         return closed
+    }
+
+    /**
+     * Fish for items
+     *
+     * @return {*}  {Promise<void>}
+     * @memberof Merchant
+     */
+    public fish(): Promise<void> {
+        const fished = new Promise<void>((resolve, reject) => {
+            const caughtCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]fishing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    resolve()
+                }
+            }
+
+            const failCheck1 = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "skill_cant_wtype") {
+                        this.socket.removeListener("game_response", failCheck1)
+                        this.socket.removeListener("ui", failCheck2)
+                        this.socket.removeListener("eval", caughtCheck)
+                        reject("We don't have a fishing rod equipped")
+                    }
+                } else if (typeof data == "object") {
+                    if (data.response == "cooldown" && data.place == "fishing" && data.skill == "fishing") {
+                        this.socket.removeListener("game_response", failCheck1)
+                        this.socket.removeListener("ui", failCheck2)
+                        this.socket.removeListener("eval", caughtCheck)
+                        reject(`Fishing is on cooldown (${data.ms}ms remaining)`)
+                    }
+                }
+            }
+
+            const failCheck2 = (data: UIData) => {
+                if(data.type == "fishing_fail" && data.name == this.name) {
+                    // NOTE: We might not be in a fishing area?
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    reject("We failed to fish.")
+                } else if(data.type == "fishing_none" && data.name == this.name) {
+                    // We fished, but we didn't catch anything
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck1)
+                this.socket.removeListener("ui", failCheck2)
+                this.socket.removeListener("eval", caughtCheck)
+                reject("fish timeout (10000ms)")
+            }, 10000)
+            this.socket.on("game_response", failCheck1)
+            this.socket.on("eval", caughtCheck)
+            this.socket.on("ui", failCheck2)
+        })
+
+        this.socket.emit("skill", { name: "fishing" })
+        return fished
     }
 
     // TODO: Add promises

@@ -15,3 +15,4 @@ export * from "./Warrior"
 // Export AL definitions
 export * from "./definitions/adventureland"
 export * from "./definitions/adventureland-server"
+export * from "./definitions/adventureland-data"

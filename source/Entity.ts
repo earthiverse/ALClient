@@ -1,4 +1,5 @@
-import { DamageType, GData, MapName, MonsterName, SkillName, StatusInfo } from "./definitions/adventureland"
+import { DamageType, GData, StatusInfo } from "./definitions/adventureland"
+import { MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, EntityData } from "./definitions/adventureland-server"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
@@ -55,7 +56,7 @@ export class Entity implements EntityData {
         this.G = G
 
         // Set soft properties
-        // NOTE: If `data` contains different values, we will overwrite these
+        // NOTE: If `data` contains different values, we will overwrite these in updateData()
         this.max_hp = G.monsters[data.type]["hp"]
         this.max_mp = G.monsters[data.type]["mp"]
         this.map = map

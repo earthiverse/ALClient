@@ -28,15 +28,18 @@ beforeAll(async () => {
         cc: 6.5,
         cid: 60164,
         controller: "",
+        courage: 2,
         crit: 0.75,
         critdamage: 0,
         ctype: "priest",
         cx: {},
         dex: 48,
         dreturn: 1,
+        emx: { drop_egg: 1 },
         esize: 28,
         evasion: 3.5,
         explosion: 0,
+        fear: 0,
         firesistance: 0,
         for: 30.25,
         frequency: 1.1786382113821139,
@@ -59,6 +62,7 @@ beforeAll(async () => {
         max_hp: 11262,
         max_mp: 7525,
         max_xp: 6200000000,
+        mcourage: 19,
         miss: 0,
         move_num: 18588709,
         moving: true,
@@ -66,6 +70,7 @@ beforeAll(async () => {
         mp_cost: 56,
         mp_reduction: 0,
         name: "earthPri",
+        pcourage: 2,
         pdps: 181472.0016944313,
         pnresistance: 0,
         q: {},
@@ -281,4 +286,8 @@ test("Player.isFriendly", async () => {
 
     // Random players should not be friendly
     expect(randomPlayer.isFriendly(character)).toBe(false)
+})
+
+test("Player.isScared", async () => {
+    expect(character.isScared()).toBe(false)
 })

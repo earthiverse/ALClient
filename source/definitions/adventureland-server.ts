@@ -3,7 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, MapName, MonsterName, ItemName, ServerRegion, ServerIdentifier, BankPackType, BankInfo, SkillName, SInfo, DamageType, StatType, TradeSlotType } from "./adventureland"
+import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, DamageType, TradeSlotType } from "./adventureland"
+import { EmotionName, ItemName, MapName, MonsterName, SkillName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -54,6 +55,10 @@ export type CharacterData = PlayerData & {
     mp: number
     max_mp: number
     attack: number
+    fear: number
+    courage: number
+    mcourage: number
+    pcourage: number
     frequency: number
     speed: number
     range: number
@@ -142,6 +147,9 @@ export type CharacterData = PlayerData & {
     crit: number
     critdamage: number
     dreturn: number
+    emx: {
+        [T in EmotionName]?: number
+    }
     tax: number
     xrange: number
     items: ItemInfo[]
@@ -228,6 +236,13 @@ export type DisappearingTextData = {
     y: number
     id: string
     args: any
+}
+
+export type EmotionData = {
+    /** emotion name */
+    name: EmotionName
+    /** character name that did the emotion */
+    player: string
 }
 
 export type EntitiesData = {
@@ -381,10 +396,16 @@ export type GameResponseDataString =
     | "buy_cost"
     /** When you're too far from Ponty and try to view Ponty's items */
     | "buy_get_closer"
+    /** When attempting to leave a map you can't use the leave command on */
+    | "cant_escape"
     /** ??? Maybe if we attempt to compound something with an inventory position that is empty ??? */
     | "compound_no_item"
     /** Too far away from monster hunt npc */
     | "ecu_get_closer"
+    /** When you try to do an emotion but it's not a valid emotion name, or you don't have that emotion */
+    | "emotion_cant"
+    /** When you try to do an emotion but it's rejected because it's on cooldown */
+    | "emotion_cooldown"
     /** We are already exchaning something */
     | "exchange_existing"
     /** The given item requires multiple to exchange */
@@ -399,6 +420,8 @@ export type GameResponseDataString =
     /** When you try to send an item to another character, but they don't have room for it in their inventory */
     | "send_no_space"
     | "skill_cant_incapacitated"
+    /** When you try to use a skill, but you don't have the right weapon type equipped for that skill */
+    | "skill_cant_wtype"
     | "skill_too_far"
     | "trade_bspace"
     | "trade_get_closer"
@@ -648,7 +671,54 @@ export type StartData = CharacterData & {
     entities: EntitiesData
 }
 
+export type TrackerData = {
+    /** How many points you have for each monster for the given character */
+    monsters: {
+        [T in MonsterName]?: number
+    }
+    /** How many points behind this character is from your character that has the most points for this monster */
+    monsters_diff: {
+        [T in MonsterName]?: number
+    }
+    /** How many exchanges this character has done for the various given items */
+    exchanges: {
+        // TODO
+    }
+    /** Contains drop information */
+    maps: {
+        [T in MapName | "global" | "global_static"]: [number, ItemName][] | [number, "open", string][]
+    }
+    /** For the "open" items in maps, this table has a list of the drops that could occur */
+    tables: {
+        [T in ItemName | string]?: [number, ItemName][]
+    }
+    /** Contains information about your characters with the max points */
+    max: {
+        monsters: {
+            /** [points, character name] */
+            [T in MonsterName]?: [number, string]
+        }
+    }
+    drops: {
+        [T in MonsterName]?: [number, ItemName][]
+    }
+    // TODO: What's the difference between the global here, and the one in 'maps'?
+    global: [number, ItemName][] | [number, "open", string][]
+    // TODO: What's the difference between the global_static here, and the one in 'maps'?
+    global_static: [number, ItemName][] | [number, "open", string][]
+}
+
 export type UIData = {
+    type: "fishing_fail"
+    name: string
+} | {
+    type: "fishing_none"
+    name: string
+} | {
+    type: "fishing_start"
+    name: string
+    direction: number
+} | {
     type: "massproduction"
     name: string
 } | {

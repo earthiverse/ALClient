@@ -1,5 +1,5 @@
 import { Character } from "./Character"
-import { MapName } from "./definitions/adventureland"
+import { MapName } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 

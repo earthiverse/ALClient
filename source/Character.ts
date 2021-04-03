@@ -1,5 +1,5 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData } from "./definitions/adventureland-server"
-import { GData, SkillName, BankInfo, ConditionName, MapName, ItemInfo, ItemName, SlotType, MonsterName, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, StatType, CharacterType, SlotInfo, StatusInfo, DamageType } from "./definitions/adventureland"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData } from "./definitions/adventureland-server"
+import { GData, BankInfo, ItemInfo, SlotType, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, CharacterType, SlotInfo, StatusInfo, DamageType } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -8,6 +8,7 @@ import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
+import { Attribute, ConditionName, EmotionName, ItemName, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
@@ -93,6 +94,7 @@ export class Character extends Observer implements CharacterData {
     public speed = 1
     public stand?: boolean | "cstand" | "stand0"
     public tp = false
+    public emx: { [T in EmotionName]?: number }
     explosion: number
     firesistance: number
     fzresistance: number
@@ -132,6 +134,10 @@ export class Character extends Observer implements CharacterData {
     xcx?: string[]
     hitchhikers?: [string, any][]
     user?: BankInfo
+    fear: number
+    courage: number
+    mcourage: number
+    pcourage: number
 
     constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
         super(serverData, g)
@@ -1211,7 +1217,7 @@ export class Character extends Observer implements CharacterData {
         if (gInfoSkill.requirements) {
             // This skill has stat requirements
             for (const s in gInfoSkill.requirements) {
-                const stat = s as StatType
+                const stat = s as Attribute
                 if (this[stat] < gInfoSkill.requirements[stat])
                     return false
             }
@@ -1254,27 +1260,16 @@ export class Character extends Observer implements CharacterData {
             return Promise.reject("You can only combine 3 items of the same level.")
 
         const compoundComplete = new Promise<boolean>((resolve, reject) => {
-            const completeCheck = (data: UpgradeData) => {
-                if (data.type == "compound") {
-                    this.socket.removeListener("upgrade", completeCheck)
-                    this.socket.removeListener("game_response", gameResponseCheck)
-                    this.socket.removeListener("player", playerCheck)
-                    resolve(data.success == 1)
-                }
-            }
-
             const playerCheck = (data: CharacterData) => {
                 if (!data.hitchhikers)
                     return
                 for (const [event, datum] of data.hitchhikers) {
                     if (event == "game_response" && datum.response == "compound_fail") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(false)
                         return
                     } else if (event == "game_response" && datum.response == "compound_success") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(true)
@@ -1286,14 +1281,12 @@ export class Character extends Observer implements CharacterData {
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "bank_restrictions" && data.place == "compound") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject("You can't compound items in the bank.")
                     }
                 } else if (typeof data == "string") {
                     if (data == "compound_no_item") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject()
@@ -1302,12 +1295,10 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("upgrade", completeCheck)
                 this.socket.removeListener("game_response", gameResponseCheck)
                 this.socket.removeListener("player", playerCheck)
                 reject("compound timeout (60000ms)")
             }, 60000)
-            this.socket.on("upgrade", completeCheck)
             this.socket.on("game_response", gameResponseCheck)
             this.socket.on("player", playerCheck)
         })
@@ -1481,6 +1472,52 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("bank", { operation: "swap", pack: bankPack, str: bankSlot, inv: inventoryPos })
         return swapped
+    }
+
+    /**
+     * Perform an emotion
+     *
+     * @param {EmotionName} emotionName
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public emote(emotionName: EmotionName): Promise<void> {
+        if (!this.emx[emotionName]) return Promise.reject(`We don't have the emotion '${emotionName}'`)
+
+        const emoted = new Promise<void>((resolve, reject) => {
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "emotion_cooldown") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("emotion", successCheck)
+                        reject()
+                    } else if (data == "emotion_cant") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("emotion", successCheck)
+                        reject()
+                    }
+                }
+            }
+
+            const successCheck = (data: EmotionData) => {
+                if (data.name == emotionName && data.player == this.name) {
+                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("emotion", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck)
+                this.socket.removeListener("emotion", successCheck)
+                reject(`emote timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", failCheck)
+            this.socket.on("emotion", successCheck)
+        })
+
+        this.socket.emit("emotion", { name: emotionName })
+        return emoted
     }
 
     public equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
@@ -1673,29 +1710,88 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Retrieves tracker data
+     *
+     * @return {*}  {Promise<TrackerData>}
+     * @memberof Character
+     */
+    public getTrackerData(): Promise<TrackerData> {
+        if (!this.hasItem("tracker")) return Promise.reject("We need a tracker to obtain tracker data.")
+
+        const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
+            const gotCheck = (data: TrackerData) => {
+                this.socket.removeListener("tracker", gotCheck)
+                resolve(data)
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("tracker", gotCheck)
+                reject(`getTrackerData timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.once("tracker", gotCheck)
+        })
+
+        this.socket.emit("tracker")
+        return gotTrackerData
+    }
+
+    /**
      * Returns true if our inventory is full, false otherwise
+     *
+     * @return {*}  {boolean}
+     * @memberof Character
      */
     public isFull(): boolean {
         return this.esize == 0
     }
+    
+    /**
+     * Returns true if our character is scared, false otherwise
+     *
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public isScared(): boolean {
+        return this.fear > 0
+    }
 
     /**
      * For use on 'cyberland' and 'jail' to leave the map. You will be transported to the spawn on "main".
+     *
+     * @return {*}  {Promise<void>}
+     * @memberof Character
      */
     public leaveMap(): Promise<void> {
         const leaveComplete = new Promise<void>((resolve, reject) => {
             const leaveCheck = (data: NewMapData) => {
-                if (data.name == "main")
+                if (data.name == "main") {
+                    this.socket.removeListener("new_map", leaveCheck)
+                    this.socket.removeListener("game_response", failCheck)
                     resolve()
-                else
+                } else {
+                    this.socket.removeListener("new_map", leaveCheck)
+                    this.socket.removeListener("game_response", failCheck)
                     reject(`We are now in ${data.name}, but we should be in main`)
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "cant_escape") {
+                        this.socket.removeListener("new_map", leaveCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`Can't escape from current map ${this.map}`)
+                    }
+                }
             }
 
             setTimeout(() => {
                 this.socket.removeListener("new_map", leaveCheck)
+                this.socket.removeListener("game_response", failCheck)
                 reject(`leaveMap timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", leaveCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("leave")
@@ -1979,9 +2075,6 @@ export class Character extends Observer implements CharacterData {
      * You can use this function to move across maps.
      * 
      * If you want this funnction to return after we complete the move, use `await`.
-     * 
-     * TODO: This function is currently a little buggy and sometimes walks through walls
-     *       which could send your character to 'jail'.
      * @param {(MapName | MonsterName | NPCType | IPosition)} to
      * @param {{ getWithin?: number; useBlink?: boolean; }} [options={
      *         getWithin: 0,
@@ -2320,8 +2413,7 @@ export class Character extends Observer implements CharacterData {
         return unequipped
     }
 
-    // TODO: Add offering support
-    public upgrade(itemPos: number, scrollPos: number): Promise<boolean> {
+    public upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
         if (this.G.maps[this.map].mount) return Promise.reject("We can't upgrade things in the bank.")
 
         const itemInfo = this.items[itemPos]
@@ -2331,27 +2423,16 @@ export class Character extends Observer implements CharacterData {
         if (!scrollInfo) return Promise.reject(`There is no scroll in inventory slot ${scrollPos}.`)
 
         const upgradeComplete = new Promise<boolean>((resolve, reject) => {
-            const completeCheck = (data: UpgradeData) => {
-                if (data.type == "upgrade") {
-                    this.socket.removeListener("upgrade", completeCheck)
-                    this.socket.removeListener("game_response", gameResponseCheck)
-                    this.socket.removeListener("player", playerCheck)
-                    resolve(data.success == 1)
-                }
-            }
-
             const playerCheck = (data: CharacterData) => {
                 if (!data.hitchhikers)
                     return
                 for (const [event, datum] of data.hitchhikers) {
                     if (event == "game_response" && datum.response == "upgrade_fail" && datum.num == itemPos) {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(false)
                         return
                     } else if (event == "game_response" && datum.response == "upgrade_success" && datum.num == itemPos) {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(true)
@@ -2362,33 +2443,27 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.removeListener("upgrade", completeCheck)
                     this.socket.removeListener("game_response", gameResponseCheck)
                     this.socket.removeListener("player", playerCheck)
                     reject("You can't upgrade items in the bank.")
                 } else if (typeof data == "string") {
                     if (data == "bank_restrictions") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject("We can't upgrade things in the bank.")
                     } else if (data == "upgrade_in_progress") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject("We are already upgrading something.")
                     } else if (data == "upgrade_incompatible_scroll") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
                     } else if (data == "upgrade_success") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(true)
                     } else if (data == "upgrade_fail") {
-                        this.socket.removeListener("upgrade", completeCheck)
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(false)
@@ -2396,17 +2471,15 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("upgrade", completeCheck)
                 this.socket.removeListener("game_response", gameResponseCheck)
                 this.socket.removeListener("player", playerCheck)
                 reject("upgrade timeout (60000ms)")
             }, 60000)
-            this.socket.on("upgrade", completeCheck)
             this.socket.on("game_response", gameResponseCheck)
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, clevel: this.items[itemPos].level })
+        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, offering_num: offeringPos, clevel: this.items[itemPos].level })
         return upgradeComplete
     }
 

@@ -1,4 +1,4 @@
-import { MapName } from "./adventureland"
+import { MapName } from "./adventureland-data"
 
 export type Grid = number[][]
 export type Grids = { [T in MapName]?: Grid }

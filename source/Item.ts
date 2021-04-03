@@ -1,4 +1,5 @@
-import { GData, ItemInfo, ItemName } from "./definitions/adventureland"
+import { GData, ItemInfo } from "./definitions/adventureland"
+import { ItemName } from "./definitions/adventureland-data"
 
 export class Item {
     protected G: GData

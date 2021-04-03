@@ -1,11 +1,11 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { GData, MapName, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
+import { GData, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Game } from "./Game"
 import { Tools } from "./Tools"
-import { nextTick } from "process"
+import { MapName } from "./definitions/adventureland-data"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -493,10 +493,6 @@ export class Pathfinder {
             // TODO: Get links, and determine the faster link? This will help solve the walk to spawn issue on winterland.
             const link = this.graph.getLink(currentNode.id, nextNode.id)
             if (link.data) {
-                if (i == rawPath.length - 1 && link.data.type == "transport") {
-                    // We have to move to the transport first
-                    path.push({ type: "move", map: currentNode.data.map, x: currentNode.data.x, y: currentNode.data.y })
-                }
                 path.push(link.data)
                 if (link.data.type == "town") {
                     // Town warps don't always go to the exact location, so sometimes we can't reach the next node.

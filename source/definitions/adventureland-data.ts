@@ -3,7 +3,9 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-export type GData = {
+import { DamageType } from "./adventureland"
+
+export type GData2 = {
     conditions: {
         [T in ConditionName]: {
             /** The condition name (human readable) */
@@ -26,7 +28,7 @@ export type GData = {
             skin?: string
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
-        } | {
+        } & {
             [T in Attribute]?: number
         } } & {
         "eburn": {
@@ -102,6 +104,149 @@ export type GData = {
             freeze_multiplier?: number
         }
     }
+    monsters: {
+        [T in MonsterName]: {
+            /** If true, all attacks will only do 1 damage to this monster */
+            "1hp"?: boolean
+            /** (GUI) If set, the sprite will continue its animation when it's standing still. */
+            aa?: number
+            /** Abilities that this monster has */
+            abilities?: {
+                [T in SkillName]?: {
+                    cooldown: number
+                    radius?: number
+                    aura?: boolean
+                    condition?: ConditionName
+                } & {
+                    "burn": {
+                        unlimited: boolean
+                        attr0: number
+                    }
+                } & {
+                    "heal": {
+                        cooldown: number
+                        heal: number
+                    }
+                } & {
+                    "self_healing"?: {
+                        cooldown: number
+                        heal: number
+                    }
+                } & {
+                    "weakness_aura"?: {
+                        cooldown: number
+                        radius: number
+                        aura: true
+                        condition: "weakness"
+                    }
+                }
+            }
+            /** Tracker achievements. [points needed, "stat", stat type, improvement] */
+            achievements?: [number, "stat", Attribute, number][]
+            /** The higher the number, the more likely the monster will attack you if you're near it */
+            aggro: number
+            /** (GUI) The color of text used to announce this monster when it spawns. */
+            announce?: string
+            /** TODO: ??? What is this? Documentation? */
+            article?: string
+            /** The amount of damage the monster can deal */
+            attack: number
+            /** TODO: ??? What is this? The name of the player that suggested changes for the monster? */
+            balance?: string
+            /** The speed the monster will move when targeting something */
+            charge?: number
+            /** If set, drops are split among all players who help kill this monster */
+            cooperative?: boolean
+            /** If set, the monster won't level up */
+            cute?: boolean
+            damage_type: DamageType
+            /** TODO: ??? What is this? A multiplier for difficulty calculation in the GUI? */
+            difficulty?: number
+            /** Will teleport away if hit. PROTIP: Stun these monsters, and kill them before the stun runs out! */
+            escapist?: boolean
+            /** Flavour text that explains extra information, like when it spawns. */
+            explanation?: string
+            /** TODO: ??? Does this mean it can appear on all maps? */
+            global?: boolean
+            /** If set, the monster will steal gold on attack. */
+            goldsteal?: number
+            /** (GUI) Attack animation */
+            hit?: string
+            humanoid?: boolean
+            /** Immune monsters can only be hurt by basic attacks. Skills won't hit. */
+            immune?: boolean
+            /** TODO: More information. Wizard: "Acts as a gold multiplier" */
+            lucrativeness?: number
+            /** Human readable name for the monster. */
+            name: string
+            /** TODO: ??? What is this? */
+            operator?: boolean
+            /** TODO: ??? What is this? */
+            passive?: boolean
+            pet?: {
+                aggression: [number, number]
+                brightness: number
+                chatter: [number, number]
+                courage: [number, number]
+                exponential: boolean
+                level: {
+                    [T in Attribute]?: number
+                }
+                obedience: [number, number]
+                passion: [number, number]
+                xp: number
+            }
+            /** If set, the monster will cause the condition `poisoned` on attack. */
+            poisonous?: boolean
+            /** (GUI?) */
+            prefix?: string
+            /** (GUI) Projectile sprite */
+            projectile?: string
+            /** The higher the rage, the more likely the monster is to attack (and target) you if you are near it */
+            rage: number
+            /** If you kill this monster (TODO: Confirm you have to kill this monster), this condition will be applied to you */
+            rbuff?: ConditionName
+            /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
+             * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
+             * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
+             **/
+            respawn: number
+            /** If set to true, the monster will roam around the entire map */
+            roam?: boolean
+            /** Initial conditions for the monster when it spawns */
+            s?: { [T in ConditionName]: { ms: number } }
+            /** (GUI) size modifier for sprite sizing */
+            size?: number
+            /** (GUI) Monster sprite */
+            skin: string
+            /** (GUI?) TODO: Confirm that this only affects the look of the monster. It will look like it's holding these weapons. */
+            slots?: {
+                mainhand: {
+                    name: ItemName
+                    level: number
+                }
+                offhand?: {
+                    name: ItemName
+                    level: number
+                }
+            }
+            /** If set, this monster will spawn more monsters [ms between spawns, monster to spawn] */
+            spawns?: [number, MonsterName][]
+            special?: boolean
+            /** If set, this monster will not move */
+            stationary?: boolean
+            /** TODO: ??? What is this? */
+            supporter?: boolean
+            /** If this is set, the monster isn't really a monster, it's a trap. */
+            trap?: boolean
+            /** TODO: ??? What is this? */
+            unlist?: boolean
+            /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
+            xp: number
+        } & {
+            [T in Attribute]?: number
+        }
+    }
     titles: {
         [T in TitleName]: {
             /** The title name (human readable) */
@@ -118,7 +263,7 @@ export type GData = {
             improve?: boolean
             /** TODO: ??? */
             manual?: boolean
-        } | {
+        } & {
             [T in Attribute]?: number
         } } & {
         "sniper": {
@@ -276,6 +421,9 @@ export type ConditionName =
     | "xpower"
     | "xshotted"
 
+export type EmotionName =
+    | "drop_egg"
+
 export type ItemName =
     | "5bucks"
     | "ale"
@@ -403,6 +551,7 @@ export type ItemName =
     | "elixirvit0"
     | "elixirvit1"
     | "elixirvit2"
+    | "emotionjar"
     | "emptyheart"
     | "emptyjar"
     | "epyjamas"
@@ -822,6 +971,209 @@ export type MapName =
     | "winter_inn_rooms"
     | "winterland"
     | "woffice"
+
+export type MonsterName =
+    | "a1"
+    | "a2"
+    | "a3"
+    | "a4"
+    | "a5"
+    | "a6"
+    | "a7"
+    | "a8"
+    | "arcticbee"
+    | "armadillo"
+    | "bat"
+    | "bbpompom"
+    | "bee"
+    | "bigbird"
+    | "bluefairy"
+    | "boar"
+    | "booboo"
+    | "bscorpion"
+    | "cgoo"
+    | "chestm"
+    | "crab"
+    | "crabx"
+    | "croc"
+    | "cutebee"
+    | "d_wiz"
+    | "dknight2"
+    | "dragold"
+    | "eelemental"
+    | "ent"
+    | "felemental"
+    | "fieldgen0"
+    | "fireroamer"
+    | "franky"
+    | "frog"
+    | "fvampire"
+    | "gbluepro"
+    | "ggreenpro"
+    | "ghost"
+    | "goblin"
+    | "goldenbat"
+    | "goo"
+    | "gpurplepro"
+    | "gredpro"
+    | "greenfairy"
+    | "greenjr"
+    | "grinch"
+    | "gscorpion"
+    | "hen"
+    | "iceroamer"
+    | "jr"
+    | "jrat"
+    | "kitty1"
+    | "kitty2"
+    | "kitty3"
+    | "kitty4"
+    | "ligerx"
+    | "mechagnome"
+    | "minimush"
+    | "mole"
+    | "mrgreen"
+    | "mrpumpkin"
+    | "mummy"
+    | "mvampire"
+    | "nelemental"
+    | "nerfedmummy"
+    | "oneeye"
+    | "osnake"
+    | "phoenix"
+    | "pinkgoblin"
+    | "pinkgoo"
+    | "plantoid"
+    | "poisio"
+    | "porcupine"
+    | "pppompom"
+    | "prat"
+    | "puppy1"
+    | "puppy2"
+    | "puppy3"
+    | "puppy4"
+    | "rat"
+    | "redfairy"
+    | "rooster"
+    | "rudolph"
+    | "scorpion"
+    | "skeletor"
+    | "snake"
+    | "snowman"
+    | "spider"
+    | "squig"
+    | "squigtoad"
+    | "stompy"
+    | "stoneworm"
+    | "target"
+    | "target_a500"
+    | "target_a750"
+    | "target_ar500red"
+    | "target_ar900"
+    | "target_r500"
+    | "target_r750"
+    | "tinyp"
+    | "tortoise"
+    | "vbat"
+    | "wabbit"
+    | "welemental"
+    | "wolf"
+    | "wolfie"
+    | "xscorpion"
+    | "zapper0"
+
+export type SkillName =
+    | "3shot"
+    | "4fingers"
+    | "5shot"
+    | "absorb"
+    | "agitate"
+    | "alchemy"
+    | "anger"
+    | "attack"
+    | "blink"
+    | "burst"
+    | "cburst"
+    | "charge"
+    | "charm"
+    | "cleave"
+    | "curse"
+    | "curse_aura"
+    | "dampening_aura"
+    | "darkblessing"
+    | "emotion"
+    | "energize"
+    | "entangle"
+    | "esc"
+    | "fishing"
+    | "gm"
+    | "hardshell"
+    | "heal"
+    | "healing"
+    | "huntersmark"
+    | "interact"
+    | "invis"
+    | "light"
+    | "magiport"
+    | "massproduction"
+    | "massproductionpp"
+    | "mcourage"
+    | "mentalburst"
+    | "mlight"
+    | "mluck"
+    | "move_down"
+    | "move_left"
+    | "move_right"
+    | "move_up"
+    | "mshield"
+    | "mtangle"
+    | "multi_burn"
+    | "multi_freeze"
+    | "open_snippet"
+    | "partyheal"
+    | "pcoat"
+    | "phaseout"
+    | "piercingshot"
+    | "poisonarrow"
+    | "portal"
+    | "power"
+    | "pure_eval"
+    | "quickpunch"
+    | "quickstab"
+    | "reflection"
+    | "regen_hp"
+    | "regen_mp"
+    | "revive"
+    | "rspeed"
+    | "scare"
+    | "self_healing"
+    | "selfheal"
+    | "shadowstrike"
+    | "snippet"
+    | "snowball"
+    | "stack"
+    | "stomp"
+    | "stone"
+    | "stop"
+    | "supershot"
+    | "tangle"
+    | "taunt"
+    | "throw"
+    | "toggle_character"
+    | "toggle_code"
+    | "toggle_inventory"
+    | "toggle_run_code"
+    | "toggle_stats"
+    | "track"
+    | "travel"
+    | "use_hp"
+    | "use_mp"
+    | "use_town"
+    | "warcry"
+    | "warp"
+    | "weakness_aura"
+    | "xpower"
+    | "zap"
 
 export type TitleName =
     | "critmonger"

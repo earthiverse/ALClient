@@ -1,8 +1,8 @@
 import { CharacterData, EntitiesData } from "./definitions/adventureland-server"
-import { SkillName, ConditionName } from "./definitions/adventureland"
 import { Constants } from "./Constants"
 import { Character } from "./Character"
 import { Tools } from "./Tools"
+import { ConditionName, SkillName } from "./definitions/adventureland-data"
 
 export class PingCompensatedCharacter extends Character {
     async connect(): Promise<void> {

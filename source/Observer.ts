@@ -1,6 +1,7 @@
 import socketio from "socket.io-client"
 import { ServerData, WelcomeData, LoadedData } from "./definitions/adventureland-server"
-import { ServerRegion, ServerIdentifier, GData, MapName } from "./definitions/adventureland"
+import { ServerRegion, ServerIdentifier, GData} from "./definitions/adventureland"
+import { MapName } from "./definitions/adventureland-data"
 
 export class Observer {
     public socket: SocketIOClient.Socket;

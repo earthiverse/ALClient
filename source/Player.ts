@@ -1,5 +1,6 @@
+import { MapName } from "."
 import { Character } from "./Character"
-import { CharacterType, DamageType, GData, MapName, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { CharacterType, DamageType, GData, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
