@@ -91,6 +91,7 @@ export class Pathfinder {
 
     /**
      * Checks if we can walk from `from` to `to`. Useful for `move()`.
+     * Adapted from http://eugen.dedu.free.fr/projects/bresenham/
      * @param from The starting position (where we start walking from)
      * @param to The ending position (where we walk to)
      */
