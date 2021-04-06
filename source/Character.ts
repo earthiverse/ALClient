@@ -1358,14 +1358,12 @@ export class Character extends Observer implements CharacterData {
     public depositGold(gold: number): unknown {
         // TODO: Check if you can be in the basement and deposit gold
         if (this.map !== "bank") return Promise.reject("We need to be in 'bank' to deposit gold.")
-        if (gold <= 0)
-            return Promise.reject("We can't deposit 0 or less gold")
+        if (gold <= 0) return Promise.reject("We can't deposit 0 or less gold")
 
         if (gold > this.gold) {
             gold = this.gold
             console.warn(`We are only going to deposit ${gold} gold.`)
         }
-
 
         this.socket.emit("bank", { operation: "deposit", amount: gold })
     }
@@ -1744,7 +1742,7 @@ export class Character extends Observer implements CharacterData {
     public isFull(): boolean {
         return this.esize == 0
     }
-    
+
     /**
      * Returns true if our character is scared, false otherwise
      *
@@ -2625,7 +2623,6 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkWithdrawal)
         })
 
-        console.log({ operation: "swap", pack: bankPack, str: bankPos, inv: inventoryPos })
         this.socket.emit("bank", { operation: "swap", pack: bankPack, str: bankPos, inv: inventoryPos })
         return swapped
     }

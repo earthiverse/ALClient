@@ -533,8 +533,7 @@ export class Pathfinder {
             path.splice(i, 1)
         }
 
-        console.log(`Path from ${fromNode.id} to ${toNode.id} found! (${path.length} steps)`)
-        console.log(path)
+        console.log(`Path from ${fromNode.id} to ${toNode.id} found!`)
         return path
     }
 
@@ -631,8 +630,6 @@ export class Pathfinder {
 
         console.log("Preparing pathfinding...")
         const start = Date.now()
-
-        // TODO: Grab pathfinding information from the database
 
         for (let i = 0; i < maps.length; i++) {
             const map = maps[i]
