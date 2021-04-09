@@ -1,10 +1,10 @@
-import { DamageType, GData, StatusInfo } from "./definitions/adventureland"
-import { MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
+import { StatusInfo } from "./definitions/adventureland"
+import { DamageType, GData2, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, EntityData } from "./definitions/adventureland-server"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Entity implements EntityData {
-    protected G: GData
+    protected G: GData2
 
     // Position
     public map: MapName
@@ -52,7 +52,7 @@ export class Entity implements EntityData {
     public resistance = 0
     public rage = 0
 
-    public constructor(data: EntityData, map: MapName, G: GData) {
+    public constructor(data: EntityData, map: MapName, G: GData2) {
         this.G = G
 
         // Set soft properties

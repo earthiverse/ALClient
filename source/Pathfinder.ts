@@ -1,18 +1,18 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { GData, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
+import { IPosition, DoorInfo } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Game } from "./Game"
 import { Tools } from "./Tools"
-import { MapName } from "./definitions/adventureland-data"
+import { GData2, MapName } from "./definitions/adventureland-data"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
 const WALKABLE = 3
 
 export class Pathfinder {
-    protected static G: GData
+    protected static G: GData2
 
     protected static FIRST_MAP: MapName = "main"
     protected static TRANSPORT_COST = 50
@@ -330,7 +330,7 @@ export class Pathfinder {
         // Add nodes at transporters. We'll look for close nodes to doors later.
         // console.log("  Adding transporter node and links...")
         // console.log(`  # nodes: ${walkableNodes.length}`)
-        const transporters: GMapsNPC[] = []
+        const transporters = []
         for (const npc of this.G.maps[map].npcs) {
             if (npc.id !== "transporter") continue
             const closest = this.findClosestSpawn(map, npc.position[0], npc.position[1])

@@ -11,6 +11,7 @@ import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
+import { GData2 } from "./definitions/adventureland-data"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -23,7 +24,7 @@ export class Game {
     public static players: { [T in string]: Character } = {}
     public static observers: { [T in string]: Observer } = {}
 
-    public static G: GData
+    public static G: GData2
 
     protected constructor() {
         // Private to force static methods
@@ -37,7 +38,7 @@ export class Game {
         await this.stopAllObservers()
     }
 
-    static async getGData(): Promise<GData> {
+    static async getGData(): Promise<GData2> {
         if (this.G) return this.G
 
         console.log("Updating 'G' data...")
@@ -45,7 +46,7 @@ export class Game {
         if (response.status == 200) {
             // Update G with the latest data
             const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
-            this.G = JSON.parse(matches[1]) as GData
+            this.G = JSON.parse(matches[1]) as GData2
             console.log("  Updated 'G' data!")
             return this.G
         } else {

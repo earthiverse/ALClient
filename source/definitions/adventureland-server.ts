@@ -3,8 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, DamageType, TradeSlotType } from "./adventureland"
-import { EmotionName, ItemName, MapName, MonsterName, SkillName } from "./adventureland-data"
+import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
+import { DamageType, EmotionName, ItemName, MapName, MonsterName, SkillName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string

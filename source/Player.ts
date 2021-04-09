@@ -1,10 +1,11 @@
 import { MapName } from "."
 import { Character } from "./Character"
-import { CharacterType, DamageType, GData, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { DamageType, GData2 } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
-    protected G: GData
+    protected G: GData2
 
     public afk: string
     public id: string
@@ -53,7 +54,7 @@ export class Player implements PlayerData {
     in: MapName;
     map: MapName;
 
-    public constructor(data: PlayerData, map: MapName, G: GData) {
+    public constructor(data: PlayerData, map: MapName, G: GData2) {
         this.G = G
 
         // Set soft properties

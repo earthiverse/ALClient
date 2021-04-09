@@ -1,9 +1,9 @@
-import { GData } from "./definitions/adventureland"
 import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
+import { GData2 } from "./definitions/adventureland-data"
 
-let G: GData
+let G: GData2
 let character: Character
 let sameOwner: Player
 let sameParty: Player

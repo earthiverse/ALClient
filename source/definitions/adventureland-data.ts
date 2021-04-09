@@ -3,19 +3,56 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { DamageType } from "./adventureland"
+import { CharacterType, GItem, IPosition, SlotInfo, SlotType, WeaponType } from "./adventureland"
 
 export type GData2 = {
+    achievements: {
+        [T in AchievementName]: GDataAchievement
+    }
+    classes: { [T in CharacterType]: {
+        /** What items you get if you create a new character */
+        base_slots: Partial<SlotInfo>
+        /** TODO: ??? What does this do? Does it prevent your damage from decreasing when feared? */
+        brave?: boolean
+        damage_type: DamageType
+        /** A list of items that the character can equip using both hands */
+        doublehand: { [T in WeaponType]?: {
+            /** Modifier on the given stat for equipping this type of item */
+            [T in Attribute]?: number
+        } };
+        /** A list of items that the character can equip in its mainhand */
+        mainhand: { [T in WeaponType]?: {
+            /** Modifier on the given stat for equipping this type of item */
+            [T in Attribute]?: number
+        } };
+        /** A list of items that the character can equip in its offhand */
+        offhand: { [T in WeaponType]?: {
+            /** Modifier on the given stat for equipping this type of item */
+            [T in Attribute]?: number
+        } };
+    } & {
+        [T in Attribute]?: number
+    } };
     conditions: {
         [T in ConditionName]: {
+            /** TODO: ??? What is this? The attribute the condition provides!? */
+            attr0?: string
+            /** TODO: ??? Does this mean it is caused by an aura, or it causes an aura? */
+            aura?: boolean
             /** The condition name (human readable) */
             name: string
             /** A description of what the condition does / what caused the condition. */
             explanation?: string
             /** Is this a 'bad' condition to have? (see also: `buff`) */
             bad?: boolean
+            /** If this is true, you won't be able to attack */
+            blocked?: boolean
             /** Is this a 'good' condition to have? (see also: `bad`) */
             buff?: boolean
+            /** TODO: Confirm. For channeled conditions, if you move around, it won't be cancelled. */
+            can_move?: boolean
+            /** TODO: Confirm. If this is true, attacking, moving, or using a skill will cause the condition to go away. (NOTE: You can still move if can_move is true) */
+            channel?: boolean
             /** If true, this will persist even when your character is logged out. */
             persistent?: boolean
             /** If set, the condition will 'proc' every this many ms. For example, 'burned' will cause damage every interval. */
@@ -29,15 +66,64 @@ export type GData2 = {
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
         } & {
-            [T in Attribute]?: number
+            [T in Exclude<Attribute, "attr0">]?: number
         } } & {
         "eburn": {
             damage: number
             intensity: string
         }
+    } & {
+        "reflection": {
+            cap_reflection: number
+        }
     }
+    craft: { [T in ItemName]?: {
+        /** These are the items that are required to craft the given item
+         *  [quantity, item name, item level] */
+        items: [number, ItemName, number?][]
+        /** The cost to craft this item */
+        cost: number
+        quest?: "mcollector" | "witch"
+    } }
+    geometry: {
+        [T in MapName]?: {
+            /** TODO: ??? What is this? */
+            default?: number
+            /** TODO: ??? What is this? */
+            groups?: [number, number, number][][]
+            /** The maximum x-coordinate limit for this map */
+            max_x: number
+            /** The maximum y-coordinate limit for this map */
+            max_y: number
+            /** The minimum x-coordinate limit for this map */
+            min_x: number
+            /** The minimum y-coordinate limit for this map */
+            min_y: number
+            /** TODO: ??? What is this? */
+            placements: [number, number, number, number, number][]
+            /** TODO: ??? What is this? */
+            points?: {
+                [T in string]: [number, number]
+            }
+            /** TODO: ??? Fishing areas? */
+            polygons?: {
+                [T in string]: [number, number][]
+            }
+            /** TODO: ??? What is this? */
+            rectangles?: {
+                [T in string]: [number, number, number, number]
+            }
+            /** TODO: ??? What is this? GUI related? */
+            tiles: ["string", number, number, number][]
+            /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
+            x_lines: [number, number, number][]
+            /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
+            y_lines: [number, number, number][]
+        }
+    }
+    items: { [T in ItemName]: GItem };
     maps: {
-        [T in MapName]: {
+        [T in MapName]?: {
             data?: {
                 /** The furthest west you can go on the map */
                 min_x: number
@@ -48,6 +134,41 @@ export type GData2 = {
                 /** The furthest south you can go on the map */
                 max_y: number
             }
+            /** If true, this map is PVP. */
+            pvp?: boolean
+            /** If true, you cannot be attacked on this map. */
+            safe?: boolean
+            /** TODO: Confirm. If true, does this mean you don't lose things when you die? */
+            safe_pvp?: boolean
+            /** TODO: ??? What is this? */
+            loss?: false
+            /** If you die on this map, you will spawn at the given map and spawn. */
+            on_death?: [MapName, number]
+            /** TODO: Confirm. If you logout while your character is on this map, you will be at the given map and spawn next time you login */
+            on_exit?: [MapName, number]
+            /** TODO: ??? What is this? */
+            drop_norm?: number
+            monsters?: {
+                boundary?: [number, number, number, number]
+                boundaries?: [MapName, number, number, number, number][]
+                /** Rage boundary. Enter this and all monsters will target you. */
+                rage?: [number, number, number, number]
+                polygon?: [number, number][]
+                count: number
+                gatekeeper?: boolean
+                grow?: boolean
+                type: MonsterName
+                stype?: "randomrespawn"
+                /** TODO: ??? Does this mean they roam around the map? */
+                roam?: boolean
+                /** TODO: ??? What is this? */
+                special?: boolean
+
+                /** TODO: ??? Old? */
+                position?: [number, number]
+                /** TODO: ??? Old? */
+                radius?: number
+            }[];
             npcs: {
                 /** [x, y, direction] spawn position for the given NPC on the map */
                 position?: [number, number, number?]
@@ -58,7 +179,9 @@ export type GData2 = {
                 /** TODO: ??? */
                 loop?: boolean
                 /** NPC id */
-                id: string
+                id: NPCName
+                /** Human readable NPC name */
+                name?: string
             }[]
             /**
              * Doors to other maps
@@ -78,10 +201,10 @@ export type GData2 = {
              * [6]: The spawn that this door is close to on the current map
              * 
              * [7]: TODO: ??? Related to bank / bank keys?
-             * 
+             *
              * [8]: TODO: ??? Related to bank / bank keys?
              */
-            doors: [number, number, number, number, MapName, number?, number?, "ulocked"?, "complicated"?][]
+            doors: [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?][]
             /** Esentially a unique ID for the map. Contains a little more information than the `name`. */
             key: string
             /** Map Name (human readable) */
@@ -97,11 +220,57 @@ export type GData2 = {
             /** If true, this map should be ignored (it probably isn't accessible, or is a work in progress) */
             ignore?: boolean
             /** Signs and doors on maps that don't work, but could contain useful information */
-            quirks?: [number, number, number, number, "compound" | "info" | "invisible_statue" | "list_pvp" | "log" | "note" | "sign" | "the_lever" | "upgrade" | string, string][]
+            quirks?: [number, number, number, number, "compound" | "info" | "invisible_statue" | "list_pvp" | "log" | "note" | "sign" | "the_lever" | "upgrade" | string, string?][]
             /** If set, this map has a different burn chance %. Multiply the burn chance by this multiplier. */
             burn_multiplier?: number
             /** If set, this map has a different freeze chance %. Multiply the freeze chance by this multiplier. */
             freeze_multiplier?: number
+            /**
+             * [0]: x position where you spawn
+             * 
+             * [1]: y position where you spawn
+             * 
+             * [2]: Direction to face the character when you spawn
+             */
+            spawns: ([number, number, number?] | [number, number, number, number])[]
+            /** TODO: What is this? */
+            world?: string
+            traps?: {
+                type: "debuff" | "spikes"
+                polygon?: [number, number][]
+                position?: [number, number]
+            }[]
+            animatables?: {
+                [T in string]?: {
+                    x: number
+                    y: number
+                    position: string
+                }
+            }
+            event?: string
+            /** TODO: Figure out these types */
+            machines?: any
+            /** TODO: ??? What is this? GUI related? */
+            unlist?: boolean
+            /** TODO: ??? GUI related? */
+            fx?: string
+            /** TODO: ??? GUI related? */
+            weather?: string
+            zones?: {
+                drop: string
+                type: "fishing"
+                polygon: [number, number][]
+            }[]
+            /** TODO: ??? What is this? GUI related? */
+            ref?: {
+                [T in string]?: [number, number] | [number, number, number, number] | IPosition
+            }
+            /** TODO: ??? Old? Depricated? */
+            old_monsters?: {
+                count: number
+                boundary: [number, number, number, number]
+                type: MonsterName
+            }[]
         }
     }
     monsters: {
@@ -117,28 +286,40 @@ export type GData2 = {
                     radius?: number
                     aura?: boolean
                     condition?: ConditionName
-                } & {
-                    "burn": {
-                        unlimited: boolean
-                        attr0: number
-                    }
-                } & {
-                    "heal": {
-                        cooldown: number
-                        heal: number
-                    }
-                } & {
-                    "self_healing"?: {
-                        cooldown: number
-                        heal: number
-                    }
-                } & {
-                    "weakness_aura"?: {
-                        cooldown: number
-                        radius: number
-                        aura: true
-                        condition: "weakness"
-                    }
+                }
+            } & {
+                "burn"?: {
+                    unlimited: boolean
+                    attr0: number
+                }
+            } & {
+                "degen"?: {
+                    amount: number
+                }
+            } & {
+                "heal"?: {
+                    heal: number
+                }
+            } & {
+                "multi_burn"?: {
+                    damage: number
+                }
+            } & {
+                "putrid"?: {
+                    curse: boolean
+                    poison: boolean
+                }
+            } & {
+                "self_healing"?: {
+                    heal: number
+                }
+            } & {
+                "weakness_aura"?: {
+                    condition: "weakness"
+                }
+            } & {
+                "zap"?: {
+                    amount: number
                 }
             }
             /** Tracker achievements. [points needed, "stat", stat type, improvement] */
@@ -181,6 +362,8 @@ export type GData2 = {
             name: string
             /** TODO: ??? What is this? */
             operator?: boolean
+            /** TODO: ??? What is this? GUI related? */
+            orientation?: number
             /** TODO: ??? What is this? */
             passive?: boolean
             pet?: {
@@ -214,7 +397,7 @@ export type GData2 = {
             /** If set to true, the monster will roam around the entire map */
             roam?: boolean
             /** Initial conditions for the monster when it spawns */
-            s?: { [T in ConditionName]: { ms: number } }
+            s?: { [T in ConditionName]?: { ms: number } }
             /** (GUI) size modifier for sprite sizing */
             size?: number
             /** (GUI) Monster sprite */
@@ -247,6 +430,140 @@ export type GData2 = {
             [T in Attribute]?: number
         }
     }
+    npcs: {
+        [T in NPCName]: {
+            /** TODO: ??? What is this? */
+            allow?: boolean
+            /** TODO: ??? What is this? GUI related? */
+            aspeed?: "slow" | "slower" | "fast"
+            /** TODO: ??? What is this? GUI related? */
+            atype?: "flow" | "once"
+            /** If you stand near this NPC, you will gain this aura */
+            aura?: {
+                [T in Attribute]?: number
+            }
+            /** TODO: ??? What is this? GUI related? */
+            color?: string
+            /** TODO: ??? What is this? GUI related? */
+            cx?: any
+            /** TODO: ??? What is this? GUI related? */
+            delay?: number
+            /** The same NPCName as `G.npcs[NPCName]` */
+            id: NPCName
+            /** TODO: ??? What is this? Does this mean the NPC won't spawn? */
+            ignore?: boolean
+            /** (GUI) A list of things the NPC will say if you click on it in game */
+            interaction?: string[]
+            /** TODO: ??? What is this? GUI related? */
+            interval?: number
+            /** A list of items that you can buy from this NPC. */
+            items?: ItemName[]
+            /** NPC level? */
+            level?: number
+            /** NOTE: Not sure why this exists. Some NPCs which don't have this still move */
+            moving?: boolean
+            /** Their human readable name */
+            name?: string
+            /** TODO: ??? What is this? Items they used to sell, but no longer sell? */
+            old_items?: ItemName[]
+            /** TODO: ??? What is this? Their old role? */
+            old_role?: "merchant" | "premium"
+            /** TODO: ??? What is this? Their old interaction? */
+            old_side_interaction?: {
+                auto: boolean
+                message: string
+                skin: string
+            }
+            /** For bank NPCs, this is the bank pack they represent */
+            pack?: BankPackName
+            /** If the quest is an ItemName, you can exchange it at this NPC.
+             *  If it's "cx", you can exchange cosmetic jars.
+             *  If it's "mcollector", you can exchange whatever has `quest: "mcollector"` in `G.craft`
+             *  If it's "witch", you can exchange whatever has `quest: "witch"` in `G.craft` */
+            quest?: ItemName | "cx" | "mcollector" | "witch"
+            /** The role the NPC has */
+            role: "announcer" | "blocker" | "bouncer" | "citizen" | "companion" | "compound" | "craftsman" | "cx" | "daily_events" | "exchange" | "funtokens" | "gold" | "guard" | "items" | "jailer" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "merchant" | "monstertokens" | "newupgrade" | "newyear_tree" | "petkeeper" | "premium" | "pvp_announcer" | "pvptokens" | "quest" | "repeater" | "resort" | "rewards" | "secondhands" | "shells" | "ship" | "shrine" | "standmerchant" | "tavern" | "tease" | "thesearch" | "transport" | "witch" | string
+            /** (GUI) Lines the NPC can say */
+            says?: string[] | string
+            /** (GUI) More interactions. TODO: How is this different than interaction? */
+            side_interaction?: {
+                auto: boolean
+                message: string
+                skin: string
+            }
+            /** (GUI) Sprite for the NPC */
+            skin: string
+            /** How fast the NPC moves */
+            speed?: number
+            /** (GUI) If set, the stand sprite for the NPC */
+            stand?: string
+            /** TODO: ??? What is this? GUI related? */
+            steps?: number
+            /** TODO: ??? What is this? GUI related? */
+            stopframe?: number
+            /** If set, you can exchange tokens of this type at this NPC */
+            token?: ItemName
+            /** TODO: ??? GUI related? */
+            type?: "full" | "fullstatic" | "static"
+        } & {
+            [T in Attribute]?: number
+        }
+    } & {
+        "transporter": {
+            /** Places that the transporter can take you */
+            places?: {
+                /** The number refers to the given spawn on the map */
+                [T in MapName]?: number
+            }
+        }
+    }
+    /** TODO: ??? What is this? GUI related sprite positions in some sort of image map? */
+    positions: {
+        [T in string]:
+        | [string, number, number]
+        | [string, number, number, number, number]
+        | [string, number, number, number, number][]
+    } | {
+        "textures": string[]
+    }
+    /** If you buy an item with shells, this is the ratio of shells to gold */
+    shells_to_gold: number
+    skills: { [T in SkillName]: {
+        apiercing?: number;
+        class?: CharacterType[];
+        cooldown: number;
+        cooldown_multiplier?: number;
+        damage_multiplier?: number;
+        /** If true, we can't use this skill in a safe zone */
+        hostile?: boolean;
+        /** Items that this we need to use the skill */
+        inventory?: ItemName[];
+        level?: number;
+        /** Can we use this skill on monsters? */
+        monster?: boolean;
+        /** MP Cost for skill */
+        mp?: number;
+        /** The name of the skill */
+        name: string;
+        range?: number;
+        range_bonus?: number;
+        range_multiplier?: number;
+        /** For MP use skills on the mage, 1 mp will equal this much damage */
+        ratio?: number;
+        /** Requirements for using the skill */
+        requirements?: { [T in Attribute]?: number }
+        /** The cooldown this skill shares with another skill */
+        share?: SkillName;
+        /** The item(s) required to use this skill */
+        slot?: [SlotType, ItemName][];
+        /** Does this skill require a single target? (Don't use an array) */
+        target?: boolean;
+        /** Does this skill require multiple targets? (Use an array) */
+        targets?: boolean;
+        warning?: string;
+        /** The weapon type needed to use this skill */
+        wtype?: WeaponType | WeaponType[];
+    } }
     titles: {
         [T in TitleName]: {
             /** The title name (human readable) */
@@ -270,6 +587,25 @@ export type GData2 = {
             consecutive_200p_range_last_hits: number
         }
     }
+    /** Version number for this data. */
+    version: number
+}
+
+export type GDataAchievement = {
+    /** The achievement name (human readable) */
+    name: string
+    /** An explanation how this achievement works, or how you obtain it */
+    explanation?: string
+    /** If you achieve this achievement, you get this item */
+    item?: ItemName
+    /** If you achieve this achievement, you get this many shells */
+    shells?: number
+    /** The number of times you have to do the thing to get the achievement */
+    count?: number
+    /** If this is set, your item will obtain this title if you get this achievement */
+    title?: TitleName
+    /** TODO: What is this? */
+    rr?: number
 }
 
 export type Attribute =
@@ -291,6 +627,8 @@ export type Attribute =
     | "blast"
     /** TODO: ??? Joke stat? */
     | "bling"
+    /** TODO: ??? What is this? Additional run speed when it has a target? */
+    | "charge"
     /** TODO: ??? Joke stat? */
     | "charisma"
     /** Number of monsters that can attack before 'fear' starts. */
@@ -313,6 +651,8 @@ export type Attribute =
     | "for"
     /** Attack Speed (decreases attack cooldown) */
     | "frequency"
+    /** Attack speed multiplier */
+    | "frequencym"
     /** Freeze resistance (%) */
     | "fzresistance"
     /** Gold drop multiplier (%) */
@@ -372,6 +712,74 @@ export type Attribute =
     /** XP (increases XP gained by this much %) */
     | "xp"
 
+export type AchievementName =
+    | "1000boss"
+    | "100boss"
+    | "discoverlair"
+    | "festive"
+    | "firehazard"
+    | "gooped"
+    | "lucky"
+    | "monsterhunter"
+    | "reach40"
+    | "reach50"
+    | "reach60"
+    | "reach70"
+    | "reach80"
+    | "reach90"
+    | "stomped"
+    | "upgrade10"
+
+export type BankPackName =
+    | "items0"
+    | "items1"
+    | "items2"
+    | "items3"
+    | "items4"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
+    | "items10"
+    | "items11"
+    | "items12"
+    | "items13"
+    | "items14"
+    | "items15"
+    | "items16"
+    | "items17"
+    | "items18"
+    | "items19"
+    | "items20"
+    | "items21"
+    | "items22"
+    | "items23"
+    | "items24"
+    | "items25"
+    | "items26"
+    | "items27"
+    | "items28"
+    | "items29"
+    | "items30"
+    | "items31"
+    | "items32"
+    | "items33"
+    | "items34"
+    | "items35"
+    | "items36"
+    | "items37"
+    | "items38"
+    | "items39"
+    | "items40"
+    | "items41"
+    | "items42"
+    | "items43"
+    | "items44"
+    | "items45"
+    | "items46"
+    | "items47"
+
 export type ConditionName =
     | "authfail"
     | "blink"
@@ -386,6 +794,7 @@ export type ConditionName =
     | "eheal"
     | "energized"
     | "fingered"
+    | "fishing"
     | "frozen"
     | "fullguard"
     | "hardshell"
@@ -395,6 +804,7 @@ export type ConditionName =
     | "licenced"
     | "marked"
     | "massproduction"
+    | "massproductionpp"
     | "mcourage"
     | "mlifesteal"
     | "mluck"
@@ -415,11 +825,18 @@ export type ConditionName =
     | "stunned"
     | "sugarrush"
     | "tangled"
+    | "town"
     | "warcry"
     | "weakness"
     | "withdrawal"
     | "xpower"
     | "xshotted"
+
+export type DamageType =
+    | "magical"
+    | "none"
+    | "physical"
+    | "pure"
 
 export type EmotionName =
     | "drop_egg"
@@ -930,7 +1347,9 @@ export type MapName =
     | "cgallery"
     | "crypt"
     | "cyberland"
+    | "d1"
     | "d2"
+    | "d3"
     | "d_a1"
     | "d_a2"
     | "d_b1"
@@ -1081,6 +1500,133 @@ export type MonsterName =
     | "wolfie"
     | "xscorpion"
     | "zapper0"
+
+export type NPCName =
+    | "antip2w"
+    | "appearance"
+    | "armors"
+    | "basics"
+    | "bean"
+    | "beans"
+    | "bouncer"
+    | "citizen0"
+    | "citizen1"
+    | "citizen10"
+    | "citizen11"
+    | "citizen12"
+    | "citizen13"
+    | "citizen14"
+    | "citizen15"
+    | "citizen2"
+    | "citizen3"
+    | "citizen4"
+    | "citizen5"
+    | "citizen6"
+    | "citizen7"
+    | "citizen8"
+    | "citizen9"
+    | "compound"
+    | "craftsman"
+    | "exchange"
+    | "fancypots"
+    | "firstc"
+    | "fisherman"
+    | "funtokens"
+    | "gemmerchant"
+    | "goldnpc"
+    | "guard"
+    | "holo"
+    | "holo0"
+    | "holo1"
+    | "holo2"
+    | "holo3"
+    | "holo4"
+    | "holo5"
+    | "items0"
+    | "items1"
+    | "items10"
+    | "items11"
+    | "items12"
+    | "items13"
+    | "items14"
+    | "items15"
+    | "items16"
+    | "items17"
+    | "items18"
+    | "items19"
+    | "items2"
+    | "items20"
+    | "items21"
+    | "items22"
+    | "items23"
+    | "items24"
+    | "items25"
+    | "items26"
+    | "items27"
+    | "items28"
+    | "items29"
+    | "items3"
+    | "items30"
+    | "items31"
+    | "items32"
+    | "items33"
+    | "items34"
+    | "items35"
+    | "items36"
+    | "items37"
+    | "items38"
+    | "items39"
+    | "items4"
+    | "items40"
+    | "items41"
+    | "items42"
+    | "items43"
+    | "items44"
+    | "items45"
+    | "items46"
+    | "items47"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
+    | "jailer"
+    | "leathermerchant"
+    | "lichteaser"
+    | "locksmith"
+    | "lostandfound"
+    | "lotterylady"
+    | "mcollector"
+    | "mistletoe"
+    | "monsterhunter"
+    | "newupgrade"
+    | "newyear_tree"
+    | "ornaments"
+    | "pete"
+    | "pots"
+    | "premium"
+    | "princess"
+    | "pvp"
+    | "pvpblocker"
+    | "pvptokens"
+    | "pwincess"
+    | "rewards"
+    | "santa"
+    | "scrolls"
+    | "secondhands"
+    | "shellsguy"
+    | "ship"
+    | "shrine"
+    | "standmerchant"
+    | "tavern"
+    | "tbartender"
+    | "thief"
+    | "transporter"
+    | "wbartender"
+    | "weapons"
+    | "witch"
+    | "wizardrepeater"
+    | "wnpc"
 
 export type SkillName =
     | "3shot"

@@ -1,8 +1,8 @@
-import { GData } from "./definitions/adventureland"
 import { Game } from "./Game"
 import { Character } from "./Character"
+import { GData2 } from "./definitions/adventureland-data"
 
-let G: GData
+let G: GData2
 let character: Character
 beforeAll(async () => {
     G = await Game.getGData()
@@ -41,6 +41,35 @@ test("Character.calculateItemCost", async () => {
     expect(character.calculateItemCost({ name: "dexring", level: 3 })).toBe(964800)
     expect(character.calculateItemCost({ name: "dexring", level: 4 })).toBe(3134400)
     expect(character.calculateItemCost({ name: "dexring", level: 5 })).toBe(18603200)
+})
+
+test("Character.isPVP", async () => {
+    // False if the map and server are not PVP
+    character.server = {
+        region: "ASIA",
+        name: "I",
+        in: "main",
+        map: "main",
+        gameplay: "test",
+        info: "test",
+        pvp: false,
+        x: 0,
+        y: 0
+    }
+    character.map = "main"
+    expect(character.isPVP()).toBe(false)
+
+    // True if the server is PVP
+    character.server.pvp = true
+    expect(character.isPVP()).toBe(true)
+
+    // True if the map is PVP
+    character.map = "arena"
+    expect(character.isPVP()).toBe(true)
+
+    // False if the map is safe
+    character.map = "hut"
+    expect(character.isPVP()).toBe(false)
 })
 
 test("Character.locateItem", async () => {

@@ -1,5 +1,5 @@
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData } from "./definitions/adventureland-server"
-import { GData, BankInfo, ItemInfo, SlotType, SInfo, IPosition, NPCType, BankPackType, TradeSlotType, CharacterType, SlotInfo, StatusInfo, DamageType } from "./definitions/adventureland"
+import { BankInfo, ItemInfo, SlotType, SInfo, IPosition, NPCType, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -8,14 +8,13 @@ import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
-import { Attribute, ConditionName, EmotionName, ItemName, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, ConditionName, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
     protected userAuth: string;
     protected characterID: string;
     protected lastPositionUpdate: number;
-    protected promises: Promise<boolean>[] = [];
     protected pingNum = 1;
     protected pingMap = new Map<string, number>();
     protected timeouts = new Map<string, ReturnType<typeof setTimeout>>();
@@ -139,7 +138,7 @@ export class Character extends Observer implements CharacterData {
     mcourage: number
     pcourage: number
 
-    constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
+    constructor(userID: string, userAuth: string, characterID: string, g: GData2, serverData: ServerData) {
         super(serverData, g)
         this.userID = userID
         this.userAuth = userAuth
@@ -1368,7 +1367,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("bank", { operation: "deposit", amount: gold })
     }
 
-    public depositItem(inventoryPos: number, bankPack?: Exclude<BankPackType, "gold">, bankSlot = -1): unknown {
+    public depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): unknown {
         if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
             return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
 
@@ -1402,10 +1401,10 @@ export class Character extends Observer implements CharacterData {
 
             const numStackable = this.G.items[item.name].s
 
-            let emptyPack: Exclude<BankPackType, "gold">
+            let emptyPack: BankPackName
             let emptySlot: number
             for (let packNum = packFrom; packNum <= packTo; packNum++) {
-                const packName = `items${packNum}` as Exclude<BankPackType, "gold">
+                const packName = `items${packNum}` as BankPackName
                 const pack = this.bank[packName] as ItemInfo[]
                 if (!pack)
                     continue // We don't have access to this pack
@@ -2593,7 +2592,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("bank", { operation: "withdraw", amount: gold })
     }
 
-    public withdrawItem(bankPack: Exclude<BankPackType, "gold">, bankPos: number, inventoryPos = -1): unknown {
+    public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
         const item = this.bank[bankPack][bankPos]
         if (!item) return Promise.reject(`There is no item in bank ${bankPack}[${bankPos}]`)
 
@@ -2767,11 +2766,14 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns a boolean corresponding to whether or not we can attack other players
+     * Can we attack other players?
+     *
+     * @return {*}  {boolean}
+     * @memberof Character
      */
     public isPVP(): boolean {
-        if (this.G[this.map].pvp)
-            return true
+        if (this.G.maps[this.map].pvp) return true
+        if (this.G.maps[this.map].safe) return false
         return this.server.pvp
     }
 
@@ -2958,7 +2960,7 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateNPCs(npcType: NPCType): NodeData[] {
+    public locateNPCs(npcID: NPCName): NodeData[] {
         const locations: NodeData[] = []
         for (const mapName in this.G.maps) {
             const map = this.G.maps[mapName as MapName]
@@ -2968,7 +2970,7 @@ export class Character extends Observer implements CharacterData {
                 continue // Map is unreachable, or there are no NPCs
 
             for (const npc of map.npcs) {
-                if (npc.id !== npcType)
+                if (npc.id !== npcID)
                     continue
 
                 // TODO: If it's an NPC that moves around, check in the database for the latest location

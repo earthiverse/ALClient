@@ -1,3 +1,5 @@
+import { GData2 } from "./definitions/adventureland-data"
+
 export * from "./Constants"
 export * from "./Game"
 export * from "./Mage"

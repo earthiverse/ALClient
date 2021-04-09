@@ -1,4 +1,4 @@
-import { Attribute, ConditionName, ItemName, MapName, MonsterName, SkillName, TitleName } from "./adventureland-data"
+import { Attribute, BankPackName, ConditionName, DamageType, ItemName, MapName, MonsterName, SkillName, TitleName } from "./adventureland-data"
 
 export type GData = {
     // TODO: Add
@@ -7,24 +7,7 @@ export type GData = {
         /** The base amount of gold this monster drops if you kill it in the given map */
         [T in MapName]?: number
     } };
-    classes: { [T in CharacterType]: {
-        damage_type: DamageType
-        /** A list of items that the character can equip using both hands */
-        doublehand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
-            [T in Attribute]?: number
-        } };
-        /** A list of items that the character can equip in its mainhand */
-        mainhand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
-            [T in Attribute]?: number
-        } };
-        /** A list of items that the character can equip in its offhand */
-        offhand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
-            [T in Attribute]?: number
-        } };
-    } };
+    
     conditions: { [T in ConditionName]: {
         /** Indicates whether the condition is a penalty or not */
         bad?: boolean;
@@ -90,10 +73,10 @@ export type GData = {
             };
         };
         /**
-     * [0]: x position where you spawn
-     * [1]: y position where you spawn
-     * [2]: Direction to face the character when you spawn
-     */
+         * [0]: x position where you spawn
+         * [1]: y position where you spawn
+         * [2]: Direction to face the character when you spawn
+         */
         spawns: [number, number, number?][];
     } };
     monsters: { [T in MonsterName]: GMonster };
@@ -172,8 +155,8 @@ export type GMonster = {
    * This is a list of Tracktrix achievements you can get by killing these monsters
    * [0]: # of monsters you need to kill to get this level of achievement
    * [1]: TODO: Looks to be just "stat" at this point
-   * [2]: The StatType that gets an improvement
-   * [3]: The amount of that StatType that gets improved
+   * [2]: The Attribute that gets an improvement
+   * [3]: The amount of that Attribute that gets improved
    */
     achievevments?: [number, "stat", Attribute, number][]
     aggro: number
@@ -250,7 +233,7 @@ export type GItem = {
 } & { [T in Attribute]?: number }
 
 export type BankInfo = {
-    [T in Exclude<BankPackType, "gold">]?: ItemInfo[]
+    [T in Exclude<BankPackName, "gold">]?: ItemInfo[]
 } & {
     gold: number;
 }
@@ -271,6 +254,8 @@ export type ItemInfo = {
     ex?: boolean;
     /** If the item expires (booster, elixir), this will be set to a date string */
     expires?: string
+    /** If the item is a gift, you can only sell it for 1 gold. The items you get from creating a new character are gifts. */
+    gift?: number
     /** Related to upgrade chance. (NOTE: If you see this property, it's likely a bug. Report to Wizard!) */
     grace?: number
     /** Set if the item is compoundable or upgradable */
@@ -396,12 +381,10 @@ export type PositionSmart = IPosition & {
 }
 
 export type IPosition = {
-    /**
-   * Contains the name of the map
-   */
-    map?: MapName;
-    x: number;
-    y: number;
+    map?: MapName
+    in?: string
+    x: number
+    y: number
 }
 
 // TODO: Get all types (from G?)
@@ -413,12 +396,6 @@ export type CharacterType =
     | "ranger"
     | "rogue"
     | "warrior"
-
-// TODO: Get all types (from G?)
-export type DamageType =
-    | "magical"
-    | "physical"
-    | "pure"
 
 // TODO: Get all types
 export type ItemType =
@@ -448,57 +425,6 @@ export type WeaponType =
     | "sword"
     | "wand"
     | "wblade"
-
-export type BankPackType =
-    | "gold"
-    | "items0"
-    | "items1"
-    | "items10"
-    | "items11"
-    | "items12"
-    | "items13"
-    | "items14"
-    | "items15"
-    | "items16"
-    | "items17"
-    | "items18"
-    | "items19"
-    | "items2"
-    | "items20"
-    | "items21"
-    | "items22"
-    | "items23"
-    | "items24"
-    | "items25"
-    | "items26"
-    | "items27"
-    | "items28"
-    | "items29"
-    | "items3"
-    | "items30"
-    | "items31"
-    | "items32"
-    | "items33"
-    | "items34"
-    | "items35"
-    | "items36"
-    | "items37"
-    | "items38"
-    | "items39"
-    | "items4"
-    | "items40"
-    | "items41"
-    | "items42"
-    | "items43"
-    | "items44"
-    | "items45"
-    | "items46"
-    | "items47"
-    | "items5"
-    | "items6"
-    | "items7"
-    | "items8"
-    | "items9"
 
 export type SlotType =
     | "amulet"

@@ -1,12 +1,12 @@
 import socketio from "socket.io-client"
 import { ServerData, WelcomeData, LoadedData } from "./definitions/adventureland-server"
-import { ServerRegion, ServerIdentifier, GData} from "./definitions/adventureland"
-import { MapName } from "./definitions/adventureland-data"
+import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
+import { GData2, MapName } from "./definitions/adventureland-data"
 
 export class Observer {
     public socket: SocketIOClient.Socket;
 
-    public G: GData;
+    public G: GData2;
 
     protected serverRegion: ServerRegion;
     protected serverIdentifier: ServerIdentifier;
@@ -14,7 +14,7 @@ export class Observer {
     protected x: number;
     protected y: number;
 
-    constructor(serverData: ServerData, g: GData, reconnect = false) {
+    constructor(serverData: ServerData, g: GData2, reconnect = false) {
         this.serverRegion = serverData.region
         this.serverIdentifier = serverData.name
         this.G = g
