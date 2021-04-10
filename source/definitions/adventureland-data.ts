@@ -14,22 +14,59 @@ export type GData2 = {
         base_slots: Partial<SlotInfo>
         /** TODO: ??? What does this do? Does it prevent your damage from decreasing when feared? */
         brave?: boolean
+        /** What type of damage this class does */
         damage_type: DamageType
-        /** A list of items that the character can equip using both hands */
+        /** A short lore of the class */
+        description: string
+        /** A list of items that the class can equip using both hands */
         doublehand: { [T in WeaponType]?: {
             /** Modifier on the given stat for equipping this type of item */
             [T in Attribute]?: number
         } };
-        /** A list of items that the character can equip in its mainhand */
+        /** (GUI related) What sprites are available for the given class */
+        looks: [string, {
+            chin?: string
+            hair?: string
+            hat?: string
+            head?: string
+            makeup?: string
+        }][]
+        /** Statistics the class gets with a level up */
+        lstats: {
+            dex: number
+            for: number
+            int: number
+            str: number
+            vit: number
+        }
+        /** (GUI related) What sprite to use for heals */
+        healing_projectile?: string
+        /** The class's main attribute. Increasing this will increase attack. */
+        main_stat: Attribute
+        /** A list of items that the class can equip in its mainhand */
         mainhand: { [T in WeaponType]?: {
             /** Modifier on the given stat for equipping this type of item */
             [T in Attribute]?: number
         } };
-        /** A list of items that the character can equip in its offhand */
+        /** A list of items that the class can equip in its offhand */
         offhand: { [T in WeaponType]?: {
             /** Modifier on the given stat for equipping this type of item */
             [T in Attribute]?: number
         } };
+        /** (GUI related) What sprite the class uses for attacks */
+        projectile: string
+        /** TODO: ??? What is this? */
+        side_stat?: Attribute
+        /** Statistics the class starts with */
+        stats: {
+            dex: number
+            for: number
+            int: number
+            str: number
+            vit: number
+        }
+        /** TODO: ??? GUI related? */
+        xcx?: any[]
     } & {
         [T in Attribute]?: number
     } };
@@ -90,7 +127,7 @@ export type GData2 = {
             /** TODO: ??? What is this? */
             default?: number
             /** TODO: ??? What is this? */
-            groups?: [number, number, number][][]
+            groups?: ([number, number, number] | [number, number, number, any, any, number])[][]
             /** The maximum x-coordinate limit for this map */
             max_x: number
             /** The maximum y-coordinate limit for this map */
@@ -100,7 +137,7 @@ export type GData2 = {
             /** The minimum y-coordinate limit for this map */
             min_y: number
             /** TODO: ??? What is this? */
-            placements: [number, number, number, number, number][]
+            placements: ([number, number, number] | [number, number, number, number, number])[]
             /** TODO: ??? What is this? */
             points?: {
                 [T in string]: [number, number]
@@ -114,14 +151,17 @@ export type GData2 = {
                 [T in string]: [number, number, number, number]
             }
             /** TODO: ??? What is this? GUI related? */
-            tiles: ["string", number, number, number][]
+            tiles: ([string, number, number, number] | [string, number, number, number, number])[]
             /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
-            x_lines: [number, number, number][]
+            x_lines?: [number, number, number][]
             /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
-            y_lines: [number, number, number][]
+            y_lines?: [number, number, number][]
         }
     }
     items: { [T in ItemName]: GItem };
+    levels: {
+        [T in string]?: number
+    }
     maps: {
         [T in MapName]?: {
             data?: {
@@ -673,6 +713,8 @@ export type Attribute =
     | "manasteal"
     /** Magical Courage (Number of magical monsters that can attack before 'fear' starts) */
     | "mcourage"
+    /** % chance to miss a shot */
+    | "miss"
     /** Mana */
     | "mp"
     /** MP Cost (how much MP an attack will use) */

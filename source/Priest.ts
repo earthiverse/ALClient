@@ -3,6 +3,27 @@ import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Priest extends PingCompensatedCharacter {
+    // NOTE: Untested
+    public absorbSins(target: string): Promise<void> {
+        const absorbed = new Promise<void>((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("eval", cooldownCheck)
+                reject(`curse timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
+        this.socket.emit("skill", { name: "absorb", id: target })
+        return absorbed
+    }
+
     public curse(target: string): Promise<void> {
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {

@@ -1,5 +1,5 @@
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData } from "./definitions/adventureland-server"
-import { BankInfo, ItemInfo, SlotType, SInfo, IPosition, NPCType, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { BankInfo, ItemInfo, SlotType, SInfo, IPosition, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -1017,11 +1017,9 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add promises
-    // TODO: Check gold
-    // TODO: Check Ponty's prices? Apparently they're higher than G.items[].g
     public buyFromPonty(item: ItemInfo): unknown {
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
-        const price = this.G.items[item.name].g * (item.q ? item.q : 1)
+        const price = this.G.items[item.name].g * 1.2 /* Ponty items have a 20% markup */ * (item.q ? item.q : 1)
         if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
         this.socket.emit("sbuy", { rid: item.rid })
     }
@@ -2080,7 +2078,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<NodeData>} The destination where our character finished
      * @memberof Character
      */
-    public async smartMove(to: MapName | MonsterName | NPCType | IPosition, options: { getWithin?: number; useBlink?: boolean; } = {
+    public async smartMove(to: MapName | MonsterName | NPCName | IPosition, options: { getWithin?: number; useBlink?: boolean; } = {
         getWithin: 0,
         useBlink: false
     }): Promise<NodeData> {

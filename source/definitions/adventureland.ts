@@ -1,4 +1,4 @@
-import { Attribute, BankPackName, ConditionName, DamageType, ItemName, MapName, MonsterName, SkillName, TitleName } from "./adventureland-data"
+import { Attribute, BankPackName, ConditionName, DamageType, ItemName, MapName, MonsterName, NPCName, SkillName, TitleName } from "./adventureland-data"
 
 export type GData = {
     // TODO: Add
@@ -7,7 +7,7 @@ export type GData = {
         /** The base amount of gold this monster drops if you kill it in the given map */
         [T in MapName]?: number
     } };
-    
+
     conditions: { [T in ConditionName]: {
         /** Indicates whether the condition is a penalty or not */
         bad?: boolean;
@@ -80,8 +80,8 @@ export type GData = {
         spawns: [number, number, number?][];
     } };
     monsters: { [T in MonsterName]: GMonster };
-    npcs: { [T in NPCType]: {
-        id: NPCType;
+    npcs: { [T in NPCName]: {
+        id: NPCName;
         items?: ItemName[];
         /** Full name of NPC */
         name: string;
@@ -93,7 +93,7 @@ export type GData = {
     } };
     // TODO: Get list of quest names
     quests: { [T in string]: PositionReal & {
-        id: NPCType;
+        id: NPCName;
     } };
     skills: { [T in SkillName]: {
         apiercing?: number;
@@ -136,7 +136,7 @@ export type GData = {
 // TODO: Get a better name for this.
 // TODO: Get a better naming convention for G data
 export type GMapsNPC = {
-    id: NPCType
+    id: NPCName
     name?: string
     position: [number, number, number?]
     positions: [number, number, number?]
@@ -415,10 +415,18 @@ export type WeaponType =
     | "dagger"
     | "dartgun"
     | "fist"
+    | "great_staff"
+    | "great_sword"
     | "mace"
+    | "misc_offhand"
     | "pmace"
+    | "quiver"
     | "rapier"
+    | "rod"
+    | "scythe"
+    | "shield"
     | "short_sword"
+    | "source"
     | "spear"
     | "staff"
     | "stars"
@@ -504,133 +512,6 @@ export type NPCRole =
     | "thesearch"
     | "transport"
     | "witch"
-
-export type NPCType =
-    | "antip2w"
-    | "appearance"
-    | "armors"
-    | "basics"
-    | "bean"
-    | "beans"
-    | "bouncer"
-    | "citizen0"
-    | "citizen1"
-    | "citizen10"
-    | "citizen11"
-    | "citizen12"
-    | "citizen13"
-    | "citizen14"
-    | "citizen15"
-    | "citizen2"
-    | "citizen3"
-    | "citizen4"
-    | "citizen5"
-    | "citizen6"
-    | "citizen7"
-    | "citizen8"
-    | "citizen9"
-    | "compound"
-    | "craftsman"
-    | "exchange"
-    | "fancypots"
-    | "firstc"
-    | "fisherman"
-    | "funtokens"
-    | "gemmerchant"
-    | "goldnpc"
-    | "guard"
-    | "holo"
-    | "holo0"
-    | "holo1"
-    | "holo2"
-    | "holo3"
-    | "holo4"
-    | "holo5"
-    | "items0"
-    | "items1"
-    | "items10"
-    | "items11"
-    | "items12"
-    | "items13"
-    | "items14"
-    | "items15"
-    | "items16"
-    | "items17"
-    | "items18"
-    | "items19"
-    | "items2"
-    | "items20"
-    | "items21"
-    | "items22"
-    | "items23"
-    | "items24"
-    | "items25"
-    | "items26"
-    | "items27"
-    | "items28"
-    | "items29"
-    | "items3"
-    | "items30"
-    | "items31"
-    | "items32"
-    | "items33"
-    | "items34"
-    | "items35"
-    | "items36"
-    | "items37"
-    | "items38"
-    | "items39"
-    | "items4"
-    | "items40"
-    | "items41"
-    | "items42"
-    | "items43"
-    | "items44"
-    | "items45"
-    | "items46"
-    | "items47"
-    | "items5"
-    | "items6"
-    | "items7"
-    | "items8"
-    | "items9"
-    | "jailer"
-    | "leathermerchant"
-    | "lichteaser"
-    | "locksmith"
-    | "lostandfound"
-    | "lotterylady"
-    | "mcollector"
-    | "mistletoe"
-    | "monsterhunter"
-    | "newupgrade"
-    | "newyear_tree"
-    | "ornaments"
-    | "pete"
-    | "pots"
-    | "premium"
-    | "princess"
-    | "pvp"
-    | "pvpblocker"
-    | "pvptokens"
-    | "pwincess"
-    | "rewards"
-    | "santa"
-    | "scrolls"
-    | "secondhands"
-    | "shellsguy"
-    | "ship"
-    | "shrine"
-    | "standmerchant"
-    | "tavern"
-    | "tbartender"
-    | "thief"
-    | "transporter"
-    | "wbartender"
-    | "weapons"
-    | "witch"
-    | "wizardrepeater"
-    | "wnpc"
 
 // TODO: Confirm that PVP is actually the identifier for PVP servers
 export type ServerIdentifier =

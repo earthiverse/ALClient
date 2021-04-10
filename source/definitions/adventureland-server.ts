@@ -3,8 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { NPCType, CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
-import { DamageType, EmotionName, ItemName, MapName, MonsterName, SkillName } from "./adventureland-data"
+import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
+import { DamageType, EmotionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -567,7 +567,7 @@ export type PartyData = {
 
 export type PlayerData = {
     id: string
-    ctype: CharacterType | NPCType
+    ctype: CharacterType | NPCName
 
     abs: boolean
     afk?: string
