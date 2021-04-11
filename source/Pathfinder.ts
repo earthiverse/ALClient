@@ -20,7 +20,23 @@ export class Pathfinder {
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
-    protected static path = path.nba(Pathfinder.graph, {
+    protected static pathWithoutTown = path.nba(Pathfinder.graph, {
+        distance(fromNode, toNode, link) {
+            if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
+                // We are using the transporter
+                return Pathfinder.TRANSPORT_COST
+            } else if (link.data && link.data.type == "town") {
+                // We are warping to town
+                return 999999
+            }
+            // We are walking
+            if (fromNode.data.map == toNode.data.map) {
+                return Tools.distance(fromNode.data, toNode.data)
+            }
+        },
+        oriented: true
+    })
+    protected static pathWithTown = path.nba(Pathfinder.graph, {
         distance(fromNode, toNode, link) {
             if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
                 // We are using the transporter
@@ -467,7 +483,7 @@ export class Pathfinder {
         return closest
     }
 
-    public static getPath(from: NodeData, to: NodeData): LinkData[] {
+    public static getPath(from: NodeData, to: NodeData, avoidTownWarps = false): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
 
         if (from.map == to.map && this.canWalkPath(from, to)) {
@@ -481,7 +497,13 @@ export class Pathfinder {
         const path: LinkData[] = []
 
         console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
-        const rawPath = this.path.find(fromNode.id, toNode.id)
+        let rawPath:Node<NodeData>[]
+        if(avoidTownWarps) {
+            rawPath = this.pathWithoutTown.find(fromNode.id, toNode.id)
+        } else {
+            rawPath = this.pathWithTown.find(fromNode.id, toNode.id)
+        }
+        
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
         }

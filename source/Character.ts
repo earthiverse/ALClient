@@ -2069,17 +2069,17 @@ export class Character extends Observer implements CharacterData {
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move across maps.
-     * 
-     * If you want this funnction to return after we complete the move, use `await`.
-     * @param {(MapName | MonsterName | NPCType | IPosition)} to
-     * @param {{ getWithin?: number; useBlink?: boolean; }} [options={
+     *
+     * @param {(MapName | MonsterName | NPCName | IPosition)} to
+     * @param {{ avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; }} [options={
      *         getWithin: 0,
      *         useBlink: false
      *     }]
-     * @return {*}  {Promise<NodeData>} The destination where our character finished
+     * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
-    public async smartMove(to: MapName | MonsterName | NPCName | IPosition, options: { getWithin?: number; useBlink?: boolean; } = {
+    public async smartMove(to: MapName | MonsterName | NPCName | IPosition, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
+        avoidTownWarps: false,
         getWithin: 0,
         useBlink: false
     }): Promise<NodeData> {
@@ -2109,7 +2109,7 @@ export class Character extends Observer implements CharacterData {
                     const locations = this.locateMonster(mtype as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location)
+                        const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -2134,7 +2134,7 @@ export class Character extends Observer implements CharacterData {
                         const locations = this.locateNPCs(npc.id)
                         let closestDistance: number = Number.MAX_VALUE
                         for (const location of locations) {
-                            const potentialPath = await Pathfinder.getPath(this, location)
+                            const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
                             const distance = Pathfinder.computePathCost(potentialPath)
                             if (distance < closestDistance) {
                                 path = potentialPath
@@ -2160,12 +2160,11 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        if (options && options.getWithin !== undefined && Tools.distance(this, fixedTo) <= options.getWithin)
+        if (options?.getWithin >= Tools.distance(this, fixedTo))
             return Promise.resolve({ x: this.x, y: this.y, map: this.map })
 
         // If we don't have the path yet, get it
-        if (!path)
-            path = await Pathfinder.getPath(this, fixedTo)
+        if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
 
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
@@ -2214,7 +2213,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Blink skip check
-            if (options.useBlink && this.canUse("blink")) {
+            if (options?.useBlink && this.canUse("blink")) {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
