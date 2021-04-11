@@ -116,6 +116,7 @@ export class Pathfinder {
         if (from.map !== to.map) return false // We can't walk across maps
 
         const grid = this.getGrid(from.map)
+        const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
         let ystep, xstep // the step on y and x axis
         let error // the error accumulated during the incremenet
@@ -124,7 +125,7 @@ export class Pathfinder {
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
-        if (grid[y][x] !== WALKABLE) return false
+        if (grid[y * width + x] !== WALKABLE) return false
 
         if (dy < 0) {
             ystep = -1
@@ -152,15 +153,15 @@ export class Pathfinder {
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
                     if (error + errorprev < ddx) {  // bottom square also
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     } else if (error + errorprev > ddx) {  // left square also
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     } else {  // corner: bottom and left squares also
-                        if (grid[y - ystep][x] !== WALKABLE) return false
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return false
+                if (grid[y * width + x] !== WALKABLE) return false
                 errorprev = error
             }
         } else {  // the same as above
@@ -172,15 +173,15 @@ export class Pathfinder {
                     x += xstep
                     error -= ddy
                     if (error + errorprev < ddy) {
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     } else if (error + errorprev > ddy) {
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     } else {
-                        if (grid[y][x - xstep] !== WALKABLE) return false
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return false
+                if (grid[y * width + x] !== WALKABLE) return false
                 errorprev = error
             }
         }
@@ -220,17 +221,14 @@ export class Pathfinder {
         const width = this.G.geometry[map].max_x - this.G.geometry[map].min_x
         const height = this.G.geometry[map].max_y - this.G.geometry[map].min_y
 
-        const grid: Grid = Array(height)
-        for (let y = 0; y < height; y++) {
-            grid[y] = []
-            for (let x = 0; x < width; x++) grid[y][x] = UNKNOWN
-        }
+        const grid = new Uint8Array(height * width)
+        grid.fill(UNKNOWN)
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
             for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= yLine[0] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
                 for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - Constants.BASE.h); x <= yLine[2] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
-                    grid[y][x] = UNWALKABLE
+                    grid[y * width + x] = UNWALKABLE
                 }
             }
         }
@@ -239,7 +237,7 @@ export class Pathfinder {
         for (const xLine of this.G.geometry[map].x_lines) {
             for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - Constants.BASE.h); x <= xLine[0] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
                 for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= xLine[2] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
-                    grid[y][x] = UNWALKABLE
+                    grid[y * width + x] = UNWALKABLE
                 }
             }
         }
@@ -248,28 +246,28 @@ export class Pathfinder {
         for (const spawn of this.G.maps[map].spawns) {
             let x = Math.trunc(spawn[0]) - this.G.geometry[map].min_x
             let y = Math.trunc(spawn[1]) - this.G.geometry[map].min_y
-            if (grid[y][x] === WALKABLE) continue // We've already flood filled this
+            if (grid[y * width + x] === WALKABLE) continue // We've already flood filled this
             const stack = [[y, x]]
             while (stack.length) {
                 [y, x] = stack.pop()
                 let x1 = x
-                while (x1 >= 0 && grid[y][x1] == UNKNOWN) x1--
+                while (x1 >= 0 && grid[y * width + x1] == UNKNOWN) x1--
                 x1++
                 let spanAbove = 0
                 let spanBelow = 0
-                while (x1 < width && grid[y][x1] == UNKNOWN) {
-                    grid[y][x1] = WALKABLE
-                    if (!spanAbove && y > 0 && grid[y - 1][x1] == UNKNOWN) {
+                while (x1 < width && grid[y * width + x1] == UNKNOWN) {
+                    grid[y * width + x1] = WALKABLE
+                    if (!spanAbove && y > 0 && grid[(y - 1) * width + x1] == UNKNOWN) {
                         stack.push([y - 1, x1])
                         spanAbove = 1
-                    } else if (spanAbove && y > 0 && grid[y - 1][x1] !== UNKNOWN) {
+                    } else if (spanAbove && y > 0 && grid[(y - 1) * width + x1] !== UNKNOWN) {
                         spanAbove = 0
                     }
 
-                    if (!spanBelow && y < height - 1 && grid[y + 1][x1] == UNKNOWN) {
+                    if (!spanBelow && y < height - 1 && grid[(y + 1) * width + x1] == UNKNOWN) {
                         stack.push([y + 1, x1])
                         spanBelow = 1
-                    } else if (spanBelow && y < height - 1 && grid[y + 1][x1] !== UNKNOWN) {
+                    } else if (spanBelow && y < height - 1 && grid[(y + 1) * width + x1] !== UNKNOWN) {
                         spanBelow = 0
                     }
                     x1++
@@ -289,54 +287,54 @@ export class Pathfinder {
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width; x++) {
-                if (grid[y][x] !== WALKABLE) continue
+                if (grid[y * width + x] !== WALKABLE) continue
 
-                if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === UNWALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x - 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE) {
+                if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === UNWALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE) {
                     // Inside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === UNWALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === UNWALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y][x - 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[y * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === WALKABLE
-                    && grid[y][x - 1] === WALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === WALKABLE
+                    && grid[y * width + x - 1] === WALKABLE) {
                     // Outside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x] === WALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === WALKABLE) {
+                } else if (grid[(y - 1) * width + x] === WALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === WALKABLE) {
                     // Outside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y][x + 1] === WALKABLE
-                    && grid[y + 1][x] === WALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[y * width + x + 1] === WALKABLE
+                    && grid[(y + 1) * width + x] === WALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Outside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y][x - 1] === WALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === WALKABLE) {
+                } else if (grid[y * width + x - 1] === WALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === WALKABLE) {
                     // Outside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
                 }
@@ -570,6 +568,7 @@ export class Pathfinder {
         if (!this.G) throw new Error("Prepare pathfinding before querying getSafeWalkTo()!")
 
         const grid = this.getGrid(from.map)
+        const width = this.G.geometry[from.map].max_y - this.G.geometry[from.map].min_y
 
         let ystep, xstep // the step on y and x axis
         let error // the error accumulated during the incremenet
@@ -578,7 +577,7 @@ export class Pathfinder {
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
-        if (grid[y][x] !== WALKABLE) {
+        if (grid[y * width + x] !== WALKABLE) {
             console.error(`We shouldn't be able to be where we are in from (${from.map}:${from.x},${from.y}).`)
             return Pathfinder.findClosestNode(from.map, from.x, from.y).data
         }
@@ -609,15 +608,15 @@ export class Pathfinder {
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
                     if (error + errorprev < ddx) {  // bottom square also
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else if (error + errorprev > ddx) {  // left square also
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else {  // corner: bottom and left squares also
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
                 errorprev = error
             }
         } else {  // the same as above
@@ -629,15 +628,15 @@ export class Pathfinder {
                     x += xstep
                     error -= ddy
                     if (error + errorprev < ddy) {
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else if (error + errorprev > ddy) {
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else {
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return { map: from.map, x: x + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                 errorprev = error
             }
         }
