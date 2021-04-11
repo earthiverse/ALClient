@@ -147,7 +147,7 @@ export type CharacterData = PlayerData & {
     crit: number
     critdamage: number
     dreturn: number
-    emx: {
+    emx?: {
         [T in EmotionName]?: number
     }
     tax: number

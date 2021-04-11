@@ -340,6 +340,8 @@ export type StatusInfo = {
         c: number;
         /** What monster we have to kill */
         id: MonsterName;
+        /** What is this? */
+        dl?: boolean
     };
     citizen0aura?: {
         luck: number;

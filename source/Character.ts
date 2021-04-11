@@ -1144,25 +1144,25 @@ export class Character extends Observer implements CharacterData {
      * If you only want to check the cooldown, use isOnCooldown(skill) or getCooldown(skill).
      *
      * @param {SkillName} skill
-     * @param {boolean} [options={
-     *         checkCooldown: true,
-     *         checkEquipped: true
-     *     }]
+     * @param {{
+     *         ignoreCooldown?: boolean,
+     *         ignoreEquipped?: boolean
+     *     }} [options]
      * @return {*}  {boolean}
      * @memberof Character
      */
     public canUse(skill: SkillName, options?: {
-        checkCooldown?: boolean,
-        checkEquipped?: boolean
+        ignoreCooldown?: boolean,
+        ignoreEquipped?: boolean
     }): boolean {
         if (this.rip) return false // We are dead
         if (this.s.stoned) return false // We are 'stoned' (oneeye condition)
-        if (options?.checkCooldown && this.isOnCooldown(skill)) return false // Skill is on cooldown
+        if (this.isOnCooldown(skill) && !options?.ignoreCooldown) return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
-        if (options?.checkEquipped && gInfoSkill.wtype) {
+        if (gInfoSkill.wtype && !options?.ignoreEquipped) {
             // The skill requires a certain weapon type
             if (!this.slots.mainhand) return false // We don't have any weapon equipped
             const gInfoWeapon = this.G.items[this.slots.mainhand.name]
