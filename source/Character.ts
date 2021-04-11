@@ -16,7 +16,7 @@ export class Character extends Observer implements CharacterData {
     protected characterID: string;
     protected lastPositionUpdate: number;
     protected pingNum = 1;
-    protected pingMap = new Map<string, number>();
+    protected pingMap = new Map<string, { log: boolean, time: number }>();
     protected timeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
     public achievements = new Map<string, AchievementProgressData>();
@@ -339,7 +339,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("ping_ack", (data: { id: string; }) => {
             if (this.pingMap.has(data.id)) {
                 // Add the new ping
-                const ping = Date.now() - this.pingMap.get(data.id)
+                const ping = Date.now() - this.pingMap.get(data.id).time
                 this.pings.push(ping)
                 console.log(`Ping: ${ping}`)
 
@@ -737,13 +737,13 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Convert to async, and return a promise<number> with the ping ms time
-    public sendPing(): string {
+    public sendPing(log = true): string {
         // Get the next pingID
         const pingID = this.pingNum.toString()
         this.pingNum++
 
         // Set the pingID in the map
-        this.pingMap.set(pingID, Date.now())
+        this.pingMap.set(pingID, { log: log, time: Date.now() })
 
         // Get the ping
         this.socket.emit("ping_trig", { id: pingID })
