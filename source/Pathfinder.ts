@@ -199,7 +199,7 @@ export class Pathfinder {
         if (this.grids[map]) return this.grids[map]
         if (!this.G) throw new Error("Prepare pathfinding before querying getGrid()!")
 
-        console.log(`Preparing ${map}...`)
+        console.debug(`Preparing ${map}...`)
 
         const width = this.G.geometry[map].max_x - this.G.geometry[map].min_x
         const height = this.G.geometry[map].max_y - this.G.geometry[map].min_y
@@ -269,8 +269,8 @@ export class Pathfinder {
         this.graph.beginUpdate()
 
         // Add nodes at corners
-        // console.log("  Adding corners...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding corners...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width; x++) {
                 if (grid[y][x] !== WALKABLE) continue
@@ -328,8 +328,8 @@ export class Pathfinder {
         }
 
         // Add nodes at transporters. We'll look for close nodes to doors later.
-        // console.log("  Adding transporter node and links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding transporter node and links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         const transporters = []
         for (const npc of this.G.maps[map].npcs) {
             if (npc.id !== "transporter") continue
@@ -340,8 +340,8 @@ export class Pathfinder {
         }
 
         // Add nodes at doors. We'll look for close nodes to doors later.
-        // console.log("  Adding door nodes and links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding door nodes and links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         const doors: DoorInfo[] = []
         for (const door of this.G.maps[map].doors) {
             // TODO: Figure out how to know if we have access to a locked door
@@ -355,16 +355,16 @@ export class Pathfinder {
         }
 
         // Add nodes at spawns
-        // console.log("  Adding spawn nodes...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding spawn nodes...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (const spawn of this.G.maps[map].spawns) {
             walkableNodes.push(this.addNodeToGraph(map, spawn[0], spawn[1]))
         }
 
         // TODO: Is there any way to optimize this!?!?
         // TODO: This is what takes the most compute time...
-        // console.log("  Adding walkable links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding walkable links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let i = 0; i < walkableNodes.length; i++) {
             const fromNode = walkableNodes[i]
 
@@ -409,7 +409,6 @@ export class Pathfinder {
             }
         }
 
-        // console.log("  Adding town and leave links...")
         const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
         const townLinkData: LinkData = { type: "town", map: map, x: townNode.data.x, y: townNode.data.y }
         const leaveLink = this.addNodeToGraph("main", this.G.maps.main.spawns[0][0], this.G.maps.main.spawns[0][1])
@@ -481,7 +480,7 @@ export class Pathfinder {
 
         const path: LinkData[] = []
 
-        console.log(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
+        console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
         const rawPath = this.path.find(fromNode.id, toNode.id)
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
@@ -534,7 +533,7 @@ export class Pathfinder {
             path.splice(i, 1)
         }
 
-        console.log(`Path from ${fromNode.id} to ${toNode.id} found!`)
+        console.debug(`Path from ${fromNode.id} to ${toNode.id} found!`)
         return path
     }
 
@@ -629,7 +628,7 @@ export class Pathfinder {
 
         const maps: MapName[] = [startMap]
 
-        console.log("Preparing pathfinding...")
+        console.debug("Preparing pathfinding...")
         const start = Date.now()
 
         for (let i = 0; i < maps.length; i++) {
@@ -638,7 +637,7 @@ export class Pathfinder {
             // Add the connected maps
             for (const door of this.G.maps[map].doors) {
                 if (door[7] || door[8]) continue
-                if (door[4] == "test") continue
+                if (door[4] == "test") continue // Skip the test map to save ourselves some processing.
                 if (!maps.includes(door[4])) maps.push(door[4])
             }
         }
@@ -656,9 +655,9 @@ export class Pathfinder {
         }
         this.getGrid("jail") // Jail is disconnected, prepare it
 
-        console.log(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
-        console.log(`  # Nodes: ${this.graph.getNodeCount()}`)
-        console.log(`  # Links: ${this.graph.getLinkCount()}`)
+        console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
+        console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
+        console.debug(`  # Links: ${this.graph.getLinkCount()}`)
 
         return
     }

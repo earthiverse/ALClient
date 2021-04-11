@@ -27,7 +27,7 @@ export class Observer {
     }
 
     public async connect(): Promise<void> {
-        console.log(`Connecting to ${this.serverRegion}${this.serverIdentifier}...`)
+        console.debug(`Connecting to ${this.serverRegion}${this.serverIdentifier}...`)
         const connected = new Promise<void>((resolve, reject) => {
             this.socket.on("welcome", (data: WelcomeData) => {
                 if (data.region !== this.serverRegion || data.name !== this.serverIdentifier) {

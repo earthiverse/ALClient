@@ -21,7 +21,7 @@ export class Player implements PlayerData {
     public going_x: number
     public going_y: number
     public level = 1
-    public move_num: any
+    public move_num: number
     public moving: boolean
     public party: string
     public resistance: number

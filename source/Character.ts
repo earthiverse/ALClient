@@ -157,7 +157,6 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("achievement_progress", (data: AchievementProgressData) => {
             this.achievements.set(data.name, data)
-            console.log(data)
         })
 
         this.socket.on("action", (data: ActionData) => {
@@ -168,19 +167,6 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("chest_opened", (data: ChestOpenedData) => {
             this.chests.delete(data.id)
         })
-
-        // // TODO: Create a CorrectionData object
-        // this.socket.on("correction", (data: { x: number, y: number }) => {
-        //     console.log("----- LOCATION CORRECTION -----")
-        //     console.log(data)
-
-        //     this.updatePositions()
-        //     if (Pathfinder.canWalk(this, data)) {
-        //         this.going_x = data.x
-        //         this.going_y = data.y
-        //         this.moving = true
-        //     }
-        // })
 
         this.socket.on("death", (data: DeathData) => {
             const entity = this.entities.get(data.id)
@@ -294,8 +280,6 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("hit", (data: HitData) => {
-            // console.log("socket: hit!")
-            // console.log(data)
             if (data.miss || data.evade) {
                 this.projectiles.delete(data.pid)
                 return
@@ -337,15 +321,15 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("ping_ack", (data: { id: string; }) => {
-            if (this.pingMap.has(data.id)) {
+            const ping = this.pingMap.get(data.id)
+            if (ping) {
                 // Add the new ping
-                const ping = Date.now() - this.pingMap.get(data.id).time
-                this.pings.push(ping)
-                console.log(`Ping: ${ping}`)
+                const time = Date.now() - ping.time
+                this.pings.push(time)
+                if (ping.log) console.log(`Ping: ${time}`)
 
                 // Remove the oldest ping
-                if (this.pings.length > Constants.MAX_PINGS)
-                    this.pings.shift()
+                if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
 
                 // Remove the ping from the map
                 this.pingMap.delete(data.id)
@@ -384,7 +368,6 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("welcome", (data: WelcomeData) => {
-            // console.log("socket: welcome!")
             this.server = data
 
             // This serves as a doublecheck.
@@ -396,7 +379,6 @@ export class Character extends Observer implements CharacterData {
             this.serverIdentifier = data.name
 
             // Send a response that we're ready to go
-            // console.log("socket: loaded...")
             this.socket.emit("loaded", {
                 height: 1080,
                 width: 1920,
@@ -506,12 +488,16 @@ export class Character extends Observer implements CharacterData {
                 }
             } else {
                 // DEBUG
-                console.info("Game Response Data -----")
-                console.info(data)
+                console.debug("Game Response Data -----")
+                console.debug(data)
             }
         } else if (typeof (data) == "string") {
-            // DEBUG
-            console.info(`Game Response: ${data}`)
+            if (data == "resolve_skill") {
+                // Ignore. We resolve our skills a different way than the vanilla client
+            } else {
+                // DEBUG
+                console.debug(`Game Response: ${data}`)
+            }
         }
     }
 
@@ -661,7 +647,6 @@ export class Character extends Observer implements CharacterData {
 
         // When we're loaded, authenticate
         this.socket.on("welcome", () => {
-            // console.log("socket: authenticating...")
             this.socket.emit("auth", {
                 auth: this.userAuth,
                 character: this.characterID,
@@ -1153,15 +1138,31 @@ export class Character extends Observer implements CharacterData {
         return Tools.calculateDamageRange(this, entity)[0] > entity.hp
     }
 
-    public canUse(skill: SkillName): boolean {
+    /**
+     * Returns true if we can use the skill.
+     * This function checks various requirements, such as level, having a required item equipped, etc.
+     * If you only want to check the cooldown, use isOnCooldown(skill) or getCooldown(skill).
+     *
+     * @param {SkillName} skill
+     * @param {boolean} [options={
+     *         checkCooldown: true,
+     *         checkEquipped: true
+     *     }]
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canUse(skill: SkillName, options?: {
+        checkCooldown?: boolean,
+        checkEquipped?: boolean
+    }): boolean {
         if (this.rip) return false // We are dead
         if (this.s.stoned) return false // We are 'stoned' (oneeye condition)
-        if (this.getCooldown(skill) > 0) return false // Skill is on cooldown
+        if (options?.checkCooldown && this.isOnCooldown(skill)) return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
-        if (gInfoSkill.wtype) {
+        if (options?.checkEquipped && gInfoSkill.wtype) {
             // The skill requires a certain weapon type
             if (!this.slots.mainhand) return false // We don't have any weapon equipped
             const gInfoWeapon = this.G.items[this.slots.mainhand.name]
@@ -2154,7 +2155,7 @@ export class Character extends Observer implements CharacterData {
             else
                 fixedTo = { map: this.map, x: to.x, y: to.y }
         } else {
-            console.log(to)
+            console.debug(to)
             return Promise.reject("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
         }
 
@@ -2191,7 +2192,6 @@ export class Character extends Observer implements CharacterData {
                     y: fixedTo.y + Math.sin(angle) * options.getWithin
                 }
                 if (Pathfinder.canWalkPath(this, potentialMove)) {
-                    // console.log("walk close success!")
                     i = path.length
                     currentMove = potentialMove
                 }
@@ -2207,7 +2207,6 @@ export class Character extends Observer implements CharacterData {
                         break
 
                     if (potentialMove.type == "move" && Pathfinder.canWalkPath(this, potentialMove)) {
-                        console.log("skip check success!")
                         i = j
                         currentMove = potentialMove
                     }
@@ -2631,7 +2630,7 @@ export class Character extends Observer implements CharacterData {
      * @param filters Filters to help search for specific properties on items
      */
     public countItem(item: ItemName, inventory = this.items,
-        args?: {
+        filters?: {
             levelGreaterThan?: number;
             levelLessThan?: number;
         }): number {
@@ -2642,17 +2641,17 @@ export class Character extends Observer implements CharacterData {
             if (inventoryItem.name !== item)
                 continue
 
-            if (args) {
-                if (args.levelGreaterThan !== undefined) {
+            if (filters) {
+                if (filters.levelGreaterThan !== undefined) {
                     if (inventoryItem.level == undefined)
                         continue // This item doesn't have a level
-                    if (inventoryItem.level <= args.levelGreaterThan)
+                    if (inventoryItem.level <= filters.levelGreaterThan)
                         continue // This item is a lower level than desired
                 }
-                if (args.levelLessThan !== undefined) {
+                if (filters.levelLessThan !== undefined) {
                     if (inventoryItem.level == undefined)
                         continue // This item doesn't have a level
-                    if (inventoryItem.level >= args.levelLessThan)
+                    if (inventoryItem.level >= filters.levelLessThan)
                         continue // This item is a higher level than desired
                 }
             }
@@ -2670,16 +2669,13 @@ export class Character extends Observer implements CharacterData {
 
     public getCooldown(skill: SkillName): number {
         // Check if this skill is shared with another cooldown
-        if (this.G.skills[skill].share)
-            skill = this.G.skills[skill].share
+        if (this.G.skills[skill].share) skill = this.G.skills[skill].share
 
         const nextSkill = this.nextSkill.get(skill)
-        if (!nextSkill)
-            return 0
+        if (!nextSkill) return 0
 
         const cooldown = nextSkill.getTime() - Date.now()
-        if (cooldown < 0)
-            return 0
+        if (cooldown < 0) return 0
         return cooldown
     }
 
@@ -2755,12 +2751,24 @@ export class Character extends Observer implements CharacterData {
      */
     public isEquipped(itemName: ItemName): boolean {
         for (const slot in this.slots) {
-            if (!this.slots[slot as SlotType])
-                continue // Nothing equipped in this slot
-            if (this.slots[slot as SlotType].name == itemName)
-                return true
+            if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
+            if (this.slots[slot as SlotType].b) continue // We are buying this item, we don't have it equipped
+            if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
+    }
+
+    /**
+     * Returns true if our skill is on cooldown, false otherwise.
+     * This function does not check if you can use the skill.
+     * If you want to check if you have all the requirements to use it, see canUse(skill).
+     *
+     * @param {SkillName} skill
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public isOnCooldown(skill: SkillName): boolean {
+        return this.getCooldown(skill) !== 0
     }
 
     /**

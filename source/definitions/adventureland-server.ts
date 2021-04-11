@@ -417,6 +417,8 @@ export type GameResponseDataString =
     | "no_level"
     /** When you attack or use a skill with "id" set to "null" */
     | "no_target"
+    /** After you use a skill, when the server is done with everything, it will send this in response */
+    | "resolve_skill"
     /** When you try to send an item to another character, but they don't have room for it in their inventory */
     | "send_no_space"
     | "skill_cant_incapacitated"

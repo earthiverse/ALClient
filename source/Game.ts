@@ -1,7 +1,7 @@
 import axios from "axios"
 import fs from "fs"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantCharData, PullMerchantData } from "./definitions/adventureland-server"
-import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
+import { ServerRegion, ServerIdentifier, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
@@ -41,13 +41,13 @@ export class Game {
     static async getGData(): Promise<GData2> {
         if (this.G) return this.G
 
-        console.log("Updating 'G' data...")
+        console.debug("Updating 'G' data...")
         const response = await axios.get("http://adventure.land/data.js")
         if (response.status == 200) {
             // Update G with the latest data
             const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
             this.G = JSON.parse(matches[1]) as GData2
-            console.log("  Updated 'G' data!")
+            console.debug("Updated 'G' data!")
             return this.G
         } else {
             console.error(response)
@@ -105,7 +105,7 @@ export class Game {
         // See if we already have a userAuth stored in our database
 
         // Login and save the auth
-        console.log("Logging in...")
+        console.debug("Logging in...")
         const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
         let loginResult
         for (const datum of login.data) {
@@ -115,7 +115,7 @@ export class Game {
             }
         }
         if (loginResult && loginResult.message == "Logged In!") {
-            console.log("  Logged in!")
+            console.debug("Logged in!")
             // We successfully logged in
             // Find the auth cookie and save it
             for (const cookie of login.headers["set-cookie"]) {
