@@ -497,13 +497,13 @@ export class Pathfinder {
         const path: LinkData[] = []
 
         console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
-        let rawPath:Node<NodeData>[]
-        if(avoidTownWarps) {
+        let rawPath: Node<NodeData>[]
+        if (avoidTownWarps) {
             rawPath = this.pathWithoutTown.find(fromNode.id, toNode.id)
         } else {
             rawPath = this.pathWithTown.find(fromNode.id, toNode.id)
         }
-        
+
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
         }
@@ -524,7 +524,7 @@ export class Pathfinder {
             } else {
                 // If the next move is the town node, check if it's faster to warp there.
                 const townNode = this.G.maps[nextNode.data.map].spawns[0]
-                if (nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
+                if (!avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
                     if (Tools.distance(currentNode.data, nextNode.data) > this.TOWN_COST) {
                         // It's quicker to use 'town'
                         path.push({ type: "town", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
