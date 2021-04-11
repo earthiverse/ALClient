@@ -568,7 +568,7 @@ export class Pathfinder {
         if (!this.G) throw new Error("Prepare pathfinding before querying getSafeWalkTo()!")
 
         const grid = this.getGrid(from.map)
-        const width = this.G.geometry[from.map].max_y - this.G.geometry[from.map].min_y
+        const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
         let ystep, xstep // the step on y and x axis
         let error // the error accumulated during the incremenet
