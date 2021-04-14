@@ -316,8 +316,10 @@ export type GData2 = {
              * [1]: y position where you spawn
              * 
              * [2]: Direction to face the character when you spawn
+             * 
+             * [3]: If set, randomly places you within this distance of the spawn to prevent stacking. TODO: Confirm.
              */
-            spawns: ([number, number, number?] | [number, number, number, number])[]
+            spawns: ([number, number, number?, number?])[]
             /** TODO: What is this? */
             world?: string
             traps?: {
