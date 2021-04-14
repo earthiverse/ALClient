@@ -2,6 +2,8 @@ import { StatusInfo } from "./definitions/adventureland"
 import { DamageType, GData2, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, EntityData } from "./definitions/adventureland-server"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Player } from "./Player"
+import { Tools } from "./Tools"
 
 export class Entity implements EntityData {
     protected G: GData2
@@ -134,16 +136,24 @@ export class Entity implements EntityData {
     }
 
     /**
-     * Returns true if the entity will die to the already incoming projectiles
-     * @param entity 
-     * @param projectiles 
+     * Returns true if the entity has a 100% chance to die from projectiles already cast.
+     *
+     * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
+     * @param {Map<string, Player>} players (e.g.: bot.players)
+     * @return {*}  {boolean}
+     * @memberof Entity
      */
-    public willDieToProjectiles(projectiles: Map<string, ActionData>): boolean {
-        if (this["1hp"] || this.evasion || this.reflection) return false
+    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>): boolean {
+        if (this.evasion || this.reflection) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
-            if (projectile.target == this.id) incomingProjectileDamage += projectile.damage * 0.9
-            if (incomingProjectileDamage > this.hp) return true
+            if (projectile.target !== this.id) continue // This projectile is heading towards another entity
+
+            const attacker = players.get(projectile.attacker)
+            const minimumDamage = Tools.calculateDamageRange(attacker, this)[0]
+
+            incomingProjectileDamage += minimumDamage
+            if (incomingProjectileDamage >= this.hp) return true
         }
         return false
     }
