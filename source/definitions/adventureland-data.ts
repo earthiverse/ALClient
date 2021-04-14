@@ -7,7 +7,44 @@ import { CharacterType, GItem, IPosition, SlotInfo, SlotType, WeaponType } from 
 
 export type GData2 = {
     achievements: {
-        [T in AchievementName]: GDataAchievement
+        [T in AchievementName]: {
+            /** The achievement name (human readable) */
+            name: string
+            /** An explanation how this achievement works, or how you obtain it */
+            explanation?: string
+            /** If you achieve this achievement, you get this item */
+            item?: ItemName
+            /** If you achieve this achievement, you get this many shells */
+            shells?: number
+            /** The number of times you have to do the thing to get the achievement */
+            count?: number
+            /** If this is set, your item will obtain this title if you get this achievement */
+            title?: TitleName
+            /** TODO: What is this? */
+            rr?: number
+        }
+    }
+    animations: {
+        [T in AnimationName]: {
+            aspeed?: "fast" | "mild" | "slow"
+            alpha?: number
+            bubble?: boolean
+            continuous?: boolean
+            directional?: boolean
+            exact?: boolean
+            fade?: boolean
+            framefps?: number
+            front?: boolean
+            file: string
+            frames: number
+            proportional?: boolean
+            scale?: number
+            size?: number
+            speed?: number
+            speeding?: boolean
+            tiling?: boolean
+            y?: number
+        }
     }
     classes: { [T in CharacterType]: {
         /** What items you get if you create a new character */
@@ -116,12 +153,20 @@ export type GData2 = {
     }
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
-         *  [quantity, item name, item level] */
+         *  [quantity, item name, item level (0 if not set)] */
         items: [number, ItemName, number?][]
         /** The cost to craft this item */
         cost: number
         quest?: "mcollector" | "witch"
     } }
+    dismantle: {
+        [T in ItemName]?: {
+            /** What items you get when you dismantle [quantity (chance if < 1), item name] */
+            items: [number, ItemName][]
+            /** How much it costs to disassemble the given item */
+            cost: number
+        }
+    }
     geometry: {
         [T in MapName]?: {
             /** TODO: ??? What is this? */
@@ -151,7 +196,7 @@ export type GData2 = {
                 [T in string]: [number, number, number, number]
             }
             /** TODO: ??? What is this? GUI related? */
-            tiles: ([string, number, number, number] | [string, number, number, number, number])[]
+            tiles: ([TilesetName, number, number, number] | [TilesetName, number, number, number, number])[]
             /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
             x_lines?: [number, number, number][]
             /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
@@ -566,6 +611,16 @@ export type GData2 = {
     } | {
         "textures": string[]
     }
+    projectiles: {
+        [T in ProjectileName]: {
+            animation: string
+            hit_animation?: string
+            pure?: boolean
+            ray?: boolean
+            /** Projectile speed */
+            speed: number
+        }
+    }
     /** If you buy an item with shells, this is the ratio of shells to gold */
     shells_to_gold: number
     skills: { [T in SkillName]: {
@@ -604,6 +659,16 @@ export type GData2 = {
         /** The weapon type needed to use this skill */
         wtype?: WeaponType | WeaponType[];
     } }
+    tilesets: {
+        [T in TilesetName]: {
+            /** The URL that contains the tileset */
+            file: string
+            /** TODO: ??? Animation? */
+            frames?: number
+            /** TODO: ??? Animation? */
+            frame_width?: number
+        }
+    }
     titles: {
         [T in TitleName]: {
             /** The title name (human readable) */
@@ -629,23 +694,6 @@ export type GData2 = {
     }
     /** Version number for this data. */
     version: number
-}
-
-export type GDataAchievement = {
-    /** The achievement name (human readable) */
-    name: string
-    /** An explanation how this achievement works, or how you obtain it */
-    explanation?: string
-    /** If you achieve this achievement, you get this item */
-    item?: ItemName
-    /** If you achieve this achievement, you get this many shells */
-    shells?: number
-    /** The number of times you have to do the thing to get the achievement */
-    count?: number
-    /** If this is set, your item will obtain this title if you get this achievement */
-    title?: TitleName
-    /** TODO: What is this? */
-    rr?: number
 }
 
 export type Attribute =
@@ -771,6 +819,83 @@ export type AchievementName =
     | "reach90"
     | "stomped"
     | "upgrade10"
+
+export type AnimationName =
+    | "acid"
+    | "arrow1"
+    | "arrow_hit"
+    | "block"
+    | "burst"
+    | "carrow"
+    | "confetti"
+    | "crackle"
+    | "cuarrow"
+    | "curse"
+    | "curse_new"
+    | "curse_projectile"
+    | "dampened"
+    | "exchange"
+    | "explode_a"
+    | "explode_b"
+    | "explode_c"
+    | "explode_p"
+    | "explode_up"
+    | "failure"
+    | "firearrow"
+    | "fireball"
+    | "fog"
+    | "frostarrow"
+    | "frostball"
+    | "garrow"
+    | "gm"
+    | "gold"
+    | "gold_anim"
+    | "hardshell"
+    | "heal"
+    | "heal_projectile"
+    | "icecrack"
+    | "invincible"
+    | "light"
+    | "magic0"
+    | "magic1"
+    | "magic2"
+    | "magic3"
+    | "magic4"
+    | "mblob"
+    | "mblob_purplish"
+    | "mblob_red"
+    | "mluck"
+    | "party_heal"
+    | "pblob"
+    | "pinky"
+    | "poucharrow"
+    | "rain"
+    | "reflection"
+    | "revival"
+    | "rspeed"
+    | "slash"
+    | "slash0"
+    | "slash1"
+    | "slash2"
+    | "slash3"
+    | "snow"
+    | "snowball"
+    | "snowball_hit"
+    | "snowflake"
+    | "spark0"
+    | "starkiller"
+    | "stunned"
+    | "success"
+    | "superarrow"
+    | "supershot"
+    | "tangle"
+    | "taunt"
+    | "tiling_burst"
+    | "tiling_burstj"
+    | "transport"
+    | "typing"
+    | "wandy"
+    | "wslash"
 
 export type BankPackName =
     | "items0"
@@ -1670,6 +1795,36 @@ export type NPCName =
     | "wizardrepeater"
     | "wnpc"
 
+export type ProjectileName =
+    | "acid"
+    | "arrow"
+    | "bigmagic"
+    | "burst"
+    | "crossbowarrow"
+    | "cupid"
+    | "curse"
+    | "firearrow"
+    | "fireball"
+    | "frostarrow"
+    | "frostball"
+    | "garrow"
+    | "magic"
+    | "magic_divine"
+    | "magic_purple"
+    | "mmagic"
+    | "momentum"
+    | "pinky"
+    | "plight"
+    | "pmagic"
+    | "poisonarrow"
+    | "pouch"
+    | "snowball"
+    | "stone"
+    | "stone_k"
+    | "supershot"
+    | "wandy"
+    | "wmomentum"
+
 export type SkillName =
     | "3shot"
     | "4fingers"
@@ -1762,6 +1917,31 @@ export type SkillName =
     | "weakness_aura"
     | "xpower"
     | "zap"
+
+export type TilesetName =
+    | "ash"
+    | "beach"
+    | "castle"
+    | "custom"
+    | "custom2"
+    | "custom_a"
+    | "dark"
+    | "doors"
+    | "dungeon"
+    | "fort"
+    | "house"
+    | "inside"
+    | "jungle"
+    | "licht"
+    | "new"
+    | "outside"
+    | "puzzle"
+    | "ruins"
+    | "ship"
+    | "stands"
+    | "tree"
+    | "water"
+    | "winter"
 
 export type TitleName =
     | "critmonger"
