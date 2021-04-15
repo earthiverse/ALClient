@@ -1,13 +1,13 @@
-import { GData, ItemInfo } from "./definitions/adventureland"
-import { ItemName } from "./definitions/adventureland-data"
+import { ItemInfo } from "./definitions/adventureland"
+import { GData2, ItemName } from "./definitions/adventureland-data"
 
 export class Item {
-    protected G: GData
+    protected G: GData2
 
     public level: number
     public name: ItemName
 
-    public constructor(data: ItemInfo, G: GData) {
+    public constructor(data: ItemInfo, G: GData2) {
         this.G = G
     }
 

@@ -2122,7 +2122,7 @@ export class Character extends Observer implements CharacterData {
                             continue
 
                         // Set `to` to the closest NPC
-                        const locations = this.locateNPCs(npc.id)
+                        const locations = this.locateNPC(npc.id)
                         let closestDistance: number = Number.MAX_VALUE
                         for (const location of locations) {
                             const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
@@ -2956,18 +2956,15 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateNPCs(npcID: NPCName): NodeData[] {
-        const locations: NodeData[] = []
+    public locateNPC(npcID: NPCName): IPosition[] {
+        const locations: IPosition[] = []
         for (const mapName in this.G.maps) {
             const map = this.G.maps[mapName as MapName]
-            if (map.ignore)
-                continue
-            if (map.instance || !map.npcs || map.npcs.length == 0)
-                continue // Map is unreachable, or there are no NPCs
+            if (map.ignore) continue
+            if (map.instance || !map.npcs || map.npcs.length == 0) continue // Map is unreachable, or there are no NPCs
 
             for (const npc of map.npcs) {
-                if (npc.id !== npcID)
-                    continue
+                if (npc.id !== npcID) continue
 
                 // TODO: If it's an NPC that moves around, check in the database for the latest location
                 if (npc.position) {
@@ -2981,5 +2978,105 @@ export class Character extends Observer implements CharacterData {
         }
 
         return locations
+    }
+
+    public locateCraftNPC(itemName: ItemName): IPosition {
+        // Is the item craftable?
+        const gCraft = this.G.craft[itemName]
+        if (gCraft) {
+            // If the item has a quest associated with it, use that npc, otherwise use the craftsman.
+            const npcToLocate = gCraft.quest ? gCraft.quest : "craftsman"
+            for (const mapName in this.G.maps) {
+                const gMap = this.G.maps[mapName as MapName]
+                if (gMap.ignore) continue
+
+                for (const npc of gMap.npcs) {
+                    if (npc.id == npcToLocate) {
+                        // We found the NPC
+                        return { map: mapName as MapName, x: npc.position[0], y: npc.position[1] }
+                    }
+                }
+            }
+        }
+
+        throw Error(`${itemName} is not craftable.`)
+    }
+
+    public locateExchangeNPC(itemName: ItemName): IPosition {
+        // Does the item have a quest involved?
+        const gItem = this.G.items[itemName]
+        if (gItem.quest) {
+            // Find the NPC that accepts these quests
+            let npcToLocate: NPCName
+            for (const npcName in this.G.npcs) {
+                const gNPC = this.G.npcs[npcName as NPCName]
+                if (gNPC.ignore) continue
+
+                if (gNPC.quest == gItem.quest) {
+                    npcToLocate = gNPC.id
+                    break
+                }
+            }
+            // Look for the NPC in the maps
+            if (npcToLocate) {
+                for (const mapName in this.G.maps) {
+                    const gMap = this.G.maps[mapName as MapName]
+                    if (gMap.ignore) continue
+
+                    for (const npc of gMap.npcs) {
+                        if (npc.id == npcToLocate) {
+                            // We found the NPC
+                            return { map: mapName as MapName, x: npc.position[0], y: npc.position[1] }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Is the item a token?
+        if(gItem.type == "token") {
+            // Find the NPC that accepts these tokens
+            let npcToLocate: NPCName
+            for (const npcName in this.G.npcs) {
+                const gNPC = this.G.npcs[npcName as NPCName]
+                if (gNPC.ignore) continue
+
+                if (gNPC.token == itemName) {
+                    npcToLocate = gNPC.id
+                    break
+                }
+            }
+            // Look for the NPC in the maps
+            if (npcToLocate) {
+                for (const mapName in this.G.maps) {
+                    const gMap = this.G.maps[mapName as MapName]
+                    if (gMap.ignore) continue
+
+                    for (const npc of gMap.npcs) {
+                        if (npc.id == npcToLocate) {
+                            // We found the NPC
+                            return { map: mapName as MapName, x: npc.position[0], y: npc.position[1] }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Is the item exchangable?
+        if (gItem.e) {
+            for (const mapName in this.G.maps) {
+                const gMap = this.G.maps[mapName as MapName]
+                if (gMap.ignore) continue
+
+                for (const npc of gMap.npcs) {
+                    if (npc.id == "exchange") {
+                        // We found the NPC
+                        return { map: mapName as MapName, x: npc.position[0], y: npc.position[1] }
+                    }
+                }
+            }
+        }
+
+        throw Error(`${itemName} is not exchangable`)
     }
 }

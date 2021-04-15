@@ -2,6 +2,7 @@ import { Game } from "./Game"
 import { Character } from "./Character"
 import { GData2 } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
+import { IPosition } from "./definitions/adventureland"
 
 let G: GData2
 let priest: Character
@@ -538,4 +539,26 @@ test("Character.locateItems", async () => {
     expect(priest.locateItems("pants", priest.items, { levelLessThan: 2 }).length).toBe(2)
     expect(priest.locateItems("pants", priest.items, { levelGreaterThan: 0 }).length).toBe(1)
     expect(priest.locateItems("mpot0", priest.items, { quantityGreaterThan: 1 }).length).toBe(2)
+})
+
+test("Character.locateCraftNPC", async () => {
+    // craftsman location
+    expect(priest.locateCraftNPC("pouchbow")).toStrictEqual<IPosition>({ map: "main", x: 92, y: 670 })
+    // witch location
+    expect(priest.locateCraftNPC("elixirpnres")).toStrictEqual<IPosition>({ map: "halloween", x: 858, y: -160 })
+    // mcollector location
+    expect(priest.locateCraftNPC("resistancering")).toStrictEqual<IPosition>({ map: "main", x: 81, y: -283 })
+    // not craftable
+    expect(() => { priest.locateCraftNPC("gem0") }).toThrowError()
+})
+
+test("Character.locateExchangeNPC", async () => {
+    // general exchangable
+    expect(priest.locateExchangeNPC("gem0")).toStrictEqual<IPosition>({ map: "main", x: -25, y: -478 })
+    // token
+    expect(priest.locateExchangeNPC("monstertoken")).toStrictEqual<IPosition>({ map: "main", x: 126, y: -413 })
+    // quest
+    expect(priest.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 144, y: -47 })
+    // not exchangable
+    expect(() => { priest.locateExchangeNPC("mpot0") }).toThrowError()
 })

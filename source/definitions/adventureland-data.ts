@@ -3,7 +3,7 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { CharacterType, GItem, IPosition, SlotInfo, SlotType, WeaponType } from "./adventureland"
+import { CharacterType, IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland"
 
 export type GData2 = {
     achievements: {
@@ -167,8 +167,16 @@ export type GData2 = {
             cost: number
         }
     }
+    emotions: {
+        [T in EmotionName]?: {
+            /** How long you have to wait to use an emotion again after using this emotion */
+            cooldown: number
+            /** The emotion name */
+            fx: EmotionName
+        }
+    }
     geometry: {
-        [T in MapName]?: {
+        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "old_bank" | "old_main" | "original_main" | "therush">]: {
             /** TODO: ??? What is this? */
             default?: number
             /** TODO: ??? What is this? */
@@ -203,7 +211,146 @@ export type GData2 = {
             y_lines?: [number, number, number][]
         }
     }
-    items: { [T in ItemName]: GItem };
+    items: {
+        [T in ItemName]: {
+            /** (TODO: Obsolete?) Related to 'announce'? */
+            a?: boolean | number
+            ability?: "burn" | "freeze" | "posion" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
+            /** (GUI related) Item border accent color */
+            acolor?: string
+            /** TODO: ??? What is this? Is this related to special items? */
+            action?: string
+            /** Wearing this item grants the given aura */
+            aura?: ConditionName
+            /** Cost of the item in shells */
+            cash?: number
+            /** If set, only these class types can use this item */
+            class?: CharacterType[]
+            /** If set, the item is upgradable. How the item gets better if you compound it. */
+            compound?: {
+                [T in Attribute]?: number
+            }
+            /** Time to wait until you can use this type of item again */
+            cooldown?: number
+            /** TODO: ??? The user who came up with the idea for this item? */
+            credit?: string
+            /** TODO: ??? GUI related? */
+            cx?: {
+                accent?: string
+                border?: number
+                extension?: boolean
+                large?: boolean
+                lightborder?: boolean
+                scale?: number
+            }
+            damage?: DamageType
+            /** How long the booster is good for */
+            days?: number
+            /** If true, this item will remove conditions */
+            debuff?: boolean
+            /** Human readable flavor text */
+            delia?: string
+            /** How long the elixir will last */
+            duration?: number
+            /** TODO: ??? What is this? Why don't all elixirs have 'eat'? */
+            eat?: boolean
+            /** TODO: ??? What is this? */
+            edge?: number
+            /** If set, you can exchange this many of the item for something (see 'G.drops') */
+            e?: number
+            /** If true, this item is related to an event */
+            event?: boolean
+            /** TODO: ??? What is this? */
+            exclusive?: boolean
+            /** Human readable flavor text for the item */
+            explanation?: string
+            /** Bonus to the amount of stat points you get from applying a scroll to the item */
+            extra_stat?: number
+            /** Item worth */
+            g: number
+            gain?: Attribute
+            gives?: [[Attribute, number]]
+            /** TODO: Confirm. Upgrade/compound scroll grade */
+            grade?: number
+            /** What level the item increases grade at [high, rare, legendary, exalted] */
+            grades?: [number, number, number, number]
+            /** TODO: Confirm. Equipping this item offers the following cosmetic. */
+            hat?: string
+            /** If true, the item is probably old. */
+            ignore?: boolean
+            /** TODO: ??? Obsolete? */
+            legacy?: {
+                class?: null
+                gold?: number
+                luck?: number
+                set?: null
+            }
+            /** If set, you will only get `item.g / item.markup` gold for selling the item. */
+            markup?: number
+            /** TODO: ??? Pets? */
+            monster?: MonsterName
+            multiplier?: number
+            /** Human readable name for the item */
+            name: string
+            /** Human readable lore */
+            nopo?: string
+            /** (Obsolete?) Basically the same as "explanation" */
+            note?: string
+            /** Which NPC to trade the item with */
+            npc?: NPCName
+            /** TODO: ??? What is this? */
+            offering?: number
+            /** TODO: Confirm. (GUI rleated) If set, clicking on this item will cause the given javascript to run. */
+            onclick?: string
+            /** TODO: Confirm. Opens the given dungeon */
+            opens?: MapName
+            /** (GUI related) Projectile to use for weapon attacks */
+            projectile?: ProjectileName
+            /** TODO: ??? GUI related? */
+            projectile_test?: string
+            /** TODO: ??? What is this? */
+            protection?: boolean
+            /** Relates to where you can exchange this item. (See: G.npcs[NPCName].quest) */
+            quest?: string
+            rare?: boolean
+            /** For tome of protection, it rewards the player who kills you with this % of the item cost (item.g) */
+            reward?: number
+            /** If set, you can stack this many of the item in one inventory slot */
+            s?: number | boolean
+            /** TODO: Confirm. If true, you can apply a scroll to this item to give it stats */
+            scroll?: boolean
+            set?: string
+            /** GUI picture for the item */
+            skin: string
+            skin_a?: string
+            skin_c?: string
+            skin_r?: string
+            /** Spawns the given monster */
+            spawn?: MonsterName
+            special?: boolean
+            /** If set, you can use this item as a merchant stand */
+            stand?: string
+            stat?: Attribute | number
+            tier?: number
+            /** Human readable history and lore for the item */
+            trex?: string
+            type: ItemType
+            /** This key unlocks the given map */
+            unlocks?: MapName
+            /** If set, the item is upgradable. How the item gets better if you upgrade it. */
+            upgrade?: {
+                [T in Attribute]?: number
+            }
+            withdrawal?: ConditionName
+            wtype?: WeaponType
+            /** TODO: Confirm. Equipping this item allows you to equip the following cosmetics */
+            xcx?: string[]
+            /** TODO: ??? What is this? */
+            xscroll?: boolean
+        } & {
+            [T in Exclude<Attribute, "stat">]?: number
+        }
+    };
     levels: {
         [T in string]?: number
     }
@@ -361,7 +508,7 @@ export type GData2 = {
         }
     }
     monsters: {
-        [T in MonsterName]: {
+        [T in Exclude<MonsterName, "terracota">]: {
             /** If true, all attacks will only do 1 damage to this monster */
             "1hp"?: boolean
             /** (GUI) If set, the sprite will continue its animation when it's standing still. */
@@ -567,7 +714,7 @@ export type GData2 = {
              *  If it's "cx", you can exchange cosmetic jars.
              *  If it's "mcollector", you can exchange whatever has `quest: "mcollector"` in `G.craft`
              *  If it's "witch", you can exchange whatever has `quest: "witch"` in `G.craft` */
-            quest?: ItemName | "cx" | "mcollector" | "witch"
+            quest?: QuestName
             /** The role the NPC has */
             role: "announcer" | "blocker" | "bouncer" | "citizen" | "companion" | "compound" | "craftsman" | "cx" | "daily_events" | "exchange" | "funtokens" | "gold" | "guard" | "items" | "jailer" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "merchant" | "monstertokens" | "newupgrade" | "newyear_tree" | "petkeeper" | "premium" | "pvp_announcer" | "pvptokens" | "quest" | "repeater" | "resort" | "rewards" | "secondhands" | "shells" | "ship" | "shrine" | "standmerchant" | "tavern" | "tease" | "thesearch" | "transport" | "witch" | string
             /** (GUI) Lines the NPC can say */
@@ -717,6 +864,8 @@ export type Attribute =
     | "blast"
     /** TODO: ??? Joke stat? */
     | "bling"
+    /** Chance for the item to break on use */
+    | "breaks"
     /** TODO: ??? What is this? Additional run speed when it has a target? */
     | "charge"
     /** TODO: ??? Joke stat? */
@@ -737,6 +886,8 @@ export type Attribute =
     | "evasion"
     /** Chance to do AoE damage around the target */
     | "explosion"
+    /** Fire resistance (%) */
+    | "firesistance"
     /** Fortitude (Reduces the amount of PvP damage you take) */
     | "for"
     /** Attack Speed (decreases attack cooldown) */
@@ -1002,6 +1153,7 @@ export type ConditionName =
     | "xshotted"
 
 export type DamageType =
+    | "heal"
     | "magical"
     | "none"
     | "physical"
@@ -1527,6 +1679,7 @@ export type MapName =
     | "desertland"
     | "duelland"
     | "dungeon0"
+    | "frozencave"
     | "goobrawl"
     | "halloween"
     | "hut"
@@ -1552,6 +1705,7 @@ export type MapName =
     | "spookytown"
     | "tavern"
     | "test"
+    | "therush"
     | "tomb"
     | "tunnel"
     | "winter_cave"
@@ -1660,6 +1814,7 @@ export type MonsterName =
     | "target_ar900"
     | "target_r500"
     | "target_r750"
+    | "terracota"
     | "tinyp"
     | "tortoise"
     | "vbat"
@@ -1958,3 +2113,9 @@ export type TitleName =
     | "sniper"
     | "stomped"
     | "superfast"
+
+export type QuestName =
+    | ItemName // Not all items are quests, check with `G.items[ItemName].e` if you can exchange it
+    | "cx" 
+    | "mcollector"
+    | "witch"

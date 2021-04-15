@@ -32,7 +32,6 @@ export type GData = {
         /** A list of items you will get if you dismantle. If the number is < 1, it indicates the probability of getting that item. */
         items: [number, ItemName][];
     } };
-    items: { [T in ItemName]: GItem };
     geometry: {
         [T in MapName]: {
             max_x: number;
@@ -201,36 +200,6 @@ export type GMonster = {
 } & {
     [T in Attribute]?: number
 }
-
-export type GItem = {
-    buy?: boolean;
-    /** Contains information about what stats the item will gain with each compound level. Set if the item is compoundable. */
-    compound?: {
-        [T in Attribute]?: number
-    };
-    damage?: DamageType;
-    /** Refers to how many items are needed to exchange (see .quest as well!) */
-    e?: number;
-    /** Cost of the item in gold, if an NPC were to sell this item */
-    g: number;
-    gives: ["hp" | "mp", number][]
-    /** The first number refers to what level the item begins being "high" grade, the second for "rare" */
-    grades?: [number, number];
-    /** The full name of the item */
-    name: string;
-    id: ItemName;
-    // TODO: Add a type for quests
-    /** Indicates the "quest" that this item is needed to complete */
-    quest: string;
-    /** Indicates how many of this items you can stack. Set if the item is stackable. */
-    s: number;
-    /** Contains information about what stats the item will gain with each upgrade level. Set if the item is upgradable. */
-    upgrade?: {
-        [T in Attribute]?: number
-    };
-    type: ItemType;
-    wtype: WeaponType;
-} & { [T in Attribute]?: number }
 
 export type BankInfo = {
     [T in Exclude<BankPackName, "gold">]?: ItemInfo[]
@@ -401,13 +370,58 @@ export type CharacterType =
 
 // TODO: Get all types
 export type ItemType =
+    | "activator"
+    | "amulet"
+    | "bank_key"
+    | "belt"
+    | "booster"
     | "box"
     | "cape"
+    | "chest"
+    | "chrysalis"
+    | "computer"
+    | "container"
+    | "cosmetics"
+    | "cscroll"
+    | "dungeon_key"
+    | "earring"
+    | "elixir"
+    | "flute"
     | "gem"
+    | "gloves"
+    | "helmet"
+    | "jar"
+    | "licence"
     | "material"
     | "misc"
+    | "misc_offhand"
+    | "offering"
+    | "orb"
+    | "pants"
+    | "petlicence"
+    | "placeholder"
     | "pot"
+    | "pscroll"
+    | "qubics"
     | "quest"
+    | "quiver"
+    | "ring"
+    | "shield"
+    | "shoes"
+    | "skill_item"
+    | "source"
+    | "spawner"
+    | "stand"
+    | "stone"
+    | "test"
+    | "throw"
+    | "token"
+    | "tome"
+    | "tool"
+    | "tracker"
+    | "uscroll"
+    | "weapon"
+    | "xp"
 
 export type WeaponType =
     | "axe"

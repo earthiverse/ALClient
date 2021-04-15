@@ -107,6 +107,11 @@ export class Merchant extends PingCompensatedCharacter {
         })
     }
 
+    // TODO: Add promises
+    public merchantCourage(): void {
+        this.socket.emit("skill", { name: "mcourage" })
+    }
+
     public mluck(target: string): Promise<void> {
         if (target !== this.id) {
             const player = this.players.get(target)
@@ -222,4 +227,24 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "massproduction" })
         return massProductioned
     }
+
+    // public massProductionPP(): Promise<void> {
+    //     const massProductioned = new Promise<void>((resolve, reject) => {
+    //         const productedCheck = (data: UIData) => {
+    //             if (data.type == "massproductionpp" && data.name == this.id) {
+    //                 this.socket.removeListener("ui", productedCheck)
+    //                 resolve()
+    //             }
+    //         }
+
+    //         setTimeout(() => {
+    //             this.socket.removeListener("ui", productedCheck)
+    //             reject(`massProductionPP timeout (${Constants.TIMEOUT}ms)`)
+    //         }, Constants.TIMEOUT)
+    //         this.socket.on("ui", productedCheck)
+    //     })
+
+    //     this.socket.emit("skill", { name: "massproductionpp" })
+    //     return massProductioned
+    // }
 }
