@@ -2956,8 +2956,8 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateNPC(npcID: NPCName): IPosition[] {
-        const locations: IPosition[] = []
+    public locateNPC(npcID: NPCName): NodeData[] {
+        const locations: NodeData[] = []
         for (const mapName in this.G.maps) {
             const map = this.G.maps[mapName as MapName]
             if (map.ignore) continue
@@ -2980,7 +2980,7 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateCraftNPC(itemName: ItemName): IPosition {
+    public locateCraftNPC(itemName: ItemName): NodeData {
         // Is the item craftable?
         const gCraft = this.G.craft[itemName]
         if (gCraft) {
@@ -3002,7 +3002,7 @@ export class Character extends Observer implements CharacterData {
         throw Error(`${itemName} is not craftable.`)
     }
 
-    public locateExchangeNPC(itemName: ItemName): IPosition {
+    public locateExchangeNPC(itemName: ItemName): NodeData {
         // Does the item have a quest involved?
         const gItem = this.G.items[itemName]
         if (gItem.quest) {
