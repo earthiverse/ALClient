@@ -6,7 +6,7 @@
 
 This is a node client for the game [Adventure Land - The Code MMORPG](https://adventure.land). It's 99% custom code that seems *much* more efficient than running the code in-game, or using the game's official CLI.
 
-This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull/ALBot) aims to be. The code that you run in the console in game **WILL NOT** run as-is if you try to run it using this project.
+This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull/ALBot) aims to be. The code that you run in the console in game **WILL NOT** run as-is if you try to run your in-game code using this project.
 
 ## Requirements
 
@@ -53,8 +53,9 @@ run()
 ```typescript
 import AL from "alclient"
 
-AL.Game.startRanger("earthiverse", "US", "I").then(async (ranger) => {
-    await ranger.smartMove("main")
+async function run() {
+    await AL.Game.loginJSONFile("../credentials.json")
+    const ranger = await AL.Game.startRanger("earthiverse", "US", "I")
 
     while (true) {
         await ranger.move(50, 50)
@@ -62,7 +63,8 @@ AL.Game.startRanger("earthiverse", "US", "I").then(async (ranger) => {
         await ranger.move(-50, -50)
         await ranger.move(-50, 50)
     }
-})
+}
+run()
 ```
 
 2. Some functions are renamed, most notably `attack()` is `basicAttack()`.
@@ -70,7 +72,10 @@ AL.Game.startRanger("earthiverse", "US", "I").then(async (ranger) => {
 ```typescript
 import AL from "alclient"
 
-AL.Game.startRanger("earthiverse", "US", "I").then(async (ranger) => {
+async function run() {
+    await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Pathfinder.prepare()])
+    const ranger = await AL.Game.startRanger("earthiverse", "US", "I")
+
     await ranger.smartMove("hen")
 
     while (true) {
@@ -95,5 +100,6 @@ AL.Game.startRanger("earthiverse", "US", "I").then(async (ranger) => {
             }
         }
     }
-})
+}
+run()
 ```
