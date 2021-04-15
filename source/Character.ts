@@ -1072,38 +1072,29 @@ export class Character extends Observer implements CharacterData {
 
         const computerAvailable = this.locateItem("computer") !== undefined
 
-        let buyable = gInfo.buy
+        let buyable = false
         let close = false
-        if (buyable === undefined) {
-            // Double check if we can buy from an NPC
-            for (const map in this.G.maps) {
-                if (buyable !== undefined)
-                    break
-                if (!computerAvailable && map !== this.map)
-                    continue // We aren't close, and we don't have a computer, so don't check this map
-                if (this.G.maps[map as MapName].ignore)
-                    continue
-                for (const npc of this.G.maps[map as MapName].npcs) {
-                    if (buyable !== undefined)
+        // Double check if we can buy from an NPC
+        for (const map in this.G.maps) {
+            if (buyable !== undefined) break
+            if (!computerAvailable && map !== this.map) continue // We aren't close, and we don't have a computer, so don't check this map
+            if (this.G.maps[map as MapName].ignore) continue
+            for (const npc of this.G.maps[map as MapName].npcs) {
+                if (buyable !== undefined) break
+                if (this.G.npcs[npc.id].items === undefined) continue
+                for (const i of this.G.npcs[npc.id].items) {
+                    if (i == item) {
+                        buyable = true
+                        if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
+                            close = true
                         break
-                    if (this.G.npcs[npc.id].items === undefined)
-                        continue
-                    for (const i of this.G.npcs[npc.id].items) {
-                        if (i == item) {
-                            buyable = true
-                            if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
-                                close = true
-                            break
-                        }
                     }
                 }
             }
         }
-        if (!buyable)
-            return false
+        if (!buyable) return false
 
-        if (computerAvailable || close)
-            return true
+        if (computerAvailable || close) return true
 
         return false
     }
