@@ -88,8 +88,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public piercingShot(target: string): Promise<string> {
-        if (this.G.skills.piercingshot.mp > this.mp)
-            return Promise.reject("Not enough MP to use piercingShot")
+        if (this.G.skills.piercingshot.mp > this.mp) return Promise.reject("Not enough MP to use piercingShot")
 
         const piercingShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
@@ -103,7 +102,7 @@ export class Ranger extends PingCompensatedCharacter {
             }
 
             const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]piercingshot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                if (/skill_timeout\s*\(\s*['"]attack['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("eval", cooldownCheck)
                     resolve(projectile)
