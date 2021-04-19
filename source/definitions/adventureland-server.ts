@@ -4,7 +4,7 @@
  */
 
 import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
-import { DamageType, EmotionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
+import { Attribute, EmotionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -89,6 +89,7 @@ export type CharacterData = PlayerData & {
             // TODO: add more variables
         }
     }
+    /** TODO: What is this? */
     abs: boolean
     age: number
     angle: number
@@ -275,27 +276,6 @@ export type EntityData = {
 
     x: number
     y: number
-
-    // The following are soft properties. We need to use the values from G.monsters for these if there are none available.
-    "1hp"?: boolean
-    apiercing?: number
-    attack?: number
-    charge?: number
-    cooperative?: boolean
-    damage_type?: DamageType
-    evasion?: number
-    hp?: number
-    immune?: boolean
-    level?: number
-    map?: MapName
-    max_hp?: number
-    max_mp?: number
-    mp?: number
-    range?: number
-    reflection?: number
-    rpiercing?: number
-    speed?: number
-    xp?: number
 }
 
 export type EvalData = {
@@ -374,6 +354,9 @@ export type GameResponseDataObject = {
 } | {
     response: "no_target"
     // TODO: See what else gets returned
+} | {
+    response: "seashell_success"
+    suffix: "" | string
 } | {
     response: "skill_success"
     name: SkillName
@@ -464,6 +447,17 @@ export type HitData = {
 export type InviteData = {
     /** The name of the character who invited */
     name: string
+}
+
+export type ItemData = {
+    /** If set, the item is locked */
+    l?: number
+    /** The item level */
+    level?: number
+    /** The item name */
+    name: ItemName
+    /** If the item has a scroll applied to it, the scroll provides this attribute */
+    stat_type?: Attribute
 }
 
 export type LoadedData = {

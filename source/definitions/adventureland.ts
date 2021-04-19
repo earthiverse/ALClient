@@ -78,7 +78,6 @@ export type GData = {
          */
         spawns: [number, number, number?][];
     } };
-    monsters: { [T in MonsterName]: GMonster };
     npcs: { [T in NPCName]: {
         id: NPCName;
         items?: ItemName[];
@@ -139,66 +138,6 @@ export type GMapsNPC = {
     name?: string
     position: [number, number, number?]
     positions: [number, number, number?]
-}
-
-export type GMonster = {
-    /** If set, the monster will only take 1 damage from attacks */
-    "1hp"?: true
-    // TODO: Improve this to separate the damage and heal in to respective types
-    abilities?: { [T in SkillName]?: {
-        cooldown?: number
-        damage?: number
-        heal?: number
-    } }
-    /**
-   * This is a list of Tracktrix achievements you can get by killing these monsters
-   * [0]: # of monsters you need to kill to get this level of achievement
-   * [1]: TODO: Looks to be just "stat" at this point
-   * [2]: The Attribute that gets an improvement
-   * [3]: The amount of that Attribute that gets improved
-   */
-    achievevments?: [number, "stat", Attribute, number][]
-    aggro: number
-    /** If set, the monster will have this speed set when it is targeting a player */
-    charge?: number
-    /** If set to true, all players that deal damage to this monster will share the loot */
-    cooperative?: true
-    damage_type: DamageType
-    /** If true, when the monster dies, the chest will drop on the player's location, not where the monster died */
-    global?: true
-    /** If true, the monster can only be damaged using basic attacks.
-   * NOTE: Immunity doesn't prevent the monster from being stunned */
-    immune?: true
-    /** TODO: Confirm || boosts the amount of XP obtained when you kill this monster? */
-    lucrativeness?: number
-    name: string
-    rage: number
-    /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
-   * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
-   * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
-   */
-    respawn: number
-    spawns?: [number, MonsterName][]
-    special?: true
-    xspawns?: [number, MonsterName][]
-
-    // GUI related things
-    aa?: number // TODO: Conirm what this is
-    announce: string
-    hit?: string
-    projectile?: string
-    skin: string
-    size?: number // TODO: Confirm that size doesn't affect things
-
-    // The following stats are available on all monsterss
-    attack: number
-    frequency: number
-    hp: number
-    mp: number
-    range: number
-    xp: number
-} & {
-    [T in Attribute]?: number
 }
 
 export type BankInfo = {

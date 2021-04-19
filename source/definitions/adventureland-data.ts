@@ -212,150 +212,13 @@ export type GData2 = {
         }
     }
     items: {
-        [T in ItemName]: {
-            /** (TODO: Obsolete?) Related to 'announce'? */
-            a?: boolean | number
-            ability?: "burn" | "freeze" | "posion" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
-            /** (GUI related) Item border accent color */
-            acolor?: string
-            /** TODO: ??? What is this? Is this related to special items? */
-            action?: string
-            /** Wearing this item grants the given aura */
-            aura?: ConditionName
-            /** Cost of the item in shells */
-            cash?: number
-            /** If set, only these class types can use this item */
-            class?: CharacterType[]
-            /** If set, the item is upgradable. How the item gets better if you compound it. */
-            compound?: {
-                [T in Attribute]?: number
-            }
-            /** Time to wait until you can use this type of item again */
-            cooldown?: number
-            /** TODO: ??? The user who came up with the idea for this item? */
-            credit?: string
-            /** TODO: ??? GUI related? */
-            cx?: {
-                accent?: string
-                border?: number
-                extension?: boolean
-                large?: boolean
-                lightborder?: boolean
-                scale?: number
-            }
-            damage?: DamageType
-            /** How long the booster is good for */
-            days?: number
-            /** If true, this item will remove conditions */
-            debuff?: boolean
-            /** Human readable flavor text */
-            delia?: string
-            /** How long the elixir will last */
-            duration?: number
-            /** TODO: ??? What is this? Why don't all elixirs have 'eat'? */
-            eat?: boolean
-            /** TODO: ??? What is this? */
-            edge?: number
-            /** If set, you can exchange this many of the item for something (see 'G.drops') */
-            e?: number
-            /** If true, this item is related to an event */
-            event?: boolean
-            /** TODO: ??? What is this? */
-            exclusive?: boolean
-            /** Human readable flavor text for the item */
-            explanation?: string
-            /** Bonus to the amount of stat points you get from applying a scroll to the item */
-            extra_stat?: number
-            /** Item worth */
-            g: number
-            gain?: Attribute
-            gives?: [[Attribute, number]]
-            /** TODO: Confirm. Upgrade/compound scroll grade */
-            grade?: number
-            /** What level the item increases grade at [high, rare, legendary, exalted] */
-            grades?: [number, number, number, number]
-            /** TODO: Confirm. Equipping this item offers the following cosmetic. */
-            hat?: string
-            /** If true, the item is probably old. */
-            ignore?: boolean
-            /** TODO: ??? Obsolete? */
-            legacy?: {
-                class?: null
-                gold?: number
-                luck?: number
-                set?: null
-            }
-            /** If set, you will only get `item.g / item.markup` gold for selling the item. */
-            markup?: number
-            /** TODO: ??? Pets? */
-            monster?: MonsterName
-            multiplier?: number
-            /** Human readable name for the item */
-            name: string
-            /** Human readable lore */
-            nopo?: string
-            /** (Obsolete?) Basically the same as "explanation" */
-            note?: string
-            /** Which NPC to trade the item with */
-            npc?: NPCName
-            /** TODO: ??? What is this? */
-            offering?: number
-            /** TODO: Confirm. (GUI rleated) If set, clicking on this item will cause the given javascript to run. */
-            onclick?: string
-            /** TODO: Confirm. Opens the given dungeon */
-            opens?: MapName
-            /** (GUI related) Projectile to use for weapon attacks */
-            projectile?: ProjectileName
-            /** TODO: ??? GUI related? */
-            projectile_test?: string
-            /** TODO: ??? What is this? */
-            protection?: boolean
-            /** Relates to where you can exchange this item. (See: G.npcs[NPCName].quest) */
-            quest?: string
-            rare?: boolean
-            /** For tome of protection, it rewards the player who kills you with this % of the item cost (item.g) */
-            reward?: number
-            /** If set, you can stack this many of the item in one inventory slot */
-            s?: number | boolean
-            /** TODO: Confirm. If true, you can apply a scroll to this item to give it stats */
-            scroll?: boolean
-            set?: string
-            /** GUI picture for the item */
-            skin: string
-            skin_a?: string
-            skin_c?: string
-            skin_r?: string
-            /** Spawns the given monster */
-            spawn?: MonsterName
-            special?: boolean
-            /** If set, you can use this item as a merchant stand */
-            stand?: string
-            stat?: Attribute | number
-            tier?: number
-            /** Human readable history and lore for the item */
-            trex?: string
-            type: ItemType
-            /** This key unlocks the given map */
-            unlocks?: MapName
-            /** If set, the item is upgradable. How the item gets better if you upgrade it. */
-            upgrade?: {
-                [T in Attribute]?: number
-            }
-            withdrawal?: ConditionName
-            wtype?: WeaponType
-            /** TODO: Confirm. Equipping this item allows you to equip the following cosmetics */
-            xcx?: string[]
-            /** TODO: ??? What is this? */
-            xscroll?: boolean
-        } & {
-            [T in Exclude<Attribute, "stat">]?: number
-        }
+        [T in ItemName]: GItem
     };
     levels: {
         [T in string]?: number
     }
     maps: {
-        [T in MapName]?: {
+        [T in Exclude<MapName, "d1" | "d3" | "frozencave" | "therush">]: {
             data?: {
                 /** The furthest west you can go on the map */
                 min_x: number
@@ -492,7 +355,7 @@ export type GData2 = {
             weather?: string
             zones?: {
                 drop: string
-                type: "fishing"
+                type: "fishing" | "mining"
                 polygon: [number, number][]
             }[]
             /** TODO: ??? What is this? GUI related? */
@@ -508,161 +371,7 @@ export type GData2 = {
         }
     }
     monsters: {
-        [T in Exclude<MonsterName, "terracota">]: {
-            /** If true, all attacks will only do 1 damage to this monster */
-            "1hp"?: boolean
-            /** (GUI) If set, the sprite will continue its animation when it's standing still. */
-            aa?: number
-            /** Abilities that this monster has */
-            abilities?: {
-                [T in SkillName]?: {
-                    cooldown: number
-                    radius?: number
-                    aura?: boolean
-                    condition?: ConditionName
-                }
-            } & {
-                "burn"?: {
-                    unlimited: boolean
-                    attr0: number
-                }
-            } & {
-                "degen"?: {
-                    amount: number
-                }
-            } & {
-                "heal"?: {
-                    heal: number
-                }
-            } & {
-                "multi_burn"?: {
-                    damage: number
-                }
-            } & {
-                "putrid"?: {
-                    curse: boolean
-                    poison: boolean
-                }
-            } & {
-                "self_healing"?: {
-                    heal: number
-                }
-            } & {
-                "weakness_aura"?: {
-                    condition: "weakness"
-                }
-            } & {
-                "zap"?: {
-                    amount: number
-                }
-            }
-            /** Tracker achievements. [points needed, "stat", stat type, improvement] */
-            achievements?: [number, "stat", Attribute, number][]
-            /** The higher the number, the more likely the monster will attack you if you're near it */
-            aggro: number
-            /** (GUI) The color of text used to announce this monster when it spawns. */
-            announce?: string
-            /** TODO: ??? What is this? Documentation? */
-            article?: string
-            /** The amount of damage the monster can deal */
-            attack: number
-            /** TODO: ??? What is this? The name of the player that suggested changes for the monster? */
-            balance?: string
-            /** The speed the monster will move when targeting something */
-            charge?: number
-            /** If set, drops are split among all players who help kill this monster */
-            cooperative?: boolean
-            /** If set, the monster won't level up */
-            cute?: boolean
-            damage_type: DamageType
-            /** TODO: ??? What is this? A multiplier for difficulty calculation in the GUI? */
-            difficulty?: number
-            /** Will teleport away if hit. PROTIP: Stun these monsters, and kill them before the stun runs out! */
-            escapist?: boolean
-            /** Flavour text that explains extra information, like when it spawns. */
-            explanation?: string
-            /** TODO: ??? Does this mean it can appear on all maps? */
-            global?: boolean
-            /** If set, the monster will steal gold on attack. */
-            goldsteal?: number
-            /** (GUI) Attack animation */
-            hit?: string
-            humanoid?: boolean
-            /** Immune monsters can only be hurt by basic attacks. Skills won't hit. */
-            immune?: boolean
-            /** TODO: More information. Wizard: "Acts as a gold multiplier" */
-            lucrativeness?: number
-            /** Human readable name for the monster. */
-            name: string
-            /** TODO: ??? What is this? */
-            operator?: boolean
-            /** TODO: ??? What is this? GUI related? */
-            orientation?: number
-            /** TODO: ??? What is this? */
-            passive?: boolean
-            pet?: {
-                aggression: [number, number]
-                brightness: number
-                chatter: [number, number]
-                courage: [number, number]
-                exponential: boolean
-                level: {
-                    [T in Attribute]?: number
-                }
-                obedience: [number, number]
-                passion: [number, number]
-                xp: number
-            }
-            /** If set, the monster will cause the condition `poisoned` on attack. */
-            poisonous?: boolean
-            /** (GUI?) */
-            prefix?: string
-            /** (GUI) Projectile sprite */
-            projectile?: string
-            /** The higher the rage, the more likely the monster is to attack (and target) you if you are near it */
-            rage: number
-            /** If you kill this monster (TODO: Confirm you have to kill this monster), this condition will be applied to you */
-            rbuff?: ConditionName
-            /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
-             * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
-             * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
-             **/
-            respawn: number
-            /** If set to true, the monster will roam around the entire map */
-            roam?: boolean
-            /** Initial conditions for the monster when it spawns */
-            s?: { [T in ConditionName]?: { ms: number } }
-            /** (GUI) size modifier for sprite sizing */
-            size?: number
-            /** (GUI) Monster sprite */
-            skin: string
-            /** (GUI?) TODO: Confirm that this only affects the look of the monster. It will look like it's holding these weapons. */
-            slots?: {
-                mainhand: {
-                    name: ItemName
-                    level: number
-                }
-                offhand?: {
-                    name: ItemName
-                    level: number
-                }
-            }
-            /** If set, this monster will spawn more monsters [ms between spawns, monster to spawn] */
-            spawns?: [number, MonsterName][]
-            special?: boolean
-            /** If set, this monster will not move */
-            stationary?: boolean
-            /** TODO: ??? What is this? */
-            supporter?: boolean
-            /** If this is set, the monster isn't really a monster, it's a trap. */
-            trap?: boolean
-            /** TODO: ??? What is this? */
-            unlist?: boolean
-            /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
-            xp: number
-        } & {
-            [T in Attribute]?: number
-        }
+        [T in Exclude<MonsterName, "terracota">]: GMonster
     }
     npcs: {
         [T in NPCName]: {
@@ -841,8 +550,305 @@ export type GData2 = {
             consecutive_200p_range_last_hits: number
         }
     }
+    tokens: {
+        [T in "funtoken" | "monstertoken" | "pvptoken"]: {
+            /** For the ItemName, it costs this many tokens */
+            [T in ItemName]?: number
+        }
+    }
     /** Version number for this data. */
     version: number
+}
+
+export type GItem = {
+    /** (TODO: Obsolete?) Related to 'announce'? */
+    a?: boolean | number
+    ability?: "burn" | "freeze" | "posion" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
+    /** (GUI related) Item border accent color */
+    acolor?: string
+    /** TODO: ??? What is this? Is this related to special items? */
+    action?: string
+    /** Wearing this item grants the given aura */
+    aura?: ConditionName
+    /** Cost of the item in shells */
+    cash?: number
+    /** If set, only these class types can use this item */
+    class?: CharacterType[]
+    /** If set, the item is upgradable. How the item gets better if you compound it. */
+    compound?: {
+        [T in Attribute]?: number
+    }
+    /** Time to wait until you can use this type of item again */
+    cooldown?: number
+    /** TODO: ??? The user who came up with the idea for this item? */
+    credit?: string
+    /** TODO: ??? GUI related? */
+    cx?: {
+        accent?: string
+        border?: number
+        extension?: boolean
+        large?: boolean
+        lightborder?: boolean
+        scale?: number
+    }
+    damage?: DamageType
+    /** How long the booster is good for */
+    days?: number
+    /** If true, this item will remove conditions */
+    debuff?: boolean
+    /** Human readable flavor text */
+    delia?: string
+    /** How long the elixir will last */
+    duration?: number
+    /** TODO: ??? What is this? Why don't all elixirs have 'eat'? */
+    eat?: boolean
+    /** TODO: ??? What is this? */
+    edge?: number
+    /** If set, you can exchange this many of the item for something (see 'G.drops') */
+    e?: number
+    /** If true, this item is related to an event */
+    event?: boolean
+    /** TODO: ??? What is this? */
+    exclusive?: boolean
+    /** Human readable flavor text for the item */
+    explanation?: string
+    /** Bonus to the amount of stat points you get from applying a scroll to the item */
+    extra_stat?: number
+    /** Item worth */
+    g: number
+    gain?: Attribute
+    gives?: [[Attribute, number]]
+    /** TODO: Confirm. Upgrade/compound scroll grade */
+    grade?: number
+    /** What level the item increases grade at [high, rare, legendary, exalted] */
+    grades?: [number, number, number, number]
+    /** TODO: Confirm. Equipping this item offers the following cosmetic. */
+    hat?: string
+    /** If true, the item is probably old. */
+    ignore?: boolean
+    /** TODO: ??? Obsolete? */
+    legacy?: {
+        class?: null
+        gold?: number
+        luck?: number
+        set?: null
+    }
+    /** If set, you will only get `item.g / item.markup` gold for selling the item. */
+    markup?: number
+    /** TODO: ??? Pets? */
+    monster?: MonsterName
+    multiplier?: number
+    /** Human readable name for the item */
+    name: string
+    /** Human readable lore */
+    nopo?: string
+    /** (Obsolete?) Basically the same as "explanation" */
+    note?: string
+    /** Which NPC to trade the item with */
+    npc?: NPCName
+    /** TODO: ??? What is this? */
+    offering?: number
+    /** TODO: Confirm. (GUI rleated) If set, clicking on this item will cause the given javascript to run. */
+    onclick?: string
+    /** TODO: Confirm. Opens the given dungeon */
+    opens?: MapName
+    /** (GUI related) Projectile to use for weapon attacks */
+    projectile?: ProjectileName
+    /** TODO: ??? GUI related? */
+    projectile_test?: string
+    /** TODO: ??? What is this? */
+    protection?: boolean
+    /** Relates to where you can exchange this item. (See: G.npcs[NPCName].quest) */
+    quest?: string
+    rare?: boolean
+    /** For tome of protection, it rewards the player who kills you with this % of the item cost (item.g) */
+    reward?: number
+    /** If set, you can stack this many of the item in one inventory slot */
+    s?: number | boolean
+    /** TODO: Confirm. If true, you can apply a scroll to this item to give it stats */
+    scroll?: boolean
+    set?: string
+    /** GUI picture for the item */
+    skin: string
+    skin_a?: string
+    skin_c?: string
+    skin_r?: string
+    /** Spawns the given monster */
+    spawn?: MonsterName
+    special?: boolean
+    /** If set, you can use this item as a merchant stand */
+    stand?: string
+    stat?: Attribute | number
+    tier?: number
+    /** Human readable history and lore for the item */
+    trex?: string
+    type: ItemType
+    /** This key unlocks the given map */
+    unlocks?: MapName
+    /** If set, the item is upgradable. How the item gets better if you upgrade it. */
+    upgrade?: {
+        [T in Attribute]?: number
+    }
+    withdrawal?: ConditionName
+    wtype?: WeaponType
+    /** TODO: Confirm. Equipping this item allows you to equip the following cosmetics */
+    xcx?: string[]
+    /** TODO: ??? What is this? */
+    xscroll?: boolean
+} & {
+    [T in Exclude<Attribute, "stat">]?: number
+}
+
+export type GMonster = {
+    /** If true, all attacks will only do 1 damage to this monster */
+    "1hp"?: boolean
+    /** (GUI) If set, the sprite will continue its animation when it's standing still. */
+    aa?: number
+    /** Abilities that this monster has */
+    abilities?: {
+        [T in SkillName]?: {
+            cooldown: number
+            radius?: number
+            aura?: boolean
+            condition?: ConditionName
+        }
+    } & {
+        "burn"?: {
+            unlimited: boolean
+            attr0: number
+        }
+    } & {
+        "degen"?: {
+            amount: number
+        }
+    } & {
+        "heal"?: {
+            heal: number
+        }
+    } & {
+        "multi_burn"?: {
+            damage: number
+        }
+    } & {
+        "putrid"?: {
+            curse: boolean
+            poison: boolean
+        }
+    } & {
+        "self_healing"?: {
+            heal: number
+        }
+    } & {
+        "weakness_aura"?: {
+            condition: "weakness"
+        }
+    } & {
+        "zap"?: {
+            amount: number
+        }
+    }
+    /** Tracker achievements. [points needed, "stat", stat type, improvement] */
+    achievements?: [number, "stat", Attribute, number][]
+    /** The higher the number, the more likely the monster will attack you if you're near it */
+    aggro: number
+    /** (GUI) The color of text used to announce this monster when it spawns. */
+    announce?: string
+    /** TODO: ??? What is this? Documentation? */
+    article?: string
+    /** The amount of damage the monster can deal */
+    attack: number
+    /** TODO: ??? What is this? The name of the player that suggested changes for the monster? */
+    balance?: string
+    /** The speed the monster will move when targeting something */
+    charge?: number
+    /** If set, drops are split among all players who help kill this monster */
+    cooperative?: boolean
+    /** If set, the monster won't level up */
+    cute?: boolean
+    damage_type: DamageType
+    /** TODO: ??? What is this? A multiplier for difficulty calculation in the GUI? */
+    difficulty?: number
+    /** Will teleport away if hit. PROTIP: Stun these monsters, and kill them before the stun runs out! */
+    escapist?: boolean
+    /** Flavour text that explains extra information, like when it spawns. */
+    explanation?: string
+    frequency: number
+    /** TODO: ??? Does this mean it can appear on all maps? */
+    global?: boolean
+    /** If set, the monster will steal gold on attack. */
+    goldsteal?: number
+    /** (GUI) Attack animation */
+    hit?: string
+    hp: number
+    humanoid?: boolean
+    /** Immune monsters can only be hurt by basic attacks. Skills won't hit. */
+    immune?: boolean
+    /** TODO: More information. Wizard: "Acts as a gold multiplier" */
+    lucrativeness?: number
+    mp: number
+    /** Human readable name for the monster. */
+    name: string
+    /** TODO: ??? What is this? */
+    operator?: boolean
+    /** TODO: Confirm. What orientation to show the monster on spawn. */
+    orientation?: number
+    /** TODO: ??? What is this? */
+    passive?: boolean
+    pet?: {
+        aggression: [number, number]
+        brightness: number
+        chatter: [number, number]
+        courage: [number, number]
+        exponential: boolean
+        level: {
+            [T in Attribute]?: number
+        }
+        obedience: [number, number]
+        passion: [number, number]
+        xp: number
+    }
+    /** If set, the monster will cause the condition `poisoned` on attack. */
+    poisonous?: boolean
+    /** (GUI?) */
+    prefix?: string
+    /** (GUI) Projectile sprite */
+    projectile?: string
+    /** The higher the rage, the more likely the monster is to attack (and target) you if you are near it */
+    rage: number
+    range: number
+    /** If you kill this monster (TODO: Confirm you have to kill this monster), this condition will be applied to you */
+    rbuff?: ConditionName
+    /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
+     * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
+     * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
+     **/
+    respawn: number
+    /** If set to true, the monster will roam around the entire map */
+    roam?: boolean
+    /** Initial conditions for the monster when it spawns */
+    s?: { [T in ConditionName]?: { ms: number } }
+    /** (GUI) size modifier for sprite sizing */
+    size?: number
+    /** (GUI) Monster sprite */
+    skin: string
+    /** (GUI?) TODO: Confirm that this only affects the look of the monster. It will look like it's holding these weapons. */
+    slots?: Partial<SlotInfo>
+    /** If set, this monster will spawn more monsters [ms between spawns, monster to spawn] */
+    spawns?: [number, MonsterName][]
+    special?: boolean
+    speed: number
+    /** If set, this monster will not move */
+    stationary?: boolean
+    /** TODO: ??? What is this? */
+    supporter?: boolean
+    /** If this is set, the monster isn't really a monster, it's a trap. */
+    trap?: boolean
+    /** TODO: ??? What is this? */
+    unlist?: boolean
+    /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
+    xp: number
+} & {
+    [T in Attribute]?: number
 }
 
 export type Attribute =
@@ -2116,6 +2122,6 @@ export type TitleName =
 
 export type QuestName =
     | ItemName // Not all items are quests, check with `G.items[ItemName].e` if you can exchange it
-    | "cx" 
+    | "cx"
     | "mcollector"
     | "witch"

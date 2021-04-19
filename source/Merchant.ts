@@ -63,13 +63,13 @@ export class Merchant extends PingCompensatedCharacter {
             }
 
             const failCheck2 = (data: UIData) => {
-                if(data.type == "fishing_fail" && data.name == this.name) {
+                if (data.type == "fishing_fail" && data.name == this.name) {
                     // NOTE: We might not be in a fishing area?
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
                     this.socket.removeListener("eval", caughtCheck)
                     reject("We failed to fish.")
-                } else if(data.type == "fishing_none" && data.name == this.name) {
+                } else if (data.type == "fishing_none" && data.name == this.name) {
                     // We fished, but we didn't catch anything
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
@@ -176,9 +176,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public openMerchantStand(): Promise<void> {
-        if (this.stand)
-            return Promise.resolve() // It's already open
-
+        if (this.stand) return Promise.resolve() // It's already open
 
         // Find the stand
         let stand = this.locateItem("stand0")

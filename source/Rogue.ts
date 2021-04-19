@@ -103,7 +103,7 @@ export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     // TODO: Improve to check if we applied it on the given character
     public rspeed(target: string): Promise<void> {
-        const marked = new Promise<void>((resolve, reject) => {
+        const swifted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]rspeed['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
@@ -121,7 +121,7 @@ export class Rogue extends PingCompensatedCharacter {
             name: "rspeed",
             id: target
         })
-        return marked
+        return swifted
     }
 
     // NOTE: UNTESTED
