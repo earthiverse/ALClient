@@ -1,58 +1,115 @@
-import { StatusInfo } from "./definitions/adventureland"
-import { DamageType, GData2, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
+import { SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { Attribute, ConditionName, DamageType, GData2, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, EntityData } from "./definitions/adventureland-server"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
 
-export class Entity implements EntityData {
+export class Entity implements EntityData, Partial<GMonster> {
     protected G: GData2
 
-    // Position
-    public map: MapName
-    public x: number
-    public y: number
+    // EntityData (required)
+    public abs: boolean
+    public angle: number
+    public cid: number
     public going_x: number
     public going_y: number
-    public angle: number
-    public moving = false
+    public map: MapName
     public move_num: number
+    public moving = false
+    public x: number
+    public y: number
 
-    public type: MonsterName
-    public id: string
-    public level = 1
-
-    public abs: boolean
-    public cid: number
     public target: string
-    public s: StatusInfo = {}
 
     public abilities: { [T in SkillName]?: any } = {}
-    public max_hp: number
-    public max_mp: number
-    public "1hp" = false
-    public aggro = 0
-    public apiercing = 0
     public charge: number
     public cooperative = false
     public damage_type: DamageType
-    public evasion = 0
-    public frequency: number
-    public immune = false
-    public lifesteal = 0
-    public range: number
-    public reflection = 0
-    public rpiercing = 0
-    public speed: number
-    public xp: number
 
+    // Stats (required)
+    public attack: number
+    public frequency: number
     public hp: number
     public mp: number
+    public range: number
+    public speed: number
 
+    // Stats (optional)
+    public apiercing = 0
     public armor = 0
-    public attack = 0
+    public avoidance = 0
+    public blast = 0
+    public breaks = 0
+    public evasion = 0
+    public lifesteal = 0
+    public mcourage = 0
+    public reflection = 0
     public resistance = 0
-    public rage = 0
+    public rpiercing = 0
+
+    // GMonster properties (required)
+    public readonly aggro: number
+    public readonly name: string
+    public readonly rage: number
+    public readonly respawn: number
+    public readonly skin: string
+
+    // GMonster properties (optional)
+    public readonly "1hp" = false
+    public readonly aa = 0
+    public readonly achievements: [number, "stat", Attribute, number][] = []
+    public readonly announce?: string
+    public readonly article?: string
+    public readonly balance?: string
+    public readonly cute = false
+    public readonly difficulty?: number
+    public readonly escapist = false
+    public readonly explanation?: string
+    public readonly global = false
+    public readonly goldsteal = 0
+    public readonly hit?: string
+    public readonly humanoid = false
+    public readonly immune = false
+    public readonly lucrativeness?: number
+    public readonly operator = false
+    public readonly orientation?: number
+    public readonly passive = false
+    public readonly pet?: {
+        aggression: [number, number]
+        brightness: number
+        chatter: [number, number]
+        courage: [number, number]
+        exponential: boolean
+        level: {
+            [T in Attribute]?: number
+        }
+        obedience: [number, number]
+        passion: [number, number]
+        xp: number
+    }
+    public readonly poisonous = false
+    public readonly prefix = ""
+    public readonly projectile?: string
+    public readonly rbuff: ConditionName
+    public readonly roam = false
+    public readonly size?: number
+    public readonly slots?: Partial<SlotInfo>
+    public readonly spawns?: [number, MonsterName][] = []
+    public readonly special = false
+    public readonly stationary = false
+    public readonly supporter = false
+    public readonly trap = false
+    public readonly unlist = false
+
+    // Misc.
+    public id: string
+    public level = 1
+    public max_hp: number
+    public max_mp: number
+    public s: StatusInfo = {}
+    public type: MonsterName
+    public xp: number
 
     public constructor(data: EntityData, map: MapName, G: GData2) {
         this.G = G
@@ -62,8 +119,8 @@ export class Entity implements EntityData {
         this.max_hp = G.monsters[data.type]["hp"]
         this.max_mp = G.monsters[data.type]["mp"]
         this.map = map
-        for (const gDatum in G.monsters[data.type]) {
-            this[gDatum] = G.monsters[data.type][gDatum]
+        for (const gKey in G.monsters[data.type]) {
+            this[gKey] = G.monsters[data.type][gKey]
         }
 
         // Set everything else
