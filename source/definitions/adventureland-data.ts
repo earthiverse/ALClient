@@ -1479,6 +1479,7 @@ export type ItemName =
     | "pants1"
     | "partyhat"
     | "phelmet"
+    | "pickaxe"
     | "pico"
     | "pinkie"
     | "placeholder"

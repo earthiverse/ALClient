@@ -374,6 +374,7 @@ export type WeaponType =
     | "great_sword"
     | "mace"
     | "misc_offhand"
+    | "pickaxe"
     | "pmace"
     | "quiver"
     | "rapier"
