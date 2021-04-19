@@ -449,6 +449,12 @@ test("Character.calculateItemCost", async () => {
     expect(priest.calculateItemCost({ name: "dexring", level: 5 })).toBe(18603200)
 })
 
+test("Character.canBuy", async () => {
+    expect(priest.canBuy("mpot1")).toBe(true) // We have a computer and enough gold
+    expect(priest.canBuy("hpot1")).toBe(true)
+    expect(priest.canBuy("computer")).toBe(false)
+})
+
 test("Character.canUse", async () => {
     expect(priest.canUse("attack")).toBe(true)
     expect(priest.canUse("partyheal")).toBe(true)
