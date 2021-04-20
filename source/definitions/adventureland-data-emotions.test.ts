@@ -11,6 +11,10 @@ test("G.emotions type validation", async () => {
             "drop_egg": {
                 "fx": "drop_egg",
                 "cooldown": 2000
+            },
+            "hearts_single": {
+                "fx": "hearts_single",
+                "cooldown": 2000
             }
         }
     }
