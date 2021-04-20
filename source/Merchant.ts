@@ -5,8 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
-        if (!this.stand)
-            return Promise.resolve() // It's already closed
+        if (!this.stand) return Promise.resolve() // It's already closed
 
         const closed = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
@@ -34,12 +33,15 @@ export class Merchant extends PingCompensatedCharacter {
      * @memberof Merchant
      */
     public fish(): Promise<void> {
+        let startedFishing = false
+        if (this.c.fishing) startedFishing = true // We're already fishing!?
         const fished = new Promise<void>((resolve, reject) => {
             const caughtCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]fishing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
                     this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
                     resolve()
                 }
             }
@@ -50,6 +52,7 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.removeListener("game_response", failCheck1)
                         this.socket.removeListener("ui", failCheck2)
                         this.socket.removeListener("eval", caughtCheck)
+                        this.socket.removeListener("player", failCheck3)
                         reject("We don't have a fishing rod equipped")
                     }
                 } else if (typeof data == "object") {
@@ -57,24 +60,41 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.removeListener("game_response", failCheck1)
                         this.socket.removeListener("ui", failCheck2)
                         this.socket.removeListener("eval", caughtCheck)
+                        this.socket.removeListener("player", failCheck3)
                         reject(`Fishing is on cooldown (${data.ms}ms remaining)`)
                     }
                 }
             }
 
             const failCheck2 = (data: UIData) => {
-                if (data.type == "fishing_fail" && data.name == this.name) {
+                if (data.type == "fishing_fail" && data.name == this.id) {
                     // NOTE: We might not be in a fishing area?
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
                     this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
                     reject("We failed to fish.")
-                } else if (data.type == "fishing_none" && data.name == this.name) {
+                } else if (data.type == "fishing_none" && data.name == this.id) {
                     // We fished, but we didn't catch anything
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
                     this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
                     resolve()
+                }
+            }
+
+            const failCheck3 = (data: CharacterData) => {
+                if (!startedFishing && data.c.fishing) {
+                    startedFishing = true
+                } else if (startedFishing && !data.c.fishing) {
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
+                    // TODO: Is there a reliable way to figure out if we got interrupted?
+                    // TODO: Maybe the eval cooldown?
+                    resolve() // We fished and caught nothing, or got interrupted.
                 }
             }
 
@@ -82,11 +102,13 @@ export class Merchant extends PingCompensatedCharacter {
                 this.socket.removeListener("game_response", failCheck1)
                 this.socket.removeListener("ui", failCheck2)
                 this.socket.removeListener("eval", caughtCheck)
-                reject("fish timeout (10000ms)")
-            }, 10000)
+                this.socket.removeListener("player", failCheck3)
+                reject("fish timeout (20000ms)")
+            }, 20000)
             this.socket.on("game_response", failCheck1)
             this.socket.on("eval", caughtCheck)
             this.socket.on("ui", failCheck2)
+            this.socket.on("player", failCheck3)
         })
 
         this.socket.emit("skill", { name: "fishing" })

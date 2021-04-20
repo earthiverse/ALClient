@@ -485,6 +485,21 @@ test("Character.canUse", async () => {
     expect(warrior.canUse("cleave")).toBe(true)
 })
 
+test("Character.countItem", async () => {
+    // Non-stackable items
+    expect(priest.countItem("computer")).toBe(1)
+
+    // Stackable items
+    expect(priest.countItem("hpot0")).toBe(0)
+    expect(priest.countItem("mpot0")).toBe(0)
+    expect(priest.countItem("hpot1")).toBe(1000)
+    expect(priest.countItem("mpot1")).toBe(999)
+})
+
+test("Character.hasPVPMarkedItem", async () => {
+    expect(priest.hasPvPMarkedItem()).toBeFalsy()
+})
+
 test("Character.isPVP", async () => {
     // False if the map and server are not PVP
     priest.server = {
@@ -517,6 +532,7 @@ test("Character.isPVP", async () => {
 test("Character.locateItem", async () => {
     // Create the character's inventory for testing
     priest.esize = 2
+    const itemsBackup = [...priest.items]
     priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
     priest.isize = priest.items.length
 
@@ -530,11 +546,13 @@ test("Character.locateItem", async () => {
 
     expect(priest.locateItem("mpot0")).toBeTruthy()
     expect(priest.locateItem("mpot0", priest.items, { quantityGreaterThan: 1 })).toBe(2)
+    priest.items = itemsBackup
 })
 
 test("Character.locateItems", async () => {
     // Create the character's inventory for testing
     priest.esize = 2
+    const itemsBackup = [...priest.items]
     priest.items = [{ name: "mpot0", q: 1 }, undefined, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined, { name: "mpot0", q: 10 }]
     priest.isize = priest.items.length
 
@@ -545,6 +563,7 @@ test("Character.locateItems", async () => {
     expect(priest.locateItems("pants", priest.items, { levelLessThan: 2 }).length).toBe(2)
     expect(priest.locateItems("pants", priest.items, { levelGreaterThan: 0 }).length).toBe(1)
     expect(priest.locateItems("mpot0", priest.items, { quantityGreaterThan: 1 }).length).toBe(2)
+    priest.items = itemsBackup
 })
 
 test("Character.locateCraftNPC", async () => {
@@ -564,7 +583,7 @@ test("Character.locateExchangeNPC", async () => {
     // token
     expect(priest.locateExchangeNPC("monstertoken")).toStrictEqual<IPosition>({ map: "main", x: 126, y: -413 })
     // quest
-    expect(priest.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 144, y: -47 })
+    expect(priest.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 262, y: -48.5 })
     // not exchangable
     expect(() => { priest.locateExchangeNPC("mpot0") }).toThrowError()
 })

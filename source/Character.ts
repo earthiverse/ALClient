@@ -2626,24 +2626,20 @@ export class Character extends Observer implements CharacterData {
         }): number {
         let count = 0
         for (const inventoryItem of inventory) {
-            if (!inventoryItem)
-                continue
-            if (inventoryItem.name !== item)
-                continue
+            if (!inventoryItem) continue
+            if (inventoryItem.name !== item) continue
 
-            if (filters) {
-                if (filters.levelGreaterThan !== undefined) {
-                    if (inventoryItem.level == undefined)
-                        continue // This item doesn't have a level
-                    if (inventoryItem.level <= filters.levelGreaterThan)
-                        continue // This item is a lower level than desired
-                }
-                if (filters.levelLessThan !== undefined) {
-                    if (inventoryItem.level == undefined)
-                        continue // This item doesn't have a level
-                    if (inventoryItem.level >= filters.levelLessThan)
-                        continue // This item is a higher level than desired
-                }
+            if (filters?.levelGreaterThan !== undefined) {
+                if (inventoryItem.level == undefined)
+                    continue // This item doesn't have a level
+                if (inventoryItem.level <= filters.levelGreaterThan)
+                    continue // This item is a lower level than desired
+            }
+            if (filters?.levelLessThan !== undefined) {
+                if (inventoryItem.level == undefined)
+                    continue // This item doesn't have a level
+                if (inventoryItem.level >= filters.levelLessThan)
+                    continue // This item is a higher level than desired
             }
 
             // We have the item!
@@ -2844,29 +2840,27 @@ export class Character extends Observer implements CharacterData {
             if (!item) continue
             if (item.name !== itemName) continue
 
-            if (filters) {
-                if (filters.level !== undefined) {
-                    if (item.level !== filters.level)
-                        continue // The item's level doesn't match
-                }
-                if (filters.levelGreaterThan !== undefined) {
-                    if (item.level == undefined)
-                        continue // This item doesn't have a level
-                    if (item.level <= filters.levelGreaterThan)
-                        continue // This item is a lower level than desired
-                }
-                if (filters.levelLessThan !== undefined) {
-                    if (item.level == undefined)
-                        continue // This item doesn't have a level
-                    if (item.level >= filters.levelLessThan)
-                        continue // This item is a higher level than desired
-                }
-                if (filters.quantityGreaterThan !== undefined) {
-                    if (item.q == undefined)
-                        continue // This item doesn't have a quantity
-                    if (item.q <= filters.quantityGreaterThan)
-                        continue // There isn't enough items in this stack
-                }
+            if (filters?.level !== undefined) {
+                if (item.level !== filters.level)
+                    continue // The item's level doesn't match
+            }
+            if (filters?.levelGreaterThan !== undefined) {
+                if (item.level == undefined)
+                    continue // This item doesn't have a level
+                if (item.level <= filters.levelGreaterThan)
+                    continue // This item is a lower level than desired
+            }
+            if (filters?.levelLessThan !== undefined) {
+                if (item.level == undefined)
+                    continue // This item doesn't have a level
+                if (item.level >= filters.levelLessThan)
+                    continue // This item is a higher level than desired
+            }
+            if (filters?.quantityGreaterThan !== undefined) {
+                if (item.q == undefined)
+                    continue // This item doesn't have a quantity
+                if (item.q <= filters.quantityGreaterThan)
+                    continue // There isn't enough items in this stack
             }
 
             return i
@@ -3034,7 +3028,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Is the item a token?
-        if(gItem.type == "token") {
+        if (gItem.type == "token") {
             // Find the NPC that accepts these tokens
             let npcToLocate: NPCName
             for (const npcName in this.G.npcs) {
