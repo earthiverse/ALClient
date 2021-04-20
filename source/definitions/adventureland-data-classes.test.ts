@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 657 (2021-04-09)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
  * It is used to confirm type correctness
  */
 
@@ -15,6 +15,9 @@ test("G.classes type validation", async () => {
                 "mcourage": 0,
                 "speed": 55,
                 "doublehand": {
+                    "pickaxe": {
+                        "speed": -20
+                    },
                     "rod": {
                         "speed": -20
                     },

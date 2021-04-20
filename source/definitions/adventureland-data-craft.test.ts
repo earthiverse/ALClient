@@ -21,6 +21,15 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 180000
             },
+            "platinumingot": {
+                "items": [
+                    [
+                        8,
+                        "platinumnugget"
+                    ]
+                ],
+                "cost": 36000000
+            },
             "resistancering": {
                 "items": [
                     [
@@ -40,23 +49,46 @@ test("G.craft type validation", async () => {
                 "quest": "mcollector",
                 "cost": 0
             },
-            "armorring": {
+            "wbreeches": {
                 "items": [
                     [
-                        1,
-                        "snakefang"
+                        10,
+                        "crabclaw"
                     ],
                     [
-                        1,
-                        "lotusf"
-                    ],
-                    [
-                        1,
-                        "vitring",
-                        2
+                        100,
+                        "spores"
                     ]
                 ],
                 "quest": "mcollector",
+                "cost": 0
+            },
+            "wgloves": {
+                "items": [
+                    [
+                        60,
+                        "beewings"
+                    ],
+                    [
+                        20,
+                        "spores"
+                    ]
+                ],
+                "quest": "mcollector",
+                "cost": 0
+            },
+            "snakeoil": {
+                "items": [
+                    [
+                        40,
+                        "dstones"
+                    ],
+                    [
+                        9000,
+                        "rattail"
+                    ]
+                ],
+                "quest": "witch",
                 "cost": 0
             },
             "rod": {
@@ -86,22 +118,101 @@ test("G.craft type validation", async () => {
                 "quest": "witch",
                 "cost": 0
             },
-            "ornamentstaff": {
+            "wcap": {
+                "items": [
+                    [
+                        50,
+                        "beewings"
+                    ],
+                    [
+                        3,
+                        "gslime"
+                    ]
+                ],
+                "quest": "mcollector",
+                "cost": 0
+            },
+            "hbow": {
+                "items": [
+                    [
+                        40,
+                        "dstones"
+                    ],
+                    [
+                        2,
+                        "pleather"
+                    ],
+                    [
+                        1,
+                        "feather0"
+                    ]
+                ],
+                "quest": "mcollector",
+                "cost": 0
+            },
+            "daggerofthedead": {
+                "items": [
+                    [
+                        1,
+                        "mbones"
+                    ],
+                    [
+                        1,
+                        "wand"
+                    ]
+                ],
+                "cost": 24000
+            },
+            "computer": {
+                "items": [
+                    [
+                        1,
+                        "networkcard"
+                    ],
+                    [
+                        8,
+                        "qubics"
+                    ],
+                    [
+                        1,
+                        "platinumnugget"
+                    ],
+                    [
+                        12,
+                        "goldnugget"
+                    ],
+                    [
+                        100,
+                        "electronics"
+                    ]
+                ],
+                "cost": 120000000
+            },
+            "mushroomstaff": {
                 "items": [
                     [
                         1,
                         "staff"
                     ],
                     [
-                        1,
-                        "ornament"
-                    ],
-                    [
-                        20,
-                        "confetti"
+                        2,
+                        "smush"
                     ]
                 ],
-                "cost": 120000
+                "cost": 24000
+            },
+            "firestars": {
+                "items": [
+                    [
+                        1,
+                        "throwingstars"
+                    ],
+                    [
+                        1,
+                        "essenceoffire"
+                    ]
+                ],
+                "cost": 180000
             },
             "cclaw": {
                 "items": [
@@ -189,14 +300,95 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 20000
             },
-            "elixirvit1": {
+            "basketofeggs": {
                 "items": [
                     [
-                        10,
-                        "elixirvit0"
+                        1,
+                        "egg0"
+                    ],
+                    [
+                        1,
+                        "egg1"
+                    ],
+                    [
+                        1,
+                        "egg2"
+                    ],
+                    [
+                        1,
+                        "egg3"
+                    ],
+                    [
+                        1,
+                        "egg4"
+                    ],
+                    [
+                        1,
+                        "egg5"
+                    ],
+                    [
+                        1,
+                        "egg6"
+                    ],
+                    [
+                        1,
+                        "egg7"
+                    ],
+                    [
+                        1,
+                        "egg8"
                     ]
                 ],
-                "cost": 1000
+                "cost": 100
+            },
+            "goldingot": {
+                "items": [
+                    [
+                        12,
+                        "goldnugget"
+                    ]
+                ],
+                "cost": 3600000
+            },
+            "fsword": {
+                "items": [
+                    [
+                        1,
+                        "blade"
+                    ],
+                    [
+                        2,
+                        "essenceoffrost"
+                    ]
+                ],
+                "cost": 20000
+            },
+            "fclaw": {
+                "items": [
+                    [
+                        1,
+                        "claw"
+                    ],
+                    [
+                        2,
+                        "essenceoffrost"
+                    ]
+                ],
+                "cost": 20000
+            },
+            "elixirfires": {
+                "items": [
+                    [
+                        1,
+                        "cshell"
+                    ],
+                    [
+                        2000,
+                        "hpot0"
+                    ]
+                ],
+                "quest": "witch",
+                "cost": 0
             },
             "bowofthedead": {
                 "items": [
@@ -211,18 +403,23 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 120000
             },
-            "swordofthedead": {
+            "elixirint1": {
                 "items": [
                     [
-                        1,
-                        "mbones"
-                    ],
-                    [
-                        1,
-                        "sword"
+                        10,
+                        "elixirint0"
                     ]
                 ],
-                "cost": 24000
+                "cost": 1000
+            },
+            "bronzeingot": {
+                "items": [
+                    [
+                        16,
+                        "bronzenugget"
+                    ]
+                ],
+                "cost": 360000
             },
             "maceofthedead": {
                 "items": [
@@ -237,18 +434,44 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 240000
             },
-            "slimestaff": {
+            "elixirdex1": {
+                "items": [
+                    [
+                        10,
+                        "elixirdex0"
+                    ]
+                ],
+                "cost": 1000
+            },
+            "swordofthedead": {
+                "items": [
+                    [
+                        1,
+                        "mbones"
+                    ],
+                    [
+                        1,
+                        "sword"
+                    ]
+                ],
+                "cost": 24000
+            },
+            "ornamentstaff": {
                 "items": [
                     [
                         1,
                         "staff"
                     ],
                     [
-                        10,
-                        "gslime"
+                        1,
+                        "ornament"
+                    ],
+                    [
+                        20,
+                        "confetti"
                     ]
                 ],
-                "cost": 24000
+                "cost": 120000
             },
             "froststaff": {
                 "items": [
@@ -263,18 +486,18 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 20000
             },
-            "mushroomstaff": {
+            "gstaff": {
                 "items": [
                     [
                         1,
                         "staff"
                     ],
                     [
-                        2,
-                        "smush"
+                        1,
+                        "essenceofgreed"
                     ]
                 ],
-                "cost": 24000
+                "cost": 180000
             },
             "orbg": {
                 "items": [
@@ -298,18 +521,35 @@ test("G.craft type validation", async () => {
                 "quest": "mcollector",
                 "cost": 0
             },
-            "gstaff": {
+            "stealthcape": {
                 "items": [
                     [
                         1,
-                        "staff"
+                        "bcape"
                     ],
                     [
-                        1,
-                        "essenceofgreed"
+                        5,
+                        "shadowstone"
+                    ],
+                    [
+                        200,
+                        "essenceofnature"
+                    ],
+                    [
+                        1000,
+                        "cscale"
                     ]
                 ],
-                "cost": 180000
+                "cost": 2000000
+            },
+            "elixirint2": {
+                "items": [
+                    [
+                        10,
+                        "elixirint1"
+                    ]
+                ],
+                "cost": 2400
             },
             "wingedboots": {
                 "items": [
@@ -323,6 +563,102 @@ test("G.craft type validation", async () => {
                     ]
                 ],
                 "cost": 120000
+            },
+            "firebow": {
+                "items": [
+                    [
+                        1,
+                        "bow"
+                    ],
+                    [
+                        2,
+                        "essenceoffire"
+                    ]
+                ],
+                "cost": 40000
+            },
+            "wshoes": {
+                "items": [
+                    [
+                        5,
+                        "frogt"
+                    ],
+                    [
+                        500,
+                        "beewings"
+                    ],
+                    [
+                        100,
+                        "crabclaw"
+                    ]
+                ],
+                "quest": "mcollector",
+                "cost": 0
+            },
+            "wblade": {
+                "items": [
+                    [
+                        1,
+                        "stick",
+                        9
+                    ],
+                    [
+                        1,
+                        "blade"
+                    ],
+                    [
+                        800,
+                        "essenceoffrost"
+                    ]
+                ],
+                "cost": 24000000
+            },
+            "slimestaff": {
+                "items": [
+                    [
+                        1,
+                        "staff"
+                    ],
+                    [
+                        10,
+                        "gslime"
+                    ]
+                ],
+                "cost": 24000
+            },
+            "pickaxe": {
+                "items": [
+                    [
+                        1,
+                        "staff"
+                    ],
+                    [
+                        1,
+                        "spidersilk"
+                    ],
+                    [
+                        1,
+                        "blade"
+                    ]
+                ],
+                "cost": 100
+            },
+            "merry": {
+                "items": [
+                    [
+                        1,
+                        "bow"
+                    ],
+                    [
+                        1,
+                        "candycane"
+                    ],
+                    [
+                        1,
+                        "mistletoe"
+                    ]
+                ],
+                "cost": 480000
             },
             "candycanesword": {
                 "items": [
@@ -351,19 +687,50 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 40000
             },
-            "heartwood": {
+            "dartgun": {
                 "items": [
                     [
                         1,
-                        "woodensword",
-                        8
+                        "blade",
+                        9
+                    ],
+                    [
+                        12,
+                        "qubics"
+                    ],
+                    [
+                        4,
+                        "platinumnugget"
+                    ],
+                    [
+                        20,
+                        "goldnugget"
+                    ]
+                ],
+                "cost": 32000000
+            },
+            "elixirpnres": {
+                "items": [
+                    [
+                        500,
+                        "bwing"
                     ],
                     [
                         1,
-                        "nheart"
+                        "hpot0"
                     ]
                 ],
-                "cost": 120000000
+                "quest": "witch",
+                "cost": 0
+            },
+            "elixirvit1": {
+                "items": [
+                    [
+                        10,
+                        "elixirvit0"
+                    ]
+                ],
+                "cost": 1000
             },
             "elixirvit2": {
                 "items": [
@@ -460,14 +827,19 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 1000
             },
-            "elixirstr2": {
+            "heartwood": {
                 "items": [
                     [
-                        10,
-                        "elixirstr1"
+                        1,
+                        "woodensword",
+                        8
+                    ],
+                    [
+                        1,
+                        "nheart"
                     ]
                 ],
-                "cost": 2400
+                "cost": 120000000
             },
             "fireblade": {
                 "items": [
@@ -481,6 +853,25 @@ test("G.craft type validation", async () => {
                     ]
                 ],
                 "cost": 20000
+            },
+            "armorring": {
+                "items": [
+                    [
+                        1,
+                        "snakefang"
+                    ],
+                    [
+                        1,
+                        "lotusf"
+                    ],
+                    [
+                        1,
+                        "vitring",
+                        2
+                    ]
+                ],
+                "quest": "mcollector",
+                "cost": 0
             },
             "lbelt": {
                 "items": [
@@ -496,332 +887,6 @@ test("G.craft type validation", async () => {
                 ],
                 "quest": "mcollector",
                 "cost": 0
-            },
-            "wshoes": {
-                "items": [
-                    [
-                        5,
-                        "frogt"
-                    ],
-                    [
-                        500,
-                        "beewings"
-                    ],
-                    [
-                        100,
-                        "crabclaw"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "stinger": {
-                "items": [
-                    [
-                        12,
-                        "feather0"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "firestaff": {
-                "items": [
-                    [
-                        1,
-                        "staff"
-                    ],
-                    [
-                        1,
-                        "essenceoffire"
-                    ]
-                ],
-                "cost": 20000
-            },
-            "platinumingot": {
-                "items": [
-                    [
-                        8,
-                        "platinumnugget"
-                    ]
-                ],
-                "cost": 36000000
-            },
-            "wbreeches": {
-                "items": [
-                    [
-                        10,
-                        "crabclaw"
-                    ],
-                    [
-                        100,
-                        "spores"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "wgloves": {
-                "items": [
-                    [
-                        60,
-                        "beewings"
-                    ],
-                    [
-                        20,
-                        "spores"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "daggerofthedead": {
-                "items": [
-                    [
-                        1,
-                        "mbones"
-                    ],
-                    [
-                        1,
-                        "wand"
-                    ]
-                ],
-                "cost": 24000
-            },
-            "hbow": {
-                "items": [
-                    [
-                        40,
-                        "dstones"
-                    ],
-                    [
-                        2,
-                        "pleather"
-                    ],
-                    [
-                        1,
-                        "feather0"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "bronzeingot": {
-                "items": [
-                    [
-                        16,
-                        "bronzenugget"
-                    ]
-                ],
-                "cost": 360000
-            },
-            "computer": {
-                "items": [
-                    [
-                        1,
-                        "networkcard"
-                    ],
-                    [
-                        8,
-                        "qubics"
-                    ],
-                    [
-                        1,
-                        "platinumnugget"
-                    ],
-                    [
-                        12,
-                        "goldnugget"
-                    ],
-                    [
-                        100,
-                        "electronics"
-                    ]
-                ],
-                "cost": 120000000
-            },
-            "firestars": {
-                "items": [
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        1,
-                        "essenceoffire"
-                    ]
-                ],
-                "cost": 180000
-            },
-            "basketofeggs": {
-                "items": [
-                    [
-                        1,
-                        "egg0"
-                    ],
-                    [
-                        1,
-                        "egg1"
-                    ],
-                    [
-                        1,
-                        "egg2"
-                    ],
-                    [
-                        1,
-                        "egg3"
-                    ],
-                    [
-                        1,
-                        "egg4"
-                    ],
-                    [
-                        1,
-                        "egg5"
-                    ],
-                    [
-                        1,
-                        "egg6"
-                    ],
-                    [
-                        1,
-                        "egg7"
-                    ],
-                    [
-                        1,
-                        "egg8"
-                    ]
-                ],
-                "cost": 100
-            },
-            "fsword": {
-                "items": [
-                    [
-                        1,
-                        "blade"
-                    ],
-                    [
-                        2,
-                        "essenceoffrost"
-                    ]
-                ],
-                "cost": 20000
-            },
-            "elixirfires": {
-                "items": [
-                    [
-                        1,
-                        "cshell"
-                    ],
-                    [
-                        2000,
-                        "hpot0"
-                    ]
-                ],
-                "quest": "witch",
-                "cost": 0
-            },
-            "elixirint1": {
-                "items": [
-                    [
-                        10,
-                        "elixirint0"
-                    ]
-                ],
-                "cost": 1000
-            },
-            "wcap": {
-                "items": [
-                    [
-                        50,
-                        "beewings"
-                    ],
-                    [
-                        3,
-                        "gslime"
-                    ]
-                ],
-                "quest": "mcollector",
-                "cost": 0
-            },
-            "elixirdex1": {
-                "items": [
-                    [
-                        10,
-                        "elixirdex0"
-                    ]
-                ],
-                "cost": 1000
-            },
-            "snakeoil": {
-                "items": [
-                    [
-                        40,
-                        "dstones"
-                    ],
-                    [
-                        9000,
-                        "rattail"
-                    ]
-                ],
-                "quest": "witch",
-                "cost": 0
-            },
-            "stealthcape": {
-                "items": [
-                    [
-                        1,
-                        "bcape"
-                    ],
-                    [
-                        5,
-                        "shadowstone"
-                    ],
-                    [
-                        200,
-                        "essenceofnature"
-                    ],
-                    [
-                        1000,
-                        "cscale"
-                    ]
-                ],
-                "cost": 2000000
-            },
-            "elixirint2": {
-                "items": [
-                    [
-                        10,
-                        "elixirint1"
-                    ]
-                ],
-                "cost": 2400
-            },
-            "fclaw": {
-                "items": [
-                    [
-                        1,
-                        "claw"
-                    ],
-                    [
-                        2,
-                        "essenceoffrost"
-                    ]
-                ],
-                "cost": 20000
-            },
-            "firebow": {
-                "items": [
-                    [
-                        1,
-                        "bow"
-                    ],
-                    [
-                        2,
-                        "essenceoffire"
-                    ]
-                ],
-                "cost": 40000
             },
             "charmer": {
                 "items": [
@@ -840,85 +905,24 @@ test("G.craft type validation", async () => {
                 ],
                 "cost": 80000
             },
-            "wblade": {
+            "elixirstr2": {
                 "items": [
                     [
-                        1,
-                        "stick",
-                        9
-                    ],
-                    [
-                        1,
-                        "blade"
-                    ],
-                    [
-                        800,
-                        "essenceoffrost"
+                        10,
+                        "elixirstr1"
                     ]
                 ],
-                "cost": 24000000
+                "cost": 2400
             },
-            "merry": {
+            "stinger": {
                 "items": [
-                    [
-                        1,
-                        "bow"
-                    ],
-                    [
-                        1,
-                        "candycane"
-                    ],
-                    [
-                        1,
-                        "mistletoe"
-                    ]
-                ],
-                "cost": 480000
-            },
-            "dartgun": {
-                "items": [
-                    [
-                        1,
-                        "blade",
-                        9
-                    ],
                     [
                         12,
-                        "qubics"
-                    ],
-                    [
-                        4,
-                        "platinumnugget"
-                    ],
-                    [
-                        20,
-                        "goldnugget"
+                        "feather0"
                     ]
                 ],
-                "cost": 32000000
-            },
-            "elixirpnres": {
-                "items": [
-                    [
-                        500,
-                        "bwing"
-                    ],
-                    [
-                        1,
-                        "hpot0"
-                    ]
-                ],
-                "quest": "witch",
+                "quest": "mcollector",
                 "cost": 0
-            },
-            "goldingot": {
-                "items": [
-                    [
-                        12,
-                        "goldnugget"
-                    ]
-                ],
-                "cost": 3600000
             },
             "spearofthedead": {
                 "items": [
@@ -932,6 +936,19 @@ test("G.craft type validation", async () => {
                     ]
                 ],
                 "cost": 24000
+            },
+            "firestaff": {
+                "items": [
+                    [
+                        1,
+                        "staff"
+                    ],
+                    [
+                        1,
+                        "essenceoffire"
+                    ]
+                ],
+                "cost": 20000
             }
         }
     }

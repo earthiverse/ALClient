@@ -159,12 +159,40 @@ export type GData2 = {
         cost: number
         quest?: "mcollector" | "witch"
     } }
+    dimensions: {
+        [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
+    }
     dismantle: {
         [T in ItemName]?: {
             /** What items you get when you dismantle [quantity (chance if < 1), item name] */
             items: [number, ItemName][]
             /** How much it costs to disassemble the given item */
             cost: number
+        }
+    }
+    drops: {
+        [T in DropName]: GDropItem[]
+    } | {
+        gold: {
+            base: number
+            random: number
+            x10: number
+            x50: number
+        }
+    } | {
+        maps: {
+            [T in MapName | "global" | "global_static"]?: GDropItem[]
+        }
+    } | {
+        monsters: {
+            [T in MonsterName]?: GDropItem[]
+        }
+    } | {
+        skins: {
+            bronze: string[]
+            gold: string[]
+            normal: string[]
+            silver: string[]
         }
     }
     emotions: {
@@ -176,7 +204,7 @@ export type GData2 = {
         }
     }
     geometry: {
-        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "old_bank" | "old_main" | "original_main" | "therush">]: {
+        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: {
             /** TODO: ??? What is this? */
             default?: number
             /** TODO: ??? What is this? */
@@ -218,7 +246,7 @@ export type GData2 = {
         [T in string]?: number
     }
     maps: {
-        [T in Exclude<MapName, "d1" | "d3" | "frozencave" | "therush">]: {
+        [T in Exclude<MapName, "d1" | "d3" | "frozencave" | "maintest" | "therush">]: {
             data?: {
                 /** The furthest west you can go on the map */
                 min_x: number
@@ -482,22 +510,48 @@ export type GData2 = {
     /** If you buy an item with shells, this is the ratio of shells to gold */
     shells_to_gold: number
     skills: { [T in SkillName]: {
+        action?: string
         apiercing?: number;
-        class?: CharacterType[];
-        cooldown: number;
-        cooldown_multiplier?: number;
-        damage_multiplier?: number;
+        aura?: boolean
+        class?: CharacterType[]
+        code?: boolean | string
+        /** Additional */
+        complementary?: string
+        condition?: ConditionName
+        consume?: ItemName
+        cooldown?: number
+        cooldown_multiplier?: number
+        damage?: number
+        damage_multiplier?: number
+        damage_type?: DamageType
+        /** How long the condition lasts */
+        duration?: number
+        /** An exlpanation of what this skill does */
+        explanation?: string
         /** If true, we can't use this skill in a safe zone */
         hostile?: boolean;
         /** Items that this we need to use the skill */
         inventory?: ItemName[];
         level?: number;
+        levels?: [number, number][]
+        /** If set, the skill requires a list of targets */
+        list?: boolean
+        max?: number
         /** Can we use this skill on monsters? */
-        monster?: boolean;
+        monsters?: boolean;
         /** MP Cost for skill */
         mp?: number;
         /** The name of the skill */
         name: string;
+        negative?: ItemName[]
+        nprop?: Attribute[]
+        /** For skills that get better with level, this is how much the default does */
+        output?: number
+        /** If this is set, this skill will affect all party members */
+        party?: boolean
+        passive?: boolean
+        persistent?: boolean
+        positive?: ItemName[]
         range?: number;
         range_bonus?: number;
         range_multiplier?: number;
@@ -505,18 +559,28 @@ export type GData2 = {
         ratio?: number;
         /** Requirements for using the skill */
         requirements?: { [T in Attribute]?: number }
+        reuse_cooldown?: number
         /** The cooldown this skill shares with another skill */
         share?: SkillName;
+        skin?: string
+        skins?: string[]
         /** The item(s) required to use this skill */
         slot?: [SlotType, ItemName][];
         /** Does this skill require a single target? (Don't use an array) */
         target?: boolean;
         /** Does this skill require multiple targets? (Use an array) */
         targets?: boolean;
+        toggle?: boolean;
+        /** NOTE: If the type is 'monster', only monsters have this ability */
+        type?: "ability" | "gm" | "monster" | "passive" | "skill" | "utility"
+        ui?: boolean
         warning?: string;
         /** The weapon type needed to use this skill */
         wtype?: WeaponType | WeaponType[];
+        /** How much percent to vary the output by (random chance) */
+        variance?: number
     } }
+
     tilesets: {
         [T in TilesetName]: {
             /** The URL that contains the tileset */
@@ -698,6 +762,21 @@ export type GItem = {
 } & {
     [T in Exclude<Attribute, "stat">]?: number
 }
+
+export type GDropItem =
+    /** The drop is an item [chance, item name, item quantity] */
+    | [number, ItemName, number?]
+    /** The drop is a cosmetic */
+    | [number, "cx" | "cxbundle", string]
+    | [number, "cxjar", number, string]
+    /** The drop is an emotion */
+    | [number, "emotionjar", number, EmotionName]
+    /** The drop is nothing */
+    | [number, "empty"]
+    /** The drop is gold, or shells [chance, gold/shells, number of gold/shells] */
+    | [number, "gold" | "shells", number]
+    /** The drop is an item from another drop table */
+    | [number, "open", DropName]
 
 export type GMonster = {
     /** If true, all attacks will only do 1 damage to this monster */
@@ -1012,6 +1091,7 @@ export type AnimationName =
     | "hardshell"
     | "heal"
     | "heal_projectile"
+    | "hearts_single"
     | "icecrack"
     | "invincible"
     | "light"
@@ -1164,6 +1244,68 @@ export type DamageType =
     | "none"
     | "physical"
     | "pure"
+
+export type DropName =
+    | "5bucks"
+    | "abtesting"
+    | "apologybox"
+    | "armorbox"
+    | "armorx"
+    | "basicelixir"
+    | "basketofeggs"
+    | "bugbountybox"
+    | "candy0"
+    | "candy0v2"
+    | "candy0v3"
+    | "candy1"
+    | "candy1v2"
+    | "candy1v3"
+    | "candycane"
+    | "candypop"
+    | "cosmo0"
+    | "cosmo1"
+    | "cosmo2"
+    | "cosmo3"
+    | "eastereggs"
+    | "f1"
+    | "gem0"
+    | "gem1"
+    | "gem1_old"
+    | "gemfragment"
+    | "gift0"
+    | "gift1"
+    | "glitch"
+    | "goldenegg"
+    | "greenenvelope"
+    | "jewellerybox"
+    | "konami"
+    | "leather"
+    | "lightmage"
+    | "lostearring0"
+    | "lostearring1"
+    | "lostearring2"
+    | "lostearring3"
+    | "lostearring4"
+    | "m1"
+    | "mistletoe"
+    | "mysterybox"
+    | "ornament"
+    | "quiver"
+    | "redenvelope"
+    | "redenvelopev2"
+    | "redenvelopev2_shouldhavebeen"
+    | "redenvelopev3"
+    | "seashell"
+    | "statamulet"
+    | "statbelt"
+    | "statring"
+    | "test"
+    | "thrash"
+    | "troll"
+    | "weaponbox"
+    | "weaponofthedead"
+    | "xN"
+    | "xbox"
 
 export type EmotionName =
     | "drop_egg"
@@ -1701,6 +1843,7 @@ export type MapName =
     | "level3"
     | "level4"
     | "main"
+    | "maintest"
     | "mansion"
     | "mtunnel"
     | "old_bank"
@@ -2027,6 +2170,7 @@ export type SkillName =
     | "massproductionpp"
     | "mcourage"
     | "mentalburst"
+    | "mining"
     | "mlight"
     | "mluck"
     | "move_down"

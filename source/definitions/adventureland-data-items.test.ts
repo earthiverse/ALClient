@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 663 (2021-04-18)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-20d)
  * It is used to confirm type correctness
  */
 
@@ -5645,6 +5645,7 @@ test("G.items type validation", async () => {
                 "name": "Lucky T-Shirt",
                 "g": 120000,
                 "skin": "luckyt",
+                // NOTE: Known error
                 // "res": 20,
                 "xp": 5,
                 "type": "chest",
@@ -6859,6 +6860,7 @@ test("G.items type validation", async () => {
                     10,
                     12
                 ],
+                // NOTE: Known error
                 // "strength": 6,
                 "vit": -8,
                 "skin": "maceofthedead",

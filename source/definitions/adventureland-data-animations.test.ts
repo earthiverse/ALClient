@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 657 (2021-04-09)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
  * It is used to confirm type correctness
  */
 
@@ -189,6 +189,10 @@ test("G.animations type validation", async () => {
                 "frames": 7,
                 "file": "/images/sprites/animations/snowflake.png"
             },
+            "failure": {
+                "frames": 10,
+                "file": "/images/sprites/animations/CRed_Spark5.png"
+            },
             "heal_projectile": {
                 "frames": 4,
                 "continuous": true,
@@ -357,9 +361,12 @@ test("G.animations type validation", async () => {
                 "file": "/images/sprites/animations/MBlobP.png",
                 "directional": true
             },
-            "failure": {
+            "hearts_single": {
                 "frames": 10,
-                "file": "/images/sprites/animations/CRed_Spark5.png"
+                "y": -10,
+                "alpha": 1,
+                "file": "/images/sprites/emotions/heart_rise_single.png",
+                "size": 2
             },
             "arrow_hit": {
                 "frames": 7,

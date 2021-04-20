@@ -74,7 +74,7 @@ export class Merchant extends PingCompensatedCharacter {
                     this.socket.removeListener("eval", caughtCheck)
                     this.socket.removeListener("player", failCheck3)
                     reject("We failed to fish.")
-                } else if (data.type == "fishing_none" && data.name == this.id) {
+                } else if (data.type == "fishing_none") {
                     // We fished, but we didn't catch anything
                     this.socket.removeListener("game_response", failCheck1)
                     this.socket.removeListener("ui", failCheck2)
@@ -132,6 +132,89 @@ export class Merchant extends PingCompensatedCharacter {
     // TODO: Add promises
     public merchantCourage(): void {
         this.socket.emit("skill", { name: "mcourage" })
+    }
+
+    public mine(): Promise<void> {
+        let startedMining = false
+        if (this.c.mining) startedMining = true // We're already mining!?
+        const mined = new Promise<void>((resolve, reject) => {
+            const caughtCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]mining['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
+                    resolve()
+                }
+            }
+
+            const failCheck1 = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "skill_cant_wtype") {
+                        this.socket.removeListener("game_response", failCheck1)
+                        this.socket.removeListener("ui", failCheck2)
+                        this.socket.removeListener("eval", caughtCheck)
+                        this.socket.removeListener("player", failCheck3)
+                        reject("We don't have a pickaxe equipped")
+                    }
+                } else if (typeof data == "object") {
+                    if (data.response == "cooldown" && data.place == "mining" && data.skill == "mining") {
+                        this.socket.removeListener("game_response", failCheck1)
+                        this.socket.removeListener("ui", failCheck2)
+                        this.socket.removeListener("eval", caughtCheck)
+                        this.socket.removeListener("player", failCheck3)
+                        reject(`Mining is on cooldown (${data.ms}ms remaining)`)
+                    }
+                }
+            }
+
+            const failCheck2 = (data: UIData) => {
+                if (data.type == "mining_fail" && data.name == this.id) {
+                    // NOTE: We might not be in a mining area?
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
+                    reject("We failed to mine.")
+                } else if (data.type == "mining_none") {
+                    // We mined, but we didn't get anything
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
+                    resolve()
+                }
+            }
+
+            const failCheck3 = (data: CharacterData) => {
+                if (!startedMining && data.c.mining) {
+                    startedMining = true
+                } else if (startedMining && !data.c.mining) {
+                    this.socket.removeListener("game_response", failCheck1)
+                    this.socket.removeListener("ui", failCheck2)
+                    this.socket.removeListener("eval", caughtCheck)
+                    this.socket.removeListener("player", failCheck3)
+                    // TODO: Is there a reliable way to figure out if we got interrupted?
+                    // TODO: Maybe the eval cooldown?
+                    resolve() // We mined and caught nothing, or got interrupted.
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck1)
+                this.socket.removeListener("ui", failCheck2)
+                this.socket.removeListener("eval", caughtCheck)
+                this.socket.removeListener("player", failCheck3)
+                reject("mine timeout (20000ms)")
+            }, 20000)
+            this.socket.on("game_response", failCheck1)
+            this.socket.on("eval", caughtCheck)
+            this.socket.on("ui", failCheck2)
+            this.socket.on("player", failCheck3)
+        })
+
+        this.socket.emit("skill", { name: "mining" })
+        return mined
     }
 
     public mluck(target: string): Promise<void> {

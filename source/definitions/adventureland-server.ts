@@ -709,7 +709,6 @@ export type UIData = {
     name: string
 } | {
     type: "fishing_none"
-    name: string
 } | {
     type: "fishing_start"
     name: string
@@ -717,6 +716,15 @@ export type UIData = {
 } | {
     type: "massproduction"
     name: string
+} | {
+    type: "mining_fail"
+    name: string
+} | {
+    type: "mining_none"
+} | {
+    type: "mining_start"
+    name: string
+    direction: number
 } | {
     type: "mluck"
     from: string

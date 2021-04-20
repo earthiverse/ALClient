@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 663 (2021-04-18)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
  * It is used to confirm type correctness
  */
 
@@ -13,8 +13,8 @@ test("G.maps type validation", async () => {
                 "npcs": [
                     {
                         "position": [
-                            144,
-                            -47
+                            262,
+                            -48.5
                         ],
                         "id": "leathermerchant"
                     },
@@ -128,7 +128,7 @@ test("G.maps type validation", async () => {
                     ]
                 ],
                 "name": "Winterland",
-                "key": "jayson_IceLandPrototype",
+                "key": "jayson_WinterLandV2",
                 "doors": [
                     [
                         -280,

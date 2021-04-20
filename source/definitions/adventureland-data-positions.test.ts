@@ -795,6 +795,11 @@ test("G.positions type validation", async () => {
                 6,
                 12
             ],
+            "pickaxe": [
+                "custom",
+                4,
+                4
+            ],
             "skill_charge": [
                 "skills",
                 5,
@@ -3340,6 +3345,11 @@ test("G.positions type validation", async () => {
                 "",
                 13,
                 33
+            ],
+            "skill_mining": [
+                "custom",
+                4,
+                4
             ],
             "lmace": [
                 "",

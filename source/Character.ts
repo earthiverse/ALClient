@@ -1174,12 +1174,15 @@ export class Character extends Observer implements CharacterData {
                     return false // We don't have the right weapon type equipped
             }
         }
-        if (gInfoSkill.inventory) {
+        if (gInfoSkill.consume && !options?.ignoreEquipped) {
+            if (!this.hasItem(gInfoSkill.consume)) return false // We don't have the required consumable
+        }
+        if (gInfoSkill.inventory && !options?.ignoreEquipped) {
             for (const item of gInfoSkill.inventory) {
                 if (!this.hasItem(item)) return false // We don't have the required item in our inventory
             }
         }
-        if (gInfoSkill.slot) {
+        if (gInfoSkill.slot && !options?.ignoreEquipped) {
             // The skill requires an item to be equipped
             let hasSlot = false
             for (const [slot, item] of gInfoSkill.slot) {
@@ -1200,22 +1203,19 @@ export class Character extends Observer implements CharacterData {
                     break
                 }
             }
-            if (!compatibleClass)
-                return false
+            if (!compatibleClass) return false
         }
         if (gInfoSkill.requirements) {
             // This skill has stat requirements
             for (const s in gInfoSkill.requirements) {
                 const stat = s as Attribute
-                if (this[stat] < gInfoSkill.requirements[stat])
-                    return false
+                if (this[stat] < gInfoSkill.requirements[stat]) return false
             }
         }
 
         // Special circumstance -- we can't use blink if we're being dampened
         if (this.s.dampened) {
-            if (skill == "blink")
-                return false
+            if (skill == "blink") return false
         }
 
         // Special circumstance -- merchants can't attack unless they have a dartgun
@@ -1235,18 +1235,12 @@ export class Character extends Observer implements CharacterData {
         const item2Info = this.items[item2Pos]
         const item3Info = this.items[item3Pos]
         const cscrollInfo = this.items[cscrollPos]
-        if (!item1Info)
-            return Promise.reject(`There is no item in inventory slot ${item1Pos} (item1).`)
-        if (!item2Info)
-            return Promise.reject(`There is no item in inventory slot ${item2Pos} (item2).`)
-        if (!item3Info)
-            return Promise.reject(`There is no item in inventory slot ${item3Pos} (item3).`)
-        if (!cscrollInfo)
-            return Promise.reject(`There is no item in inventory slot ${cscrollPos} (cscroll).`)
-        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name)
-            return Promise.reject("You can only combine 3 of the same items.")
-        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level)
-            return Promise.reject("You can only combine 3 items of the same level.")
+        if (!item1Info) return Promise.reject(`There is no item in inventory slot ${item1Pos} (item1).`)
+        if (!item2Info) return Promise.reject(`There is no item in inventory slot ${item2Pos} (item2).`)
+        if (!item3Info) return Promise.reject(`There is no item in inventory slot ${item3Pos} (item3).`)
+        if (!cscrollInfo) return Promise.reject(`There is no item in inventory slot ${cscrollPos} (cscroll).`)
+        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) return Promise.reject("You can only combine 3 of the same items.")
+        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) return Promise.reject("You can only combine 3 items of the same level.")
 
         const compoundComplete = new Promise<boolean>((resolve, reject) => {
             const playerCheck = (data: CharacterData) => {
@@ -2054,6 +2048,22 @@ export class Character extends Observer implements CharacterData {
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
     public sendPartyRequest(id: string) {
         this.socket.emit("party", { event: "request", name: id })
+    }
+
+    /**
+     * Shifts a booster to the given type
+     *
+     * @param {number} booster the inventory popsition of the booster
+     * @param {("goldbooster" | "luckbooster" | "xpbooster")} to the type you want to shift it to
+     * @memberof Character
+     */
+    // TODO: Add promises
+    public shiftBooster(booster: number, to: "goldbooster" | "luckbooster" | "xpbooster") {
+        const itemInfo = this.items[booster]
+        if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
+        if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
+
+        this.socket.emit("booster", { num: booster, action: "shift", to: to })
     }
 
     protected lastSmartMove: number = Date.now();
