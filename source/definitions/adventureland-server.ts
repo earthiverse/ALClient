@@ -295,6 +295,13 @@ export type GameResponseDataObject = {
     response: "attack_failed"
     place: "attack"
     id: string
+} | 
+/** When you try to enter the bank, but another one of your characters is already inside. */
+{
+    response: "bank_opx"
+    /** The character that is already inside */
+    name: string
+    reason: "mounted"
 } | {
     response: "bank_restrictions"
     place: "compound" | string
@@ -358,6 +365,9 @@ export type GameResponseDataObject = {
     response: "seashell_success"
     suffix: "" | string
 } | {
+    response: "skill_fail"
+    name: SkillName
+}| {
     response: "skill_success"
     name: SkillName
 } | {

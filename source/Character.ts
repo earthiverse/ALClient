@@ -2366,17 +2366,30 @@ export class Character extends Observer implements CharacterData {
     public transport(map: MapName, spawn: number): Promise<void> {
         const transportComplete = new Promise<void>((resolve, reject) => {
             const transportCheck = (data: NewMapData) => {
+                this.socket.removeListener("game_response", failCheck)
                 if (data.name == map)
                     resolve()
                 else
                     reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
 
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "bank_opx" && data.reason == "mounted") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("new_map", transportCheck)
+                        reject(`${data.name} is currently in the bank, we can't enter.`)
+                    }
+                }
+            }
+
             setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("new_map", transportCheck)
                 reject(`transport timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", transportCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("transport", { to: map, s: spawn })
