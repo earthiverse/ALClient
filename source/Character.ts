@@ -1805,7 +1805,6 @@ export class Character extends Observer implements CharacterData {
     public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
         // Check if we're already there
         if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, y: this.y, x: this.x })
-        const currentMoveNum = this.move_num
 
         let to: IPosition = { map: this.map, x: x, y: y }
         if (!options?.disableSafetyCheck) {
@@ -1837,13 +1836,6 @@ export class Character extends Observer implements CharacterData {
             }
 
             const checkPosition = () => {
-                if (this.move_num > currentMoveNum + 1) {
-                    // We issued a new move before we finished our current one. Resolve this one.
-                    this.socket.removeListener("player", checkPlayer)
-                    resolve({ map: this.map, y: this.y, x: this.x })
-                    return
-                }
-
                 // Force an update of the character position
                 this.updatePositions()
                 timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
