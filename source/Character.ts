@@ -1789,20 +1789,26 @@ export class Character extends Observer implements CharacterData {
      * i.e. there's a wall in the way, then we will move to the closest we can walk there in
      * a straight line.
      * 
-     * If you want this funnction to return after we complete the move, use `await`.
+     * If you want this function to return after we complete the move, use `await`.
      * 
+     * If you start a new move before the last move is finished, the last move's promise will resolve.
+     *
      * @param {number} x
      * @param {number} y
-     * @param {boolean} [safetyCheck=true] If set to false, move() will not check map bounds
-     * @return {*}  {Promise<NodeData>} The position where we finish
+     * @param {{ disableSafetyCheck: boolean }} [options] 
+     * 
+     * disableSafetyCheck - If set to true, move() will not check map bounds
+     * 
+     * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
-    public async move(x: number, y: number, safetyCheck = true): Promise<NodeData> {
+    public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
         // Check if we're already there
         if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, y: this.y, x: this.x })
+        const currentMoveNum = this.move_num
 
         let to: IPosition = { map: this.map, x: x, y: y }
-        if (safetyCheck) {
+        if (!options?.disableSafetyCheck) {
             to = Pathfinder.getSafeWalkTo(
                 { map: this.map, x: this.x, y: this.y },
                 { map: this.map, x, y })
@@ -1831,6 +1837,13 @@ export class Character extends Observer implements CharacterData {
             }
 
             const checkPosition = () => {
+                if (this.move_num > currentMoveNum + 1) {
+                    // We issued a new move before we finished our current one. Resolve this one.
+                    this.socket.removeListener("player", checkPlayer)
+                    resolve({ map: this.map, y: this.y, x: this.x })
+                    return
+                }
+
                 // Force an update of the character position
                 this.updatePositions()
                 timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
@@ -1864,6 +1877,7 @@ export class Character extends Observer implements CharacterData {
         this.going_x = to.x
         this.going_y = to.y
         this.moving = true
+        this.move_num += 1
         return moveFinished
     }
 
@@ -2257,7 +2271,7 @@ export class Character extends Observer implements CharacterData {
                     if (currentMove.map !== this.map) {
                         return Promise.reject(`We are supposed to be in ${currentMove.map}, but we are in ${this.map}`)
                     }
-                    await this.move(currentMove.x, currentMove.y, false)
+                    await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
                 } else if (currentMove.type == "town") {
                     await this.warpToTown()
                 } else if (currentMove.type == "transport") {
@@ -2541,7 +2555,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public warpToJail(): Promise<NodeData> {
-        return this.move(Number.MAX_VALUE, Number.MAX_VALUE, false)
+        return this.move(Number.MAX_VALUE, Number.MAX_VALUE, { disableSafetyCheck: true })
     }
 
     public warpToTown(): Promise<NodeData> {
