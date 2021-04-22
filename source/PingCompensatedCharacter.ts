@@ -23,7 +23,7 @@ export class PingCompensatedCharacter extends Character {
     protected async parseEntities(data: EntitiesData): Promise<void> {
         super.parseEntities(data)
 
-        const pingCompensation = Math.min(...this.pings) / 2
+        const pingCompensation = Math.min(...this.pings)
 
         for (const monster of data.monsters) {
             // Compensate position
@@ -79,7 +79,7 @@ export class PingCompensatedCharacter extends Character {
     public updateCharacter(data: CharacterData): void {
         super.updateCharacter(data)
 
-        const pingCompensation = Math.min(...this.pings) / 2
+        const pingCompensation = Math.min(...this.pings)
 
         // Compensate movement
         if (this.moving) {
