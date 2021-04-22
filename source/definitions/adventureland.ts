@@ -189,6 +189,15 @@ export type ItemInfo = {
     v?: boolean
 }
 
+export type TradeItemInfo = ItemInfo & {
+    /** Number of minutes remaining for giveaway items */
+    giveaway?: number;
+    /** List of character IDs that are in the giveaway */
+    list?: string[];
+    price: number;
+    rid: string;
+}
+
 export type SlotInfo = {
     [T in SlotType]: ItemInfo
 } & {
@@ -425,6 +434,20 @@ export type TradeSlotType =
     | "trade14"
     | "trade15"
     | "trade16"
+    | "trade17"
+    | "trade18"
+    | "trade19"
+    | "trade20"
+    | "trade21"
+    | "trade22"
+    | "trade23"
+    | "trade24"
+    | "trade25"
+    | "trade26"
+    | "trade27"
+    | "trade28"
+    | "trade29"
+    | "trade30"
 
 export type NPCRole =
     | "announcer"

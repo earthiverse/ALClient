@@ -1,6 +1,6 @@
 import axios from "axios"
 import fs from "fs"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantCharData, PullMerchantData } from "./definitions/adventureland-server"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
@@ -74,12 +74,12 @@ export class Game {
         return mail
     }
 
-    static async getMerchants(): Promise<PullMerchantCharData[]> {
+    static async getMerchants(): Promise<PullMerchantsCharData[]> {
         if (!this.user) return Promise.reject("You must login first.")
         //const merchants: PullMerchantsData[] = []
-        const merchants: PullMerchantCharData[] = []
+        const merchants: PullMerchantsCharData[] = []
 
-        const data = await axios.post<PullMerchantData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = await axios.post<PullMerchantsData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         for(const datum of data.data) {
             if(datum.type == "merchants") {
                 for(const char of datum.chars) {

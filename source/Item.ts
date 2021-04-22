@@ -2,13 +2,13 @@ import { ItemInfo, ItemType } from "./definitions/adventureland"
 import { Attribute, GData2, GItem, ItemName, SkillName } from "./definitions/adventureland-data"
 import { ItemData } from "./definitions/adventureland-server"
 
-export class Item implements ItemData, ItemInfo, Partial<GItem> {
+export class Item implements ItemData, ItemInfo, GItem {
     protected G: GData2
 
     // ItemData (required)
     public name: ItemName
     // ItemData (optional)
-    public l?: number
+    public l?: "s" | "x"
     public level?: number
     public stat_type?: Attribute
 

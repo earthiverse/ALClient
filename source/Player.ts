@@ -1,7 +1,7 @@
 import { MapName } from "."
 import { Character } from "./Character"
 import { CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { DamageType, GData2 } from "./definitions/adventureland-data"
+import { CXData, DamageType, GData2 } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
@@ -32,15 +32,15 @@ export class Player implements PlayerData {
     public s: StatusInfo = {}
 
     c: any = {}
-    cx: any;
-    focus?: string;
-    hp: number;
-    max_hp: number;
-    max_mp: number;
-    mp: number;
-    npc?: string;
-    owner: string;
-    pdps: number;
+    cx: CXData
+    focus?: string
+    hp: number
+    max_hp: number
+    max_mp: number
+    mp: number
+    npc?: string
+    owner: string
+    pdps: number
     q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; } = {}
     range: number;
     rip: boolean;

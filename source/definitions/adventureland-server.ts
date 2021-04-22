@@ -4,7 +4,7 @@
  */
 
 import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
-import { Attribute, EmotionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
+import { AchievementName, AnimationName, Attribute, CXData, EmotionName, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -18,14 +18,15 @@ export type AchievementProgressDataFirehazard = {
 
 export type ActionData = {
     attacker: string
-    damage: number
+    damage?: number
+    heal?: number
     eta: number
     m: number
     pid: string
-    projectile: "arrow" | "pmag" | "supershot" | string
-    source: "attack" | "supershot" | string
+    projectile: ProjectileName
+    source: SkillName
     target: string
-    type: "attack" | "supershot" | string
+    type: SkillName
     x: number
     y: number
 }
@@ -159,7 +160,7 @@ export type CharacterData = PlayerData & {
     // (Probably) GUI Related things
     cid: number
     controller: string
-    cx: any
+    cx: CXData
 
     ipass?: string
     // TODO: Figure this out
@@ -179,7 +180,7 @@ export type CharacterListData = {
     name: string
     level: number
     skin: string
-    cx: any
+    cx: CXData
     online: number
     y: number
     x: number
@@ -295,7 +296,7 @@ export type GameResponseDataObject = {
     response: "attack_failed"
     place: "attack"
     id: string
-} | 
+} |
 /** When you try to enter the bank, but another one of your characters is already inside. */
 {
     response: "bank_opx"
@@ -367,7 +368,7 @@ export type GameResponseDataObject = {
 } | {
     response: "skill_fail"
     name: SkillName
-}| {
+} | {
     response: "skill_success"
     name: SkillName
 } | {
@@ -431,12 +432,13 @@ export type GameResponseDataString =
 // | string
 
 export type HitData = {
-    anim: "arrow_hit" | "miss" | "reflect" | "slash1" | string
+    anim?: AnimationName
     /** If this is set, we avoided the projectile (by running?) */
     avoid?: boolean
-    damage: number
+    damage?: number
     lifesteal?: number
     evade?: boolean
+    heal?: number
     hid?: string
     id?: string
     pid?: string
@@ -444,7 +446,7 @@ export type HitData = {
     reflect?: boolean
     /** If set, this was a sneak attack by a rogue */
     sneak?: boolean
-    source?: "attack" | "heal" | string
+    source?: SkillName | "burn"
     /** If this is set, these IDs are too close to each other and are receiving additional damage on each hit */
     stacked?: string[]
     /** If set, the character is stunned with this attack */
@@ -460,14 +462,42 @@ export type InviteData = {
 }
 
 export type ItemData = {
-    /** If set, the item is locked */
-    l?: number
+    /** Achievement progress */
+    acc?: number
+    /** Achievement name to which you are progressing to */
+    ach?: AchievementName
+    /** TODO: Confirm. The item was a giveaway, and this was the character that gave it away. */
+    gf?: string
+    /** If set, the item was given to the player (most likely when they created the character), and it is only worth 1 gold if you sell it to an NPC. */
+    gift?: number
+    /** The higher the number, the more likely it is to succeed if you compound or upgrade the item */
+    grace?: number
+    /** If set, the item is locked. 's' == 'sealed', 'u' == 'unlocking', TODO: ??? == 'locked'. */
+    l?: "s" | "x"
     /** The item level */
     level?: number
     /** The item name */
     name: ItemName
+    /** The title applied to the item */
+    p?: TitleName
+    /** The quantity of the item for stackable items */
+    q?: number
     /** If the item has a scroll applied to it, the scroll provides this attribute */
     stat_type?: Attribute
+}
+
+/**
+ * This is for items that are in trade slots
+ */
+export type ItemDataTrade = ItemData & {
+    /** If set, this item is not for sale. The player wants to buy this item. */
+    b?: boolean
+    /** Number of minutes remaining for giveaway items */
+    giveaway?: number;
+    /** List of character IDs that are in the giveaway */
+    list?: string[];
+    price: number;
+    rid: string;
 }
 
 export type LoadedData = {
@@ -508,33 +538,27 @@ export type MailMessageData = {
     taken?: boolean
 }
 
-export type PullMerchantData = {
+export type PullMerchantsData = {
     type: "merchants"
-    chars: PullMerchantCharData[]
+    chars: PullMerchantsCharData[]
 }
 
-export type PullMerchantCharData = {
+export type PullMerchantsCharData = {
+    cx: CXData
     map: MapName
     x: number
     y: number
-    afk: boolean
+    afk: "code" | boolean
     /** Follows the following format: `${ServerRegion} ${ServerIdentifier}` */
     server: string
-    stand: ItemName
+    stand: "cstand" | "stand0" | "stand1"
     /** Merchant name */
     name: string
     /** Merchant level */
     level: number
     /** Items for sale */
-    slots: { [T in TradeSlotType]?: ItemInfo & {
-        /** Number of minutes remaining for giveaway items */
-        giveaway?: number;
-        /** List of character IDs that are in the giveaway */
-        list?: string[];
-        price: number;
-        rid: string;
-    }
-    }
+    slots: { [T in TradeSlotType]?: ItemDataTrade }
+    skin: string
 }
 
 export type NewMapData = {
@@ -583,8 +607,7 @@ export type PlayerData = {
     // TODO: Figure out what this is
     c: any
     cid: number
-    // TODO: Figure out what this is
-    cx: any
+    cx: CXData
     focus?: string
     frequency: number
     x: number
@@ -774,6 +797,8 @@ export type UpgradeData = {
 }
 
 export type WelcomeData = {
+    /** The character gets returned if you open a socket with a secret (i.e. /comm and click on one of your characters) */
+    character?: CharacterData
     region: ServerRegion
     in: MapName
     map: MapName

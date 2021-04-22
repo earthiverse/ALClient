@@ -8,7 +8,7 @@ import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
-import { Attribute, BankPackName, ConditionName, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
@@ -50,7 +50,7 @@ export class Character extends Observer implements CharacterData {
     public attack = 0
     public c: any
     public cid: number
-    public cx: any
+    public cx: CXData
     public damage_type: DamageType
     public focus?: string
     public frequency: number

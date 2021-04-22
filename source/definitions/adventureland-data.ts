@@ -61,13 +61,7 @@ export type GData2 = {
             [T in Attribute]?: number
         } };
         /** (GUI related) What sprites are available for the given class */
-        looks: [string, {
-            chin?: string
-            hair?: string
-            hat?: string
-            head?: string
-            makeup?: string
-        }][]
+        looks: [string, CXData][]
         /** Statistics the class gets with a level up */
         lstats: {
             dex: number
@@ -415,8 +409,8 @@ export type GData2 = {
             }
             /** TODO: ??? What is this? GUI related? */
             color?: string
-            /** TODO: ??? What is this? GUI related? */
-            cx?: any
+            /** Appearance related. Look & accessories. */
+            cx?: CXData
             /** TODO: ??? What is this? GUI related? */
             delay?: number
             /** The same NPCName as `G.npcs[NPCName]` */
@@ -622,6 +616,16 @@ export type GData2 = {
     }
     /** Version number for this data. */
     version: number
+}
+
+export type CXData = {
+    chin?: string
+    face?: string
+    hair?: string
+    hat?: string
+    head?: string
+    makeup?: string
+    upper?: string
 }
 
 export type GItem = {
