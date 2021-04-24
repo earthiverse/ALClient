@@ -154,6 +154,7 @@ export class Game {
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
+        if(!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         try {
