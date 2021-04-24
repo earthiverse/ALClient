@@ -1,14 +1,14 @@
 import { ActionData, EvalData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Ranger extends PingCompensatedPlayer {
+export class Ranger extends PingCompensatedCharacter {
     public fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "5shot"
                     && (data.target == target1 || data.target == target2 || data.target == target3 || data.target == target4 || data.target == target5)) {
                     projectiles.push(data.pid)
@@ -76,7 +76,7 @@ export class Ranger extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`supershot timeout (${Constants.TIMEOUT}ms)`)
+                reject(`huntersmark timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
@@ -88,14 +88,13 @@ export class Ranger extends PingCompensatedPlayer {
     }
 
     public piercingShot(target: string): Promise<string> {
-        if (this.G.skills.piercingshot.mp > this.character.mp)
-            return Promise.reject("Not enough MP to use piercingShot")
+        if (this.G.skills.piercingshot.mp > this.mp) return Promise.reject("Not enough MP to use piercingShot")
 
         const piercingShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "piercingshot"
                     && data.target == target) {
                     projectile = data.pid
@@ -103,7 +102,7 @@ export class Ranger extends PingCompensatedPlayer {
             }
 
             const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]piercingshot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                if (/skill_timeout\s*\(\s*['"]attack['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("eval", cooldownCheck)
                     resolve(projectile)
@@ -131,7 +130,7 @@ export class Ranger extends PingCompensatedPlayer {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "poisonarrow"
                     && data.target == target) {
                     projectile = data.pid
@@ -159,15 +158,22 @@ export class Ranger extends PingCompensatedPlayer {
         return poisonArrowed
     }
 
+    /**
+     * TODO: Add a fail check for when we supershot an entitiy that doesn't exist (probably already killed)
+     *
+     * @param {string} target
+     * @return {*}  {Promise<string>}
+     * @memberof Ranger
+     */
     public superShot(target: string): Promise<string> {
-        if (this.G.skills.supershot.mp > this.character.mp)
+        if (this.G.skills.supershot.mp > this.mp)
             return Promise.reject("Not enough MP to use superShot")
 
         const superShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "supershot"
                     && data.target == target) {
                     projectile = data.pid
@@ -200,7 +206,7 @@ export class Ranger extends PingCompensatedPlayer {
             const projectiles: string[] = []
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "3shot"
                     && (data.target == target1 || data.target == target2 || data.target == target3)) {
                     projectiles.push(data.pid)

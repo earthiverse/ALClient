@@ -1,17 +1,18 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { GData, MapName, IPosition, DoorInfo, GMapsNPC } from "./definitions/adventureland"
+import { IPosition, DoorInfo } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Game } from "./Game"
 import { Tools } from "./Tools"
+import { GData2, MapName } from "./definitions/adventureland-data"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
 const WALKABLE = 3
 
 export class Pathfinder {
-    protected static G: GData
+    protected static G: GData2
 
     protected static FIRST_MAP: MapName = "main"
     protected static TRANSPORT_COST = 50
@@ -19,7 +20,23 @@ export class Pathfinder {
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
-    protected static path = path.nba(Pathfinder.graph, {
+    protected static pathWithoutTown = path.nba(Pathfinder.graph, {
+        distance(fromNode, toNode, link) {
+            if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
+                // We are using the transporter
+                return Pathfinder.TRANSPORT_COST
+            } else if (link.data && link.data.type == "town") {
+                // We are warping to town
+                return 999999
+            }
+            // We are walking
+            if (fromNode.data.map == toNode.data.map) {
+                return Tools.distance(fromNode.data, toNode.data)
+            }
+        },
+        oriented: true
+    })
+    protected static pathWithTown = path.nba(Pathfinder.graph, {
         distance(fromNode, toNode, link) {
             if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
                 // We are using the transporter
@@ -65,15 +82,41 @@ export class Pathfinder {
     }
 
     /**
-     * Checks if we can walk from `from` to `to`.
+     * Checks if we can stand at the given location. Useful for `blink()`.
+     *
+     * @static
+     * @param {IPosition} location Position to check if we can stand there
+     * @return {*}  {boolean}
+     * @memberof Pathfinder
+     */
+    public static canStand(location: IPosition): boolean {
+        if (!this.G) throw new Error("Prepare pathfinding before querying canStand()!")
+
+        const y = Math.trunc(location.y) - this.G.geometry[location.map].min_y
+        const x = Math.trunc(location.x) - this.G.geometry[location.map].min_x
+
+        try {
+            const grid = this.getGrid(location.map)
+            if (grid[y][x] == WALKABLE) return true
+        } catch (e) {
+            return false
+        }
+
+        return false
+    }
+
+    /**
+     * Checks if we can walk from `from` to `to`. Useful for `move()`.
+     * Adapted from http://eugen.dedu.free.fr/projects/bresenham/
      * @param from The starting position (where we start walking from)
      * @param to The ending position (where we walk to)
      */
-    public static canWalk(from: IPosition, to: IPosition): boolean {
-        if (!this.G) throw new Error("Prepare pathfinding before querying canWalk()!")
-        if (from.map != to.map) return false // We can't walk across maps
+    public static canWalkPath(from: IPosition, to: IPosition): boolean {
+        if (!this.G) throw new Error("Prepare pathfinding before querying canWalkPath()!")
+        if (from.map !== to.map) return false // We can't walk across maps
 
         const grid = this.getGrid(from.map)
+        const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
         let ystep, xstep // the step on y and x axis
         let error // the error accumulated during the incremenet
@@ -82,7 +125,7 @@ export class Pathfinder {
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
-        if (grid[y][x] !== WALKABLE) return false
+        if (grid[y * width + x] !== WALKABLE) return false
 
         if (dy < 0) {
             ystep = -1
@@ -110,15 +153,15 @@ export class Pathfinder {
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
                     if (error + errorprev < ddx) {  // bottom square also
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     } else if (error + errorprev > ddx) {  // left square also
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     } else {  // corner: bottom and left squares also
-                        if (grid[y - ystep][x] !== WALKABLE) return false
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return false
+                if (grid[y * width + x] !== WALKABLE) return false
                 errorprev = error
             }
         } else {  // the same as above
@@ -130,15 +173,15 @@ export class Pathfinder {
                     x += xstep
                     error -= ddy
                     if (error + errorprev < ddy) {
-                        if (grid[y][x - xstep] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
                     } else if (error + errorprev > ddy) {
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     } else {
-                        if (grid[y][x - xstep] !== WALKABLE) return false
-                        if (grid[y - ystep][x] !== WALKABLE) return false
+                        if (grid[y * width + x - xstep] !== WALKABLE) return false
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return false
+                if (grid[y * width + x] !== WALKABLE) return false
                 errorprev = error
             }
         }
@@ -173,22 +216,19 @@ export class Pathfinder {
         if (this.grids[map]) return this.grids[map]
         if (!this.G) throw new Error("Prepare pathfinding before querying getGrid()!")
 
-        console.log(`Preparing ${map}...`)
+        console.debug(`Preparing ${map}...`)
 
         const width = this.G.geometry[map].max_x - this.G.geometry[map].min_x
         const height = this.G.geometry[map].max_y - this.G.geometry[map].min_y
 
-        const grid: Grid = Array(height)
-        for (let y = 0; y < height; y++) {
-            grid[y] = []
-            for (let x = 0; x < width; x++) grid[y][x] = UNKNOWN
-        }
+        const grid = new Uint8Array(height * width)
+        grid.fill(UNKNOWN)
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
             for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= yLine[0] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
                 for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - Constants.BASE.h); x <= yLine[2] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
-                    grid[y][x] = UNWALKABLE
+                    grid[y * width + x] = UNWALKABLE
                 }
             }
         }
@@ -197,7 +237,7 @@ export class Pathfinder {
         for (const xLine of this.G.geometry[map].x_lines) {
             for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - Constants.BASE.h); x <= xLine[0] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
                 for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= xLine[2] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
-                    grid[y][x] = UNWALKABLE
+                    grid[y * width + x] = UNWALKABLE
                 }
             }
         }
@@ -206,28 +246,28 @@ export class Pathfinder {
         for (const spawn of this.G.maps[map].spawns) {
             let x = Math.trunc(spawn[0]) - this.G.geometry[map].min_x
             let y = Math.trunc(spawn[1]) - this.G.geometry[map].min_y
-            if (grid[y][x] === WALKABLE) continue // We've already flood filled this
+            if (grid[y * width + x] === WALKABLE) continue // We've already flood filled this
             const stack = [[y, x]]
             while (stack.length) {
                 [y, x] = stack.pop()
                 let x1 = x
-                while (x1 >= 0 && grid[y][x1] == UNKNOWN) x1--
+                while (x1 >= 0 && grid[y * width + x1] == UNKNOWN) x1--
                 x1++
                 let spanAbove = 0
                 let spanBelow = 0
-                while (x1 < width && grid[y][x1] == UNKNOWN) {
-                    grid[y][x1] = WALKABLE
-                    if (!spanAbove && y > 0 && grid[y - 1][x1] == UNKNOWN) {
+                while (x1 < width && grid[y * width + x1] == UNKNOWN) {
+                    grid[y * width + x1] = WALKABLE
+                    if (!spanAbove && y > 0 && grid[(y - 1) * width + x1] == UNKNOWN) {
                         stack.push([y - 1, x1])
                         spanAbove = 1
-                    } else if (spanAbove && y > 0 && grid[y - 1][x1] != UNKNOWN) {
+                    } else if (spanAbove && y > 0 && grid[(y - 1) * width + x1] !== UNKNOWN) {
                         spanAbove = 0
                     }
 
-                    if (!spanBelow && y < height - 1 && grid[y + 1][x1] == UNKNOWN) {
+                    if (!spanBelow && y < height - 1 && grid[(y + 1) * width + x1] == UNKNOWN) {
                         stack.push([y + 1, x1])
                         spanBelow = 1
-                    } else if (spanBelow && y < height - 1 && grid[y + 1][x1] != UNKNOWN) {
+                    } else if (spanBelow && y < height - 1 && grid[(y + 1) * width + x1] !== UNKNOWN) {
                         spanBelow = 0
                     }
                     x1++
@@ -243,58 +283,58 @@ export class Pathfinder {
         this.graph.beginUpdate()
 
         // Add nodes at corners
-        // console.log("  Adding corners...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding corners...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width; x++) {
-                if (grid[y][x] !== WALKABLE) continue
+                if (grid[y * width + x] !== WALKABLE) continue
 
-                if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === UNWALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x - 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE) {
+                if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === UNWALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE) {
                     // Inside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === UNWALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === UNWALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y][x - 1] === UNWALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === UNWALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[y * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === UNWALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Inside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x - 1] === UNWALKABLE
-                    && grid[y - 1][x] === WALKABLE
-                    && grid[y][x - 1] === WALKABLE) {
+                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y - 1) * width + x] === WALKABLE
+                    && grid[y * width + x - 1] === WALKABLE) {
                     // Outside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y - 1][x] === WALKABLE
-                    && grid[y - 1][x + 1] === UNWALKABLE
-                    && grid[y][x + 1] === WALKABLE) {
+                } else if (grid[(y - 1) * width + x] === WALKABLE
+                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
+                    && grid[y * width + x + 1] === WALKABLE) {
                     // Outside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y][x + 1] === WALKABLE
-                    && grid[y + 1][x] === WALKABLE
-                    && grid[y + 1][x + 1] === UNWALKABLE) {
+                } else if (grid[y * width + x + 1] === WALKABLE
+                    && grid[(y + 1) * width + x] === WALKABLE
+                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
                     // Outside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y][x - 1] === WALKABLE
-                    && grid[y + 1][x - 1] === UNWALKABLE
-                    && grid[y + 1][x] === WALKABLE) {
+                } else if (grid[y * width + x - 1] === WALKABLE
+                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
+                    && grid[(y + 1) * width + x] === WALKABLE) {
                     // Outside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
                 }
@@ -302,9 +342,9 @@ export class Pathfinder {
         }
 
         // Add nodes at transporters. We'll look for close nodes to doors later.
-        // console.log("  Adding transporter node and links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
-        const transporters: GMapsNPC[] = []
+        // console.debug("  Adding transporter node and links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
+        const transporters = []
         for (const npc of this.G.maps[map].npcs) {
             if (npc.id !== "transporter") continue
             const closest = this.findClosestSpawn(map, npc.position[0], npc.position[1])
@@ -314,8 +354,8 @@ export class Pathfinder {
         }
 
         // Add nodes at doors. We'll look for close nodes to doors later.
-        // console.log("  Adding door nodes and links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding door nodes and links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         const doors: DoorInfo[] = []
         for (const door of this.G.maps[map].doors) {
             // TODO: Figure out how to know if we have access to a locked door
@@ -329,22 +369,22 @@ export class Pathfinder {
         }
 
         // Add nodes at spawns
-        // console.log("  Adding spawn nodes...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding spawn nodes...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (const spawn of this.G.maps[map].spawns) {
             walkableNodes.push(this.addNodeToGraph(map, spawn[0], spawn[1]))
         }
 
         // TODO: Is there any way to optimize this!?!?
         // TODO: This is what takes the most compute time...
-        // console.log("  Adding walkable links...")
-        // console.log(`  # nodes: ${walkableNodes.length}`)
+        // console.debug("  Adding walkable links...")
+        // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let i = 0; i < walkableNodes.length; i++) {
             const fromNode = walkableNodes[i]
 
             // Check if we can walk to another node
             for (let j = i + 1; j < walkableNodes.length; j++) {
-                if (this.canWalk(fromNode.data, walkableNodes[j].data)) {
+                if (this.canWalkPath(fromNode.data, walkableNodes[j].data)) {
                     this.addLinkToGraph(fromNode, walkableNodes[j])
                     this.addLinkToGraph(walkableNodes[j], fromNode)
                 }
@@ -383,7 +423,6 @@ export class Pathfinder {
             }
         }
 
-        // console.log("  Adding town and leave links...")
         const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
         const townLinkData: LinkData = { type: "town", map: map, x: townNode.data.x, y: townNode.data.y }
         const leaveLink = this.addNodeToGraph("main", this.G.maps.main.spawns[0][0], this.G.maps.main.spawns[0][1])
@@ -401,14 +440,18 @@ export class Pathfinder {
         return grid
     }
 
-    protected static findClosestNode(map: MapName, x: number, y: number): Node<NodeData> {
+    public static findClosestNode(map: MapName, x: number, y: number): Node<NodeData> {
         let closest: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
         let closestWalkable: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
         const from = { map, x, y }
         this.graph.forEachNode((node) => {
             if (node.data.map == map) {
                 const distance = Tools.distance(from, node.data)
-                const walkable = this.canWalk(from, node.data)
+
+                // If we're further than one we can already walk to, don't check further
+                if (distance > closest.distance) return
+
+                const walkable = this.canWalkPath(from, node.data)
 
                 if (distance < closest.distance) closest = { distance, node }
                 if (walkable && distance < closestWalkable.distance) closestWalkable = { distance, node }
@@ -438,26 +481,31 @@ export class Pathfinder {
         return closest
     }
 
-    public static getPath(from: NodeData, to: NodeData): LinkData[] {
+    public static getPath(from: NodeData, to: NodeData, avoidTownWarps = false): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
+
+        if (from.map == to.map && this.canWalkPath(from, to)) {
+            // Return a straight line to the destination
+            return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
+        }
 
         const fromNode = this.findClosestNode(from.map, from.x, from.y)
         const toNode = this.findClosestNode(to.map, to.x, to.y)
 
         const path: LinkData[] = []
 
-        if (from.map == to.map && this.canWalk(from, to)) {
-            // Return a straight line to the destination
-            return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
+        console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
+        let rawPath: Node<NodeData>[]
+        if (avoidTownWarps) {
+            rawPath = this.pathWithoutTown.find(fromNode.id, toNode.id)
+        } else {
+            rawPath = this.pathWithTown.find(fromNode.id, toNode.id)
         }
 
-        console.log(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
-        const rawPath = this.path.find(fromNode.id, toNode.id)
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
         }
-        path.push({ type: "move", map: from.map, x: from.x, y: from.y })
-
+        path.push({ type: "move", map: fromNode.data.map, x: fromNode.data.x, y: fromNode.data.y })
         for (let i = rawPath.length - 1; i > 0; i--) {
             const currentNode = rawPath[i]
             const nextNode = rawPath[i - 1]
@@ -465,10 +513,6 @@ export class Pathfinder {
             // TODO: Get links, and determine the faster link? This will help solve the walk to spawn issue on winterland.
             const link = this.graph.getLink(currentNode.id, nextNode.id)
             if (link.data) {
-                if (i == rawPath.length - 1 && link.data.type == "transport") {
-                    // We have to move to the transport first
-                    path.push({ type: "move", map: from.map, x: link.data.x, y: link.data.y })
-                }
                 path.push(link.data)
                 if (link.data.type == "town") {
                     // Town warps don't always go to the exact location, so sometimes we can't reach the next node.
@@ -478,7 +522,7 @@ export class Pathfinder {
             } else {
                 // If the next move is the town node, check if it's faster to warp there.
                 const townNode = this.G.maps[nextNode.data.map].spawns[0]
-                if (nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
+                if (!avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
                     if (Tools.distance(currentNode.data, nextNode.data) > this.TOWN_COST) {
                         // It's quicker to use 'town'
                         path.push({ type: "town", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
@@ -494,8 +538,22 @@ export class Pathfinder {
         }
         path.push({ type: "move", map: to.map, x: to.x, y: to.y })
 
-        console.log(`Path from ${fromNode.id} to ${toNode.id} found! (${path.length} steps)`)
-        console.log(path)
+        // Clean the path
+        for (let i = 0; i < path.length - 1; i++) {
+            const current = path[i]
+            const next = path[i + 1]
+
+            // If anything is different, continue
+            if (current.type !== next.type) continue
+            if (current.map !== next.map) continue
+            if (current.x !== next.x) continue
+            if (current.y !== next.y) continue
+
+            // The two nodes are the same, remove one
+            path.splice(i, 1)
+        }
+
+        console.debug(`Path from ${fromNode.id} to ${toNode.id} found!`)
         return path
     }
 
@@ -506,10 +564,11 @@ export class Pathfinder {
      * @param to 
      */
     public static getSafeWalkTo(from: IPosition, to: IPosition): IPosition {
-        if (from.map != to.map) throw new Error("We can't walk across maps.")
+        if (from.map !== to.map) throw new Error("We can't walk across maps.")
         if (!this.G) throw new Error("Prepare pathfinding before querying getSafeWalkTo()!")
 
         const grid = this.getGrid(from.map)
+        const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
         let ystep, xstep // the step on y and x axis
         let error // the error accumulated during the incremenet
@@ -518,7 +577,7 @@ export class Pathfinder {
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
-        if (grid[y][x] !== WALKABLE) {
+        if (grid[y * width + x] !== WALKABLE) {
             console.error(`We shouldn't be able to be where we are in from (${from.map}:${from.x},${from.y}).`)
             return Pathfinder.findClosestNode(from.map, from.x, from.y).data
         }
@@ -549,15 +608,15 @@ export class Pathfinder {
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
                     if (error + errorprev < ddx) {  // bottom square also
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else if (error + errorprev > ddx) {  // left square also
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else {  // corner: bottom and left squares also
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
                 errorprev = error
             }
         } else {  // the same as above
@@ -569,15 +628,15 @@ export class Pathfinder {
                     x += xstep
                     error -= ddy
                     if (error + errorprev < ddy) {
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else if (error + errorprev > ddy) {
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     } else {
-                        if (grid[y][x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                        if (grid[y - ystep][x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     }
                 }
-                if (grid[y][x] !== WALKABLE) return { map: from.map, x: x + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                 errorprev = error
             }
         }
@@ -590,10 +649,8 @@ export class Pathfinder {
 
         const maps: MapName[] = [startMap]
 
-        console.log("Preparing pathfinding...")
+        console.debug("Preparing pathfinding...")
         const start = Date.now()
-
-        // TODO: Grab pathfinding information from the database
 
         for (let i = 0; i < maps.length; i++) {
             const map = maps[i]
@@ -601,7 +658,7 @@ export class Pathfinder {
             // Add the connected maps
             for (const door of this.G.maps[map].doors) {
                 if (door[7] || door[8]) continue
-                if (door[4] == "test") continue
+                if (door[4] == "test") continue // Skip the test map to save ourselves some processing.
                 if (!maps.includes(door[4])) maps.push(door[4])
             }
         }
@@ -619,9 +676,9 @@ export class Pathfinder {
         }
         this.getGrid("jail") // Jail is disconnected, prepare it
 
-        console.log(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
-        console.log(`  # Nodes: ${this.graph.getNodeCount()}`)
-        console.log(`  # Links: ${this.graph.getLinkCount()}`)
+        console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
+        console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
+        console.debug(`  # Links: ${this.graph.getLinkCount()}`)
 
         return
     }

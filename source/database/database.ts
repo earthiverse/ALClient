@@ -1,7 +1,7 @@
 import Mongoose from "mongoose"
 
 let database: Mongoose.Connection
-export const connect = (): void => {
+export const connectToMongo = (): void => {
     // TODO: Move this to a config file
     const uri = "mongodb://localhost:27017/adventureland"
 
@@ -23,7 +23,7 @@ export const connect = (): void => {
     })
 }
 
-export const disconnect = (): void => {
+export const disconnectFromMongo = (): void => {
     if (!database) {
         return
     }

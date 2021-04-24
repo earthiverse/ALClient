@@ -1,20 +1,21 @@
 import axios from "axios"
 import fs from "fs"
-import { connect, disconnect } from "./database/database"
-import { ServerData, CharacterListData } from "./definitions/adventureland-server"
-import { ServerRegion, ServerIdentifier, GData, CharacterType } from "./definitions/adventureland"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
+import { ServerRegion, ServerIdentifier, CharacterType } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
-import { Player } from "./Player"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Character } from "./Character"
 import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
+import { GData2 } from "./definitions/adventureland-data"
+import { connectToMongo, disconnectFromMongo } from "./database/database"
 
 // Connect to Mongo
-connect()
+connectToMongo()
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -24,10 +25,10 @@ export class Game {
     // TODO: Move this type to type definitions
     protected static characters: { [T in string]?: CharacterListData } = {}
 
-    public static players: { [T in string]: Player } = {}
+    public static players: { [T in string]: Character } = {}
     public static observers: { [T in string]: Observer } = {}
 
-    public static G: GData
+    public static G: GData2
 
     protected constructor() {
         // Private to force static methods
@@ -41,19 +42,19 @@ export class Game {
         await this.stopAllObservers()
 
         // Disconnect from the database
-        if (mongo) disconnect()
+        if (mongo) disconnectFromMongo()
     }
 
-    static async getGData(): Promise<GData> {
+    static async getGData(): Promise<GData2> {
         if (this.G) return this.G
 
-        console.log("Updating 'G' data...")
+        console.debug("Updating 'G' data...")
         const response = await axios.get("http://adventure.land/data.js")
         if (response.status == 200) {
             // Update G with the latest data
             const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
-            this.G = JSON.parse(matches[1]) as GData
-            console.log("  Updated 'G' data!")
+            this.G = JSON.parse(matches[1]) as GData2
+            console.debug("Updated 'G' data!")
             return this.G
         } else {
             console.error(response)
@@ -61,11 +62,57 @@ export class Game {
         }
     }
 
+    static async getMail(all = true): Promise<MailMessageData[]> {
+        if (!this.user) return Promise.reject("You must login first.")
+        let data = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const mail: MailMessageData[] = []
+
+        while (data.data.length > 0) {
+            mail.push(...data.data[0].mail)
+
+            if (all && data.data[0].more) {
+                // Get more mail
+                data = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${data.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+            } else {
+                break
+            }
+        }
+
+        return mail
+    }
+
+    static async getMerchants(): Promise<PullMerchantsCharData[]> {
+        if (!this.user) return Promise.reject("You must login first.")
+        //const merchants: PullMerchantsData[] = []
+        const merchants: PullMerchantsCharData[] = []
+
+        const data = await axios.post<PullMerchantsData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        for(const datum of data.data) {
+            if(datum.type == "merchants") {
+                for(const char of datum.chars) {
+                    merchants.push(char)
+                }
+            }
+        }
+
+        return merchants
+    }
+
+    /**
+     * The following function will tell the server that we've read the following mail message
+     * @param mailID The mail message to mark as 'read'
+     */
+    static async markMailAsRead(mailID: string): Promise<void> {
+        if (!this.user) return Promise.reject("You must login first.")
+        const data = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        return data.data[0]
+    }
+
     static async login(email: string, password: string): Promise<boolean> {
         // See if we already have a userAuth stored in our database
 
         // Login and save the auth
-        console.log("Logging in...")
+        console.debug("Logging in...")
         const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
         let loginResult
         for (const datum of login.data) {
@@ -75,7 +122,7 @@ export class Game {
             }
         }
         if (loginResult && loginResult.message == "Logged In!") {
-            console.log("  Logged in!")
+            console.debug("Logged in!")
             // We successfully logged in
             // Find the auth cookie and save it
             for (const cookie of login.headers["set-cookie"]) {
@@ -107,30 +154,26 @@ export class Game {
         return this.login(data.email, data.password)
     }
 
-    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedPlayer> {
+    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
         if (!this.user) return Promise.reject("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
+        if(!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         try {
             // Create the player and connect
-            let player: PingCompensatedPlayer
+            let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "merchant") player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "priest") player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "ranger") player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "rogue") player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "warrior") player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else player = new PingCompensatedPlayer(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-
-            // Handle disconnects
-            player.socket.on("disconnect", () => {
-                Game.stopCharacter(cName)
-            })
+            else player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
 
             await player.connect()
 

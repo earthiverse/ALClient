@@ -1,44 +1,293 @@
-import { GData } from "./definitions/adventureland"
 import { Game } from "./Game"
+import { Character } from "./Character"
 import { Player } from "./Player"
+import { GData2 } from "./definitions/adventureland-data"
 
-let G: GData
-let player: Player
+let G: GData2
+let character: Character
+let sameOwner: Player
+let sameParty: Player
+let randomPlayer: Player
 beforeAll(async () => {
     G = await Game.getGData()
-    player = new Player(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
+    character = new Character(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
+    character.updateCharacter({
+        id: "earthPri",
+        party: "earthMer",
+        owner: "12345",
+        abs: false,
+        afk: "code",
+        age: 404,
+        angle: -85.76360520094116,
+        apiercing: 9,
+        armor: 162,
+        attack: 4149,
+        blast: 0,
+        c: {},
+        cash: 3036,
+        cc: 6.5,
+        cid: 60164,
+        controller: "",
+        courage: 2,
+        crit: 0.75,
+        critdamage: 0,
+        ctype: "priest",
+        cx: {},
+        dex: 48,
+        dreturn: 1,
+        emx: { drop_egg: 1 },
+        esize: 28,
+        evasion: 3.5,
+        explosion: 0,
+        fear: 0,
+        firesistance: 0,
+        for: 30.25,
+        frequency: 1.1786382113821139,
+        fzresistance: 1,
+        going_x: 671,
+        going_y: -225,
+        gold: 1000793,
+        goldm: 1.2,
+        hp: 11262,
+        in: "mtunnel",
+        int: 399,
+        isize: 42,
+        items: [{ name: "computer" }, { name: "tracker" }, { q: 999, name: "mpot1" }, { q: 1000, name: "hpot1" }],
+        level: 86,
+        lifesteal: 2.5,
+        luckm: 1.4849999999999999,
+        m: 451,
+        manasteal: 0,
+        map: "mtunnel",
+        max_hp: 11262,
+        max_mp: 7525,
+        max_xp: 6200000000,
+        mcourage: 19,
+        miss: 0,
+        move_num: 18588709,
+        moving: true,
+        mp: 7125,
+        mp_cost: 56,
+        mp_reduction: 0,
+        name: "earthPri",
+        pcourage: 2,
+        pdps: 181472.0016944313,
+        pnresistance: 0,
+        q: {},
+        range: 214,
+        reflection: 5,
+        resistance: 363,
+        rip: false,
+        rpiercing: 91,
+        s: { mlifesteal: { ms: 3521515 }, mluck: { ms: 3567460, f: "earthMer", strong: true } },
+        skin: "fpriest",
+        slots: {
+            amulet: { level: 5, name: "intamulet" },
+            belt: { level: 4, name: "intbelt" },
+            cape: { acc: 35946, ps: ["festive"], name: "angelwings", level: 8, ach: "festive", p: "festive" },
+            chest: { name: "wattire", level: 9, p: "shiny", stat_type: "int" },
+            earring1: { level: 5, name: "intearring" },
+            earring2: { level: 5, name: "intearring" },
+            elixir: { expires: "2021-01-10T00:58:46.062Z", name: "elixirluck", ex: true },
+            gloves: { stat_type: "int", name: "wgloves", level: 9 },
+            helmet: { name: "wcap", level: 9, stat_type: "int" },
+            mainhand: { acc: 1, name: "firestaff", level: 9 },
+            offhand: { name: "wbook1", level: 3 },
+            orb: { name: "jacko", level: 4 },
+            pants: { acc: 3076803, name: "wbreeches", level: 9, ach: "gooped", stat_type: "int" },
+            ring1: { name: "intring", level: 4 },
+            ring2: { level: 4, name: "intring" },
+            shoes: { level: 9, stat_type: "int", name: "wshoes" }
+        },
+        speed: 69,
+        str: 52,
+        stun: 0,
+        target: "2067865",
+        targets: 0,
+        tax: 0.01,
+        vit: 111,
+        x: 667.4007558893662,
+        xp: 2890596969.9000006,
+        xpm: 1.19,
+        xrange: 25,
+        y: -176.41020450644513,
+    })
+
+    sameOwner = new Player({
+        id: "test_same_owner",
+        party: undefined,
+        owner: "12345",
+        x: 10,
+        y: 10,
+        map: "main",
+
+        abs: false,
+        angle: 90,
+        armor: 100,
+        attack: 100,
+        c: {},
+        cid: 1,
+        cx: {},
+        frequency: 1,
+        going_x: 10,
+        going_y: 10,
+        hp: 1000,
+        max_hp: 1000,
+        mp: 500,
+        max_mp: 500,
+        level: 50,
+        pdps: 20000,
+        q: {},
+        range: 100,
+        resistance: 100,
+        rip: false,
+        s: {},
+        skin: "fpriest",
+        slots: {
+            amulet: { level: 5, name: "intamulet" },
+            belt: { level: 4, name: "intbelt" },
+            cape: { acc: 35946, ps: ["festive"], name: "angelwings", level: 8, ach: "festive", p: "festive" },
+            chest: { name: "wattire", level: 9, p: "shiny", stat_type: "int" },
+            earring1: { level: 5, name: "intearring" },
+            earring2: { level: 5, name: "intearring" },
+            elixir: { expires: "2021-01-10T00:58:46.062Z", name: "elixirluck", ex: true },
+            gloves: { stat_type: "int", name: "wgloves", level: 9 },
+            helmet: { name: "wcap", level: 9, stat_type: "int" },
+            mainhand: { acc: 1, name: "firestaff", level: 9 },
+            offhand: { name: "wbook1", level: 3 },
+            orb: { name: "jacko", level: 4 },
+            pants: { acc: 3076803, name: "wbreeches", level: 9, ach: "gooped", stat_type: "int" },
+            ring1: { name: "intring", level: 4 },
+            ring2: { level: 4, name: "intring" },
+            shoes: { level: 9, stat_type: "int", name: "wshoes" }
+        },
+        speed: 50,
+
+        ctype: "priest",
+    }, "main", G)
+
+    sameParty = new Player({
+        id: "test_same_party",
+        party: "earthMer",
+        owner: "99999",
+        x: 10,
+        y: 10,
+        map: "main",
+
+        abs: false,
+        angle: 90,
+        armor: 100,
+        attack: 100,
+        c: {},
+        cid: 1,
+        cx: {},
+        frequency: 1,
+        going_x: 10,
+        going_y: 10,
+        hp: 1000,
+        max_hp: 1000,
+        mp: 500,
+        max_mp: 500,
+        level: 50,
+        pdps: 20000,
+        q: {},
+        range: 100,
+        resistance: 100,
+        rip: false,
+        s: {},
+        skin: "fpriest",
+        slots: {
+            amulet: { level: 5, name: "intamulet" },
+            belt: { level: 4, name: "intbelt" },
+            cape: { acc: 35946, ps: ["festive"], name: "angelwings", level: 8, ach: "festive", p: "festive" },
+            chest: { name: "wattire", level: 9, p: "shiny", stat_type: "int" },
+            earring1: { level: 5, name: "intearring" },
+            earring2: { level: 5, name: "intearring" },
+            elixir: { expires: "2021-01-10T00:58:46.062Z", name: "elixirluck", ex: true },
+            gloves: { stat_type: "int", name: "wgloves", level: 9 },
+            helmet: { name: "wcap", level: 9, stat_type: "int" },
+            mainhand: { acc: 1, name: "firestaff", level: 9 },
+            offhand: { name: "wbook1", level: 3 },
+            orb: { name: "jacko", level: 4 },
+            pants: { acc: 3076803, name: "wbreeches", level: 9, ach: "gooped", stat_type: "int" },
+            ring1: { name: "intring", level: 4 },
+            ring2: { level: 4, name: "intring" },
+            shoes: { level: 9, stat_type: "int", name: "wshoes" }
+        },
+        speed: 50,
+
+        ctype: "priest",
+    }, "main", G)
+
+    randomPlayer = new Player({
+        id: "test_random_player",
+        party: "funPartyTime",
+        owner: "99999",
+        x: 10,
+        y: 10,
+        map: "main",
+
+        abs: false,
+        angle: 90,
+        armor: 100,
+        attack: 100,
+        c: {},
+        cid: 1,
+        cx: {},
+        frequency: 1,
+        going_x: 10,
+        going_y: 10,
+        hp: 1000,
+        max_hp: 1000,
+        mp: 500,
+        max_mp: 500,
+        level: 50,
+        pdps: 20000,
+        q: {},
+        range: 100,
+        resistance: 100,
+        rip: false,
+        s: {},
+        skin: "fpriest",
+        slots: {
+            amulet: { level: 5, name: "intamulet" },
+            belt: { level: 4, name: "intbelt" },
+            cape: { acc: 35946, ps: ["festive"], name: "angelwings", level: 8, ach: "festive", p: "festive" },
+            chest: { name: "wattire", level: 9, p: "shiny", stat_type: "int" },
+            earring1: { level: 5, name: "intearring" },
+            earring2: { level: 5, name: "intearring" },
+            elixir: { expires: "2021-01-10T00:58:46.062Z", name: "elixirluck", ex: true },
+            gloves: { stat_type: "int", name: "wgloves", level: 9 },
+            helmet: { name: "wcap", level: 9, stat_type: "int" },
+            mainhand: { acc: 1, name: "firestaff", level: 9 },
+            offhand: { name: "wbook1", level: 3 },
+            orb: { name: "jacko", level: 4 },
+            pants: { acc: 3076803, name: "wbreeches", level: 9, ach: "gooped", stat_type: "int" },
+            ring1: { name: "intring", level: 4 },
+            ring2: { level: 4, name: "intring" },
+            shoes: { level: 9, stat_type: "int", name: "wshoes" }
+        },
+        speed: 50,
+
+        ctype: "priest",
+    }, "main", G)
 }, 30000)
 
 afterAll(async () => {
     Game.disconnect()
 })
 
-test("Player.calculateItemCost", async () => {
-    // The costs below assume these G costs, so check that they're still good
-    expect(G.items.scroll0.g).toBe(1000)
-    expect(G.items.scroll1.g).toBe(40000)
-    expect(G.items.pants.g).toBe(7800)
-    expect(G.items.dexring.g).toBe(24000)
+test("Player.isFriendly", async () => {
+    // Our other characters should be friendly
+    expect(sameOwner.isFriendly(character)).toBe(true)
 
-    // Normal item
-    expect(player.calculateItemCost({ name: "scroll0" })).toBe(1000)
-    expect(player.calculateItemCost({ name: "scroll1" })).toBe(40000)
+    // Other players in our party should be friendly
+    expect(sameParty.isFriendly(character)).toBe(true)
 
-    // Upgradable items
-    expect(player.calculateItemCost({ name: "pants", level: 0 })).toBe(7800)
-    expect(player.calculateItemCost({ name: "pants", level: 1 })).toBe(8800)
-    expect(player.calculateItemCost({ name: "pants", level: 2 })).toBe(9800)
-    expect(player.calculateItemCost({ name: "pants", level: 3 })).toBe(10800)
-    expect(player.calculateItemCost({ name: "pants", level: 4 })).toBe(11800)
-    expect(player.calculateItemCost({ name: "pants", level: 5 })).toBe(12800)
-    expect(player.calculateItemCost({ name: "pants", level: 6 })).toBe(13800)
-    expect(player.calculateItemCost({ name: "pants", level: 7 })).toBe(53800)
+    // Random players should not be friendly
+    expect(randomPlayer.isFriendly(character)).toBe(false)
+})
 
-    // Compoundable items
-    expect(player.calculateItemCost({ name: "dexring", level: 0 })).toBe(24000)
-    expect(player.calculateItemCost({ name: "dexring", level: 1 })).toBe(78400)
-    expect(player.calculateItemCost({ name: "dexring", level: 2 })).toBe(241600)
-    expect(player.calculateItemCost({ name: "dexring", level: 3 })).toBe(964800)
-    expect(player.calculateItemCost({ name: "dexring", level: 4 })).toBe(3134400)
-    expect(player.calculateItemCost({ name: "dexring", level: 5 })).toBe(18603200)
+test("Player.isScared", async () => {
+    expect(character.isScared()).toBe(false)
 })

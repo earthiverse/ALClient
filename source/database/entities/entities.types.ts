@@ -1,5 +1,6 @@
 import { Document, Model } from "mongoose"
-import { ServerRegion, MapName, ServerIdentifier, MonsterName } from "../../definitions/adventureland"
+import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland"
+import { MapName, MonsterName } from "../../definitions/adventureland-data"
 
 export interface IEntity {
     map: MapName

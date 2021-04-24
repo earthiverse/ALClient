@@ -1,8 +1,8 @@
 import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Warrior extends PingCompensatedPlayer {
+export class Warrior extends PingCompensatedCharacter {
     // TODO: Investigate why the cooldown check doesn't work.
     public agitate(): Promise<void> {
         const agitated = new Promise<void>((resolve, reject) => {
@@ -76,7 +76,7 @@ export class Warrior extends PingCompensatedPlayer {
     }
 
     public cleave(): Promise<void> {
-        if (this.G.skills.cleave.mp > this.character.mp)
+        if (this.G.skills.cleave.mp > this.mp)
             return Promise.reject("Not enough MP to use cleave")
 
         const cleaved = new Promise<void>((resolve, reject) => {
@@ -207,7 +207,7 @@ export class Warrior extends PingCompensatedPlayer {
     public taunt(target: string): Promise<string> {
         const tauntStarted = new Promise<string>((resolve, reject) => {
             const tauntCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id
+                if (data.attacker == this.id
                     && data.type == "taunt"
                     && data.target == target) {
                     resolve(data.pid)

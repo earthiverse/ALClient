@@ -1,5 +1,6 @@
 import { Document, Model } from "mongoose"
-import { ServerRegion, MapName, ServerIdentifier } from "../../definitions/adventureland"
+import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland"
+import { MapName } from "../../definitions/adventureland-data"
 
 export interface INPC {
     name: string

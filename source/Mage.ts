@@ -1,9 +1,10 @@
 import { EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Pathfinder } from "./index"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Mage extends PingCompensatedPlayer {
+export class Mage extends PingCompensatedCharacter {
+    // NOTE: UNTESTED
     public alchemy(): Promise<void> {
         const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -15,7 +16,7 @@ export class Mage extends PingCompensatedPlayer {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`entangle timeout (${Constants.TIMEOUT}ms)`)
+                reject(`alchemy timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
@@ -27,10 +28,10 @@ export class Mage extends PingCompensatedPlayer {
 
     // TODO: Add promises
     public blink(x: number, y: number): void {
-        const blinkTo = { map: this.character.map, x: x, y: y }
-        // TODO: We should have an isWalkable(NodeData) position.
-        if (Pathfinder.canWalk(blinkTo, blinkTo)) {
+        if (Pathfinder.canStand({ map: this.map, x: x, y: y })) {
             this.socket.emit("skill", { name: "blink", x: x, y: y })
+        } else {
+            throw Error(`We cannot blink to ${this.map} ${x},${y}`)
         }
     }
 
@@ -171,7 +172,11 @@ export class Mage extends PingCompensatedPlayer {
         return magiportOfferSent
     }
 
-    public reflection(target: string): Promise<void> {
+    /**
+     * This function is not named 'reflection' due to the 'reflection' property.
+     * @param target 
+     */
+    public applyReflection(target: string): Promise<void> {
         const relectioned = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

@@ -1,11 +1,13 @@
+import { GData2 } from "./definitions/adventureland-data"
+
 export * from "./Constants"
 export * from "./Game"
 export * from "./Mage"
 export * from "./Merchant"
 export * from "./Observer"
 export * from "./Pathfinder"
-export * from "./PingCompensatedPlayer"
-export * from "./Player"
+export * from "./PingCompensatedCharacter"
+export * from "./Character"
 export * from "./Priest"
 export * from "./Ranger"
 export * from "./Rogue"
@@ -13,5 +15,6 @@ export * from "./Tools"
 export * from "./Warrior"
 
 // Export AL definitions
-export * from './definitions/adventureland'
-export * from './definitions/adventureland-server'
+export * from "./definitions/adventureland"
+export * from "./definitions/adventureland-server"
+export * from "./definitions/adventureland-data"

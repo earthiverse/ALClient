@@ -1,8 +1,29 @@
 import { ActionData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedPlayer } from "./PingCompensatedPlayer"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
-export class Priest extends PingCompensatedPlayer {
+export class Priest extends PingCompensatedCharacter {
+    // NOTE: Untested
+    public absorbSins(target: string): Promise<void> {
+        const absorbed = new Promise<void>((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("eval", cooldownCheck)
+                reject(`curse timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
+        this.socket.emit("skill", { name: "absorb", id: target })
+        return absorbed
+    }
+
     public curse(target: string): Promise<void> {
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -80,7 +101,7 @@ export class Priest extends PingCompensatedPlayer {
                 }
             }
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.character.id && data.target == id && data.type == "heal") {
+                if (data.attacker == this.id && data.target == id && data.type == "heal") {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("game_response", failCheck)
                     this.socket.removeListener("death", deathCheck)
@@ -123,6 +144,8 @@ export class Priest extends PingCompensatedPlayer {
     }
 
     public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<void> {
+        if (essenceoflife === undefined) return Promise.reject("We don't have any essenceoflife in our inventory.")
+
         const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

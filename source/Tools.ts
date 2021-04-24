@@ -1,13 +1,16 @@
-import { MapName } from "./definitions/adventureland"
-import { ActionData, CharacterData, EntityData } from "./definitions/adventureland-server"
+import { Character } from "./Character"
+import { MapName } from "./definitions/adventureland-data"
+import { Entity } from "./Entity"
+import { Player } from "./Player"
 
 export class Tools {
     /**
      * The first element is the minimum damage the attacker could do. The second element is the maximum damage the attacker could do.
+     * NOTE: This function does not apply crit (TODO: Should it? It should probably, no?)
      * @param attacker 
      * @param defender 
      */
-    public static calculateDamageRange(attacker: EntityData | CharacterData, defender: EntityData | CharacterData): [number, number] {
+    public static calculateDamageRange(attacker: Entity | Player | Character, defender: Entity | Player | Character): [number, number] {
         /**
          * From Adventureland's common_functions.js
          * @param a The difference between armor and armor piercing, or resistance and resistance piercing.
@@ -22,7 +25,15 @@ export class Tools {
 
         let baseDamage: number = attacker.attack
 
-        if ((attacker as CharacterData).ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
+        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        if (defender.s.cursed) {
+            baseDamage *= 1.2
+        }
+        if (defender.s.marked) {
+            baseDamage *= 1.1
+        }
+
+        if ((attacker as Player).ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
         if (attacker.damage_type == "physical") baseDamage *= damage_multiplier(defender.armor - attacker.apiercing)
         else if (attacker.damage_type == "magical") baseDamage *= damage_multiplier(defender.resistance - attacker.rpiercing)
@@ -35,7 +46,8 @@ export class Tools {
      * @param b Position 2
      */
     public static distance(a: { x: number, y: number, map?: MapName }, b: { x: number, y: number, map?: MapName }): number {
-        if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE
+        if (!a || !b) return Number.MAX_VALUE // No data for one of the objects
+        if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE // Different map
 
         return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
     }

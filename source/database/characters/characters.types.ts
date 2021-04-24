@@ -1,5 +1,6 @@
 import { Document, Model } from "mongoose"
-import { ServerRegion, MapName, ServerIdentifier, StatusInfo } from "../../definitions/adventureland"
+import { ServerRegion, ServerIdentifier, StatusInfo } from "../../definitions/adventureland"
+import { MapName } from "../../definitions/adventureland-data"
 
 export interface ICharacter {
     name: string
