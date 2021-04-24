@@ -201,7 +201,7 @@ export class Entity implements EntityData, Partial<GMonster> {
      * @return {*}  {boolean}
      * @memberof Entity
      */
-    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Player>): boolean {
+    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
         if (this.evasion || this.reflection) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
