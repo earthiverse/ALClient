@@ -9,6 +9,7 @@ import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 import { Attribute, BankPackName, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { DeathModel } from "./database/deaths/deaths.model"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
@@ -225,6 +226,22 @@ export class Character extends Observer implements CharacterData {
                 console.error(data)
             }
             this.disconnect()
+        })
+
+        this.socket.on("game_log", (data: { message: string; color: string; }) => {
+            const result = /^Slain by (.+)$/.exec(data.message)
+            if (result) {
+                DeathModel.insertMany([{
+                    name: this.id,
+                    cause: result[1],
+                    map: this.map,
+                    x: this.x,
+                    y: this.y,
+                    serverRegion: this.server.region,
+                    serverIdentifier: this.server.name,
+                    time: Date.now()
+                }])
+            }
         })
 
         this.socket.on("game_response", (data: GameResponseData) => {

@@ -13,6 +13,7 @@ const DeathSchema = new Schema({
 })
 
 DeathSchema.index({ serverRegion: 1, serverIdentifier: 1 })
+DeathSchema.index({ name: 1 })
 DeathSchema.index({ time: 1 })
 
 export default DeathSchema
