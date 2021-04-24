@@ -746,15 +746,20 @@ export type ServerData = {
 }
 
 export type ServerInfoData = {
-    [T in MonsterName]?: {
+    [T in MonsterName]?: ({
         hp: number
-        live: boolean
         map: MapName
         max_hp: number
         target?: string
+    }) & ({
+        live: true
         x: number
         y: number
-    }
+    } | {
+        live: false
+        /** When the monster will spawn next */
+        spapwn: string
+    })
 } & {
     egghunt?: boolean
     lunarnewyear?: boolean
