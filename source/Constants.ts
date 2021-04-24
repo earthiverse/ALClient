@@ -2,8 +2,9 @@ export class Constants {
     /** Various client related things */
     static MAX_PINGS = 100
     static PING_EVERY_MS = 30000
-    static UPDATE_POSITIONS_EVERY_MS = 25
+    static STALE_PROJECTILE_MS = 10000
     static TIMEOUT = 1000
+    static UPDATE_POSITIONS_EVERY_MS = 25
 
     /** Various distance related things */
     static MAX_VISIBLE_RANGE = 600

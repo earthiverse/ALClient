@@ -1,5 +1,5 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData } from "./definitions/adventureland-server"
-import { BankInfo, ItemInfo, SlotType, SInfo, IPosition, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayerData, PlayersData } from "./definitions/adventureland-server"
+import { BankInfo, ItemInfo, SlotType, IPosition, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -29,7 +29,7 @@ export class Character extends Observer implements CharacterData {
     public players = new Map<string, Player>();
     public projectiles = new Map<string, ActionData & { date: Date; }>();
     public server: WelcomeData;
-    public S: SInfo;
+    public S: ServerInfoData;
 
     // CharacterData
     public afk: string
@@ -172,63 +172,15 @@ export class Character extends Observer implements CharacterData {
             const entity = this.entities.get(data.id)
 
             // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S && entity && this.S[entity.type])
-                delete this.S[entity.type]
+            if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
 
             this.entities.delete(data.id)
-            // TODO: Does this get called for players, too? Players turn in to grave stones...
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
-            if (data.reason == "disconnect") {
-                // Only players can disconnect
-                this.players.delete(data.id)
-            } else if (data.reason == "transport" && (typeof data.s == "number" || typeof data.s == "undefined")) {
-                // Only players can transport
-                const player = this.players.get(data.id)
-                if (player && data.to) {
-                    const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
-                    player.x = location[0]
-                    player.y = location[1]
-                    this.players.set(data.id, player)
-                } else if (data.to == undefined) {
-                    // They moved somewhere unknown (TODO: Is this because they are wearing a stealth cape?)
-                    this.players.delete(data.id)
-                }
-            } else if (data.reason == undefined) {
-                // This probably meant that the entity ran in to a wall
-                this.entities.delete(data.id)
-            } else if (data.reason == "invis") {
-                // This probably means the rogue went invisible 
-                this.players.delete(data.id)
-                this.entities.delete(data.id)
-            } else {
-                const player = this.players.get(data.id)
-                if (player) {
-                    if (Array.isArray(data.s)) {
-                        player.x = data.s[0]
-                        player.y = data.s[1]
-                    } else {
-                        const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
-                        player.x = location[0]
-                        player.y = location[1]
-                    }
-                    this.players.set(data.id, player)
-                } else {
-                    const entity = this.entities.get(data.id)
-                    if (entity) {
-                        if (Array.isArray(data.s)) {
-                            entity.x = data.s[0]
-                            entity.y = data.s[1]
-                        } else {
-                            const location = this.G.maps[data.to].spawns[data.s == undefined ? 0 : data.s]
-                            entity.x = location[0]
-                            entity.y = location[1]
-                        }
-                        this.entities.set(data.id, entity)
-                    }
-                }
-            }
+            // Remove them from their list
+            this.players.delete(data.id) || this.entities.delete(data.id)
+
             this.updatePositions()
         })
 
@@ -286,8 +238,14 @@ export class Character extends Observer implements CharacterData {
             }
 
             if (data.reflect) {
-                // TODO: Reflect!
-                this.projectiles.get(data.pid)
+                // Reflect the projectile towards the attacker
+                const p = this.projectiles.get(data.pid)
+                if (p) {
+                    p.damage = data.reflect
+                    p.target = data.hid
+                    p.x = this.x
+                    p.y = this.y
+                }
             }
 
             if (data.kill == true) {
@@ -295,24 +253,27 @@ export class Character extends Observer implements CharacterData {
                 this.entities.delete(data.id)
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
-                const entity = this.entities.get(data.id)
-                if (entity) {
-                    entity.hp = entity.hp - data.damage
-                    this.entities.set(data.id, entity)
+                const e = this.entities.get(data.id)
+                if (e) {
+                    e.hp = e.hp - data.damage
+                    this.entities.set(data.id, e)
                 }
             }
         })
 
         this.socket.on("new_map", (data: NewMapData) => {
             this.projectiles.clear()
-
-            this.parseEntities(data.entities)
-
+            
             this.x = data.x
+            this.going_x = data.x
             this.y = data.y
+            this.going_y = data.y
             this.in = data.in
             this.map = data.name
             this.m = data.m
+            this.moving = false
+
+            this.parseEntities(data.entities)
         })
 
         // TODO: Confirm this works for leave_party(), too.
@@ -345,7 +306,7 @@ export class Character extends Observer implements CharacterData {
             if (data.q.compound) this.q.compound = data.q.compound
         })
 
-        this.socket.on("server_info", (data: SInfo) => {
+        this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
             for (const mtype in data) {
                 if (typeof data[mtype] !== "object")
@@ -539,7 +500,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Update players
-            for (const player of this.players.values()) {
+            for (const [, player] of this.players) {
                 if (!player.moving)
                     continue
                 const distanceTravelled = player.speed * msSinceLastUpdate / 1000
@@ -608,6 +569,11 @@ export class Character extends Observer implements CharacterData {
         }
         for (const id of toDelete)
             this.players.delete(id)
+
+        // Erase all stale projectiles
+        for (const [id, projectile] of this.projectiles) {
+            if (Date.now() - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
+        }
 
         this.lastPositionUpdate = Date.now()
     }
@@ -1659,6 +1625,28 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("monsterhunt")
         return questGot
+    }
+
+    /**
+     * Returns a list of the players that are online on the server
+     *
+     * @return {*}  {Promise<PlayersData>}
+     * @memberof Character
+     */
+    public getPlayers(): Promise<PlayersData> {
+        const playersData = new Promise<PlayersData>((resolve, reject) => {
+            const dataCheck = (data: PlayersData) => {
+                resolve(data)
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("players", dataCheck)
+                reject(`getPlayers timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.once("players", dataCheck)
+        })
+        this.socket.emit("players")
+        return playersData
     }
 
     public getPontyItems(): Promise<ItemInfo[]> {

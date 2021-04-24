@@ -268,17 +268,6 @@ export type StatusInfo = {
     };
 }
 
-export type SInfo = { [T in MonsterName]?: IPosition & {
-    map: string;
-    live: boolean;
-    hp: number;
-    max_hp: number;
-    /** The character name that the monster is currently attacking */
-    target?: string;
-} } & {
-    valentines?: boolean;
-}
-
 export type PositionReal = IPosition & {
     map: MapName;
     real_x?: number;

@@ -197,16 +197,18 @@ export class Entity implements EntityData, Partial<GMonster> {
      *
      * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
      * @param {Map<string, Player>} players (e.g.: bot.players)
+     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
      * @return {*}  {boolean}
      * @memberof Entity
      */
-    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>): boolean {
+    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Player>): boolean {
         if (this.evasion || this.reflection) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
 
-            const attacker = players.get(projectile.attacker)
+            // NOTE: Entities can attack themselves if the projectile gets reflected
+            const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
             const minimumDamage = Tools.calculateDamageRange(attacker, this)[0]
 
             incomingProjectileDamage += minimumDamage

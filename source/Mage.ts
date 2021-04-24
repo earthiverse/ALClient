@@ -28,7 +28,6 @@ export class Mage extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public blink(x: number, y: number): void {
-        // TODO: We should have an isWalkable(NodeData) position.
         if (Pathfinder.canStand({ map: this.map, x: x, y: y })) {
             this.socket.emit("skill", { name: "blink", x: x, y: y })
         } else {

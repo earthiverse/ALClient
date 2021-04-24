@@ -3,7 +3,7 @@
  * game uses to interact with the server.
  */
 
-import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, SInfo, TradeSlotType } from "./adventureland"
+import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
 import { AchievementName, AnimationName, Attribute, CXData, EmotionName, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
 
 export type AchievementProgressData = {
@@ -225,11 +225,19 @@ export type DeathData = {
 
 export type DisappearData = {
     id: string
-    effect?: 1
-    reason?: "disconnect" | "invis" | "transport" | string
+    /** TODO: Confirm, if effect is '1', they used the town skill */
+    effect?: 1 | "blink"
+    reason?: "transport" | string
     /** s can be a spawn (single number), or [x,y,orientation (up/down/left/right)] */
     s?: number | [number, number, number?]
     to?: MapName
+} | {
+    id: string
+    reason: "disconnect"
+} | {
+    id: string
+    reason: "invis"
+    invis: boolean
 }
 
 export type DisappearingTextData = {
@@ -239,6 +247,9 @@ export type DisappearingTextData = {
     id: string
     args: any
 }
+
+export type DisconnectReasonData =
+    | "limitdc"
 
 export type EmotionData = {
     /** emotion name */
@@ -432,18 +443,22 @@ export type GameResponseDataString =
 // | string
 
 export type HitData = {
-    anim?: AnimationName
+    anim?: AnimationName | "miss" | "reflect"
     /** If this is set, we avoided the projectile (by running?) */
     avoid?: boolean
     damage?: number
-    lifesteal?: number
     evade?: boolean
     heal?: number
     hid?: string
     id?: string
+    /** Did the entity die from this hit? */
+    kill?: boolean
+    lifesteal?: number
+    manasteal?: number
+    miss?: boolean
     pid?: string
     projectile?: string
-    reflect?: boolean
+    reflect?: number
     /** If set, this was a sneak attack by a rogue */
     sneak?: boolean
     source?: SkillName | "burn"
@@ -451,8 +466,6 @@ export type HitData = {
     stacked?: string[]
     /** If set, the character is stunned with this attack */
     stun?: boolean
-    miss?: boolean
-    kill?: boolean
 }
 
 /** Used for the 'invite' socket message */
@@ -498,6 +511,26 @@ export type ItemDataTrade = ItemData & {
     list?: string[];
     price: number;
     rid: string;
+}
+
+export type LimitDCReportData = {
+    /** How many of each call you made */
+    mcalls: {
+        auth?: number
+        code?: number
+        loaded?: number
+        move?: number
+        "o:home"?: number
+        ping_trig?: number
+        players?: number
+        property?: number
+        render?: number
+        send_updates?: number
+    }
+    /** Call cost limit. It's lower for comm sockets. */
+    climit?: number
+    /** Total number of socket messages sent */
+    total?: number
 }
 
 export type LoadedData = {
@@ -655,6 +688,27 @@ export type PlayerData = {
     in?: MapName
 }
 
+/**
+ * This is what is returned when you ask for 'players'.
+ * It's all the players that are online on the server you're on.
+ */
+export type PlayersData = {
+    /** Are they AFK? */
+    afk: number
+    /** How many days have passed since this character was created */
+    age: number
+    /** What level are they */
+    level: number
+    /** Character name */
+    name: string
+    /** What map are they on */
+    map: MapName
+    /** What party are they in? */
+    party: string
+    /** What type of character are they */
+    type: CharacterType
+}[]
+
 export type QData = {
     num: number
     p: {
@@ -690,13 +744,28 @@ export type ServerData = {
     key: string
 }
 
+export type ServerInfoData = {
+    [T in MonsterName]?: {
+        hp: number
+        live: boolean
+        map: MapName
+        max_hp: number
+        x: number
+        y: number
+    }
+} & {
+    egghunt?: boolean
+    lunarnewyear?: boolean
+    valentines?: boolean
+}
+
 export type StartData = CharacterData & {
     // TODO: Figure this out
     info: any
     base_gold: {
         [T in MonsterName]?: { [T in string]?: number }
     }
-    s_info: SInfo
+    s_info: ServerInfoData
     entities: EntitiesData
 }
 
