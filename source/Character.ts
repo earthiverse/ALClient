@@ -263,7 +263,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("new_map", (data: NewMapData) => {
             this.projectiles.clear()
-            
+
             this.x = data.x
             this.going_x = data.x
             this.y = data.y
@@ -1918,9 +1918,38 @@ export class Character extends Observer implements CharacterData {
         return regenReceived
     }
 
-    // TODO: Improve with promises
-    public respawn(): void {
+    /**
+     * If you are dead, you can call this function to respawn.
+     *
+     * @return {*}  {Promise<NodeData>} Where you respawned
+     * @memberof Character
+     */
+    public respawn(): Promise<NodeData> {
+        const respawned = new Promise<NodeData>((resolve, reject) => {
+            const respawnCheck = (data: NewMapData) => {
+                if (data.effect == 1) {
+                    this.socket.removeListener("new_map", respawnCheck)
+                    this.socket.removeListener("game_log", failCheck)
+                    resolve({ map: data.name, x: data.x, y: data.y })
+                }
+            }
+            const failCheck = (data: GameLogData) => {
+                if (data == "Can't respawn yet.") {
+                    this.socket.removeListener("new_map", respawnCheck)
+                    this.socket.removeListener("game_log", failCheck)
+                    reject(data)
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("new_map", respawnCheck)
+                this.socket.removeListener("game_log", failCheck)
+                reject(`respawn timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("new_map", respawnCheck)
+            this.socket.on("game_log", failCheck)
+        })
         this.socket.emit("respawn")
+        return respawned
     }
 
     public scare(): Promise<string[]> {

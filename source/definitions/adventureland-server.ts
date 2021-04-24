@@ -297,6 +297,7 @@ export type EvalData = {
 export type GameLogData = GameLogDataString
 export type GameLogDataString =
     | "Already partying"
+    | "Can't respawn yet."
     | "Invitation expired"
     | string
 
@@ -750,6 +751,7 @@ export type ServerInfoData = {
         live: boolean
         map: MapName
         max_hp: number
+        target?: string
         x: number
         y: number
     }
