@@ -48,22 +48,7 @@ export class Observer {
         })
 
         this.socket.on("death", (data: DeathData) => {
-            const entity = this.entities.get(data.id)
-
-            // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
-
-            // Update database
-            if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                // If there's only one monster, delete all.
-                if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
-                    EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
-                } else {
-                    EntityModel.deleteOne({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
-                }
-            }
-
-            this.entities.delete(data.id)
+            this.markEntityAsDead(data.id)
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
@@ -96,7 +81,7 @@ export class Observer {
 
             if (data.kill == true) {
                 this.projectiles.delete(data.pid)
-                this.entities.delete(data.id)
+                this.markEntityAsDead(data.id)
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
@@ -107,7 +92,7 @@ export class Observer {
             }
         })
 
-        this.socket.on("new_map", (data: NewMapData) => {
+        this.socket.on("new_map", async (data: NewMapData) => {
             this.projectiles.clear()
 
             this.x = data.x
@@ -117,6 +102,40 @@ export class Observer {
             this.m = data.m
 
             this.parseEntities(data.entities)
+
+            // Delete monsters that haven't been seen 'round these parts in a while.
+            const toDeletes = await EntityModel.aggregate([
+                {
+                    $match: {
+                        serverRegion: this.serverRegion,
+                        serverIdentifier: this.serverIdentifier,
+                        map: this.map,
+                        lastSeen: { $lt: Date.now() - Constants.STALE_MONSTER_MS }
+                    }
+                },
+                {
+                    $project: {
+                        distance: {
+                            $sqrt: {
+                                $add: [
+                                    { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
+                                    { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    $match: {
+                        distance: {
+                            $lt: Constants.MAX_VISIBLE_RANGE
+                        }
+                    }
+                }
+            ]).exec()
+            const ids = []
+            for (const toDelete of toDeletes) ids.push(toDelete._id)
+            await EntityModel.deleteMany({ _id: { $in: ids } }).exec()
         })
 
         this.socket.on("server_info", (data: ServerInfoData) => {
@@ -159,6 +178,25 @@ export class Observer {
 
         this.socket.open()
         return connected
+    }
+
+    protected async markEntityAsDead(id: string): Promise<void> {
+        const entity = this.entities.get(id)
+
+        // If it was a special monster in 'S', delete it from 'S'.
+        if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
+
+        // Update database
+        if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+            // If there's only one monster, delete all.
+            if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
+                await EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+            } else {
+                await EntityModel.deleteOne({ name: id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+            }
+        }
+
+        this.entities.delete(id)
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {

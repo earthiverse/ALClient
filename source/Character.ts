@@ -199,10 +199,10 @@ export class Character extends Observer implements CharacterData {
             this.disconnect()
         })
 
-        this.socket.on("game_log", (data: { message: string; color: string; }) => {
+        this.socket.on("game_log", async (data: { message: string; color: string; }) => {
             const result = /^Slain by (.+)$/.exec(data.message)
             if (result) {
-                DeathModel.insertMany([{
+                await DeathModel.create({
                     name: this.id,
                     cause: result[1],
                     map: this.map,
@@ -211,7 +211,7 @@ export class Character extends Observer implements CharacterData {
                     serverRegion: this.server.region,
                     serverIdentifier: this.server.name,
                     time: Date.now()
-                }])
+                })
             }
         })
 
