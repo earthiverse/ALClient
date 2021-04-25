@@ -1,15 +1,15 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, ConditionName, DamageType, GData2, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
-import { ActionData, EntityData } from "./definitions/adventureland-server"
+import { ActionData, MonsterData } from "./definitions/adventureland-server"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
 
-export class Entity implements EntityData, Partial<GMonster> {
+export class Entity implements MonsterData, Partial<GMonster> {
     protected G: GData2
 
-    // EntityData (required)
-    public abs: boolean
+    // MonsterData (required)
+    public abs?: false
     public angle: number
     public cid: number
     public going_x: number
@@ -111,7 +111,7 @@ export class Entity implements EntityData, Partial<GMonster> {
     public type: MonsterName
     public xp: number
 
-    public constructor(data: EntityData, map: MapName, G: GData2) {
+    public constructor(data: MonsterData, map: MapName, G: GData2) {
         this.G = G
 
         // Set soft properties
@@ -127,7 +127,7 @@ export class Entity implements EntityData, Partial<GMonster> {
         this.updateData(data)
     }
 
-    public updateData(data: EntityData): void {
+    public updateData(data: MonsterData): void {
         if (this.id !== undefined && this.id !== data.id) throw Error("The entity's ID does not match")
 
         // Set everything

@@ -3,8 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { CharacterType, StatusInfo, SlotInfo, ItemInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
-import { AchievementName, AnimationName, Attribute, CXData, EmotionName, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
+import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
+import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -154,7 +154,7 @@ export type CharacterData = PlayerData & {
     }
     tax: number
     xrange: number
-    items: ItemInfo[]
+    items: ItemData[]
     cc: number
 
     // (Probably) GUI Related things
@@ -176,7 +176,7 @@ export type CharacterData = PlayerData & {
 
 export type CharacterListData = {
     map: MapName
-    in: MapName
+    in: string
     name: string
     level: number
     skin: string
@@ -260,34 +260,43 @@ export type EmotionData = {
 
 export type EntitiesData = {
     type: "all" | "xy"
-    in: MapName
+    in: string
     map: MapName
 
-    monsters: EntityData[]
+    monsters: MonsterData[]
     players: PlayerData[]
 }
 
-export type EntityData = {
+
+export type MonsterData = {
     id: string
     type: MonsterName
 
-    abs: boolean
-    angle: number
-    armor: number
+    angle?: number
+    move_num?: number
+    moving?: boolean
+    x: number
+    y: number
+
+    armor?: number
+    attack?: number
     // TODO: Figure out what this is
     cid: number
-    frequency: number
+    frequency?: number
     going_x: number
     going_y: number
-    move_num: number
-    moving: boolean
-    resistance: number
+    mp: number
+    speed?: number
+    resistance?: number
     s: StatusInfo
     /** The ID of the target */
     target?: string
 
-    x: number
-    y: number
+    abs?: false
+    hp?: number
+    level?: number
+    max_hp?: number
+    xp?: number
 }
 
 export type EvalData = {
@@ -475,29 +484,78 @@ export type InviteData = {
     name: string
 }
 
+// TODO: merge the old types
+// export type ItemInfo = {
+//     // TODO: Figure out what this is
+//     acc?: number
+//     // TODO: Figure out what this is (I think it might be similar to 'p', but for achievements)
+//     ach?: TitleName
+//     /** If true, the entity is buying this item */
+//     b?: boolean;
+//     // TODO: Figure out what this is (Probably related to 'expires')
+//     ex?: boolean;
+//     /** If the item expires (booster, elixir), this will be set to a date string */
+//     expires?: string
+//     /** If the item is a gift, you can only sell it for 1 gold. The items you get from creating a new character are gifts. */
+//     gift?: number
+//     /** Related to upgrade chance. (NOTE: If you see this property, it's likely a bug. Report to Wizard!) */
+//     grace?: number
+//     /** Set if the item is compoundable or upgradable */
+//     level?: number;
+//     name: ItemName;
+//     /** How many of this item we have. Set if the item is stackable. */
+//     q?: number;
+//     /** If set, name == placeholder, and we are upgrading or compounding something */
+//     p?: {
+//         chance: number;
+//         name: ItemName;
+//         level: number;
+//         scroll: ItemName;
+//         nums: number[];
+//     } | TitleName;
+//     ps?: TitleName[]
+//     /** If set, the item is for sale, or purchase */
+//     rid?: string;
+//     /** If the item has this property, this type of scroll has been applied */
+//     stat_type?: Attribute
+//     // TODO: Confirm
+//     /** If set, the item might drop if we die to another player's attacks (i.e. die to PvP) */
+//     v?: boolean
+// }
+
 export type ItemData = {
     /** Achievement progress */
     acc?: number
     /** Achievement name to which you are progressing to */
     ach?: AchievementName
+    /** TODO: What is this? Seen on an elixir. TODO: Check if this is only applicable to the elixir slot */
+    ex?: boolean
+    /** If this is set, once the date hits, the item will disappear */
+    expires?: string
+    /** TODO: What is this? Seen on a level 1 xpbooster. */
+    extra?: number
     /** TODO: Confirm. The item was a giveaway, and this was the character that gave it away. */
     gf?: string
     /** If set, the item was given to the player (most likely when they created the character), and it is only worth 1 gold if you sell it to an NPC. */
     gift?: number
     /** The higher the number, the more likely it is to succeed if you compound or upgrade the item */
     grace?: number
-    /** If set, the item is locked. 's' == 'sealed', 'u' == 'unlocking', TODO: ??? == 'locked'. */
-    l?: "s" | "x"
+    /** If set, the item is locked. 's' == 'sealed', 'u' == 'unlocking', "l" == 'locked'. */
+    l?: "l" | "s" | "x"
     /** The item level */
     level?: number
     /** The item name */
     name: ItemName
     /** The title applied to the item */
     p?: TitleName
+    /** TODO: What is this? A list of available titles for the item?  */
+    ps?: TitleName[]
     /** The quantity of the item for stackable items */
     q?: number
     /** If the item has a scroll applied to it, the scroll provides this attribute */
     stat_type?: Attribute
+    /** If set, the item is PVP marked until the given date. If you die to another player, there is a chance to lose this item to them. */
+    v?: string
 }
 
 /**
@@ -599,7 +657,7 @@ export type NewMapData = {
     direction: number
     effect: number | "magiport"
     entities: EntitiesData
-    in: MapName
+    in: string
     info: any
     m: number
     name: MapName
@@ -613,7 +671,7 @@ export type PartyData = {
     party: {
         [T in string]: {
             gold: number
-            in: MapName
+            in: string
             // TODO: What is this?
             l: number
             level: number
@@ -633,33 +691,40 @@ export type PlayerData = {
     id: string
     ctype: CharacterType | NPCName
 
-    abs: boolean
-    afk?: string
-    angle: number
+    abs?: boolean
+    angle?: number
+    going_x?: number
+    going_y?: number
+
+    /** The 'pvp' NPC has an extra  */
+    allow?: boolean
+
+    afk?: boolean | "code"
+    age?: number
     armor: number
-    attack: number
+    attack?: number
     // TODO: Figure out what this is
     c: any
     cid: number
+    code?: boolean
+    controller?: string
     cx: CXData
     focus?: string
-    frequency: number
+    frequency?: number
     x: number
     y: number
-    going_x: number
-    going_y: number
     hp: number
     level: number
     max_hp: number
-    max_mp: number
+    max_mp?: number
     move_num?: number
     moving?: boolean
-    mp: number
-    npc?: string
+    mp?: number
+    npc?: NPCName
     owner: string
     party?: string
     // TODO: Figure out what this is
-    pdps: number
+    pdps?: number
     q: {
         compound?: {
             len: number
@@ -674,19 +739,17 @@ export type PlayerData = {
             num: number
         }
     }
-    range: number
-    resistance: number
-    rip: boolean
+    range?: number
+    resistance?: number
+    rip?: number | boolean
     s: StatusInfo
     skin: string
-    slots: SlotInfo
+    slots?: SlotInfo
     speed: number
     stand?: boolean | "cstand" | "stand0"
+    target?: string
     tp?: boolean
-
-    // Soft Properties
-    map?: MapName
-    in?: MapName
+    xp?: number
 }
 
 /**
@@ -876,7 +939,7 @@ export type WelcomeData = {
     /** The character gets returned if you open a socket with a secret (i.e. /comm and click on one of your characters) */
     character?: CharacterData
     region: ServerRegion
-    in: MapName
+    in: string
     map: MapName
     // TODO: Find out if this is "hardcore" on a hardcore server
     gameplay: "normal" | string

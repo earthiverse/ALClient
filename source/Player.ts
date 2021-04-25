@@ -1,13 +1,13 @@
 import { MapName } from "."
 import { Character } from "./Character"
-import { CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { CXData, DamageType, GData2 } from "./definitions/adventureland-data"
+import { SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { CharacterType, CXData, DamageType, GData2, NPCName } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
     protected G: GData2
 
-    public afk: string
+    public afk?: boolean | "code"
     public id: string
     public ctype: CharacterType
     public abs: boolean
@@ -38,7 +38,7 @@ export class Player implements PlayerData {
     max_hp: number
     max_mp: number
     mp: number
-    npc?: string
+    npc?: NPCName
     owner: string
     pdps: number
     q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; } = {}
