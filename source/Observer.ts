@@ -2,10 +2,10 @@ import socketio from "socket.io-client"
 import { ServerData, WelcomeData, LoadedData, ServerInfoData, DeathData, HitData, ActionData, DisappearData, EntitiesData, NewMapData, ServerInfoDataLive } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
-import { Entity } from "./Entity";
-import { Player } from "./Player";
-import { Tools } from "./Tools";
-import { Constants } from "./Constants";
+import { Entity } from "./Entity"
+import { Player } from "./Player"
+import { Tools } from "./Tools"
+import { Constants } from "./Constants"
 
 export class Observer {
     protected lastPositionUpdate: number;
@@ -108,11 +108,12 @@ export class Observer {
 
         this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
-            for (const mtype in data) {
-                if (typeof data[mtype as MonsterName] == "object") {
-                    if (data[mtype as MonsterName].live) {
-                        (data[mtype as MonsterName] as ServerInfoDataLive).hp = this.G.monsters[mtype].hp
-                        (data[mtype as MonsterName] as ServerInfoDataLive).max_hp = this.G.monsters[mtype].hp
+            for (const datum in data) {
+                const mtype = datum as MonsterName
+                if (typeof data[mtype] == "object") {
+                    if (data[mtype].live) {
+                        if (!(data[mtype] as ServerInfoDataLive).hp) (data[mtype] as ServerInfoDataLive).hp = this.G.monsters[datum].hp
+                        if (!(data[mtype] as ServerInfoDataLive).max_hp) (data[mtype] as ServerInfoDataLive).max_hp = this.G.monsters[datum].hp
                     }
                 }
             }
