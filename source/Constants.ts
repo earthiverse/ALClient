@@ -19,6 +19,9 @@ export class Constants {
         vn: 2
     }
 
+    /** Mongo related things */
+    static MONGO_UPDATE_ENTITY_MS = 1000
+
     /** Monsters that are worth tracking in our database */
-    static SPECIAL_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "tinyp", "wabbit"]
+    static SPECIAL_MONSTERS: MonsterName[] = ["cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "tinyp", "wabbit"]
 }

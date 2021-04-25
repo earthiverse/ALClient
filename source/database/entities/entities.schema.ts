@@ -16,7 +16,7 @@ const EntitySchema = new Schema({
 })
 
 EntitySchema.index({ type: 1 })
-EntitySchema.index({ serverRegion: 1, serverIdentifier: 1, name: 1 }, { unique: true })
+EntitySchema.index({ serverRegion: 1, serverIdentifier: 1, name: 1, type: 1 }, { unique: true })
 EntitySchema.index({ lastSeen: 1 })
 
 export default EntitySchema

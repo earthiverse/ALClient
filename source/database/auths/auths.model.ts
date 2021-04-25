@@ -4,5 +4,5 @@ const { model } = pkg
 import { IAuthDocument } from "./auths.types"
 import AuthSchema from "./auths.schema"
 
-export const UserModel = model<IAuthDocument>("user", AuthSchema)
-UserModel.createIndexes()
+export const AuthModel = model<IAuthDocument>("auth", AuthSchema)
+AuthModel.createIndexes()

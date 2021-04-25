@@ -13,6 +13,7 @@ import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
 import { CharacterType, GData2 } from "./definitions/adventureland-data"
 import { connectToMongo, disconnectFromMongo } from "./database/database"
+import { AuthModel } from "./database/auths/auths.model"
 
 // Connect to Mongo
 connectToMongo()
@@ -87,9 +88,9 @@ export class Game {
         const merchants: PullMerchantsCharData[] = []
 
         const data = await axios.post<PullMerchantsData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
-        for(const datum of data.data) {
-            if(datum.type == "merchants") {
-                for(const char of datum.chars) {
+        for (const datum of data.data) {
+            if (datum.type == "merchants") {
+                for (const char of datum.chars) {
                     merchants.push(char)
                 }
             }
@@ -110,40 +111,46 @@ export class Game {
 
     static async login(email: string, password: string): Promise<boolean> {
         // See if we already have a userAuth stored in our database
-
-        // Login and save the auth
-        console.debug("Logging in...")
-        const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
-        let loginResult
-        for (const datum of login.data) {
-            if (datum.message) {
-                loginResult = datum
-                break
-            }
-        }
-        if (loginResult && loginResult.message == "Logged In!") {
-            console.debug("Logged in!")
-            // We successfully logged in
-            // Find the auth cookie and save it
-            for (const cookie of login.headers["set-cookie"]) {
-                const result = /^auth=(.+?);/.exec(cookie)
-                if (result) {
-                    // Save our data to the database
-                    this.user = {
-                        userID: result[1].split("-")[0],
-                        userAuth: result[1].split("-")[1]
-                    }
+        const find = await AuthModel.findOne({ email: email }).lean().exec()
+        if (find?.userID && find?.userAuth) {
+            console.debug("Using auth data from database...")
+            this.user = { userID: find.userID, userAuth: find.userAuth }
+        } else {
+            // Login and save the auth
+            console.debug("Logging in...")
+            const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
+            let loginResult
+            for (const datum of login.data) {
+                if (datum.message) {
+                    loginResult = datum
                     break
                 }
             }
-        } else if (loginResult && loginResult.message) {
-            // We failed logging in, and we have a reason from the server
-            console.error(loginResult.message)
-            return Promise.reject(loginResult.message)
-        } else {
-            // We failed logging in, but we don't know what went wrong
-            console.error(login.data)
-            return Promise.reject()
+            if (loginResult && loginResult.message == "Logged In!") {
+                console.debug("Logged in!")
+                // We successfully logged in
+                // Find the auth cookie and save it
+                for (const cookie of login.headers["set-cookie"]) {
+                    const result = /^auth=(.+?);/.exec(cookie)
+                    if (result) {
+                        // Save our data to the database
+                        this.user = {
+                            userID: result[1].split("-")[0],
+                            userAuth: result[1].split("-")[1]
+                        }
+                        await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).exec()
+                        break
+                    }
+                }
+            } else if (loginResult && loginResult.message) {
+                // We failed logging in, and we have a reason from the server
+                console.error(loginResult.message)
+                return Promise.reject(loginResult.message)
+            } else {
+                // We failed logging in, but we don't know what went wrong
+                console.error(login.data)
+                return Promise.reject("Failed logging in.")
+            }
         }
 
         return this.updateServersAndCharacters()
@@ -161,7 +168,7 @@ export class Game {
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
-        if(!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
+        if (!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         try {

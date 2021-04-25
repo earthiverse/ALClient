@@ -5,6 +5,7 @@ import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
     protected G: GData2
+    public lastMongoUpdate: number
 
     public afk?: boolean | "code"
     public id: string
@@ -86,5 +87,15 @@ export class Player implements PlayerData {
 
         // They're not friendly >:(
         return false
+    }
+
+    /**
+     * Returns true if this player is an NPC.
+     *
+     * @return {*}  {boolean}
+     * @memberof Player
+     */
+    public isNPC(): boolean {
+        return this.npc !== undefined
     }
 }

@@ -2,7 +2,7 @@ import { Document, Model } from "mongoose"
 import { ServerRegion, ServerIdentifier, StatusInfo } from "../../definitions/adventureland"
 import { MapName } from "../../definitions/adventureland-data"
 
-export interface ICharacter {
+export interface IPlayer {
     name: string
     map: MapName
     x: number
@@ -13,7 +13,7 @@ export interface ICharacter {
     lastSeen?: number
 }
 
-export interface ICharacterDocument extends ICharacter, Document { }
+export interface IPlayerDocument extends IPlayer, Document { }
 
-export type ICharacterModel = Model<ICharacterDocument>
-// export interface IUserModel extends Model<IUserDocument> { }
+export type IPlayerModel = Model<IPlayerDocument>
+// export interface IPlayerModel extends Model<IPlayerDocument> { }

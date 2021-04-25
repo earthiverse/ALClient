@@ -7,6 +7,6 @@ const AuthSchema = new Schema({
     userAuth: { type: String, required: false }
 })
 
-AuthSchema.index({ email: 1 })
+AuthSchema.index({ email: 1 }, { unique: true })
 
 export default AuthSchema

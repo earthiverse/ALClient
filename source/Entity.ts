@@ -1,3 +1,5 @@
+import { Constants } from "./Constants"
+import { EntityModel } from "./database/entities/entities.model"
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, ConditionName, DamageType, GData2, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, MonsterData } from "./definitions/adventureland-server"
@@ -7,6 +9,7 @@ import { Tools } from "./Tools"
 
 export class Entity implements MonsterData, Partial<GMonster> {
     protected G: GData2
+    public lastMongoUpdate: number
 
     // MonsterData (required)
     public abs?: false

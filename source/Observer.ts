@@ -6,6 +6,9 @@ import { Entity } from "./Entity";
 import { Player } from "./Player";
 import { Tools } from "./Tools";
 import { Constants } from "./Constants";
+import { EntityModel } from "./database/entities/entities.model";
+import { PlayerModel } from "./database/players/players.model";
+import { NPCModel } from "./database/npcs/npcs.model";
 
 export class Observer {
     protected lastPositionUpdate: number;
@@ -51,6 +54,11 @@ export class Observer {
             if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
 
             this.entities.delete(data.id)
+
+            // Update database
+            if (Constants.SPECIAL_MONSTERS.includes(entity.type) && entity) {
+                EntityModel.deleteOne({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+            }
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
@@ -158,25 +166,59 @@ export class Observer {
         }
 
         for (const monster of data.monsters) {
+            let e: Entity
             if (!this.entities.has(monster.id)) {
                 // Create the entity and add it to our list
-                const e = new Entity(monster, data.map, this.G)
+                e = new Entity(monster, data.map, this.G)
                 this.entities.set(monster.id, e)
             } else {
                 // Update everything
-                const e = this.entities.get(monster.id)
+                e = this.entities.get(monster.id)
                 e.updateData(monster)
+            }
+
+            // Update our database
+            if (Constants.SPECIAL_MONSTERS.includes(e.type)
+                && (!e.lastMongoUpdate || Date.now() - e.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS)) {
+                let now = Date.now()
+                await EntityModel.updateOne(
+                    { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
+                    { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: now },
+                    { upsert: true }).exec()
+                e.lastMongoUpdate = now
             }
         }
         for (const player of data.players) {
+            let p: Player
             if (!this.players.has(player.id)) {
                 // Create the player and add it to our list
-                const p = new Player(player, data.map, this.G)
+                p = new Player(player, data.map, this.G)
                 this.players.set(player.id, p)
             } else {
                 // Update everything
-                const p = this.players.get(player.id)
+                p = this.players.get(player.id)
                 p.updateData(player)
+            }
+
+            // Update our database
+            if (p.isNPC()) {
+                if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
+                    let now = Date.now()
+                    await NPCModel.updateOne(
+                        { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
+                        { map: p.map, x: p.x, y: p.y, lastSeen: now },
+                        { upsert: true }).exec()
+                    p.lastMongoUpdate = now
+                }
+            } else {
+                if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
+                    let now = Date.now()
+                    await PlayerModel.updateOne(
+                        { name: p.id },
+                        { map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
+                        { upsert: true }).exec()
+                    p.lastMongoUpdate = now
+                }
             }
         }
     }
