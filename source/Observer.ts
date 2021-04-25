@@ -2,13 +2,13 @@ import socketio from "socket.io-client"
 import { ServerData, WelcomeData, LoadedData, ServerInfoData, DeathData, HitData, ActionData, DisappearData, EntitiesData, NewMapData, ServerInfoDataLive } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
-import { Entity } from "./Entity";
-import { Player } from "./Player";
-import { Tools } from "./Tools";
-import { Constants } from "./Constants";
-import { EntityModel } from "./database/entities/entities.model";
-import { PlayerModel } from "./database/players/players.model";
-import { NPCModel } from "./database/npcs/npcs.model";
+import { Entity } from "./Entity"
+import { Player } from "./Player"
+import { Tools } from "./Tools"
+import { Constants } from "./Constants"
+import { EntityModel } from "./database/entities/entities.model"
+import { PlayerModel } from "./database/players/players.model"
+import { NPCModel } from "./database/npcs/npcs.model"
 
 export class Observer {
     protected lastPositionUpdate: number;
@@ -116,11 +116,12 @@ export class Observer {
 
         this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
-            for (const mtype in data) {
-                if (typeof data[mtype as MonsterName] == "object") {
-                    if (data[mtype as MonsterName].live) {
-                        (data[mtype as MonsterName] as ServerInfoDataLive).hp = this.G.monsters[mtype].hp
-                        (data[mtype as MonsterName] as ServerInfoDataLive).max_hp = this.G.monsters[mtype].hp
+            for (const datum in data) {
+                const mtype = datum as MonsterName
+                if (typeof data[mtype] == "object") {
+                    if (data[mtype].live) {
+                        if (!(data[mtype] as ServerInfoDataLive).hp) (data[mtype] as ServerInfoDataLive).hp = this.G.monsters[datum].hp
+                        if (!(data[mtype] as ServerInfoDataLive).max_hp) (data[mtype] as ServerInfoDataLive).max_hp = this.G.monsters[datum].hp
                     }
                 }
             }
@@ -180,7 +181,7 @@ export class Observer {
             // Update our database
             if (Constants.SPECIAL_MONSTERS.includes(e.type)
                 && (!e.lastMongoUpdate || Date.now() - e.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS)) {
-                let now = Date.now()
+                const now = Date.now()
                 await EntityModel.updateOne(
                     { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
                     { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: now },
@@ -203,7 +204,7 @@ export class Observer {
             // Update our database
             if (p.isNPC()) {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
-                    let now = Date.now()
+                    const now = Date.now()
                     await NPCModel.updateOne(
                         { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
                         { map: p.map, x: p.x, y: p.y, lastSeen: now },
@@ -212,7 +213,7 @@ export class Observer {
                 }
             } else {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
-                    let now = Date.now()
+                    const now = Date.now()
                     await PlayerModel.updateOne(
                         { name: p.id },
                         { map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
