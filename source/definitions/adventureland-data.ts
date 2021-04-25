@@ -3,7 +3,7 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { CharacterType, IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland"
+import { IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland"
 
 export type GData2 = {
     achievements: {
@@ -99,8 +99,8 @@ export type GData2 = {
         /** TODO: ??? GUI related? */
         xcx?: any[]
     } & {
-        [T in Attribute]?: number
-    } };
+            [T in Attribute]?: number
+        } };
     conditions: {
         [T in ConditionName]: {
             /** TODO: ??? What is this? The attribute the condition provides!? */
@@ -136,15 +136,15 @@ export type GData2 = {
         } & {
             [T in Exclude<Attribute, "attr0">]?: number
         } } & {
-        "eburn": {
-            damage: number
-            intensity: string
+            "eburn": {
+                damage: number
+                intensity: string
+            }
+        } & {
+            "reflection": {
+                cap_reflection: number
+            }
         }
-    } & {
-        "reflection": {
-            cap_reflection: number
-        }
-    }
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
          *  [quantity, item name, item level (0 if not set)] */
@@ -604,10 +604,10 @@ export type GData2 = {
         } & {
             [T in Attribute]?: number
         } } & {
-        "sniper": {
-            consecutive_200p_range_last_hits: number
+            "sniper": {
+                consecutive_200p_range_last_hits: number
+            }
         }
-    }
     tokens: {
         [T in "funtoken" | "monstertoken" | "pvptoken"]: {
             /** For the ItemName, it costs this many tokens */
@@ -764,8 +764,8 @@ export type GItem = {
     /** TODO: ??? What is this? */
     xscroll?: boolean
 } & {
-    [T in Exclude<Attribute, "stat">]?: number
-}
+        [T in Exclude<Attribute, "stat">]?: number
+    }
 
 export type GDropItem =
     /** The drop is an item [chance, item name, item quantity] */
@@ -931,8 +931,8 @@ export type GMonster = {
     /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
     xp: number
 } & {
-    [T in Attribute]?: number
-}
+        [T in Attribute]?: number
+    }
 
 export type Attribute =
     /** Armor Piercing (physical attacks will pierce through this much armor) */
@@ -1189,6 +1189,15 @@ export type BankPackName =
     | "items45"
     | "items46"
     | "items47"
+
+export type CharacterType =
+    | "mage"
+    | "merchant"
+    | "paladin"
+    | "priest"
+    | "ranger"
+    | "rogue"
+    | "warrior"
 
 export type ConditionName =
     | "authfail"

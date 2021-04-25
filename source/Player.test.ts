@@ -119,7 +119,6 @@ beforeAll(async () => {
         owner: "12345",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,
@@ -172,7 +171,6 @@ beforeAll(async () => {
         owner: "99999",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,
@@ -225,7 +223,6 @@ beforeAll(async () => {
         owner: "99999",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,

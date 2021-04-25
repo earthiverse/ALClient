@@ -1,7 +1,7 @@
 import axios from "axios"
 import fs from "fs"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
-import { ServerRegion, ServerIdentifier, CharacterType } from "./definitions/adventureland"
+import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
@@ -11,7 +11,7 @@ import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
-import { GData2 } from "./definitions/adventureland-data"
+import { CharacterType, GData2 } from "./definitions/adventureland-data"
 import { connectToMongo, disconnectFromMongo } from "./database/database"
 
 // Connect to Mongo

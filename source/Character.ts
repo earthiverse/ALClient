@@ -1,5 +1,5 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayerData, PlayersData } from "./definitions/adventureland-server"
-import { BankInfo, ItemInfo, SlotType, IPosition, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayerData, PlayersData, ItemData, ItemDataTrade } from "./definitions/adventureland-server"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -8,14 +8,13 @@ import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
-import { Attribute, BankPackName, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { DeathModel } from "./database/deaths/deaths.model"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
     protected userAuth: string;
     protected characterID: string;
-    protected lastPositionUpdate: number;
     protected pingNum = 1;
     protected pingMap = new Map<string, { log: boolean, time: number }>();
     protected timeouts = new Map<string, ReturnType<typeof setTimeout>>();
@@ -23,25 +22,23 @@ export class Character extends Observer implements CharacterData {
     public achievements = new Map<string, AchievementProgressData>();
     public bank: BankInfo = { gold: 0 };
     public chests = new Map<string, ChestData>();
-    public entities = new Map<string, Entity>();
     public nextSkill = new Map<SkillName, Date>();
     public partyData: PartyData;
     public pings: number[] = [];
-    public players = new Map<string, Player>();
-    public projectiles = new Map<string, ActionData & { date: Date; }>();
     public server: WelcomeData;
-    public S: ServerInfoData;
 
     // CharacterData
-    public afk: string
+    public allow?: boolean
+    public afk: "code"
     public age: number
     public apiercing = 0
     public blast = 0
+    public code?: boolean
     public controller: string
     public x: number
     public y: number
     public map: MapName
-    public in: MapName
+    public in: string
     public name: string
     public id: string
     public ctype: CharacterType
@@ -60,14 +57,13 @@ export class Character extends Observer implements CharacterData {
     public gold = 0
     public hp = 0
     public level = 1
-    public m: number
     public mp_cost: number
     public max_hp = 1
     public max_mp = 1
     public move_num: number
     public moving = false
     public mp = 1
-    public npc?: string
+    public npc?: NPCName
     public owner: string
     public party?: string
     public pdps: number
@@ -126,7 +122,7 @@ export class Character extends Observer implements CharacterData {
     dreturn: number
     tax: number
     xrange: number
-    items: ItemInfo[]
+    items: ItemData[]
     cc: number
     ipass?: string
     friends?: any
@@ -160,37 +156,12 @@ export class Character extends Observer implements CharacterData {
             this.achievements.set(data.name, data)
         })
 
-        this.socket.on("action", (data: ActionData) => {
-            // TODO: do we need this 'date'?
-            this.projectiles.set(data.pid, { ...data, date: new Date() })
-        })
-
         this.socket.on("chest_opened", (data: ChestOpenedData) => {
             this.chests.delete(data.id)
         })
 
-        this.socket.on("death", (data: DeathData) => {
-            const entity = this.entities.get(data.id)
-
-            // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
-
-            this.entities.delete(data.id)
-        })
-
-        this.socket.on("disappear", (data: DisappearData) => {
-            // Remove them from their list
-            this.players.delete(data.id) || this.entities.delete(data.id)
-
-            this.updatePositions()
-        })
-
         this.socket.on("drop", (data: ChestData) => {
             this.chests.set(data.id, data)
-        })
-
-        this.socket.on("entities", (data: EntitiesData) => {
-            this.parseEntities(data)
         })
 
         this.socket.on("eval", (data: EvalData) => {
@@ -248,46 +219,9 @@ export class Character extends Observer implements CharacterData {
             this.parseGameResponse(data)
         })
 
-        this.socket.on("hit", (data: HitData) => {
-            if (data.miss || data.evade) {
-                this.projectiles.delete(data.pid)
-                return
-            }
-
-            if (data.reflect) {
-                // Reflect the projectile towards the attacker
-                const p = this.projectiles.get(data.pid)
-                if (p) {
-                    p.damage = data.reflect
-                    p.target = data.hid
-                    p.x = this.x
-                    p.y = this.y
-                }
-            }
-
-            if (data.kill == true) {
-                this.projectiles.delete(data.pid)
-                this.entities.delete(data.id)
-            } else if (data.damage) {
-                this.projectiles.delete(data.pid)
-                const e = this.entities.get(data.id)
-                if (e) {
-                    e.hp = e.hp - data.damage
-                    this.entities.set(data.id, e)
-                }
-            }
-        })
-
         this.socket.on("new_map", (data: NewMapData) => {
-            this.projectiles.clear()
-
-            this.x = data.x
             this.going_x = data.x
-            this.y = data.y
             this.going_y = data.y
-            this.in = data.in
-            this.map = data.name
-            this.m = data.m
             this.moving = false
 
             this.parseEntities(data.entities)
@@ -321,21 +255,6 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("q_data", (data: QData) => {
             if (data.q.upgrade) this.q.upgrade = data.q.upgrade
             if (data.q.compound) this.q.compound = data.q.compound
-        })
-
-        this.socket.on("server_info", (data: ServerInfoData) => {
-            // Add Soft properties
-            for (const mtype in data) {
-                if (typeof data[mtype] !== "object")
-                    continue
-                const mN = mtype as MonsterName
-                if (data[mN].live && data[mN].hp == undefined) {
-                    data[mN].hp = this.G.monsters[mN].hp
-                    data[mN].max_hp = this.G.monsters[mN].hp
-                }
-            }
-
-            this.S = data
         })
 
         this.socket.on("upgrade", (data: UpgradeData) => {
@@ -412,40 +331,6 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
-    protected async parseEntities(data: EntitiesData): Promise<void> {
-        if (data.type == "all") {
-            // Erase all of the entities
-            this.entities.clear()
-            this.players.clear()
-        } else {
-            // Update all positions
-            this.updatePositions()
-        }
-
-        for (const monster of data.monsters) {
-            if (!this.entities.has(monster.id)) {
-                // Create the entity and add it to our list
-                const e = new Entity(monster, data.map, this.G)
-                this.entities.set(monster.id, e)
-            } else {
-                // Update everything
-                const e = this.entities.get(monster.id)
-                e.updateData(monster)
-            }
-        }
-        for (const player of data.players) {
-            if (!this.players.has(player.id)) {
-                // Create the player and add it to our list
-                const p = new Player(player, data.map, this.G)
-                this.players.set(player.id, p)
-            } else {
-                // Update everything
-                const p = this.players.get(player.id)
-                p.updateData(player)
-            }
-        }
-    }
-
     protected parseGameResponse(data: GameResponseData): void {
         // Adjust cooldowns
         if (typeof (data) == "object") {
@@ -487,61 +372,6 @@ export class Character extends Observer implements CharacterData {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
 
-            // Update entities
-            for (const [, entity] of this.entities) {
-                if (!entity.moving)
-                    continue
-
-                const speed = entity.speed
-
-                const distanceTravelled = speed * msSinceLastUpdate / 1000
-                const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-                const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-                if (distanceTravelled > distanceToGoal) {
-                    entity.moving = false
-                    entity.x = entity.going_x
-                    entity.y = entity.going_y
-                } else {
-                    entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                    entity.y = entity.y + Math.sin(angle) * distanceTravelled
-                }
-
-                // Update conditions
-                for (const condition in entity.s) {
-                    const newCooldown = entity.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete entity.s[condition as ConditionName]
-                    else
-                        entity.s[condition as ConditionName].ms = newCooldown
-                }
-            }
-
-            // Update players
-            for (const [, player] of this.players) {
-                if (!player.moving)
-                    continue
-                const distanceTravelled = player.speed * msSinceLastUpdate / 1000
-                const angle = Math.atan2(player.going_y - player.y, player.going_x - player.x)
-                const distanceToGoal = Tools.distance({ x: player.x, y: player.y }, { x: player.going_x, y: player.going_y })
-                if (distanceTravelled > distanceToGoal) {
-                    player.moving = false
-                    player.x = player.going_x
-                    player.y = player.going_y
-                } else {
-                    player.x = player.x + Math.cos(angle) * distanceTravelled
-                    player.y = player.y + Math.sin(angle) * distanceTravelled
-                }
-
-                // Update conditions
-                for (const condition in player.s) {
-                    const newCooldown = player.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete player.s[condition as ConditionName]
-                    else
-                        player.s[condition as ConditionName].ms = newCooldown
-                }
-            }
-
             // Update character
             if (this.moving) {
                 const distanceTravelled = this.speed * msSinceLastUpdate / 1000
@@ -567,32 +397,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        // Erase all entities that are far away
-        let toDelete: string[] = []
-        for (const [id, entity] of this.entities) {
-            if (Tools.distance(this, entity) < Constants.MAX_VISIBLE_RANGE)
-                continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete)
-            this.entities.delete(id)
-
-        // Erase all players that are far away
-        toDelete = []
-        for (const [id, player] of this.players) {
-            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE)
-                continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete)
-            this.players.delete(id)
-
-        // Erase all stale projectiles
-        for (const [id, projectile] of this.projectiles) {
-            if (Date.now() - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
-        }
-
-        this.lastPositionUpdate = Date.now()
+        super.updatePositions()
     }
 
     /**
@@ -727,7 +532,7 @@ export class Character extends Observer implements CharacterData {
             const magiportCheck = (data: NewMapData) => {
                 if (data.effect == "magiport") {
                     this.socket.removeListener("new_map", magiportCheck)
-                    resolve({ map: data.in, x: data.x, y: data.y })
+                    resolve({ map: data.name, x: data.x, y: data.y })
                 }
             }
 
@@ -985,7 +790,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add promises
-    public buyFromPonty(item: ItemInfo): unknown {
+    public buyFromPonty(item: ItemDataTrade): unknown {
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * 1.2 /* Ponty items have a 20% markup */ * (item.q ? item.q : 1)
         if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
@@ -995,11 +800,11 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns the *minimum* gold required to obtain the given item.
      *
-     * @param {ItemInfo} item - The item to calculate the minimum cost for
+     * @param {ItemData} item - The item to calculate the minimum cost for
      * @return {*}  {number} - The cost of the item
      * @memberof Character
      */
-    public calculateItemCost(item: ItemInfo): number {
+    public calculateItemCost(item: ItemData): number {
         const gInfo = this.G.items[item.name]
 
         // Base cost
@@ -1036,7 +841,7 @@ export class Character extends Observer implements CharacterData {
         return cost
     }
 
-    public calculateItemGrade(item: ItemInfo): number {
+    public calculateItemGrade(item: ItemData): number {
         const gInfo = this.G.items[item.name]
         if (!gInfo.grades) return
         let grade = 0
@@ -1372,7 +1177,7 @@ export class Character extends Observer implements CharacterData {
             let emptySlot: number
             for (let packNum = packFrom; packNum <= packTo; packNum++) {
                 const packName = `items${packNum}` as BankPackName
-                const pack = this.bank[packName] as ItemInfo[]
+                const pack = this.bank[packName] as ItemData[]
                 if (!pack)
                     continue // We don't have access to this pack
                 for (let slotNum = 0; slotNum < pack.length; slotNum++) {
@@ -1666,8 +1471,8 @@ export class Character extends Observer implements CharacterData {
         return playersData
     }
 
-    public getPontyItems(): Promise<ItemInfo[]> {
-        const pontyItems = new Promise<ItemInfo[]>((resolve, reject) => {
+    public getPontyItems(): Promise<ItemDataTrade[]> {
+        const pontyItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
             const distanceCheck = (data: GameResponseData) => {
                 if (data == "buy_get_closer") {
                     this.socket.removeListener("game_response", distanceCheck)
@@ -1676,7 +1481,7 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            const secondhandsItems = (data: ItemInfo[]) => {
+            const secondhandsItems = (data: ItemDataTrade[]) => {
                 this.socket.removeListener("game_response", distanceCheck)
                 this.socket.removeListener("secondhands", secondhandsItems)
                 resolve(data)
@@ -2731,7 +2536,7 @@ export class Character extends Observer implements CharacterData {
     public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
         let closest: Entity
         let closestD = Number.MAX_VALUE
-        this.entities.forEach((entity) => {
+        for (const [, entity] of this.entities) {
             if (mtype && entity.type != mtype)
                 return
             const d = Tools.distance(this, entity)
@@ -2739,9 +2544,8 @@ export class Character extends Observer implements CharacterData {
                 closest = entity
                 closestD = d
             }
-        })
-        if (closest)
-            return { monster: closest, distance: closestD }
+        }
+        if (closest) return { monster: closest, distance: closestD }
     }
 
     public getNearestAttackablePlayer(): { player: Player; distance: number; } {
@@ -2750,7 +2554,7 @@ export class Character extends Observer implements CharacterData {
 
         let closest: Player
         let closestD = Number.MAX_VALUE
-        this.players.forEach((player) => {
+        for (const [, player] of this.players) {
             if (player.s?.invincible)
                 return
             if (player.npc)
@@ -2760,9 +2564,8 @@ export class Character extends Observer implements CharacterData {
                 closest = player
                 closestD = d
             }
-        })
-        if (closest)
-            return { player: closest, distance: closestD }
+        }
+        if (closest) return { player: closest, distance: closestD }
     }
 
     /**
@@ -2801,7 +2604,7 @@ export class Character extends Observer implements CharacterData {
     public isEquipped(itemName: ItemName): boolean {
         for (const slot in this.slots) {
             if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
-            if (this.slots[slot as SlotType].b) continue // We are buying this item, we don't have it equipped
+            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, we don't have it equipped
             if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
@@ -2835,7 +2638,7 @@ export class Character extends Observer implements CharacterData {
     public locateDuplicateItems(inventory = this.items): {
         [T in ItemName]?: number[];
     } {
-        const items: (ItemInfo & { slotNum: number; })[] = []
+        const items: (ItemData & { slotNum: number; })[] = []
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
             if (!item)
