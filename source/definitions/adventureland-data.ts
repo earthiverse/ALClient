@@ -99,8 +99,8 @@ export type GData2 = {
         /** TODO: ??? GUI related? */
         xcx?: any[]
     } & {
-            [T in Attribute]?: number
-        } };
+        [T in Attribute]?: number
+    } };
     conditions: {
         [T in ConditionName]: {
             /** TODO: ??? What is this? The attribute the condition provides!? */
@@ -136,15 +136,15 @@ export type GData2 = {
         } & {
             [T in Exclude<Attribute, "attr0">]?: number
         } } & {
-            "eburn": {
-                damage: number
-                intensity: string
-            }
-        } & {
-            "reflection": {
-                cap_reflection: number
-            }
+        "eburn": {
+            damage: number
+            intensity: string
         }
+    } & {
+        "reflection": {
+            cap_reflection: number
+        }
+    }
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
          *  [quantity, item name, item level (0 if not set)] */
@@ -240,157 +240,7 @@ export type GData2 = {
         [T in string]?: number
     }
     maps: {
-        [T in Exclude<MapName, "d1" | "d3" | "frozencave" | "maintest" | "therush">]: {
-            data?: {
-                /** The furthest west you can go on the map */
-                min_x: number
-                /** The furthest east you can go on the map */
-                max_x: number
-                /** The furthest north you can go on the map */
-                min_y: number
-                /** The furthest south you can go on the map */
-                max_y: number
-            }
-            /** If true, this map is PVP. */
-            pvp?: boolean
-            /** If true, you cannot be attacked on this map. */
-            safe?: boolean
-            /** TODO: Confirm. If true, does this mean you don't lose things when you die? */
-            safe_pvp?: boolean
-            /** TODO: ??? What is this? */
-            loss?: false
-            /** If you die on this map, you will spawn at the given map and spawn. */
-            on_death?: [MapName, number]
-            /** TODO: Confirm. If you logout while your character is on this map, you will be at the given map and spawn next time you login */
-            on_exit?: [MapName, number]
-            /** TODO: ??? What is this? */
-            drop_norm?: number
-            monsters?: {
-                boundary?: [number, number, number, number]
-                boundaries?: [MapName, number, number, number, number][]
-                /** Rage boundary. Enter this and all monsters will target you. */
-                rage?: [number, number, number, number]
-                polygon?: [number, number][]
-                count: number
-                gatekeeper?: boolean
-                grow?: boolean
-                type: MonsterName
-                stype?: "randomrespawn"
-                /** TODO: ??? Does this mean they roam around the map? */
-                roam?: boolean
-                /** TODO: ??? What is this? */
-                special?: boolean
-
-                /** TODO: ??? Old? */
-                position?: [number, number]
-                /** TODO: ??? Old? */
-                radius?: number
-            }[];
-            npcs: {
-                /** [x, y, direction] spawn position for the given NPC on the map */
-                position?: [number, number, number?]
-                /** TODO: ??? If this is set, does the NPC appears on the map in more than one position? Does it walk between these positions? */
-                positions?: [number, number, number?][]
-                /** TODO: ??? Might mean that the NPC can only walk within this area */
-                boundary?: [number, number, number, number]
-                /** TODO: ??? */
-                loop?: boolean
-                /** NPC id */
-                id: NPCName
-                /** Human readable NPC name */
-                name?: string
-            }[]
-            /**
-             * Doors to other maps
-             * 
-             * [0]: The x-position of the door
-             * 
-             * [1]: The y-position of the door
-             * 
-             * [2]: The width of the door
-             * 
-             * [3]: The height of the door
-             * 
-             * [4]: The map that this door leads to (use in combination with [5] (spawn))
-             * 
-             * [5]: The spawn that this door leads to (use in combination with [4] (map))
-             * 
-             * [6]: The spawn that this door is close to on the current map
-             * 
-             * [7]: TODO: ??? Related to bank / bank keys?
-             *
-             * [8]: TODO: ??? Related to bank / bank keys?
-             */
-            doors: [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?][]
-            /** Esentially a unique ID for the map. Contains a little more information than the `name`. */
-            key: string
-            /** Map Name (human readable) */
-            name: string
-            /** Maps with `instance` set are not maps that all users share. Some are accessed by keys, some are accessed by other special means. Two players on a server could be on the same 'map', but different instances of that map. */
-            instance?: boolean
-            /** Maps with `irregular` set to true usually have no doors. */
-            irregular?: boolean
-            /** TODO: ??? Might mean that only one of your characters can be here at once. */
-            mount?: boolean
-            /** TODO: ??? Might mean you can ignore walls on this map */
-            no_bounds?: boolean
-            /** If true, this map should be ignored (it probably isn't accessible, or is a work in progress) */
-            ignore?: boolean
-            /** Signs and doors on maps that don't work, but could contain useful information */
-            quirks?: [number, number, number, number, "compound" | "info" | "invisible_statue" | "list_pvp" | "log" | "note" | "sign" | "the_lever" | "upgrade" | string, string?][]
-            /** If set, this map has a different burn chance %. Multiply the burn chance by this multiplier. */
-            burn_multiplier?: number
-            /** If set, this map has a different freeze chance %. Multiply the freeze chance by this multiplier. */
-            freeze_multiplier?: number
-            /**
-             * [0]: x position where you spawn
-             * 
-             * [1]: y position where you spawn
-             * 
-             * [2]: Direction to face the character when you spawn
-             * 
-             * [3]: If set, randomly places you within this distance of the spawn to prevent stacking. TODO: Confirm.
-             */
-            spawns: ([number, number, number?, number?])[]
-            /** TODO: What is this? */
-            world?: string
-            traps?: {
-                type: "debuff" | "spikes"
-                polygon?: [number, number][]
-                position?: [number, number]
-            }[]
-            animatables?: {
-                [T in string]?: {
-                    x: number
-                    y: number
-                    position: string
-                }
-            }
-            event?: string
-            /** TODO: Figure out these types */
-            machines?: any
-            /** TODO: ??? What is this? GUI related? */
-            unlist?: boolean
-            /** TODO: ??? GUI related? */
-            fx?: string
-            /** TODO: ??? GUI related? */
-            weather?: string
-            zones?: {
-                drop: string
-                type: "fishing" | "mining"
-                polygon: [number, number][]
-            }[]
-            /** TODO: ??? What is this? GUI related? */
-            ref?: {
-                [T in string]?: [number, number] | [number, number, number, number] | IPosition
-            }
-            /** TODO: ??? Old? Depricated? */
-            old_monsters?: {
-                count: number
-                boundary: [number, number, number, number]
-                type: MonsterName
-            }[]
-        }
+        [T in Exclude<MapName, "d1" | "d3" | "frozencave" | "maintest" | "therush">]: GMap
     }
     monsters: {
         [T in Exclude<MonsterName, "terracota">]: GMonster
@@ -604,10 +454,10 @@ export type GData2 = {
         } & {
             [T in Attribute]?: number
         } } & {
-            "sniper": {
-                consecutive_200p_range_last_hits: number
-            }
+        "sniper": {
+            consecutive_200p_range_last_hits: number
         }
+    }
     tokens: {
         [T in "funtoken" | "monstertoken" | "pvptoken"]: {
             /** For the ItemName, it costs this many tokens */
@@ -764,8 +614,8 @@ export type GItem = {
     /** TODO: ??? What is this? */
     xscroll?: boolean
 } & {
-        [T in Exclude<Attribute, "stat">]?: number
-    }
+    [T in Exclude<Attribute, "stat">]?: number
+}
 
 export type GDropItem =
     /** The drop is an item [chance, item name, item quantity] */
@@ -781,6 +631,158 @@ export type GDropItem =
     | [number, "gold" | "shells", number]
     /** The drop is an item from another drop table */
     | [number, "open", DropName]
+
+export type GMap = {
+    data?: {
+        /** The furthest west you can go on the map */
+        min_x: number
+        /** The furthest east you can go on the map */
+        max_x: number
+        /** The furthest north you can go on the map */
+        min_y: number
+        /** The furthest south you can go on the map */
+        max_y: number
+    }
+    /** If true, this map is PVP. */
+    pvp?: boolean
+    /** If true, you cannot be attacked on this map. */
+    safe?: boolean
+    /** TODO: Confirm. If true, does this mean you don't lose things when you die? */
+    safe_pvp?: boolean
+    /** TODO: ??? What is this? */
+    loss?: false
+    /** If you die on this map, you will spawn at the given map and spawn. */
+    on_death?: [MapName, number]
+    /** TODO: Confirm. If you logout while your character is on this map, you will be at the given map and spawn next time you login */
+    on_exit?: [MapName, number]
+    /** TODO: ??? What is this? */
+    drop_norm?: number
+    monsters?: {
+        boundary?: [number, number, number, number]
+        boundaries?: [MapName, number, number, number, number][]
+        /** Rage boundary. Enter this and all monsters will target you. */
+        rage?: [number, number, number, number]
+        polygon?: [number, number][]
+        count: number
+        gatekeeper?: boolean
+        grow?: boolean
+        type: MonsterName
+        stype?: "randomrespawn"
+        /** TODO: ??? Does this mean they roam around the map? */
+        roam?: boolean
+        /** TODO: ??? What is this? */
+        special?: boolean
+
+        /** TODO: ??? Old? */
+        position?: [number, number]
+        /** TODO: ??? Old? */
+        radius?: number
+    }[];
+    npcs: {
+        /** [x, y, direction] spawn position for the given NPC on the map */
+        position?: [number, number, number?]
+        /** TODO: ??? If this is set, does the NPC appears on the map in more than one position? Does it walk between these positions? */
+        positions?: [number, number, number?][]
+        /** TODO: ??? Might mean that the NPC can only walk within this area */
+        boundary?: [number, number, number, number]
+        /** TODO: ??? */
+        loop?: boolean
+        /** NPC id */
+        id: NPCName
+        /** Human readable NPC name */
+        name?: string
+    }[]
+    /**
+     * Doors to other maps
+     * 
+     * [0]: The x-position of the door
+     * 
+     * [1]: The y-position of the door
+     * 
+     * [2]: The width of the door
+     * 
+     * [3]: The height of the door
+     * 
+     * [4]: The map that this door leads to (use in combination with [5] (spawn))
+     * 
+     * [5]: The spawn that this door leads to (use in combination with [4] (map))
+     * 
+     * [6]: The spawn that this door is close to on the current map
+     * 
+     * [7]: TODO: ??? Related to bank / bank keys?
+     *
+     * [8]: TODO: ??? Related to bank / bank keys?
+     */
+    doors: [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?][]
+    /** Esentially a unique ID for the map. Contains a little more information than the `name`. */
+    key: string
+    /** Map Name (human readable) */
+    name: string
+    /** Maps with `instance` set are not maps that all users share. Some are accessed by keys, some are accessed by other special means. Two players on a server could be on the same 'map', but different instances of that map. */
+    instance?: boolean
+    /** Maps with `irregular` set to true usually have no doors. */
+    irregular?: boolean
+    /** TODO: ??? Might mean that only one of your characters can be here at once. */
+    mount?: boolean
+    /** TODO: ??? Might mean you can ignore walls on this map */
+    no_bounds?: boolean
+    /** If true, this map should be ignored (it probably isn't accessible, or is a work in progress) */
+    ignore?: boolean
+    /** Signs and doors on maps that don't work, but could contain useful information */
+    quirks?: [number, number, number, number, "compound" | "info" | "invisible_statue" | "list_pvp" | "log" | "note" | "sign" | "the_lever" | "upgrade" | string, string?][]
+    /** If set, this map has a different burn chance %. Multiply the burn chance by this multiplier. */
+    burn_multiplier?: number
+    /** If set, this map has a different freeze chance %. Multiply the freeze chance by this multiplier. */
+    freeze_multiplier?: number
+    /**
+     * [0]: x position where you spawn
+     * 
+     * [1]: y position where you spawn
+     * 
+     * [2]: Direction to face the character when you spawn
+     * 
+     * [3]: If set, randomly places you within this distance of the spawn to prevent stacking. TODO: Confirm.
+     */
+    spawns: ([number, number, number?, number?])[]
+    /** TODO: What is this? */
+    world?: string
+    traps?: {
+        type: "debuff" | "spikes"
+        polygon?: [number, number][]
+        position?: [number, number]
+    }[]
+    animatables?: {
+        [T in string]?: {
+            x: number
+            y: number
+            position: string
+        }
+    }
+    event?: string
+    /** TODO: Figure out these types */
+    machines?: any
+    /** TODO: ??? What is this? GUI related? */
+    unlist?: boolean
+    /** TODO: ??? GUI related? */
+    fx?: string
+    /** TODO: ??? GUI related? */
+    weather?: string
+    zones?: {
+        drop: string
+        type: "fishing" | "mining"
+        polygon: [number, number][]
+    }[]
+    /** TODO: ??? What is this? GUI related? */
+    ref?: {
+        [T in string]?: [number, number] | [number, number, number, number] | IPosition
+    }
+    /** TODO: ??? Old? Depricated? */
+    old_monsters?: {
+        count: number
+        boundary: [number, number, number, number]
+        type: MonsterName
+    }[]
+}
 
 export type GMonster = {
     /** If true, all attacks will only do 1 damage to this monster */
@@ -931,8 +933,8 @@ export type GMonster = {
     /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
     xp: number
 } & {
-        [T in Attribute]?: number
-    }
+    [T in Attribute]?: number
+}
 
 export type Attribute =
     /** Armor Piercing (physical attacks will pierce through this much armor) */
