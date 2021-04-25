@@ -55,9 +55,9 @@ export class Observer {
 
             // Update database
             if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                // TODO: If there's only one monster, delete all.
+                // If there's only one monster, delete all.
                 if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
-                    EntityModel.deleteMany({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                    EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
                 } else {
                     EntityModel.deleteOne({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
                 }
