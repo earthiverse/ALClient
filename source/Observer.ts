@@ -138,14 +138,25 @@ export class Observer {
             await EntityModel.deleteMany({ _id: { $in: ids } }).exec()
         })
 
-        this.socket.on("server_info", (data: ServerInfoData) => {
+        this.socket.on("server_info", async (data: ServerInfoData) => {
             // Add Soft properties
             for (const datum in data) {
                 const mtype = datum as MonsterName
                 if (typeof data[mtype] == "object") {
                     if (data[mtype].live) {
-                        if (!(data[mtype] as ServerInfoDataLive).hp) (data[mtype] as ServerInfoDataLive).hp = this.G.monsters[datum].hp
-                        if (!(data[mtype] as ServerInfoDataLive).max_hp) (data[mtype] as ServerInfoDataLive).max_hp = this.G.monsters[datum].hp
+                        const goodData = data[mtype] as ServerInfoDataLive
+                        if (!goodData.hp) (data[mtype] as ServerInfoDataLive).hp = this.G.monsters[datum].hp
+                        if (!goodData.max_hp) (data[mtype] as ServerInfoDataLive).max_hp = this.G.monsters[datum].hp
+
+                        // Update database
+                        if (Constants.SPECIAL_MONSTERS.includes(mtype)) {
+                            const now = Date.now()
+                            await EntityModel.updateOne(
+                                { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: mtype },
+                                { map: goodData.map, x: goodData.x, y: goodData.y, hp: goodData.hp, target: goodData.target, lastSeen: now },
+                                { upsert: true }).exec()
+
+                        }
                     }
                 }
             }
