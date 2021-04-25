@@ -23,5 +23,6 @@ export class Constants {
     static MONGO_UPDATE_ENTITY_MS = 1000
 
     /** Monsters that are worth tracking in our database */
+    static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = ["cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "tinyp", "wabbit"]
 }

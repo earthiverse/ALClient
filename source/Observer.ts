@@ -53,12 +53,17 @@ export class Observer {
             // If it was a special monster in 'S', delete it from 'S'.
             if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
 
-            this.entities.delete(data.id)
-
             // Update database
-            if (Constants.SPECIAL_MONSTERS.includes(entity.type) && entity) {
-                EntityModel.deleteOne({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+            if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                // TODO: If there's only one monster, delete all.
+                if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
+                    EntityModel.deleteMany({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                } else {
+                    EntityModel.deleteOne({ name: data.id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                }
             }
+
+            this.entities.delete(data.id)
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
@@ -216,7 +221,7 @@ export class Observer {
                     const now = Date.now()
                     await PlayerModel.updateOne(
                         { name: p.id },
-                        { map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
+                        { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
                         { upsert: true }).exec()
                     p.lastMongoUpdate = now
                 }
