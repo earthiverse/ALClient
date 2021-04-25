@@ -16,6 +16,13 @@ export * from "./Rogue"
 export * from "./Tools"
 export * from "./Warrior"
 
+// Mongo models
+export * from "./database/auths/auths.model"
+export * from "./database/deaths/deaths.model"
+export * from "./database/entities/entities.model"
+export * from "./database/npcs/npcs.model"
+export * from "./database/players/players.model"
+
 // Export AL definitions
 export * from "./definitions/adventureland"
 export * from "./definitions/adventureland-server"
