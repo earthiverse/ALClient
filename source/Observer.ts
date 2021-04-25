@@ -1,5 +1,5 @@
 import socketio from "socket.io-client"
-import { ServerData, WelcomeData, LoadedData, ServerInfoData, DeathData, HitData, ActionData, DisappearData, EntitiesData, NewMapData } from "./definitions/adventureland-server"
+import { ServerData, WelcomeData, LoadedData, ServerInfoData, DeathData, HitData, ActionData, DisappearData, EntitiesData, NewMapData, ServerInfoDataLive } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
 import { Entity } from "./Entity";
@@ -109,11 +109,11 @@ export class Observer {
         this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
             for (const mtype in data) {
-                if (typeof data[mtype] !== "object") continue
-                const mN = mtype as MonsterName
-                if (data[mN].live && data[mN].hp == undefined) {
-                    data[mN].hp = this.G.monsters[mN].hp
-                    data[mN].max_hp = this.G.monsters[mN].hp
+                if (typeof data[mtype as MonsterName] == "object") {
+                    if (data[mtype as MonsterName].live) {
+                        (data[mtype as MonsterName] as ServerInfoDataLive).hp = this.G.monsters[mtype].hp
+                        (data[mtype as MonsterName] as ServerInfoDataLive).max_hp = this.G.monsters[mtype].hp
+                    }
                 }
             }
 

@@ -809,24 +809,25 @@ export type ServerData = {
 }
 
 export type ServerInfoData = {
-    [T in MonsterName]?: ({
-        hp: number
-        map: MapName
-        max_hp: number
-        target?: string
-    }) & ({
-        live: true
-        x: number
-        y: number
-    } | {
-        live: false
-        /** When the monster will spawn next */
-        spapwn: string
-    })
+    [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive
 } & {
     egghunt?: boolean
     lunarnewyear?: boolean
     valentines?: boolean
+}
+export type ServerInfoDataLive = {
+    hp: number
+    live: true
+    map: MapName
+    max_hp: number
+    target?: string
+    x: number
+    y: number
+}
+export type ServerInfoDataNotLive = {
+    live: false
+    /** When the monster will spawn next */
+    spawn: string
 }
 
 export type StartData = CharacterData & {
