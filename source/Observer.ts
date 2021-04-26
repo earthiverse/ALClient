@@ -133,9 +133,11 @@ export class Observer {
                     }
                 }
             ]).exec()
-            const ids = []
-            for (const toDelete of toDeletes) ids.push(toDelete._id)
-            EntityModel.deleteMany({ _id: { $in: ids } }).exec()
+            if (toDeletes) {
+                const ids = []
+                for (const toDelete of toDeletes) ids.push(toDelete._id)
+                EntityModel.deleteMany({ _id: { $in: ids } }).exec()
+            }
         })
 
         this.socket.on("server_info", async (data: ServerInfoData) => {
