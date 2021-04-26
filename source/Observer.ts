@@ -104,7 +104,7 @@ export class Observer {
             this.parseEntities(data.entities)
 
             // Delete monsters that haven't been seen 'round these parts in a while.
-            const toDeletes = await EntityModel.aggregate([
+            const toDeletes = EntityModel.aggregate([
                 {
                     $match: {
                         serverRegion: this.serverRegion,
@@ -135,7 +135,7 @@ export class Observer {
             ]).exec()
             const ids = []
             for (const toDelete of toDeletes) ids.push(toDelete._id)
-            await EntityModel.deleteMany({ _id: { $in: ids } }).exec()
+            EntityModel.deleteMany({ _id: { $in: ids } }).exec()
         })
 
         this.socket.on("server_info", async (data: ServerInfoData) => {
@@ -151,7 +151,7 @@ export class Observer {
                         // Update database
                         if (Constants.SPECIAL_MONSTERS.includes(mtype)) {
                             const now = Date.now()
-                            await EntityModel.updateOne(
+                            EntityModel.updateOne(
                                 { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: mtype },
                                 { map: goodData.map, x: goodData.x, y: goodData.y, hp: goodData.hp, target: goodData.target, lastSeen: now },
                                 { upsert: true }).exec()
@@ -201,9 +201,9 @@ export class Observer {
         if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
             // If there's only one monster, delete all.
             if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
-                await EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
             } else {
-                await EntityModel.deleteOne({ name: id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                EntityModel.deleteOne({ name: id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
             }
         }
 
@@ -236,7 +236,7 @@ export class Observer {
             if (Constants.SPECIAL_MONSTERS.includes(e.type)
                 && (!e.lastMongoUpdate || Date.now() - e.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS)) {
                 const now = Date.now()
-                await EntityModel.updateOne(
+                EntityModel.updateOne(
                     { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
                     { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: now },
                     { upsert: true }).exec()
@@ -259,7 +259,7 @@ export class Observer {
             if (p.isNPC()) {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
                     const now = Date.now()
-                    await NPCModel.updateOne(
+                    NPCModel.updateOne(
                         { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
                         { map: p.map, x: p.x, y: p.y, lastSeen: now },
                         { upsert: true }).exec()
@@ -268,7 +268,7 @@ export class Observer {
             } else {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
                     const now = Date.now()
-                    await PlayerModel.updateOne(
+                    PlayerModel.updateOne(
                         { name: p.id },
                         { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
                         { upsert: true }).exec()
