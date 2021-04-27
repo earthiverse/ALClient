@@ -85,10 +85,8 @@ export class Observer {
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
-                if (e) {
-                    e.hp = e.hp - data.damage
-                    this.entities.set(data.id, e)
-                }
+                // Update HP
+                if (e) e.hp = e.hp - data.damage
             }
         })
 
@@ -202,20 +200,22 @@ export class Observer {
     protected async markEntityAsDead(id: string): Promise<void> {
         const entity = this.entities.get(id)
 
-        // If it was a special monster in 'S', delete it from 'S'.
-        if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
+        if (entity) {
+            // If it was a special monster in 'S', delete it from 'S'.
+            if (this.S && this.S[entity.type]) delete this.S[entity.type]
 
-        // Update database
-        if (entity && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-            // If there's only one monster, delete all.
-            if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
-                EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
-            } else {
-                EntityModel.deleteOne({ name: id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+            this.entities.delete(id)
+
+            // Update database
+            if (Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                // If there's only one monster, delete all.
+                if (Constants.ONE_SPAWN_MONSTERS.includes(entity.type)) {
+                    EntityModel.deleteMany({ type: entity.type, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                } else {
+                    EntityModel.deleteOne({ name: id, serverRegion: this.serverRegion, serverIdentifier: this.serverIdentifier }).exec()
+                }
             }
         }
-
-        this.entities.delete(id)
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
@@ -298,9 +298,9 @@ export class Observer {
             }
         }
 
-        if(entityUpdates.length) EntityModel.bulkWrite(entityUpdates)
-        if(npcUpdates.length) NPCModel.bulkWrite(npcUpdates)
-        if(playerUpdates.length) PlayerModel.bulkWrite(playerUpdates)
+        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates)
+        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates)
+        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates)
     }
 
     protected updatePositions(): void {
