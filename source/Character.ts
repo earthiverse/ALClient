@@ -611,8 +611,7 @@ export class Character extends Observer implements CharacterData {
      * @param id The ID of the entity or player to attack
      */
     public basicAttack(id: string): Promise<string> {
-        if (this.mp_cost > this.mp)
-            return Promise.reject("Not enough MP to attack")
+        if (this.mp_cost > this.mp) return Promise.reject("Not enough MP to attack")
 
         const attackStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {

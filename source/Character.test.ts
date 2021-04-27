@@ -413,7 +413,7 @@ beforeAll(async () => {
         "cc": 16,
         "name": "earthWar"
     })
-}, 30000)
+}, 60000)
 
 afterAll(async () => {
     Game.disconnect()
