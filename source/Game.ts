@@ -138,7 +138,7 @@ export class Game {
                             userID: result[1].split("-")[0],
                             userAuth: result[1].split("-")[1]
                         }
-                        await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).exec()
+                        await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
                         break
                     }
                 }

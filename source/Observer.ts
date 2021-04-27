@@ -142,6 +142,8 @@ export class Observer {
 
         this.socket.on("server_info", async (data: ServerInfoData) => {
             // Add Soft properties
+            const databaseUpdates = []
+
             for (const datum in data) {
                 const mtype = datum as MonsterName
                 if (typeof data[mtype] == "object") {
@@ -153,15 +155,19 @@ export class Observer {
                         // Update database
                         if (Constants.SPECIAL_MONSTERS.includes(mtype)) {
                             const now = Date.now()
-                            EntityModel.updateOne(
-                                { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: mtype },
-                                { map: goodData.map, x: goodData.x, y: goodData.y, hp: goodData.hp, target: goodData.target, lastSeen: now },
-                                { upsert: true }).exec()
-
+                            databaseUpdates.push({
+                                updateOne: {
+                                    filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: mtype },
+                                    update: { map: goodData.map, x: goodData.x, y: goodData.y, hp: goodData.hp, target: goodData.target, lastSeen: now },
+                                    upsert: true
+                                }
+                            })
                         }
                     }
                 }
             }
+
+            if (databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
 
             this.S = data
         })
@@ -222,6 +228,11 @@ export class Observer {
             this.updatePositions()
         }
 
+        const now = Date.now()
+        const entityUpdates = []
+        const npcUpdates = []
+        const playerUpdates = []
+
         for (const monster of data.monsters) {
             let e: Entity
             if (!this.entities.has(monster.id)) {
@@ -237,11 +248,13 @@ export class Observer {
             // Update our database
             if (Constants.SPECIAL_MONSTERS.includes(e.type)
                 && (!e.lastMongoUpdate || Date.now() - e.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS)) {
-                const now = Date.now()
-                EntityModel.updateOne(
-                    { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
-                    { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: now },
-                    { upsert: true }).exec()
+                entityUpdates.push({
+                    updateOne: {
+                        filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
+                        update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: now },
+                        upsert: true
+                    }
+                })
                 e.lastMongoUpdate = now
             }
         }
@@ -261,23 +274,33 @@ export class Observer {
             if (p.isNPC()) {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
                     const now = Date.now()
-                    NPCModel.updateOne(
-                        { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
-                        { map: p.map, x: p.x, y: p.y, lastSeen: now },
-                        { upsert: true }).exec()
+                    npcUpdates.push({
+                        updateOne: {
+                            filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
+                            update: { map: p.map, x: p.x, y: p.y, lastSeen: now },
+                            upsert: true
+                        }
+                    })
                     p.lastMongoUpdate = now
                 }
             } else {
                 if (!p.lastMongoUpdate || Date.now() - p.lastMongoUpdate > Constants.MONGO_UPDATE_ENTITY_MS) {
                     const now = Date.now()
-                    PlayerModel.updateOne(
-                        { name: p.id },
-                        { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
-                        { upsert: true }).exec()
+                    playerUpdates.push({
+                        updateOne: {
+                            filter: { name: p.id },
+                            update: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: now },
+                            upsert: true
+                        }
+                    })
                     p.lastMongoUpdate = now
                 }
             }
         }
+
+        if(entityUpdates.length) EntityModel.bulkWrite(entityUpdates)
+        if(npcUpdates.length) NPCModel.bulkWrite(npcUpdates)
+        if(playerUpdates.length) PlayerModel.bulkWrite(playerUpdates)
     }
 
     protected updatePositions(): void {

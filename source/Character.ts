@@ -202,7 +202,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("game_log", async (data: { message: string; color: string; }) => {
             const result = /^Slain by (.+)$/.exec(data.message)
             if (result) {
-                await DeathModel.create({
+                DeathModel.create({
                     name: this.id,
                     cause: result[1],
                     map: this.map,
