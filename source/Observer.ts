@@ -191,8 +191,7 @@ export class Observer {
 
             // Update entities
             for (const [, entity] of this.entities) {
-                if (!entity.moving)
-                    continue
+                if (!entity.moving) continue
 
                 const speed = entity.speed
 

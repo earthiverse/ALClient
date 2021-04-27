@@ -1,4 +1,4 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayerData, PlayersData, ItemData, ItemDataTrade } from "./definitions/adventureland-server"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
@@ -162,6 +162,12 @@ export class Character extends Observer implements CharacterData {
             this.chests.set(data.id, data)
         })
 
+        // Replace Observer (super)'s parseEntities with one that will update our character, too
+        this.socket.off("entities")
+        this.socket.on("entities", (data: EntitiesData) => {
+            this.parseEntities(data)
+        })
+
         this.socket.on("eval", (data: EvalData) => {
             // Skill timeouts (like attack) are sent via eval
             const skillReg1 = /skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
@@ -201,10 +207,19 @@ export class Character extends Observer implements CharacterData {
             this.parseGameResponse(data)
         })
 
+        // Replace Observer (super)'s parseEntities with one that will update our character, too
+        this.socket.off("new_map")
         this.socket.on("new_map", (data: NewMapData) => {
+            this.projectiles.clear()
+
             this.going_x = data.x
             this.going_y = data.y
             this.moving = false
+            this.x = data.x
+            this.y = data.y
+            this.in = data.in
+            this.map = data.name
+            this.m = data.m
 
             this.parseEntities(data.entities)
         })
@@ -268,7 +283,10 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected updateLoop(): void {
-        if (this.socket.disconnected) return
+        if (this.socket.disconnected) {
+            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            return
+        }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
@@ -277,7 +295,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
-        if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
+        if (msSinceLastUpdate >= Constants.UPDATE_POSITIONS_EVERY_MS) {
             // Update now
             this.updatePositions()
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
@@ -313,6 +331,11 @@ export class Character extends Observer implements CharacterData {
         }
 
         this.updatePositions()
+    }
+
+    protected parseEntities(data: EntitiesData): Promise<void> {
+        if (data.type == "xy") this.updateCharacterPosition()
+        return super.parseEntities(data)
     }
 
     protected parseGameResponse(data: GameResponseData): void {
@@ -352,7 +375,7 @@ export class Character extends Observer implements CharacterData {
         this.nextSkill.set(skill, next)
     }
 
-    protected updatePositions(): void {
+    private updateCharacterPosition(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
 
@@ -380,7 +403,10 @@ export class Character extends Observer implements CharacterData {
                     this.s[condition as ConditionName].ms = newCooldown
             }
         }
+    }
 
+    protected updatePositions(): void {
+        this.updateCharacterPosition()
         super.updatePositions()
     }
 
@@ -457,7 +483,7 @@ export class Character extends Observer implements CharacterData {
     public async requestEntitiesData(): Promise<EntitiesData> {
         return new Promise<EntitiesData>((resolve, reject) => {
             const checkEntitiesEvent = (data: EntitiesData) => {
-                this.socket.removeListener("entities")
+                this.socket.removeListener("entities", checkEntitiesEvent)
                 if (data.type == "all") resolve(data)
             }
 
