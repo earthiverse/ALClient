@@ -180,6 +180,15 @@ export class Ranger extends PingCompensatedCharacter {
                 }
             }
 
+            // TODO: Find a socket event for the fail
+            // const failCheck = (data: GameResponseData) => {
+            //     if(typeof data == "string") {
+            //         if(data == "no_target") {
+                        
+            //         }
+            //     }
+            // }
+
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]supershot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("action", attackCheck)

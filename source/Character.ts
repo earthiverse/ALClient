@@ -147,7 +147,6 @@ export class Character extends Observer implements CharacterData {
             this.damage_type = this.G.classes[data.ctype].damage_type
 
             this.updateCharacter(data)
-            if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
         })
 
@@ -312,6 +311,8 @@ export class Character extends Observer implements CharacterData {
                 this[datum] = data[datum]
             }
         }
+
+        this.updatePositions()
     }
 
     protected parseGameResponse(data: GameResponseData): void {

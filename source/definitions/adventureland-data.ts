@@ -351,6 +351,30 @@ export type GData2 = {
             speed: number
         }
     }
+    sets: {
+        [T in SetName]: {
+            /** Bonus for having 1 piece of the set equipped */
+            "1": { [T in Attribute]?: number }
+            /** Bonus for having 2 pieces of the set equipped */
+            "2": { [T in Attribute]?: number }
+            /** Bonus for having 3 pieces of the set equipped */
+            "3"?: { [T in Attribute]?: number }
+            /** Bonus for having 4 pieces of the set equipped */
+            "4"?: { [T in Attribute]?: number }
+            /** Bonus for having 5 pieces of the set equipped */
+            "5"?: { [T in Attribute]?: number }
+            /** Bonus for having 6 pieces of the set equipped */
+            "6"?: { [T in Attribute]?: number }
+            /** Bonus for having 7 pieces of the set equipped */
+            "7"?: { [T in Attribute]?: number }
+            /** Flavour text for the set */
+            explanation?: string
+            /** What items contribute to the set bonus */
+            items: ItemName[]
+            /** Set bonus name */
+            name: string
+        }
+    }
     /** If you buy an item with shells, this is the ratio of shells to gold */
     shells_to_gold: number
     skills: { [T in SkillName]: {
@@ -1877,6 +1901,7 @@ export type MapName =
     | "winter_cave"
     | "winter_inn"
     | "winter_inn_rooms"
+    | "winter_instance"
     | "winterland"
     | "woffice"
 
@@ -1929,6 +1954,7 @@ export type MonsterName =
     | "grinch"
     | "gscorpion"
     | "hen"
+    | "icegolem"
     | "iceroamer"
     | "jr"
     | "jrat"
@@ -2147,6 +2173,25 @@ export type ProjectileName =
     | "supershot"
     | "wandy"
     | "wmomentum"
+
+export type SetName =
+    | "easter"
+    | "fury"
+    | "holidays"
+    | "legends"
+    | "mmage"
+    | "mmerchant"
+    | "mpriest"
+    | "mpx"
+    | "mranger"
+    | "mrogue"
+    | "mwarrior"
+    | "rugged"
+    | "swift"
+    | "vampires"
+    | "wanderers"
+    | "wt3"
+    | "wt4"
 
 export type SkillName =
     | "3shot"
