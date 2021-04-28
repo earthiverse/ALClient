@@ -6,19 +6,19 @@ import { PlayerData } from "./definitions/adventureland-server"
 export class Player implements PlayerData {
     protected G: GData2
 
-    public afk: boolean | "code"
+    public afk?: boolean | "code"
     public id: string
     public ctype: CharacterType
     public abs: boolean
-    public angle: number
+    public angle?: number
     public armor: number
     public apiercing = 0
     public attack: number
     public cid: number
     public damage_type: DamageType
     public frequency: number
-    public going_x: number
-    public going_y: number
+    public going_x?: number
+    public going_y?: number
     public level = 1
     public move_num: number
     public moving: boolean
@@ -93,7 +93,7 @@ export class Player implements PlayerData {
      *
      * @return {*}  {boolean}
      * @memberof Player
-    */
+     */
     public isNPC(): boolean {
         return this.npc !== undefined
     }

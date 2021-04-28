@@ -2,7 +2,7 @@ import { ItemType } from "./definitions/adventureland"
 import { Attribute, GData2, GItem, ItemName, SkillName } from "./definitions/adventureland-data"
 import { ItemData } from "./definitions/adventureland-server"
 
-export class Item implements ItemData, ItemData, GItem {
+export class Item implements ItemData, GItem {
     protected G: GData2
 
     // ItemData (required)

@@ -388,8 +388,6 @@ export class Character extends Observer implements CharacterData {
                 }
             } else if (datum == "entities") {
                 this.parseEntities(data[datum])
-            } else if (datum == "moving") {
-                // We'll handle moving...
             } else if (datum == "tp") {
                 // We just teleported, but we don't want to keep the data.
             } else if (datum == "user") {

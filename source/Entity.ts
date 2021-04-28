@@ -9,7 +9,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     protected G: GData2
 
     // EntityData (required)
-    public abs: false
+    public abs?: false
     public angle: number
     public cid: number
     public going_x: number
