@@ -639,7 +639,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.open()
 
-        return connected
+        return connected.then(async () => { this.updateLoop() })
     }
 
     public async disconnect(): Promise<void> {
