@@ -11,7 +11,7 @@ const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 
 beforeAll(async () => {
     G = await Game.getGData()
     priest = new Character(undefined, undefined, undefined, G, serverData)
-    priest.updateCharacter({
+    priest.parseCharacter({
         id: "earthPri",
         party: "earthMer",
         owner: "12345",
@@ -114,7 +114,7 @@ beforeAll(async () => {
     })
 
     warrior = new Character(undefined, undefined, undefined, G, serverData)
-    warrior.updateCharacter({
+    warrior.parseCharacter({
         "hp": 8021,
         "max_hp": 17379,
         "mp": 1603,

@@ -11,7 +11,7 @@ let randomPlayer: Player
 beforeAll(async () => {
     G = await Game.getGData()
     character = new Character(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
-    character.updateCharacter({
+    character.parseCharacter({
         id: "earthPri",
         party: "earthMer",
         owner: "12345",
@@ -119,7 +119,6 @@ beforeAll(async () => {
         owner: "12345",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,
@@ -172,7 +171,6 @@ beforeAll(async () => {
         owner: "99999",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,
@@ -225,7 +223,6 @@ beforeAll(async () => {
         owner: "99999",
         x: 10,
         y: 10,
-        map: "main",
 
         abs: false,
         angle: 90,

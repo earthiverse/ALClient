@@ -1,5 +1,5 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayerData, PlayersData } from "./definitions/adventureland-server"
-import { BankInfo, ItemInfo, SlotType, IPosition, TradeSlotType, CharacterType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayersData, ItemData, ItemDataTrade, ServerInfoDataLive, PlayerData } from "./definitions/adventureland-server"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
@@ -8,7 +8,7 @@ import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
-import { Attribute, BankPackName, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string;
@@ -32,7 +32,7 @@ export class Character extends Observer implements CharacterData {
     public S: ServerInfoData;
 
     // CharacterData
-    public afk: string
+    public afk: "code"
     public age: number
     public apiercing = 0
     public blast = 0
@@ -40,7 +40,7 @@ export class Character extends Observer implements CharacterData {
     public x: number
     public y: number
     public map: MapName
-    public in: MapName
+    public in: string
     public name: string
     public id: string
     public ctype: CharacterType
@@ -66,7 +66,7 @@ export class Character extends Observer implements CharacterData {
     public move_num: number
     public moving = false
     public mp = 1
-    public npc?: string
+    public npc?: NPCName
     public owner: string
     public party?: string
     public pdps: number
@@ -125,7 +125,7 @@ export class Character extends Observer implements CharacterData {
     dreturn: number
     tax: number
     xrange: number
-    items: ItemInfo[]
+    items: ItemData[]
     cc: number
     ipass?: string
     friends?: any
@@ -150,7 +150,7 @@ export class Character extends Observer implements CharacterData {
             this.moving = false
             this.damage_type = this.G.classes[data.ctype].damage_type
 
-            this.updateCharacter(data)
+            this.parseCharacter(data)
             if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
         })
@@ -298,7 +298,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("player", (data: CharacterData) => {
-            this.updateCharacter(data)
+            this.parseCharacter(data)
         })
 
         this.socket.on("q_data", (data: QData) => {
@@ -309,12 +309,14 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
             for (const mtype in data) {
-                if (typeof data[mtype] !== "object")
-                    continue
+                if (typeof data[mtype] !== "object") continue
+                if (!data[mtype].live) continue
                 const mN = mtype as MonsterName
-                if (data[mN].live && data[mN].hp == undefined) {
-                    data[mN].hp = this.G.monsters[mN].hp
-                    data[mN].max_hp = this.G.monsters[mN].hp
+                const goodData = data[mN] as ServerInfoDataLive
+
+                if (goodData.hp == undefined) {
+                    goodData.hp = this.G.monsters[mN].hp
+                    goodData.max_hp = this.G.monsters[mN].hp
                 }
             }
 
@@ -350,7 +352,10 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected updateLoop(): void {
-        if (this.socket.disconnected) return
+        if (this.socket.disconnected) {
+            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            return
+        }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
@@ -369,12 +374,14 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
-    public updateCharacter(data: CharacterData): void {
+    public parseCharacter(data: CharacterData | PlayerData): void {
+        this.updatePositions()
+
         // Update all the character information we can
         for (const datum in data) {
             if (datum == "hitchhikers") {
                 // Game responses
-                for (const [event, datum] of data.hitchhikers) {
+                for (const [event, datum] of (data as CharacterData).hitchhikers) {
                     if (event == "game_response") {
                         this.parseGameResponse(datum)
                     }
@@ -387,7 +394,7 @@ export class Character extends Observer implements CharacterData {
                 // We just teleported, but we don't want to keep the data.
             } else if (datum == "user") {
                 // Bank information
-                this.bank = data.user
+                this.bank = (data as CharacterData).user
             } else {
                 // Normal attribute
                 this[datum] = data[datum]
@@ -417,14 +424,18 @@ export class Character extends Observer implements CharacterData {
             }
         }
         for (const player of data.players) {
-            if (!this.players.has(player.id)) {
-                // Create the player and add it to our list
-                const p = new Player(player, data.map, this.G)
-                this.players.set(player.id, p)
+            if (player.id == this.id) {
+                this.parseCharacter(player)
             } else {
-                // Update everything
-                const p = this.players.get(player.id)
-                p.updateData(player)
+                if (!this.players.has(player.id)) {
+                    // Create the player and add it to our list
+                    const p = new Player(player, data.map, this.G)
+                    this.players.set(player.id, p)
+                } else {
+                    // Update everything
+                    const p = this.players.get(player.id)
+                    p.updateData(player)
+                }
             }
         }
     }
@@ -651,7 +662,7 @@ export class Character extends Observer implements CharacterData {
     public async requestEntitiesData(): Promise<EntitiesData> {
         return new Promise<EntitiesData>((resolve, reject) => {
             const checkEntitiesEvent = (data: EntitiesData) => {
-                this.socket.removeListener("entities")
+                this.socket.removeListener("entities", checkEntitiesEvent)
                 if (data.type == "all") resolve(data)
             }
 
@@ -710,7 +721,7 @@ export class Character extends Observer implements CharacterData {
             const magiportCheck = (data: NewMapData) => {
                 if (data.effect == "magiport") {
                     this.socket.removeListener("new_map", magiportCheck)
-                    resolve({ map: data.in, x: data.x, y: data.y })
+                    resolve({ map: data.name, x: data.x, y: data.y })
                 }
             }
 
@@ -968,7 +979,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add promises
-    public buyFromPonty(item: ItemInfo): unknown {
+    public buyFromPonty(item: ItemDataTrade): unknown {
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * 1.2 /* Ponty items have a 20% markup */ * (item.q ? item.q : 1)
         if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
@@ -978,11 +989,11 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns the *minimum* gold required to obtain the given item.
      *
-     * @param {ItemInfo} item - The item to calculate the minimum cost for
+     * @param {ItemData} item - The item to calculate the minimum cost for
      * @return {*}  {number} - The cost of the item
      * @memberof Character
      */
-    public calculateItemCost(item: ItemInfo): number {
+    public calculateItemCost(item: ItemData): number {
         const gInfo = this.G.items[item.name]
 
         // Base cost
@@ -1019,7 +1030,7 @@ export class Character extends Observer implements CharacterData {
         return cost
     }
 
-    public calculateItemGrade(item: ItemInfo): number {
+    public calculateItemGrade(item: ItemData): number {
         const gInfo = this.G.items[item.name]
         if (!gInfo.grades) return
         let grade = 0
@@ -1355,7 +1366,7 @@ export class Character extends Observer implements CharacterData {
             let emptySlot: number
             for (let packNum = packFrom; packNum <= packTo; packNum++) {
                 const packName = `items${packNum}` as BankPackName
-                const pack = this.bank[packName] as ItemInfo[]
+                const pack = this.bank[packName] as ItemData[]
                 if (!pack)
                     continue // We don't have access to this pack
                 for (let slotNum = 0; slotNum < pack.length; slotNum++) {
@@ -1567,7 +1578,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add promises and checks
-    public finishMonsterHuntQuest() {
+    public finishMonsterHuntQuest(): void {
         this.socket.emit("monsterhunt")
     }
 
@@ -1649,8 +1660,8 @@ export class Character extends Observer implements CharacterData {
         return playersData
     }
 
-    public getPontyItems(): Promise<ItemInfo[]> {
-        const pontyItems = new Promise<ItemInfo[]>((resolve, reject) => {
+    public getPontyItems(): Promise<ItemData[]> {
+        const pontyItems = new Promise<ItemData[]>((resolve, reject) => {
             const distanceCheck = (data: GameResponseData) => {
                 if (data == "buy_get_closer") {
                     this.socket.removeListener("game_response", distanceCheck)
@@ -1659,7 +1670,7 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            const secondhandsItems = (data: ItemInfo[]) => {
+            const secondhandsItems = (data: ItemData[]) => {
                 this.socket.removeListener("game_response", distanceCheck)
                 this.socket.removeListener("secondhands", secondhandsItems)
                 resolve(data)
@@ -1768,7 +1779,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add checks and promises
-    public leaveParty() {
+    public leaveParty(): void {
         this.socket.emit("party", { event: "leave" })
     }
 
@@ -2060,7 +2071,7 @@ export class Character extends Observer implements CharacterData {
      * @param id The character ID to invite to our party.
      */
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
-    public sendPartyInvite(id: string) {
+    public sendPartyInvite(id: string): void {
         this.socket.emit("party", { event: "invite", name: id })
     }
 
@@ -2069,7 +2080,7 @@ export class Character extends Observer implements CharacterData {
      * @param id The character ID to request a party invite from.
      */
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
-    public sendPartyRequest(id: string) {
+    public sendPartyRequest(id: string): void {
         this.socket.emit("party", { event: "request", name: id })
     }
 
@@ -2081,7 +2092,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     // TODO: Add promises
-    public shiftBooster(booster: number, to: "goldbooster" | "luckbooster" | "xpbooster") {
+    public shiftBooster(booster: number, to: "goldbooster" | "luckbooster" | "xpbooster"): Promise<void> {
         const itemInfo = this.items[booster]
         if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
         if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
@@ -2784,7 +2795,7 @@ export class Character extends Observer implements CharacterData {
     public isEquipped(itemName: ItemName): boolean {
         for (const slot in this.slots) {
             if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
-            if (this.slots[slot as SlotType].b) continue // We are buying this item, we don't have it equipped
+            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, we don't have it equipped
             if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
@@ -2818,7 +2829,7 @@ export class Character extends Observer implements CharacterData {
     public locateDuplicateItems(inventory = this.items): {
         [T in ItemName]?: number[];
     } {
-        const items: (ItemInfo & { slotNum: number; })[] = []
+        const items: (ItemData & { slotNum: number; })[] = []
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
             if (!item)

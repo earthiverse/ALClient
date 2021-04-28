@@ -20,64 +20,8 @@ export class PingCompensatedCharacter extends Character {
         this.nextSkill.set(skill, new Date(next.getTime() - pingCompensation))
     }
 
-    protected async parseEntities(data: EntitiesData): Promise<void> {
-        super.parseEntities(data)
-
-        const pingCompensation = Math.min(...this.pings)
-
-        for (const monster of data.monsters) {
-            // Compensate position
-            const entity = this.entities.get(monster.id)
-            if (!entity || !entity.moving)
-                continue
-            const distanceTravelled = entity.speed * pingCompensation / 1000
-            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTravelled > distanceToGoal) {
-                entity.moving = false
-                entity.x = entity.going_x
-                entity.y = entity.going_y
-            } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                entity.y = entity.y + Math.sin(angle) * distanceTravelled
-            }
-
-            // Compensate conditions
-            for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms) {
-                    entity.s[condition as ConditionName].ms -= pingCompensation
-                }
-            }
-        }
-
-        for (const player of data.players) {
-            // Compensate position
-            const entity = this.players.get(player.id)
-            if (!entity || !entity.moving)
-                continue
-            const distanceTravelled = entity.speed * pingCompensation / 1000
-            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTravelled > distanceToGoal) {
-                entity.moving = false
-                entity.x = entity.going_x
-                entity.y = entity.going_y
-            } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                entity.y = entity.y + Math.sin(angle) * distanceTravelled
-            }
-
-            // Compensate conditions
-            for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms) {
-                    entity.s[condition as ConditionName].ms -= pingCompensation
-                }
-            }
-        }
-    }
-
-    public updateCharacter(data: CharacterData): void {
-        super.updateCharacter(data)
+    public parseCharacter(data: CharacterData): void {
+        super.parseCharacter(data)
 
         const pingCompensation = Math.min(...this.pings)
 
@@ -104,8 +48,65 @@ export class PingCompensatedCharacter extends Character {
         }
     }
 
+    protected async parseEntities(data: EntitiesData): Promise<void> {
+        super.parseEntities(data)
+
+        const pingCompensation = Math.min(...this.pings)
+
+        for (const monster of data.monsters) {
+            // Compensate position
+            const entity = this.entities.get(monster.id)
+            if (!entity || !(entity?.moving)) continue
+            const distanceTravelled = entity.speed * pingCompensation / 1000
+            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
+            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
+            if (distanceTravelled > distanceToGoal) {
+                entity.moving = false
+                entity.x = entity.going_x
+                entity.y = entity.going_y
+            } else {
+                entity.x = entity.x + Math.cos(angle) * distanceTravelled
+                entity.y = entity.y + Math.sin(angle) * distanceTravelled
+            }
+
+            // Compensate conditions
+            for (const condition in entity.s) {
+                if (entity.s[condition as ConditionName].ms) {
+                    entity.s[condition as ConditionName].ms -= pingCompensation
+                }
+            }
+        }
+
+        for (const player of data.players) {
+            // Compensate position
+            const entity = this.players.get(player.id)
+            if (!entity || !(entity?.moving)) continue
+            const distanceTravelled = entity.speed * pingCompensation / 1000
+            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
+            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
+            if (distanceTravelled > distanceToGoal) {
+                entity.moving = false
+                entity.x = entity.going_x
+                entity.y = entity.going_y
+            } else {
+                entity.x = entity.x + Math.cos(angle) * distanceTravelled
+                entity.y = entity.y + Math.sin(angle) * distanceTravelled
+            }
+
+            // Compensate conditions
+            for (const condition in entity.s) {
+                if (entity.s[condition as ConditionName].ms) {
+                    entity.s[condition as ConditionName].ms -= pingCompensation
+                }
+            }
+        }
+    }
+
     protected pingLoop(): void {
-        if (this.socket.disconnected) return
+        if (this.socket.disconnected) {
+            this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, 1000))
+            return
+        }
 
         this.sendPing(false)
         if (this.pings.length > Constants.MAX_PINGS / 10) {

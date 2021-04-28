@@ -1,4 +1,5 @@
-import { Attribute, BankPackName, ConditionName, DamageType, ItemName, MapName, MonsterName, NPCName, SkillName, TitleName } from "./adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
+import { ItemData, ItemDataTrade } from "./adventureland-server"
 
 export type GData = {
     // TODO: Add
@@ -141,7 +142,7 @@ export type GMapsNPC = {
 }
 
 export type BankInfo = {
-    [T in Exclude<BankPackName, "gold">]?: ItemInfo[]
+    [T in Exclude<BankPackName, "gold">]?: ItemData[]
 } & {
     gold: number;
 }
@@ -151,45 +152,7 @@ export type ChestInfo = PositionReal & {
     skin: "chest3" | string;
 }
 
-export type ItemInfo = {
-    // TODO: Figure out what this is
-    acc?: number
-    // TODO: Figure out what this is (I think it might be similar to 'p', but for achievements)
-    ach?: TitleName
-    /** If true, the entity is buying this item */
-    b?: boolean;
-    // TODO: Figure out what this is (Probably related to 'expires')
-    ex?: boolean;
-    /** If the item expires (booster, elixir), this will be set to a date string */
-    expires?: string
-    /** If the item is a gift, you can only sell it for 1 gold. The items you get from creating a new character are gifts. */
-    gift?: number
-    /** Related to upgrade chance. (NOTE: If you see this property, it's likely a bug. Report to Wizard!) */
-    grace?: number
-    /** Set if the item is compoundable or upgradable */
-    level?: number;
-    name: ItemName;
-    /** How many of this item we have. Set if the item is stackable. */
-    q?: number;
-    /** If set, name == placeholder, and we are upgrading or compounding something */
-    p?: {
-        chance: number;
-        name: ItemName;
-        level: number;
-        scroll: ItemName;
-        nums: number[];
-    } | TitleName;
-    ps?: TitleName[]
-    /** If set, the item is for sale, or purchase */
-    rid?: string;
-    /** If the item has this property, this type of scroll has been applied */
-    stat_type?: Attribute
-    // TODO: Confirm
-    /** If set, the item might drop if we die to another player's attacks (i.e. die to PvP) */
-    v?: boolean
-}
-
-export type TradeItemInfo = ItemInfo & {
+export type TradeItemInfo = ItemData & {
     /** Number of minutes remaining for giveaway items */
     giveaway?: number;
     /** List of character IDs that are in the giveaway */
@@ -199,16 +162,9 @@ export type TradeItemInfo = ItemInfo & {
 }
 
 export type SlotInfo = {
-    [T in SlotType]: ItemInfo
+    [T in SlotType]: ItemData
 } & {
-    [T in TradeSlotType]?: ItemInfo & {
-        /** Number of minutes remaining for giveaway items */
-        giveaway?: number;
-        /** List of character IDs that are in the giveaway */
-        list: string[];
-        price: number;
-        rid: string;
-    }
+    [T in TradeSlotType]?: ItemDataTrade
 }
 
 /**
@@ -236,7 +192,6 @@ export type StatusInfo = {
         // The character ID that caused the burn (TODO: Is this the initial character? Or the last character to contribute?)
         f: string
     }
-    // TODO: This currently isn't in G.conditions, but it *should* be eventually, so we can do it later
     cursed?: {
         ms: number
     }
@@ -247,8 +202,8 @@ export type StatusInfo = {
     mluck?: {
         /** The ID of the merchant who cast mluck */
         f: string;
-        /** A flag to show if the mluck was cast by the user's merchant. If false, it can be mlucked by any merchant. */
-        strong: boolean;
+        /** A flag to show if the mluck was cast by the user's merchant. If unset, the character can be mlucked by any merchant. */
+        strong?: boolean;
     };
     monsterhunt?: {
         /** The server ID where the monster hunt is valid */
@@ -266,6 +221,10 @@ export type StatusInfo = {
     citizen4aura?: {
         gold: number;
     };
+    self_healing?: {
+        ability: true
+        ms: number
+    }
 }
 
 export type PositionReal = IPosition & {
@@ -294,16 +253,6 @@ export type IPosition = {
     x: number
     y: number
 }
-
-// TODO: Get all types (from G?)
-export type CharacterType =
-    | "mage"
-    | "merchant"
-    | "paladin"
-    | "priest"
-    | "ranger"
-    | "rogue"
-    | "warrior"
 
 // TODO: Get all types
 export type ItemType =

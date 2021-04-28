@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
  * It is used to confirm type correctness
  */
 
@@ -4273,6 +4273,12 @@ test("G.drops type validation", async () => {
                         "cring"
                     ]
                 ],
+                "icegolem": [
+                    [
+                        5,
+                        "frozenkey"
+                    ]
+                ],
                 "boar": [
                     [
                         0.01,
@@ -5195,6 +5201,10 @@ test("G.drops type validation", async () => {
                     [
                         0.0001,
                         "essenceoffrost"
+                    ],
+                    [
+                        1e-05,
+                        "frozenkey"
                     ]
                 ],
                 "a6": [

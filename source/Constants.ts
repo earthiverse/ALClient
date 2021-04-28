@@ -4,7 +4,7 @@ export class Constants {
     static PING_EVERY_MS = 30000
     static STALE_PROJECTILE_MS = 10000
     static TIMEOUT = 1000
-    static UPDATE_POSITIONS_EVERY_MS = 25
+    static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
 
     /** Various distance related things */
     static MAX_VISIBLE_RANGE = 600

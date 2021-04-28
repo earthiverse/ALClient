@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.3.31",
+  "version": "0.3.41",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG",
   "files": [
     "build/**/*",
@@ -11,10 +11,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf build/*",
+    "cleanTests": "rimraf build/**/*.test.*",
     "lint": "eslint",
     "test": "jest",
-    "prepack": "rimraf build/**/*.test.*",
-    "prepare": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build && npm run cleanTests",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags",

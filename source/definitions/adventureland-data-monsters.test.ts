@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 663 (2021-04-18)
+ * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
  * It is used to confirm type correctness
  */
 
@@ -285,6 +285,45 @@ test("G.monsters type validation", async () => {
                 "attack": 3000,
                 "aggro": 0,
                 "mp": 180000.0
+            },
+            "icegolem": {
+                "achievements": [
+                    [
+                        1,
+                        "stat",
+                        "hp",
+                        10
+                    ],
+                    [
+                        10,
+                        "stat",
+                        "hp",
+                        30
+                    ]
+                ],
+                "abilities": {
+                    "multi_freeze": {
+                        "cooldown": 1000,
+                        "damage": 2000
+                    }
+                },
+                "name": "Ice Golem",
+                "rage": 0,
+                "armor": 400,
+                "hp": 800000,
+                "respawn": 43200,
+                "resistance": 400,
+                "attack": 2400,
+                "aggro": 0.2,
+                "charge": 48,
+                "frequency": 1.2,
+                "damage_type": "physical",
+                "cooperative": true,
+                "skin": "icegolem",
+                "range": 64,
+                "xp": 920000,
+                "speed": 12,
+                "mp": 40000.0
             },
             "skeletor": {
                 "achievements": [
