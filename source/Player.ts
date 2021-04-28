@@ -1,13 +1,12 @@
-import { MapName } from "."
 import { Character } from "./Character"
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { CharacterType, CXData, DamageType, GData2, NPCName } from "./definitions/adventureland-data"
+import { CharacterType, CXData, DamageType, GData2, MapName, NPCName } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
 
 export class Player implements PlayerData {
     protected G: GData2
 
-    public afk: "code"
+    public afk: boolean | "code"
     public id: string
     public ctype: CharacterType
     public abs: boolean
@@ -87,5 +86,15 @@ export class Player implements PlayerData {
 
         // They're not friendly >:(
         return false
+    }
+
+    /**
+     * Returns true if this player is an NPC.
+     *
+     * @return {*}  {boolean}
+     * @memberof Player
+    */
+    public isNPC(): boolean {
+        return this.npc !== undefined
     }
 }

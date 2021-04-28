@@ -11,7 +11,7 @@ import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
-import { CharacterType, GData2 } from "./definitions/adventureland-data"
+import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -47,6 +47,12 @@ export class Game {
             // Update G with the latest data
             const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
             this.G = JSON.parse(matches[1]) as GData2
+
+            // Delete things that are ignored
+            for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
+            for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
+            for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
+
             console.debug("Updated 'G' data!")
             return this.G
         } else {
@@ -80,9 +86,9 @@ export class Game {
         const merchants: PullMerchantsCharData[] = []
 
         const data = await axios.post<PullMerchantsData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
-        for(const datum of data.data) {
-            if(datum.type == "merchants") {
-                for(const char of datum.chars) {
+        for (const datum of data.data) {
+            if (datum.type == "merchants") {
+                for (const char of datum.chars) {
                     merchants.push(char)
                 }
             }
@@ -154,7 +160,7 @@ export class Game {
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
-        if(!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
+        if (!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         try {
