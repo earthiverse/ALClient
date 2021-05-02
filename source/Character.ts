@@ -11,25 +11,17 @@ import { Player } from "./Player"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 
 export class Character extends Observer implements CharacterData {
-    protected userID: string;
-    protected userAuth: string;
-    protected characterID: string;
-    protected lastPositionUpdate: number;
-    protected pingNum = 1;
-    protected pingMap = new Map<string, { log: boolean, time: number }>();
-    protected timeouts = new Map<string, ReturnType<typeof setTimeout>>();
+    protected userID: string
+    protected userAuth: string
+    protected characterID: string
+    protected timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
-    public achievements = new Map<string, AchievementProgressData>();
-    public bank: BankInfo = { gold: 0 };
-    public chests = new Map<string, ChestData>();
-    public entities = new Map<string, Entity>();
-    public nextSkill = new Map<SkillName, Date>();
-    public partyData: PartyData;
-    public pings: number[] = [];
-    public players = new Map<string, Player>();
-    public projectiles = new Map<string, ActionData & { date: Date; }>();
-    public server: WelcomeData;
-    public S: ServerInfoData;
+    public achievements = new Map<string, AchievementProgressData>()
+    public bank: BankInfo = { gold: 0 }
+    public chests = new Map<string, ChestData>()
+    public nextSkill = new Map<SkillName, Date>()
+    public partyData: PartyData
+    public server: WelcomeData
 
     // CharacterData
     public afk: "code"
@@ -159,37 +151,12 @@ export class Character extends Observer implements CharacterData {
             this.achievements.set(data.name, data)
         })
 
-        this.socket.on("action", (data: ActionData) => {
-            // TODO: do we need this 'date'?
-            this.projectiles.set(data.pid, { ...data, date: new Date() })
-        })
-
         this.socket.on("chest_opened", (data: ChestOpenedData) => {
             this.chests.delete(data.id)
         })
 
-        this.socket.on("death", (data: DeathData) => {
-            const entity = this.entities.get(data.id)
-
-            // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S && entity && this.S[entity.type]) delete this.S[entity.type]
-
-            this.entities.delete(data.id)
-        })
-
-        this.socket.on("disappear", (data: DisappearData) => {
-            // Remove them from their list
-            this.players.delete(data.id) || this.entities.delete(data.id)
-
-            this.updatePositions()
-        })
-
         this.socket.on("drop", (data: ChestData) => {
             this.chests.set(data.id, data)
-        })
-
-        this.socket.on("entities", (data: EntitiesData) => {
-            this.parseEntities(data)
         })
 
         this.socket.on("eval", (data: EvalData) => {
@@ -231,70 +198,9 @@ export class Character extends Observer implements CharacterData {
             this.parseGameResponse(data)
         })
 
-        this.socket.on("hit", (data: HitData) => {
-            if (data.miss || data.evade) {
-                this.projectiles.delete(data.pid)
-                return
-            }
-
-            if (data.reflect) {
-                // Reflect the projectile towards the attacker
-                const p = this.projectiles.get(data.pid)
-                if (p) {
-                    p.damage = data.reflect
-                    p.target = data.hid
-                    p.x = this.x
-                    p.y = this.y
-                }
-            }
-
-            if (data.kill == true) {
-                this.projectiles.delete(data.pid)
-                this.entities.delete(data.id)
-            } else if (data.damage) {
-                this.projectiles.delete(data.pid)
-                const e = this.entities.get(data.id)
-                if (e) {
-                    e.hp = e.hp - data.damage
-                    this.entities.set(data.id, e)
-                }
-            }
-        })
-
-        this.socket.on("new_map", (data: NewMapData) => {
-            this.projectiles.clear()
-
-            this.x = data.x
-            this.going_x = data.x
-            this.y = data.y
-            this.going_y = data.y
-            this.in = data.in
-            this.map = data.name
-            this.m = data.m
-            this.moving = false
-
-            this.parseEntities(data.entities)
-        })
-
         // TODO: Confirm this works for leave_party(), too.
         this.socket.on("party_update", (data: PartyData) => {
             this.partyData = data
-        })
-
-        this.socket.on("ping_ack", (data: { id: string; }) => {
-            const ping = this.pingMap.get(data.id)
-            if (ping) {
-                // Add the new ping
-                const time = Date.now() - ping.time
-                this.pings.push(time)
-                if (ping.log) console.log(`Ping: ${time}`)
-
-                // Remove the oldest ping
-                if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
-
-                // Remove the ping from the map
-                this.pingMap.delete(data.id)
-            }
         })
 
         this.socket.on("player", (data: CharacterData) => {
@@ -304,23 +210,6 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("q_data", (data: QData) => {
             if (data.q.upgrade) this.q.upgrade = data.q.upgrade
             if (data.q.compound) this.q.compound = data.q.compound
-        })
-
-        this.socket.on("server_info", (data: ServerInfoData) => {
-            // Add Soft properties
-            for (const mtype in data) {
-                if (typeof data[mtype] !== "object") continue
-                if (!data[mtype].live) continue
-                const mN = mtype as MonsterName
-                const goodData = data[mN] as ServerInfoDataLive
-
-                if (goodData.hp == undefined) {
-                    goodData.hp = this.G.monsters[mN].hp
-                    goodData.max_hp = this.G.monsters[mN].hp
-                }
-            }
-
-            this.S = data
         })
 
         this.socket.on("upgrade", (data: UpgradeData) => {
@@ -401,39 +290,15 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
-        if (data.type == "all") {
-            // Erase all of the entities
-            this.entities.clear()
-            this.players.clear()
-        } else {
-            // Update all positions
-            this.updatePositions()
-        }
+        super.parseEntities(data)
 
-        for (const monster of data.monsters) {
-            if (!this.entities.has(monster.id)) {
-                // Create the entity and add it to our list
-                const e = new Entity(monster, data.map, this.G)
-                this.entities.set(monster.id, e)
-            } else {
-                // Update everything
-                const e = this.entities.get(monster.id)
-                e.updateData(monster)
-            }
-        }
+        // Look for ourself in the players, and remove us if we were in it
         for (const player of data.players) {
             if (player.id == this.id) {
+                // We found ourself
                 this.parseCharacter(player)
-            } else {
-                if (!this.players.has(player.id)) {
-                    // Create the player and add it to our list
-                    const p = new Player(player, data.map, this.G)
-                    this.players.set(player.id, p)
-                } else {
-                    // Update everything
-                    const p = this.players.get(player.id)
-                    p.updateData(player)
-                }
+                this.players.delete(player.id)
+                break
             }
         }
     }
@@ -471,6 +336,16 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
+    protected parseNewMap(data: NewMapData): void {
+        this.going_x = data.x
+        this.going_y = data.y
+        this.in = data.in
+        this.m = data.m
+        this.moving = false
+
+        super.parseNewMap(data)
+    }
+
     protected setNextSkill(skill: SkillName, next: Date): void {
         this.nextSkill.set(skill, next)
     }
@@ -478,61 +353,6 @@ export class Character extends Observer implements CharacterData {
     protected updatePositions(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
-
-            // Update entities
-            for (const [, entity] of this.entities) {
-                if (!entity.moving)
-                    continue
-
-                const speed = entity.speed
-
-                const distanceTravelled = speed * msSinceLastUpdate / 1000
-                const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-                const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-                if (distanceTravelled > distanceToGoal) {
-                    entity.moving = false
-                    entity.x = entity.going_x
-                    entity.y = entity.going_y
-                } else {
-                    entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                    entity.y = entity.y + Math.sin(angle) * distanceTravelled
-                }
-
-                // Update conditions
-                for (const condition in entity.s) {
-                    const newCooldown = entity.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete entity.s[condition as ConditionName]
-                    else
-                        entity.s[condition as ConditionName].ms = newCooldown
-                }
-            }
-
-            // Update players
-            for (const [, player] of this.players) {
-                if (!player.moving)
-                    continue
-                const distanceTravelled = player.speed * msSinceLastUpdate / 1000
-                const angle = Math.atan2(player.going_y - player.y, player.going_x - player.x)
-                const distanceToGoal = Tools.distance({ x: player.x, y: player.y }, { x: player.going_x, y: player.going_y })
-                if (distanceTravelled > distanceToGoal) {
-                    player.moving = false
-                    player.x = player.going_x
-                    player.y = player.going_y
-                } else {
-                    player.x = player.x + Math.cos(angle) * distanceTravelled
-                    player.y = player.y + Math.sin(angle) * distanceTravelled
-                }
-
-                // Update conditions
-                for (const condition in player.s) {
-                    const newCooldown = player.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete player.s[condition as ConditionName]
-                    else
-                        player.s[condition as ConditionName].ms = newCooldown
-                }
-            }
 
             // Update character
             if (this.moving) {
@@ -559,32 +379,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        // Erase all entities that are far away
-        let toDelete: string[] = []
-        for (const [id, entity] of this.entities) {
-            if (Tools.distance(this, entity) < Constants.MAX_VISIBLE_RANGE)
-                continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete)
-            this.entities.delete(id)
-
-        // Erase all players that are far away
-        toDelete = []
-        for (const [id, player] of this.players) {
-            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE)
-                continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete)
-            this.players.delete(id)
-
-        // Erase all stale projectiles
-        for (const [id, projectile] of this.projectiles) {
-            if (Date.now() - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
-        }
-
-        this.lastPositionUpdate = Date.now()
+        super.updatePositions()
     }
 
     /**
@@ -694,20 +489,6 @@ export class Character extends Observer implements CharacterData {
 
             this.socket.emit("property", { typing: true })
         })
-    }
-
-    // TODO: Convert to async, and return a promise<number> with the ping ms time
-    public sendPing(log = true): string {
-        // Get the next pingID
-        const pingID = this.pingNum.toString()
-        this.pingNum++
-
-        // Set the pingID in the map
-        this.pingMap.set(pingID, { log: log, time: Date.now() })
-
-        // Get the ping
-        this.socket.emit("ping_trig", { id: pingID })
-        return pingID
     }
 
     /**
@@ -2720,22 +2501,6 @@ export class Character extends Observer implements CharacterData {
         return cooldown
     }
 
-    public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
-        let closest: Entity
-        let closestD = Number.MAX_VALUE
-        this.entities.forEach((entity) => {
-            if (mtype && entity.type != mtype)
-                return
-            const d = Tools.distance(this, entity)
-            if (d < closestD) {
-                closest = entity
-                closestD = d
-            }
-        })
-        if (closest)
-            return { monster: closest, distance: closestD }
-    }
-
     public getNearestAttackablePlayer(): { player: Player; distance: number; } {
         if (!this.isPVP())
             return undefined
@@ -2743,18 +2508,15 @@ export class Character extends Observer implements CharacterData {
         let closest: Player
         let closestD = Number.MAX_VALUE
         this.players.forEach((player) => {
-            if (player.s?.invincible)
-                return
-            if (player.npc)
-                return
+            if (player.s?.invincible) return
+            if (player.npc) return
             const d = Tools.distance(this, player)
             if (d < closestD) {
                 closest = player
                 closestD = d
             }
         })
-        if (closest)
-            return { player: closest, distance: closestD }
+        if (closest) return { player: closest, distance: closestD }
     }
 
     /**
