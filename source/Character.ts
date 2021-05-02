@@ -462,8 +462,10 @@ export class Character extends Observer implements CharacterData {
     public async requestEntitiesData(): Promise<EntitiesData> {
         return new Promise<EntitiesData>((resolve, reject) => {
             const checkEntitiesEvent = (data: EntitiesData) => {
-                this.socket.removeListener("entities", checkEntitiesEvent)
-                if (data.type == "all") resolve(data)
+                if (data.type == "all") {
+                    this.socket.removeListener("entities", checkEntitiesEvent)
+                    resolve(data)
+                }
             }
 
             setTimeout(() => {
