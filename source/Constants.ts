@@ -17,4 +17,7 @@ export class Constants {
         v: 7,
         vn: 2
     }
+
+    /** Miscellaneous game related things */
+    static BANK_PACK_SIZE = 42
 }

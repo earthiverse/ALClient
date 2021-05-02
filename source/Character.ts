@@ -282,6 +282,13 @@ export class Character extends Observer implements CharacterData {
             } else if (datum == "user") {
                 // Bank information
                 this.bank = (data as CharacterData).user
+
+                // Add empty bank slots
+                for (const datum in this.bank) {
+                    if (Array.isArray(this.bank[datum])) {
+                        this.bank[datum].length = Constants.BANK_PACK_SIZE
+                    }
+                }
             } else {
                 // Normal attribute
                 this[datum] = data[datum]
@@ -1107,6 +1114,15 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("bank", { operation: "deposit", amount: gold })
     }
 
+    /**
+     * Deposits an item in your bank.
+     *
+     * @param {number} inventoryPos
+     * @param {BankPackName} [bankPack]
+     * @param {*} [bankSlot=-1]
+     * @return {*}  {unknown}
+     * @memberof Character
+     */
     public depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): unknown {
         if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
             return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
@@ -1146,8 +1162,7 @@ export class Character extends Observer implements CharacterData {
             for (let packNum = packFrom; packNum <= packTo; packNum++) {
                 const packName = `items${packNum}` as BankPackName
                 const pack = this.bank[packName] as ItemData[]
-                if (!pack)
-                    continue // We don't have access to this pack
+                if (!pack) continue // We don't have access to this pack
                 for (let slotNum = 0; slotNum < pack.length; slotNum++) {
                     const slot = pack[slotNum]
                     if (!slot) {
