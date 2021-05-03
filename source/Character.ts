@@ -297,17 +297,19 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
-        super.parseEntities(data)
-
-        // Look for ourself in the players, and remove us if we were in it
+        // Look for ourself in the players
         for (const player of data.players) {
             if (player.id == this.id) {
-                // We found ourself
+                // Update our character with the info
                 this.parseCharacter(player)
-                this.players.delete(player.id)
+
+                // Remove the data so it doesn't appear as another player
+                delete data.players[player.id]
                 break
             }
         }
+
+        super.parseEntities(data)
     }
 
     protected parseGameResponse(data: GameResponseData): void {
