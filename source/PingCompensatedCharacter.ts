@@ -20,6 +20,34 @@ export class PingCompensatedCharacter extends Character {
         this.nextSkill.set(skill, new Date(next.getTime() - pingCompensation))
     }
 
+    public parseCharacter(data: CharacterData): void {
+        super.parseCharacter(data)
+
+        const pingCompensation = Math.min(...this.pings)
+
+        // Compensate movement
+        if (this.moving) {
+            const distanceTravelled = this.speed * pingCompensation / 1000
+            const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
+            const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
+            if (distanceTravelled > distanceToGoal) {
+                this.moving = false
+                this.x = this.going_x
+                this.y = this.going_y
+            } else {
+                this.x = this.x + Math.cos(angle) * distanceTravelled
+                this.y = this.y + Math.sin(angle) * distanceTravelled
+            }
+        }
+
+        // Compensate conditions
+        for (const condition in this.s) {
+            if (this.s[condition as ConditionName].ms) {
+                this.s[condition as ConditionName].ms -= pingCompensation
+            }
+        }
+    }
+
     protected async parseEntities(data: EntitiesData): Promise<void> {
         super.parseEntities(data)
 
@@ -28,8 +56,7 @@ export class PingCompensatedCharacter extends Character {
         for (const monster of data.monsters) {
             // Compensate position
             const entity = this.entities.get(monster.id)
-            if (!entity || !entity.moving)
-                continue
+            if (!entity || !(entity?.moving)) continue
             const distanceTravelled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
@@ -53,8 +80,7 @@ export class PingCompensatedCharacter extends Character {
         for (const player of data.players) {
             // Compensate position
             const entity = this.players.get(player.id)
-            if (!entity || !entity.moving)
-                continue
+            if (!entity || !(entity?.moving)) continue
             const distanceTravelled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
@@ -72,34 +98,6 @@ export class PingCompensatedCharacter extends Character {
                 if (entity.s[condition as ConditionName].ms) {
                     entity.s[condition as ConditionName].ms -= pingCompensation
                 }
-            }
-        }
-    }
-
-    public updateCharacter(data: CharacterData): void {
-        super.updateCharacter(data)
-
-        const pingCompensation = Math.min(...this.pings)
-
-        // Compensate movement
-        if (this.moving) {
-            const distanceTravelled = this.speed * pingCompensation / 1000
-            const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
-            const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
-            if (distanceTravelled > distanceToGoal) {
-                this.moving = false
-                this.x = this.going_x
-                this.y = this.going_y
-            } else {
-                this.x = this.x + Math.cos(angle) * distanceTravelled
-                this.y = this.y + Math.sin(angle) * distanceTravelled
-            }
-        }
-
-        // Compensate conditions
-        for (const condition in this.s) {
-            if (this.s[condition as ConditionName].ms) {
-                this.s[condition as ConditionName].ms -= pingCompensation
             }
         }
     }

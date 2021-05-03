@@ -2,8 +2,8 @@ export class Constants {
     /** Various client related things */
     static MAX_PINGS = 100
     static PING_EVERY_MS = 30000
-    static STALE_PROJECTILE_MS = 10000
     static STALE_MONSTER_MS = 60000
+    static STALE_PROJECTILE_MS = 10000
     static TIMEOUT = 1000
     static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
 
@@ -17,4 +17,7 @@ export class Constants {
         v: 7,
         vn: 2
     }
+
+    /** Miscellaneous game related things */
+    static BANK_PACK_SIZE = 42
 }

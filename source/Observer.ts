@@ -1,32 +1,31 @@
 import socketio from "socket.io-client"
-import { ServerData, WelcomeData, LoadedData, ServerInfoData, DeathData, HitData, ActionData, DisappearData, EntitiesData, NewMapData, ServerInfoDataLive } from "./definitions/adventureland-server"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
-import { Tools } from "./Tools"
-import { Constants } from "./Constants"
+import { Tools, Constants } from "."
 
 export class Observer {
-    protected lastPositionUpdate: number;
-
     public socket: SocketIOClient.Socket;
+
+    protected lastPositionUpdate: number
 
     public G: GData2;
 
+    public entities = new Map<string, Entity>()
+    protected pingMap = new Map<string, { log: boolean, time: number }>()
+    protected pingNum = 1
+    public pings: number[] = []
+    public players = new Map<string, Player>()
+    public projectiles = new Map<string, ActionData & { date: Date; }>()
+    public S: ServerInfoData = {}
+
     public serverRegion: ServerRegion;
     public serverIdentifier: ServerIdentifier;
-
-    public in: string;
-    public m: number
     public map: MapName;
     public x: number;
     public y: number;
-
-    public entities = new Map<string, Entity>();
-    public players = new Map<string, Player>();
-    public projectiles = new Map<string, ActionData & { date: Date; }>();
-    public S: ServerInfoData;
 
     constructor(serverData: ServerData, g: GData2, reconnect = false) {
         this.serverRegion = serverData.region
@@ -40,12 +39,16 @@ export class Observer {
         })
 
         this.socket.on("action", (data: ActionData) => {
-            // TODO: do we need this 'date'?
             this.projectiles.set(data.pid, { ...data, date: new Date() })
         })
 
         this.socket.on("death", (data: DeathData) => {
-            this.markEntityAsDead(data.id)
+            const entity = this.entities.get(data.id)
+
+            // If it was a special monster in 'S', delete it from 'S'.
+            if (entity && this.S[entity.type]) delete this.S[entity.type]
+
+            this.entities.delete(data.id)
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
@@ -78,36 +81,48 @@ export class Observer {
 
             if (data.kill == true) {
                 this.projectiles.delete(data.pid)
-                this.markEntityAsDead(data.id)
+                this.entities.delete(data.id)
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
-                // Update HP
-                if (e) e.hp = e.hp - data.damage
+                if (e) {
+                    e.hp = e.hp - data.damage
+                    this.entities.set(data.id, e)
+                }
             }
         })
 
         this.socket.on("new_map", (data: NewMapData) => {
-            this.projectiles.clear()
+            this.parseNewMap(data)
+        })
 
-            this.x = data.x
-            this.y = data.y
-            this.in = data.in
-            this.map = data.name
-            this.m = data.m
+        this.socket.on("ping_ack", (data: { id: string; }) => {
+            const ping = this.pingMap.get(data.id)
+            if (ping) {
+                // Add the new ping
+                const time = Date.now() - ping.time
+                this.pings.push(time)
+                if (ping.log) console.log(`Ping: ${time}`)
 
-            this.parseEntities(data.entities)
+                // Remove the oldest ping
+                if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
+
+                // Remove the ping from the map
+                this.pingMap.delete(data.id)
+            }
         })
 
         this.socket.on("server_info", (data: ServerInfoData) => {
             // Add Soft properties
-            for (const datum in data) {
-                const mtype = datum as MonsterName
-                if (typeof data[mtype] == "object") {
-                    if (data[mtype].live) {
-                        if (!(data[mtype] as ServerInfoDataLive).hp) (data[mtype] as ServerInfoDataLive).hp = this.G.monsters[datum].hp
-                        if (!(data[mtype] as ServerInfoDataLive).max_hp) (data[mtype] as ServerInfoDataLive).max_hp = this.G.monsters[datum].hp
-                    }
+            for (const mtype in data) {
+                if (typeof data[mtype] !== "object") continue
+                if (!data[mtype].live) continue
+                const mN = mtype as MonsterName
+                const goodData = data[mN] as ServerInfoDataLive
+
+                if (goodData.hp == undefined) {
+                    goodData.hp = this.G.monsters[mN].hp
+                    goodData.max_hp = this.G.monsters[mN].hp
                 }
             }
 
@@ -139,16 +154,6 @@ export class Observer {
 
         this.socket.open()
         return connected
-    }
-
-    protected async markEntityAsDead(id: string): Promise<void> {
-        const entity = this.entities.get(id)
-        if (entity) {
-            // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S && this.S[entity.type]) delete this.S[entity.type]
-
-            this.entities.delete(id)
-        }
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
@@ -185,13 +190,24 @@ export class Observer {
         }
     }
 
+    protected parseNewMap(data: NewMapData): void {
+        this.projectiles.clear()
+
+        this.x = data.x
+        this.y = data.y
+        this.map = data.name
+
+        this.parseEntities(data.entities)
+    }
+
     protected updatePositions(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
 
             // Update entities
             for (const [, entity] of this.entities) {
-                if (!entity.moving) continue
+                if (!entity.moving)
+                    continue
 
                 const speed = entity.speed
 
@@ -242,33 +258,62 @@ export class Observer {
                         player.s[condition as ConditionName].ms = newCooldown
                 }
             }
-
         }
 
         // Erase all entities that are far away
         let toDelete: string[] = []
         for (const [id, entity] of this.entities) {
-            if (Tools.distance(this, entity) < Constants.MAX_VISIBLE_RANGE) continue
+            if (Tools.distance(this, entity) < Constants.MAX_VISIBLE_RANGE)
+                continue
             toDelete.push(id)
         }
-        for (const id of toDelete) this.entities.delete(id)
+        for (const id of toDelete)
+            this.entities.delete(id)
 
         // Erase all players that are far away
         toDelete = []
         for (const [id, player] of this.players) {
-            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE) continue
+            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE)
+                continue
             toDelete.push(id)
         }
-        for (const id of toDelete) this.players.delete(id)
+        for (const id of toDelete)
+            this.players.delete(id)
 
         // Erase all stale projectiles
-        toDelete = []
         for (const [id, projectile] of this.projectiles) {
-            if (Date.now() - projectile.date.getTime() < Constants.STALE_PROJECTILE_MS) continue
-            toDelete.push(id)
+            if (Date.now() - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
         }
-        for (const id of toDelete) this.projectiles.delete(id)
 
         this.lastPositionUpdate = Date.now()
+    }
+
+    // TODO: Convert to async, and return a promise<number> with the ping ms time
+    public sendPing(log = true): string {
+        // Get the next pingID
+        const pingID = this.pingNum.toString()
+        this.pingNum++
+
+        // Set the pingID in the map
+        this.pingMap.set(pingID, { log: log, time: Date.now() })
+
+        // Get the ping
+        this.socket.emit("ping_trig", { id: pingID })
+        return pingID
+    }
+
+    public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
+        let closest: Entity
+        let closestD = Number.MAX_VALUE
+        this.entities.forEach((entity) => {
+            if (mtype && entity.type != mtype)
+                return
+            const d = Tools.distance(this, entity)
+            if (d < closestD) {
+                closest = entity
+                closestD = d
+            }
+        })
+        if (closest) return { monster: closest, distance: closestD }
     }
 }
