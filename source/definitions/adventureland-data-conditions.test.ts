@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -11,8 +11,17 @@ test("G.conditions type validation", async () => {
             "stunned": {
                 "bad": true,
                 "blocked": true,
+                "ui": true,
                 "name": "Stunned",
-                "skin": "condition_n"
+                "skin": "condition_bad"
+            },
+            "massproductionpp": {
+                "name": "Mass Production++",
+                "explanation": "Speeds up the next upgrade or compound 90%",
+                "ui": true,
+                "skin": "skill_massproductionpp",
+                "duration": 10000,
+                "buff": true
             },
             "marked": {
                 "duration": 10000,
@@ -24,7 +33,7 @@ test("G.conditions type validation", async () => {
             "blink": {
                 "explanation": "Blink in progress",
                 "name": "Blinking",
-                "skin": "condition_p"
+                "skin": "condition_positive"
             },
             "cursed": {
                 "duration": 5000,
@@ -52,7 +61,7 @@ test("G.conditions type validation", async () => {
                 "bad": true,
                 "blocked": true,
                 "name": "Stoned",
-                "skin": "condition_n"
+                "skin": "condition_neutral"
             },
             "darkblessing": {
                 "name": "Dark Blessing",
@@ -98,13 +107,10 @@ test("G.conditions type validation", async () => {
                 "duration": 5000,
                 "speed": -16
             },
-            "energized": {
-                "name": "Energized",
-                "frequency": 80,
-                "ui": true,
-                "skin": "skill_energize",
-                "duration": 800,
-                "buff": true
+            "invis": {
+                "explanation": "Hidden from everyone else until you attack",
+                "name": "Invisible",
+                "skin": "skill_invis"
             },
             "rspeed": {
                 "name": "Rogue Swiftness",
@@ -145,7 +151,15 @@ test("G.conditions type validation", async () => {
                 "evasion": 96,
                 "resistance": 1600,
                 "bad": true,
-                "skin": "condition_n",
+                "skin": "condition_neutral",
+                "blocked": true
+            },
+            "deepfreezed": {
+                "name": "Deepfreezed",
+                "bad": true,
+                "ui": true,
+                "skin": "condition_bad",
+                "duration": 12000,
                 "blocked": true
             },
             "xpower": {
@@ -162,7 +176,7 @@ test("G.conditions type validation", async () => {
                 "can_move": true,
                 "name": "Town",
                 "channel": true,
-                "skin": "condition_p"
+                "skin": "condition_positive"
             },
             "charmed": {
                 "duration": 30000,
@@ -194,14 +208,14 @@ test("G.conditions type validation", async () => {
                 "duration": 6000,
                 "explanation": "When you spawn in a PVP area. This prevents you from receiving damage or marked as engaged in PVP. If you get attacked, disconnect before this runs out - or fight!",
                 "name": "Invincible",
-                "skin": "condition_p"
+                "skin": "condition_positive"
             },
             "slowness": {
                 "name": "Slowness",
                 "explanation": "Things like spiderwebs cause you to slow down.",
                 "bad": true,
                 "ui": true,
-                "skin": "condition_n",
+                "skin": "condition_neutral",
                 "speed": -40
             },
             "withdrawal": {
@@ -243,13 +257,15 @@ test("G.conditions type validation", async () => {
                 "skin": "xshotted",
                 "duration": 43200000
             },
-            "massproductionpp": {
-                "name": "Mass Production++",
-                "explanation": "Speeds up the next upgrade or compound 90%",
+            "newcomersblessing": {
+                "aura": true,
                 "ui": true,
-                "skin": "skill_massproductionpp",
-                "duration": 10000,
-                "buff": true
+                "name": "Newcomers' Blessing",
+                "gold": 8,
+                "skin": "newcomersblessing",
+                "duration": 3600000,
+                "xp": 2,
+                "luck": 10
             },
             "fullguard": {
                 "armor": 10000,
@@ -334,7 +350,7 @@ test("G.conditions type validation", async () => {
             "charging": {
                 "speed": 30,
                 "name": "Charging",
-                "skin": "condition_p"
+                "skin": "condition_positive"
             },
             "power": {
                 "name": "Power",
@@ -363,10 +379,13 @@ test("G.conditions type validation", async () => {
                 "name": "Licenced to Kill",
                 "skin": "licence"
             },
-            "invis": {
-                "explanation": "Hidden from everyone else until you attack",
-                "name": "Invisible",
-                "skin": "skill_invis"
+            "energized": {
+                "name": "Energized",
+                "frequency": 80,
+                "ui": true,
+                "skin": "skill_energize",
+                "duration": 800,
+                "buff": true
             },
             "holidayspirit": {
                 "ui": true,
@@ -392,7 +411,7 @@ test("G.conditions type validation", async () => {
                 "name": "Tangled",
                 "bad": true,
                 "ui": false,
-                "skin": "condition_n",
+                "skin": "condition_bad",
                 "duration": 12000
             },
             "hardshell": {

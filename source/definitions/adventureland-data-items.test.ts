@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -597,6 +597,28 @@ test("G.items type validation", async () => {
                 "firesistance": 20,
                 "mp_reduction": 20,
                 "type": "orb"
+            },
+            "zapper": {
+                "ability": "zapperzap",
+                "int": 10,
+                "compound": {
+                    "int": 3,
+                    "rpiercing": 4
+                },
+                "resistance": 30,
+                "grades": [
+                    0,
+                    0,
+                    1,
+                    3
+                ],
+                "skin": "trigger",
+                "name": "The Zapper",
+                "a": true,
+                "rpiercing": 10,
+                "g": 6400000,
+                "str": 5,
+                "type": "ring"
             },
             "wingedboots": {
                 "stat": 1,

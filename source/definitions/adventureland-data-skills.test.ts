@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -203,10 +203,19 @@ test("G.skills type validation", async () => {
                 "mp": 300,
                 "cooldown_multiplier": 1
             },
-            "toggle_run_code": {
-                "ui": false,
-                "name": "Engage/Disengage Code",
-                "skin": "run_code"
+            "taunt": {
+                "range": 200,
+                "cooldown": 3000,
+                "target": true,
+                "name": "Taunt",
+                "skin": "skill_taunt",
+                "explanation": "Taunts an enemy. Steals aggro from friendly targets.",
+                "type": "skill",
+                "class": [
+                    "warrior"
+                ],
+                "hostile": true,
+                "mp": 40
             },
             "stomp": {
                 "explanation": "Use your basher to Stomp the ground to Stun enemies nearby!",
@@ -248,6 +257,23 @@ test("G.skills type validation", async () => {
                 "type": "skill",
                 "inventory": [
                     "snowball"
+                ]
+            },
+            "warpstomp": {
+                "explanation": "Warps to a random player nearby and stomps players in viccinity",
+                "type": "monster",
+                "name": "Warmpstomp",
+                "hostile": true
+            },
+            "blink": {
+                "name": "Blink",
+                "explanation": "Teleport to a nearby location.",
+                "cooldown": 1200,
+                "mp": 1600,
+                "skin": "skill_blink",
+                "type": "skill",
+                "class": [
+                    "mage"
                 ]
             },
             "shadowstrike": {
@@ -620,6 +646,12 @@ test("G.skills type validation", async () => {
                 "name": "Emotion",
                 "skin": "run_emotion"
             },
+            "deepfreeze": {
+                "explanation": "Randomly freezes a nearby opponent",
+                "type": "monster",
+                "name": "Deepfreeze",
+                "hostile": true
+            },
             "move_right": {
                 "ui": false,
                 "explanation": "Moves the character rightwards",
@@ -627,16 +659,19 @@ test("G.skills type validation", async () => {
                 "name": "Move Right",
                 "skin": "right"
             },
-            "blink": {
-                "name": "Blink",
-                "explanation": "Teleport to a nearby location.",
-                "cooldown": 1200,
-                "mp": 1600,
-                "skin": "skill_blink",
+            "revive": {
+                "target": true,
+                "range": 240,
+                "cooldown": 200,
+                "consume": "essenceoflife",
+                "name": "Revive!",
+                "skin": "skill_revive",
+                "explanation": "1) Heal a fellow adventurer to full hp. 2) Revive using an essence of life.",
                 "type": "skill",
                 "class": [
-                    "mage"
-                ]
+                    "priest"
+                ],
+                "mp": 500
             },
             "mluck": {
                 "explanation": "Buff a target to increase their luck. 2% chance for you to receive a duplicate of their looted items!",
@@ -675,7 +710,8 @@ test("G.skills type validation", async () => {
             "zap": {
                 "explanation": "Zaps you with a pure damage ray",
                 "type": "monster",
-                "name": "Zap"
+                "name": "Zap",
+                "hostile": true
             },
             "charge": {
                 "cooldown": 40000,
@@ -703,19 +739,13 @@ test("G.skills type validation", async () => {
                 "name": "Interact",
                 "skin": "interact"
             },
-            "revive": {
-                "target": true,
-                "range": 240,
-                "cooldown": 200,
-                "consume": "essenceoflife",
-                "name": "Revive!",
-                "skin": "skill_revive",
-                "explanation": "1) Heal a fellow adventurer to full hp. 2) Revive using an essence of life.",
-                "type": "skill",
-                "class": [
-                    "priest"
-                ],
-                "mp": 500
+            "mlight": {
+                "name": "Light",
+                "explanation": "Reveals invisible entities nearby and prevents them from going invisible again for 12 seconds.",
+                "ui": true,
+                "skin": "skill_light",
+                "type": "monster",
+                "hostile": true
             },
             "attack": {
                 "target": true,
@@ -942,7 +972,8 @@ test("G.skills type validation", async () => {
             "anger": {
                 "explanation": "Randomly targets someone",
                 "type": "monster",
-                "name": "Anger"
+                "name": "Anger",
+                "hostile": true
             },
             "toggle_character": {
                 "ui": false,
@@ -1004,19 +1035,10 @@ test("G.skills type validation", async () => {
                 "name": "Toggle Stats",
                 "skin": "stats"
             },
-            "taunt": {
-                "range": 200,
-                "cooldown": 3000,
-                "target": true,
-                "name": "Taunt",
-                "skin": "skill_taunt",
-                "explanation": "Taunts an enemy. Steals aggro from friendly targets.",
-                "type": "skill",
-                "class": [
-                    "warrior"
-                ],
-                "hostile": true,
-                "mp": 40
+            "toggle_run_code": {
+                "ui": false,
+                "name": "Engage/Disengage Code",
+                "skin": "run_code"
             },
             "regen_mp": {
                 "name": "Regenerate MP",
@@ -1025,6 +1047,24 @@ test("G.skills type validation", async () => {
                 "share": "use_mp",
                 "skin": "regen_mp",
                 "cooldown_multiplier": 2
+            },
+            "zapperzap": {
+                "slot": [
+                    [
+                        "ring1",
+                        "zapper"
+                    ],
+                    [
+                        "ring2",
+                        "zapper"
+                    ]
+                ],
+                "name": "Zap",
+                "explanation": "Zap your target for 200 pure damage",
+                "cooldown": 200,
+                "mp": 140,
+                "skin": "trigger",
+                "type": "skill"
             },
             "track": {
                 "range": 1440,
@@ -1146,14 +1186,6 @@ test("G.skills type validation", async () => {
                 "hostile": true,
                 "mp": 320,
                 "type": "skill"
-            },
-            "mlight": {
-                "name": "Light",
-                "explanation": "Reveals invisible entities nearby and prevents them from going invisible again for 12 seconds.",
-                "ui": true,
-                "skin": "skill_light",
-                "type": "monster",
-                "hostile": true
             },
             "magiport": {
                 "cooldown": 0,

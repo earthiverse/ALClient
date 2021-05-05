@@ -886,6 +886,8 @@ export type GMonster = {
     global?: boolean
     /** If set, the monster will steal gold on attack. */
     goldsteal?: number
+    /** (GUI) If true, it won't show in the in-game guides. */
+    hide?: boolean
     /** (GUI) Attack animation */
     hit?: string
     hp: number
@@ -932,6 +934,8 @@ export type GMonster = {
      * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
      **/
     respawn: number
+    /** If set, after the monster is killed, this monster will spawn */
+    respawn_as?: MonsterName
     /** If set to true, the monster will roam around the entire map */
     roam?: boolean
     /** Initial conditions for the monster when it spawns */
@@ -1234,6 +1238,7 @@ export type ConditionName =
     | "cursed"
     | "dampened"
     | "darkblessing"
+    | "deepfreezed"
     | "easterluck"
     | "eburn"
     | "eheal"
@@ -1255,6 +1260,7 @@ export type ConditionName =
     | "mluck"
     | "monsterhunt"
     | "mshield"
+    | "newcomersblessing"
     | "notverified"
     | "phasedout"
     | "poisoned"
@@ -1845,6 +1851,7 @@ export type ItemName =
     | "xptome"
     | "xshield"
     | "xshot"
+    | "zapper"
 
 export type MapName =
     | "abtesting"
@@ -2014,6 +2021,10 @@ export type MonsterName =
     | "welemental"
     | "wolf"
     | "wolfie"
+    | "xmagefi"
+    | "xmagefz"
+    | "xmagen"
+    | "xmagex"
     | "xscorpion"
     | "zapper0"
 
@@ -2212,6 +2223,7 @@ export type SkillName =
     | "curse_aura"
     | "dampening_aura"
     | "darkblessing"
+    | "deepfreeze"
     | "emotion"
     | "energize"
     | "entangle"
@@ -2283,9 +2295,11 @@ export type SkillName =
     | "use_town"
     | "warcry"
     | "warp"
+    | "warpstomp"
     | "weakness_aura"
     | "xpower"
     | "zap"
+    | "zapperzap"
 
 export type TilesetName =
     | "ash"

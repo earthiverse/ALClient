@@ -8,7 +8,7 @@ export class Item implements ItemData, GItem {
     // ItemData (required)
     public name: ItemName
     // ItemData (optional)
-    public l?: "s" | "x"
+    public l?: "l" | "s" | "x"
     public level?: number
     public stat_type?: Attribute
 
@@ -79,6 +79,6 @@ export class Item implements ItemData, GItem {
      * @memberof Item
      */
     public isLocked(): boolean {
-        return this.l !== undefined
+        return this.l == "l"
     }
 }

@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -125,6 +125,14 @@ test("G.maps type validation", async () => {
                         30,
                         "log",
                         "Can't reach. This might be Stompy's lair"
+                    ],
+                    [
+                        600.5,
+                        -1273,
+                        0,
+                        0,
+                        "info",
+                        "darkmage"
                     ]
                 ],
                 "name": "Winterland",
@@ -947,6 +955,10 @@ test("G.maps type validation", async () => {
                         0
                     ]
                 ],
+                "on_exit": [
+                    "winterland",
+                    5
+                ],
                 "spawns": [
                     [
                         -8,
@@ -954,7 +966,48 @@ test("G.maps type validation", async () => {
                         3
                     ]
                 ],
-                "monsters": []
+                "monsters": [
+                    {
+                        "count": 1,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagefz"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagefi"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagen"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagex"
+                    }
+                ]
             },
             "resort": {
                 "npcs": [

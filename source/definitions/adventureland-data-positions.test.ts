@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 657 (2021-04-09)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -441,10 +441,10 @@ test("G.positions type validation", async () => {
                 4,
                 6
             ],
-            "mcpants": [
-                "",
-                8,
-                45
+            "newcomersblessing": [
+                "skills",
+                11,
+                9
             ],
             "scroll4": [
                 "",
@@ -1586,6 +1586,11 @@ test("G.positions type validation", async () => {
                 "",
                 6,
                 20
+            ],
+            "mcpants": [
+                "",
+                8,
+                45
             ],
             "coat": [
                 "",

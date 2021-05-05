@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -454,6 +454,10 @@ test("G.drops type validation", async () => {
                 [
                     0.25,
                     "test_orb"
+                ],
+                [
+                    0.1,
+                    "zapper"
                 ],
                 [
                     1,
@@ -4181,6 +4185,10 @@ test("G.drops type validation", async () => {
                         1,
                         "open",
                         "glitch"
+                    ],
+                    [
+                        1,
+                        "funtoken"
                     ]
                 ],
                 "mrgreen": [
@@ -5064,6 +5072,32 @@ test("G.drops type validation", async () => {
                     [
                         0.0005,
                         "snakefang"
+                    ]
+                ],
+                "xmagex": [
+                    [
+                        0.02,
+                        "zapper"
+                    ],
+                    [
+                        0.0002,
+                        "trigger"
+                    ],
+                    [
+                        0.002,
+                        "mpxamulet"
+                    ],
+                    [
+                        0.002,
+                        "mpxgloves"
+                    ],
+                    [
+                        5e-06,
+                        "warpvest"
+                    ],
+                    [
+                        0.002,
+                        "starkillers"
                     ]
                 ],
                 "a8": [
