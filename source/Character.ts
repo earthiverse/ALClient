@@ -601,7 +601,6 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add 'notthere' (e.g. calling attack("12345") returns ["notthere", {place: "attack"}])
-    // TODO: Check if cooldown is sent after attack
     /**
      * NOTE: We can't name this function `attack` because of the property `attack` that specifies damage.s
      * @param id The ID of the entity or player to attack
@@ -731,21 +730,15 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add promises
     public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<void> {
-        if (quantity <= 0)
-            return Promise.reject(`We can not buy a quantity of ${quantity}.`)
+        if (quantity <= 0) return Promise.reject(`We can not buy a quantity of ${quantity}.`)
         const merchant = this.players.get(id)
-        if (!merchant)
-            return Promise.reject(`We can not see ${id} nearby.`)
-        if (Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE)
-            return Promise.reject(`We are too far away from ${id} to buy from.`)
+        if (!merchant) return Promise.reject(`We can not see ${id} nearby.`)
+        if (Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`We are too far away from ${id} to buy from.`)
 
         const item = merchant.slots[slot]
-        if (!item)
-            return Promise.reject(`We could not find an item in slot ${slot} on ${id}.`)
-        if (item.b)
-            return Promise.reject("The item is not for sale, this merchant is *buying* that item.")
-        if (item.rid !== rid)
-            return Promise.reject(`The RIDs do not match (item: ${item.rid}, supplied: ${rid})`)
+        if (!item) return Promise.reject(`We could not find an item in slot ${slot} on ${id}.`)
+        if (item.b) return Promise.reject("The item is not for sale, this merchant is *buying* that item.")
+        if (item.rid !== rid) return Promise.reject(`The RIDs do not match (item: ${item.rid}, supplied: ${rid})`)
 
         if (!merchant.slots[slot].q && quantity != 1) {
             console.warn("We are only going to buy 1, as there is only 1 available.")
@@ -768,12 +761,50 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("trade_buy", { slot: slot, id: id, rid: rid, q: quantity.toString() })
     }
 
-    // TODO: Add promises
-    public buyFromPonty(item: ItemDataTrade): unknown {
+    /**
+     * Buys an item from Ponty. Get items from `getPontyItems()`
+     *
+     * @param {ItemDataTrade} item
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public buyFromPonty(item: ItemDataTrade): Promise<void> {
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
-        const price = this.G.items[item.name].g * 1.2 /* Ponty items have a 20% markup */ * (item.q ? item.q : 1)
+        const price = this.G.items[item.name].g * Constants.PONTY_MARKUP * (item.q ? item.q : 1)
         if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
+
+        const numBefore = this.countItem(item.name, this.items)
+
+        const bought = new Promise<void>((resolve, reject) => {
+            const failCheck = (message: string) => {
+                if (message == "Item gone") {
+                    this.socket.removeListener("game_log", failCheck)
+                    this.socket.removeListener("player", successCheck)
+                    reject(`${item.name} is no longer available from Ponty.`)
+                }
+            }
+
+            const successCheck = (data: CharacterData) => {
+                const numNow = this.countItem(item.name, data.items)
+                if ((item.q && numNow == numBefore + item.q)
+                    || (numNow == numBefore + 1)) {
+                    this.socket.removeListener("game_log", failCheck)
+                    this.socket.removeListener("player", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("game_log", failCheck)
+                this.socket.removeListener("player", successCheck)
+                reject(`buyFromPonty timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_log", failCheck)
+            this.socket.on("player", successCheck)
+        })
+
         this.socket.emit("sbuy", { rid: item.rid })
+        return bought
     }
 
     /**
@@ -1458,8 +1489,8 @@ export class Character extends Observer implements CharacterData {
         return playersData
     }
 
-    public getPontyItems(): Promise<ItemData[]> {
-        const pontyItems = new Promise<ItemData[]>((resolve, reject) => {
+    public getPontyItems(): Promise<ItemDataTrade[]> {
+        const pontyItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
             const distanceCheck = (data: GameResponseData) => {
                 if (data == "buy_get_closer") {
                     this.socket.removeListener("game_response", distanceCheck)
@@ -1468,7 +1499,7 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            const secondhandsItems = (data: ItemData[]) => {
+            const secondhandsItems = (data: ItemDataTrade[]) => {
                 this.socket.removeListener("game_response", distanceCheck)
                 this.socket.removeListener("secondhands", secondhandsItems)
                 resolve(data)
