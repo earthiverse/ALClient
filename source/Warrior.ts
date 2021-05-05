@@ -40,8 +40,7 @@ export class Warrior extends PingCompensatedCharacter {
     public charge(): Promise<void> {
         const charged = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
+                if (!data.hitchhikers) return
                 for (const [event, datum] of data.hitchhikers) {
                     if (event == "game_response" && datum.response == "skill_success" && datum.name == "charge") {
                         this.socket.removeListener("player", successCheck)

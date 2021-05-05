@@ -160,28 +160,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("eval", (data: EvalData) => {
-            // Skill timeouts (like attack) are sent via eval
-            const skillReg1 = /skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
-            if (skillReg1) {
-                const skill = skillReg1[1] as SkillName
-                let cooldown: number
-                if (skillReg1[2]) {
-                    cooldown = Number.parseFloat(skillReg1[2])
-                } else if (this.G.skills[skill].cooldown) {
-                    cooldown = this.G.skills[skill].cooldown
-                }
-                this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
-                return
-            }
-
-            // Potion timeouts are sent via eval
-            const potReg = /pot_timeout\s*\(\s*(\d+\.?\d+?)\s*\)/.exec(data.code)
-            if (potReg) {
-                const cooldown = Number.parseFloat(potReg[1])
-                this.setNextSkill("use_hp", new Date(Date.now() + Math.ceil(cooldown)))
-                this.setNextSkill("use_mp", new Date(Date.now() + Math.ceil(cooldown)))
-                return
-            }
+            this.parseEval(data)
         })
 
         this.socket.on("game_error", (data: string | { message: string; }) => {
@@ -273,6 +252,8 @@ export class Character extends Observer implements CharacterData {
                 for (const [event, datum] of (data as CharacterData).hitchhikers) {
                     if (event == "game_response") {
                         this.parseGameResponse(datum)
+                    } else if (event == "eval") {
+                        this.parseEval(datum as EvalData)
                     }
                 }
             } else if (datum == "entities") {
@@ -310,6 +291,31 @@ export class Character extends Observer implements CharacterData {
         }
 
         super.parseEntities(data)
+    }
+
+    protected parseEval(data: EvalData): void {
+        // Skill timeouts (like attack) are sent via eval
+        const skillReg1 = /skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
+        if (skillReg1) {
+            const skill = skillReg1[1] as SkillName
+            let cooldown: number
+            if (skillReg1[2]) {
+                cooldown = Number.parseFloat(skillReg1[2])
+            } else if (this.G.skills[skill].cooldown) {
+                cooldown = this.G.skills[skill].cooldown
+            }
+            this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
+            return
+        }
+
+        // Potion timeouts are sent via eval
+        const potReg = /pot_timeout\s*\(\s*(\d+\.?\d+?)\s*\)/.exec(data.code)
+        if (potReg) {
+            const cooldown = Number.parseFloat(potReg[1])
+            this.setNextSkill("use_hp", new Date(Date.now() + Math.ceil(cooldown)))
+            this.setNextSkill("use_mp", new Date(Date.now() + Math.ceil(cooldown)))
+            return
+        }
     }
 
     protected parseGameResponse(data: GameResponseData): void {
