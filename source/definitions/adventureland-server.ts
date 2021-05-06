@@ -655,7 +655,7 @@ export type PullMerchantsCharData = {
 
 export type NewMapData = {
     direction: number
-    effect: number | "magiport"
+    effect: number | "blink" | "magiport"
     entities: EntitiesData
     in: string
     info: any
@@ -812,6 +812,7 @@ export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive
 } & {
     egghunt?: boolean
+    holidayseason?: boolean
     lunarnewyear?: boolean
     valentines?: boolean
 }

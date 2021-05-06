@@ -16,9 +16,7 @@ import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./defin
 export class Game {
     protected static user: { userID: string, userAuth: string }
 
-    // TODO: Move this type to type definitions
     protected static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
-    // TODO: Move this type to type definitions
     protected static characters: { [T in string]?: CharacterListData } = {}
 
     public static players: { [T in string]: Character } = {}

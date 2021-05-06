@@ -1032,8 +1032,6 @@ export class Character extends Observer implements CharacterData {
         return true
     }
 
-    // TODO: Return better compound info
-    // TODO: Add offering
     public compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
@@ -1043,6 +1041,10 @@ export class Character extends Observer implements CharacterData {
         if (!item2Info) return Promise.reject(`There is no item in inventory slot ${item2Pos} (item2).`)
         if (!item3Info) return Promise.reject(`There is no item in inventory slot ${item3Pos} (item3).`)
         if (!cscrollInfo) return Promise.reject(`There is no item in inventory slot ${cscrollPos} (cscroll).`)
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) return Promise.reject(`There is no item in inventory slot ${offeringPos} (offering).`)
+        }
         if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) return Promise.reject("You can only combine 3 of the same items.")
         if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) return Promise.reject("You can only combine 3 items of the same level.")
 
@@ -1092,6 +1094,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("compound", {
             "items": [item1Pos, item2Pos, item3Pos],
+            "offering_num": offeringPos,
             "scroll_num": cscrollPos,
             "clevel": item1Info.level
         })
@@ -1800,7 +1803,6 @@ export class Character extends Observer implements CharacterData {
 
     public scare(): Promise<string[]> {
         const scared = new Promise<string[]>((resolve, reject) => {
-            // TODO: Move this typescript to a definition
             let ids: string[]
             const idsCheck = (data: UIData) => {
                 if (data.type == "scare") {
@@ -1835,12 +1837,10 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
     }
 
-    // TODO: Add promises
-    public async sendCM(to: string[], message: unknown): Promise<void> {
+    public sendCM(to: string[], message: unknown): void {
         this.socket.emit("cm", { to: to, message: JSON.stringify(message) })
     }
 
-    // TODO: Add distance check
     public async sendGold(to: string, amount: number): Promise<number> {
         if (this.gold == 0) return Promise.reject("We have no gold to send.")
         if (!this.players.has(to)) return Promise.reject(`We can't see ${to} nearby to send gold.`)
@@ -2297,6 +2297,10 @@ export class Character extends Observer implements CharacterData {
         if (!itemInfo) return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[itemInfo.name].upgrade == undefined) return Promise.reject("This item is not upgradable.")
         if (!scrollInfo) return Promise.reject(`There is no scroll in inventory slot ${scrollPos}.`)
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) return Promise.reject(`There is no item in inventory slot ${offeringPos} (offering).`)
+        }
 
         const upgradeComplete = new Promise<boolean>((resolve, reject) => {
             const playerCheck = (data: CharacterData) => {
@@ -2359,7 +2363,6 @@ export class Character extends Observer implements CharacterData {
         return upgradeComplete
     }
 
-    // TODO: Check if it's an HP Pot
     public useHPPot(itemPos: number): Promise<void> {
         if (!this.items[itemPos]) return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[this.items[itemPos].name].type !== "pot") return Promise.reject(`The item provided (${itemPos}) is not a potion.`)
@@ -2384,7 +2387,6 @@ export class Character extends Observer implements CharacterData {
         return healReceived
     }
 
-    // TODO: Check if it's an MP Pot
     public useMPPot(itemPos: number): Promise<void> {
         if (!this.items[itemPos]) return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[this.items[itemPos].name].type !== "pot") return Promise.reject(`The item provided (${itemPos}) is not a potion.`)
