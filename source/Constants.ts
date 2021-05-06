@@ -7,7 +7,7 @@ export class Constants {
     static STALE_MONSTER_MS = 60000
     static STALE_PROJECTILE_MS = 10000
     static TIMEOUT = 1000
-    static UPDATE_POSITIONS_EVERY_MS = 25
+    static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
 
     /** Various distance related things */
     static MAX_VISIBLE_RANGE = 600
@@ -20,8 +20,12 @@ export class Constants {
         vn: 2
     }
 
+    /** Miscellaneous game related things */
+    static BANK_PACK_SIZE = 42
+    static PONTY_MARKUP = 1.2
+
     /** Mongo related things */
-    static MONGO_UPDATE_ENTITY_MS = 5000
+    static MONGO_UPDATE_MS = 5000
 
     /** Monsters that are worth tracking in our database */
     static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "snowman", "wabbit"]

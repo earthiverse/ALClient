@@ -29,6 +29,8 @@ export class Game {
     public static players: { [T in string]: Character } = {}
     public static observers: { [T in string]: Observer } = {}
 
+    public static lastMongoUpdate = new Map<string, Date>()
+
     public static G: GData2
 
     protected constructor() {

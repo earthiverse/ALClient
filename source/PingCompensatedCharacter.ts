@@ -77,7 +77,7 @@ export class PingCompensatedCharacter extends Character {
     }
 
     public updateCharacter(data: CharacterData): void {
-        super.updateCharacter(data)
+        super.parseCharacter(data)
 
         const pingCompensation = Math.min(...this.pings)
 
