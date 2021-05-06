@@ -2,7 +2,6 @@ import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOp
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
-import { Mage } from "./Mage"
 import { Observer } from "./Observer"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
@@ -10,6 +9,7 @@ import { Player } from "./Player"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { DeathModel } from "./database/deaths/deaths.model"
 import { Pathfinder } from "./Pathfinder"
+import { Mage } from "./Mage"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string

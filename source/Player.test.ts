@@ -2,6 +2,7 @@ import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
 import { GData2 } from "./definitions/adventureland-data"
+import { Database } from "./database/database"
 
 let G: GData2
 let character: Character
@@ -9,6 +10,7 @@ let sameOwner: Player
 let sameParty: Player
 let randomPlayer: Player
 beforeAll(async () => {
+    Database.connect()
     G = await Game.getGData()
     character = new Character(undefined, undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
     character.parseCharacter({
@@ -271,7 +273,7 @@ beforeAll(async () => {
 }, 60000)
 
 afterAll(async () => {
-    Game.disconnect()
+    Database.disconnect()
 })
 
 test("Player.isFriendly", async () => {

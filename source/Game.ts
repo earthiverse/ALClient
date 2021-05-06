@@ -6,17 +6,13 @@ import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
-import { Character } from "./Character"
 import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
 import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
-import { connectToMongo, disconnectFromMongo } from "./database/database"
+import { Database } from "./database/database"
 import { AuthModel } from "./database/auths/auths.model"
-
-// Connect to Mongo
-connectToMongo()
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -26,26 +22,10 @@ export class Game {
     // TODO: Move this type to type definitions
     protected static characters: { [T in string]?: CharacterListData } = {}
 
-    public static players: { [T in string]: Character } = {}
-    public static observers: { [T in string]: Observer } = {}
-
-    public static lastMongoUpdate = new Map<string, Date>()
-
     public static G: GData2
 
     protected constructor() {
         // Private to force static methods
-    }
-
-    public static async disconnect(mongo = true): Promise<void> {
-        // Stop all characters
-        await this.stopAllCharacters()
-
-        // Stop all observers
-        await this.stopAllObservers()
-
-        // Disconnect from the database
-        if (mongo) disconnectFromMongo()
     }
 
     static async getGData(): Promise<GData2> {
@@ -180,6 +160,9 @@ export class Game {
         const characterID = this.characters[cName].id
 
         try {
+            // Connect to Mongo
+            Database.connect()
+            
             // Create the player and connect
             let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
@@ -192,7 +175,6 @@ export class Game {
 
             await player.connect()
 
-            this.players[cName] = player
             return player
         } catch (e) {
             return Promise.reject(e)
@@ -229,32 +211,10 @@ export class Game {
             const observer = new Observer(this.servers[region][id], g, true)
             await observer.connect()
 
-            this.observers[this.servers[region][id].key] = observer
             return observer
         } catch (e) {
             return Promise.reject(e)
         }
-    }
-
-    static async stopAllCharacters(): Promise<void> {
-        for (const characterName in this.players) await this.stopCharacter(characterName)
-    }
-
-    static async stopAllObservers(): Promise<void> {
-        for (const region in this.observers)
-            for (const id in this.observers[region])
-                await this.stopObserver(region as ServerRegion, id as ServerIdentifier)
-    }
-
-    public static async stopCharacter(characterName: string): Promise<void> {
-        await this.players[characterName].disconnect()
-        delete this.players[characterName]
-    }
-
-    public static async stopObserver(region: ServerRegion, id: ServerIdentifier): Promise<void> {
-        this.observers[this.servers[region][id].key].socket.close()
-        this.observers[this.servers[region][id].key].socket.removeAllListeners()
-        delete this.observers[region][id]
     }
 
     static async updateServersAndCharacters(): Promise<boolean> {

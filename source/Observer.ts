@@ -9,7 +9,7 @@ import { Constants } from "./Constants"
 import { EntityModel } from "./database/entities/entities.model"
 import { PlayerModel } from "./database/players/players.model"
 import { NPCModel } from "./database/npcs/npcs.model"
-import { Game } from "./Game"
+import { Database } from "./database/database"
 
 export class Observer {
     public socket: SocketIOClient.Socket;
@@ -189,7 +189,7 @@ export class Observer {
 
             // Update our database
             if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
-                const lastUpdate = Game.lastMongoUpdate.get(e.id)
+                const lastUpdate = Database.lastMongoUpdate.get(e.id)
                 if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
                     entityUpdates.push({
                         updateOne: {
@@ -198,7 +198,7 @@ export class Observer {
                             upsert: true
                         }
                     })
-                    Game.lastMongoUpdate.set(e.id, new Date())
+                    Database.lastMongoUpdate.set(e.id, new Date())
                 }
             }
         }
@@ -216,7 +216,7 @@ export class Observer {
             }
 
             // Update our database
-            const lastUpdate = Game.lastMongoUpdate.get(p.id)
+            const lastUpdate = Database.lastMongoUpdate.get(p.id)
             if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
                 if (p.isNPC()) {
                     npcUpdates.push({
@@ -235,7 +235,7 @@ export class Observer {
                         }
                     })
                 }
-                Game.lastMongoUpdate.set(p.id, new Date())
+                Database.lastMongoUpdate.set(p.id, new Date())
             }
         }
 

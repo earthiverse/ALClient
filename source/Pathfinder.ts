@@ -3,7 +3,6 @@ import path from "ngraph.path"
 import { IPosition, DoorInfo } from "./definitions/adventureland"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
-import { Game } from "./Game"
 import { Tools } from "./Tools"
 import { GData2, MapName } from "./definitions/adventureland-data"
 
@@ -644,8 +643,8 @@ export class Pathfinder {
         return to
     }
 
-    public static async prepare(startMap = this.FIRST_MAP): Promise<void> {
-        if (!this.G) this.G = await Game.getGData()
+    public static async prepare(startMap = this.FIRST_MAP, g: GData2): Promise<void> {
+        this.G = g
 
         const maps: MapName[] = [startMap]
 

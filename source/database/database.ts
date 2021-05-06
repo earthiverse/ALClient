@@ -1,32 +1,38 @@
 import Mongoose from "mongoose"
 
-let database: Mongoose.Connection
-export const connectToMongo = (): void => {
-    // TODO: Move this to a config file
-    const uri = "mongodb://localhost:27017/adventureland"
+export class Database {
+    public static lastMongoUpdate = new Map<string, Date>()
+    public static connection: Mongoose.Connection
 
-    if (database) {
-        return
+    protected constructor() {
+        // Private to force static methods
     }
 
-    Mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useFindAndModify: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-    })
+    public static connect(): void {
+        // TODO: Move this to a config file
+        const uri = "mongodb://localhost:27017/adventureland"
 
-    database = Mongoose.connection
+        // Check if we're already connected
+        if (this.connection) return
 
-    database.on("error", () => {
-        console.error("Error connecting to MongoDB")
-    })
-}
+        Mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useFindAndModify: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+        })
 
-export const disconnectFromMongo = (): void => {
-    if (!database) {
-        return
+        this.connection = Mongoose.connection
+
+        this.connection.on("error", () => {
+            console.error("Error connecting to MongoDB")
+        })
     }
 
-    Mongoose.disconnect()
+    public static disconnect(): void {
+        // Check if we never connected
+        if (!this.connection) return
+
+        Mongoose.disconnect()
+    }
 }
