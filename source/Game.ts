@@ -11,8 +11,7 @@ import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
 import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
-import { Database } from "./database/database"
-import { AuthModel } from "./database/auths/auths.model"
+import { AuthModel, Database } from "./database/database"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }

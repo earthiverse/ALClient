@@ -6,10 +6,7 @@ import { Entity } from "./Entity"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
 import { Constants } from "./Constants"
-import { EntityModel } from "./database/entities/entities.model"
-import { PlayerModel } from "./database/players/players.model"
-import { NPCModel } from "./database/npcs/npcs.model"
-import { Database } from "./database/database"
+import { Database, EntityModel, NPCModel, PlayerModel } from "./database/database"
 
 export class Observer {
     public socket: SocketIOClient.Socket;

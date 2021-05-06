@@ -1,4 +1,9 @@
 import Mongoose from "mongoose"
+export * from "./auths/auths.model"
+export * from "./deaths/deaths.model"
+export * from "./entities/entities.model"
+export * from "./npcs/npcs.model"
+export * from "./players/players.model"
 
 export class Database {
     public static lastMongoUpdate = new Map<string, Date>()
