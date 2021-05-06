@@ -1,15 +1,15 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayersData, ItemData, ItemDataTrade, ServerInfoDataLive, PlayerData } from "./definitions/adventureland-server"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Mage } from "./Mage"
 import { Observer } from "./Observer"
-import { Pathfinder } from "./index"
 import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { DeathModel } from "./database/deaths/deaths.model"
+import { Pathfinder } from "./Pathfinder"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string

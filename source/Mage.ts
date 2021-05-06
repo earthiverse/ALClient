@@ -1,7 +1,7 @@
 import { EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { Pathfinder } from "./index"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Pathfinder } from "./Pathfinder"
 
 export class Mage extends PingCompensatedCharacter {
     // NOTE: UNTESTED
