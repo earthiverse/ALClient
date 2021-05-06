@@ -1,5 +1,8 @@
+import { MapName } from "./definitions/adventureland-data"
+
 export class Constants {
     /** Various client related things */
+    static PATHFINDER_FIRST_MAP: MapName = "main"
     static MAX_PINGS = 100
     static PING_EVERY_MS = 30000
     static STALE_MONSTER_MS = 60000

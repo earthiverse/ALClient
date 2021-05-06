@@ -643,11 +643,11 @@ export class Pathfinder {
         return to
     }
 
-    public static async prepare(startMap = this.FIRST_MAP, g: GData2): Promise<void> {
+    public static async prepare(g: GData2): Promise<void> {
         if (!g) return Promise.reject("Please provide GData. You can use Game.getGData().")
         this.G = g
 
-        const maps: MapName[] = [startMap]
+        const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]
 
         console.debug("Preparing pathfinding...")
         const start = Date.now()
