@@ -270,10 +270,6 @@ beforeAll(async () => {
     }, "main", G)
 }, 60000)
 
-afterAll(async () => {
-    Game.disconnect()
-})
-
 test("Player.isFriendly", async () => {
     // Our other characters should be friendly
     expect(sameOwner.isFriendly(character)).toBe(true)

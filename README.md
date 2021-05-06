@@ -31,7 +31,8 @@ This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull
 import AL from "alclient"
 
 async function run() {
-    await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Pathfinder.prepare()])
+    await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Game.getGData()])
+    await AL.Pathfinder.prepare(AL.Game.G)
 
     const merchant = await AL.Game.startMerchant("earthMer2", "ASIA", "I")
     console.log("Moving to main")
@@ -73,7 +74,8 @@ run()
 import AL from "alclient"
 
 async function run() {
-    await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Pathfinder.prepare()])
+    await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Game.getGData()])
+    await AL.Pathfinder.prepare(AL.Game.G)
     const ranger = await AL.Game.startRanger("earthiverse", "US", "I")
 
     await ranger.smartMove("hen")

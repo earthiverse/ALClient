@@ -1,14 +1,14 @@
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, DisappearData, ChestData, EntitiesData, EvalData, GameResponseData, HitData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, ServerInfoData, PlayersData, ItemData, ItemDataTrade, ServerInfoDataLive, PlayerData } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
+import { Entity } from "./Entity"
 import { Mage } from "./Mage"
 import { Observer } from "./Observer"
-import { Pathfinder } from "./index"
-import { Tools } from "./Tools"
-import { Entity } from "./Entity"
+import { Pathfinder } from "./Pathfinder"
 import { Player } from "./Player"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Tools } from "./Tools"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string
@@ -2565,7 +2565,7 @@ export class Character extends Observer implements CharacterData {
 
         let closest: Player
         let closestD = Number.MAX_VALUE
-        this.players.forEach((player) => {
+        for (const [, player] of this.players) {
             if (player.s?.invincible) return
             if (player.npc) return
             const d = Tools.distance(this, player)
@@ -2573,7 +2573,7 @@ export class Character extends Observer implements CharacterData {
                 closest = player
                 closestD = d
             }
-        })
+        }
         if (closest) return { player: closest, distance: closestD }
     }
 

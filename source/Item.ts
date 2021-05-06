@@ -23,13 +23,13 @@ export class Item implements ItemData, GItem {
     public action?: string
     public g: number
 
-    public constructor(data: ItemData | ItemData, G: GData2) {
-        this.G = G
+    public constructor(data: ItemData | ItemData, g: GData2) {
+        this.G = g
 
         // Set soft properties
         // NOTE: If `data` contains different values, we will overwrite these later
-        for (const gKey in G.items[data.name]) {
-            this[gKey] = G.items[data.name][gKey]
+        for (const gKey in g.items[data.name]) {
+            this[gKey] = g.items[data.name][gKey]
         }
 
         // Set everything else

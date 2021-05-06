@@ -415,10 +415,6 @@ beforeAll(async () => {
     })
 }, 60000)
 
-afterAll(async () => {
-    Game.disconnect()
-})
-
 test("Character.calculateItemCost", async () => {
     // The costs below assume these G costs, so check that they're still good
     expect(G.items.scroll0.g).toBe(1000)

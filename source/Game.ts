@@ -1,17 +1,16 @@
 import axios from "axios"
 import fs from "fs"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
+import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
-import { Character } from "./Character"
 import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
-import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -19,21 +18,10 @@ export class Game {
     protected static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
     protected static characters: { [T in string]?: CharacterListData } = {}
 
-    public static players: { [T in string]: Character } = {}
-    public static observers: { [T in string]: Observer } = {}
-
     public static G: GData2
 
     protected constructor() {
         // Private to force static methods
-    }
-
-    public static async disconnect(): Promise<void> {
-        // Stop all characters
-        await this.stopAllCharacters()
-
-        // Stop all observers
-        await this.stopAllObservers()
     }
 
     static async getGData(): Promise<GData2> {
@@ -174,7 +162,6 @@ export class Game {
 
             await player.connect()
 
-            this.players[cName] = player
             return player
         } catch (e) {
             return Promise.reject(e)
@@ -209,34 +196,13 @@ export class Game {
         try {
             const g = await Game.getGData()
             const observer = new Observer(this.servers[region][id], g, true)
+
             await observer.connect()
 
-            this.observers[this.servers[region][id].key] = observer
             return observer
         } catch (e) {
             return Promise.reject(e)
         }
-    }
-
-    static async stopAllCharacters(): Promise<void> {
-        for (const characterName in this.players) await this.stopCharacter(characterName)
-    }
-
-    static async stopAllObservers(): Promise<void> {
-        for (const region in this.observers)
-            for (const id in this.observers[region])
-                await this.stopObserver(region as ServerRegion, id as ServerIdentifier)
-    }
-
-    public static async stopCharacter(characterName: string): Promise<void> {
-        await this.players[characterName].disconnect()
-        delete this.players[characterName]
-    }
-
-    public static async stopObserver(region: ServerRegion, id: ServerIdentifier): Promise<void> {
-        this.observers[this.servers[region][id].key].socket.close()
-        this.observers[this.servers[region][id].key].socket.removeAllListeners()
-        delete this.observers[region][id]
     }
 
     static async updateServersAndCharacters(): Promise<boolean> {

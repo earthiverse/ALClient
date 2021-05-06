@@ -53,8 +53,8 @@ export class Player implements PlayerData {
     in: MapName;
     map: MapName;
 
-    public constructor(data: PlayerData, map: MapName, G: GData2) {
-        this.G = G
+    public constructor(data: PlayerData, map: MapName, g: GData2) {
+        this.G = g
 
         // Set soft properties
         this.map = map
