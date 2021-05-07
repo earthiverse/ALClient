@@ -914,7 +914,11 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns true if it's a guaranteed kill in one hit
+     * Returns true if we can kill the entity in one shot.
+     *
+     * @param {Entity} entity
+     * @return {*}  {boolean}
+     * @memberof Character
      */
     public canKillInOneShot(entity: Entity): boolean {
         // Check if it can heal
@@ -922,6 +926,8 @@ export class Character extends Observer implements CharacterData {
         if (gInfo.lifesteal !== undefined) return false
         if (gInfo.abilities && gInfo.abilities.self_healing) return false
 
+        // Check if it can avoid our shot
+        if (entity.avoidance) return false
         if (this.damage_type == "magical" && entity.reflection !== undefined) return false
         if (this.damage_type == "physical" && entity.evasion !== undefined) return false
 
