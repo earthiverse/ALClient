@@ -151,7 +151,7 @@ export type GData2 = {
         items: [number, ItemName, number?][]
         /** The cost to craft this item */
         cost: number
-        quest?: "mcollector" | "witch"
+        quest?: Extract<NPCName, "mcollector" | "witch">
     } }
     dimensions: {
         [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
