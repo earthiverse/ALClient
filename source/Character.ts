@@ -902,13 +902,31 @@ export class Character extends Observer implements CharacterData {
 
         return false
     }
-    public canCraft(itemToCraft: ItemName): boolean {
-        if (!this.G.craft[itemToCraft]) return false // Item is not craftable
-        if (this.G.craft[itemToCraft].cost > this.gold) return false // We don't have enough money
-        for (const [requiredQuantity, requiredItem, requiredItemLevel] of this.G.craft[itemToCraft].items) {
+
+    /**
+     * Returns true if you have the required items and gold to craft the item, and you
+     * are near the NPC where you can craft this item. 
+     *
+     * @param {ItemName} itemToCraft
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canCraft(itemToCraft: ItemName, options?: {
+        ignoreLocation?: boolean
+    }): boolean {
+        const gCraft = this.G.craft[itemToCraft]
+        if (!gCraft) return false // Item is not craftable
+        if (gCraft.cost > this.gold) return false // We don't have enough money
+        for (const [requiredQuantity, requiredItem, requiredItemLevel] of gCraft.items) {
             if (!this.hasItem(requiredItem, this.items, { level: requiredItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
+
+        if (!this.hasItem("computer") && !options?.ignoreLocation) {
+            // Check if we're near the NPC we need
+            const craftableLocation = this.locateCraftNPC(itemToCraft)
+            if (Tools.distance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false
+        }
 
         return true
     }
@@ -2716,6 +2734,8 @@ export class Character extends Observer implements CharacterData {
             levelLessThan?: number;
             quantityGreaterThan?: number;
         }): number {
+        if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
+
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
             if (!item) continue

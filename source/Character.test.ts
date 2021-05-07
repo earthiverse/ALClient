@@ -451,6 +451,54 @@ test("Character.canBuy", async () => {
     expect(priest.canBuy("computer")).toBe(false)
 })
 
+test("Character.canCraft", async () => {
+    // Backup so we can change things
+    const itemsBackup = [...priest.items]
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+    const craftsmanLocation = priest.locateNPC("craftsman")[0]
+    const witchLocation = priest.locateNPC("witch")[0]
+
+    // Insufficient items
+    priest.items = [{ name: "computer" }, { name: "bow", level: 0 }, { name: "essenceoffrost", q: 2 }]
+    expect(priest.canCraft("frostbow")).toBe(false)
+
+    // Sufficient items
+    priest.items = [{ name: "computer" }, { name: "bow", level: 0 }, { name: "essenceoffrost", q: 3 }]
+    expect(priest.canCraft("frostbow")).toBe(true)
+
+    // Wrong place
+    priest.items = [{ name: "bow", level: 0 }, { name: "essenceoffrost", q: 3 }]
+    priest.map = witchLocation.map
+    priest.x = witchLocation.x
+    priest.y = witchLocation.y
+    expect(priest.canCraft("frostbow")).toBe(false)
+
+    // Right place
+    priest.map = craftsmanLocation.map
+    priest.x = craftsmanLocation.x
+    priest.y = craftsmanLocation.y
+    expect(priest.canCraft("frostbow")).toBe(true)
+
+    // Wrong place (witch)
+    priest.items = [{ name: "cshell", q: 10 }, { name: "hpot0", q: 9999 }]
+    priest.map = craftsmanLocation.map
+    priest.x = craftsmanLocation.x
+    priest.y = craftsmanLocation.y
+    expect(priest.canCraft("elixirfires")).toBe(false)
+
+    //Right place (witch)
+    priest.map = witchLocation.map
+    priest.x = witchLocation.x
+    priest.y = witchLocation.y
+    expect(priest.canCraft("elixirfires")).toBe(true)
+
+    // Restore
+    priest.items = itemsBackup
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+})
+
 test("Character.canUse", async () => {
     expect(priest.canUse("attack")).toBe(true)
     expect(priest.canUse("partyheal")).toBe(true)
