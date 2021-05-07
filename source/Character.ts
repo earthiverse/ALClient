@@ -7,7 +7,7 @@ import { Tools } from "./Tools"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
-import { DeathModel } from "./database/database"
+import { DeathModel } from "./database/Database"
 import { Pathfinder } from "./Pathfinder"
 import { Mage } from "./Mage"
 

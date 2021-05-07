@@ -11,7 +11,7 @@ import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
 import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
-import { AuthModel, Database } from "./database/database"
+import { AuthModel, Database } from "./database/Database"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
@@ -96,7 +96,10 @@ export class Game {
         return data.data[0]
     }
 
-    static async login(email: string, password: string): Promise<boolean> {
+    static async login(email: string, password?: string, mongo?: string): Promise<boolean> {
+        // Connect to Mongo
+        Database.connect(mongo)
+
         // See if we already have a userAuth stored in our database
         const find = await AuthModel.findOne({ email: email }).lean().exec()
         if (find?.userID && find?.userAuth) {
@@ -144,8 +147,8 @@ export class Game {
     }
 
     static async loginJSONFile(path: string): Promise<boolean> {
-        const data: { email: string, password: string } = JSON.parse(fs.readFileSync(path, "utf8"))
-        return this.login(data.email, data.password)
+        const data: { email: string, password: string, mongo: string } = JSON.parse(fs.readFileSync(path, "utf8"))
+        return this.login(data.email, data.password, data.mongo)
     }
 
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
@@ -159,9 +162,6 @@ export class Game {
         const characterID = this.characters[cName].id
 
         try {
-            // Connect to Mongo
-            Database.connect()
-            
             // Create the player and connect
             let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])

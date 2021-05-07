@@ -15,7 +15,7 @@ export * from "./Tools"
 export * from "./Warrior"
 
 // Mongo database
-export * from "./database/database"
+export * from "./database/Database"
 
 // Export AL definitions
 export * from "./definitions/adventureland"

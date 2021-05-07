@@ -3,7 +3,7 @@ import { Character } from "./Character"
 import { GData2 } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
 import { IPosition } from "./definitions/adventureland"
-import { Database } from "./database/database"
+import { Database } from "./database/Database"
 
 let G: GData2
 let priest: Character
