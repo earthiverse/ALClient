@@ -32,6 +32,7 @@ export class Game {
         try {
             // Check if there's cached data
             this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData2
+            return this.G
         } catch (e) {
             // There's no cached data, download it
             console.debug("Updating 'G' data...")
