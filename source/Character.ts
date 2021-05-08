@@ -10,6 +10,7 @@ import { Observer } from "./Observer"
 import { Player } from "./Player"
 import { Pathfinder } from "./Pathfinder"
 import { Tools } from "./Tools"
+import { AchievementModel } from "./database/achievements/achievements.model"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string
@@ -206,6 +207,11 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("q_data", (data: QData) => {
             if (data.q.upgrade) this.q.upgrade = data.q.upgrade
             if (data.q.compound) this.q.compound = data.q.compound
+        })
+
+        this.socket.on("tracker", async (data: TrackerData) => {
+            // Add tracker data to the database
+            await AchievementModel.create({ date: Date.now(), monsters: data.monsters, max: data.max })
         })
 
         this.socket.on("upgrade", (data: UpgradeData) => {
