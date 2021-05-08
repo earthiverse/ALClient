@@ -4,7 +4,7 @@
  */
 
 import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
-import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
+import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
 
 export type AchievementProgressData = {
     name: string
@@ -856,11 +856,11 @@ export type TrackerData = {
     }
     /** Contains drop information */
     maps: {
-        [T in MapName | "global" | "global_static"]: [number, ItemName][] | [number, "open", string][]
+        [T in MapName | "global" | "global_static"]?: GDropItem[]
     }
     /** For the "open" items in maps, this table has a list of the drops that could occur */
     tables: {
-        [T in ItemName | string]?: [number, ItemName][]
+        [T in ItemName | string]?: GDropItem[]
     }
     /** Contains information about your characters with the max points */
     max: {
@@ -870,7 +870,7 @@ export type TrackerData = {
         }
     }
     drops: {
-        [T in MonsterName]?: [number, ItemName][]
+        [T in MonsterName]?: GDropItem[]
     }
     // TODO: What's the difference between the global here, and the one in 'maps'?
     global: [number, ItemName][] | [number, "open", string][]
