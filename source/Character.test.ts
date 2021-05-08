@@ -472,12 +472,16 @@ test("Character.canCraft", async () => {
     priest.x = witchLocation.x
     priest.y = witchLocation.y
     expect(priest.canCraft("frostbow")).toBe(false)
+    expect(priest.canCraft("frostbow", { ignoreLocation: false })).toBe(false)
+    expect(priest.canCraft("frostbow", { ignoreLocation: true })).toBe(true)
 
     // Right place
     priest.map = craftsmanLocation.map
     priest.x = craftsmanLocation.x
     priest.y = craftsmanLocation.y
     expect(priest.canCraft("frostbow")).toBe(true)
+    expect(priest.canCraft("frostbow", { ignoreLocation: false })).toBe(true)
+    expect(priest.canCraft("frostbow", { ignoreLocation: true })).toBe(true)
 
     // Wrong place (witch)
     priest.items = [{ name: "cshell", q: 10 }, { name: "hpot0", q: 9999 }]
@@ -485,12 +489,50 @@ test("Character.canCraft", async () => {
     priest.x = craftsmanLocation.x
     priest.y = craftsmanLocation.y
     expect(priest.canCraft("elixirfires")).toBe(false)
+    expect(priest.canCraft("elixirfires", { ignoreLocation: true })).toBe(true)
 
     //Right place (witch)
     priest.map = witchLocation.map
     priest.x = witchLocation.x
     priest.y = witchLocation.y
     expect(priest.canCraft("elixirfires")).toBe(true)
+
+    // Restore
+    priest.items = itemsBackup
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+})
+
+test("Character.canExchange", async () => {
+    // Backup so we can change things
+    const itemsBackup = [...priest.items]
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+    const xynLocation = priest.locateNPC("exchange")[0]
+    const shellLocation = priest.locateNPC("fisherman")[0]
+
+    // Insufficient items
+    priest.items = [{ name: "computer" }, { name: "seashell", q: 1 }]
+    expect(priest.canExchange("seashell")).toBe(false)
+
+    // Sufficient items
+    priest.items = [{ name: "computer" }, { name: "seashell", q: 20 }]
+    expect(priest.canExchange("seashell")).toBe(true)
+
+    // Wrong location
+    priest.items = [{ name: "seashell", q: 20 }]
+    priest.map = xynLocation.map
+    priest.x = xynLocation.x
+    priest.y = xynLocation.y
+    expect(priest.canExchange("seashell")).toBe(false)
+    expect(priest.canExchange("seashell", { ignoreLocation: true })).toBe(true)
+
+    // Correct Location
+    priest.items = [{ name: "seashell", q: 20 }]
+    priest.map = shellLocation.map
+    priest.x = shellLocation.x
+    priest.y = shellLocation.y
+    expect(priest.canExchange("seashell")).toBe(true)
 
     // Restore
     priest.items = itemsBackup

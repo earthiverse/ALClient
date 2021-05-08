@@ -79,7 +79,7 @@ export class Character extends Observer implements CharacterData {
     public resistance = 0
     public rip = true
     public rpiercing = 0
-    public s: StatusInfo
+    public s: StatusInfo = {}
     public skin: string
     public slots: SlotInfo
     public speed = 1
@@ -854,6 +854,9 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // The first level of a gifted item is only worth 1 gold.
+        if (item.gift) cost -= (gInfo.g - 1)
+
         return cost
     }
 
@@ -926,6 +929,34 @@ export class Character extends Observer implements CharacterData {
             // Check if we're near the NPC we need
             const craftableLocation = this.locateCraftNPC(itemToCraft)
             if (Tools.distance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false
+        }
+
+        return true
+    }
+
+
+    /**
+     * Returns true if you have enough of the exchangeable items, and you are
+     * near the NPC where you can exchange this item.
+     * 
+     * @param {ItemName} itemToExchange
+     * @param {{
+     *         ignoreLocation?: boolean
+     *     }} [options]
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canExchange(itemToExchange: ItemName, options?: {
+        ignoreLocation?: boolean
+    }): boolean {
+        // TODO: Add a check if we are already crafting something
+
+        const gItem = this.G.items[itemToExchange]
+        if (gItem.e !== undefined && this.countItem(itemToExchange) < gItem.e) return false // We don't have enough to exchange
+
+        if (!this.hasItem("computer") && !options?.ignoreLocation) {
+            const exchangeableLocation = this.locateExchangeNPC(itemToExchange)
+            if (Tools.distance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false // Too far away
         }
 
         return true

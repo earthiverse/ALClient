@@ -601,7 +601,7 @@ export type GItem = {
     /** TODO: ??? What is this? */
     protection?: boolean
     /** Relates to where you can exchange this item. (See: G.npcs[NPCName].quest) */
-    quest?: string
+    quest?: QuestName
     rare?: boolean
     /** For tome of protection, it rewards the player who kills you with this % of the item cost (item.g) */
     reward?: number
