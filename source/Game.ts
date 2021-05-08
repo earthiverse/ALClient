@@ -38,6 +38,8 @@ export class Game {
             for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
             for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
             for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
+            
+            return this.G
         } catch (e) {
             // There's no cached data, download it
             console.debug("Updating 'G' data...")
