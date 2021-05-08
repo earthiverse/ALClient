@@ -1,15 +1,15 @@
+import { DeathModel } from "./database/Database"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
-import { Observer } from "./Observer"
-import { Tools } from "./Tools"
 import { Entity } from "./Entity"
-import { Player } from "./Player"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
-import { DeathModel } from "./database/Database"
-import { Pathfinder } from "./Pathfinder"
 import { Mage } from "./Mage"
+import { Observer } from "./Observer"
+import { Player } from "./Player"
+import { Pathfinder } from "./Pathfinder"
+import { Tools } from "./Tools"
 
 export class Character extends Observer implements CharacterData {
     protected userID: string
@@ -919,19 +919,41 @@ export class Character extends Observer implements CharacterData {
 
         return false
     }
-    public canCraft(itemToCraft: ItemName): boolean {
-        if (!this.G.craft[itemToCraft]) return false // Item is not craftable
-        if (this.G.craft[itemToCraft].cost > this.gold) return false // We don't have enough money
-        for (const [requiredQuantity, requiredItem, requiredItemLevel] of this.G.craft[itemToCraft].items) {
+
+    /**
+     * Returns true if you have the required items and gold to craft the item, and you
+     * are near the NPC where you can craft this item. 
+     *
+     * @param {ItemName} itemToCraft
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canCraft(itemToCraft: ItemName, options?: {
+        ignoreLocation?: boolean
+    }): boolean {
+        const gCraft = this.G.craft[itemToCraft]
+        if (!gCraft) return false // Item is not craftable
+        if (gCraft.cost > this.gold) return false // We don't have enough money
+        for (const [requiredQuantity, requiredItem, requiredItemLevel] of gCraft.items) {
             if (!this.hasItem(requiredItem, this.items, { level: requiredItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
+
+        if (!this.hasItem("computer") && !options?.ignoreLocation) {
+            // Check if we're near the NPC we need
+            const craftableLocation = this.locateCraftNPC(itemToCraft)
+            if (Tools.distance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false
+        }
 
         return true
     }
 
     /**
-     * Returns true if it's a guaranteed kill in one hit
+     * Returns true if we can kill the entity in one shot.
+     *
+     * @param {Entity} entity
+     * @return {*}  {boolean}
+     * @memberof Character
      */
     public canKillInOneShot(entity: Entity): boolean {
         // Check if it can heal
@@ -939,6 +961,8 @@ export class Character extends Observer implements CharacterData {
         if (gInfo.lifesteal !== undefined) return false
         if (gInfo.abilities && gInfo.abilities.self_healing) return false
 
+        // Check if it can avoid our shot
+        if (entity.avoidance) return false
         if (this.damage_type == "magical" && entity.reflection !== undefined) return false
         if (this.damage_type == "physical" && entity.evasion !== undefined) return false
 
@@ -2582,7 +2606,7 @@ export class Character extends Observer implements CharacterData {
 
         let closest: Player
         let closestD = Number.MAX_VALUE
-        this.players.forEach((player) => {
+        for (const [, player] of this.players) {
             if (player.s?.invincible) return
             if (player.npc) return
             const d = Tools.distance(this, player)
@@ -2590,7 +2614,7 @@ export class Character extends Observer implements CharacterData {
                 closest = player
                 closestD = d
             }
-        })
+        }
         if (closest) return { player: closest, distance: closestD }
     }
 
@@ -2727,6 +2751,8 @@ export class Character extends Observer implements CharacterData {
             levelLessThan?: number;
             quantityGreaterThan?: number;
         }): number {
+        if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
+
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
             if (!item) continue

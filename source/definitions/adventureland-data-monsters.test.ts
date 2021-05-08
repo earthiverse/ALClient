@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 663 (2021-04-18)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -285,6 +285,45 @@ test("G.monsters type validation", async () => {
                 "attack": 3000,
                 "aggro": 0,
                 "mp": 180000.0
+            },
+            "icegolem": {
+                "achievements": [
+                    [
+                        1,
+                        "stat",
+                        "hp",
+                        10
+                    ],
+                    [
+                        10,
+                        "stat",
+                        "hp",
+                        30
+                    ]
+                ],
+                "abilities": {
+                    "multi_freeze": {
+                        "cooldown": 2000,
+                        "damage": 2000
+                    }
+                },
+                "name": "Ice Golem",
+                "rage": 0,
+                "armor": 400,
+                "hp": 800000,
+                "respawn": 79200,
+                "resistance": 400,
+                "attack": 2400,
+                "aggro": 0.2,
+                "charge": 48,
+                "frequency": 1.2,
+                "damage_type": "physical",
+                "cooperative": true,
+                "skin": "icegolem",
+                "range": 64,
+                "xp": 920000,
+                "speed": 12,
+                "mp": 40000.0
             },
             "skeletor": {
                 "achievements": [
@@ -1235,6 +1274,7 @@ test("G.monsters type validation", async () => {
                 "skin": "chestm",
                 "xp": 6000,
                 "speed": 4,
+                "hide": true,
                 "name": "Angry Chest",
                 "rage": 0,
                 "respawn": 4,
@@ -1570,6 +1610,7 @@ test("G.monsters type validation", async () => {
                 "skin": "dknight2",
                 "xp": 72000,
                 "speed": 28,
+                "hide": true,
                 "name": "Dark Knight",
                 "rage": 0,
                 "armor": 200,
@@ -2326,22 +2367,23 @@ test("G.monsters type validation", async () => {
                         "condition": "dampened"
                     }
                 },
-                "hp": 6400,
-                "resistance": 1600,
-                "frequency": 0,
-                "damage_type": "pure",
-                "skin": "fieldgen0",
-                "xp": 0,
-                "speed": 0,
+                "hide": true,
                 "name": "Field Generator",
                 "rage": 0,
                 "armor": 2200,
+                "hp": 6400,
                 "respawn": -1,
-                "attack": 0,
-                "range": 0,
+                "resistance": 1600,
                 "aggro": 0,
+                "attack": 0,
+                "frequency": 0,
                 "trap": true,
-                "mp": 320.0
+                "skin": "fieldgen0",
+                "range": 0,
+                "xp": 0,
+                "speed": 0,
+                "mp": 320.0,
+                "damage_type": "pure"
             },
             "kitty3": {
                 "aa": 1,
@@ -2948,6 +2990,44 @@ test("G.monsters type validation", async () => {
                 "mp": 2500.0,
                 "orientation": 0
             },
+            "xmagen": {
+                "aa": 1,
+                "abilities": {
+                    "mtangle": {
+                        "cooldown": 3200
+                    },
+                    "self_healing": {
+                        "heal": 4800,
+                        "cooldown": 2000
+                    }
+                },
+                "frequency": 1.66,
+                "damage_type": "magical",
+                "skin": "xmagen",
+                "xp": 21600000,
+                "speed": 24,
+                "slots": {
+                    "mainhand": {
+                        "name": "mushroomstaff",
+                        "level": 13
+                    }
+                },
+                "hide": true,
+                "respawn_as": "xmagex",
+                "poisonous": true,
+                "charge": 84,
+                "immune": true,
+                "attack": 2440,
+                "lucrativeness": 0,
+                "hp": 6400000,
+                "reflection": 30,
+                "name": "Mage",
+                "rage": 10,
+                "respawn": 0,
+                "range": 135,
+                "aggro": 10,
+                "mp": 320000.0
+            },
             "oneeye": {
                 "achievements": [
                     [
@@ -3126,6 +3206,42 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "mp": 5.0,
                 "attack": 5
+            },
+            "xmagex": {
+                "aa": 1,
+                "abilities": {
+                    "anger": {
+                        "cooldown": 8000,
+                        "radius": 300
+                    },
+                    "warpstomp": {
+                        "stun": 1500,
+                        "cooldown": 4000,
+                        "radius": 160
+                    }
+                },
+                "name": "Dark Mage",
+                "rage": 10,
+                "hp": 7200000,
+                "respawn": -1,
+                "attack": 12640,
+                "aggro": 10,
+                "immune": true,
+                "charge": 84,
+                "frequency": 1.56,
+                "lucrativeness": 120,
+                "skin": "xmagex",
+                "range": 135,
+                "xp": 28800000,
+                "speed": 24,
+                "slots": {
+                    "mainhand": {
+                        "name": "oozingterror",
+                        "level": 13
+                    }
+                },
+                "mp": 360000.0,
+                "damage_type": "magical"
             },
             "bluefairy": {
                 "aa": 1,
@@ -3544,22 +3660,23 @@ test("G.monsters type validation", async () => {
                         "pure": true
                     }
                 },
-                "hp": 6400,
-                "resistance": 1600,
-                "frequency": 0,
-                "damage_type": "pure",
-                "skin": "zapper0",
-                "xp": 0,
-                "speed": 0,
+                "hide": true,
                 "name": "Zapper",
                 "rage": 0,
                 "armor": 2200,
+                "hp": 6400,
                 "respawn": -1,
-                "attack": 0,
-                "range": 0,
+                "resistance": 1600,
                 "aggro": 0,
+                "attack": 0,
+                "frequency": 0,
                 "trap": true,
-                "mp": 320.0
+                "skin": "zapper0",
+                "range": 0,
+                "xp": 0,
+                "speed": 0,
+                "mp": 320.0,
+                "damage_type": "pure"
             },
             "pinkgoblin": {
                 "prefix": "",
@@ -3970,6 +4087,43 @@ test("G.monsters type validation", async () => {
                 "speed": 24,
                 "mp": 600000.0
             },
+            "xmagefi": {
+                "aa": 1,
+                "abilities": {
+                    "anger": {
+                        "cooldown": 8000,
+                        "radius": 300
+                    },
+                    "multi_burn": {
+                        "cooldown": 4000,
+                        "damage": 4000
+                    }
+                },
+                "frequency": 1.46,
+                "damage_type": "magical",
+                "skin": "xmagefi",
+                "xp": 1440000,
+                "speed": 24,
+                "slots": {
+                    "mainhand": {
+                        "name": "firestaff",
+                        "level": 13
+                    }
+                },
+                "hide": true,
+                "respawn_as": "xmagen",
+                "charge": 84,
+                "immune": true,
+                "attack": 2240,
+                "lucrativeness": 0,
+                "hp": 5600000,
+                "name": "Mage",
+                "rage": 10,
+                "respawn": 0,
+                "range": 135,
+                "aggro": 10,
+                "mp": 280000.0
+            },
             "ent": {
                 "achievements": [
                     [
@@ -4055,6 +4209,39 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "mp": 2500.0,
                 "stationary": true
+            },
+            "xmagefz": {
+                "aa": 1,
+                "abilities": {
+                    "deepfreeze": {
+                        "cooldown": 6000,
+                        "radius": 300
+                    }
+                },
+                "frequency": 1.26,
+                "damage_type": "magical",
+                "skin": "xmagefz",
+                "xp": 7200000,
+                "speed": 24,
+                "slots": {
+                    "mainhand": {
+                        "name": "vstaff",
+                        "level": 13
+                    }
+                },
+                "hide": true,
+                "respawn_as": "xmagefi",
+                "charge": 84,
+                "immune": true,
+                "attack": 1640,
+                "lucrativeness": 0,
+                "hp": 4800000,
+                "name": "Mage",
+                "rage": 10,
+                "respawn": 0,
+                "range": 135,
+                "aggro": 10,
+                "mp": 240000.0
             },
             "mechagnome": {
                 "achievements": [

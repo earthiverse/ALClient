@@ -1,4 +1,4 @@
-import { Attribute, BankPackName, CharacterType, ConditionName, DamageType, ItemName, MapName, MonsterName, NPCName, SkillName, TitleName } from "./adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, ItemName, MapName, MonsterName, NPCName, SkillName } from "./adventureland-data"
 import { ItemData, ItemDataTrade } from "./adventureland-server"
 
 export type GData = {
@@ -17,8 +17,8 @@ export type GData = {
         duration?: number;
         interval?: number;
     } & {
-            [T in Attribute]?: number
-        } };
+        [T in Attribute]?: number
+    } };
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
          *  [quantity, item name, item level] */
@@ -164,8 +164,8 @@ export type TradeItemInfo = ItemData & {
 export type SlotInfo = {
     [T in SlotType]: ItemData
 } & {
-        [T in TradeSlotType]?: ItemDataTrade
-    }
+    [T in TradeSlotType]?: ItemDataTrade
+}
 
 /**
  * Contains elements that describe a door
@@ -186,46 +186,46 @@ export type StatusInfo = {
         /** How many ms left before this condition expires */
         ms: number;
     } } & {
-        burned?: {
-            // Damage that the burn will do per second. Damage is currently split between an attack every 200ms (5 attacks/second).
-            intensity: number
-            // The character ID that caused the burn (TODO: Is this the initial character? Or the last character to contribute?)
-            f: string
-        }
-        cursed?: {
-            ms: number
-        }
-        coop?: {
-            id: string;
-            p: number;
-        };
-        mluck?: {
-            /** The ID of the merchant who cast mluck */
-            f: string;
-            /** A flag to show if the mluck was cast by the user's merchant. If unset, the character can be mlucked by any merchant. */
-            strong?: boolean;
-        };
-        monsterhunt?: {
-            /** The server ID where the monster hunt is valid */
-            sn: string;
-            /** Number of monsters remaining to kill */
-            c: number;
-            /** What monster we have to kill */
-            id: MonsterName;
-            /** What is this? */
-            dl?: boolean
-        };
-        citizen0aura?: {
-            luck: number;
-        };
-        citizen4aura?: {
-            gold: number;
-        };
-        self_healing?: {
-            ability: true
-            ms: number
-        }
+    burned?: {
+        // Damage that the burn will do per second. Damage is currently split between an attack every 200ms (5 attacks/second).
+        intensity: number
+        // The character ID that caused the burn (TODO: Is this the initial character? Or the last character to contribute?)
+        f: string
     }
+    cursed?: {
+        ms: number
+    }
+    coop?: {
+        id: string;
+        p: number;
+    };
+    mluck?: {
+        /** The ID of the merchant who cast mluck */
+        f: string;
+        /** A flag to show if the mluck was cast by the user's merchant. If unset, the character can be mlucked by any merchant. */
+        strong?: boolean;
+    };
+    monsterhunt?: {
+        /** The server ID where the monster hunt is valid */
+        sn: string;
+        /** Number of monsters remaining to kill */
+        c: number;
+        /** What monster we have to kill */
+        id: MonsterName;
+        /** What is this? */
+        dl?: boolean
+    };
+    citizen0aura?: {
+        luck: number;
+    };
+    citizen4aura?: {
+        gold: number;
+    };
+    self_healing?: {
+        ability: true
+        ms: number
+    }
+}
 
 export type PositionReal = IPosition & {
     map: MapName;

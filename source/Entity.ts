@@ -9,7 +9,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     protected G: GData2
     public lastMongoUpdate: number
 
-    // MonsterData (required)
+    // EntityData (required)
     public abs?: false
     public angle: number
     public cid: number

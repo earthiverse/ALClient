@@ -1,12 +1,12 @@
 import socketio from "socket.io-client"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
+import { Database, EntityModel, NPCModel, PlayerModel } from "./database/database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
 import { Entity } from "./Entity"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
-import { Constants } from "./Constants"
-import { Database, EntityModel, NPCModel, PlayerModel } from "./database/database"
 
 export class Observer {
     public socket: SocketIOClient.Socket;
@@ -87,10 +87,7 @@ export class Observer {
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
-                if (e) {
-                    e.hp = e.hp - data.damage
-                    this.entities.set(data.id, e)
-                }
+                if (e) e.hp = e.hp - data.damage
             }
         })
 
@@ -399,7 +396,7 @@ export class Observer {
     public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
         let closest: Entity
         let closestD = Number.MAX_VALUE
-        this.entities.forEach((entity) => {
+        for (const [, entity] of this.entities) {
             if (mtype && entity.type != mtype)
                 return
             const d = Tools.distance(this, entity)
@@ -407,7 +404,7 @@ export class Observer {
                 closest = entity
                 closestD = d
             }
-        })
+        }
         if (closest) return { monster: closest, distance: closestD }
     }
 }

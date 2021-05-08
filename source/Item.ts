@@ -8,7 +8,7 @@ export class Item implements ItemData, GItem {
     // ItemData (required)
     public name: ItemName
     // ItemData (optional)
-    public l?: "s" | "x"
+    public l?: "l" | "s" | "x"
     public level?: number
     public stat_type?: Attribute
 
@@ -23,13 +23,13 @@ export class Item implements ItemData, GItem {
     public action?: string
     public g: number
 
-    public constructor(data: ItemData | ItemData, G: GData2) {
-        this.G = G
+    public constructor(data: ItemData | ItemData, g: GData2) {
+        this.G = g
 
         // Set soft properties
         // NOTE: If `data` contains different values, we will overwrite these later
-        for (const gKey in G.items[data.name]) {
-            this[gKey] = G.items[data.name][gKey]
+        for (const gKey in g.items[data.name]) {
+            this[gKey] = g.items[data.name][gKey]
         }
 
         // Set everything else
@@ -79,6 +79,6 @@ export class Item implements ItemData, GItem {
      * @memberof Item
      */
     public isLocked(): boolean {
-        return this.l !== undefined
+        return this.l == "l"
     }
 }

@@ -1,10 +1,10 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
 import { IPosition, DoorInfo } from "./definitions/adventureland"
+import { GData2, MapName } from "./definitions/adventureland-data"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Tools } from "./Tools"
-import { GData2, MapName } from "./definitions/adventureland-data"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -644,6 +644,7 @@ export class Pathfinder {
     }
 
     public static async prepare(g: GData2): Promise<void> {
+        if (!g) return Promise.reject("Please provide GData. You can use Game.getGData().")
         this.G = g
 
         const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]

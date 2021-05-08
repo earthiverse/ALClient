@@ -11,15 +11,15 @@ export class Player implements PlayerData {
     public id: string
     public ctype: CharacterType
     public abs: boolean
-    public angle: number
+    public angle?: number
     public armor: number
     public apiercing = 0
     public attack: number
     public cid: number
     public damage_type: DamageType
     public frequency: number
-    public going_x: number
-    public going_y: number
+    public going_x?: number
+    public going_y?: number
     public level = 1
     public move_num: number
     public moving: boolean
@@ -54,8 +54,8 @@ export class Player implements PlayerData {
     in: MapName;
     map: MapName;
 
-    public constructor(data: PlayerData, map: MapName, G: GData2) {
-        this.G = G
+    public constructor(data: PlayerData, map: MapName, g: GData2) {
+        this.G = g
 
         // Set soft properties
         this.map = map

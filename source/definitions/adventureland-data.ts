@@ -151,7 +151,7 @@ export type GData2 = {
         items: [number, ItemName, number?][]
         /** The cost to craft this item */
         cost: number
-        quest?: "mcollector" | "witch"
+        quest?: Extract<NPCName, "mcollector" | "witch">
     } }
     dimensions: {
         [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
@@ -349,6 +349,30 @@ export type GData2 = {
             ray?: boolean
             /** Projectile speed */
             speed: number
+        }
+    }
+    sets: {
+        [T in SetName]: {
+            /** Bonus for having 1 piece of the set equipped */
+            "1": { [T in Attribute]?: number }
+            /** Bonus for having 2 pieces of the set equipped */
+            "2": { [T in Attribute]?: number }
+            /** Bonus for having 3 pieces of the set equipped */
+            "3"?: { [T in Attribute]?: number }
+            /** Bonus for having 4 pieces of the set equipped */
+            "4"?: { [T in Attribute]?: number }
+            /** Bonus for having 5 pieces of the set equipped */
+            "5"?: { [T in Attribute]?: number }
+            /** Bonus for having 6 pieces of the set equipped */
+            "6"?: { [T in Attribute]?: number }
+            /** Bonus for having 7 pieces of the set equipped */
+            "7"?: { [T in Attribute]?: number }
+            /** Flavour text for the set */
+            explanation?: string
+            /** What items contribute to the set bonus */
+            items: ItemName[]
+            /** Set bonus name */
+            name: string
         }
     }
     /** If you buy an item with shells, this is the ratio of shells to gold */
@@ -862,6 +886,8 @@ export type GMonster = {
     global?: boolean
     /** If set, the monster will steal gold on attack. */
     goldsteal?: number
+    /** (GUI) If true, it won't show in the in-game guides. */
+    hide?: boolean
     /** (GUI) Attack animation */
     hit?: string
     hp: number
@@ -908,6 +934,8 @@ export type GMonster = {
      * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
      **/
     respawn: number
+    /** If set, after the monster is killed, this monster will spawn */
+    respawn_as?: MonsterName
     /** If set to true, the monster will roam around the entire map */
     roam?: boolean
     /** Initial conditions for the monster when it spawns */
@@ -1210,6 +1238,7 @@ export type ConditionName =
     | "cursed"
     | "dampened"
     | "darkblessing"
+    | "deepfreezed"
     | "easterluck"
     | "eburn"
     | "eheal"
@@ -1231,6 +1260,7 @@ export type ConditionName =
     | "mluck"
     | "monsterhunt"
     | "mshield"
+    | "newcomersblessing"
     | "notverified"
     | "phasedout"
     | "poisoned"
@@ -1821,6 +1851,7 @@ export type ItemName =
     | "xptome"
     | "xshield"
     | "xshot"
+    | "zapper"
 
 export type MapName =
     | "abtesting"
@@ -1877,6 +1908,7 @@ export type MapName =
     | "winter_cave"
     | "winter_inn"
     | "winter_inn_rooms"
+    | "winter_instance"
     | "winterland"
     | "woffice"
 
@@ -1929,6 +1961,7 @@ export type MonsterName =
     | "grinch"
     | "gscorpion"
     | "hen"
+    | "icegolem"
     | "iceroamer"
     | "jr"
     | "jrat"
@@ -1988,6 +2021,10 @@ export type MonsterName =
     | "welemental"
     | "wolf"
     | "wolfie"
+    | "xmagefi"
+    | "xmagefz"
+    | "xmagen"
+    | "xmagex"
     | "xscorpion"
     | "zapper0"
 
@@ -2148,6 +2185,25 @@ export type ProjectileName =
     | "wandy"
     | "wmomentum"
 
+export type SetName =
+    | "easter"
+    | "fury"
+    | "holidays"
+    | "legends"
+    | "mmage"
+    | "mmerchant"
+    | "mpriest"
+    | "mpx"
+    | "mranger"
+    | "mrogue"
+    | "mwarrior"
+    | "rugged"
+    | "swift"
+    | "vampires"
+    | "wanderers"
+    | "wt3"
+    | "wt4"
+
 export type SkillName =
     | "3shot"
     | "4fingers"
@@ -2167,6 +2223,7 @@ export type SkillName =
     | "curse_aura"
     | "dampening_aura"
     | "darkblessing"
+    | "deepfreeze"
     | "emotion"
     | "energize"
     | "entangle"
@@ -2238,9 +2295,11 @@ export type SkillName =
     | "use_town"
     | "warcry"
     | "warp"
+    | "warpstomp"
     | "weakness_aura"
     | "xpower"
     | "zap"
+    | "zapperzap"
 
 export type TilesetName =
     | "ash"

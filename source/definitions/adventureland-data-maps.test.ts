@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -125,6 +125,14 @@ test("G.maps type validation", async () => {
                         30,
                         "log",
                         "Can't reach. This might be Stompy's lair"
+                    ],
+                    [
+                        600.5,
+                        -1273,
+                        0,
+                        0,
+                        "info",
+                        "darkmage"
                     ]
                 ],
                 "name": "Winterland",
@@ -156,6 +164,17 @@ test("G.maps type validation", async () => {
                         "level2n",
                         2,
                         4
+                    ],
+                    [
+                        599.62,
+                        -1282.15,
+                        47.71,
+                        51.32,
+                        "winter_instance",
+                        0,
+                        5,
+                        "key",
+                        "frozenkey"
                     ]
                 ],
                 "spawns": [
@@ -180,6 +199,18 @@ test("G.maps type validation", async () => {
                         -864,
                         -1614,
                         3
+                    ],
+                    [
+                        600.5,
+                        -1273
+                    ],
+                    [
+                        864.73,
+                        429.55
+                    ],
+                    [
+                        1018.66,
+                        401.71
                     ]
                 ],
                 "drop_norm": 3000,
@@ -265,6 +296,17 @@ test("G.maps type validation", async () => {
                             278
                         ],
                         "type": "iceroamer"
+                    },
+                    {
+                        "count": 1,
+                        "boundary": [
+                            782.25,
+                            395.96,
+                            888.71,
+                            450.28
+                        ],
+                        "type": "icegolem",
+                        "roam": true
                     }
                 ]
             },
@@ -892,6 +934,78 @@ test("G.maps type validation", async () => {
                             185
                         ],
                         "type": "mvampire"
+                    }
+                ]
+            },
+            "winter_instance": {
+                "npcs": [],
+                "drop_norm": 4000,
+                "quirks": [],
+                "instance": true,
+                "name": "Lair of the Dark Mage",
+                "key": "jayson_winterInstance",
+                "doors": [
+                    [
+                        -7.23,
+                        250.26,
+                        38.15,
+                        28.55,
+                        "winterland",
+                        5,
+                        0
+                    ]
+                ],
+                "on_exit": [
+                    "winterland",
+                    5
+                ],
+                "spawns": [
+                    [
+                        -8,
+                        216,
+                        3
+                    ]
+                ],
+                "monsters": [
+                    {
+                        "count": 1,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagefz"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagefi"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagen"
+                    },
+                    {
+                        "count": 0,
+                        "boundary": [
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
+                        ],
+                        "type": "xmagex"
                     }
                 ]
             },
@@ -2474,6 +2588,257 @@ test("G.maps type validation", async () => {
                 "safe": true,
                 "monsters": []
             },
+            "tavern": {
+                "npcs": [
+                    {
+                        "position": [
+                            150,
+                            -202
+                        ],
+                        "id": "tbartender"
+                    },
+                    {
+                        "position": [
+                            208,
+                            -156
+                        ],
+                        "id": "bouncer"
+                    }
+                ],
+                "drop_norm": 1000,
+                "quirks": [
+                    [
+                        136,
+                        -215,
+                        32,
+                        40,
+                        "log",
+                        "Impossible to reach. This is probably where they keep all the rare items."
+                    ],
+                    [
+                        -103,
+                        -229,
+                        20,
+                        16,
+                        "tavern_info"
+                    ]
+                ],
+                "name": "The Tavern",
+                "key": "jayson_tavern02",
+                "doors": [
+                    [
+                        1,
+                        23,
+                        48,
+                        20,
+                        "main",
+                        8,
+                        0
+                    ],
+                    [
+                        272,
+                        -220,
+                        28,
+                        36,
+                        "resort_e",
+                        0,
+                        1
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0,
+                        -8,
+                        3
+                    ],
+                    [
+                        272,
+                        -200
+                    ]
+                ],
+                "monsters": [],
+                "machines": [
+                    {
+                        "set": "custom",
+                        "y": -209,
+                        "x": -169,
+                        "frames": [
+                            [
+                                0,
+                                256,
+                                80,
+                                44
+                            ],
+                            [
+                                80,
+                                256,
+                                80,
+                                44
+                            ],
+                            [
+                                160,
+                                256,
+                                80,
+                                44
+                            ],
+                            [
+                                240,
+                                256,
+                                80,
+                                44
+                            ],
+                            [
+                                320,
+                                256,
+                                80,
+                                44
+                            ],
+                            [
+                                400,
+                                256,
+                                80,
+                                44
+                            ]
+                        ],
+                        "subframes": [
+                            [
+                                11,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                22,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                33,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                44,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                55,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                66,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                77,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                88,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                99,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                110,
+                                301,
+                                7,
+                                14
+                            ],
+                            [
+                                5,
+                                310,
+                                1,
+                                1
+                            ]
+                        ],
+                        "type": "dice"
+                    },
+                    {
+                        "frames": [
+                            [
+                                0,
+                                320,
+                                32,
+                                48
+                            ],
+                            [
+                                32,
+                                320,
+                                32,
+                                48
+                            ],
+                            [
+                                64,
+                                320,
+                                32,
+                                48
+                            ]
+                        ],
+                        "x": -272,
+                        "set": "custom",
+                        "type": "slots",
+                        "y": -216
+                    },
+                    {
+                        "frames": [
+                            [
+                                0,
+                                368,
+                                32,
+                                48
+                            ],
+                            [
+                                32,
+                                368,
+                                32,
+                                48
+                            ],
+                            [
+                                64,
+                                368,
+                                32,
+                                48
+                            ]
+                        ],
+                        "x": -64,
+                        "set": "custom",
+                        "type": "wheel",
+                        "y": -216
+                    }
+                ]
+            },
+            "ship0": {
+                "npcs": [],
+                "quirks": [],
+                "name": "The Pirate Ship",
+                "key": "jayson_PirateShip0",
+                "doors": [],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ],
+                "monsters": [],
+                "event": "pirateship"
+            },
             "tunnel": {
                 "npcs": [
                     {
@@ -2744,257 +3109,6 @@ test("G.maps type validation", async () => {
                             -21
                         ],
                         "type": "mole"
-                    }
-                ]
-            },
-            "ship0": {
-                "npcs": [],
-                "quirks": [],
-                "name": "The Pirate Ship",
-                "key": "jayson_PirateShip0",
-                "doors": [],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": [],
-                "event": "pirateship"
-            },
-            "tavern": {
-                "npcs": [
-                    {
-                        "position": [
-                            150,
-                            -202
-                        ],
-                        "id": "tbartender"
-                    },
-                    {
-                        "position": [
-                            208,
-                            -156
-                        ],
-                        "id": "bouncer"
-                    }
-                ],
-                "drop_norm": 1000,
-                "quirks": [
-                    [
-                        136,
-                        -215,
-                        32,
-                        40,
-                        "log",
-                        "Impossible to reach. This is probably where they keep all the rare items."
-                    ],
-                    [
-                        -103,
-                        -229,
-                        20,
-                        16,
-                        "tavern_info"
-                    ]
-                ],
-                "name": "The Tavern",
-                "key": "jayson_tavern02",
-                "doors": [
-                    [
-                        1,
-                        23,
-                        48,
-                        20,
-                        "main",
-                        8,
-                        0
-                    ],
-                    [
-                        272,
-                        -220,
-                        28,
-                        36,
-                        "resort_e",
-                        0,
-                        1
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -8,
-                        3
-                    ],
-                    [
-                        272,
-                        -200
-                    ]
-                ],
-                "monsters": [],
-                "machines": [
-                    {
-                        "set": "custom",
-                        "y": -209,
-                        "x": -169,
-                        "frames": [
-                            [
-                                0,
-                                256,
-                                80,
-                                44
-                            ],
-                            [
-                                80,
-                                256,
-                                80,
-                                44
-                            ],
-                            [
-                                160,
-                                256,
-                                80,
-                                44
-                            ],
-                            [
-                                240,
-                                256,
-                                80,
-                                44
-                            ],
-                            [
-                                320,
-                                256,
-                                80,
-                                44
-                            ],
-                            [
-                                400,
-                                256,
-                                80,
-                                44
-                            ]
-                        ],
-                        "subframes": [
-                            [
-                                11,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                22,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                33,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                44,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                55,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                66,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                77,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                88,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                99,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                110,
-                                301,
-                                7,
-                                14
-                            ],
-                            [
-                                5,
-                                310,
-                                1,
-                                1
-                            ]
-                        ],
-                        "type": "dice"
-                    },
-                    {
-                        "frames": [
-                            [
-                                0,
-                                320,
-                                32,
-                                48
-                            ],
-                            [
-                                32,
-                                320,
-                                32,
-                                48
-                            ],
-                            [
-                                64,
-                                320,
-                                32,
-                                48
-                            ]
-                        ],
-                        "x": -272,
-                        "set": "custom",
-                        "type": "slots",
-                        "y": -216
-                    },
-                    {
-                        "frames": [
-                            [
-                                0,
-                                368,
-                                32,
-                                48
-                            ],
-                            [
-                                32,
-                                368,
-                                32,
-                                48
-                            ],
-                            [
-                                64,
-                                368,
-                                32,
-                                48
-                            ]
-                        ],
-                        "x": -64,
-                        "set": "custom",
-                        "type": "wheel",
-                        "y": -216
                     }
                 ]
             },
@@ -4276,12 +4390,6 @@ test("G.maps type validation", async () => {
                         -1295.83
                     ]
                 ],
-                "ref": {
-                    "crypt": [
-                        -193.41,
-                        -1295.83
-                    ]
-                },
                 "monsters": [
                     {
                         "count": 6,

@@ -1,7 +1,9 @@
 import axios from "axios"
 import fs from "fs"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
+import { AuthModel, Database } from "./database/Database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
+import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
@@ -10,43 +12,55 @@ import { Priest } from "./Priest"
 import { Ranger } from "./Ranger"
 import { Rogue } from "./Rogue"
 import { Warrior } from "./Warrior"
-import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
-import { AuthModel, Database } from "./database/Database"
 
 export class Game {
     protected static user: { userID: string, userAuth: string }
 
-    // TODO: Move this type to type definitions
     protected static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
-    // TODO: Move this type to type definitions
     protected static characters: { [T in string]?: CharacterListData } = {}
 
     public static G: GData2
+    public static version: number
 
     protected constructor() {
         // Private to force static methods
     }
 
-    static async getGData(): Promise<GData2> {
+    static async getGData(cache = false): Promise<GData2> {
         if (this.G) return this.G
-
-        console.debug("Updating 'G' data...")
-        const response = await axios.get("http://adventure.land/data.js")
-        if (response.status == 200) {
-            // Update G with the latest data
-            const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
-            this.G = JSON.parse(matches[1]) as GData2
+        if (!this.version) this.getVersion()
+        const gFile = `G_${this.version}.json`
+        try {
+            // Check if there's cached data
+            this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData2
 
             // Delete things that are ignored
             for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
             for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
             for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
+        } catch (e) {
+            // There's no cached data, download it
+            console.debug("Updating 'G' data...")
+            const response = await axios.get<string>("http://adventure.land/data.js")
+            if (response.status == 200) {
+                // Update G with the latest data
+                const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
+                const rawG = matches[1]
+                this.G = JSON.parse(rawG) as GData2
 
-            console.debug("Updated 'G' data!")
-            return this.G
-        } else {
-            console.error(response)
-            console.error("Error fetching http://adventure.land/data.js")
+                // Delete things that are ignored
+                for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
+                for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
+                for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
+
+                console.debug("Updated 'G' data!")
+
+                if (cache) fs.writeFileSync(gFile, rawG)
+                return this.G
+            } else {
+                console.error(response)
+                console.error("Error fetching http://adventure.land/data.js")
+            }
         }
     }
 
@@ -84,6 +98,20 @@ export class Game {
         }
 
         return merchants
+    }
+
+    static async getVersion(): Promise<number> {
+        const response = await axios.get("http://adventure.land/comm")
+        if (response.status == 200) {
+            // Find the version
+            const matches = (response.data as string).match(/var\s+VERSION\s*=\s*'(\d+)/)
+            this.version = Number.parseInt(matches[1])
+
+            return this.version
+        } else {
+            console.error(response)
+            console.error("Error fetching http://adventure.land/comm")
+        }
     }
 
     /**
@@ -206,8 +234,9 @@ export class Game {
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
         try {
-            const g = await Game.getGData()
-            const observer = new Observer(this.servers[region][id], g, true)
+            if (!this.G) await this.getGData()
+            const observer = new Observer(this.servers[region][id], this.G, true)
+
             await observer.connect()
 
             return observer

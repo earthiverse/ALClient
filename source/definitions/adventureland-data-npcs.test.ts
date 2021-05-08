@@ -1,7 +1,7 @@
 import { GData2 } from "./adventureland-data"
 
 /** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
+ * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
@@ -254,6 +254,7 @@ test("G.npcs type validation", async () => {
             },
             "jailer": {
                 "says": "Tu-tu-tu",
+                "name": "Jailord",
                 "color": "#62C3DF",
                 "role": "jailer",
                 "skin": "thehelmet",

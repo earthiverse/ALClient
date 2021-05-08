@@ -1,7 +1,7 @@
-import { EvalData, GameResponseData } from "./definitions/adventureland-server"
+import { EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
-import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 import { Pathfinder } from "./Pathfinder"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Mage extends PingCompensatedCharacter {
     // NOTE: UNTESTED
@@ -26,13 +26,26 @@ export class Mage extends PingCompensatedCharacter {
         return alchemied
     }
 
-    // TODO: Add promises
-    public blink(x: number, y: number): void {
-        if (Pathfinder.canStand({ map: this.map, x: x, y: y })) {
-            this.socket.emit("skill", { name: "blink", x: x, y: y })
-        } else {
-            throw Error(`We cannot blink to ${this.map} ${x},${y}`)
-        }
+    public blink(x: number, y: number): Promise<void> {
+        if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) return Promise.reject(`We cannot blink to ${this.map},${x},${y}`)
+
+        const blinked = new Promise<void>((resolve, reject) => {
+            const successCheck = (data: NewMapData) => {
+                if (data.effect == "blink" && data.x == x && data.y == y) {
+                    this.socket.removeListener("new_map", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("new_map", successCheck)
+                reject(`blink timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("new_map", successCheck)
+        })
+
+        this.socket.emit("skill", { name: "blink", x: x, y: y })
+        return blinked
     }
 
     // NOTE: UNTESTED
@@ -173,8 +186,11 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     /**
-     * This function is not named 'reflection' due to the 'reflection' property.
-     * @param target 
+     * NOTE: This function is not named 'reflection' due to the 'reflection' property.
+     *
+     * @param {string} target
+     * @return {*}  {Promise<void>}
+     * @memberof Mage
      */
     public applyReflection(target: string): Promise<void> {
         const relectioned = new Promise<void>((resolve, reject) => {
