@@ -32,6 +32,12 @@ export class Game {
         try {
             // Check if there's cached data
             this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData2
+
+            // Delete things that are ignored
+            for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
+            for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
+            for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
+
             return this.G
         } catch (e) {
             // There's no cached data, download it
@@ -42,6 +48,11 @@ export class Game {
                 const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
                 const rawG = matches[1]
                 this.G = JSON.parse(rawG,) as GData2
+
+                // Delete things that are ignored
+                for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
+                for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
+                for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
 
                 console.debug("Updated 'G' data!")
 
