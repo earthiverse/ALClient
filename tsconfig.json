@@ -22,6 +22,7 @@
         "source"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "source/**/*.test.*"
     ]
 }
