@@ -10,6 +10,7 @@ import { Tools } from "./Tools"
 export class Observer {
     public socket: SocketIOClient.Socket;
 
+    protected lastAllEntities: number
     protected lastPositionUpdate: number
 
     public G: GData2;
@@ -156,6 +157,7 @@ export class Observer {
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
         if (data.type == "all") {
+            this.lastAllEntities = Date.now()
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()

@@ -219,7 +219,7 @@ export class Character extends Observer implements CharacterData {
         })
     }
 
-    protected updateLoop(): void {
+    protected async updateLoop(): Promise<void> {
         if (this.socket.disconnected) {
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
@@ -229,6 +229,10 @@ export class Character extends Observer implements CharacterData {
             this.updatePositions()
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
+        }
+
+        if (this.lastAllEntities !== undefined && Date.now() - this.lastAllEntities > Constants.STALE_MONSTER_MS) {
+            await this.requestEntitiesData().catch(() => { /* Suppress Errors */ })
         }
 
         const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
