@@ -1,5 +1,5 @@
 import socketio from "socket.io-client"
-import { Database, EntityModel, NPCModel, PlayerModel } from "./database/database"
+import { Database, EntityModel, NPCModel, PlayerModel } from "./database/Database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
@@ -185,6 +185,14 @@ export class Observer {
             if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
                 const lastUpdate = Database.lastMongoUpdate.get(e.id)
                 if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+                    if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
+                        // Delete old entities
+                        entityUpdates.push({
+                            deleteMany: {
+                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: { $ne: e.id }, type: e.type },
+                            }
+                        })
+                    }
                     entityUpdates.push({
                         updateOne: {
                             filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },

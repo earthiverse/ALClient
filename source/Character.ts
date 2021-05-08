@@ -468,8 +468,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public async disconnect(): Promise<void> {
-        if (this.socket.disconnected)
-            return
+        if (this.socket.disconnected) return
         console.warn("Disconnecting!")
 
         // Close the socket

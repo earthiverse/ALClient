@@ -2,7 +2,7 @@ import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
 import { GData2 } from "./definitions/adventureland-data"
-import { Database } from "./database/database"
+import { Database } from "./database/Database"
 
 let G: GData2
 let character: Character
