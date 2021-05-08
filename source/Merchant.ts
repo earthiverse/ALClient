@@ -116,10 +116,15 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     // TODO: Add promises
+    // TODO: Add a check that we can see the giveaway
+    public joinGiveaway(slot: TradeSlotType, id: string, rid: string): void {
+        this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+    }
+
+    // TODO: Add promises
     public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
         const itemInfo = this.items[itemPos]
-        if (!itemInfo)
-            return Promise.reject(`We do not have an item in slot ${itemPos}`)
+        if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
 
         this.socket.emit("equip", {
             num: itemPos,
