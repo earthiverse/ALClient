@@ -116,10 +116,15 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     // TODO: Add promises
+    // TODO: Add a check that we can see the giveaway
+    public joinGiveaway(slot: TradeSlotType, id: string, rid: string): void {
+        this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+    }
+
+    // TODO: Add promises
     public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
         const itemInfo = this.items[itemPos]
-        if (!itemInfo)
-            return Promise.reject(`We do not have an item in slot ${itemPos}`)
+        if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
 
         this.socket.emit("equip", {
             num: itemPos,
@@ -222,7 +227,7 @@ export class Merchant extends PingCompensatedCharacter {
             const player = this.players.get(target)
             if (!player) return Promise.reject(`Could not find ${target} to mluck.`)
             if (player.npc) return Promise.reject(`${target} is an NPC. You can't mluck NPCs.`)
-            if (player.s.mluck && player.s.mluck.strong && player.s.mluck.f !== this.id) return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
+            if (player.s.mluck && player.s.mluck.strong && player.owner !== this.owner) return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
         }
 
         const mlucked = new Promise<void>((resolve, reject) => {
