@@ -541,6 +541,35 @@ test("Character.canExchange", async () => {
     priest.y = locationBackup.y
 })
 
+test("Character.canSell", async () => {
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+    const itemsBackup = [...priest.items]
+
+    priest.items = [{ name: "helmet", level: 1 }]
+
+    // Sellable location
+    const standMerchant = priest.locateNPC("standmerchant")[0]
+    priest.map = standMerchant.map
+    priest.x = standMerchant.x
+    priest.y = standMerchant.y
+    expect(priest.canSell()).toBe(true)
+
+    // Unsellable location
+    priest.map = "arena"
+    priest.x = G.maps.arena.spawns[0][0]
+    priest.y = G.maps.arena.spawns[0][0]
+    expect(priest.canSell()).toBe(false)
+    // This time with a computer
+    priest.items = [{ name: "computer" }, { name: "helmet", level: 1 }]
+    expect(priest.canSell()).toBe(true)
+
+    // Restore
+    priest.items = itemsBackup
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+})
+
 test("Character.canUse", async () => {
     expect(priest.canUse("attack")).toBe(true)
     expect(priest.canUse("partyheal")).toBe(true)
