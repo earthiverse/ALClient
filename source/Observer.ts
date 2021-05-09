@@ -46,18 +46,7 @@ export class Observer {
         })
 
         this.socket.on("death", (data: DeathData) => {
-            const entity = this.entities.get(data.id)
-            if (!entity) return
-
-            // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S[entity.type]) delete this.S[entity.type]
-
-            // Delete the entity from the database on death
-            if (Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                EntityModel.deleteOne({ name: entity.id })
-            }
-
-            this.entities.delete(data.id)
+            this.deleteEntity(data.id)
         })
 
         this.socket.on("disappear", (data: DisappearData) => {
@@ -90,7 +79,7 @@ export class Observer {
 
             if (data.kill == true) {
                 this.projectiles.delete(data.pid)
-                this.entities.delete(data.id)
+                this.deleteEntity(data.id)
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
@@ -162,12 +151,28 @@ export class Observer {
         return connected
     }
 
+    protected async deleteEntity(id: string): Promise<void> {
+        const entity = this.entities.get(id)
+        if (!entity) return // Already deleted
+
+        // If it was a special monster in 'S', delete it from 'S'.
+        if (this.S[entity.type]) delete this.S[entity.type]
+
+        // Delete the entity from the database on death
+        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) EntityModel.deleteOne({ name: entity.id }).catch(() => { /* Suppress errors */ })
+
+        this.entities.delete(id)
+    }
+
     protected async parseEntities(data: EntitiesData): Promise<void> {
         if (data.type == "all") {
-            this.lastAllEntities = Date.now()
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
+
+            // Reset the lastUpdates
+            this.lastAllEntities = Date.now()
+            Database.lastMongoUpdate.clear()
         } else {
             // Update all positions
             this.updatePositions()
