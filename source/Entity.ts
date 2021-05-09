@@ -1,7 +1,7 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, ConditionName, DamageType, GData2, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, MonsterData } from "./definitions/adventureland-server"
-import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Character } from "./Character"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
 
@@ -139,7 +139,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * Returns true if the monster is attacking the player, or one of its party members
      * @param player The player whose party to check if the monster is attacking
      */
-    public isAttackingPartyMember(player: PingCompensatedCharacter): boolean {
+    public isAttackingPartyMember(player: Character): boolean {
         // Check if the entity is targeting anything
         if (this.target === undefined) return false
 
@@ -157,7 +157,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * Returns true if the monster is attacking us specifically, false otherwise
      * @param player The player to check if the monster is attacking
      */
-    public isAttackingUs(player: PingCompensatedCharacter): boolean {
+    public isAttackingUs(player: Character): boolean {
         return this.target === player.id
     }
 
@@ -166,7 +166,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * Returns whether or not the Warrior could taunt this monster
      * @param by The player that will perform the taunt
      */
-    public isTauntable(by: PingCompensatedCharacter): boolean {
+    public isTauntable(by: Character): boolean {
         // If this entity has no target, it is tauntable
         if (this.target === undefined) return true
 
