@@ -211,7 +211,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("tracker", async (data: TrackerData) => {
             // Add tracker data to the database
-            await AchievementModel.create({ date: Date.now(), monsters: data.monsters, max: data.max })
+            await AchievementModel.create({ name: this.id, date: Date.now(), monsters: data.monsters, max: data.max })
         })
 
         this.socket.on("upgrade", (data: UpgradeData) => {
