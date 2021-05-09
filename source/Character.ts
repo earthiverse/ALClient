@@ -543,7 +543,7 @@ export class Character extends Observer implements CharacterData {
     public acceptPartyInvite(id: string): Promise<PartyData> {
         const acceptedInvite = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
-                if (data.list.includes(this.id)
+                if (data.list && data.list.includes(this.id)
                     && data.list.includes(id)) {
                     this.socket.removeListener("party_update", partyCheck)
                     this.socket.removeListener("game_log", unableCheck)
