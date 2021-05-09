@@ -1,7 +1,7 @@
 import { DeathModel } from "./database/Database"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -1012,6 +1012,27 @@ export class Character extends Observer implements CharacterData {
         }
 
         return Tools.calculateDamageRange(this, entity)[0] > entity.hp
+    }
+
+    /**
+     * Returns true if we can sell items from where we are standing
+     *
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canSell(): boolean {
+        if (this.hasItem("computer")) return true // We can sell anywhere with a computer
+
+        // Check if we're near an NPC merchant
+        for (const npc of (this.G.maps[this.map] as GMap).npcs) {
+            const gNPC = this.G.npcs[npc.id]
+            if (!gNPC.items) continue // This NPC doesn't do merchant stuff
+            if (Tools.distance(this, { map: this.map, x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+
+            return true
+        }
+
+        return false
     }
 
     /**
