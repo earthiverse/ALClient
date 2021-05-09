@@ -159,7 +159,7 @@ export class Observer {
         if (this.S[entity.type]) delete this.S[entity.type]
 
         // Delete the entity from the database on death
-        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) EntityModel.deleteOne({ name: entity.id }).catch(() => { /* Suppress errors */ })
+        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
 
         this.entities.delete(id)
     }
