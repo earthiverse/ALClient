@@ -47,9 +47,10 @@ export class Observer {
 
         this.socket.on("death", (data: DeathData) => {
             const entity = this.entities.get(data.id)
+            if (!entity) return
 
             // If it was a special monster in 'S', delete it from 'S'.
-            if (entity && this.S[entity.type]) delete this.S[entity.type]
+            if (this.S[entity.type]) delete this.S[entity.type]
 
             // Delete the entity from the database on death
             if (Constants.SPECIAL_MONSTERS.includes(entity.type)) {
