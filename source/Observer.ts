@@ -51,6 +51,11 @@ export class Observer {
             // If it was a special monster in 'S', delete it from 'S'.
             if (entity && this.S[entity.type]) delete this.S[entity.type]
 
+            // Delete the entity from the database on death
+            if (Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                EntityModel.deleteOne({ name: entity.id })
+            }
+
             this.entities.delete(data.id)
         })
 
@@ -188,20 +193,25 @@ export class Observer {
                 const lastUpdate = Database.lastMongoUpdate.get(e.id)
                 if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
                     if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
-                        // Delete old entities
+                        // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
-                            deleteMany: {
-                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: { $ne: e.id }, type: e.type },
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: e.type },
+                                update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
+                                upsert: true
+                            }
+                        })
+                    } else {
+                        // Include the id in the filter
+                        entityUpdates.push({
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
+                                update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
+                                upsert: true
                             }
                         })
                     }
-                    entityUpdates.push({
-                        updateOne: {
-                            filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
-                            update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
-                            upsert: true
-                        }
-                    })
+
                     Database.lastMongoUpdate.set(e.id, new Date())
                 }
             }
