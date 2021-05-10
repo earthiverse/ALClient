@@ -279,6 +279,9 @@ export class Character extends Observer implements CharacterData {
                 this[datum] = data[datum]
             }
         }
+
+        // Clear party info if we have no party
+        if (!this.party) this.partyData = undefined
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
@@ -1618,7 +1621,6 @@ export class Character extends Observer implements CharacterData {
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
-                this.socket.removeListener("tracker", gotCheck)
                 resolve(data)
             }
 
