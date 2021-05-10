@@ -1640,7 +1640,6 @@ export class Character extends Observer implements CharacterData {
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
-                this.socket.removeListener("tracker", gotCheck)
                 resolve(data)
             }
 
