@@ -678,11 +678,13 @@ export type PartyData = {
             luck: number
             map: MapName
             share: number
+            pdps: number
             skin: string
             type: string
             x: number
             xp: number
             y: number
+            cx?: CXData
         }
     }
 }
