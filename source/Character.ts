@@ -302,6 +302,9 @@ export class Character extends Observer implements CharacterData {
                 this[datum] = data[datum]
             }
         }
+
+        // Clear party info if we have no party
+        if (!this.party) this.partyData = undefined
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
