@@ -31,7 +31,17 @@ export class Tools {
 
         if (attacker.damage_type == "physical") baseDamage *= damage_multiplier(defender.armor - attacker.apiercing)
         else if (attacker.damage_type == "magical") baseDamage *= damage_multiplier(defender.resistance - attacker.rpiercing)
-        return [baseDamage * 0.9, baseDamage * 1.1]
+
+        if (attacker.crit) {
+            if (attacker.crit >= 100) {
+                // Guaranteed crit
+                return [baseDamage * 0.9 * (2 + (attacker.critdamage / 100)), baseDamage * 1.1 * (2 + (attacker.critdamage / 100))]
+            } else {
+                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (attacker.critdamage / 100))]
+            }
+        } else {
+            return [baseDamage * 0.9, baseDamage * 1.1]
+        }
     }
 
     /**

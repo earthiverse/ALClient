@@ -41,6 +41,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public avoidance = 0
     public blast = 0
     public breaks = 0
+    public crit = 0
+    public critdamage = 0
     public evasion = 0
     public lifesteal = 0
     public mcourage = 0
