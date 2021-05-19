@@ -988,8 +988,7 @@ export class Character extends Observer implements CharacterData {
         if (this.damage_type == "physical" && entity.evasion !== undefined) return false
 
         if (entity["1hp"]) {
-            if (entity.hp == 1) return true
-            else return false
+            return entity.hp == 1
         }
 
         return Tools.calculateDamageRange(this, entity)[0] > entity.hp
