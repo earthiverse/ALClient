@@ -144,7 +144,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @memberof Entity
      */
     public couldDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
-        if (this.avoidance) return false
+        if (this.avoidance >= 100) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
@@ -152,7 +152,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             // NOTE: Entities can attack themselves if the projectile gets reflected
             const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
 
-            if (attacker.damage_type == "physical" && this.avoidance >= 100) continue // It will avoid the attack
+            if (attacker.damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
             if (attacker.damage_type == "magical" && this.reflection >= 100) continue // It will reflect the attack
 
             const maximumDamage = Tools.calculateDamageRange(attacker, this)[1]
@@ -238,7 +238,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
-            
+
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage
 
