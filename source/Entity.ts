@@ -135,6 +135,31 @@ export class Entity implements MonsterData, Partial<GMonster> {
     }
 
     /**
+     * Returns true if the entity has a >0% chance to die from projectiles already cast.
+     *
+     * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
+     * @param {Map<string, Player>} players (e.g.: bot.players)
+     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
+     * @return {*}  {boolean}
+     * @memberof Entity
+     */
+    public couldDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
+        if (this.evasion || this.reflection) return false
+        let incomingProjectileDamage = 0
+        for (const projectile of projectiles.values()) {
+            if (projectile.target !== this.id) continue // This projectile is heading towards another entity
+
+            // NOTE: Entities can attack themselves if the projectile gets reflected
+            const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
+            const maximumDamage = Tools.calculateDamageRange(attacker, this)[1]
+
+            incomingProjectileDamage += maximumDamage
+            if (incomingProjectileDamage >= this.hp) return true
+        }
+        return false
+    }
+
+    /**
      * Returns true if the monster is attacking the player, or one of its party members
      * @param player The player whose party to check if the monster is attacking
      */

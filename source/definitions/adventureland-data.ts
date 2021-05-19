@@ -975,7 +975,7 @@ export type Attribute =
     | "attr0"
     /** TODO: ??? Found on "weaver" (2021-02-26). Possibly an additional effect for some weapons. */
     | "attr1"
-    /** TODO: ??? */
+    /** Chance to avoid an attack (all damage types). */
     | "avoidance"
     /** TODO: ??? Joke stat? */
     | "awesomeness"
@@ -985,7 +985,7 @@ export type Attribute =
     | "bling"
     /** Chance for the item to break on use */
     | "breaks"
-    /** TODO: ??? What is this? Additional run speed when it has a target? */
+    /** Run speed when the entity is targetting something. */
     | "charge"
     /** TODO: ??? Joke stat? */
     | "charisma"
