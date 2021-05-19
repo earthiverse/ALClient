@@ -1498,28 +1498,54 @@ export class Character extends Observer implements CharacterData {
         return exchangeFinished
     }
 
-    // TODO: Add promises and checks
-    public finishMonsterHuntQuest(): void {
+    public finishMonsterHuntQuest(): Promise<void> {
+        if (!this.s.monsterhunt) return Promise.reject("We don't have a monster hunt to turn in.")
+        if (this.s.monsterhunt.c > 0) return Promise.reject(`We still have to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
+
+        let close = false
+        // Look for a monsterhunter on the current map
+        for (const npc of (this.G.maps[this.map] as GMap).npcs) {
+            if (npc.id !== "monsterhunter") continue // Not the monsterhunter
+            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+            close = true
+            break
+        }
+        if (!close) return Promise.reject("We are too far away from the Monster Hunter NPC.")
+
+        const questFinished = new Promise<void>((resolve, reject) => {
+            const successCheck = (data: CharacterData) => {
+                if (!data.s || data.s.monsterhunt == undefined) {
+                    this.socket.removeListener("player", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("player", successCheck)
+                reject(`getMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("player", successCheck)
+        })
         this.socket.emit("monsterhunt")
+        return questFinished
     }
 
-    public getMonsterHuntQuest(): Promise<void> {
+    public async getMonsterHuntQuest(): Promise<void> {
+        if (this.s.monsterhunt && this.s.monsterhunt.c > 0) return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
         if (this.ctype == "merchant") return Promise.reject("Merchants can't do Monster Hunts.")
         let close = false
         // Look for a monsterhunter on the current map
-        for (const npc of this.G.maps[this.map].npcs) {
-            if (npc.id !== "monsterhunter") continue
-            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) <= Constants.NPC_INTERACTION_DISTANCE) {
-                close = true
-                break
-            }
+        for (const npc of (this.G.maps[this.map] as GMap).npcs) {
+            if (npc.id !== "monsterhunter") continue // Not the monsterhunter
+            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+            close = true
+            break
         }
         if (!close) return Promise.reject("We are too far away from the Monster Hunter NPC.")
-        if (this.s.monsterhunt && this.s.monsterhunt.c > 0) return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}s.`)
 
         if (this.s.monsterhunt && this.s.monsterhunt.c == 0) {
-            console.warn("We are going to complete the current monster quest first")
-            this.finishMonsterHuntQuest()
+            console.warn("We are going to finish the current monster quest first.")
+            await this.finishMonsterHuntQuest()
         }
 
         const questGot = new Promise<void>((resolve, reject) => {
@@ -1535,8 +1561,7 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             const successCheck = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
+                if (!data.hitchhikers) return
                 for (const hitchhiker of data.hitchhikers) {
                     if (hitchhiker[0] == "game_response" && hitchhiker[1] == "monsterhunt_started") {
                         this.socket.removeListener("game_response", failCheck)
