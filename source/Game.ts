@@ -3,6 +3,7 @@ import fs from "fs"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
+import { Paladin } from "./definitions/Paladin"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
@@ -186,6 +187,7 @@ export class Game {
             let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "merchant") player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+            else if (cType == "paladin") player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "priest") player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "ranger") player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "rogue") player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
@@ -206,6 +208,10 @@ export class Game {
 
     static async startMerchant(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Merchant> {
         return await Game.startCharacter(cName, sRegion, sID, "merchant") as Merchant
+    }
+
+    static async startPaladin(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Paladin> {
+        return await Game.startCharacter(cName, sRegion, sID, "paladin") as Paladin
     }
 
     static async startPriest(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Priest> {
