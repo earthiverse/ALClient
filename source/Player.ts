@@ -12,11 +12,15 @@ export class Player implements PlayerData {
     public ctype: CharacterType
     public abs: boolean
     public angle?: number
-    public armor: number
+    public armor = 0
     public apiercing = 0
     public attack: number
+    public avoidance = 0
     public cid: number
+    public crit = 0
+    public critdamage = 0
     public damage_type: DamageType
+    public evasion = 0
     public frequency: number
     public going_x?: number
     public going_y?: number
@@ -24,7 +28,8 @@ export class Player implements PlayerData {
     public move_num: number
     public moving: boolean
     public party: string
-    public resistance: number
+    public reflection = 0
+    public resistance = 0
     public rpiercing = 0
     public target: string
     public x: number

@@ -2,6 +2,7 @@ import { CharacterData, EntitiesData, EvalData, GameResponseData, PlayerData, UI
 import { TradeSlotType } from "./definitions/adventureland"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { Tools } from "./Tools"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
@@ -116,8 +117,12 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     // TODO: Add promises
-    // TODO: Add a check that we can see the giveaway
-    public joinGiveaway(slot: TradeSlotType, id: string, rid: string): void {
+    public joinGiveaway(slot: TradeSlotType, id: string, rid: string): Promise<void> {
+        const merchant = this.players.get(id)
+        if (!merchant || Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`${id} is too far away.`)
+        if (!merchant.slots[slot]?.giveaway) return Promise.reject(`${id}'s slot ${slot} is not a giveaway.`)
+        if (merchant.slots[slot]?.list.includes(id)) return Promise.resolve() // We've already joined it
+
         this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
     }
 

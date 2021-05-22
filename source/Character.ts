@@ -65,17 +65,9 @@ export class Character extends Observer implements CharacterData {
     public party?: string
     public pdps: number
     public q: {
-        compound?: { len: number; ms: number; num: number; nums: number[] };
-        upgrade?: {
-            len: number
-            ms: number
-            num: number
-        }
-        exchange?: {
-            len: number
-            ms: number
-            // TODO: add more variables
-        }
+        upgrade: { len: number; ms: number; num: number };
+        compound: { len: number; ms: number; num: number; nums: number[] };
+        exchange: { len: number; ms: number; num: number; name: ItemName; id: ItemName; q: number }
     }
     public range = 1
     public resistance = 0
@@ -995,10 +987,11 @@ export class Character extends Observer implements CharacterData {
      * Returns true if we can kill the entity in one shot.
      *
      * @param {Entity} entity
+     * @param {SkillName} [skill="attack"]
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canKillInOneShot(entity: Entity): boolean {
+    public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
         if (gInfo.lifesteal !== undefined) return false
@@ -1010,11 +1003,15 @@ export class Character extends Observer implements CharacterData {
         if (this.damage_type == "physical" && entity.evasion !== undefined) return false
 
         if (entity["1hp"]) {
-            if (entity.hp == 1) return true
-            else return false
+            return entity.hp == 1
         }
 
-        return Tools.calculateDamageRange(this, entity)[0] > entity.hp
+        // TODO: Improve with skills that do apiercing, like piercingshot.
+        // TODO: Will probably need to change calculateDamageRange.
+        let minimumDamage = Tools.calculateDamageRange(this, entity)[0]
+        if (this.G.skills[skill].damage_multiplier) minimumDamage *= this.G.skills[skill].damage_multiplier
+
+        return minimumDamage > entity.hp
     }
 
     /**

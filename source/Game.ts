@@ -2,8 +2,9 @@ import axios from "axios"
 import fs from "fs"
 import { AuthModel, Database } from "./database/Database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
-import { CharacterType, GData2, GMap, ItemName, MapName, NPCName } from "./definitions/adventureland-data"
+import { CharacterType, GData2 } from "./definitions/adventureland-data"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
+import { Paladin } from "./definitions/Paladin"
 import { Mage } from "./Mage"
 import { Merchant } from "./Merchant"
 import { Observer } from "./Observer"
@@ -33,12 +34,6 @@ export class Game {
         try {
             // Check if there's cached data
             this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData2
-
-            // Delete things that are ignored
-            for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
-            for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
-            for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
-
             return this.G
         } catch (e) {
             // There's no cached data, download it
@@ -49,16 +44,6 @@ export class Game {
                 const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
                 const rawG = matches[1]
                 this.G = JSON.parse(rawG) as GData2
-
-                // Delete things that are ignored
-                for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
-                for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
-                for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
-
-                // Delete things that are ignored
-                for (const itemName in this.G.items) if (this.G.items[itemName as ItemName].ignore) delete this.G.items[itemName]
-                for (const mapName in this.G.maps) if ((this.G.maps[mapName as MapName] as GMap).ignore) delete this.G.maps[mapName]
-                for (const npcName in this.G.npcs) if (this.G.npcs[npcName as NPCName].ignore) delete this.G.npcs[npcName]
 
                 console.debug("Updated 'G' data!")
 
@@ -201,6 +186,7 @@ export class Game {
             let player: PingCompensatedCharacter
             if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "merchant") player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+            else if (cType == "paladin") player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "priest") player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "ranger") player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else if (cType == "rogue") player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
@@ -221,6 +207,10 @@ export class Game {
 
     static async startMerchant(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Merchant> {
         return await Game.startCharacter(cName, sRegion, sID, "merchant") as Merchant
+    }
+
+    static async startPaladin(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Paladin> {
+        return await Game.startCharacter(cName, sRegion, sID, "paladin") as Paladin
     }
 
     static async startPriest(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Priest> {
