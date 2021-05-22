@@ -225,6 +225,16 @@ export type StatusInfo = {
         ability: true
         ms: number
     }
+    rspeed?: {
+        f: string
+    }
+    blink?: {
+        in: string
+        map: MapName
+        x: number
+        y: number
+        d: number
+    }
 }
 
 export type PositionReal = IPosition & {

@@ -67,7 +67,7 @@ export type CharacterData = PlayerData & {
     resistance: number
     level: number
     rip: boolean
-    afk: "afk" | string
+    afk: "afk" | boolean | string
     s: StatusInfo
     // TODO: Figure this type out
     c: any
@@ -91,18 +91,18 @@ export type CharacterData = PlayerData & {
         }
     }
     /** TODO: What is this? */
-    abs: boolean
+    abs?: boolean
     age: number
-    angle: number
+    angle?: number
     blast: number
     pdps: number
     id: string
-    name: string
+    name?: string
     x: number
     y: number
     going_x?: number
     going_y?: number
-    moving: boolean
+    moving?: boolean
     stand?: boolean | "cstand" | "stand0",
     skin: string
     slots: SlotInfo
@@ -140,7 +140,7 @@ export type CharacterData = PlayerData & {
     m: number
     evasion: number
     miss: number
-    move_num: number
+    move_num?: number
     reflection: number
     lifesteal: number
     manasteal: number
@@ -159,7 +159,7 @@ export type CharacterData = PlayerData & {
 
     // (Probably) GUI Related things
     cid: number
-    controller: string
+    controller?: string
     cx: CXData
 
     ipass?: string
@@ -216,6 +216,13 @@ export type ChestOpenedData = {
 } | {
     id: string
     gone: true
+}
+
+export type CMData = {
+    /** The name of the player that sent the CM */
+    name: string
+    /** The message that they sent */
+    message: string
 }
 
 export type DeathData = {
@@ -708,7 +715,7 @@ export type PlayerData = {
     // TODO: Figure out what this is
     c: any
     cid: number
-    code?: boolean
+    code?: boolean | string
     controller?: string
     cx: CXData
     focus?: string
@@ -734,6 +741,14 @@ export type PlayerData = {
             num: number
             // NOTE: I don't think this value is used?
             nums: number[]
+        }
+        exchange?: {
+            ms: number
+            len: number
+            name: ItemName
+            id: ItemName
+            q: number
+            num: number
         }
         upgrade?: {
             len: number
@@ -836,6 +851,8 @@ export type ServerInfoDataNotLive = {
 export type StartData = CharacterData & {
     // TODO: Figure this out
     info: any
+    code_slot: number
+    code_version: number
     base_gold: {
         [T in MonsterName]?: { [T in string]?: number }
     }

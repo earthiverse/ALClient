@@ -63,17 +63,9 @@ export class Character extends Observer implements CharacterData {
     public party?: string
     public pdps: number
     public q: {
-        compound?: { len: number; ms: number; num: number; nums: number[] };
-        upgrade?: {
-            len: number
-            ms: number
-            num: number
-        }
-        exchange?: {
-            len: number
-            ms: number
-            // TODO: add more variables
-        }
+        upgrade: { len: number; ms: number; num: number };
+        compound: { len: number; ms: number; num: number; nums: number[] };
+        exchange: { len: number; ms: number; num: number; name: ItemName; id: ItemName; q: number }
     }
     public range = 1
     public resistance = 0
