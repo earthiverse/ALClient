@@ -1,6 +1,6 @@
-import { CharacterData, EvalData } from "./adventureland-server"
-import { Constants } from "../Constants"
-import { PingCompensatedCharacter } from "../PingCompensatedCharacter"
+import { CharacterData, EvalData } from "./definitions/adventureland-server"
+import { Constants } from "./Constants"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Paladin extends PingCompensatedCharacter {
     // NOTE: Untested
