@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG",
   "files": [
     "build/**/*",
@@ -40,11 +40,11 @@
   "homepage": "https://github.com/earthiverse/ALClient#readme",
   "devDependencies": {
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.3.0",
+    "@types/node": "^15.6.0",
     "@types/socket.io-client": "^1.4.36",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
-    "eslint": "^7.26.0",
+    "eslint": "^7.27.0",
     "jest": "^26.6.3",
     "madge": "^4.0.2",
     "rimraf": "^3.0.2",
