@@ -965,10 +965,11 @@ export class Character extends Observer implements CharacterData {
      * Returns true if we can kill the entity in one shot.
      *
      * @param {Entity} entity
+     * @param {SkillName} [skill="attack"]
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canKillInOneShot(entity: Entity): boolean {
+    public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
         if (gInfo.lifesteal !== undefined) return false
@@ -983,7 +984,12 @@ export class Character extends Observer implements CharacterData {
             return entity.hp == 1
         }
 
-        return Tools.calculateDamageRange(this, entity)[0] > entity.hp
+        // TODO: Improve with skills that do apiercing, like piercingshot.
+        // TODO: Will probably need to change calculateDamageRange.
+        let minimumDamage = Tools.calculateDamageRange(this, entity)[0]
+        if (this.G.skills[skill].damage_multiplier) minimumDamage *= this.G.skills[skill].damage_multiplier
+
+        return minimumDamage > entity.hp
     }
 
     /**
