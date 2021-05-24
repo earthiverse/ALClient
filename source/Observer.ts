@@ -23,18 +23,18 @@ export class Observer {
     public projectiles = new Map<string, ActionData & { date: Date; }>()
     public S: ServerInfoData = {}
 
-    public serverRegion: ServerRegion;
-    public serverIdentifier: ServerIdentifier;
+    public serverData: ServerData
     public map: MapName;
     public x: number;
     public y: number;
 
-    constructor(serverData: ServerData, g: GData2, reconnect = false) {
-        this.serverRegion = serverData.region
-        this.serverIdentifier = serverData.name
+    constructor(serverData: ServerData, g: GData2) {
+        this.serverData = serverData
         this.G = g
+    }
 
-        this.socket = socketio(`ws://${serverData.addr}:${serverData.port}`, {
+    public async connect(reconnect = false): Promise<void> {
+        this.socket = socketio(`ws://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
             reconnection: reconnect,
             transports: ["websocket"]
@@ -122,14 +122,12 @@ export class Observer {
 
             this.S = data
         })
-    }
 
-    public async connect(): Promise<void> {
-        console.debug(`Connecting to ${this.serverRegion}${this.serverIdentifier}...`)
+        console.debug(`Connecting to ${this.serverData.region}${this.serverData.name}...`)
         const connected = new Promise<void>((resolve, reject) => {
             this.socket.on("welcome", (data: WelcomeData) => {
-                if (data.region !== this.serverRegion || data.name !== this.serverIdentifier) {
-                    reject(`We wanted the server ${this.serverRegion}${this.serverIdentifier}, but we are on ${data.region}${data.name}.`)
+                if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
+                    reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
                 } else {
                     this.socket.emit("loaded", {
                         height: 1080,
@@ -142,11 +140,12 @@ export class Observer {
             })
 
             setTimeout(() => {
-                reject("Failed to start within 10s.")
-            }, 10000)
+                reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
+            }, Constants.CONNECT_TIMEOUT_MS)
         })
 
         this.socket.open()
+
         return connected
     }
 

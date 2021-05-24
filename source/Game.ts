@@ -222,9 +222,9 @@ export class Game {
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
         try {
             if (!this.G) await this.getGData()
-            const observer = new Observer(this.servers[region][id], this.G, true)
+            const observer = new Observer(this.servers[region][id], this.G)
 
-            await observer.connect()
+            await observer.connect(true)
 
             return observer
         } catch (e) {

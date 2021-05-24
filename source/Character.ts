@@ -128,108 +128,6 @@ export class Character extends Observer implements CharacterData {
         this.userID = userID
         this.userAuth = userAuth
         this.characterID = characterID
-
-        this.socket.on("disconnect", () => {
-            this.ready = false
-        })
-
-        this.socket.on("start", (data: StartData) => {
-            this.going_x = data.x
-            this.going_y = data.y
-            this.moving = false
-            this.damage_type = this.G.classes[data.ctype].damage_type
-
-            this.parseCharacter(data)
-            if (data.entities) this.parseEntities(data.entities)
-            this.S = data.s_info
-            this.ready = true
-        })
-
-        this.socket.on("achievement_progress", (data: AchievementProgressData) => {
-            this.achievements.set(data.name, data)
-        })
-
-        this.socket.on("chest_opened", (data: ChestOpenedData) => {
-            this.chests.delete(data.id)
-        })
-
-        this.socket.on("drop", (data: ChestData) => {
-            this.chests.set(data.id, data)
-        })
-
-        this.socket.on("eval", (data: EvalData) => {
-            this.parseEval(data)
-        })
-
-        this.socket.on("game_error", (data: string | { message: string; }) => {
-            if (typeof data == "string") {
-                console.error(`Game Error: ${data}`)
-            } else {
-                console.error("Game Error ----------")
-                console.error(data)
-            }
-            this.disconnect()
-        })
-
-        this.socket.on("game_response", (data: GameResponseData) => {
-            this.parseGameResponse(data)
-        })
-
-        // TODO: Confirm this works for leave_party(), too.
-        this.socket.on("party_update", (data: PartyData) => {
-            this.partyData = data
-        })
-
-        this.socket.on("player", (data: CharacterData) => {
-            this.parseCharacter(data)
-        })
-
-        this.socket.on("q_data", (data: QData) => {
-            if (data.q.upgrade) this.q.upgrade = data.q.upgrade
-            if (data.q.compound) this.q.compound = data.q.compound
-        })
-
-        this.socket.on("upgrade", (data: UpgradeData) => {
-            if (data.type == "compound" && this.q.compound) delete this.q.compound
-
-            // else if (data.type == "exchange" && this.q.exchange) delete this.q.exchange
-            else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
-        })
-
-        this.socket.on("welcome", (data: WelcomeData) => {
-            this.server = data
-
-            // This serves as a doublecheck.
-            if (this.serverRegion !== data.region)
-                console.error(`REGIONS DO NOT MATCH!? ${this.serverRegion} VS. ${data.region}`)
-            if (this.serverIdentifier !== data.name)
-                console.error(`IDENTIFIERS DO NOT MATCH!? ${this.serverIdentifier} VS. ${data.name}`)
-            this.serverRegion = data.region
-            this.serverIdentifier = data.name
-
-            // Send a response that we're ready to go
-            this.socket.emit("loaded", {
-                height: 1080,
-                width: 1920,
-                scale: 2,
-                success: 1
-            } as LoadedData)
-
-            // When we're loaded, authenticate
-            this.socket.emit("auth", {
-                auth: this.userAuth,
-                character: this.characterID,
-                height: 1080,
-                no_graphics: "True",
-                no_html: "1",
-                passphrase: "",
-                scale: 2,
-                user: this.userID,
-                width: 1920
-            } as AuthData)
-        })
-
-        this.updateLoop()
     }
 
     protected async updateLoop(): Promise<void> {
@@ -424,6 +322,98 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
+        this.socket.on("disconnect", () => {
+            this.ready = false
+        })
+
+        this.socket.on("start", (data: StartData) => {
+            this.going_x = data.x
+            this.going_y = data.y
+            this.moving = false
+            this.damage_type = this.G.classes[data.ctype].damage_type
+
+            this.parseCharacter(data)
+            if (data.entities) this.parseEntities(data.entities)
+            this.S = data.s_info
+            this.ready = true
+        })
+
+        this.socket.on("achievement_progress", (data: AchievementProgressData) => {
+            this.achievements.set(data.name, data)
+        })
+
+        this.socket.on("chest_opened", (data: ChestOpenedData) => {
+            this.chests.delete(data.id)
+        })
+
+        this.socket.on("drop", (data: ChestData) => {
+            this.chests.set(data.id, data)
+        })
+
+        this.socket.on("eval", (data: EvalData) => {
+            this.parseEval(data)
+        })
+
+        this.socket.on("game_error", (data: string | { message: string; }) => {
+            if (typeof data == "string") {
+                console.error(`Game Error: ${data}`)
+            } else {
+                console.error("Game Error ----------")
+                console.error(data)
+            }
+            this.disconnect()
+        })
+
+        this.socket.on("game_response", (data: GameResponseData) => {
+            this.parseGameResponse(data)
+        })
+
+        // TODO: Confirm this works for leave_party(), too.
+        this.socket.on("party_update", (data: PartyData) => {
+            this.partyData = data
+        })
+
+        this.socket.on("player", (data: CharacterData) => {
+            this.parseCharacter(data)
+        })
+
+        this.socket.on("q_data", (data: QData) => {
+            if (data.q.upgrade) this.q.upgrade = data.q.upgrade
+            if (data.q.compound) this.q.compound = data.q.compound
+        })
+
+        this.socket.on("upgrade", (data: UpgradeData) => {
+            if (data.type == "compound" && this.q.compound) delete this.q.compound
+
+            // else if (data.type == "exchange" && this.q.exchange) delete this.q.exchange
+            else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
+        })
+
+        this.socket.on("welcome", (data: WelcomeData) => {
+            this.server = data
+
+            // Send a response that we're ready to go
+            this.socket.emit("loaded", {
+                height: 1080,
+                width: 1920,
+                scale: 2,
+                success: 1
+            } as LoadedData)
+
+            // When we're loaded, authenticate
+            this.socket.emit("auth", {
+                auth: this.userAuth,
+                character: this.characterID,
+                height: 1080,
+                no_graphics: "True",
+                no_html: "1",
+                passphrase: "",
+                scale: 2,
+                user: this.userID,
+                width: 1920
+            } as AuthData)
+        })
+
         const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
@@ -443,26 +433,29 @@ export class Character extends Observer implements CharacterData {
             setTimeout(() => {
                 this.socket.removeListener("start", startCheck)
                 this.socket.removeListener("game_error", failCheck)
-                reject("Failed to start within 10s.")
-            }, 10000)
+                reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
+            }, Constants.CONNECT_TIMEOUT_MS)
 
             this.socket.once("start", startCheck)
             this.socket.once("game_error", failCheck)
         })
 
-        this.socket.open()
+        await super.connect()
+
+        this.updateLoop()
 
         return connected
     }
 
     public async disconnect(): Promise<void> {
-        if (this.socket.disconnected)
-            return
         console.warn("Disconnecting!")
 
-        // Close the socket
+        // Close & remove the socket
         this.socket.close()
         this.socket.removeAllListeners()
+        this.socket = undefined
+
+        this.ready = false
 
         // Cancel all timeouts
         for (const [, timer] of this.timeouts) clearTimeout(timer)
