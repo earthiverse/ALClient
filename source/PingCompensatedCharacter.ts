@@ -103,7 +103,7 @@ export class PingCompensatedCharacter extends Character {
     }
 
     protected pingLoop(): void {
-        if (this.socket.disconnected) {
+        if (!this.socket || this.socket.disconnected) {
             this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, Constants.PING_EVERY_MS))
             return
         }
