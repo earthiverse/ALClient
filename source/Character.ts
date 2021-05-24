@@ -419,10 +419,10 @@ export class Character extends Observer implements CharacterData {
         const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
-                    this.socket?.removeListener("start", startCheck)
+                    this.socket.removeListener("start", startCheck)
                     reject(`Failed to connect: ${data}`)
                 } else {
-                    this.socket?.removeListener("start", startCheck)
+                    this.socket.removeListener("start", startCheck)
                     reject(`Failed to connect: ${data.message}`)
                 }
             }
@@ -433,8 +433,8 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket?.removeListener("start", startCheck)
-                this.socket?.removeListener("game_error", failCheck)
+                this.socket.removeListener("start", startCheck)
+                this.socket.removeListener("game_error", failCheck)
                 reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
             }, Constants.CONNECT_TIMEOUT_MS)
 
@@ -454,7 +454,6 @@ export class Character extends Observer implements CharacterData {
         if (this.socket) {
             this.socket.close()
             this.socket.removeAllListeners()
-            this.socket = undefined
         }
 
         this.ready = false
