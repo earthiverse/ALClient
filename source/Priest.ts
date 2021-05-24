@@ -5,6 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Priest extends PingCompensatedCharacter {
     // NOTE: Untested
     public absorbSins(target: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const absorbed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -25,6 +26,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public curse(target: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -45,6 +47,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public darkBlessing(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const darkBlessed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -65,6 +68,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public heal(id: string): Promise<string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // if (!this.game.entities.has(id) && !this.game.players.has(id)) return Promise.reject(`No Entity with ID '${id}'`)
         const healStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
@@ -124,6 +128,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public partyHeal(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const healStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]partyheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -144,6 +149,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (essenceoflife === undefined) return Promise.reject("We don't have any essenceoflife in our inventory.")
 
         const revived = new Promise<void>((resolve, reject) => {

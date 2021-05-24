@@ -4,6 +4,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
 export class Ranger extends PingCompensatedCharacter {
     public fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
 
@@ -42,6 +43,7 @@ export class Ranger extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public fourFinger(target: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // TODO: Check that the target is not a monster.
 
         const marked = new Promise<void>((resolve, reject) => {
@@ -66,6 +68,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public huntersMark(target: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]huntersmark['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -88,6 +91,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public piercingShot(target: string): Promise<string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.G.skills.piercingshot.mp > this.mp) return Promise.reject("Not enough MP to use piercingShot")
 
         const piercingShotStarted = new Promise<string>((resolve, reject) => {
@@ -124,6 +128,7 @@ export class Ranger extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public poisonArrow(target: string, poison = this.locateItem("poison")): Promise<string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (poison === undefined) return Promise.reject("We need poison to use this skill.")
 
         const poisonArrowed = new Promise<string>((resolve, reject) => {
@@ -166,6 +171,7 @@ export class Ranger extends PingCompensatedCharacter {
      * @memberof Ranger
      */
     public superShot(target: string): Promise<string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.G.skills.supershot.mp > this.mp)
             return Promise.reject("Not enough MP to use superShot")
 
@@ -184,7 +190,7 @@ export class Ranger extends PingCompensatedCharacter {
             // const failCheck = (data: GameResponseData) => {
             //     if(typeof data == "string") {
             //         if(data == "no_target") {
-                        
+
             //         }
             //     }
             // }
@@ -211,6 +217,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public threeShot(target1: string, target2: string, target3: string): Promise<string[]> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
 
