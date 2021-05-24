@@ -7,15 +7,16 @@ import { ConditionName, GData2, SkillName } from "./definitions/adventureland-da
 export class PingCompensatedCharacter extends Character {
     constructor(userID: string, userAuth: string, characterID: string, g: GData2, serverData: ServerData) {
         super(userID, userAuth, characterID, g, serverData)
+    }
+
+    public async connect(): Promise<void> {
+        await super.connect()
         this.pingLoop()
     }
 
     protected setNextSkill(skill: SkillName, next: Date): void {
         // Get ping compensation
-        let pingCompensation = 0
-        if (this.pings.length > 0) {
-            pingCompensation = Math.min(...this.pings)
-        }
+        const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
 
         this.nextSkill.set(skill, new Date(next.getTime() - pingCompensation))
     }
@@ -23,7 +24,8 @@ export class PingCompensatedCharacter extends Character {
     public parseCharacter(data: CharacterData): void {
         super.parseCharacter(data)
 
-        const pingCompensation = Math.min(...this.pings)
+        // Get ping compensation
+        const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
 
         // Compensate movement
         if (this.moving) {
@@ -51,7 +53,8 @@ export class PingCompensatedCharacter extends Character {
     protected async parseEntities(data: EntitiesData): Promise<void> {
         super.parseEntities(data)
 
-        const pingCompensation = Math.min(...this.pings)
+        // Get ping compensation
+        const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
 
         for (const monster of data.monsters) {
             // Compensate position
@@ -104,7 +107,7 @@ export class PingCompensatedCharacter extends Character {
 
     protected pingLoop(): void {
         if (!this.socket || this.socket.disconnected) {
-            this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, Constants.PING_EVERY_MS))
+            this.timeouts.set("pingLoop", setTimeout(async () => { this.pingLoop() }, 1000))
             return
         }
 

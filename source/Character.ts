@@ -324,7 +324,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
-        super.connect(false, false)
+        await super.connect(false, false)
 
         this.socket.on("disconnect", () => {
             this.ready = false
