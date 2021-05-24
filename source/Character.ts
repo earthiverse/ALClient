@@ -228,10 +228,12 @@ export class Character extends Observer implements CharacterData {
                 width: 1920
             } as AuthData)
         })
+
+        this.updateLoop()
     }
 
     protected async updateLoop(): Promise<void> {
-        if (this.socket.disconnected) {
+        if (this.socket.disconnected || !this.ready) {
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
@@ -450,7 +452,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.open()
 
-        return connected.then(async () => { this.updateLoop() })
+        return connected
     }
 
     public async disconnect(): Promise<void> {
