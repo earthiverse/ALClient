@@ -153,6 +153,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
+            if (!attacker) return true // Couldn't find entity, already dead?
 
             if (attacker.damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
             if (attacker.damage_type == "magical" && this.reflection >= 100) continue // It will reflect the attack
@@ -240,6 +241,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
+            if(!attacker) return true // Couldn't find entity, already dead?
 
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage

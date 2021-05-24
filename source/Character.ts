@@ -14,7 +14,7 @@ export class Character extends Observer implements CharacterData {
     protected userID: string
     protected userAuth: string
     protected characterID: string
-    protected timeouts = new Map<string, ReturnType<typeof setTimeout>>()
+    public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
     public achievements = new Map<string, AchievementProgressData>()
     public bank: BankInfo = { gold: 0 }
@@ -22,6 +22,7 @@ export class Character extends Observer implements CharacterData {
     public nextSkill = new Map<SkillName, Date>()
     public partyData: PartyData
     public server: WelcomeData
+    public ready = false
 
     // CharacterData
     public afk: "code"
@@ -128,6 +129,10 @@ export class Character extends Observer implements CharacterData {
         this.userAuth = userAuth
         this.characterID = characterID
 
+        this.socket.on("disconnect", () => {
+            this.ready = false
+        })
+
         this.socket.on("start", (data: StartData) => {
             this.going_x = data.x
             this.going_y = data.y
@@ -137,6 +142,7 @@ export class Character extends Observer implements CharacterData {
             this.parseCharacter(data)
             if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
+            this.ready = true
         })
 
         this.socket.on("achievement_progress", (data: AchievementProgressData) => {
@@ -208,6 +214,19 @@ export class Character extends Observer implements CharacterData {
                 scale: 2,
                 success: 1
             } as LoadedData)
+
+            // When we're loaded, authenticate
+            this.socket.emit("auth", {
+                auth: this.userAuth,
+                character: this.characterID,
+                height: 1080,
+                no_graphics: "True",
+                no_html: "1",
+                passphrase: "",
+                scale: 2,
+                user: this.userID,
+                width: 1920
+            } as AuthData)
         })
     }
 
@@ -429,21 +448,6 @@ export class Character extends Observer implements CharacterData {
             this.socket.once("game_error", failCheck)
         })
 
-        // When we're loaded, authenticate
-        this.socket.on("welcome", () => {
-            this.socket.emit("auth", {
-                auth: this.userAuth,
-                character: this.characterID,
-                height: 1080,
-                no_graphics: "True",
-                no_html: "1",
-                passphrase: "",
-                scale: 2,
-                user: this.userID,
-                width: 1920
-            } as AuthData)
-        })
-
         this.socket.open()
 
         return connected.then(async () => { this.updateLoop() })
@@ -467,6 +471,8 @@ export class Character extends Observer implements CharacterData {
      * NOTE: There is a rather high code call cost to this, don't call it too often.
      */
     public async requestEntitiesData(): Promise<EntitiesData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+
         return new Promise<EntitiesData>((resolve, reject) => {
             const checkEntitiesEvent = (data: EntitiesData) => {
                 if (data.type == "all") {
@@ -489,6 +495,8 @@ export class Character extends Observer implements CharacterData {
      * This function is a hack to get the server to respond with a player data update. It will respond with two...
      */
     public async requestPlayerData(): Promise<CharacterData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+
         return new Promise<CharacterData>((resolve, reject) => {
             const checkPlayerEvent = (data: CharacterData) => {
                 if (data.s.typing) {
@@ -512,6 +520,8 @@ export class Character extends Observer implements CharacterData {
      * @param name ID of the character that offered a magiport.
      */
     public acceptMagiport(name: string): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+
         const acceptedMagiport = new Promise<NodeData>((resolve, reject) => {
             const magiportCheck = (data: NewMapData) => {
                 if (data.effect == "magiport") {
@@ -536,6 +546,8 @@ export class Character extends Observer implements CharacterData {
      * @param id The ID of the character's party you want to accept the invite for.
      */
     public acceptPartyInvite(id: string): Promise<PartyData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+
         const acceptedInvite = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
                 if (data.list && data.list.includes(this.id)
@@ -585,6 +597,8 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add failure checks
     public acceptPartyRequest(id: string): Promise<PartyData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+
         const acceptedRequest = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
                 if (data.list.includes(this.id)
@@ -611,8 +625,7 @@ export class Character extends Observer implements CharacterData {
      * @param id The ID of the entity or player to attack
      */
     public basicAttack(id: string): Promise<string> {
-        if (this.mp_cost > this.mp)
-            return Promise.reject("Not enough MP to attack")
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
 
         const attackStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
@@ -678,8 +691,8 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Return buy info
     public buy(itemName: ItemName, quantity = 1): Promise<number> {
-        if (this.gold < this.G.items[itemName].g)
-            return Promise.reject(`Insufficient gold. We only have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (this.gold < this.G.items[itemName].g) return Promise.reject(`Insufficient gold. We only have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
 
         const itemReceived = new Promise<number>((resolve, reject) => {
             const buyCheck1 = (data: CharacterData) => {
@@ -735,6 +748,7 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add promises
     public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (quantity <= 0) return Promise.reject(`We can not buy a quantity of ${quantity}.`)
         const merchant = this.players.get(id)
         if (!merchant) return Promise.reject(`We can not see ${id} nearby.`)
@@ -774,6 +788,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public buyFromPonty(item: ItemDataTrade): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * Constants.PONTY_MARKUP * (item.q ? item.q : 1)
         if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
@@ -1113,6 +1128,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
         const item3Info = this.items[item3Pos]
@@ -1183,6 +1199,7 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add promises
     public craft(item: ItemName): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const gInfo = this.G.craft[item]
         if (!gInfo) return Promise.reject(`Can not find a recipe for ${item}.`)
         if (gInfo.cost > this.gold) return Promise.reject(`We don't have enough gold to craft ${item}.`)
@@ -1226,6 +1243,7 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add promises
     public depositGold(gold: number): unknown {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // TODO: Check if you can be in the basement and deposit gold
         if (this.map !== "bank") return Promise.reject("We need to be in 'bank' to deposit gold.")
         if (gold <= 0) return Promise.reject("We can't deposit 0 or less gold")
@@ -1248,6 +1266,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): unknown {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
             return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
 
@@ -1358,6 +1377,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public emote(emotionName: EmotionName): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.emx[emotionName]) return Promise.reject(`We don't have the emotion '${emotionName}'`)
 
         const emoted = new Promise<void>((resolve, reject) => {
@@ -1397,6 +1417,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
 
         const iInfo = this.items[inventoryPos]
@@ -1448,6 +1469,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public exchange(inventoryPos: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
         if (this.G.maps[this.map].mount) return Promise.reject("We can't exchange things in the bank.")
 
@@ -1496,6 +1518,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public finishMonsterHuntQuest(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.s.monsterhunt) return Promise.reject("We don't have a monster hunt to turn in.")
         if (this.s.monsterhunt.c > 0) return Promise.reject(`We still have to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
 
@@ -1528,6 +1551,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public async getMonsterHuntQuest(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.s.monsterhunt && this.s.monsterhunt.c > 0) return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
         if (this.ctype == "merchant") return Promise.reject("Merchants can't do Monster Hunts.")
         let close = false
@@ -1588,6 +1612,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public getPlayers(): Promise<PlayersData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const playersData = new Promise<PlayersData>((resolve, reject) => {
             const dataCheck = (data: PlayersData) => {
                 resolve(data)
@@ -1604,6 +1629,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public getPontyItems(): Promise<ItemDataTrade[]> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const pontyItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
             const distanceCheck = (data: GameResponseData) => {
                 if (data == "buy_get_closer") {
@@ -1639,6 +1665,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public getTrackerData(): Promise<TrackerData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.hasItem("tracker")) return Promise.reject("We need a tracker to obtain tracker data.")
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
@@ -1684,6 +1711,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public leaveMap(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const leaveComplete = new Promise<void>((resolve, reject) => {
             const leaveCheck = (data: NewMapData) => {
                 if (data.name == "main") {
@@ -1721,7 +1749,8 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add checks and promises
-    public leaveParty(): void {
+    public leaveParty(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.socket.emit("party", { event: "leave" })
     }
 
@@ -1744,6 +1773,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // Check if we're already there
         if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, y: this.y, x: this.x })
 
@@ -1815,6 +1845,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public openChest(id: string): Promise<ChestOpenedData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const chestOpened = new Promise<ChestOpenedData>((resolve, reject) => {
             const openCheck = (data: ChestOpenedData) => {
                 if (data.id == id) {
@@ -1833,6 +1864,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public regenHP(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
@@ -1852,6 +1884,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public regenMP(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // if (this.game.nextSkill.get("use_mp")?.getTime() > Date.now()) return Promise.reject("use_mp is on cooldown")
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
@@ -1878,6 +1911,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public respawn(): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const respawned = new Promise<NodeData>((resolve, reject) => {
             const respawnCheck = (data: NewMapData) => {
                 if (data.effect == 1) {
@@ -1905,7 +1939,9 @@ export class Character extends Observer implements CharacterData {
         return respawned
     }
 
+    // TODO: Improve with item check
     public scare(): Promise<string[]> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const scared = new Promise<string[]>((resolve, reject) => {
             let ids: string[]
             const idsCheck = (data: UIData) => {
@@ -1938,14 +1974,17 @@ export class Character extends Observer implements CharacterData {
 
     // TODO: Add promises
     public async sell(itemPos: number, quantity = 1): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
     }
 
-    public sendCM(to: string[], message: unknown): void {
+    public sendCM(to: string[], message: unknown): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.socket.emit("cm", { to: to, message: JSON.stringify(message) })
     }
 
     public async sendGold(to: string, amount: number): Promise<number> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.gold == 0) return Promise.reject("We have no gold to send.")
         if (!this.players.has(to)) return Promise.reject(`We can't see ${to} nearby to send gold.`)
         if (Tools.distance(this, this.players.get(to)) > Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`We are too far away from ${to} to send gold.`)
@@ -1974,6 +2013,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public sendItem(to: string, inventoryPos: number, quantity = 1): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.players.has(to)) return Promise.reject(`${to} is not nearby.`)
         if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
         if (this.items[inventoryPos]?.q < quantity) return Promise.reject(`We only have a quantity of ${this.items[inventoryPos].q}, not ${quantity}.`)
@@ -2010,7 +2050,8 @@ export class Character extends Observer implements CharacterData {
      * @param id The character ID to invite to our party.
      */
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
-    public sendPartyInvite(id: string): void {
+    public sendPartyInvite(id: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.socket.emit("party", { event: "invite", name: id })
     }
 
@@ -2019,7 +2060,8 @@ export class Character extends Observer implements CharacterData {
      * @param id The character ID to request a party invite from.
      */
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
-    public sendPartyRequest(id: string): void {
+    public sendPartyRequest(id: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.socket.emit("party", { event: "request", name: id })
     }
 
@@ -2032,6 +2074,7 @@ export class Character extends Observer implements CharacterData {
      */
     // TODO: Add promises
     public shiftBooster(booster: number, to: "goldbooster" | "luckbooster" | "xpbooster"): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const itemInfo = this.items[booster]
         if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
         if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
@@ -2057,6 +2100,7 @@ export class Character extends Observer implements CharacterData {
         getWithin: 0,
         useBlink: false
     }): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const started = Date.now()
         this.lastSmartMove = started
         let fixedTo: NodeData
@@ -2250,6 +2294,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public async stopSmartMove(): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         this.lastSmartMove = Date.now()
         if (this?.c?.town) {
             this.stopWarpToTown()
@@ -2258,15 +2303,15 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: Add promises
-    public stopWarpToTown(): void {
+    public stopWarpToTown(): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // TODO: Check if we are warping to town, return reject promise if we are
 
         this.socket.emit("stop", { action: "town" })
     }
 
     public takeMailItem(mailID: string): Promise<void> {
-        // TODO: We could be receiving a stacked item, and that could stack on something in our inventory...
-        // if (this.isFull()) return Promise.reject("Not enough inventory space to retrieve mail item")
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
 
         const itemReceived = new Promise<void>((resolve, reject) => {
             const successCheck = (data: GameResponseData) => {
@@ -2290,6 +2335,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public throwSnowball(target: string, snowball = this.locateItem("snowball")): Promise<string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.G.skills.snowball.mp > this.mp) return Promise.reject("Not enough MP to throw a snowball.")
         if (snowball === undefined) return Promise.reject("We don't have any snowballs in our inventory.")
 
@@ -2337,6 +2383,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public transport(map: MapName, spawn: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const transportComplete = new Promise<void>((resolve, reject) => {
             const transportCheck = (data: NewMapData) => {
                 this.socket.removeListener("game_response", failCheck)
@@ -2370,6 +2417,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public unequip(slot: SlotType | TradeSlotType): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.slots[slot] === null) return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.slots[slot] === undefined) return Promise.reject(`Slot ${slot} does not exist.`)
 
@@ -2394,6 +2442,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (this.G.maps[this.map].mount) return Promise.reject("We can't upgrade things in the bank.")
 
         const itemInfo = this.items[itemPos]
@@ -2468,6 +2517,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public useHPPot(itemPos: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.items[itemPos]) return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[this.items[itemPos].name].type !== "pot") return Promise.reject(`The item provided (${itemPos}) is not a potion.`)
         if (this.G.items[this.items[itemPos].name].gives[0][0] !== "hp") return Promise.reject(`The item provided(${itemPos}) is not an HP Potion.`)
@@ -2492,6 +2542,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public useMPPot(itemPos: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         if (!this.items[itemPos]) return Promise.reject(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[this.items[itemPos].name].type !== "pot") return Promise.reject(`The item provided (${itemPos}) is not a potion.`)
         if (this.G.items[this.items[itemPos].name].gives[0][0] !== "mp") return Promise.reject(`The item provided(${itemPos}) is not an MP Potion.`)
@@ -2516,10 +2567,12 @@ export class Character extends Observer implements CharacterData {
     }
 
     public warpToJail(): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         return this.move(Number.MAX_VALUE, Number.MAX_VALUE, { disableSafetyCheck: true })
     }
 
     public warpToTown(): Promise<NodeData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         let startedWarp = false
         const warpComplete = new Promise<NodeData>((resolve, reject) => {
             const failCheck = (data: CharacterData) => {
@@ -2563,6 +2616,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public withdrawGold(gold: number): unknown {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         // TODO: Check if you can be in the basement and withdraw gold
         if (this.map !== "bank")
             return Promise.reject("We need to be in 'bank' to withdraw gold.")
@@ -2578,6 +2632,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
+        if (!this.ready) return Promise.reject("We aren't ready yet.")
         const item = this.bank[bankPack][bankPos]
         if (!item) return Promise.reject(`There is no item in bank ${bankPack}[${bankPos}]`)
 

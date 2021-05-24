@@ -5,6 +5,7 @@ export class Constants {
     static PATHFINDER_FIRST_MAP: MapName = "main"
     static MAX_PINGS = 100
     static PING_EVERY_MS = 30000
+    static RECONNECT_TIMEOUT_MS = 40000
     static STALE_MONSTER_MS = 60000
     static STALE_PROJECTILE_MS = 10000
     static TIMEOUT = 1000
