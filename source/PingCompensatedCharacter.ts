@@ -1,13 +1,13 @@
-import { CharacterData, EntitiesData } from "./definitions/adventureland-server"
+import { CharacterData, EntitiesData, ServerData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Character } from "./Character"
 import { Tools } from "./Tools"
-import { ConditionName, SkillName } from "./definitions/adventureland-data"
+import { ConditionName, GData2, SkillName } from "./definitions/adventureland-data"
 
 export class PingCompensatedCharacter extends Character {
-    async connect(): Promise<void> {
-        const promise = super.connect()
-        return promise.then(async () => { this.pingLoop() })
+    constructor(userID: string, userAuth: string, characterID: string, g: GData2, serverData: ServerData) {
+        super(userID, userAuth, characterID, g, serverData)
+        this.pingLoop()
     }
 
     protected setNextSkill(skill: SkillName, next: Date): void {
