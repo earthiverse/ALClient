@@ -324,6 +324,8 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
+        super.connect(false, false)
+
         this.socket.on("disconnect", () => {
             this.ready = false
         })
@@ -463,11 +465,9 @@ export class Character extends Observer implements CharacterData {
             this.socket.once("game_error", failCheck)
         })
 
-        await super.connect()
+        this.socket.open()
 
-        this.updateLoop()
-
-        return connected
+        return connected.then(() => { this.updateLoop() })
     }
 
     public async disconnect(): Promise<void> {

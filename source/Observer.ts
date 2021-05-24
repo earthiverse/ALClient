@@ -34,7 +34,7 @@ export class Observer {
         this.G = g
     }
 
-    public async connect(reconnect = false): Promise<void> {
+    public async connect(reconnect = false, start = true): Promise<void> {
         this.socket = socketio(`ws://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
             reconnection: reconnect,
@@ -124,30 +124,30 @@ export class Observer {
             this.S = data
         })
 
-        console.debug(`Connecting to ${this.serverData.region}${this.serverData.name}...`)
-        const connected = new Promise<void>((resolve, reject) => {
-            this.socket.on("welcome", (data: WelcomeData) => {
-                if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
-                    reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
-                } else {
-                    this.socket.emit("loaded", {
-                        height: 1080,
-                        width: 1920,
-                        scale: 2,
-                        success: 1
-                    } as LoadedData)
-                    resolve()
-                }
+        if (start) {
+            console.debug(`Connecting to ${this.serverData.region}${this.serverData.name}...`)
+            const connected = new Promise<void>((resolve, reject) => {
+                this.socket.on("welcome", (data: WelcomeData) => {
+                    if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
+                        reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
+                    } else {
+                        this.socket.emit("loaded", {
+                            height: 1080,
+                            width: 1920,
+                            scale: 2,
+                            success: 1
+                        } as LoadedData)
+                        resolve()
+                    }
+                })
+
+                setTimeout(() => {
+                    reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
+                }, Constants.CONNECT_TIMEOUT_MS)
             })
-
-            setTimeout(() => {
-                reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
-            }, Constants.CONNECT_TIMEOUT_MS)
-        })
-
-        this.socket.open()
-
-        return connected
+            this.socket.open()
+            return connected
+        }
     }
 
     protected async deleteEntity(id: string): Promise<void> {
