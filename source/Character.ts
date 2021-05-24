@@ -433,8 +433,8 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("start", startCheck)
-                this.socket.removeListener("game_error", failCheck)
+                this.socket?.removeListener("start", startCheck)
+                this.socket?.removeListener("game_error", failCheck)
                 reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
             }, Constants.CONNECT_TIMEOUT_MS)
 
