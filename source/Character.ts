@@ -451,9 +451,11 @@ export class Character extends Observer implements CharacterData {
         console.warn("Disconnecting!")
 
         // Close & remove the socket
-        this.socket.close()
-        this.socket.removeAllListeners()
-        this.socket = undefined
+        if (this.socket) {
+            this.socket.close()
+            this.socket.removeAllListeners()
+            this.socket = undefined
+        }
 
         this.ready = false
 
