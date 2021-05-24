@@ -24,18 +24,18 @@ export class Observer {
     public projectiles = new Map<string, ActionData & { date: Date; }>()
     public S: ServerInfoData = {}
 
-    public serverRegion: ServerRegion;
-    public serverIdentifier: ServerIdentifier;
+    public serverData: ServerData
     public map: MapName;
     public x: number;
     public y: number;
 
-    constructor(serverData: ServerData, g: GData2, reconnect = false) {
-        this.serverRegion = serverData.region
-        this.serverIdentifier = serverData.name
+    constructor(serverData: ServerData, g: GData2) {
+        this.serverData = serverData
         this.G = g
+    }
 
-        this.socket = socketio(`ws://${serverData.addr}:${serverData.port}`, {
+    public async connect(reconnect = false): Promise<void> {
+        this.socket = socketio(`ws://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
             reconnection: reconnect,
             transports: ["websocket"]
@@ -123,14 +123,12 @@ export class Observer {
 
             this.S = data
         })
-    }
 
-    public async connect(): Promise<void> {
-        console.debug(`Connecting to ${this.serverRegion}${this.serverIdentifier}...`)
+        console.debug(`Connecting to ${this.serverData.region}${this.serverData.name}...`)
         const connected = new Promise<void>((resolve, reject) => {
             this.socket.on("welcome", (data: WelcomeData) => {
-                if (data.region !== this.serverRegion || data.name !== this.serverIdentifier) {
-                    reject(`We wanted the server ${this.serverRegion}${this.serverIdentifier}, but we are on ${data.region}${data.name}.`)
+                if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
+                    reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
                 } else {
                     this.socket.emit("loaded", {
                         height: 1080,
@@ -143,11 +141,12 @@ export class Observer {
             })
 
             setTimeout(() => {
-                reject("Failed to start within 10s.")
-            }, 10000)
+                reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
+            }, Constants.CONNECT_TIMEOUT_MS)
         })
 
         this.socket.open()
+
         return connected
     }
 
@@ -202,7 +201,7 @@ export class Observer {
                         // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, type: e.type },
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
                                 update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
                                 upsert: true
                             }
@@ -211,7 +210,7 @@ export class Observer {
                         // Include the id in the filter
                         entityUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: e.id, type: e.type },
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: e.id, type: e.type },
                                 update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
                                 upsert: true
                             }
@@ -241,7 +240,7 @@ export class Observer {
                 if (p.isNPC()) {
                     npcUpdates.push({
                         updateOne: {
-                            filter: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, name: p.id },
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: p.id },
                             update: { map: p.map, x: p.x, y: p.y, lastSeen: Date.now() },
                             upsert: true
                         }
@@ -250,7 +249,7 @@ export class Observer {
                     playerUpdates.push({
                         updateOne: {
                             filter: { name: p.id },
-                            update: { serverIdentifier: this.serverIdentifier, serverRegion: this.serverRegion, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: Date.now() },
+                            update: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: Date.now() },
                             upsert: true
                         }
                     })
@@ -277,8 +276,8 @@ export class Observer {
         const toDeletes = await EntityModel.aggregate([
             {
                 $match: {
-                    serverRegion: this.serverRegion,
-                    serverIdentifier: this.serverIdentifier,
+                    serverRegion: this.serverData.region,
+                    serverIdentifier: this.serverData.name,
                     map: this.map,
                     lastSeen: { $lt: Date.now() - Constants.STALE_MONSTER_MS }
                 }
