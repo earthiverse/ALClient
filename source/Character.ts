@@ -442,10 +442,10 @@ export class Character extends Observer implements CharacterData {
         const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
-                    this.socket.removeListener("start", startCheck)
+                    this.socket?.removeListener("start", startCheck)
                     reject(`Failed to connect: ${data}`)
                 } else {
-                    this.socket.removeListener("start", startCheck)
+                    this.socket?.removeListener("start", startCheck)
                     reject(`Failed to connect: ${data.message}`)
                 }
             }
