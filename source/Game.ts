@@ -183,7 +183,11 @@ export class Game {
             else if (cType == "warrior") player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
             else player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
 
-            await player.connect()
+            try {
+                await player.connect()
+            } catch (e) {
+                return Promise.reject(e)
+            }
 
             return player
         } catch (e) {

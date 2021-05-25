@@ -10,8 +10,12 @@ export class PingCompensatedCharacter extends Character {
     }
 
     public async connect(): Promise<void> {
-        await super.connect()
-        this.pingLoop()
+        try {
+            await super.connect()
+            this.pingLoop()
+        } catch (e) {
+            return Promise.reject(e)
+        }
     }
 
     protected setNextSkill(skill: SkillName, next: Date): void {
