@@ -324,9 +324,17 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
-        await super.connect(false, false)
+        try {
+            await super.connect(false, false)
+        } catch (e) {
+            return Promise.reject(e)
+        }
 
         this.socket.on("disconnect", () => {
+            this.ready = false
+        })
+
+        this.socket.on("disconnect_reason", () => {
             this.ready = false
         })
 
@@ -365,7 +373,6 @@ export class Character extends Observer implements CharacterData {
                 console.error("Game Error ----------")
                 console.error(data)
             }
-            this.disconnect()
         })
 
         this.socket.on("game_log", async (data: { message: string; color: string; }) => {
@@ -443,31 +450,43 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
                     this.socket.removeListener("start", startCheck)
+                    this.socket.removeListener("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data}`)
                 } else {
                     this.socket.removeListener("start", startCheck)
+                    this.socket.removeListener("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data.message}`)
                 }
             }
 
+            const failCheck2 = (data: string) => {
+                this.socket.removeListener("start", startCheck)
+                this.socket.removeListener("game_error", failCheck)
+                reject(`Failed to connect: ${data}`)
+            }
+
             const startCheck = () => {
                 this.socket.removeListener("game_error", failCheck)
+                this.socket.removeListener("disconnect_reason", failCheck2)
+                this.updateLoop()
                 resolve()
             }
 
             setTimeout(() => {
                 this.socket.removeListener("start", startCheck)
                 this.socket.removeListener("game_error", failCheck)
+                this.socket.removeListener("disconnect_reason", failCheck2)
                 reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
             }, Constants.CONNECT_TIMEOUT_MS)
 
             this.socket.once("start", startCheck)
             this.socket.once("game_error", failCheck)
+            this.socket.once("disconnect_reason", failCheck2)
         })
 
         this.socket.open()
 
-        return connected.then(() => { this.updateLoop() })
+        return connected
     }
 
     public async disconnect(): Promise<void> {
