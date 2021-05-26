@@ -153,9 +153,11 @@ export class Character extends Observer implements CharacterData {
             // Update now
             this.updatePositions()
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            return
         } else {
             // Update in a bit
             this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+            return
         }
     }
 
@@ -198,14 +200,12 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
-        // Look for ourself in the players
-        for (const player of data.players) {
-            if (player.id == this.id) {
-                // Update our character with the info
+        // Look for ourself in the players, and parse it differently so we don't get it mixed up with the other players
+        for(let i = 0; i < data.players.length; i++) {
+            const player = data.players[i]
+            if(player.id == this.id) {
                 this.parseCharacter(player)
-
-                // Remove the data so it doesn't appear as another player
-                delete data.players[player.id]
+                data.players.slice(i, 1)
                 break
             }
         }
@@ -288,6 +288,7 @@ export class Character extends Observer implements CharacterData {
     protected updatePositions(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
+            if (msSinceLastUpdate == 0) return
 
             // Update character
             if (this.moving) {

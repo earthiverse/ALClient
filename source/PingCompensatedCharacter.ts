@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, ServerData } from "./definitions/adventureland-server"
+import { CharacterData, EntitiesData, PlayerData, ServerData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Character } from "./Character"
 import { Tools } from "./Tools"
@@ -25,7 +25,7 @@ export class PingCompensatedCharacter extends Character {
         this.nextSkill.set(skill, new Date(next.getTime() - pingCompensation))
     }
 
-    public parseCharacter(data: CharacterData): void {
+    public parseCharacter(data: CharacterData | PlayerData): void {
         super.parseCharacter(data)
 
         // Get ping compensation
@@ -63,7 +63,7 @@ export class PingCompensatedCharacter extends Character {
         for (const monster of data.monsters) {
             // Compensate position
             const entity = this.entities.get(monster.id)
-            if (!entity || !(entity?.moving)) continue
+            if (!entity || !entity.moving) continue
             const distanceTravelled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
@@ -87,7 +87,7 @@ export class PingCompensatedCharacter extends Character {
         for (const player of data.players) {
             // Compensate position
             const entity = this.players.get(player.id)
-            if (!entity || !(entity?.moving)) continue
+            if (!entity || !entity.moving) continue
             const distanceTravelled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })

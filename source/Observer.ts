@@ -165,12 +165,14 @@ export class Observer {
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
         if (data.type == "all") {
+            this.lastAllEntities = Date.now()
+            
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
+            this.lastPositionUpdate = Date.now()
 
             // Reset the lastUpdates
-            this.lastAllEntities = Date.now()
             Database.lastMongoUpdate.clear()
         } else {
             // Update all positions
@@ -319,6 +321,7 @@ export class Observer {
     protected updatePositions(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
+            if (msSinceLastUpdate == 0) return
 
             // Update entities
             for (const [, entity] of this.entities) {
