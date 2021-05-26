@@ -16,8 +16,8 @@ import { Warrior } from "./Warrior"
 export class Game {
     protected static user: { userID: string, userAuth: string }
 
-    protected static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
-    protected static characters: { [T in string]?: CharacterListData } = {}
+    public static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
+    public static characters: { [T in string]?: CharacterListData } = {}
 
     public static G: GData2
     public static version: number

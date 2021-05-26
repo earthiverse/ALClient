@@ -165,6 +165,7 @@ export class Observer {
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
+            this.lastPositionUpdate = Date.now()
         } else {
             // Update all positions
             this.updatePositions()
@@ -207,6 +208,7 @@ export class Observer {
     protected updatePositions(): void {
         if (this.lastPositionUpdate) {
             const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
+            if (msSinceLastUpdate == 0) return
 
             // Update entities
             for (const [, entity] of this.entities) {
