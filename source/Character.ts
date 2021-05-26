@@ -205,7 +205,7 @@ export class Character extends Observer implements CharacterData {
             const player = data.players[i]
             if(player.id == this.id) {
                 this.parseCharacter(player)
-                data.players.slice(i, 1)
+                data.players.splice(i, 1)
                 break
             }
         }
