@@ -495,7 +495,7 @@ export class Character extends Observer implements CharacterData {
 
         // Close & remove the socket
         if (this.socket) {
-            this.socket.close()
+            this.socket.disconnect()
             this.socket.removeAllListeners()
         }
 
