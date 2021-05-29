@@ -5,7 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Warrior extends PingCompensatedCharacter {
     // TODO: Investigate why the cooldown check doesn't work.
     public agitate(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [agitate].")
         const agitated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]agitate['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -39,7 +39,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public charge(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [charge].")
         const charged = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (!data.hitchhikers) return
@@ -77,7 +77,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public cleave(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [cleave].")
 
         const cleaved = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -112,7 +112,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public hardshell(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [hardshell].")
         const hardshelled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]hardshell['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -172,7 +172,7 @@ export class Warrior extends PingCompensatedCharacter {
 
     // TODO: Return ids of those monsters & players that are now stomped
     public stomp(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [stomp].")
         const stomped = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]stomp['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -207,7 +207,7 @@ export class Warrior extends PingCompensatedCharacter {
 
     // TODO: Investigate if cooldown is before or after the "action" event. We are getting lots of "failed due to cooldowns"
     public taunt(target: string): Promise<string> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [taunt].")
         const tauntStarted = new Promise<string>((resolve, reject) => {
             const tauntCheck = (data: ActionData) => {
                 if (data.attacker == this.id
@@ -250,7 +250,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public warcry(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [warcry].")
         const warcried = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]warcry['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

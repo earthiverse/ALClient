@@ -5,7 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Paladin extends PingCompensatedCharacter {
     // NOTE: Untested
     public manaShieldOff(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [manaShieldOff].")
         if (!this.s.mshield) return Promise.resolve() // It's already off
 
         const shieldCheck = new Promise<void>((resolve, reject) => {
@@ -28,7 +28,7 @@ export class Paladin extends PingCompensatedCharacter {
 
     // NOTE: Untested
     public manaShieldOn(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [manaShieldOn].")
         if (this.s.mshield) return Promise.resolve() // It's already on
 
         const shieldCheck = new Promise<void>((resolve, reject) => {
@@ -51,7 +51,7 @@ export class Paladin extends PingCompensatedCharacter {
 
     // NOTE: Untested
     public selfHeal(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [selfHeal].")
         const healed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]selfheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

@@ -6,7 +6,7 @@ import { Tools } from "./Tools"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [closeMerchantStand].")
         if (!this.stand) return Promise.resolve() // It's already closed
 
         const closed = new Promise<void>((resolve, reject) => {
@@ -35,7 +35,7 @@ export class Merchant extends PingCompensatedCharacter {
      * @memberof Merchant
      */
     public fish(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [fish].")
         let startedFishing = false
         if (this.c.fishing) startedFishing = true // We're already fishing!?
         const fished = new Promise<void>((resolve, reject) => {
@@ -120,7 +120,7 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public joinGiveaway(slot: TradeSlotType, id: string, rid: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [joinGiveaway].")
         const merchant = this.players.get(id)
         if (!merchant || Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) return Promise.reject(`${id} is too far away.`)
         if (!merchant.slots[slot]?.giveaway) return Promise.reject(`${id}'s slot ${slot} is not a giveaway.`)
@@ -131,7 +131,7 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
         if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
 
@@ -145,12 +145,12 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public merchantCourage(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [merchantCourage].")
         this.socket.emit("skill", { name: "mcourage" })
     }
 
     public mine(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [mine].")
         let startedMining = false
         if (this.c.mining) startedMining = true // We're already mining!?
         const mined = new Promise<void>((resolve, reject) => {
@@ -234,7 +234,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public mluck(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [mluck].")
         if (target !== this.id) {
             const player = this.players.get(target)
             if (!player) return Promise.reject(`Could not find ${target} to mluck.`)
@@ -298,7 +298,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public openMerchantStand(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [openMerchantStand].")
         if (this.stand) return Promise.resolve() // It's already open
 
         // Find the stand
@@ -330,7 +330,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public massProduction(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [massProduction].")
         const massProductioned = new Promise<void>((resolve, reject) => {
             const productedCheck = (data: UIData) => {
                 if (data.type == "massproduction" && data.name == this.id) {
