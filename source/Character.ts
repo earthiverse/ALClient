@@ -196,6 +196,9 @@ export class Character extends Observer implements CharacterData {
 
         // Clear party info if we have no party
         if (!this.party) this.partyData = undefined
+
+        // Set damage type if not set
+        if (!this.damage_type && this.ctype) this.damage_type = this.G.classes[this.ctype].damage_type
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
@@ -1009,8 +1012,8 @@ export class Character extends Observer implements CharacterData {
 
         // Check if it can avoid our shot
         if (entity.avoidance) return false
-        if (this.damage_type == "magical" && entity.reflection !== undefined) return false
-        if (this.damage_type == "physical" && entity.evasion !== undefined) return false
+        if (this.damage_type == "magical" && entity.reflection) return false
+        if (this.damage_type == "physical" && entity.evasion) return false
 
         if (entity["1hp"]) {
             return entity.hp == 1

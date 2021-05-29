@@ -3,6 +3,7 @@ import { Character } from "./Character"
 import { GData2 } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
 import { IPosition } from "./definitions/adventureland"
+import { Entity } from "./Entity"
 
 let G: GData2
 let priest: Character
@@ -415,6 +416,11 @@ beforeAll(async () => {
     })
 }, 60000)
 
+test("Character attributes", () => {
+    expect(priest.damage_type).toBe<string>(G.classes.priest.damage_type)
+    expect(warrior.damage_type).toBe<string>(G.classes.warrior.damage_type)
+})
+
 test("Character.calculateItemCost", async () => {
     // The costs below assume these G costs, so check that they're still good
     expect(G.items.scroll0.g).toBe(1000)
@@ -445,13 +451,13 @@ test("Character.calculateItemCost", async () => {
     expect(priest.calculateItemCost({ name: "dexring", level: 5 })).toBe(18603200)
 })
 
-test("Character.canBuy", async () => {
+test("Character.canBuy", () => {
     expect(priest.canBuy("mpot1")).toBe(true) // We have a computer and enough gold
     expect(priest.canBuy("hpot1")).toBe(true)
     expect(priest.canBuy("computer")).toBe(false)
 })
 
-test("Character.canCraft", async () => {
+test("Character.canCraft", () => {
     // Backup so we can change things
     const itemsBackup = [...priest.items]
     const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
@@ -541,7 +547,32 @@ test("Character.canExchange", async () => {
     priest.y = locationBackup.y
 })
 
-test("Character.canSell", async () => {
+test("Character.canKillInOneShot", () => {
+    const bee = new Entity({
+        "mp": 2,
+        "armor": 0,
+        "resistance": 0,
+        "id": "5185017",
+        "x": 70.32182893235411,
+        "y": 1487.9526638730226,
+        "moving": true,
+        "going_x": 206.28099056907251,
+        "going_y": 1485.9456975484566,
+        "abs": false,
+        "move_num": 49572238,
+        "angle": -0.8457123996441614,
+        "type": "bee",
+        "cid": 1,
+        "s": {
+            "young": {
+                "ms": 340
+            }
+        }
+    }, "main", priest.G)
+    expect(priest.canKillInOneShot(bee)).toBe(true)
+})
+
+test("Character.canSell", () => {
     const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
     const itemsBackup = [...priest.items]
 
@@ -570,7 +601,7 @@ test("Character.canSell", async () => {
     priest.y = locationBackup.y
 })
 
-test("Character.canUse", async () => {
+test("Character.canUse", () => {
     expect(priest.canUse("attack")).toBe(true)
     expect(priest.canUse("partyheal")).toBe(true)
     expect(priest.canUse("3shot")).toBe(false)
@@ -600,7 +631,7 @@ test("Character.canUse", async () => {
     expect(warrior.canUse("cleave")).toBe(true)
 })
 
-test("Character.countItem", async () => {
+test("Character.countItem", () => {
     // Non-stackable items
     expect(priest.countItem("computer")).toBe(1)
 
@@ -611,11 +642,11 @@ test("Character.countItem", async () => {
     expect(priest.countItem("mpot1")).toBe(999)
 })
 
-test("Character.hasPVPMarkedItem", async () => {
+test("Character.hasPVPMarkedItem", () => {
     expect(priest.hasPvPMarkedItem()).toBeFalsy()
 })
 
-test("Character.isPVP", async () => {
+test("Character.isPVP", () => {
     // False if the map and server are not PVP
     priest.server = {
         region: "ASIA",
@@ -644,7 +675,7 @@ test("Character.isPVP", async () => {
     expect(priest.isPVP()).toBe(false)
 })
 
-test("Character.locateItem", async () => {
+test("Character.locateItem", () => {
     // Create the character's inventory for testing
     priest.esize = 2
     const itemsBackup = [...priest.items]
@@ -681,7 +712,7 @@ test("Character.locateItems", async () => {
     priest.items = itemsBackup
 })
 
-test("Character.locateCraftNPC", async () => {
+test("Character.locateCraftNPC", () => {
     // craftsman location
     expect(priest.locateCraftNPC("pouchbow")).toStrictEqual<IPosition>({ map: "main", x: 92, y: 670 })
     // witch location
@@ -692,7 +723,7 @@ test("Character.locateCraftNPC", async () => {
     expect(() => { priest.locateCraftNPC("gem0") }).toThrowError()
 })
 
-test("Character.locateExchangeNPC", async () => {
+test("Character.locateExchangeNPC", () => {
     // general exchangable
     expect(priest.locateExchangeNPC("gem0")).toStrictEqual<IPosition>({ map: "main", x: -25, y: -478 })
     // token
