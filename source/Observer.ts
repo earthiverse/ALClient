@@ -1,6 +1,5 @@
 import socketio from "socket.io-client"
 import { Database, EntityModel, NPCModel, PlayerModel } from "./database/Database"
-import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"

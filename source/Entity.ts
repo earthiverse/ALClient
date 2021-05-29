@@ -168,6 +168,26 @@ export class Entity implements MonsterData, Partial<GMonster> {
     }
 
     /**
+     * Returns true if killing this monster could drop gold/loot, or give us tracker credit.
+     *
+     * @param {Character} player
+     * @return {*}  {boolean}
+     * @memberof Entity
+     */
+    public couldGiveCreditForKill(player: Character): boolean {
+        // It's not attacking anyone
+        if (this.target === undefined) return true
+
+        // Everyone gets credit if you attack a cooperative monster
+        if (this.cooperative) return true
+
+        // It's attacking one of our party members (includes us)
+        if (this.isAttackingPartyMember(player)) return true
+
+        return false
+    }
+
+    /**
      * Returns true if the monster is attacking the player, or one of its party members
      * @param player The player whose party to check if the monster is attacking
      */
@@ -180,7 +200,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.isAttackingUs(player)) return true
 
         // Check if the entity is targeting a party member
-        if (player.partyData && player.partyData.list && player.partyData.list.includes(this.target)) return true
+        if (player?.partyData?.list.includes(this.target)) return true
 
         return false
     }
@@ -242,7 +262,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
-            if(!attacker) return true // Couldn't find entity, already dead?
+            if (!attacker) return true // Couldn't find entity, already dead?
 
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage

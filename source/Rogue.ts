@@ -6,13 +6,13 @@ export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     // TODO: Add promises
     public invis() {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [invis].")
         this.socket.emit("skill", { name: "invis" })
     }
 
     // NOTE: UNTESTED
     public mentalBurst(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [mentalBurst].")
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mentalburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -36,7 +36,7 @@ export class Rogue extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public poisonCoat(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [poisonCoat].")
         const poisonCoated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]pcoat['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -59,7 +59,7 @@ export class Rogue extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public quickPunch(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [quickPunch].")
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickpunch['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -83,7 +83,7 @@ export class Rogue extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public quickStab(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [quickStab].")
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickstab['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -108,7 +108,7 @@ export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     // TODO: Improve to check if we applied it on the given character
     public rspeed(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [rspeed].")
         const swifted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]rspeed['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -132,7 +132,7 @@ export class Rogue extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public shadowStrike(shadowstone = this.locateItem("shadowstone")): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [shadowStrike].")
         if (shadowstone === undefined) return Promise.reject("We need a shadowstone in order to shadowstrike.")
 
         const shadowStriked = new Promise<void>((resolve, reject) => {

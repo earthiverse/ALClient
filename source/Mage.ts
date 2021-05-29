@@ -6,7 +6,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Mage extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     public alchemy(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [alchemy].")
         const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -28,7 +28,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public blink(x: number, y: number): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [blink].")
         if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) return Promise.reject(`We cannot blink to ${this.map},${x},${y}`)
 
         const blinked = new Promise<void>((resolve, reject) => {
@@ -52,7 +52,7 @@ export class Mage extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public burst(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [burst].")
         const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]burst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -77,7 +77,7 @@ export class Mage extends PingCompensatedCharacter {
      * @param targets Put in pairs of entity IDs, and how much mp to spend attacking each target. E.g.: [["12345", "100"]]
      */
     public cburst(targets: [string, number][]): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [cburst].")
         const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -98,7 +98,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public energize(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [energize].")
         const energized = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]energize['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -120,7 +120,7 @@ export class Mage extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [entangle].")
         if (essenceofnature === undefined) return Promise.reject("We need an essenceofnature in order to entangle.")
 
         const tangled = new Promise<void>((resolve, reject) => {
@@ -146,7 +146,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public light(): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [light].")
         const lit = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]light['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -168,7 +168,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public magiport(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [magiport].")
         const magiportOfferSent = new Promise<void>((resolve, reject) => {
             const magiportCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
@@ -201,7 +201,7 @@ export class Mage extends PingCompensatedCharacter {
      * @memberof Mage
      */
     public applyReflection(target: string): Promise<void> {
-        if (!this.ready) return Promise.reject("We aren't ready yet.")
+        if (!this.ready) return Promise.reject("We aren't ready yet [applyReflection].")
         const relectioned = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
