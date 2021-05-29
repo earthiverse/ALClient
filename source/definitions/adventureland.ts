@@ -235,6 +235,9 @@ export type StatusInfo = {
         y: number
         d: number
     }
+    young?: {
+        ms: number
+    }
 }
 
 export type PositionReal = IPosition & {
