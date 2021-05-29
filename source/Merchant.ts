@@ -239,7 +239,11 @@ export class Merchant extends PingCompensatedCharacter {
             const player = this.players.get(target)
             if (!player) return Promise.reject(`Could not find ${target} to mluck.`)
             if (player.npc) return Promise.reject(`${target} is an NPC. You can't mluck NPCs.`)
-            if (player.s.mluck && player.s.mluck.strong && player.owner !== this.owner) return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
+            if (player.s.mluck && player.s.mluck.strong // They have a strong mluck
+                && ((player.owner && player.owner !== this.owner) // If they are public, check if they are from different owners
+                    || (player.s.mluck.f !== this.id))) { // Else, rely on the character id
+                return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
+            }
         }
 
         const mlucked = new Promise<void>((resolve, reject) => {
