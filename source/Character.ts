@@ -174,6 +174,8 @@ export class Character extends Observer implements CharacterData {
                 }
             } else if (datum == "entities") {
                 this.parseEntities(data[datum])
+            } else if (datum == "owner") {
+                // We know who the owner is, for some reason start sends it as a blank string
             } else if (datum == "tp") {
                 // We just teleported, but we don't want to keep the data.
             } else if (datum == "user") {
@@ -198,9 +200,9 @@ export class Character extends Observer implements CharacterData {
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
         // Look for ourself in the players, and parse it differently so we don't get it mixed up with the other players
-        for(let i = 0; i < data.players.length; i++) {
+        for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
-            if(player.id == this.id) {
+            if (player.id == this.id) {
                 this.parseCharacter(player)
                 data.players.splice(i, 1)
                 break
