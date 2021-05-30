@@ -1604,28 +1604,69 @@ export class Character extends Observer implements CharacterData {
         return questFinished
     }
 
-    public getEntities(filters?: {
-        targettingMe?: boolean
+    /**
+     * Returns a list of nearby entities, with optional filters
+     *
+     * @param {{
+     *         canWalkTo?: boolean
+     *         couldGiveCredit?: boolean
+     *         withinRange?: number
+     *         targetingMe?: boolean
+     *         targetingPlayer?: string
+     *         type?: MonsterName
+     *         typeList?: MonsterName[]
+     *         level?: number
+     *         levelGreaterThan?: number
+     *         levelLessThan?: number
+     *         willDieToProjectiles?: boolean
+     *     }} [filters={}]
+     * @return {*}  {Entity[]}
+     * @memberof Character
+     */
+    public getEntities(filters: {
+        canWalkTo?: boolean
+        couldGiveCredit?: boolean
+        withinRange?: number
+        targetingMe?: boolean
+        targetingPlayer?: string
         type?: MonsterName
         typeList?: MonsterName[]
         level?: number
         levelGreaterThan?: number
         levelLessThan?: number
-    }): Entity[] {
+        willDieToProjectiles?: boolean
+    } = {}): Entity[] {
         const entities: Entity[] = []
         for (const [, entity] of this.entities) {
-            if (filters?.targettingMe !== undefined) {
-                if (filters.targettingMe) {
+            if (filters.targetingMe !== undefined) {
+                if (filters.targetingMe) {
                     if (entity.target !== this.id) continue
                 } else {
                     if (entity.target == this.id) continue
                 }
             }
-            if (filters?.level !== entity.level) continue
-            if (filters?.levelGreaterThan <= entity.level) continue
-            if (filters?.levelLessThan >= entity.level) continue
-            if (filters?.type !== entity.type) continue
-            if (filters?.typeList && !filters.typeList.includes(entity.type)) continue
+            if (filters.targetingPlayer && entity.target !== filters.targetingPlayer) continue
+            if (filters.level !== entity.level) continue
+            if (filters.levelGreaterThan <= entity.level) continue
+            if (filters.levelLessThan >= entity.level) continue
+            if (filters.type !== entity.type) continue
+            if (filters.typeList && !filters.typeList.includes(entity.type)) continue
+            if (filters.withinRange !== undefined && Tools.distance(this, entity) > filters.withinRange) continue
+            if (filters.canWalkTo !== undefined) {
+                const canWalkTo = Pathfinder.canWalkPath(this, entity)
+                if (filters.canWalkTo && !canWalkTo) continue
+                if (!filters.canWalkTo && canWalkTo) continue
+            }
+            if (filters.couldGiveCredit) {
+                const couldGiveCredit = entity.couldGiveCreditForKill(this)
+                if (filters.couldGiveCredit && !couldGiveCredit) continue
+                if (!filters.couldGiveCredit && couldGiveCredit) continue
+            }
+            if (filters.willDieToProjectiles) {
+                const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
+                if (filters.willDieToProjectiles && !willDieToProjectiles) continue
+                if (!filters.willDieToProjectiles && willDieToProjectiles) continue
+            }
 
             entities.push(entity)
         }
