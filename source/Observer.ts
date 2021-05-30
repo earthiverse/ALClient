@@ -165,7 +165,7 @@ export class Observer {
     protected async parseEntities(data: EntitiesData): Promise<void> {
         if (data.type == "all") {
             this.lastAllEntities = Date.now()
-            
+
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
@@ -250,7 +250,7 @@ export class Observer {
                     playerUpdates.push({
                         updateOne: {
                             filter: { name: p.id },
-                            update: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, map: p.map, x: p.x, y: p.y, s: p.s, lastSeen: Date.now() },
+                            update: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, map: p.map, x: p.x, y: p.y, s: p.s, type: p.ctype, slots: p.slots, lastSeen: Date.now() },
                             upsert: true
                         }
                     })

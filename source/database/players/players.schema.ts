@@ -9,7 +9,9 @@ const PlayerSchema = new Schema({
     serverRegion: String,
     serverIdentifier: String,
     s: { type: Object, required: false },
-    lastSeen: { type: Number, required: false }
+    type: String,
+    slots: { type: Object },
+    lastSeen: { type: Number }
 })
 
 PlayerSchema.index({ name: 1 }, { unique: true }) // Characters can only be on one server at a time
