@@ -1952,18 +1952,22 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkPlayer)
         })
 
-        this.socket.emit("move", {
-            x: this.x,
-            y: this.y,
-            going_x: to.x,
-            going_y: to.y,
-            m: this.m
-        })
-        this.updatePositions()
-        this.going_x = to.x
-        this.going_y = to.y
-        this.moving = true
-        this.move_num += 1
+        if (this.going_x !== x || this.going_y !== y) {
+            // Only send a move if it's to a different location than we're alreaedy going
+            this.socket.emit("move", {
+                x: this.x,
+                y: this.y,
+                going_x: to.x,
+                going_y: to.y,
+                m: this.m
+            })
+            this.updatePositions()
+            this.going_x = to.x
+            this.going_y = to.y
+            this.moving = true
+            this.move_num += 1
+        }
+
         return moveFinished
     }
 
@@ -2224,8 +2228,6 @@ export class Character extends Observer implements CharacterData {
         useBlink: false
     }): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [smartMove].")
-        const started = Date.now()
-        this.lastSmartMove = started
         let fixedTo: NodeData
         let path: LinkData[]
         if (typeof to == "string") {
@@ -2301,12 +2303,13 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        if (options?.getWithin >= Tools.distance(this, fixedTo))
-            return Promise.resolve({ x: this.x, y: this.y, map: this.map })
+        if (options?.getWithin >= Tools.distance(this, fixedTo)) return Promise.resolve({ x: this.x, y: this.y, map: this.map })
 
         // If we don't have the path yet, get it
         if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
 
+        const started = Date.now()
+        this.lastSmartMove = started
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
             let currentMove = path[i]
@@ -2318,12 +2321,12 @@ export class Character extends Observer implements CharacterData {
                     return Promise.reject(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
             }
 
-            if (Tools.distance(this, fixedTo) < options.getWithin) {
+            if (options?.getWithin >= Tools.distance(this, fixedTo)) {
                 break // We're already close enough!
             }
 
             // Check if we can walk to a spot close to the goal if that's OK
-            if (currentMove.type == "move" && this.map == fixedTo.map && options.getWithin > 0) {
+            if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
                 const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
                 const potentialMove: LinkData = {
                     type: "move",
