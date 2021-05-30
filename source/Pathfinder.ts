@@ -483,7 +483,7 @@ export class Pathfinder {
     public static getPath(from: NodeData, to: NodeData, avoidTownWarps = false): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
 
-        if (from.map == to.map && this.canWalkPath(from, to)) {
+        if (from.map == to.map && this.canWalkPath(from, to) && Tools.distance(from, to) < this.TOWN_COST) {
             // Return a straight line to the destination
             return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
         }

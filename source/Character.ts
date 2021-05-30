@@ -1627,28 +1627,69 @@ export class Character extends Observer implements CharacterData {
         return questFinished
     }
 
-    public getEntities(filters?: {
-        targettingMe?: boolean
+    /**
+     * Returns a list of nearby entities, with optional filters
+     *
+     * @param {{
+     *         canWalkTo?: boolean
+     *         couldGiveCredit?: boolean
+     *         withinRange?: number
+     *         targetingMe?: boolean
+     *         targetingPlayer?: string
+     *         type?: MonsterName
+     *         typeList?: MonsterName[]
+     *         level?: number
+     *         levelGreaterThan?: number
+     *         levelLessThan?: number
+     *         willDieToProjectiles?: boolean
+     *     }} [filters={}]
+     * @return {*}  {Entity[]}
+     * @memberof Character
+     */
+    public getEntities(filters: {
+        canWalkTo?: boolean
+        couldGiveCredit?: boolean
+        withinRange?: number
+        targetingMe?: boolean
+        targetingPlayer?: string
         type?: MonsterName
         typeList?: MonsterName[]
         level?: number
         levelGreaterThan?: number
         levelLessThan?: number
-    }): Entity[] {
+        willDieToProjectiles?: boolean
+    } = {}): Entity[] {
         const entities: Entity[] = []
         for (const [, entity] of this.entities) {
-            if (filters?.targettingMe !== undefined) {
-                if (filters.targettingMe) {
+            if (filters.targetingMe !== undefined) {
+                if (filters.targetingMe) {
                     if (entity.target !== this.id) continue
                 } else {
                     if (entity.target == this.id) continue
                 }
             }
-            if (filters?.level !== entity.level) continue
-            if (filters?.levelGreaterThan <= entity.level) continue
-            if (filters?.levelLessThan >= entity.level) continue
-            if (filters?.type !== entity.type) continue
-            if (filters?.typeList && !filters.typeList.includes(entity.type)) continue
+            if (filters.targetingPlayer && entity.target !== filters.targetingPlayer) continue
+            if (filters.level !== entity.level) continue
+            if (filters.levelGreaterThan <= entity.level) continue
+            if (filters.levelLessThan >= entity.level) continue
+            if (filters.type !== entity.type) continue
+            if (filters.typeList && !filters.typeList.includes(entity.type)) continue
+            if (filters.withinRange !== undefined && Tools.distance(this, entity) > filters.withinRange) continue
+            if (filters.canWalkTo !== undefined) {
+                const canWalkTo = Pathfinder.canWalkPath(this, entity)
+                if (filters.canWalkTo && !canWalkTo) continue
+                if (!filters.canWalkTo && canWalkTo) continue
+            }
+            if (filters.couldGiveCredit) {
+                const couldGiveCredit = entity.couldGiveCreditForKill(this)
+                if (filters.couldGiveCredit && !couldGiveCredit) continue
+                if (!filters.couldGiveCredit && couldGiveCredit) continue
+            }
+            if (filters.willDieToProjectiles) {
+                const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
+                if (filters.willDieToProjectiles && !willDieToProjectiles) continue
+                if (!filters.willDieToProjectiles && willDieToProjectiles) continue
+            }
 
             entities.push(entity)
         }
@@ -1934,18 +1975,22 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkPlayer)
         })
 
-        this.socket.emit("move", {
-            x: this.x,
-            y: this.y,
-            going_x: to.x,
-            going_y: to.y,
-            m: this.m
-        })
-        this.updatePositions()
-        this.going_x = to.x
-        this.going_y = to.y
-        this.moving = true
-        this.move_num += 1
+        if (this.going_x !== x || this.going_y !== y) {
+            // Only send a move if it's to a different location than we're alreaedy going
+            this.socket.emit("move", {
+                x: this.x,
+                y: this.y,
+                going_x: to.x,
+                going_y: to.y,
+                m: this.m
+            })
+            this.updatePositions()
+            this.going_x = to.x
+            this.going_y = to.y
+            this.moving = true
+            this.move_num += 1
+        }
+
         return moveFinished
     }
 
@@ -2206,8 +2251,6 @@ export class Character extends Observer implements CharacterData {
         useBlink: false
     }): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [smartMove].")
-        const started = Date.now()
-        this.lastSmartMove = started
         let fixedTo: NodeData
         let path: LinkData[]
         if (typeof to == "string") {
@@ -2283,12 +2326,13 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        if (options?.getWithin >= Tools.distance(this, fixedTo))
-            return Promise.resolve({ x: this.x, y: this.y, map: this.map })
+        if (options?.getWithin >= Tools.distance(this, fixedTo)) return Promise.resolve({ x: this.x, y: this.y, map: this.map })
 
         // If we don't have the path yet, get it
         if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
 
+        const started = Date.now()
+        this.lastSmartMove = started
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
             let currentMove = path[i]
@@ -2300,12 +2344,12 @@ export class Character extends Observer implements CharacterData {
                     return Promise.reject(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
             }
 
-            if (Tools.distance(this, fixedTo) < options.getWithin) {
+            if (options?.getWithin >= Tools.distance(this, fixedTo)) {
                 break // We're already close enough!
             }
 
             // Check if we can walk to a spot close to the goal if that's OK
-            if (currentMove.type == "move" && this.map == fixedTo.map && options.getWithin > 0) {
+            if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
                 const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
                 const potentialMove: LinkData = {
                     type: "move",
