@@ -1,7 +1,9 @@
 import { Character } from "./Character"
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { CharacterType, CXData, DamageType, GData2, MapName, NPCName } from "./definitions/adventureland-data"
+import { CharacterType, CXData, DamageType, GData2, MapName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
+import { Entity } from "./Entity"
+import { Tools } from "./Tools"
 
 export class Player implements PlayerData {
     protected G: GData2
@@ -75,6 +77,41 @@ export class Player implements PlayerData {
 
         // Set everything
         for (const key in data) this[key] = data[key]
+    }
+
+
+    public calculateDamageRange(defender: Entity | Player | Character, skill: SkillName = "attack"): [number, number] {
+        if (defender["1hp"]) return [1, 1]
+
+        let baseDamage: number = this.attack
+        if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
+
+        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        if (defender.s.cursed) baseDamage *= 1.2
+        if (defender.s.marked) baseDamage *= 1.1
+
+        if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
+
+        let additonalApiercing = 0
+        if (this.G.skills[skill].apiercing) additonalApiercing = this.G.skills[skill].apiercing
+        // NOTE: currently no skills with rpiercing
+        // let additonalRpiercing = 0
+        // if (this.G.skills[skill].rpiercing) additonalRpiercing = this.G.skills[skill].rpiercing
+        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additonalApiercing)
+        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+
+        if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
+
+        if (this.crit) {
+            if (this.crit >= 100) {
+                // Guaranteed crit
+                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            } else {
+                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            }
+        } else {
+            return [baseDamage * 0.9, baseDamage * 1.1]
+        }
     }
 
     /**

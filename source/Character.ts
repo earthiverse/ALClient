@@ -42,7 +42,7 @@ export class Character extends Observer implements CharacterData {
     public angle: number
     public armor = 0
     public attack = 0
-    public c: any
+    public c: any = {}
     public cid: number
     public cx: CXData
     public damage_type: DamageType
@@ -870,6 +870,40 @@ export class Character extends Observer implements CharacterData {
         return bought
     }
 
+    public calculateDamageRange(defender: Entity | Player | Character, skill: SkillName = "attack"): [number, number] {
+        if (defender["1hp"]) return [1, 1]
+
+        let baseDamage: number = this.attack
+        if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
+
+        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        if (defender.s.cursed) baseDamage *= 1.2
+        if (defender.s.marked) baseDamage *= 1.1
+
+        if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
+
+        let additonalApiercing = 0
+        if (this.G.skills[skill].apiercing) additonalApiercing = this.G.skills[skill].apiercing
+        // NOTE: currently no skills with rpiercing
+        // let additonalRpiercing = 0
+        // if (this.G.skills[skill].rpiercing) additonalRpiercing = this.G.skills[skill].rpiercing
+        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additonalApiercing)
+        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+
+        if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
+
+        if (this.crit) {
+            if (this.crit >= 100) {
+                // Guaranteed crit
+                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            } else {
+                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            }
+        } else {
+            return [baseDamage * 0.9, baseDamage * 1.1]
+        }
+    }
+
     /**
      * Returns the *minimum* gold required to obtain the given item.
      *
@@ -1020,7 +1054,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns true if we can kill the entity in one shot.
+     * Returns true if we can 100% kill the entity in one shot.
      *
      * @param {Entity} entity
      * @param {SkillName} [skill="attack"]
@@ -1044,7 +1078,7 @@ export class Character extends Observer implements CharacterData {
 
         // TODO: Improve with skills that do apiercing, like piercingshot.
         // TODO: Will probably need to change calculateDamageRange.
-        let minimumDamage = Tools.calculateDamageRange(this, entity)[0]
+        let minimumDamage = this.calculateDamageRange(entity)[0]
         if (this.G.skills[skill].damage_multiplier) minimumDamage *= this.G.skills[skill].damage_multiplier
 
         return minimumDamage > entity.hp
@@ -1591,6 +1625,34 @@ export class Character extends Observer implements CharacterData {
         })
         this.socket.emit("monsterhunt")
         return questFinished
+    }
+
+    public getEntities(filters?: {
+        targettingMe?: boolean
+        type?: MonsterName
+        typeList?: MonsterName[]
+        level?: number
+        levelGreaterThan?: number
+        levelLessThan?: number
+    }): Entity[] {
+        const entities: Entity[] = []
+        for (const [, entity] of this.entities) {
+            if (filters?.targettingMe !== undefined) {
+                if (filters.targettingMe) {
+                    if (entity.target !== this.id) continue
+                } else {
+                    if (entity.target == this.id) continue
+                }
+            }
+            if (filters?.level !== entity.level) continue
+            if (filters?.levelGreaterThan <= entity.level) continue
+            if (filters?.levelLessThan >= entity.level) continue
+            if (filters?.type !== entity.type) continue
+            if (filters?.typeList && !filters.typeList.includes(entity.type)) continue
+
+            entities.push(entity)
+        }
+        return entities
     }
 
     public async getMonsterHuntQuest(): Promise<void> {

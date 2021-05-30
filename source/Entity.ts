@@ -137,6 +137,30 @@ export class Entity implements MonsterData, Partial<GMonster> {
         for (const key in data) this[key] = data[key]
     }
 
+    public calculateDamageRange(defender: Entity | Player | Character): [number, number] {
+        if (defender["1hp"]) return [1, 1]
+
+        let baseDamage: number = this.attack
+
+        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        if (defender.s.cursed) baseDamage *= 1.2
+        if (defender.s.marked) baseDamage *= 1.1
+
+        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing)
+        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing)
+
+        if (this.crit) {
+            if (this.crit >= 100) {
+                // Guaranteed crit
+                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            } else {
+                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+            }
+        } else {
+            return [baseDamage * 0.9, baseDamage * 1.1]
+        }
+    }
+
     /**
      * Returns true if the entity has a >0% chance to die from projectiles already cast.
      *
@@ -159,7 +183,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             if (attacker.damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
             if (attacker.damage_type == "magical" && this.reflection >= 100) continue // It will reflect the attack
 
-            const maximumDamage = Tools.calculateDamageRange(attacker, this)[1]
+            const maximumDamage = attacker.calculateDamageRange(this)[1]
 
             incomingProjectileDamage += maximumDamage
             if (incomingProjectileDamage >= this.hp) return true
@@ -267,7 +291,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage
 
-            const minimumDamage = Tools.calculateDamageRange(attacker, this)[0]
+            const minimumDamage = attacker.calculateDamageRange(this)[0]
 
             incomingProjectileDamage += minimumDamage
             if (incomingProjectileDamage >= this.hp) return true
