@@ -10,14 +10,14 @@ export type GData = {
     } };
 
     conditions: { [T in ConditionName]: {
+        [T in Attribute]?: number
+    } & {
         /** Indicates whether the condition is a penalty or not */
         bad?: boolean;
         buff?: boolean;
         /** The length the condition lasts in ms */
         duration?: number;
         interval?: number;
-    } & {
-        [T in Attribute]?: number
     } };
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
@@ -149,7 +149,7 @@ export type BankInfo = {
 
 export type ChestInfo = PositionReal & {
     alpha: number;
-    skin: "chest3" | string;
+    skin: string | "chest3";
 }
 
 export type TradeItemInfo = ItemData & {
@@ -292,8 +292,8 @@ export type ItemType =
     | "jar"
     | "licence"
     | "material"
-    | "misc"
     | "misc_offhand"
+    | "misc"
     | "offering"
     | "orb"
     | "pants"
@@ -452,6 +452,4 @@ export type ServerIdentifier =
     | "PVP"
 
 export type ServerRegion =
-    | "ASIA"
-    | "US"
-    | "EU"
+    "ASIA" | "EU" | "US"

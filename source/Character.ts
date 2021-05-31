@@ -409,9 +409,9 @@ export class Character extends Observer implements CharacterData {
             // Send a response that we're ready to go
             this.socket.emit("loaded", {
                 height: 1080,
-                width: 1920,
                 scale: 2,
-                success: 1
+                success: 1,
+                width: 1920
             } as LoadedData)
 
             // When we're loaded, authenticate
@@ -797,7 +797,7 @@ export class Character extends Observer implements CharacterData {
             quantity = buyableQuantity
         }
 
-        this.socket.emit("trade_buy", { slot: slot, id: id, rid: rid, q: quantity.toString() })
+        this.socket.emit("trade_buy", { id: id, q: quantity.toString(), rid: rid, slot: slot })
     }
 
     /**
@@ -847,7 +847,7 @@ export class Character extends Observer implements CharacterData {
         return bought
     }
 
-    public calculateDamageRange(defender: Entity | Player | Character, skill: SkillName = "attack"): [number, number] {
+    public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
         if (defender["1hp"]) return [1, 1]
 
         let baseDamage: number = this.attack
@@ -976,7 +976,7 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns true if you have the required items and gold to craft the item, and you
-     * are near the NPC where you can craft this item. 
+     * are near the NPC where you can craft this item.
      *
      * @param {ItemName} itemToCraft
      * @return {*}  {boolean}
@@ -1006,7 +1006,7 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns true if you have enough of the exchangeable items, and you are
      * near the NPC where you can exchange this item.
-     * 
+     *
      * @param {ItemName} itemToExchange
      * @param {{
      *         ignoreLocation?: boolean
@@ -1243,10 +1243,10 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.emit("compound", {
+            "clevel": item1Info.level,
             "items": [item1Pos, item2Pos, item3Pos],
             "offering_num": offeringPos,
-            "scroll_num": cscrollPos,
-            "clevel": item1Info.level
+            "scroll_num": cscrollPos
         })
         return compoundComplete
     }
@@ -1265,8 +1265,8 @@ export class Character extends Observer implements CharacterData {
             const requiredLevel = gInfo.items[i][2]
 
             const searchArgs = {
+                level: requiredLevel,
                 quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity : undefined,
-                level: requiredLevel
             }
 
             const itemPos = this.locateItem(requiredName, this.items, searchArgs)
@@ -1307,7 +1307,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to deposit ${gold} gold.`)
         }
 
-        this.socket.emit("bank", { operation: "deposit", amount: gold })
+        this.socket.emit("bank", { amount: gold, operation: "deposit" })
     }
 
     /**
@@ -1419,7 +1419,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkDeposit)
         })
 
-        this.socket.emit("bank", { operation: "swap", pack: bankPack, str: bankSlot, inv: inventoryPos })
+        this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankSlot })
         return swapped
     }
 
@@ -1881,24 +1881,24 @@ export class Character extends Observer implements CharacterData {
      * Moves the character to a given location. If the character can not move there safely,
      * i.e. there's a wall in the way, then we will move to the closest we can walk there in
      * a straight line.
-     * 
+     *
      * If you want this function to return after we complete the move, use `await`.
-     * 
+     *
      * If you start a new move before the last move is finished, the last move's promise will resolve.
      *
      * @param {number} x
      * @param {number} y
-     * @param {{ disableSafetyCheck: boolean }} [options] 
-     * 
+     * @param {{ disableSafetyCheck: boolean }} [options]
+     *
      * disableSafetyCheck - If set to true, move() will not check map bounds
-     * 
+     *
      * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
     public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [move].")
         // Check if we're already there
-        if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, y: this.y, x: this.x })
+        if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         let to: IPosition = { map: this.map, x: x, y: y }
         if (!options?.disableSafetyCheck) {
@@ -1937,7 +1937,7 @@ export class Character extends Observer implements CharacterData {
                 if (this.x == to.x && this.y == to.y) {
                     // We are here!
                     this.socket.removeListener("player", checkPlayer)
-                    resolve({ x: x, y: y, map: this.map })
+                    resolve({ map: this.map, x: x, y: y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
                     timeout = setTimeout(checkPosition, timeToFinishMove)
@@ -1955,11 +1955,11 @@ export class Character extends Observer implements CharacterData {
         if (this.going_x !== x || this.going_y !== y) {
             // Only send a move if it's to a different location than we're alreaedy going
             this.socket.emit("move", {
-                x: this.x,
-                y: this.y,
                 going_x: to.x,
                 going_y: to.y,
-                m: this.m
+                m: this.m,
+                x: this.x,
+                y: this.y,
             })
             this.updatePositions()
             this.going_x = to.x
@@ -2107,7 +2107,7 @@ export class Character extends Observer implements CharacterData {
 
     public sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendCM].")
-        this.socket.emit("cm", { to: to, message: JSON.stringify(message) })
+        this.socket.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
     public async sendGold(to: string, amount: number): Promise<number> {
@@ -2135,7 +2135,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
         })
-        this.socket.emit("send", { name: to, gold: amount })
+        this.socket.emit("send", { gold: amount, name: to })
         return goldSent
     }
 
@@ -2236,7 +2236,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
-    public async smartMove(to: MapName | MonsterName | NPCName | IPosition, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
+    public async smartMove(to: IPosition | MapName | MonsterName | NPCName, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
         avoidTownWarps: false,
         getWithin: 0,
         useBlink: false

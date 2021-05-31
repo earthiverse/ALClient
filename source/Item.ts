@@ -18,7 +18,7 @@ export class Item implements ItemData, GItem {
     public type: ItemType
     // GItem (optional)
     public a: boolean | number = false
-    public ability?: "burn" | "freeze" | "posion" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
+    public ability?: SkillName | "burn" | "freeze" | "poke" | "posion" | "restore_mp" | "secondchance" | "sugarrush" | "weave"
     public acolor?: string
     public action?: string
     public g: number

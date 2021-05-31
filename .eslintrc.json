@@ -21,21 +21,22 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ]
+        "array-bracket-spacing": ["error", "never"],
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "indent": ["error", 4],
+        "func-call-spacing": ["error", "never"],
+        "keyword-spacing": ["error", { "before": true }],
+        "key-spacing": ["error", { "afterColon": true, "beforeColon": false }],
+        "linebreak-style": ["error", "windows"],
+        "no-multi-spaces": "error",
+        "no-trailing-spaces": "error",
+        "quotes": ["error", "double"],
+        "semi": ["error", "never"],
+        "sort-keys": "warn",
+        "sort-vars": "error",
+        "space-infix-ops": "error",
+        "space-in-parens": ["error", "never"],
+        "space-unary-ops": "error",
+        "@typescript-eslint/sort-type-union-intersection-members": "warn"
     }
 }
