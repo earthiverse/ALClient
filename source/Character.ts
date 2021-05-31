@@ -2176,10 +2176,24 @@ export class Character extends Observer implements CharacterData {
      * Invites the given character to our party.
      * @param id The character ID to invite to our party.
      */
-    // TODO: See what socket events happen, and see if we can see if the server picked up our request
     public sendPartyInvite(id: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendPartyInvite].")
+        const invited = new Promise<void>((resolve, reject) => {
+            const sentCheck = (data: string) => {
+                if (data == `Invited ${id} to party`) {
+                    this.socket.removeListener("game_log", sentCheck)
+                    resolve()
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("game_log", sentCheck)
+                reject(`sendPartyInvite timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_log", sentCheck)
+        })
+
         this.socket.emit("party", { event: "invite", name: id })
+        return invited
     }
 
     /**
