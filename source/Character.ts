@@ -2251,15 +2251,16 @@ export class Character extends Observer implements CharacterData {
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move across maps.
      *
-     * @param {(MapName | MonsterName | NPCName | IPosition)} to
+     * @param {(IPosition | ItemName | MapName | MonsterName | NPCName)} to
      * @param {{ avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; }} [options={
+     *         avoidTownWarps: false,
      *         getWithin: 0,
      *         useBlink: false
      *     }]
      * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
-    public async smartMove(to: IPosition | MapName | MonsterName | NPCName, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
+    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
         avoidTownWarps: false,
         getWithin: 0,
         useBlink: false
@@ -2269,24 +2270,19 @@ export class Character extends Observer implements CharacterData {
         let path: LinkData[]
         if (typeof to == "string") {
             // Check if our destination is a map name
-            for (const mapName in this.G.maps) {
-                if (to !== mapName)
-                    continue
-
+            const gMap = this.G.maps[to]
+            if (gMap) {
                 // Set `to` to the `town` spawn on the map
                 const mainSpawn = this.G.maps[to as MapName].spawns[0]
                 fixedTo = { map: to as MapName, x: mainSpawn[0], y: mainSpawn[1] }
-                break
             }
 
             // Check if our destination is a monster type
             if (!fixedTo) {
-                for (const mtype in this.G.monsters) {
-                    if (to !== mtype)
-                        continue
-
+                const gMonster = this.G.monsters[to as Exclude<MonsterName, "terracota">]
+                if (gMonster) {
                     // Set `to` to the closest spawn for these monsters
-                    const locations = this.locateMonster(mtype as MonsterName)
+                    const locations = this.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
                         const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
@@ -2297,43 +2293,49 @@ export class Character extends Observer implements CharacterData {
                             closestDistance = distance
                         }
                     }
-                    break
                 }
             }
 
             // Check if our destination is an NPC role
             if (!fixedTo) {
-                for (const mapName in this.G.maps) {
-                    if (this.G.maps[mapName as MapName].ignore)
-                        continue
-                    for (const npc of this.G.maps[mapName as MapName].npcs) {
-                        if (to !== npc.id)
-                            continue
-
-                        // Set `to` to the closest NPC
-                        const locations = this.locateNPC(npc.id)
-                        let closestDistance: number = Number.MAX_VALUE
-                        for (const location of locations) {
-                            const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
-                            const distance = Pathfinder.computePathCost(potentialPath)
-                            if (distance < closestDistance) {
-                                path = potentialPath
-                                fixedTo = path[path.length - 1]
-                                closestDistance = distance
-                            }
-                        }
-                        break
+                const locations = this.locateNPC(to as NPCName)
+                // Set `to` to the closest NPC
+                let closestDistance: number = Number.MAX_VALUE
+                for (const location of locations) {
+                    const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
+                    const distance = Pathfinder.computePathCost(potentialPath)
+                    if (distance < closestDistance) {
+                        path = potentialPath
+                        fixedTo = path[path.length - 1]
+                        closestDistance = distance
                     }
                 }
             }
 
-            if (!fixedTo)
-                return Promise.reject(`Could not find a suitable destination for '${to}'`)
+            // Check if our destination is an ItemName. If it is, go to the NPC that sells that item.
+            if (!fixedTo) {
+                const gItem = this.G.items[to as ItemName]
+                if (gItem) {
+                    for (const map in this.G.maps) {
+                        if (this.G.maps[map as MapName].ignore) continue
+                        for (const npc of this.G.maps[map as MapName].npcs) {
+                            if (this.G.npcs[npc.id].items === undefined) continue
+                            for (const i of this.G.npcs[npc.id].items) {
+                                if (i == to as ItemName) {
+                                    // We found the NPC that sells the item
+                                    // We're going to run smartMove again to the NPC
+                                    return this.smartMove(npc, options)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!fixedTo) return Promise.reject(`Could not find a suitable destination for '${to}'`)
         } else if (to.x !== undefined && to.y !== undefined) {
-            if (to.map)
-                fixedTo = to as NodeData
-            else
-                fixedTo = { map: this.map, x: to.x, y: to.y }
+            if (to.map) fixedTo = to as NodeData
+            else fixedTo = { map: this.map, x: to.x, y: to.y }
         } else {
             console.debug(to)
             return Promise.reject("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
