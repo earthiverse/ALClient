@@ -137,7 +137,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         for (const key in data) this[key] = data[key]
     }
 
-    public calculateDamageRange(defender: Entity | Player | Character): [number, number] {
+    public calculateDamageRange(defender: Character | Entity | Player): [number, number] {
         if (defender["1hp"]) return [1, 1]
 
         let baseDamage: number = this.attack

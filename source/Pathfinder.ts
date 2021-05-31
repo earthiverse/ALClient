@@ -117,10 +117,10 @@ export class Pathfinder {
         const grid = this.getGrid(from.map)
         const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
-        let ystep, xstep // the step on y and x axis
+        let xstep, ystep // the step on y and x axis
         let error // the error accumulated during the incremenet
         let errorprev // *vision the previous value of the error variable
-        let y = Math.trunc(from.y) - this.G.geometry[from.map].min_y, x = Math.trunc(from.x) - this.G.geometry[from.map].min_x // the line points
+        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x, y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
@@ -143,19 +143,19 @@ export class Pathfinder {
 
         if (ddx >= ddy) { // first octant (0 <= slope <= 1)
             // compulsory initialization (even for errorprev, needed when dx==dy)
-            errorprev = error = dx  // start in the middle of the square
-            for (let i = 0; i < dx; i++) {  // do not use the first point (already done)
+            errorprev = error = dx // start in the middle of the square
+            for (let i = 0; i < dx; i++) { // do not use the first point (already done)
                 x += xstep
                 error += ddy
-                if (error > ddx) {  // increment y if AFTER the middle ( > )
+                if (error > ddx) { // increment y if AFTER the middle ( > )
                     y += ystep
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
-                    if (error + errorprev < ddx) {  // bottom square also
+                    if (error + errorprev < ddx) { // bottom square also
                         if (grid[(y - ystep) * width + x] !== WALKABLE) return false
-                    } else if (error + errorprev > ddx) {  // left square also
+                    } else if (error + errorprev > ddx) { // left square also
                         if (grid[y * width + x - xstep] !== WALKABLE) return false
-                    } else {  // corner: bottom and left squares also
+                    } else { // corner: bottom and left squares also
                         if (grid[(y - ystep) * width + x] !== WALKABLE) return false
                         if (grid[y * width + x - xstep] !== WALKABLE) return false
                     }
@@ -163,7 +163,7 @@ export class Pathfinder {
                 if (grid[y * width + x] !== WALKABLE) return false
                 errorprev = error
             }
-        } else {  // the same as above
+        } else { // the same as above
             errorprev = error = dy
             for (let i = 0; i < dy; i++) {
                 y += ystep
@@ -531,7 +531,7 @@ export class Pathfinder {
                         path.push({ type: "move", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
                     }
                 } else {
-                    path.push({ type: "move", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
+                    path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
                 }
             }
         }
@@ -559,8 +559,8 @@ export class Pathfinder {
     /**
      * If we were to walk from `from` to `to`, and `to` was unreachable, get the furthest `to` we can walk to.
      * Adapted from http://eugen.dedu.free.fr/projects/bresenham/
-     * @param from 
-     * @param to 
+     * @param from
+     * @param to
      */
     public static getSafeWalkTo(from: IPosition, to: IPosition): IPosition {
         if (from.map !== to.map) throw new Error("We can't walk across maps.")
@@ -569,10 +569,10 @@ export class Pathfinder {
         const grid = this.getGrid(from.map)
         const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x
 
-        let ystep, xstep // the step on y and x axis
+        let xstep, ystep // the step on y and x axis
         let error // the error accumulated during the incremenet
         let errorprev // *vision the previous value of the error variable
-        let y = Math.trunc(from.y) - this.G.geometry[from.map].min_y, x = Math.trunc(from.x) - this.G.geometry[from.map].min_x // the line points
+        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x, y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
@@ -598,19 +598,19 @@ export class Pathfinder {
 
         if (ddx >= ddy) { // first octant (0 <= slope <= 1)
             // compulsory initialization (even for errorprev, needed when dx==dy)
-            errorprev = error = dx  // start in the middle of the square
-            for (let i = 0; i < dx; i++) {  // do not use the first point (already done)
+            errorprev = error = dx // start in the middle of the square
+            for (let i = 0; i < dx; i++) { // do not use the first point (already done)
                 x += xstep
                 error += ddy
-                if (error > ddx) {  // increment y if AFTER the middle ( > )
+                if (error > ddx) { // increment y if AFTER the middle ( > )
                     y += ystep
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
-                    if (error + errorprev < ddx) {  // bottom square also
+                    if (error + errorprev < ddx) { // bottom square also
                         if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                    } else if (error + errorprev > ddx) {  // left square also
+                    } else if (error + errorprev > ddx) { // left square also
                         if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
-                    } else {  // corner: bottom and left squares also
+                    } else { // corner: bottom and left squares also
                         if (grid[(y - ystep) * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                         if (grid[y * width + x - xstep] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y - ystep + this.G.geometry[from.map].min_y }
                     }
@@ -618,7 +618,7 @@ export class Pathfinder {
                 if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x - xstep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
                 errorprev = error
             }
-        } else {  // the same as above
+        } else { // the same as above
             errorprev = error = dy
             for (let i = 0; i < dy; i++) {
                 y += ystep

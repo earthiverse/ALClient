@@ -80,7 +80,7 @@ export class Player implements PlayerData {
     }
 
 
-    public calculateDamageRange(defender: Entity | Player | Character, skill: SkillName = "attack"): [number, number] {
+    public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
         if (defender["1hp"]) return [1, 1]
 
         let baseDamage: number = this.attack

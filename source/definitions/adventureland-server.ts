@@ -6,9 +6,9 @@
 import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
 import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
 
-export type AchievementProgressData = {
+export type AchievementProgressData = AchievementProgressDataFirehazard | {
     name: string
-} | AchievementProgressDataFirehazard
+}
 
 export type AchievementProgressDataFirehazard = {
     name: "firehazard"
@@ -44,8 +44,8 @@ export type AuthData = {
     width: number
     scale: number
 
-    no_html: "1" | ""
-    no_graphics: "True" | ""
+    no_html: "" | "1"
+    no_graphics: "" | "True"
 
     code_slot?: number
 }
@@ -67,7 +67,7 @@ export type CharacterData = PlayerData & {
     resistance: number
     level: number
     rip: boolean
-    afk: "afk" | boolean | string
+    afk: boolean | string | "afk"
     s: StatusInfo
     // TODO: Figure this type out
     c: any
@@ -192,7 +192,7 @@ export type CharacterListData = {
 }
 
 export type ChestData = {
-    chest: "chest3" | "chest4" | "chest6" | string
+    chest: string | "chest3" | "chest4" | "chest6"
     id: string
     items: number
     map: MapName
@@ -227,14 +227,14 @@ export type CMData = {
 
 export type DeathData = {
     id: string
-    place?: "attack" | string
+    place?: string | "attack"
 }
 
 export type DisappearData = {
     id: string
     /** TODO: Confirm, if effect is '1', they used the town skill */
-    effect?: 1 | "blink"
-    reason?: "transport" | string
+    effect?: "blink" | 1
+    reason?: string | "transport"
     /** s can be a spawn (single number), or [x,y,orientation (up/down/left/right)] */
     s?: number | [number, number, number?]
     to?: MapName
@@ -312,10 +312,10 @@ export type EvalData = {
 
 export type GameLogData = GameLogDataString
 export type GameLogDataString =
+    | string
     | "Already partying"
     | "Can't respawn yet."
     | "Invitation expired"
-    | string
 
 export type GameResponseData = GameResponseDataObject | GameResponseDataString
 
@@ -333,7 +333,7 @@ export type GameResponseDataObject = {
     reason: "mounted"
 } | {
     response: "bank_restrictions"
-    place: "compound" | string
+    place: string | "compound"
 } | {
     response: "buy_success"
     cost: number
@@ -392,7 +392,7 @@ export type GameResponseDataObject = {
     // TODO: See what else gets returned
 } | {
     response: "seashell_success"
-    suffix: "" | string
+    suffix: string | ""
 } | {
     response: "skill_fail"
     name: SkillName
@@ -449,15 +449,14 @@ export type GameResponseDataString =
     | "skill_too_far"
     | "trade_bspace"
     | "trade_get_closer"
+    /* Failed upgrading (to chance) */
+    | "upgrade_fail"
     /** We are already upgrading something */
     | "upgrade_in_progress"
     /** We are trying to use a scroll to upgrade something that is a higher grade than the scroll can upgrade */
     | "upgrade_incompatible_scroll"
-    /* Failed upgrading (to chance) */
-    | "upgrade_fail"
     /* Successfully upgraded */
     | "upgrade_success"
-// | string
 
 export type HitData = {
     anim?: AnimationName | "miss" | "reflect"
@@ -606,7 +605,7 @@ export type LoadedData = {
     width: number
     // TODO: Find out what this is
     scale: number
-    success: 1 | number
+    success: number | 1
 }
 
 export type MailData = {
@@ -647,7 +646,7 @@ export type PullMerchantsCharData = {
     map: MapName
     x: number
     y: number
-    afk: "code" | boolean
+    afk: boolean | "code"
     /** Follows the following format: `${ServerRegion} ${ServerIdentifier}` */
     server: string
     stand: "cstand" | "stand0" | "stand1"
@@ -758,7 +757,7 @@ export type PlayerData = {
     }
     range?: number
     resistance?: number
-    rip?: number | boolean
+    rip?: boolean | number
     s: StatusInfo
     skin: string
     slots?: SlotInfo
@@ -875,7 +874,7 @@ export type TrackerData = {
     }
     /** Contains drop information */
     maps: {
-        [T in MapName | "global" | "global_static"]?: GDropItem[]
+        [T in MapName | "global_static" | "global"]?: GDropItem[]
     }
     /** For the "open" items in maps, this table has a list of the drops that could occur */
     tables: {
@@ -892,12 +891,34 @@ export type TrackerData = {
         [T in MonsterName]?: GDropItem[]
     }
     // TODO: What's the difference between the global here, and the one in 'maps'?
-    global: [number, ItemName][] | [number, "open", string][]
+    global: [number, "open", string][] | [number, ItemName][]
     // TODO: What's the difference between the global_static here, and the one in 'maps'?
-    global_static: [number, ItemName][] | [number, "open", string][]
+    global_static: [number, "open", string][] | [number, ItemName][]
 }
 
 export type UIData = {
+    type: "-$"
+    // TODO: Is there a type for these?
+    id: string | "basics" | "scrolls"
+    /** The character who sold the item */
+    name: string
+    item: {
+        name: ItemName
+        q: number
+    }
+    /** The slot number where the item was being stored in inventory. */
+    num: string
+} | {
+    type: "+$"
+    // TODO: Is there a type for these?
+    id: string | "basics" | "scrolls"
+    /** The character who bought the item */
+    name: string
+    item: {
+        name: ItemName
+        q: number
+    }
+} | {
     type: "fishing_fail"
     name: string
 } | {
@@ -926,32 +947,10 @@ export type UIData = {
     type: "scare"
     name: string
     ids: string[]
-} | {
-    type: "+$"
-    // TODO: Is there a type for these?
-    id: "basics" | "scrolls" | string
-    /** The character who bought the item */
-    name: string
-    item: {
-        name: ItemName
-        q: number
-    }
-} | {
-    type: "-$"
-    // TODO: Is there a type for these?
-    id: "basics" | "scrolls" | string
-    /** The character who sold the item */
-    name: string
-    item: {
-        name: ItemName
-        q: number
-    }
-    /** The slot number where the item was being stored in inventory. */
-    num: string
 }
 
 export type UpgradeData = {
-    type: "compound" | "exchange" | "upgrade" | string
+    type: string | "compound" | "exchange" | "upgrade"
     /** 0 = fail, 1 = success */
     success: 0 | 1
 }
@@ -963,7 +962,7 @@ export type WelcomeData = {
     in: string
     map: MapName
     // TODO: Find out if this is "hardcore" on a hardcore server
-    gameplay: "normal" | string
+    gameplay: string | "normal"
     // TODO: Find out what this is
     info: any
     name: ServerIdentifier

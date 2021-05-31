@@ -5,7 +5,7 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     // TODO: Add promises
-    public invis() {
+    public invis(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [invis].")
         this.socket.emit("skill", { name: "invis" })
     }
@@ -28,8 +28,8 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "mentalburst",
-            id: target
+            id: target,
+            name: "mentalburst"
         })
         return marked
     }
@@ -75,8 +75,8 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "quickpunch",
-            id: target
+            id: target,
+            name: "quickpunch"
         })
         return marked
     }
@@ -99,8 +99,8 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "quickstab",
-            id: target
+            id: target,
+            name: "quickstab"
         })
         return marked
     }
@@ -124,8 +124,8 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
+            id: target,
             name: "rspeed",
-            id: target
         })
         return swifted
     }
