@@ -1828,6 +1828,37 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Removes a party member
+     *
+     * @param {string} toKick
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public kickPartyMember(toKick: string): Promise<void> {
+        if (!this.party) return Promise.resolve() // We're not in a party, so consider whoever they are "kicked"...
+        if (!this.partyData.list.includes(toKick)) return Promise.resolve() // They aren't in our party, so consider whoever they are "kicked"...
+        if (toKick == this.id) return this.leaveParty() // If it's us, leave the party instead, don't kick ourselves.
+        if (this.partyData.list.indexOf(this.id) < this.partyData.list.indexOf(toKick)) return Promise.reject(`We can't kick ${toKick}, they're higher on the party list.`)
+
+        const kicked = new Promise<void>((resolve, reject) => {
+            const kickedCheck = (data: PartyData) => {
+                if (!data.list || !data.list.includes(toKick)) {
+                    // They're no longer in our party list
+                    this.socket.removeListener("party_update", kickedCheck)
+                    resolve()
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("party_update", kickedCheck)
+                reject(`kickPartyMember timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("party_update", kickedCheck)
+        })
+        this.socket.emit("party", {event: "kick", name: toKick})
+        return kicked
+    }
+
+    /**
      * For use on 'cyberland' and 'jail' to leave the map. You will be transported to the spawn on "main".
      *
      * @return {*}  {Promise<void>}
