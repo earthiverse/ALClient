@@ -1845,7 +1845,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.party) return Promise.resolve() // We're not in a party, so consider whoever they are "kicked"...
         if (!this.partyData.list.includes(toKick)) return Promise.resolve() // They aren't in our party, so consider whoever they are "kicked"...
         if (toKick == this.id) return this.leaveParty() // If it's us, leave the party instead, don't kick ourselves.
-        if (this.partyData.list.indexOf(this.id) < this.partyData.list.indexOf(toKick)) return Promise.reject(`We can't kick ${toKick}, they're higher on the party list.`)
+        if (this.partyData.list.indexOf(this.id) > this.partyData.list.indexOf(toKick)) return Promise.reject(`We can't kick ${toKick}, they're higher on the party list.`)
 
         const kicked = new Promise<void>((resolve, reject) => {
             const kickedCheck = (data: PartyData) => {
@@ -1861,7 +1861,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("party_update", kickedCheck)
         })
-        this.socket.emit("party", {event: "kick", name: toKick})
+        this.socket.emit("party", { event: "kick", name: toKick })
         return kicked
     }
 
