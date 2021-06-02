@@ -22,6 +22,7 @@
     ],
     "rules": {
         "array-bracket-spacing": ["error", "never"],
+        "block-spacing": "error",
         "comma-spacing": ["error", { "before": false, "after": true }],
         "indent": ["error", 4],
         "func-call-spacing": ["error", "never"],
@@ -29,7 +30,9 @@
         "key-spacing": ["error", { "afterColon": true, "beforeColon": false }],
         "linebreak-style": ["error", "windows"],
         "no-multi-spaces": "error",
+        "no-tabs": ["error", { "allowIndentationTabs": false }] ,
         "no-trailing-spaces": "error",
+        "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "double"],
         "semi": ["error", "never"],
         "sort-keys": "warn",
