@@ -1618,6 +1618,7 @@ export class Character extends Observer implements CharacterData {
      *         level?: number
      *         levelGreaterThan?: number
      *         levelLessThan?: number
+     *         willBurnToDeath?: boolean
      *         willDieToProjectiles?: boolean
      *     }} [filters={}]
      * @return {*}  {Entity[]}
@@ -1634,6 +1635,7 @@ export class Character extends Observer implements CharacterData {
         level?: number
         levelGreaterThan?: number
         levelLessThan?: number
+        willBurnToDeath?: boolean
         willDieToProjectiles?: boolean
     } = {}): Entity[] {
         const entities: Entity[] = []
@@ -1661,6 +1663,11 @@ export class Character extends Observer implements CharacterData {
                 const couldGiveCredit = entity.couldGiveCreditForKill(this)
                 if (filters.couldGiveCredit && !couldGiveCredit) continue
                 if (!filters.couldGiveCredit && couldGiveCredit) continue
+            }
+            if (filters.willBurnToDeath) {
+                const willBurnToDeath = entity.willBurnToDeath()
+                if (filters.willBurnToDeath && !willBurnToDeath) continue
+                if (!filters.willDieToProjectiles && willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles) {
                 const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
