@@ -1646,29 +1646,29 @@ export class Character extends Observer implements CharacterData {
                     if (entity.target == this.id) continue
                 }
             }
-            if (filters.targetingPlayer && entity.target !== filters.targetingPlayer) continue
-            if (filters.level !== entity.level) continue
-            if (filters.levelGreaterThan <= entity.level) continue
-            if (filters.levelLessThan >= entity.level) continue
-            if (filters.type !== entity.type) continue
-            if (filters.typeList && !filters.typeList.includes(entity.type)) continue
+            if (filters.targetingPlayer !== undefined && entity.target !== filters.targetingPlayer) continue
+            if (filters.level !== undefined && filters.level !== entity.level) continue
+            if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= entity.level) continue
+            if (filters.levelLessThan !== undefined && filters.levelLessThan >= entity.level) continue
+            if (filters.type !== undefined && filters.type !== entity.type) continue
+            if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
             if (filters.withinRange !== undefined && Tools.distance(this, entity) > filters.withinRange) continue
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, entity)
                 if (filters.canWalkTo && !canWalkTo) continue
                 if (!filters.canWalkTo && canWalkTo) continue
             }
-            if (filters.couldGiveCredit) {
+            if (filters.couldGiveCredit !== undefined) {
                 const couldGiveCredit = entity.couldGiveCreditForKill(this)
                 if (filters.couldGiveCredit && !couldGiveCredit) continue
                 if (!filters.couldGiveCredit && couldGiveCredit) continue
             }
-            if (filters.willBurnToDeath) {
+            if (filters.willBurnToDeath !== undefined) {
                 const willBurnToDeath = entity.willBurnToDeath()
                 if (filters.willBurnToDeath && !willBurnToDeath) continue
                 if (!filters.willDieToProjectiles && willBurnToDeath) continue
             }
-            if (filters.willDieToProjectiles) {
+            if (filters.willDieToProjectiles !== undefined) {
                 const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
                 if (filters.willDieToProjectiles && !willDieToProjectiles) continue
                 if (!filters.willDieToProjectiles && willDieToProjectiles) continue
