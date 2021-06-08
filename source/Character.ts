@@ -955,7 +955,7 @@ export class Character extends Observer implements CharacterData {
             if (this.G.maps[map as MapName].ignore) continue
             for (const npc of this.G.maps[map as MapName].npcs) {
                 if (buyable == true) break
-                if (this.G.npcs[npc.id].items === undefined) continue
+                if (this.G.npcs[npc.id].items == undefined) continue
                 for (const i of this.G.npcs[npc.id].items) {
                     if (i == item) {
                         buyable = true

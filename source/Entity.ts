@@ -199,7 +199,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      */
     public couldGiveCreditForKill(player: Character): boolean {
         // It's not attacking anyone
-        if (this.target === undefined) return true
+        if (this.target == undefined) return true
 
         // Everyone gets credit if you attack a cooperative monster
         if (this.cooperative) return true
