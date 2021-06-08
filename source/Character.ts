@@ -621,8 +621,7 @@ export class Character extends Observer implements CharacterData {
 
         const acceptedRequest = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
-                if (data.list.includes(this.id)
-                    && data.list.includes(id)) {
+                if (data.list && data.list.includes(this.id) && data.list.includes(id)) {
                     this.socket.removeListener("party_update", partyCheck)
                     resolve(data)
                 }
