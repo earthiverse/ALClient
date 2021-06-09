@@ -1,6 +1,6 @@
 import { ActionData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-04-22
  * It is used to confirm type correctness
  */
