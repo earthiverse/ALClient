@@ -11,7 +11,7 @@ let sameParty: Player
 let randomPlayer: Player
 beforeAll(async () => {
     Database.connect()
-    G = await Game.getGData()
+    G = await Game.getGData(true)
     character = new Character("12345", undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
     character.parseCharacter({
         id: "earthPri",

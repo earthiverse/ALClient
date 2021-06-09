@@ -29,7 +29,7 @@ export class Game {
 
     static async getGData(cache = false): Promise<GData2> {
         if (this.G) return this.G
-        if (!this.version) this.getVersion()
+        if (!this.version) await this.getVersion()
         const gFile = `G_${this.version}.json`
         try {
             // Check if there's cached data

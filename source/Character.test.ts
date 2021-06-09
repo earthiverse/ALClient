@@ -12,7 +12,7 @@ let warrior: Character
 const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" }
 beforeAll(async () => {
     Database.connect()
-    G = await Game.getGData()
+    G = await Game.getGData(true)
     priest = new Character(undefined, undefined, undefined, G, serverData)
     priest.parseCharacter({
         id: "earthPri",

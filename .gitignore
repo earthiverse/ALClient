@@ -65,3 +65,6 @@ build/
 
 # credentials file
 credentials.json
+
+# Backup G files
+G_*.json
