@@ -3,7 +3,7 @@ import { MapName } from "./definitions/adventureland-data"
 export class Constants {
     /** Various client related things */
     static PATHFINDER_FIRST_MAP: MapName = "main"
-    static MAX_PINGS = 10
+    static MAX_PINGS = 50
     static PING_EVERY_MS = 30000
     static CONNECT_TIMEOUT_MS = 10000
     static RECONNECT_TIMEOUT_MS = 40000
