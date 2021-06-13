@@ -1110,6 +1110,7 @@ export class Character extends Observer implements CharacterData {
         if (this.rip) return false // We are dead
         if (this.s.stoned) return false // We are 'stoned' (oneeye condition)
         if (this.isOnCooldown(skill) && !options?.ignoreCooldown) return false // Skill is on cooldown
+        if (this.G.skills[skill].hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
         const gInfoSkill = this.G.skills[skill]
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)

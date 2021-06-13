@@ -41,6 +41,6 @@
         "space-in-parens": ["error", "never"],
         "space-unary-ops": "error",
         "@typescript-eslint/sort-type-union-intersection-members": "warn",
-        "@typescript-eslint/type-annotation-spacing": ["error", { "before": false, "after": true }]
+        "@typescript-eslint/type-annotation-spacing": ["error", { "before": false, "after": true, "overrides": { "arrow": { "before": true, "after": true }}}]
     }
 }
