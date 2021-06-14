@@ -1051,22 +1051,17 @@ export class Character extends Observer implements CharacterData {
     public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
-        if (gInfo.lifesteal !== undefined) return false
-        if (gInfo.abilities && gInfo.abilities.self_healing) return false
+        if (gInfo.lifesteal) return false
+        if (gInfo.abilities?.self_healing) return false
 
         // Check if it can avoid our shot
         if (entity.avoidance) return false
         if (this.damage_type == "magical" && entity.reflection) return false
         if (this.damage_type == "physical" && entity.evasion) return false
 
-        if (entity["1hp"]) {
-            return entity.hp == 1
-        }
+        if (entity["1hp"]) return entity.hp == 1
 
-        let minimumDamage = this.calculateDamageRange(entity, skill)[0]
-        if (this.G.skills[skill].damage_multiplier) minimumDamage *= this.G.skills[skill].damage_multiplier
-
-        return minimumDamage > entity.hp
+        return this.calculateDamageRange(entity, skill)[0] > entity.hp
     }
 
     /**
@@ -1676,7 +1671,7 @@ export class Character extends Observer implements CharacterData {
             if (filters.willBurnToDeath !== undefined) {
                 const willBurnToDeath = entity.willBurnToDeath()
                 if (filters.willBurnToDeath && !willBurnToDeath) continue
-                if (!filters.willDieToProjectiles && willBurnToDeath) continue
+                if (!filters.willBurnToDeath && willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles !== undefined) {
                 const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)

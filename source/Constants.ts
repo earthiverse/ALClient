@@ -25,6 +25,6 @@ export class Constants {
 
     /** Miscellaneous game related things */
     static BANK_PACK_SIZE = 42
-    static MAX_PARTY_SIZE = 10
+    static MAX_PARTY_SIZE = 9 // TODO: It might actually be 9 + 1 merchant?
     static PONTY_MARKUP = 1.2
 }
