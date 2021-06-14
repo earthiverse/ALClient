@@ -131,9 +131,9 @@ export class Observer {
                     } else {
                         this.socket.emit("loaded", {
                             height: 1080,
-                            width: 1920,
                             scale: 2,
-                            success: 1
+                            success: 1,
+                            width: 1920
                         } as LoadedData)
                         resolve()
                     }
@@ -319,6 +319,6 @@ export class Observer {
                 closestD = d
             }
         }
-        if (closest) return { monster: closest, distance: closestD }
+        if (closest) return { distance: closestD, monster: closest }
     }
 }
