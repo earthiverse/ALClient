@@ -2267,7 +2267,7 @@ export class Character extends Observer implements CharacterData {
         if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
         if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
 
-        this.socket.emit("booster", { num: booster, action: "shift", to: to })
+        this.socket.emit("booster", { action: "shift", num: booster, to: to })
     }
 
     protected lastSmartMove: number = Date.now();
@@ -2366,7 +2366,9 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        if (options?.getWithin >= Tools.distance(this, fixedTo)) return Promise.resolve({ x: this.x, y: this.y, map: this.map })
+        const distance = Tools.distance(this, fixedTo)
+        if (distance == 0) return Promise.resolve(fixedTo)
+        if (options?.getWithin >= distance) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         // If we don't have the path yet, get it
         if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
@@ -2392,8 +2394,8 @@ export class Character extends Observer implements CharacterData {
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
                 const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
                 const potentialMove: LinkData = {
-                    type: "move",
                     map: this.map,
+                    type: "move",
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
                     y: fixedTo.y + Math.sin(angle) * options.getWithin
                 }
@@ -2567,7 +2569,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", { name: "snowball", id: target, num: snowball })
+        this.socket.emit("skill", { id: target, name: "snowball", num: snowball })
         return throwStarted
     }
 
@@ -2601,7 +2603,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("transport", { to: map, s: spawn })
+        this.socket.emit("transport", { s: spawn, to: map })
         return transportComplete
     }
 
@@ -2701,7 +2703,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, offering_num: offeringPos, clevel: this.items[itemPos].level })
+        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
         return upgradeComplete
     }
 
@@ -2818,7 +2820,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to withdraw ${gold} gold.`)
         }
 
-        this.socket.emit("bank", { operation: "withdraw", amount: gold })
+        this.socket.emit("bank", { amount: gold, operation: "withdraw" })
     }
 
     public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
@@ -2852,7 +2854,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkWithdrawal)
         })
 
-        this.socket.emit("bank", { operation: "swap", pack: bankPack, str: bankPos, inv: inventoryPos })
+        this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankPos })
         return swapped
     }
 
@@ -2923,7 +2925,7 @@ export class Character extends Observer implements CharacterData {
                 closestD = d
             }
         }
-        if (closest) return { player: closest, distance: closestD }
+        if (closest) return { distance: closestD, player: closest }
     }
 
     /**
