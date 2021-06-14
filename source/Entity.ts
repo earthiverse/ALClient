@@ -216,7 +216,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      */
     public isAttackingPartyMember(player: Character): boolean {
         // Check if the entity is targeting anything
-        if (this.target === undefined) return false
+        if (this.target == undefined) return false
 
         // Check if the entity is attacking us
         // NOTE: I don't want to get in to the semantics if we are actually in a party, I'm assuming if we aren't in a party, we're a party of "1".
