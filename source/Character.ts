@@ -870,12 +870,15 @@ export class Character extends Observer implements CharacterData {
     }
 
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
+        // If the entity is immune, most skills won't do damage
+        if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
+
         if (defender["1hp"]) return [1, 1]
 
         let baseDamage: number = this.attack
         if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
 
-        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
         if (defender.s.marked) baseDamage *= 1.1
 
@@ -891,16 +894,24 @@ export class Character extends Observer implements CharacterData {
 
         if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
 
+        let lowerLimit = baseDamage * 0.9
+        let upperLimit = baseDamage * 1.1
+
         if (this.crit) {
             if (this.crit >= 100) {
-                // Guaranteed crit
-                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
-            } else {
-                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+                lowerLimit *= (2 + (this.critdamage / 100))
             }
-        } else {
-            return [baseDamage * 0.9, baseDamage * 1.1]
+            upperLimit *= (2 + (this.critdamage / 100))
         }
+
+        // NOTE: This information is from @Wizard on Discord on May 1st, 2020
+        // https://discord.com/channels/238332476743745536/243707345887166465/705722706250694737
+        if (skill == "cleave") {
+            lowerLimit *= 0.1
+            upperLimit *= 0.9
+        }
+
+        return [lowerLimit, upperLimit]
     }
 
     /**
@@ -1063,24 +1074,17 @@ export class Character extends Observer implements CharacterData {
     public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
         // Check if it can heal
         const gInfo = this.G.monsters[entity.type]
-        if (gInfo.lifesteal !== undefined) return false
-        if (gInfo.abilities && gInfo.abilities.self_healing) return false
+        if (gInfo.lifesteal) return false
+        if (gInfo.abilities?.self_healing) return false
 
         // Check if it can avoid our shot
         if (entity.avoidance) return false
         if (this.damage_type == "magical" && entity.reflection) return false
         if (this.damage_type == "physical" && entity.evasion) return false
 
-        if (entity["1hp"]) {
-            return entity.hp == 1
-        }
+        if (entity["1hp"]) return entity.hp == 1
 
-        // TODO: Improve with skills that do apiercing, like piercingshot.
-        // TODO: Will probably need to change calculateDamageRange.
-        let minimumDamage = this.calculateDamageRange(entity)[0]
-        if (this.G.skills[skill].damage_multiplier) minimumDamage *= this.G.skills[skill].damage_multiplier
-
-        return minimumDamage > entity.hp
+        return this.calculateDamageRange(entity, skill)[0] > entity.hp
     }
 
     /**
@@ -1124,6 +1128,7 @@ export class Character extends Observer implements CharacterData {
         if (this.rip) return false // We are dead
         if (this.s.stoned) return false // We are 'stoned' (oneeye condition)
         if (this.isOnCooldown(skill) && !options?.ignoreCooldown) return false // Skill is on cooldown
+        if (this.G.skills[skill].hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
         const gInfoSkill = this.G.skills[skill]
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)
@@ -1689,7 +1694,7 @@ export class Character extends Observer implements CharacterData {
             if (filters.willBurnToDeath !== undefined) {
                 const willBurnToDeath = entity.willBurnToDeath()
                 if (filters.willBurnToDeath && !willBurnToDeath) continue
-                if (!filters.willDieToProjectiles && willBurnToDeath) continue
+                if (!filters.willBurnToDeath && willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles !== undefined) {
                 const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
@@ -2280,7 +2285,7 @@ export class Character extends Observer implements CharacterData {
         if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
         if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
 
-        this.socket.emit("booster", { num: booster, action: "shift", to: to })
+        this.socket.emit("booster", { action: "shift", num: booster, to: to })
     }
 
     protected lastSmartMove: number = Date.now();
@@ -2379,7 +2384,9 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        if (options?.getWithin >= Tools.distance(this, fixedTo)) return Promise.resolve({ x: this.x, y: this.y, map: this.map })
+        const distance = Tools.distance(this, fixedTo)
+        if (distance == 0) return Promise.resolve(fixedTo)
+        if (options?.getWithin >= distance) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         // If we don't have the path yet, get it
         if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
@@ -2405,8 +2412,8 @@ export class Character extends Observer implements CharacterData {
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
                 const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
                 const potentialMove: LinkData = {
-                    type: "move",
                     map: this.map,
+                    type: "move",
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
                     y: fixedTo.y + Math.sin(angle) * options.getWithin
                 }
@@ -2580,7 +2587,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", { name: "snowball", id: target, num: snowball })
+        this.socket.emit("skill", { id: target, name: "snowball", num: snowball })
         return throwStarted
     }
 
@@ -2614,7 +2621,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("transport", { to: map, s: spawn })
+        this.socket.emit("transport", { s: spawn, to: map })
         return transportComplete
     }
 
@@ -2714,7 +2721,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { item_num: itemPos, scroll_num: scrollPos, offering_num: offeringPos, clevel: this.items[itemPos].level })
+        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
         return upgradeComplete
     }
 
@@ -2831,7 +2838,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to withdraw ${gold} gold.`)
         }
 
-        this.socket.emit("bank", { operation: "withdraw", amount: gold })
+        this.socket.emit("bank", { amount: gold, operation: "withdraw" })
     }
 
     public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
@@ -2865,7 +2872,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkWithdrawal)
         })
 
-        this.socket.emit("bank", { operation: "swap", pack: bankPack, str: bankPos, inv: inventoryPos })
+        this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankPos })
         return swapped
     }
 
@@ -2936,7 +2943,7 @@ export class Character extends Observer implements CharacterData {
                 closestD = d
             }
         }
-        if (closest) return { player: closest, distance: closestD }
+        if (closest) return { distance: closestD, player: closest }
     }
 
     /**

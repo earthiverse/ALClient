@@ -52,33 +52,33 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public rpiercing = 0
 
     // GMonster properties (required)
-    public readonly aggro: number
-    public readonly name: string
-    public readonly rage: number
-    public readonly respawn: number
-    public readonly skin: string
+    public aggro: number
+    public name: string
+    public rage: number
+    public respawn: number
+    public skin: string
 
     // GMonster properties (optional)
-    public readonly "1hp" = false
-    public readonly aa = 0
-    public readonly achievements: [number, "stat", Attribute, number][] = []
-    public readonly announce?: string
-    public readonly article?: string
-    public readonly balance?: string
-    public readonly cute = false
-    public readonly difficulty?: number
-    public readonly escapist = false
-    public readonly explanation?: string
-    public readonly global = false
-    public readonly goldsteal = 0
-    public readonly hit?: string
-    public readonly humanoid = false
-    public readonly immune = false
-    public readonly lucrativeness?: number
-    public readonly operator = false
-    public readonly orientation?: number
-    public readonly passive = false
-    public readonly pet?: {
+    public "1hp" = false
+    public aa = 0
+    public achievements: [number, "stat", Attribute, number][] = []
+    public announce?: string
+    public article?: string
+    public balance?: string
+    public cute = false
+    public difficulty?: number
+    public escapist = false
+    public explanation?: string
+    public global = false
+    public goldsteal = 0
+    public hit?: string
+    public humanoid = false
+    public immune = false
+    public lucrativeness?: number
+    public operator = false
+    public orientation?: number
+    public passive = false
+    public pet?: {
         aggression: [number, number]
         brightness: number
         chatter: [number, number]
@@ -91,19 +91,19 @@ export class Entity implements MonsterData, Partial<GMonster> {
         passion: [number, number]
         xp: number
     }
-    public readonly poisonous = false
-    public readonly prefix = ""
-    public readonly projectile?: string
-    public readonly rbuff: ConditionName
-    public readonly roam = false
-    public readonly size?: number
-    public readonly slots?: Partial<SlotInfo>
-    public readonly spawns?: [number, MonsterName][] = []
-    public readonly special = false
-    public readonly stationary = false
-    public readonly supporter = false
-    public readonly trap = false
-    public readonly unlist = false
+    public poisonous = false
+    public prefix = ""
+    public projectile?: string
+    public rbuff: ConditionName
+    public roam = false
+    public size?: number
+    public slots?: Partial<SlotInfo>
+    public spawns?: [number, MonsterName][] = []
+    public special = false
+    public stationary = false
+    public supporter = false
+    public trap = false
+    public unlist = false
 
     // Misc.
     public id: string
@@ -217,7 +217,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      */
     public isAttackingPartyMember(player: Character): boolean {
         // Check if the entity is targeting anything
-        if (this.target === undefined) return false
+        if (this.target == undefined) return false
 
         // Check if the entity is attacking us
         // NOTE: I don't want to get in to the semantics if we are actually in a party, I'm assuming if we aren't in a party, we're a party of "1".
@@ -244,10 +244,14 @@ export class Entity implements MonsterData, Partial<GMonster> {
      */
     public isTauntable(by: Character): boolean {
         // If this entity has no target, it is tauntable
-        if (this.target === undefined) return true
+        if (this.target == undefined) return true
 
         // If this entity is attacking a party member, it is tauntable
         if (this.isAttackingPartyMember(by)) return true
+
+        // If the player it's targeting is another character of ours, it is tauntable
+        const targetting = by.players.get(this.target)
+        if (targetting && targetting.owner == by.owner) return true
 
         return false
     }
