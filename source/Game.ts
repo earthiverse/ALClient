@@ -57,15 +57,15 @@ export class Game {
 
     static async getMail(all = true): Promise<MailMessageData[]> {
         if (!this.user) return Promise.reject("You must login first.")
-        let data = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        let response = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const mail: MailMessageData[] = []
 
-        while (data.data.length > 0) {
-            mail.push(...data.data[0].mail)
+        while (response.data.length > 0) {
+            mail.push(...response.data[0].mail)
 
-            if (all && data.data[0].more) {
+            if (all && response.data[0].more) {
                 // Get more mail
-                data = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${data.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+                response = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
             } else {
                 break
             }
@@ -111,13 +111,11 @@ export class Game {
      */
     static async markMailAsRead(mailID: string): Promise<void> {
         if (!this.user) return Promise.reject("You must login first.")
-        const data = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
-        return data.data[0]
+        const response = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        return response.data[0]
     }
 
     static async login(email: string, password: string): Promise<boolean> {
-        // See if we already have a userAuth stored in our database
-
         // Login and save the auth
         console.debug("Logging in...")
         const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
@@ -135,10 +133,9 @@ export class Game {
             for (const cookie of login.headers["set-cookie"]) {
                 const result = /^auth=(.+?);/.exec(cookie)
                 if (result) {
-                    // Save our data to the database
                     this.user = {
-                        userID: result[1].split("-")[0],
-                        userAuth: result[1].split("-")[1]
+                        userAuth: result[1].split("-")[1],
+                        userID: result[1].split("-")[0]
                     }
                     break
                 }
@@ -159,6 +156,14 @@ export class Game {
     static async loginJSONFile(path: string): Promise<boolean> {
         const data: { email: string, password: string } = JSON.parse(fs.readFileSync(path, "utf8"))
         return this.login(data.email, data.password)
+    }
+
+    static async logoutEverywhere(): Promise<any> {
+        if (!this.user) return Promise.reject("You must login first.")
+
+        const response = await axios.post<any>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+
+        return response.data
     }
 
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
