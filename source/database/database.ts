@@ -1,4 +1,6 @@
 import Mongoose from "mongoose"
+export * from "./achievements/achievements.model"
+export * from "./achievements/achievements.types"
 export * from "./auths/auths.model"
 export * from "./auths/auths.types"
 export * from "./deaths/deaths.model"
