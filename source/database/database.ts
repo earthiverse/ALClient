@@ -27,10 +27,12 @@ export class Database {
         }
 
         const connect = Mongoose.connect(uri, {
-            useNewUrlParser: true,
-            useFindAndModify: true,
-            useUnifiedTopology: true,
+            family: 4,
+            poolSize: 2,
             useCreateIndex: true,
+            useFindAndModify: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
         })
 
         this.connection = Mongoose.connection
