@@ -82,6 +82,9 @@ export class Observer {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
                 if (e) e.hp = e.hp - data.damage
+            } else {
+                // NOTE: Priest's `curse` doesn't do damage, and is one example of a projectile that would be caught in this else block.
+                this.projectiles.delete(data.pid)
             }
         })
 
