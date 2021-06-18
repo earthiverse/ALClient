@@ -281,15 +281,18 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @return {*}  {boolean}
      * @memberof Entity
      */
-    public willDieToProjectiles(projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
+    public willDieToProjectiles(character: Character, projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
         if (this.avoidance) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
-            const attacker = players.get(projectile.attacker) || entities.get(projectile.attacker)
-            if (!attacker) return true // Couldn't find entity, already dead?
+            let attacker: Character | Entity | Player
+            if (!attacker && character.id == projectile.attacker) attacker = character
+            if (!attacker) attacker = players.get(projectile.attacker)
+            if (!attacker) attacker = entities.get(projectile.attacker)
+            if (!attacker) continue // Can't find attacker, assume the projectile will do 0 damage
 
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage

@@ -75,7 +75,7 @@ export class Observer {
                 }
             }
 
-            if (data.kill == true) {
+            if (data.kill) {
                 this.projectiles.delete(data.pid)
                 this.deleteEntity(data.id)
             } else if (data.damage) {

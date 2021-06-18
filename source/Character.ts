@@ -1674,7 +1674,7 @@ export class Character extends Observer implements CharacterData {
                 if (!filters.willBurnToDeath && willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles !== undefined) {
-                const willDieToProjectiles = entity.willDieToProjectiles(this.projectiles, this.players, this.entities)
+                const willDieToProjectiles = entity.willDieToProjectiles(this, this.projectiles, this.players, this.entities)
                 if (filters.willDieToProjectiles && !willDieToProjectiles) continue
                 if (!filters.willDieToProjectiles && willDieToProjectiles) continue
             }
