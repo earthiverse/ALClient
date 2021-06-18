@@ -174,6 +174,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.avoidance >= 100) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
+            if (!projectile.damage) continue // Won't do any damage
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
@@ -286,6 +287,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.avoidance) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
+            if (!projectile.damage) continue // This projectile won't do damage
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
