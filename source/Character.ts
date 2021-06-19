@@ -3046,8 +3046,8 @@ export class Character extends Observer implements CharacterData {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
-            locateHighestLevel?: number;
             quantityGreaterThan?: number;
+            statType?: Attribute;
         }): boolean {
         return this.locateItem(iN, inv, args) !== undefined
     }
@@ -3155,6 +3155,7 @@ export class Character extends Observer implements CharacterData {
             levelGreaterThan?: number;
             levelLessThan?: number;
             quantityGreaterThan?: number;
+            statType?: Attribute;
         }): number {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
 
@@ -3184,6 +3185,10 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
+            }
+            if (filters?.statType !== undefined) {
+                if (item.stat_type !== filters.statType)
+                    continue // This item doesn't match the stat scroll
             }
 
             return i
