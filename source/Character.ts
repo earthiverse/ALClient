@@ -1,6 +1,6 @@
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData } from "./definitions/adventureland-server"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -112,7 +112,7 @@ export class Character extends Observer implements CharacterData {
     items: ItemData[]
     cc: number
     ipass?: string
-    friends?: any
+    friends?: string[]
     acx?: any
     xcx?: string[]
     hitchhikers?: [string, any][]
@@ -341,6 +341,12 @@ export class Character extends Observer implements CharacterData {
             this.ready = false
         })
 
+        this.socket.on("friends", (data: FriendData) => {
+            if (data.event == "lost" || data.event == "new" || data.event == "update") {
+                this.friends = data.friends
+            }
+        })
+
         this.socket.on("start", (data: StartData) => {
             this.going_x = data.x
             this.going_y = data.y
@@ -533,6 +539,45 @@ export class Character extends Observer implements CharacterData {
 
             this.socket.emit("property", { typing: true })
         })
+    }
+
+    /**
+     * Accepts a friend request.
+     *
+     * @param {string} id
+     * @return {*}  {Promise<FriendData>}
+     * @memberof Character
+     */
+    public acceptFriendRequest(id: string): Promise<FriendData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [acceptFriendRequest].")
+
+        const friended = new Promise<FriendData>((resolve, reject) => {
+            const successCheck = (data: FriendData) => {
+                if (data.event == "new") {
+                    this.socket.removeListener("friend", successCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    resolve(data)
+                }
+            }
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "friend_expired") {
+                        this.socket.removeListener("friend", successCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject("Friend request expired.")
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("friend", successCheck)
+                this.socket.removeListener("game_response", failCheck)
+                reject(`acceptFriendRequest timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("friend", successCheck)
+            this.socket.on("game_response", failCheck)
+        })
+        this.socket.emit("friend", { event: "accept", name: id })
+        return friended
     }
 
     /**
@@ -2152,6 +2197,33 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
+    public sendFriendRequest(id: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [sendFriendRequest].")
+
+        const requestSent = new Promise<void>((resolve, reject) => {
+            const check = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "friend_already" || data == "friend_rsent") {
+                        // We are already friends, or the request has been sent
+                        this.socket.removeListener("game_response", check)
+                        resolve()
+                    } else if (data == "friend_rleft") {
+                        // We couldn't send the friend request
+                        this.socket.removeListener("game_response", check)
+                        reject(`${id} is not online on the same server.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("game_response", check)
+                reject(`sendFriendRequest timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", check)
+        })
+        this.socket.emit("friend", { event: "request", name: id })
+        return requestSent
+    }
+
     public async sendGold(to: string, amount: number): Promise<number> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendGold].")
         if (this.gold == 0) return Promise.reject("We have no gold to send.")
@@ -2625,6 +2697,34 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("unequip", { slot: slot })
         return unequipped
+    }
+
+    /**
+     * Unfriend another player.
+     * NOTE: `data.name` may not equal `id`. The event uses the player's 1st character's name.
+     *
+     * @param {string} id
+     * @return {*}  {Promise<FriendData>}
+     * @memberof Character
+     */
+    public unfriend(id: string): Promise<FriendData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [unfriend].")
+
+        const unfriended = new Promise<FriendData>((resolve, reject) => {
+            const check = (data: FriendData) => {
+                if (data.event == "lost") {
+                    this.socket.removeListener("friend", check)
+                    resolve(data)
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("friend", check)
+                reject(`unfriend timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("friend", check)
+        })
+        this.socket.emit("friend", { event: "unfriend", name: id })
+        return unfriended
     }
 
     public upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
