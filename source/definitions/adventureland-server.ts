@@ -163,8 +163,7 @@ export type CharacterData = PlayerData & {
     cx: CXData
 
     ipass?: string
-    // TODO: Figure this out
-    friends?: any
+    friends?: string[]
     // TODO: Figure this out
     acx?: any
     xcx?: string[]
@@ -274,6 +273,25 @@ export type EntitiesData = {
     players: PlayerData[]
 }
 
+// TODO: Capture an "update" and confirm that it has friends.
+export type FriendData = {
+    event: "lost"
+    friends: string[]
+    /** The name of the player that you are no longer friends with */
+    name: string
+} | {
+    event: "new"
+    /** The name of the player that you are now friends with */
+    friends: string[]
+    name: string
+} | {
+    event: "request"
+    /** The name of the player who sent you a friend request */
+    name: string
+} | {
+    event: "update"
+    friends: string[]
+}
 
 export type MonsterData = {
     id: string
@@ -375,8 +393,6 @@ export type GameResponseDataObject = {
     item: ItemName
     q: number
 } | {
-    response: "mail_item_taken"
-} | {
     response: "magiport_failed"
     // User ID the magiport offer was sent to
     id: string
@@ -385,6 +401,8 @@ export type GameResponseDataObject = {
     // User ID the magiport offer was sent to
     id: string
 } | {
+    response: "mail_item_taken"
+}| {
     response: "no_mp"
     place: "attack"
 } | {
@@ -432,6 +450,14 @@ export type GameResponseDataString =
     | "exchange_existing"
     /** The given item requires multiple to exchange */
     | "exchange_notenough"
+    /** When you send a friend request for someone you're already friends with */
+    | "friend_already"
+    /** When you try to accept a friend request, but you took too long (or they never sent one in the first place) */
+    | "friend_expired"
+    /** When you send a friend request but they aren't on the server to accept the request */
+    | "friend_rleft"
+    /** When you send a friend request for a valid player name */
+    | "friend_rsent"
     /** When a merchant tries to start a monster hunt */
     | "monsterhunt_merchant"
     | "monsterhunt_started"
@@ -669,6 +695,11 @@ export type NewMapData = {
     name: MapName
     x: number
     y: number
+}
+
+export type OnlineData = {
+    name: string
+    server: string
 }
 
 export type PartyData = {

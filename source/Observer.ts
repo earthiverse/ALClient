@@ -160,7 +160,7 @@ export class Observer {
         if (this.S[entity.type]) delete this.S[entity.type]
 
         // Delete the entity from the database on death
-        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
+        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) await EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
 
         this.entities.delete(id)
     }
@@ -427,8 +427,7 @@ export class Observer {
         let closest: Entity
         let closestD = Number.MAX_VALUE
         for (const [, entity] of this.entities) {
-            if (mtype && entity.type != mtype)
-                return
+            if (mtype && entity.type !== mtype) continue
             const d = Tools.distance(this, entity)
             if (d < closestD) {
                 closest = entity

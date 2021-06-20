@@ -1,7 +1,7 @@
 import { DeathModel } from "./database/Database"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData } from "./definitions/adventureland-server"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData } from "./definitions/adventureland-server"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -114,7 +114,7 @@ export class Character extends Observer implements CharacterData {
     items: ItemData[]
     cc: number
     ipass?: string
-    friends?: any
+    friends?: string[]
     acx?: any
     xcx?: string[]
     hitchhikers?: [string, any][]
@@ -252,6 +252,17 @@ export class Character extends Observer implements CharacterData {
                     const cooldown = data.ms
                     this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
                 }
+            } else if (data.response == "defeated_by_a_monster") {
+                DeathModel.insertMany([{
+                    cause: data.monster,
+                    map: this.map,
+                    name: this.id,
+                    serverIdentifier: this.server.name,
+                    serverRegion: this.server.region,
+                    time: Date.now(),
+                    x: this.x,
+                    y: this.y
+                }])
             } else if (data.response == "ex_condition") {
                 // The condition expired
                 delete this.s[data.name]
@@ -343,6 +354,12 @@ export class Character extends Observer implements CharacterData {
             this.ready = false
         })
 
+        this.socket.on("friends", (data: FriendData) => {
+            if (data.event == "lost" || data.event == "new" || data.event == "update") {
+                this.friends = data.friends
+            }
+        })
+
         this.socket.on("start", (data: StartData) => {
             this.going_x = data.x
             this.going_y = data.y
@@ -384,14 +401,14 @@ export class Character extends Observer implements CharacterData {
             const result = /^Slain by (.+)$/.exec(data.message)
             if (result) {
                 DeathModel.create({
-                    name: this.id,
                     cause: result[1],
                     map: this.map,
-                    x: this.x,
-                    y: this.y,
-                    serverRegion: this.server.region,
+                    name: this.id,
                     serverIdentifier: this.server.name,
-                    time: Date.now()
+                    serverRegion: this.server.region,
+                    time: Date.now(),
+                    x: this.x,
+                    y: this.y
                 })
             }
         })
@@ -556,6 +573,45 @@ export class Character extends Observer implements CharacterData {
 
             this.socket.emit("property", { typing: true })
         })
+    }
+
+    /**
+     * Accepts a friend request.
+     *
+     * @param {string} id
+     * @return {*}  {Promise<FriendData>}
+     * @memberof Character
+     */
+    public acceptFriendRequest(id: string): Promise<FriendData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [acceptFriendRequest].")
+
+        const friended = new Promise<FriendData>((resolve, reject) => {
+            const successCheck = (data: FriendData) => {
+                if (data.event == "new") {
+                    this.socket.removeListener("friend", successCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    resolve(data)
+                }
+            }
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "friend_expired") {
+                        this.socket.removeListener("friend", successCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject("Friend request expired.")
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("friend", successCheck)
+                this.socket.removeListener("game_response", failCheck)
+                reject(`acceptFriendRequest timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("friend", successCheck)
+            this.socket.on("game_response", failCheck)
+        })
+        this.socket.emit("friend", { event: "accept", name: id })
+        return friended
     }
 
     /**
@@ -2175,6 +2231,33 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
+    public sendFriendRequest(id: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [sendFriendRequest].")
+
+        const requestSent = new Promise<void>((resolve, reject) => {
+            const check = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "friend_already" || data == "friend_rsent") {
+                        // We are already friends, or the request has been sent
+                        this.socket.removeListener("game_response", check)
+                        resolve()
+                    } else if (data == "friend_rleft") {
+                        // We couldn't send the friend request
+                        this.socket.removeListener("game_response", check)
+                        reject(`${id} is not online on the same server.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("game_response", check)
+                reject(`sendFriendRequest timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", check)
+        })
+        this.socket.emit("friend", { event: "request", name: id })
+        return requestSent
+    }
+
     public async sendGold(to: string, amount: number): Promise<number> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendGold].")
         if (this.gold == 0) return Promise.reject("We have no gold to send.")
@@ -2650,6 +2733,34 @@ export class Character extends Observer implements CharacterData {
         return unequipped
     }
 
+    /**
+     * Unfriend another player.
+     * NOTE: `data.name` may not equal `id`. The event uses the player's 1st character's name.
+     *
+     * @param {string} id
+     * @return {*}  {Promise<FriendData>}
+     * @memberof Character
+     */
+    public unfriend(id: string): Promise<FriendData> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [unfriend].")
+
+        const unfriended = new Promise<FriendData>((resolve, reject) => {
+            const check = (data: FriendData) => {
+                if (data.event == "lost") {
+                    this.socket.removeListener("friend", check)
+                    resolve(data)
+                }
+            }
+            setTimeout(() => {
+                this.socket.removeListener("friend", check)
+                reject(`unfriend timeout(${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("friend", check)
+        })
+        this.socket.emit("friend", { event: "unfriend", name: id })
+        return unfriended
+    }
+
     public upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) return Promise.reject("We aren't ready yet [upgrade].")
         if (this.G.maps[this.map].mount) return Promise.reject("We can't upgrade things in the bank.")
@@ -2969,8 +3080,8 @@ export class Character extends Observer implements CharacterData {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
-            locateHighestLevel?: number;
             quantityGreaterThan?: number;
+            statType?: Attribute;
         }): boolean {
         return this.locateItem(iN, inv, args) !== undefined
     }
@@ -3078,6 +3189,7 @@ export class Character extends Observer implements CharacterData {
             levelGreaterThan?: number;
             levelLessThan?: number;
             quantityGreaterThan?: number;
+            statType?: Attribute;
         }): number {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
 
@@ -3107,6 +3219,10 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
+            }
+            if (filters?.statType !== undefined) {
+                if (item.stat_type !== filters.statType)
+                    continue // This item doesn't match the stat scroll
             }
 
             return i
