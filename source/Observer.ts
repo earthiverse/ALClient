@@ -314,8 +314,7 @@ export class Observer {
         let closest: Entity
         let closestD = Number.MAX_VALUE
         for (const [, entity] of this.entities) {
-            if (mtype && entity.type != mtype)
-                return
+            if (mtype && entity.type !== mtype) continue
             const d = Tools.distance(this, entity)
             if (d < closestD) {
                 closest = entity
