@@ -152,7 +152,7 @@ export class Observer {
         }
     }
 
-    protected async deleteEntity(id: string): Promise<void> {
+    public async deleteEntity(id: string): Promise<void> {
         const entity = this.entities.get(id)
         if (!entity) return // Already deleted
 
