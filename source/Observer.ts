@@ -188,7 +188,6 @@ export class Observer {
 
         for (const monster of data.monsters) {
             let e: Entity
-            visibleIDs.push(e.id)
             if (!this.entities.has(monster.id)) {
                 // Create the entity and add it to our list
                 e = new Entity(monster, data.map, this.G)
@@ -198,6 +197,7 @@ export class Observer {
                 e = this.entities.get(monster.id)
                 e.updateData(monster)
             }
+            visibleIDs.push(e.id)
 
             // Update our database
             if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
