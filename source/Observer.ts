@@ -181,12 +181,14 @@ export class Observer {
             this.updatePositions()
         }
 
+        const visibleIDs = []
         const entityUpdates = []
         const npcUpdates = []
         const playerUpdates = []
 
         for (const monster of data.monsters) {
             let e: Entity
+            visibleIDs.push(e.id)
             if (!this.entities.has(monster.id)) {
                 // Create the entity and add it to our list
                 e = new Entity(monster, data.map, this.G)
@@ -265,6 +267,50 @@ export class Observer {
         if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates)
         if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates)
         if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates)
+
+        if (data.type == "all") {
+            // Delete monsters that we should be able to see
+            EntityModel.aggregate([
+                {
+                    $match: {
+                        map: this.map,
+                        name: { $nin: visibleIDs },
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                    }
+                },
+                {
+                    $project: {
+                        distance: {
+                            $sqrt: {
+                                $add: [
+                                    { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
+                                    { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    $match: {
+                        distance: {
+                            $lt: Constants.MAX_VISIBLE_RANGE / 2
+                        }
+                    }
+                }
+            ]).exec().then((toDeletes => {
+                try {
+                    const ids = []
+                    for (const toDelete of toDeletes) ids.push(toDelete._id)
+                    EntityModel.deleteMany({ _id: { $in: ids } }).exec()
+                } catch (e) {
+                    console.error(e)
+                    console.log("DEBUG -----")
+                    console.log("toDeletes:")
+                    console.log(toDeletes)
+                }
+            })).catch(() => { /* Supress Errors */ })
+        }
     }
 
     protected async parseNewMap(data: NewMapData): Promise<void> {
@@ -275,49 +321,6 @@ export class Observer {
         this.map = data.name
 
         this.parseEntities(data.entities)
-
-        // Delete monsters that haven't been seen 'round these parts in a while.
-        const toDeletes = await EntityModel.aggregate([
-            {
-                $match: {
-                    serverRegion: this.serverData.region,
-                    serverIdentifier: this.serverData.name,
-                    map: this.map,
-                    lastSeen: { $lt: Date.now() - Constants.STALE_MONSTER_MS }
-                }
-            },
-            {
-                $project: {
-                    distance: {
-                        $sqrt: {
-                            $add: [
-                                { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
-                                { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
-                            ]
-                        }
-                    }
-                }
-            },
-            {
-                $match: {
-                    distance: {
-                        $lt: Constants.MAX_VISIBLE_RANGE
-                    }
-                }
-            }
-        ]).exec()
-        if (toDeletes) {
-            try {
-                const ids = []
-                for (const toDelete of toDeletes) ids.push(toDelete._id)
-                EntityModel.deleteMany({ _id: { $in: ids } })
-            } catch (e) {
-                console.error(e)
-                console.log("DEBUG -----")
-                console.log("toDeletes:")
-                console.log(toDeletes)
-            }
-        }
     }
 
     protected updatePositions(): void {
