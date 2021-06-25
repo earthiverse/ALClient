@@ -2408,14 +2408,14 @@ export class Character extends Observer implements CharacterData {
                 const gItem = this.G.items[to as ItemName]
                 if (gItem) {
                     for (const map in this.G.maps) {
-                        if (this.G.maps[map as MapName].ignore) continue
-                        for (const npc of this.G.maps[map as MapName].npcs) {
+                        if ((this.G.maps[map as MapName] as GMap).ignore) continue
+                        for (const npc of (this.G.maps[map as MapName] as GMap).npcs) {
                             if (this.G.npcs[npc.id].items === undefined) continue
                             for (const i of this.G.npcs[npc.id].items) {
                                 if (i == to as ItemName) {
                                     // We found the NPC that sells the item
                                     // We're going to run smartMove again to the NPC
-                                    return this.smartMove(npc, options)
+                                    return this.smartMove(npc.id, options)
                                 }
                             }
                         }
