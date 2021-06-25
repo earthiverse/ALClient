@@ -264,9 +264,9 @@ export class Observer {
             }
         }
 
-        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates)
-        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates)
-        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates)
+        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch(() => { /* Suppress Errors */ })
+        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch(() => { /* Suppress Errors */ })
+        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(() => { /* Suppress Errors */ })
 
         if (data.type == "all") {
             // Delete monsters that we should be able to see
