@@ -154,15 +154,19 @@ export class Observer {
 
     public async deleteEntity(id: string): Promise<void> {
         const entity = this.entities.get(id)
-        if (!entity) return // Already deleted
+        if (entity) {
+            // If it was a special monster in 'S', delete it from 'S'.
+            if (this.S[entity.type]) delete this.S[entity.type]
 
-        // If it was a special monster in 'S', delete it from 'S'.
-        if (this.S[entity.type]) delete this.S[entity.type]
+            // Delete the entity from the database on death
+            const lastUpdate = Database.lastMongoUpdate.get(entity.id)
+            if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                await EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
+                Database.lastMongoUpdate.delete(entity.id)
+            }
 
-        // Delete the entity from the database on death
-        if (Constants.SPECIAL_MONSTERS.includes(entity.type)) await EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
-
-        this.entities.delete(id)
+            this.entities.delete(id)
+        }
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
