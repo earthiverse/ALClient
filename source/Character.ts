@@ -2401,10 +2401,10 @@ export class Character extends Observer implements CharacterData {
         let path: LinkData[]
         if (typeof to == "string") {
             // Check if our destination is a map name
-            const gMap = this.G.maps[to]
+            const gMap: GMap = this.G.maps[to]
             if (gMap) {
                 // Set `to` to the `town` spawn on the map
-                const mainSpawn = this.G.maps[to as MapName].spawns[0]
+                const mainSpawn = gMap.spawns[0]
                 fixedTo = { map: to as MapName, x: mainSpawn[0], y: mainSpawn[1] }
             }
 
