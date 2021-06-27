@@ -1,5 +1,5 @@
 import socketio from "socket.io-client"
-import { Database, EntityModel, NPCModel, PlayerModel } from "./database/Database"
+import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database"
 import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
@@ -212,7 +212,7 @@ export class Observer {
                         entityUpdates.push({
                             updateOne: {
                                 filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
+                                update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
@@ -220,8 +220,8 @@ export class Observer {
                         // Include the id in the filter
                         entityUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: e.id, type: e.type },
-                                update: { map: e.map, x: e.x, y: e.y, level: e.level, hp: e.hp, target: e.target, lastSeen: Date.now() },
+                                filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
+                                update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
@@ -251,15 +251,27 @@ export class Observer {
                     npcUpdates.push({
                         updateOne: {
                             filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: p.id },
-                            update: { map: p.map, x: p.x, y: p.y, lastSeen: Date.now() },
+                            update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
                             upsert: true
                         }
                     })
                 } else {
+                    const updateData: Partial<IPlayer> = {
+                        lastSeen: Date.now(),
+                        map: p.map,
+                        s: p.s,
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                        slots: p.slots,
+                        type: p.ctype,
+                        x: p.x,
+                        y: p.y,
+                    }
+                    if (p.owner) updateData.owner = p.owner
                     playerUpdates.push({
                         updateOne: {
                             filter: { name: p.id },
-                            update: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, map: p.map, x: p.x, y: p.y, s: p.s, type: p.ctype, slots: p.slots, lastSeen: Date.now() },
+                            update: updateData,
                             upsert: true
                         }
                     })

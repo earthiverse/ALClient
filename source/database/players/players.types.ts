@@ -3,16 +3,17 @@ import { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../defi
 import { CharacterType, MapName } from "../../definitions/adventureland-data"
 
 export interface IPlayer {
-    name: string
+    lastSeen?: number
     map: MapName
-    x: number
-    y: number
-    serverRegion: ServerRegion
+    name: string
+    owner: string
     serverIdentifier: ServerIdentifier
+    serverRegion: ServerRegion
+    slots: SlotInfo
     s?: StatusInfo
     type: CharacterType
-    slots: SlotInfo
-    lastSeen?: number
+    x: number
+    y: number
 }
 
 export interface IPlayerDocument extends IPlayer, Document { }

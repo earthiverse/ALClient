@@ -1,4 +1,4 @@
-import { Database, DeathModel, PlayerModel } from "./database/Database"
+import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData } from "./definitions/adventureland-server"
@@ -204,7 +204,19 @@ export class Character extends Observer implements CharacterData {
 
         const lastUpdate = Database.lastMongoUpdate.get(this.id)
         if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
-            PlayerModel.updateOne({ name: this.id }, { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, map: this.map, x: this.x, y: this.y, s: this.s, type: this.ctype, slots: this.slots, lastSeen: Date.now() }, { upsert: true }).exec().catch(() => { /* Suppress Errors */ })
+            const updateData: Partial<IPlayer> = {
+                lastSeen: Date.now(),
+                map: this.map,
+                s: this.s,
+                serverIdentifier: this.serverData.name,
+                serverRegion: this.serverData.region,
+                slots: this.slots,
+                type: this.ctype,
+                x: this.x,
+                y: this.y
+            }
+            if (this.owner) updateData.owner = this.owner
+            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).exec().catch(() => { /* Suppress Errors */ })
             Database.lastMongoUpdate.set(this.id, new Date())
         }
     }
