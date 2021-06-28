@@ -418,6 +418,9 @@ export type GameResponseDataObject = {
     response: "skill_success"
     name: SkillName
 } | {
+    response: "target_lock"
+    monster: MonsterName
+} | {
     response: "too_far"
     place: "attack"
     id: string

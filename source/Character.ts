@@ -2551,6 +2551,36 @@ export class Character extends Observer implements CharacterData {
         return { map: this.map, x: this.x, y: this.y }
     }
 
+    public async startKonami(): Promise<MonsterName> {
+        const started = new Promise<MonsterName>((resolve, reject) => {
+            const successCheck = (data: GameResponseData) => {
+                if (typeof data !== "object") return
+                if (data.response !== "target_lock") return
+                this.socket.removeListener("game_response", successCheck)
+                resolve(data.monster)
+            }
+            setTimeout(() => {
+                this.socket.removeListener("game_response", successCheck)
+                reject("startKonami timeout (5000ms)")
+            }, 5000)
+            this.socket.on("game_response", successCheck)
+        })
+
+        this.socket.emit("move", { "key": "up" })
+        this.socket.emit("move", { "key": "up" })
+        this.socket.emit("move", { "key": "down" })
+        this.socket.emit("move", { "key": "down" })
+        this.socket.emit("move", { "key": "left" })
+        this.socket.emit("move", { "key": "right" })
+        this.socket.emit("move", { "key": "left" })
+        this.socket.emit("move", { "key": "right" })
+        this.socket.emit("interaction", { "key": "B" })
+        this.socket.emit("interaction", { "key": "A" })
+        this.socket.emit("interaction", { "key": "enter" })
+
+        return started
+    }
+
     public async stopSmartMove(): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [stopSmartMove].")
         this.lastSmartMove = Date.now()
