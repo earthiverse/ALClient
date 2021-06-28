@@ -422,6 +422,11 @@ export type GameResponseDataObject = {
     place: "attack"
     id: string
     dist: number
+} |
+/** When you try to unfriend, but you have a character in the bank */
+{
+    response: "unfriend_failed"
+    reason: "bank"
 } | {
     // TODO: Separate these in to separate objects
     response: "gold_received" | "item_placeholder" | "item_received"
