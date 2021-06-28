@@ -2763,17 +2763,29 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [unfriend].")
 
         const unfriended = new Promise<FriendData>((resolve, reject) => {
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "unfriend_failed") {
+                        this.socket.removeListener("friend", check)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`unfriend failed (${data.reason})`)
+                    }
+                }
+            }
             const check = (data: FriendData) => {
                 if (data.event == "lost") {
                     this.socket.removeListener("friend", check)
+                    this.socket.removeListener("game_response", failCheck)
                     resolve(data)
                 }
             }
             setTimeout(() => {
                 this.socket.removeListener("friend", check)
-                reject(`unfriend timeout(${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
+                this.socket.removeListener("game_response", failCheck)
+                reject("unfriend timeout(2500ms)")
+            }, 2500)
             this.socket.on("friend", check)
+            this.socket.on("game_response", failCheck)
         })
         this.socket.emit("friend", { event: "unfriend", name: id })
         return unfriended
