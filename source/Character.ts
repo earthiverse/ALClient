@@ -891,6 +891,58 @@ export class Character extends Observer implements CharacterData {
         return bought
     }
 
+    /**
+     * Calculates the type of targets attacking you.
+     *
+     * The first element is the current number of targets of the given damage type.
+     *
+     * The second element is our character's courage
+     *
+     * @return {*}  {{
+     *         magical: [number, number];
+     *         physical: [number, number];
+     *         pure: [number, number];
+     *         }}
+     * @memberof Character
+     */
+    public calculateTargets(): {
+        magical: number;
+        physical: number;
+        pure: number;
+        } {
+        const targets = {
+            magical: 0,
+            physical: 0,
+            pure: 0
+        }
+
+        for (const entity of this.getEntities({
+            targetingMe: true
+        })) {
+            switch (entity.damage_type) {
+            case "magical":
+                targets.magical += 1
+                break
+            case "physical":
+                targets.physical += 1
+                break
+            case "pure":
+                targets.pure += 1
+                break
+            }
+        }
+
+        if ((targets.magical + targets.physical + targets.pure) < this.targets) {
+            // Something else is targeting us, assume the worst
+            const difference = this.targets - (targets.magical + targets.physical + targets.pure)
+            targets.magical += difference
+            targets.physical += difference
+            targets.pure += difference
+        }
+
+        return targets
+    }
+
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
         // If the entity is immune, most skills won't do damage
         if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
@@ -2551,6 +2603,18 @@ export class Character extends Observer implements CharacterData {
         return { map: this.map, x: this.x, y: this.y }
     }
 
+    /**
+     * Starts "Konami" mode.
+     *
+     * In Konami mode, you can only attack the monster it specifies.
+     *
+     * You have a (very low) chance to get a special item in this mode.
+     *
+     * To exit Konami mode, you need to disconnect and reconnect
+     *
+     * @return {*}  {Promise<MonsterName>} The type of monster you need to target
+     * @memberof Character
+     */
     public async startKonami(): Promise<MonsterName> {
         const started = new Promise<MonsterName>((resolve, reject) => {
             const successCheck = (data: GameResponseData) => {

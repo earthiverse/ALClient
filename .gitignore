@@ -68,3 +68,6 @@ credentials.json
 
 # Backup G files
 G_*.json
+
+# Typescript build info
+*.tsbuildinfo
