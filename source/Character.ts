@@ -947,7 +947,7 @@ export class Character extends Observer implements CharacterData {
         // If the entity is immune, most skills won't do damage
         if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
 
-        if (defender["1hp"]) return [1, 1]
+        if (defender["1hp"] || skill == "taunt") return [1, 1]
 
         let baseDamage: number = this.attack
         if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
@@ -1156,9 +1156,7 @@ export class Character extends Observer implements CharacterData {
         if (this.damage_type == "magical" && entity.reflection) return false
         if (this.damage_type == "physical" && entity.evasion) return false
 
-        if (entity["1hp"]) return entity.hp == 1
-
-        return this.calculateDamageRange(entity, skill)[0] > entity.hp
+        return this.calculateDamageRange(entity, skill)[0] >= entity.hp
     }
 
     /**
