@@ -418,6 +418,9 @@ export type GameResponseDataObject = {
     response: "skill_success"
     name: SkillName
 } | {
+    response: "target_lock"
+    monster: MonsterName
+} | {
     response: "too_far"
     place: "attack"
     id: string
@@ -426,7 +429,7 @@ export type GameResponseDataObject = {
 /** When you try to unfriend, but you have a character in the bank */
 {
     response: "unfriend_failed"
-    reason: "bank"
+    reason: "bank" | "coms failure" | "nouser"
 } | {
     // TODO: Separate these in to separate objects
     response: "gold_received" | "item_placeholder" | "item_received"
