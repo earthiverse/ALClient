@@ -161,8 +161,8 @@ export class Observer {
             // Delete the entity from the database on death
             const lastUpdate = Database.lastMongoUpdate.get(entity.id)
             if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                await EntityModel.deleteOne({ name: entity.id }).exec().catch(() => { /* Suppress errors */ })
-                Database.lastMongoUpdate.delete(entity.id)
+                EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).exec().catch(() => { /* Suppress errors */ })
+                Database.lastMongoUpdate.delete(id)
             }
 
             this.entities.delete(id)
@@ -280,9 +280,9 @@ export class Observer {
             }
         }
 
-        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch(() => { /* Suppress Errors */ })
-        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch(() => { /* Suppress Errors */ })
-        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(() => { /* Suppress Errors */ })
+        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch((e) => { console.error(e) })
+        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch((e) => { console.error(e) })
+        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
 
         if (data.type == "all") {
             // Delete monsters that we should be able to see
@@ -318,14 +318,14 @@ export class Observer {
                 try {
                     const ids = []
                     for (const toDelete of toDeletes) ids.push(toDelete._id)
-                    EntityModel.deleteMany({ _id: { $in: ids } }).exec()
+                    EntityModel.deleteMany({ name: { $in: ids } }).exec()
                 } catch (e) {
                     console.error(e)
                     console.log("DEBUG -----")
                     console.log("toDeletes:")
                     console.log(toDeletes)
                 }
-            })).catch(() => { /* Supress Errors */ })
+            })).catch((e) => { console.error(e) })
         }
     }
 

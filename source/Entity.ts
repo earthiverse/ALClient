@@ -235,7 +235,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @param player The player to check if the monster is attacking
      */
     public isAttackingUs(player: Character): boolean {
-        return this.target === player.id
+        return this.target == player.id
     }
 
     // TODO: Check if we can taunt when the entity is attacking another player we control (i.e. same account), but we're not partied.
