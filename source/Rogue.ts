@@ -1,4 +1,4 @@
-import { EvalData } from "./definitions/adventureland-server"
+import { EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
@@ -17,15 +17,28 @@ export class Rogue extends PingCompensatedCharacter {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mentalburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("game_response", failCheck)
                     resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "cooldown" && data.skill == "mentalburst") {
+                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`quickStab on ${target} failed due to cooldown (ms: ${data.ms}).`)
+                    }
                 }
             }
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
+                this.socket.removeListener("game_response", failCheck)
                 reject(`mentalburst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("game_response", failCheck)
         })
         this.socket.emit("skill", {
             id: target,
@@ -88,15 +101,28 @@ export class Rogue extends PingCompensatedCharacter {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickstab['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("game_response", failCheck)
                     resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "cooldown" && data.skill == "quickstab") {
+                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`quickStab on ${target} failed due to cooldown (ms: ${data.ms}).`)
+                    }
                 }
             }
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
+                this.socket.removeListener("game_response", failCheck)
                 reject(`quickstab timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("game_response", failCheck)
         })
         this.socket.emit("skill", {
             id: target,
