@@ -101,7 +101,7 @@ export class Rogue extends PingCompensatedCharacter {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
-                reject(`quickpunch timeout (${Constants.TIMEOUT}ms)`)
+                reject(`quickPunch timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
@@ -152,8 +152,9 @@ export class Rogue extends PingCompensatedCharacter {
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
+                this.socket.removeListener("death", deathCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`quickstab timeout (${Constants.TIMEOUT}ms)`)
+                reject(`quickStab timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
             this.socket.on("death", deathCheck)
