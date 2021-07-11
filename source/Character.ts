@@ -246,7 +246,8 @@ export class Character extends Observer implements CharacterData {
             } else if (this.G.skills[skill].cooldown) {
                 cooldown = this.G.skills[skill].cooldown
             }
-            this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
+            const next = new Date(Date.now() + Math.ceil(cooldown))
+            this.setNextSkill(skill, next)
             return
         }
 
@@ -254,8 +255,9 @@ export class Character extends Observer implements CharacterData {
         const potReg = /pot_timeout\s*\(\s*(\d+\.?\d+?)\s*\)/.exec(data.code)
         if (potReg) {
             const cooldown = Number.parseFloat(potReg[1])
-            this.setNextSkill("use_hp", new Date(Date.now() + Math.ceil(cooldown)))
-            this.setNextSkill("use_mp", new Date(Date.now() + Math.ceil(cooldown)))
+            const next = new Date(Date.now() + Math.ceil(cooldown))
+            this.setNextSkill("use_hp", next)
+            this.setNextSkill("use_mp", next)
             return
         }
     }
@@ -316,6 +318,7 @@ export class Character extends Observer implements CharacterData {
 
     protected setNextSkill(skill: SkillName, next: Date): void {
         this.nextSkill.set(skill, next)
+        if (this.G.skills[skill].share) this.nextSkill.set(this.G.skills[skill].share, next)
     }
 
     protected updatePositions(): void {

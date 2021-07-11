@@ -1,4 +1,4 @@
-import { EvalData, GameResponseData } from "./definitions/adventureland-server"
+import { DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 
@@ -13,12 +13,22 @@ export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     public mentalBurst(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [mentalBurst].")
-        const marked = new Promise<void>((resolve, reject) => {
+        const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mentalburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("death", deathCheck)
                     this.socket.removeListener("game_response", failCheck)
                     resolve()
+                }
+            }
+
+            const deathCheck = (data: DeathData) => {
+                if (data.id == target) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("death", deathCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    reject(`Entity ${target} not found`)
                 }
             }
 
@@ -26,25 +36,33 @@ export class Rogue extends PingCompensatedCharacter {
                 if (typeof data == "object") {
                     if (data.response == "cooldown" && data.skill == "mentalburst") {
                         this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("death", deathCheck)
                         this.socket.removeListener("game_response", failCheck)
-                        reject(`quickStab on ${target} failed due to cooldown (ms: ${data.ms}).`)
+                        reject(`mentalBurst on ${target} failed due to cooldown (ms: ${data.ms}).`)
+                    } else if (data.response == "too_far" && data.place == "mentalburst") {
+                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("death", deathCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`${target} is too far away to mentalBurst (dist: ${data.dist}).`)
                     }
                 }
             }
 
             setTimeout(() => {
                 this.socket.removeListener("eval", cooldownCheck)
+                this.socket.removeListener("death", deathCheck)
                 this.socket.removeListener("game_response", failCheck)
-                reject(`mentalburst timeout (${Constants.TIMEOUT}ms)`)
+                reject(`mentalBurst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("death", deathCheck)
             this.socket.on("game_response", failCheck)
         })
         this.socket.emit("skill", {
             id: target,
             name: "mentalburst"
         })
-        return marked
+        return bursted
     }
 
     // NOTE: UNTESTED
@@ -97,10 +115,11 @@ export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     public quickStab(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [quickStab].")
-        const marked = new Promise<void>((resolve, reject) => {
+        const stabbed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickstab['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("death", deathCheck)
                     this.socket.removeListener("game_response", failCheck)
                     resolve()
                 }
@@ -110,9 +129,24 @@ export class Rogue extends PingCompensatedCharacter {
                 if (typeof data == "object") {
                     if (data.response == "cooldown" && data.skill == "quickstab") {
                         this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("death", deathCheck)
                         this.socket.removeListener("game_response", failCheck)
                         reject(`quickStab on ${target} failed due to cooldown (ms: ${data.ms}).`)
+                    } else if (data.response == "too_far" && data.place == "quickstab") {
+                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.removeListener("death", deathCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        reject(`${target} is too far away to mentalBurst (dist: ${data.dist}).`)
                     }
+                }
+            }
+
+            const deathCheck = (data: DeathData) => {
+                if (data.id == target) {
+                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.removeListener("death", deathCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    reject(`Entity ${target} not found`)
                 }
             }
 
@@ -122,13 +156,14 @@ export class Rogue extends PingCompensatedCharacter {
                 reject(`quickstab timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("death", deathCheck)
             this.socket.on("game_response", failCheck)
         })
         this.socket.emit("skill", {
             id: target,
             name: "quickstab"
         })
-        return marked
+        return stabbed
     }
 
     // NOTE: UNTESTED
