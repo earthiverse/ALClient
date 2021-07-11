@@ -422,7 +422,7 @@ export type GameResponseDataObject = {
     monster: MonsterName
 } | {
     response: "too_far"
-    place: "attack"
+    place: SkillName
     id: string
     dist: number
 } |
