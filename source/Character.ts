@@ -2152,7 +2152,6 @@ export class Character extends Observer implements CharacterData {
 
     public regenMP(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [regenMP].")
-        // if (this.game.nextSkill.get("use_mp")?.getTime() > Date.now()) return Promise.reject("use_mp is on cooldown")
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
@@ -3101,14 +3100,11 @@ export class Character extends Observer implements CharacterData {
     }
 
     public getCooldown(skill: SkillName): number {
-        // Check if this skill is shared with another cooldown
-        if (this.G.skills[skill].share) skill = this.G.skills[skill].share
-
         const nextSkill = this.nextSkill.get(skill)
-        if (!nextSkill) return 0
+        if (nextSkill == undefined) return 0
 
         const cooldown = nextSkill.getTime() - Date.now()
-        if (cooldown < 0) return 0
+        if (cooldown <= 0) return 0
         return cooldown
     }
 

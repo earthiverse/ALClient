@@ -19,18 +19,21 @@ export class PingCompensatedCharacter extends Character {
         }
     }
 
-    protected setNextSkill(skill: SkillName, next: Date): void {
-        // Get ping compensation
+    public calculateCompensation(): number {
         const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
+        if (pingCompensation < 0) console.error(`Ping compensation is < 0! (${pingCompensation})`)
+        return pingCompensation
+    }
 
-        this.nextSkill.set(skill, new Date(next.getTime() - pingCompensation))
+    protected setNextSkill(skill: SkillName, next: Date): void {
+        super.setNextSkill(skill, new Date(next.getTime() - this.calculateCompensation()))
     }
 
     public parseCharacter(data: CharacterData | PlayerData): void {
         super.parseCharacter(data)
 
         // Get ping compensation
-        const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
+        const pingCompensation = this.calculateCompensation()
 
         // Compensate movement
         if (this.moving) {
@@ -59,7 +62,7 @@ export class PingCompensatedCharacter extends Character {
         super.parseEntities(data)
 
         // Get ping compensation
-        const pingCompensation = this.pings.length > 0 ? Math.min(...this.pings) : 0
+        const pingCompensation = this.calculateCompensation()
 
         for (const monster of data.monsters) {
             // Compensate position
