@@ -226,8 +226,10 @@ export class Character extends Observer implements CharacterData {
             } else if (this.G.skills[skill].cooldown) {
                 cooldown = this.G.skills[skill].cooldown
             }
-            const next = new Date(Date.now() + Math.ceil(cooldown))
-            this.setNextSkill(skill, next)
+            if (cooldown !== undefined) {
+                const next = new Date(Date.now() + Math.ceil(cooldown))
+                this.setNextSkill(skill, next)
+            }
             return
         }
 
@@ -2055,11 +2057,15 @@ export class Character extends Observer implements CharacterData {
             const checkPlayer = async (data: CharacterData) => {
                 if (!data.moving || data.going_x != to.x || data.going_y != to.y) {
                     // We *might* not be moving in the right direction. Let's request new data and check.
-                    const newData = await this.requestPlayerData()
-                    if (!newData.moving || newData.going_x != to.x || newData.going_y != to.y) {
-                        clearTimeout(timeout)
-                        this.socket.removeListener("player", checkPlayer)
-                        reject(`move to ${to.x}, ${to.y} failed`)
+                    try {
+                        const newData = await this.requestPlayerData()
+                        if (!newData.moving || newData.going_x != to.x || newData.going_y != to.y) {
+                            clearTimeout(timeout)
+                            this.socket.removeListener("player", checkPlayer)
+                            reject(`move to ${to.x}, ${to.y} failed`)
+                        }
+                    } catch (e) {
+                        console.error(e)
                     }
                 } else {
                     // We're still moving in the right direction
@@ -2592,7 +2598,7 @@ export class Character extends Observer implements CharacterData {
                 }
             } catch (e) {
                 console.error(e)
-                await this.requestPlayerData()
+                await this.requestPlayerData().catch((e) => { console.error(e) })
                 if (lastMove == i)
                     return Promise.reject("We are having some trouble smartMoving...")
                 lastMove = i
