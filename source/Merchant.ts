@@ -276,7 +276,7 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
                         this.socket.removeListener("player", selfMluckCheck)
-                        await this.requestPlayerData()
+                        await this.requestPlayerData().catch((e) => { console.error(e) })
                         reject(`We are too far from ${target} to mluck.`)
                     } else if (data == "no_level") {
                         this.socket.removeListener("entities", mluckCheck)
