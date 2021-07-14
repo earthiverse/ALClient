@@ -958,6 +958,14 @@ export type UIData = {
         q: number
     }
 } | {
+    type: "+$$"
+    seller: string
+    buyer: string
+    item: ItemData & { price: number }
+    slot: TradeSlotType
+    num: number
+    snum: number
+} | {
     type: "fishing_fail"
     name: string
 } | {

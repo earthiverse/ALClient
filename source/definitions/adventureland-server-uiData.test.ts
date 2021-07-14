@@ -1,7 +1,8 @@
+/* eslint-disable sort-keys */
 import { UIData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-04-22
+ * The following is from socket events received 2021-04-22 to 2021-07-14
  * It is used to confirm type correctness
  */
 
@@ -23,4 +24,20 @@ test("UIData type validation", async () => {
         "to": "earthMer"
     }
     expect(mluck).not.toBe(undefined)
+
+    const trade_sell: UIData = {
+        "type": "+$$",
+        "seller": "earthWar",
+        "buyer": "Dinger",
+        "item": {
+            "name": "wbook0",
+            "level": 0,
+            "q": 1,
+            "price": 50000
+        },
+        "slot": "trade1",
+        "num": 23,
+        "snum": 6
+    }
+    expect(trade_sell).not.toBe(undefined)
 })
