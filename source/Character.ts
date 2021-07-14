@@ -2302,6 +2302,27 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
     }
 
+    public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
+        // TODO: Add a check that we have the item
+        const sold = new Promise<void>((resolve, reject) => {
+            const soldCheck = (data: UIData) => {
+                if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
+                    this.socket.removeListener("ui", soldCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("ui", soldCheck)
+                reject(`sellToMerchant timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("ui", soldCheck)
+        })
+
+        this.socket.emit("trade_sell", { id: id, q: q, rid: rid, slot: slot })
+        return sold
+    }
+
     public sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendCM].")
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
