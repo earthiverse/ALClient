@@ -136,7 +136,7 @@ export class Rogue extends PingCompensatedCharacter {
                         this.socket.removeListener("eval", cooldownCheck)
                         this.socket.removeListener("death", deathCheck)
                         this.socket.removeListener("game_response", failCheck)
-                        reject(`${target} is too far away to mentalBurst (dist: ${data.dist}).`)
+                        reject(`${target} is too far away to quickStab (dist: ${data.dist}).`)
                     }
                 }
             }

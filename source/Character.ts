@@ -2090,7 +2090,7 @@ export class Character extends Observer implements CharacterData {
                 } else {
                     // We're not moving in the right direction
                     this.socket.removeListener("player", checkPlayer)
-                    reject(`move to ${to.x}, ${to.y} failed (we're currently going to ${this.going_x}, ${this.going_y})`)
+                    reject(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`)
                 }
             }
             let timeout = setTimeout(checkPosition, timeToFinishMove)
