@@ -93,10 +93,11 @@ export class Pathfinder {
 
         const y = Math.trunc(location.y) - this.G.geometry[location.map].min_y
         const x = Math.trunc(location.x) - this.G.geometry[location.map].min_x
+        const width = this.G.geometry[location.map].max_x - this.G.geometry[location.map].min_x
 
         try {
             const grid = this.getGrid(location.map)
-            if (grid[y][x] == WALKABLE) return true
+            if (grid[y * width + x] == WALKABLE) return true
         } catch (e) {
             return false
         }
