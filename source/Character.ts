@@ -2251,7 +2251,10 @@ export class Character extends Observer implements CharacterData {
     }
 
     public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [sellToMerchant].")
+
         // TODO: Add a check that we have the item
+
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
