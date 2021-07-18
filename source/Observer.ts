@@ -110,18 +110,34 @@ export class Observer {
         })
 
         this.socket.on("server_info", (data: ServerInfoData) => {
-            // Add Soft properties
+            const databaseUpdates = []
+            const now = Date.now()
+
             for (const mtype in data) {
-                if (typeof data[mtype] !== "object") continue
-                if (!data[mtype].live) continue
+                if (typeof data[mtype] !== "object") continue // Event information, not monster information
+                if (!data[mtype].live) continue // Monster is not alive
+
+                // Add soft properties to monster
                 const mN = mtype as MonsterName
                 const goodData = data[mN] as ServerInfoDataLive
 
-                if (goodData.hp == undefined) {
-                    goodData.hp = this.G.monsters[mN].hp
-                    goodData.max_hp = this.G.monsters[mN].hp
+                if (goodData.hp == undefined) goodData.hp = this.G.monsters[mN].hp
+                if (goodData.max_hp == undefined) goodData.max_hp = this.G.monsters[mN].hp
+
+                data[mN] = goodData
+
+                if (Constants.SPECIAL_MONSTERS.includes(mN)) {
+                    databaseUpdates.push({
+                        updateOne: {
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
+                            update: { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y },
+                            upsert: true
+                        }
+                    })
                 }
             }
+
+            if (databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
 
             this.S = data
         })
