@@ -10,7 +10,6 @@ export class Rogue extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "invis" })
     }
 
-    // NOTE: UNTESTED
     public mentalBurst(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [mentalBurst].")
         const bursted = new Promise<void>((resolve, reject) => {
@@ -112,7 +111,6 @@ export class Rogue extends PingCompensatedCharacter {
         return marked
     }
 
-    // NOTE: UNTESTED
     public quickStab(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [quickStab].")
         const stabbed = new Promise<void>((resolve, reject) => {
@@ -136,7 +134,7 @@ export class Rogue extends PingCompensatedCharacter {
                         this.socket.removeListener("eval", cooldownCheck)
                         this.socket.removeListener("death", deathCheck)
                         this.socket.removeListener("game_response", failCheck)
-                        reject(`${target} is too far away to mentalBurst (dist: ${data.dist}).`)
+                        reject(`${target} is too far away to quickStab (dist: ${data.dist}).`)
                     }
                 }
             }
@@ -167,7 +165,6 @@ export class Rogue extends PingCompensatedCharacter {
         return stabbed
     }
 
-    // NOTE: UNTESTED
     // TODO: Improve to check if we applied it on the given character
     public rspeed(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [rspeed].")

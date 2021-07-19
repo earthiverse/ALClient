@@ -79,14 +79,16 @@ export class Player implements PlayerData {
         for (const key in data) this[key] = data[key]
     }
 
-
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
-        if (defender["1hp"]) return [1, 1]
+        // If the entity is immune, most skills won't do damage
+        if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
+
+        if (defender["1hp"] || skill == "taunt") return [1, 1]
 
         let baseDamage: number = this.attack
         if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
 
-        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
+        // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
         if (defender.s.marked) baseDamage *= 1.1
 
@@ -102,16 +104,24 @@ export class Player implements PlayerData {
 
         if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
 
+        let lowerLimit = baseDamage * 0.9
+        let upperLimit = baseDamage * 1.1
+
         if (this.crit) {
             if (this.crit >= 100) {
-                // Guaranteed crit
-                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
-            } else {
-                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+                lowerLimit *= (2 + (this.critdamage / 100))
             }
-        } else {
-            return [baseDamage * 0.9, baseDamage * 1.1]
+            upperLimit *= (2 + (this.critdamage / 100))
         }
+
+        // NOTE: This information is from @Wizard on Discord on May 1st, 2020
+        // https://discord.com/channels/238332476743745536/243707345887166465/705722706250694737
+        if (skill == "cleave") {
+            lowerLimit *= 0.1
+            upperLimit *= 0.9
+        }
+
+        return [lowerLimit, upperLimit]
     }
 
     /**

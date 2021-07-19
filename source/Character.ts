@@ -2091,8 +2091,6 @@ export class Character extends Observer implements CharacterData {
      */
     public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [move].")
-        // Check if we're already there
-        if (this.x == x && this.y == y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         let to: IPosition = { map: this.map, x: x, y: y }
         if (!options?.disableSafetyCheck) {
@@ -2103,15 +2101,19 @@ export class Character extends Observer implements CharacterData {
                 console.warn(`move: We can't move to {x: ${x}, y: ${y}} safely. We will move to {x: ${to.x}, y: ${to.y}}.`)
             }
         }
+
+        // Check if we're already there
+        if (this.x == to.x && this.y == to.y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
+
         const moveFinished = new Promise<NodeData>((resolve, reject) => {
             let timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
-                if (!data.moving || data.going_x != to.x || data.going_y != to.y) {
+                if (!data.moving || data.going_x !== to.x || data.going_y !== to.y) {
                     // We *might* not be moving in the right direction. Let's request new data and check.
                     try {
                         const newData = await this.requestPlayerData()
-                        if (!newData.moving || newData.going_x != to.x || newData.going_y != to.y) {
+                        if (!newData.moving || newData.going_x !== to.x || newData.going_y !== to.y) {
                             clearTimeout(timeout)
                             this.socket.removeListener("player", checkPlayer)
                             reject(`move to ${to.x}, ${to.y} failed`)
@@ -2142,7 +2144,7 @@ export class Character extends Observer implements CharacterData {
                 } else {
                     // We're not moving in the right direction
                     this.socket.removeListener("player", checkPlayer)
-                    reject(`move to ${to.x}, ${to.y} failed (we're currently going to ${this.going_x}, ${this.going_y})`)
+                    reject(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`)
                 }
             }
             let timeout = setTimeout(checkPosition, timeToFinishMove)
@@ -2150,7 +2152,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkPlayer)
         })
 
-        if (this.going_x !== x || this.going_y !== y) {
+        if (this.going_x !== to.x || this.going_y !== to.y) {
             // Only send a move if it's to a different location than we're alreaedy going
             this.socket.emit("move", {
                 going_x: to.x,
@@ -2303,7 +2305,10 @@ export class Character extends Observer implements CharacterData {
     }
 
     public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [sellToMerchant].")
+
         // TODO: Add a check that we have the item
+
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
@@ -2607,10 +2612,8 @@ export class Character extends Observer implements CharacterData {
             if (currentMove.type == "move") {
                 for (let j = i + 1; j < path.length; j++) {
                     const potentialMove = path[j]
-                    if (potentialMove.map !== currentMove.map)
-                        break
-                    if (potentialMove.type == "town")
-                        break
+                    if (potentialMove.map !== currentMove.map) break
+                    if (potentialMove.type == "town") break
 
                     if (potentialMove.type == "move" && Pathfinder.canWalkPath(this, potentialMove)) {
                         i = j
