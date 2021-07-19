@@ -2123,7 +2123,7 @@ export class Character extends Observer implements CharacterData {
                     }
                 } else {
                     // We're still moving in the right direction
-                    timeToFinishMove = Tools.distance(this, { x: data.x, y: data.y }) / data.speed
+                    timeToFinishMove = 1 + Tools.distance(this, { x: data.going_x, y: data.going_y }) / data.speed
                     clearTimeout(timeout)
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 }

@@ -15,6 +15,10 @@ This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull
 
 ## Basic Usage
 
+**Notes:**
+In tsconfig.json, make sure `"esModuleInterop": true` is set.
+In package.json, make sure `"type": "module"` is set.
+
 1. Install the package using `npm install alclient`.
 2. Add a `credentials.json` file that looks like this:
 
@@ -42,7 +46,7 @@ async function run() {
     console.log("Moving to halloween")
     await merchant.smartMove("halloween")
 
-    AL.Game.disconnect()
+    merchant.disconnect()
 }
 run()
 ```
