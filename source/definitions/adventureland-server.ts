@@ -230,6 +230,13 @@ export type DeathData = {
 }
 
 export type DisappearData = {
+    effect: "magiport"
+    // Character name
+    id: string
+    reason: "transport"
+    s?: [number, number]
+    to?: MapName
+} | {
     id: string
     /** TODO: Confirm, if effect is '1', they used the town skill */
     effect?: "blink" | 1
