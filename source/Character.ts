@@ -945,6 +945,9 @@ export class Character extends Observer implements CharacterData {
             targets.pure += difference
         }
 
+        // TODO: We can probably use `this.fear` and `this.courage`/`this.mcourage`/`this.pcourage`
+        // If we're not feared, the `targets.X` count is guaranteed to be less than our courage
+
         return targets
     }
 
