@@ -216,7 +216,7 @@ export class Character extends Observer implements CharacterData {
                 y: this.y
             }
             if (this.owner) updateData.owner = this.owner
-            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).exec().catch(() => { /* Suppress Errors */ })
+            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
             Database.lastMongoUpdate.set(this.id, new Date())
         }
     }

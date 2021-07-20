@@ -1,6 +1,6 @@
 import socketio from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database"
-import { ConditionName, GData2, MapName, MonsterName } from "./definitions/adventureland-data"
+import { ConditionName, GData2, GMap, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -53,6 +53,35 @@ export class Observer {
             this.players.delete(data.id) || this.entities.delete(data.id)
 
             this.updatePositions()
+
+            // TODO: Update player data in database
+            if (data.reason == "transport" && data.to !== undefined && (data.effect !== undefined || data.s !== undefined)) {
+                let s = 0
+                if (Array.isArray(data.s)) s = data.s[0]
+                else s = data.s
+                const spawnLocation = (this.G.maps[data.to] as GMap).spawns[s]
+                const updateData: Partial<IPlayer> = {
+                    lastSeen: Date.now(),
+                    map: data.to,
+                    serverIdentifier: this.serverData.name,
+                    serverRegion: this.serverData.region,
+                    x: spawnLocation[0],
+                    y: spawnLocation[1]
+                }
+                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                Database.lastMongoUpdate.set(data.id, new Date())
+            } else if (data.reason == "transport" && data.effect == "magiport" && data.to !== undefined && data.s !== undefined) {
+                const updateData: Partial<IPlayer> = {
+                    lastSeen: Date.now(),
+                    map: data.to,
+                    serverIdentifier: this.serverData.name,
+                    serverRegion: this.serverData.region,
+                    x: data.s[0],
+                    y: data.s[1]
+                }
+                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                Database.lastMongoUpdate.set(data.id, new Date())
+            }
         })
 
         this.socket.on("entities", (data: EntitiesData) => {
