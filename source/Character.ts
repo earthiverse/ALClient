@@ -1051,7 +1051,9 @@ export class Character extends Observer implements CharacterData {
         return grade
     }
 
-    public canBuy(item: ItemName): boolean {
+    public canBuy(item: ItemName, options?: {
+        ignoreLocation?: boolean
+    }): boolean {
         if (this.isFull()) return false // We are full
 
         const gInfo = this.G.items[item]
@@ -1072,8 +1074,7 @@ export class Character extends Observer implements CharacterData {
                 for (const i of this.G.npcs[npc.id].items) {
                     if (i == item) {
                         buyable = true
-                        if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE)
-                            close = true
+                        if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE) close = true
                         break
                     }
                 }
@@ -1081,7 +1082,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (!buyable) return false
 
-        if (computerAvailable || close) return true
+        if (computerAvailable || close || options?.ignoreLocation) return true
 
         return false
     }
@@ -2101,7 +2102,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         if (this.going_x !== to.x || this.going_y !== to.y) {
-            // Only send a move if it's to a different location than we're alreaedy going
+            // Only send a move if it's to a different location than we're already going
             this.socket.emit("move", {
                 going_x: to.x,
                 going_y: to.y,
