@@ -1717,6 +1717,7 @@ export class Character extends Observer implements CharacterData {
      *         couldGiveCredit?: boolean
      *         withinRange?: number
      *         targetingMe?: boolean
+     *         targetingPartyMember?: boolean
      *         targetingPlayer?: string
      *         type?: MonsterName
      *         typeList?: MonsterName[]
@@ -1734,6 +1735,7 @@ export class Character extends Observer implements CharacterData {
         couldGiveCredit?: boolean
         withinRange?: number
         targetingMe?: boolean
+        targetingPartyMember?: boolean
         targetingPlayer?: string
         type?: MonsterName
         typeList?: MonsterName[]
@@ -1750,6 +1752,14 @@ export class Character extends Observer implements CharacterData {
                     if (entity.target !== this.id) continue
                 } else {
                     if (entity.target == this.id) continue
+                }
+            }
+            if (filters.targetingPartyMember !== undefined) {
+                const attackingPartyMember = entity.isAttackingPartyMember(this)
+                if (filters.targetingPartyMember) {
+                    if (!attackingPartyMember) continue
+                } else {
+                    if (attackingPartyMember) continue
                 }
             }
             if (filters.targetingPlayer !== undefined && entity.target !== filters.targetingPlayer) continue
