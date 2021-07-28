@@ -1605,15 +1605,28 @@ export class Character extends Observer implements CharacterData {
 
         const enterComplete = new Promise<void>((resolve, reject) => {
             const enterCheck = (data: NewMapData) => {
+                this.socket.removeListener("game_response", failCheck)
                 if (data.name == map) resolve()
                 else reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
 
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "transport_cant_item") {
+                        this.socket.removeListener("new_map", enterCheck)
+                        this.socket.removeListener("game_response", failCheck)
+                        return Promise.reject(`We don't have the required item to enter ${map}.`)
+                    }
+                }
+            }
+
             setTimeout(() => {
                 this.socket.removeListener("new_map", enterCheck)
+                this.socket.removeListener("game_response", failCheck)
                 reject(`enter timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", enterCheck)
+            this.socket.on("game_response", failCheck)
         })
         this.socket.emit("enter", { name: instance, place: map })
         return enterComplete
@@ -2844,6 +2857,20 @@ export class Character extends Observer implements CharacterData {
                         this.socket.removeListener("game_response", failCheck)
                         this.socket.removeListener("new_map", transportCheck)
                         reject(`${data.name} is currently in the bank, we can't enter.`)
+                    }
+                } else if (typeof data == "string") {
+                    if (data == "cant_enter") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("new_map", transportCheck)
+                        reject(`The door to spawn ${spawn} on ${map} requires a key. Use 'enter' instead of 'transport'.`)
+                    } else if (data == "transport_cant_locked") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("new_map", transportCheck)
+                        reject(`We haven't unlocked the door to spawn ${spawn} on ${map}.`)
+                    } else if (data == "transport_cant_reach") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("new_map", transportCheck)
+                        reject(`We are too far away from the door to spawn ${spawn} on ${map}.`)
                     }
                 }
             }

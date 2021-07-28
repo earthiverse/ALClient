@@ -451,6 +451,8 @@ export type GameResponseDataString =
     | "buy_cost"
     /** When you're too far from Ponty and try to view Ponty's items */
     | "buy_get_closer"
+    /** When you try to use `transport` on a door that needs `enter` */
+    | "cant_enter"
     /** When attempting to leave a map you can't use the leave command on */
     | "cant_escape"
     /** ??? Maybe if we attempt to compound something with an inventory position that is empty ??? */
@@ -490,13 +492,19 @@ export type GameResponseDataString =
     | "skill_too_far"
     | "trade_bspace"
     | "trade_get_closer"
-    /* Failed upgrading (to chance) */
+    /** When you try to enter a dungeon, but you don't have a key */
+    | "transport_cant_item"
+    /** When you try to go through a door you haven't unlocked yet (e.g. lower bank) */
+    | "transport_cant_locked"
+    /** When you're too far away from a door */
+    | "transport_cant_reach"
+    /** Failed upgrading (to chance) */
     | "upgrade_fail"
     /** We are already upgrading something */
     | "upgrade_in_progress"
     /** We are trying to use a scroll to upgrade something that is a higher grade than the scroll can upgrade */
     | "upgrade_incompatible_scroll"
-    /* Successfully upgraded */
+    /** Successfully upgraded */
     | "upgrade_success"
 
 export type HitData = {
