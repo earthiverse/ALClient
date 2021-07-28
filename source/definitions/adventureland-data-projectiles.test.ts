@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 657 (2021-04-09)
+/**
+ * The following is from http://adventure.land/data.js, version 657 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.projectiles type validation", async () => {
-    const G_projectiles: Pick<GData2, "projectiles"> = {
+    const G_projectiles: Pick<GData, "projectiles"> = {
         "projectiles": {
             "burst": {
                 "animation": "tiling_burstj",

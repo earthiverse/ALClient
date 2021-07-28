@@ -1,6 +1,6 @@
 import socketio from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database"
-import { ConditionName, GData2, GMap, MapName, MonsterName } from "./definitions/adventureland-data"
+import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -13,7 +13,7 @@ export class Observer {
     protected lastAllEntities: number
     protected lastPositionUpdate: number
 
-    public G: GData2;
+    public G: GData;
 
     public entities = new Map<string, Entity>()
     protected pingMap = new Map<string, { log: boolean, time: number }>()
@@ -28,7 +28,7 @@ export class Observer {
     public x: number;
     public y: number;
 
-    constructor(serverData: ServerData, g: GData2) {
+    constructor(serverData: ServerData, g: GData) {
         this.serverData = serverData
         this.G = g
     }

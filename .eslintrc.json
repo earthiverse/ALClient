@@ -35,7 +35,7 @@
         "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "double"],
         "semi": ["error", "never"],
-        "sort-keys": "warn",
+        "sort-keys": ["warn", "asc", {"caseSensitive": true, "natural": true, "minKeys": 2}],
         "sort-vars": "error",
         "space-infix-ops": "error",
         "space-in-parens": ["error", "never"],

@@ -2,7 +2,7 @@ import axios from "axios"
 import fs from "fs"
 import { AuthModel, Database } from "./database/Database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
-import { CharacterType, GData2 } from "./definitions/adventureland-data"
+import { CharacterType, GData } from "./definitions/adventureland-data"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
 import { Paladin } from "./Paladin"
 import { Mage } from "./Mage"
@@ -20,20 +20,20 @@ export class Game {
     public static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
     public static characters: { [T in string]?: CharacterListData } = {}
 
-    public static G: GData2
+    public static G: GData
     public static version: number
 
     protected constructor() {
         // Private to force static methods
     }
 
-    static async getGData(cache = false): Promise<GData2> {
+    static async getGData(cache = false): Promise<GData> {
         if (this.G) return this.G
         if (!this.version) await this.getVersion()
         const gFile = `G_${this.version}.json`
         try {
             // Check if there's cached data
-            this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData2
+            this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData
             return this.G
         } catch (e) {
             // There's no cached data, download it
@@ -43,7 +43,7 @@ export class Game {
                 // Update G with the latest data
                 const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
                 const rawG = matches[1]
-                this.G = JSON.parse(rawG) as GData2
+                this.G = JSON.parse(rawG) as GData
 
                 console.debug("Updated 'G' data!")
 

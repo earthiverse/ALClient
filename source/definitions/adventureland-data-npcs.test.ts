@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.npcs type validation", async () => {
-    const G_npcs: Pick<GData2, "npcs"> = {
+    const G_npcs: Pick<GData, "npcs"> = {
         "npcs": {
             "items22": {
                 "name": "X",
@@ -146,10 +147,10 @@ test("G.npcs type validation", async () => {
                 "speed": 28,
                 "id": "citizen11",
                 "interaction": [
-                    "Guard. Village. Protect. Innocents.",
-                    "Brothers. Rest. Here. Protect. Over. Their. Graves.",
-                    "Remember. The. Fallen. Never. Forget. Their. Sacrifices.",
-                    "Heal. The. Fallen."
+                    "Guard.    Village.    Protect.    Innocents.",
+                    "Brothers.     Rest.     Here.    Protect.    Over.    Their.    Graves.",
+                    "Remember.    The.    Fallen.    Never.    Forget.  Their.    Sacrifices.",
+                    "Heal.    The.    Fallen."
                 ],
                 "name": "Baron",
                 "level": 120,
@@ -1362,7 +1363,7 @@ test("G.npcs type validation", async () => {
                 "pack": "items46"
             },
             "holo": {
-                "says": "\u25b3 \u25bd \u25b2 \u25bc",
+                "says": "△ ▽ ▲ ▼",
                 "name": "Z",
                 "color": "#EBECEE",
                 "role": "resort",

@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-20)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.dimensions type validation", async () => {
-    const G_dimensions: Pick<GData2, "dimensions"> = {
+    const G_dimensions: Pick<GData, "dimensions"> = {
         dimensions: {
             "rudolph": [
                 60,

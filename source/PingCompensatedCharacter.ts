@@ -2,10 +2,10 @@ import { CharacterData, EntitiesData, PlayerData, ServerData } from "./definitio
 import { Constants } from "./Constants"
 import { Character } from "./Character"
 import { Tools } from "./Tools"
-import { ConditionName, GData2, SkillName } from "./definitions/adventureland-data"
+import { ConditionName, GData, SkillName } from "./definitions/adventureland-data"
 
 export class PingCompensatedCharacter extends Character {
-    constructor(userID: string, userAuth: string, characterID: string, g: GData2, serverData: ServerData) {
+    constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
         super(userID, userAuth, characterID, g, serverData)
     }
 

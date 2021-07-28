@@ -5,7 +5,7 @@
 
 import { IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland"
 
-export type GData2 = {
+export type GData = {
     achievements: {
         [T in AchievementName]: {
             /** The achievement name (human readable) */
@@ -500,6 +500,27 @@ export type CXData = {
     upper?: string
 }
 
+/**
+ * [0]: The x-position of the door
+ *
+ * [1]: The y-position of the door
+ *
+ * [2]: The width of the door
+ *
+ * [3]: The height of the door
+ *
+ * [4]: The map that this door leads to (use in combination with [5] (spawn))
+ *
+ * [5]: The spawn that this door leads to (use in combination with [4] (map))
+ *
+ * [6]: The spawn that this door is close to on the current map
+ *
+ * [7]: If "key", then you need [8] as an item to open this door
+ *
+ * [8]: TODO: If [7] is "key", then this is the key that is required to open this door
+ */
+export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
+
 export type GItem = {
     [T in Exclude<Attribute, "stat">]?: number
 } & {
@@ -714,28 +735,8 @@ export type GMap = {
         /** Human readable NPC name */
         name?: string
     }[]
-    /**
-     * Doors to other maps
-     *
-     * [0]: The x-position of the door
-     *
-     * [1]: The y-position of the door
-     *
-     * [2]: The width of the door
-     *
-     * [3]: The height of the door
-     *
-     * [4]: The map that this door leads to (use in combination with [5] (spawn))
-     *
-     * [5]: The spawn that this door leads to (use in combination with [4] (map))
-     *
-     * [6]: The spawn that this door is close to on the current map
-     *
-     * [7]: TODO: ??? Related to bank / bank keys?
-     *
-     * [8]: TODO: ??? Related to bank / bank keys?
-     */
-    doors: [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?][]
+    /** A list of doors on the map */
+    doors: DoorInfo[]
     /** Esentially a unique ID for the map. Contains a little more information than the `name`. */
     key: string
     /** Map Name (human readable) */

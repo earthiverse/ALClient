@@ -1,12 +1,12 @@
 import { Game } from "./Game"
 import { Character } from "./Character"
-import { GData2 } from "./definitions/adventureland-data"
+import { GData } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
 import { IPosition } from "./definitions/adventureland"
 import { Database } from "./database/Database"
 import { Entity } from "./Entity"
 
-let G: GData2
+let G: GData
 let priest: Character
 let warrior: Character
 const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" }

@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.craft type validation", async () => {
-    const G_craft: Pick<GData2, "craft"> = {
+    const G_craft: Pick<GData, "craft"> = {
         "craft": {
             "pouchbow": {
                 "items": [

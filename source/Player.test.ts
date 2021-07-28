@@ -1,10 +1,10 @@
 import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
-import { GData2 } from "./definitions/adventureland-data"
+import { GData } from "./definitions/adventureland-data"
 import { Database } from "./database/Database"
 
-let G: GData2
+let G: GData
 let character: Character
 let sameOwner: Player
 let sameParty: Player
