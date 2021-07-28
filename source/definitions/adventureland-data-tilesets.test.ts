@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 657 (2021-04-09)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.tilesets type validation", async () => {
-    const G_tilesets: Pick<GData2, "tilesets"> = {
+    const G_tilesets: Pick<GData, "tilesets"> = {
         "tilesets": {
             "house": {
                 "file": "/images/tiles/map/house.png?v=4"

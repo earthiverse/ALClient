@@ -1,8 +1,8 @@
-import { GData2 } from "./definitions/adventureland-data"
+import { GData } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Game } from "./Game"
 
-let G: GData2
+let G: GData
 let burningToDeathHen: Entity
 let idleBBPompom: Entity
 // const projectiles = new Map<string, ActionData>()

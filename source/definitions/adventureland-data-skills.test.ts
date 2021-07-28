@@ -1,12 +1,12 @@
-import { GData2 } from "./adventureland-data"
+import { GData } from "./adventureland-data"
 
-/** 
+/**
  * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
 test("G.skills type validation", async () => {
-    const G_skills: Pick<GData2, "skills"> = {
+    const G_skills: Pick<GData, "skills"> = {
         "skills": {
             "use_town": {
                 "explanation": "Teleports you to the center of the map.",

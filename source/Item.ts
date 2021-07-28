@@ -1,9 +1,9 @@
 import { ItemType } from "./definitions/adventureland"
-import { Attribute, GData2, GItem, ItemName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, GData, GItem, ItemName, SkillName } from "./definitions/adventureland-data"
 import { ItemData } from "./definitions/adventureland-server"
 
 export class Item implements ItemData, GItem {
-    protected G: GData2
+    protected G: GData
 
     // ItemData (required)
     public name: ItemName
@@ -23,7 +23,7 @@ export class Item implements ItemData, GItem {
     public action?: string
     public g: number
 
-    public constructor(data: ItemData | ItemData, g: GData2) {
+    public constructor(data: ItemData | ItemData, g: GData) {
         this.G = g
 
         // Set soft properties

@@ -1,12 +1,12 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { Attribute, ConditionName, DamageType, GData2, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, ConditionName, DamageType, GData, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data"
 import { ActionData, MonsterData } from "./definitions/adventureland-server"
 import { Character } from "./Character"
 import { Player } from "./Player"
 import { Tools } from "./Tools"
 
 export class Entity implements MonsterData, Partial<GMonster> {
-    protected G: GData2
+    protected G: GData
 
     // EntityData (required)
     public abs?: false
@@ -113,7 +113,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public type: MonsterName
     public xp: number
 
-    public constructor(data: MonsterData, map: MapName, G: GData2) {
+    public constructor(data: MonsterData, map: MapName, G: GData) {
         this.G = G
 
         // Set soft properties

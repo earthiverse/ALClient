@@ -1,12 +1,12 @@
-import { GData2 } from "./adventureland-data"
+import { GData } from "./adventureland-data"
 
-/** 
+/**
  * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
  * It is used to confirm type correctness
  */
 
 test("G.sets type validation", async () => {
-    const G_sets: Pick<GData2, "sets"> = {
+    const G_sets: Pick<GData, "sets"> = {
         "sets": {
             "wt3": {
                 "name": "Heavy Armor",

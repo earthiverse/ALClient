@@ -1,7 +1,7 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
-import { IPosition, DoorInfo } from "./definitions/adventureland"
-import { GData2, MapName } from "./definitions/adventureland-data"
+import { IPosition } from "./definitions/adventureland"
+import { DoorInfo, GData, MapName } from "./definitions/adventureland-data"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Tools } from "./Tools"
@@ -11,11 +11,11 @@ const UNWALKABLE = 2
 const WALKABLE = 3
 
 export class Pathfinder {
-    protected static G: GData2
+    protected static G: GData
 
     protected static FIRST_MAP: MapName = "main"
     protected static TRANSPORT_COST = 50
-    protected static TOWN_COST = 500
+    protected static TOWN_COST = 450
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
@@ -57,7 +57,7 @@ export class Pathfinder {
      * @param a The position to check the distance to the door
      * @param b The door's information (G.maps[mapName].doors[doorNum])
      */
-    protected static doorDistance(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
+    public static doorDistance(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
         const doorX = b[0]
         const doorY = b[1]
         const doorWidth = b[2]
@@ -392,7 +392,6 @@ export class Pathfinder {
 
             // Check if we can reach a door
             for (const door of doors) {
-                if (door[4] == "test") continue
                 if (this.doorDistance(walkableNodes[i].data, door) > Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
 
                 // To
@@ -406,7 +405,6 @@ export class Pathfinder {
                 if (Tools.distance(fromNode.data, { x: npc.position[0], y: npc.position[1] }) > Constants.TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
                 for (const toMap in this.G.npcs.transporter.places) {
                     if (map == toMap) continue // Don't add links to ourself
-                    if (map == "test") continue // Skip the test map to save ourselves some processing.
 
                     const spawnID = this.G.npcs.transporter.places[toMap as MapName]
                     const spawn = this.G.maps[toMap as MapName].spawns[spawnID]
@@ -644,8 +642,12 @@ export class Pathfinder {
         return to
     }
 
-    public static async prepare(g: GData2): Promise<void> {
-        if (!g) return Promise.reject("Please provide GData. You can use Game.getGData().")
+    public static prepare(g: GData, options: {
+        include_bank_b?: boolean,
+        include_bank_u?: boolean,
+        include_test?: boolean
+    } = {}): void {
+        if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
 
         const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]
@@ -658,21 +660,22 @@ export class Pathfinder {
 
             // Add the connected maps
             for (const door of this.G.maps[map].doors) {
-                if (door[7] || door[8]) continue
-                if (door[4] == "test") continue // Skip the test map to save ourselves some processing.
+                if (door[4] == "bank_b" && !options.include_bank_b) continue
+                if (door[4] == "bank_u" && !options.include_bank_u) continue
+                if (door[4] == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
                 if (!maps.includes(door[4])) maps.push(door[4])
             }
         }
 
         // Add maps that we can reach through the teleporter
         for (const map in this.G.npcs.transporter.places) {
-            if (map == "test") continue // Skip the test map to save ourselves some processing.
+            if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
             if (!maps.includes(map as MapName)) maps.push(map as MapName)
         }
 
         // Prepare each map
         for (const map of maps) {
-            if (map == "test") continue // Skip the test map to save ourselves some processing.
+            if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
             this.getGrid(map)
         }
         this.getGrid("jail") // Jail is disconnected, prepare it
@@ -680,7 +683,5 @@ export class Pathfinder {
         console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
         console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
         console.debug(`  # Links: ${this.graph.getLinkCount()}`)
-
-        return
     }
 }

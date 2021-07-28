@@ -1,12 +1,12 @@
-import { GData2 } from "./adventureland-data"
+import { GData } from "./adventureland-data"
 
-/** 
+/**
  * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
  * It is used to confirm type correctness
  */
 
 test("G.conditions type validation", async () => {
-    const G_conditions: Pick<GData2, "conditions"> = {
+    const G_conditions: Pick<GData, "conditions"> = {
         "conditions": {
             "stunned": {
                 "bad": true,

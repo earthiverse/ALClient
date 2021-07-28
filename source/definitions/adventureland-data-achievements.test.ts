@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 666 (2021-04-27)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.achivements type validation", async () => {
-    const G_achievements: Pick<GData2, "achievements"> = {
+    const G_achievements: Pick<GData, "achievements"> = {
         "achievements": {
             "gooped": {
                 "count": 60000000,

@@ -1,5 +1,5 @@
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData2, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData } from "./definitions/adventureland-server"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
@@ -122,7 +122,7 @@ export class Character extends Observer implements CharacterData {
     mcourage: number
     pcourage: number
 
-    constructor(userID: string, userAuth: string, characterID: string, g: GData2, serverData: ServerData) {
+    constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
         super(serverData, g)
         this.owner = userID
         this.userAuth = userAuth
@@ -1578,6 +1578,47 @@ export class Character extends Observer implements CharacterData {
         return emoted
     }
 
+    /**
+     * Use this function to enter dungeons.
+     *
+     * See `transport` for traveling through normal doors.
+     *
+     * @param {MapName} map
+     * @param {string} [instance] Instance ID string. If not set, a key will be consumed from your inventory to create a new one.
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public async enter(map: MapName, instance?: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [emote].")
+
+        let found = false
+        let distance = Number.MAX_VALUE
+        for (const d of (this.G.maps[this.map] as GMap).doors) {
+            if (d[4] !== map) continue
+            found = true
+            distance = Pathfinder.doorDistance(this, d)
+            if (distance > Constants.DOOR_REACH_DISTANCE) continue
+            break
+        }
+        if (!found) return Promise.reject(`There is no door to ${map} from ${this.map}.`)
+        if (distance > Constants.DOOR_REACH_DISTANCE) return Promise.reject(`We are too far (${distance}) from the door to ${map}.`)
+
+        const enterComplete = new Promise<void>((resolve, reject) => {
+            const enterCheck = (data: NewMapData) => {
+                if (data.name == map) resolve()
+                else reject(`We are now in ${data.name}, but we should be in ${map}`)
+            }
+
+            setTimeout(() => {
+                this.socket.removeListener("new_map", enterCheck)
+                reject(`enter timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.once("new_map", enterCheck)
+        })
+        this.socket.emit("enter", { name: instance, place: map })
+        return enterComplete
+    }
+
     public equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [equip].")
         if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
@@ -2778,15 +2819,23 @@ export class Character extends Observer implements CharacterData {
         return throwStarted
     }
 
+    /**
+     * Use this function to travel through normal doors.
+     *
+     * See `enter` for entering dungeons.
+     *
+     * @param {MapName} map The map to move to
+     * @param {number} spawn The spawn to move to for the given map
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
     public transport(map: MapName, spawn: number): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [transport].")
         const transportComplete = new Promise<void>((resolve, reject) => {
             const transportCheck = (data: NewMapData) => {
                 this.socket.removeListener("game_response", failCheck)
-                if (data.name == map)
-                    resolve()
-                else
-                    reject(`We are now in ${data.name}, but we should be in ${map}`)
+                if (data.name == map) resolve()
+                else reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
 
             const failCheck = (data: GameResponseData) => {

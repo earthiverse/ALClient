@@ -1,12 +1,13 @@
-import { GData2 } from "./adventureland-data"
+/* eslint-disable sort-keys */
+import { GData } from "./adventureland-data"
 
-/** 
- * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
+/**
+ * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
  * It is used to confirm type correctness
  */
 
 test("G.maps type validation", async () => {
-    const G_maps: Pick<GData2, "maps"> = {
+    const G_maps: Pick<GData, "maps"> = {
         "maps": {
             "winterland": {
                 "freeze_multiplier": 1.5,
@@ -24,13 +25,6 @@ test("G.maps type validation", async () => {
                             -393
                         ],
                         "id": "transporter"
-                    },
-                    {
-                        "position": [
-                            1065,
-                            -2015
-                        ],
-                        "id": "guard"
                     },
                     {
                         "position": [
@@ -166,10 +160,10 @@ test("G.maps type validation", async () => {
                         4
                     ],
                     [
-                        599.62,
-                        -1282.15,
-                        47.71,
-                        51.32,
+                        1064.28,
+                        -2017.79,
+                        31.66,
+                        47.45,
                         "winter_instance",
                         0,
                         5,
@@ -201,16 +195,16 @@ test("G.maps type validation", async () => {
                         3
                     ],
                     [
-                        600.5,
-                        -1273
+                        1063,
+                        -2007
                     ],
                     [
-                        864.73,
-                        429.55
+                        864.5,
+                        429.5
                     ],
                     [
-                        1018.66,
-                        401.71
+                        1018.5,
+                        401.5
                     ]
                 ],
                 "drop_norm": 3000,
@@ -298,7 +292,7 @@ test("G.maps type validation", async () => {
                         "type": "iceroamer"
                     },
                     {
-                        "count": 1,
+                        "count": 0,
                         "boundary": [
                             782.25,
                             395.96,
@@ -2442,7 +2436,7 @@ test("G.maps type validation", async () => {
                         254.82,
                         -916.88,
                         61.73,
-                        99.0,
+                        99,
                         "d_a2",
                         0,
                         1

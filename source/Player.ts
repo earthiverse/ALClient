@@ -1,12 +1,12 @@
 import { Character } from "./Character"
 import { SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { CharacterType, CXData, DamageType, GData2, MapName, NPCName, SkillName } from "./definitions/adventureland-data"
+import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { PlayerData } from "./definitions/adventureland-server"
 import { Entity } from "./Entity"
 import { Tools } from "./Tools"
 
 export class Player implements PlayerData {
-    protected G: GData2
+    protected G: GData
 
     public afk?: boolean | "code"
     public id: string
@@ -60,7 +60,7 @@ export class Player implements PlayerData {
     in: MapName;
     map: MapName;
 
-    public constructor(data: PlayerData, map: MapName, g: GData2) {
+    public constructor(data: PlayerData, map: MapName, g: GData) {
         this.G = g
 
         // Set soft properties
