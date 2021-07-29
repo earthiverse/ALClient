@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.5.35",
+  "version": "0.5.36",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG",
   "files": [
     "build/**/*",
