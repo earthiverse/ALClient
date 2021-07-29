@@ -97,7 +97,7 @@ export class Mage extends PingCompensatedCharacter {
         return cbursted
     }
 
-    public energize(target: string): Promise<void> {
+    public energize(target: string, mp?: number): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [energize].")
         const energized = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -114,7 +114,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "energize", id: target })
+        this.socket.emit("skill", { id: target, mp: mp, name: "energize" })
         return energized
     }
 
