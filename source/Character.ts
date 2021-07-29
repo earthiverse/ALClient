@@ -1,6 +1,6 @@
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData } from "./definitions/adventureland-server"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData } from "./definitions/adventureland-server"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
@@ -688,7 +688,6 @@ export class Character extends Observer implements CharacterData {
         return acceptedRequest
     }
 
-    // TODO: Add 'notthere' (e.g. calling attack("12345") returns ["notthere", {place: "attack"}])
     /**
      * NOTE: We can't name this function `attack` because of the property `attack` that specifies damage.s
      * @param id The ID of the entity or player to attack
@@ -701,6 +700,7 @@ export class Character extends Observer implements CharacterData {
                 if (data.id == id) {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("notthere", failCheck2)
                     this.socket.removeListener("death", deathCheck)
                     reject(`Entity ${id} not found`)
                 }
@@ -710,35 +710,50 @@ export class Character extends Observer implements CharacterData {
                     if (data.response == "disabled") {
                         this.socket.removeListener("action", attackCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("notthere", failCheck2)
                         this.socket.removeListener("death", deathCheck)
                         reject(`Attack on ${id} failed (disabled).`)
                     } else if (data.response == "attack_failed" && data.id == id) {
                         this.socket.removeListener("action", attackCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("notthere", failCheck2)
                         this.socket.removeListener("death", deathCheck)
                         reject(`Attack on ${id} failed.`)
                     } else if (data.response == "too_far" && data.id == id) {
                         this.socket.removeListener("action", attackCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("notthere", failCheck2)
                         this.socket.removeListener("death", deathCheck)
                         reject(`${id} is too far away to attack (dist: ${data.dist}).`)
                     } else if (data.response == "cooldown" && data.id == id) {
                         this.socket.removeListener("action", attackCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("notthere", failCheck2)
                         this.socket.removeListener("death", deathCheck)
                         reject(`Attack on ${id} failed due to cooldown (ms: ${data.ms}).`)
                     } else if (data.response == "no_mp" && data.place == "attack") {
                         this.socket.removeListener("action", attackCheck)
                         this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("notthere", failCheck2)
                         this.socket.removeListener("death", deathCheck)
                         reject(`Attack on ${id} failed due to insufficient MP.`)
                     }
+                }
+            }
+            const failCheck2 = (data: NotThereData) => {
+                if (data.place == "attack") {
+                    this.socket.removeListener("action", attackCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("notthere", failCheck2)
+                    this.socket.removeListener("death", deathCheck)
+                    reject(`${id} could not be found to attack.`)
                 }
             }
             const attackCheck = (data: ActionData) => {
                 if (data.attacker == this.id && data.target == id && data.type == "attack") {
                     this.socket.removeListener("action", attackCheck)
                     this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("notthere", failCheck2)
                     this.socket.removeListener("death", deathCheck)
                     resolve(data.pid)
                 }
@@ -746,11 +761,13 @@ export class Character extends Observer implements CharacterData {
             setTimeout(() => {
                 this.socket.removeListener("action", attackCheck)
                 this.socket.removeListener("game_response", failCheck)
+                this.socket.removeListener("notthere", failCheck2)
                 this.socket.removeListener("death", deathCheck)
                 reject(`attack timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("game_response", failCheck)
+            this.socket.on("notthere", failCheck2)
             this.socket.on("death", deathCheck)
         })
 

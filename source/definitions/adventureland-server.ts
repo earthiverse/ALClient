@@ -720,6 +720,10 @@ export type NewMapData = {
     y: number
 }
 
+export type NotThereData = {
+    place: "attack"
+}
+
 export type OnlineData = {
     name: string
     server: string
