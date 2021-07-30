@@ -57,9 +57,17 @@ export class Observer {
             // TODO: Update player data in database
             if (data.reason == "transport" && data.to !== undefined && (data.effect !== undefined || data.s !== undefined)) {
                 let s = 0
-                if (Array.isArray(data.s)) s = data.s[0]
-                else s = data.s
+                if (data.s !== undefined) {
+                    if (Array.isArray(data.s)) s = data.s[0]
+                    else s = data.s
+                }
                 const spawnLocation = (this.G.maps[data.to] as GMap).spawns[s]
+                if (!spawnLocation) {
+                    console.error("DEBUG ----- spawnLocation unndefined -----")
+                    console.error(JSON.stringify(data))
+                    console.error("------------------------------------------")
+                    return
+                }
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
                     map: data.to,
