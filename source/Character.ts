@@ -2655,6 +2655,12 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
+            // Town check -- try to go to town right away
+            const nextMove = path[i + 1]
+            if (nextMove && nextMove.type == "town" && currentMove.map == nextMove.map) {
+                this.warpToTown().catch((e) => { console.error(e) })
+            }
+
             // Blink skip check
             if (options?.useBlink && this.canUse("blink")) {
                 let blinked = false
