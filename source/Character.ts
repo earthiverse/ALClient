@@ -443,6 +443,31 @@ export class Character extends Observer implements CharacterData {
         // TODO: Confirm this works for leave_party(), too.
         this.socket.on("party_update", (data: PartyData) => {
             this.partyData = data
+
+            if (data) {
+                const playerUpdates = []
+                for (const id in data.party) {
+                    const cData = data.party[id]
+
+                    const updateData: Partial<IPlayer> = {
+                        lastSeen: Date.now(),
+                        map: cData.map,
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                        type: cData.type,
+                        x: cData.x,
+                        y: cData.y
+                    }
+                    playerUpdates.push({
+                        updateOne: {
+                            filter: { name: id },
+                            update: updateData,
+                            upsert: true
+                        }
+                    })
+                }
+                if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
+            }
         })
 
         this.socket.on("player", (data: CharacterData) => {
