@@ -54,8 +54,18 @@ export class Observer {
 
             this.updatePositions()
 
-            // TODO: Update player data in database
-            if (data.reason == "transport" && data.to !== undefined && (data.effect !== undefined || data.s !== undefined)) {
+            if (data.reason == "transport" && data.effect == "magiport" && data.to !== undefined && data.s !== undefined) {
+                const updateData: Partial<IPlayer> = {
+                    lastSeen: Date.now(),
+                    map: data.to,
+                    serverIdentifier: this.serverData.name,
+                    serverRegion: this.serverData.region,
+                    x: data.s[0],
+                    y: data.s[1]
+                }
+                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                Database.lastMongoUpdate.set(data.id, new Date())
+            } else if (data.reason == "transport" && data.to !== undefined && (data.effect !== undefined || data.s !== undefined)) {
                 let s = 0
                 if (data.s !== undefined) {
                     if (Array.isArray(data.s)) s = data.s[0]
@@ -75,17 +85,6 @@ export class Observer {
                     serverRegion: this.serverData.region,
                     x: spawnLocation[0],
                     y: spawnLocation[1]
-                }
-                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
-                Database.lastMongoUpdate.set(data.id, new Date())
-            } else if (data.reason == "transport" && data.effect == "magiport" && data.to !== undefined && data.s !== undefined) {
-                const updateData: Partial<IPlayer> = {
-                    lastSeen: Date.now(),
-                    map: data.to,
-                    serverIdentifier: this.serverData.name,
-                    serverRegion: this.serverData.region,
-                    x: data.s[0],
-                    y: data.s[1]
                 }
                 PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
                 Database.lastMongoUpdate.set(data.id, new Date())
