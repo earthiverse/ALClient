@@ -744,7 +744,7 @@ export type PartyData = {
             share: number
             pdps: number
             skin: string
-            type: string
+            type: CharacterType
             x: number
             xp: number
             y: number
