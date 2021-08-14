@@ -2345,16 +2345,30 @@ export class Character extends Observer implements CharacterData {
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
+                    this.socket.removeListener("game_response", failCheck)
                     this.socket.removeListener("ui", soldCheck)
                     resolve()
                 }
             }
 
+            const failCheck = (data: GameResponseData) => {
+                if (typeof (data) == "string") {
+                    if (data == "trade_bspace") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("ui", soldCheck)
+                        reject(`${id} doesn't have enough space, so we can't sell items.`)
+                    }
+                }
+            }
+            // TODO: Add a check that the merchant we're selling to isn't full
+
             setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("ui", soldCheck)
                 reject(`sellToMerchant timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", soldCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("trade_sell", { id: id, q: q, rid: rid, slot: slot })
@@ -2697,6 +2711,7 @@ export class Character extends Observer implements CharacterData {
             //     }
             //     if (time > 2000) break
             // }
+
             // Perform the next movement
             try {
                 if (currentMove.type == "leave") {
@@ -3342,8 +3357,7 @@ export class Character extends Observer implements CharacterData {
         const items: (ItemData & { slotNum: number; })[] = []
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
-            if (!item)
-                continue
+            if (!item) continue
             items.push({ ...item, slotNum: i })
         }
 
@@ -3361,6 +3375,12 @@ export class Character extends Observer implements CharacterData {
             // Sort 'p' items first
             if (a.p !== undefined && b.p === undefined)
                 return -1
+            else if (a.p === undefined && b.p !== undefined)
+                return 1
+
+            // Sort higher quantity stacks first
+            if (a.q !== undefined && b.q !== undefined)
+                return b.q - a.q
 
             return 0
         })

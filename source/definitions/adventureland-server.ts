@@ -490,6 +490,7 @@ export type GameResponseDataString =
     /** When you try to use a skill, but you don't have the right weapon type equipped for that skill */
     | "skill_cant_wtype"
     | "skill_too_far"
+    /** When you try to sell an item to another merchant, but there's no space on that merchant */
     | "trade_bspace"
     | "trade_get_closer"
     /** When you try to enter a dungeon, but you don't have a key */
