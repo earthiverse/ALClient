@@ -517,7 +517,7 @@ export type CXData = {
  *
  * [7]: If "key", then you need [8] as an item to open this door
  *
- * [8]: TODO: If [7] is "key", then this is the key that is required to open this door
+ * [8]: If [7] is "key", then this is the key that is required to open this door
  */
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
 
