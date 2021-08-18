@@ -394,6 +394,9 @@ export type GameResponseDataObject = {
     // The amount of gold that was sent
     gold: number
 } | {
+    response: "item_locked"
+    place: "upgrade"
+} | {
     response: "item_sent"
     // User ID the item was sent to
     name: string

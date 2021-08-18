@@ -3025,10 +3025,16 @@ export class Character extends Observer implements CharacterData {
             }
 
             const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.removeListener("game_response", gameResponseCheck)
-                    this.socket.removeListener("player", playerCheck)
-                    reject("You can't upgrade items in the bank.")
+                if (typeof data == "object") {
+                    if (data.response == "bank_restrictions" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("You can't upgrade items in the bank.")
+                    } else if (data.response == "item_locked" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("You can't upgrade locked items.")
+                    }
                 } else if (typeof data == "string") {
                     if (data == "bank_restrictions") {
                         this.socket.removeListener("game_response", gameResponseCheck)
@@ -3042,14 +3048,14 @@ export class Character extends Observer implements CharacterData {
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
-                    } else if (data == "upgrade_success") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
-                        resolve(true)
                     } else if (data == "upgrade_fail") {
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(false)
+                    } else if (data == "upgrade_success") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        resolve(true)
                     }
                 }
             }
