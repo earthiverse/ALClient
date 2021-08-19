@@ -3034,6 +3034,10 @@ export class Character extends Observer implements CharacterData {
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject("You can't upgrade locked items.")
+                    } else if (data.response == "get_closer" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("We are too far away to upgrade items.")
                     }
                 } else if (typeof data == "string") {
                     if (data == "bank_restrictions") {

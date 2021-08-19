@@ -388,6 +388,9 @@ export type GameResponseDataObject = {
     response: "ex_condition"
     name: SkillName
 } | {
+    response: "get_closer"
+    place: "upgrade"
+} | {
     response: "gold_sent"
     // User ID the gold was sent to
     name: string
