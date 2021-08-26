@@ -229,28 +229,64 @@ export type DeathData = {
     place?: string | "attack"
 }
 
-export type DisappearData = {
-    effect: "magiport"
-    // Character name
+export type DisappearData =
+/** Character used 'blink' */
+{
+    /** Blink animation will be used */
+    effect: "blink"
+    /** Character name */
     id: string
     reason: "transport"
-    s?: [number, number]
+    /** [x, y, orientation (up/down/left/right)] */
+    s?: [number, number, number]
     to?: MapName
-} | {
+} |
+/** Character (rogue) went invisible */
+{
+    /** Character name */
     id: string
-    /** TODO: Confirm, if effect is '1', they used the town skill */
-    effect?: "blink" | 1
-    reason?: string | "transport"
-    /** s can be a spawn (single number), or [x,y,orientation (up/down/left/right)] */
-    s?: number | [number, number, number?]
-    to?: MapName
-} | {
+    invis: true
+    reason: "invis"
+} |
+/** Character disconnected */
+{
+    /** Character name */
     id: string
     reason: "disconnect"
-} | {
+} |
+/** Character used 'magiport' */
+{
+    /** Magiport animation will be used */
+    effect: "magiport"
+    /** Character name */
     id: string
-    reason: "invis"
-    invis: boolean
+    reason: "transport"
+    /** [x, y] */
+    s?: [number, number]
+    to?: MapName
+} |
+/** Character went through a door */
+{
+    /** No animation will be used */
+    effect?: undefined
+    /** Character name */
+    id: string
+    reason: "transport"
+    /** The map spawn where the character will appear */
+    s?: number
+    /** The map the character went to */
+    to?: MapName
+} |
+/** Character used a 'town' teleport */
+{
+    // TODO: Confirm that characters wearing a stealth cape using 'town' still have 'effect:1'
+    /** Town teleport animation will be used */
+    effect: 1
+    /** Character name */
+    id: string
+    reason: "transport"
+    s?: number
+    to?: MapName
 }
 
 export type DisappearingTextData = {
