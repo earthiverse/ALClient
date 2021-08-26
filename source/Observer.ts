@@ -48,13 +48,17 @@ export class Observer {
             this.deleteEntity(data.id)
         })
 
+        // Update database when characters move around the map by transporting
         this.socket.on("disappear", (data: DisappearData) => {
             // Remove them from their list
             this.players.delete(data.id) || this.entities.delete(data.id)
 
             this.updatePositions()
 
-            if (data.reason == "transport" && data.effect == "magiport" && data.to !== undefined && data.s !== undefined) {
+            if (data.reason == "disconnect" || data.reason == "invis") return // We don't track these
+
+            if ((data.effect == "blink" || data.effect == "magiport") && data.to !== undefined && data.s !== undefined) {
+                // They used "blink" or "magiport" and don't have a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
                     map: data.to,
@@ -65,12 +69,10 @@ export class Observer {
                 }
                 PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
                 Database.lastMongoUpdate.set(data.id, new Date())
-            } else if (data.reason == "transport" && data.to !== undefined && (data.effect !== undefined || data.s !== undefined)) {
+            } else if (data.to !== undefined && data.effect == 1) {
                 let s = 0
-                if (data.s !== undefined) {
-                    if (Array.isArray(data.s)) s = data.s[0]
-                    else s = data.s
-                }
+                if (data.s !== undefined) s = data.s
+                // They used a "home" teleport and don't have a stealth cape
                 const spawnLocation = (this.G.maps[data.to] as GMap).spawns[s]
                 if (!spawnLocation) {
                     console.error("DEBUG ----- spawnLocation unndefined -----")
