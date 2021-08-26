@@ -2055,6 +2055,18 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Retrieves target entity
+     *
+     * @return {*}  {Entity}
+     * @memberof Character
+     */
+    public getTargetEntity(): Entity {
+        for (const [, entity] of this.entities) {
+            if (entity.id === this.target) return entity
+        }
+    }
+
+    /**
      * Retrieves tracker data
      *
      * @return {*}  {Promise<TrackerData>}
