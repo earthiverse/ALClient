@@ -147,6 +147,14 @@ export class Observer {
             }
         })
 
+        // Use the socket.io's built in pings to supplement AL's pings
+        this.socket.on("pong", (ms: number) => {
+            this.pings.push(ms)
+
+            // Remove the oldest ping
+            if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
+        })
+
         this.socket.on("server_info", (data: ServerInfoData) => {
             const databaseUpdates = []
             const now = Date.now()

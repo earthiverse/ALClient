@@ -201,7 +201,9 @@ export type GData = {
         [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: {
             /** TODO: ??? What is this? */
             default?: number
-            /** TODO: ??? What is this? */
+            /** [tileidx, min_x, min_y, max_x, max_y, y_disp]
+             *
+             * See: https://pixijs.download/dev/docs/PIXI.Container.html */
             groups?: ([number, number, number, any, any, number] | [number, number, number])[][]
             /** The maximum x-coordinate limit for this map */
             max_x: number
@@ -213,19 +215,19 @@ export type GData = {
             min_y: number
             /** TODO: ??? What is this? */
             placements: ([number, number, number, number, number] | [number, number, number])[]
-            /** TODO: ??? What is this? */
+            /** [x, y]. Potentially used in the past for map traversal. */
             points?: {
                 [T in string]: [number, number]
             }
-            /** TODO: ??? Fishing areas? */
+            /** Related to G.maps[mapName].zones */
             polygons?: {
                 [T in string]: [number, number][]
             }
-            /** TODO: ??? What is this? */
+            /** Related to doors, quirks, and spawns. */
             rectangles?: {
                 [T in string]: [number, number, number, number]
             }
-            /** TODO: ??? What is this? GUI related? */
+            /** Texture atlas for tiles, [name, x, y, height, width] */
             tiles: ([TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
             /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
             x_lines?: [number, number, number][]
@@ -517,7 +519,7 @@ export type CXData = {
  *
  * [7]: If "key", then you need [8] as an item to open this door
  *
- * [8]: TODO: If [7] is "key", then this is the key that is required to open this door
+ * [8]: If [7] is "key", then this is the key that is required to open this door
  */
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
 
@@ -790,6 +792,7 @@ export type GMap = {
     fx?: string
     /** TODO: ??? GUI related? */
     weather?: string
+    /** Zones are special areas where you can use certain skills. */
     zones?: {
         drop: string
         type: "fishing" | "mining"

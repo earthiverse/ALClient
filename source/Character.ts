@@ -2422,16 +2422,30 @@ export class Character extends Observer implements CharacterData {
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
+                    this.socket.removeListener("game_response", failCheck)
                     this.socket.removeListener("ui", soldCheck)
                     resolve()
                 }
             }
 
+            const failCheck = (data: GameResponseData) => {
+                if (typeof (data) == "string") {
+                    if (data == "trade_bspace") {
+                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.removeListener("ui", soldCheck)
+                        reject(`${id} doesn't have enough space, so we can't sell items.`)
+                    }
+                }
+            }
+            // TODO: Add a check that the merchant we're selling to isn't full
+
             setTimeout(() => {
+                this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("ui", soldCheck)
                 reject(`sellToMerchant timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", soldCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("trade_sell", { id: id, q: q, rid: rid, slot: slot })
@@ -2774,6 +2788,7 @@ export class Character extends Observer implements CharacterData {
             //     }
             //     if (time > 2000) break
             // }
+
             // Perform the next movement
             try {
                 if (currentMove.type == "leave") {
@@ -3087,10 +3102,20 @@ export class Character extends Observer implements CharacterData {
             }
 
             const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.removeListener("game_response", gameResponseCheck)
-                    this.socket.removeListener("player", playerCheck)
-                    reject("You can't upgrade items in the bank.")
+                if (typeof data == "object") {
+                    if (data.response == "bank_restrictions" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("You can't upgrade items in the bank.")
+                    } else if (data.response == "item_locked" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("You can't upgrade locked items.")
+                    } else if (data.response == "get_closer" && data.place == "upgrade") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        reject("We are too far away to upgrade items.")
+                    }
                 } else if (typeof data == "string") {
                     if (data == "bank_restrictions") {
                         this.socket.removeListener("game_response", gameResponseCheck)
@@ -3104,14 +3129,14 @@ export class Character extends Observer implements CharacterData {
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
-                    } else if (data == "upgrade_success") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
-                        resolve(true)
                     } else if (data == "upgrade_fail") {
                         this.socket.removeListener("game_response", gameResponseCheck)
                         this.socket.removeListener("player", playerCheck)
                         resolve(false)
+                    } else if (data == "upgrade_success") {
+                        this.socket.removeListener("game_response", gameResponseCheck)
+                        this.socket.removeListener("player", playerCheck)
+                        resolve(true)
                     }
                 }
             }
@@ -3419,8 +3444,7 @@ export class Character extends Observer implements CharacterData {
         const items: (ItemData & { slotNum: number; })[] = []
         for (let i = 0; i < inventory.length; i++) {
             const item = inventory[i]
-            if (!item)
-                continue
+            if (!item) continue
             items.push({ ...item, slotNum: i })
         }
 
@@ -3438,6 +3462,12 @@ export class Character extends Observer implements CharacterData {
             // Sort 'p' items first
             if (a.p !== undefined && b.p === undefined)
                 return -1
+            else if (a.p === undefined && b.p !== undefined)
+                return 1
+
+            // Sort higher quantity stacks first
+            if (a.q !== undefined && b.q !== undefined)
+                return b.q - a.q
 
             return 0
         })

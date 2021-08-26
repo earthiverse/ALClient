@@ -229,28 +229,64 @@ export type DeathData = {
     place?: string | "attack"
 }
 
-export type DisappearData = {
-    effect: "magiport"
-    // Character name
+export type DisappearData =
+/** Character used 'blink' */
+{
+    /** Blink animation will be used */
+    effect: "blink"
+    /** Character name */
     id: string
     reason: "transport"
-    s?: [number, number]
+    /** [x, y, orientation (up/down/left/right)] */
+    s?: [number, number, number]
     to?: MapName
-} | {
+} |
+/** Character (rogue) went invisible */
+{
+    /** Character name */
     id: string
-    /** TODO: Confirm, if effect is '1', they used the town skill */
-    effect?: "blink" | 1
-    reason?: string | "transport"
-    /** s can be a spawn (single number), or [x,y,orientation (up/down/left/right)] */
-    s?: number | [number, number, number?]
-    to?: MapName
-} | {
+    invis: true
+    reason: "invis"
+} |
+/** Character disconnected */
+{
+    /** Character name */
     id: string
     reason: "disconnect"
-} | {
+} |
+/** Character used 'magiport' */
+{
+    /** Magiport animation will be used */
+    effect: "magiport"
+    /** Character name */
     id: string
-    reason: "invis"
-    invis: boolean
+    reason: "transport"
+    /** [x, y] */
+    s?: [number, number]
+    to?: MapName
+} |
+/** Character went through a door */
+{
+    /** No animation will be used */
+    effect?: undefined
+    /** Character name */
+    id: string
+    reason: "transport"
+    /** The map spawn where the character will appear */
+    s?: number
+    /** The map the character went to */
+    to?: MapName
+} |
+/** Character used a 'town' teleport */
+{
+    // TODO: Confirm that characters wearing a stealth cape using 'town' still have 'effect:1'
+    /** Town teleport animation will be used */
+    effect: 1
+    /** Character name */
+    id: string
+    reason: "transport"
+    s?: number
+    to?: MapName
 }
 
 export type DisappearingTextData = {
@@ -388,11 +424,17 @@ export type GameResponseDataObject = {
     response: "ex_condition"
     name: SkillName
 } | {
+    response: "get_closer"
+    place: "upgrade"
+} | {
     response: "gold_sent"
     // User ID the gold was sent to
     name: string
     // The amount of gold that was sent
     gold: number
+} | {
+    response: "item_locked"
+    place: "upgrade"
 } | {
     response: "item_sent"
     // User ID the item was sent to
@@ -490,6 +532,7 @@ export type GameResponseDataString =
     /** When you try to use a skill, but you don't have the right weapon type equipped for that skill */
     | "skill_cant_wtype"
     | "skill_too_far"
+    /** When you try to sell an item to another merchant, but there's no space on that merchant */
     | "trade_bspace"
     | "trade_get_closer"
     /** When you try to enter a dungeon, but you don't have a key */
