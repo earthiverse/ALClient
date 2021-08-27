@@ -1,4 +1,3 @@
-import { Database } from "./database/Database"
 import { GData } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Game } from "./Game"
@@ -8,7 +7,6 @@ let burningToDeathHen: Entity
 let idleBBPompom: Entity
 // const projectiles = new Map<string, ActionData>()
 beforeAll(async () => {
-    Database.connect()
     G = await Game.getGData(true)
 
     idleBBPompom = new Entity({
@@ -59,10 +57,6 @@ beforeAll(async () => {
         }
     }, "main", G)
 }, 60000)
-
-afterAll(async () => {
-    Database.disconnect()
-})
 
 test("Entity.willBurnToDeath", () => {
     // Won't burn to death

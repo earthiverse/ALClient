@@ -5,4 +5,4 @@ import { IPlayerDocument } from "./players.types"
 import PlayerSchema from "./players.schema"
 
 export const PlayerModel = model<IPlayerDocument>("player", PlayerSchema)
-PlayerModel.createIndexes()
+PlayerModel.createIndexes().catch((e) => { if (pkg.connection.readyState) console.error(e) })

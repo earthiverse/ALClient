@@ -5,4 +5,4 @@ import { IEntityDocument } from "./entities.types"
 import EntitySchema from "./entities.schema"
 
 export const EntityModel = model<IEntityDocument>("entity", EntitySchema)
-EntityModel.createIndexes()
+EntityModel.createIndexes().catch((e) => { if (pkg.connection.readyState) console.error(e) })

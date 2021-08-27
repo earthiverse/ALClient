@@ -3,7 +3,6 @@ import { Character } from "./Character"
 import { GData } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
 import { IPosition } from "./definitions/adventureland"
-import { Database } from "./database/Database"
 import { Entity } from "./Entity"
 
 let G: GData
@@ -11,7 +10,6 @@ let priest: Character
 let warrior: Character
 const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" }
 beforeAll(async () => {
-    Database.connect()
     G = await Game.getGData(true)
     priest = new Character(undefined, undefined, undefined, G, serverData)
     priest.parseCharacter({
@@ -417,10 +415,6 @@ beforeAll(async () => {
         "name": "earthWar"
     })
 }, 60000)
-
-afterAll(async () => {
-    Database.disconnect()
-})
 
 test("Character attributes", () => {
     expect(priest.damage_type).toBe<string>(G.classes.priest.damage_type)

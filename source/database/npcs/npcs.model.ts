@@ -5,4 +5,4 @@ import { INPCDocument } from "./npcs.types"
 import NPCSchema from "./npcs.schema"
 
 export const NPCModel = model<INPCDocument>("npc", NPCSchema)
-NPCModel.createIndexes()
+NPCModel.createIndexes().catch((e) => { if (pkg.connection.readyState) console.error(e) })

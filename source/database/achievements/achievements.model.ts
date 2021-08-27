@@ -5,4 +5,4 @@ import { IAchievementDocument } from "./achievements.types"
 import AchievementSchema from "./achievements.schema"
 
 export const AchievementModel = model<IAchievementDocument>("achievement", AchievementSchema)
-AchievementModel.createIndexes()
+AchievementModel.createIndexes().catch((e) => { if (pkg.connection.readyState) console.error(e) })

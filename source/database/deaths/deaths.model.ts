@@ -5,4 +5,4 @@ import { IDeathDocument } from "./deaths.types"
 import DeathSchema from "./deaths.schema"
 
 export const DeathModel = model<IDeathDocument>("Death", DeathSchema)
-DeathModel.createIndexes()
+DeathModel.createIndexes().catch((e) => { if (pkg.connection.readyState) console.error(e) })
