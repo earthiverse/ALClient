@@ -642,6 +642,37 @@ test("Character.countItem", () => {
     expect(priest.countItem("mpot1")).toBe(999)
 })
 
+test("Character.getTargetEntitiy", () => {
+    priest.target = undefined
+    expect(priest.getTargetEntity()).toBeUndefined()
+
+    const bee = new Entity({
+        "mp": 2,
+        "armor": 0,
+        "resistance": 0,
+        "id": "5185017",
+        "x": 70.32182893235411,
+        "y": 1487.9526638730226,
+        "moving": true,
+        "going_x": 206.28099056907251,
+        "going_y": 1485.9456975484566,
+        "abs": false,
+        "move_num": 49572238,
+        "angle": -0.8457123996441614,
+        "type": "bee",
+        "cid": 1,
+        "s": {
+            "young": {
+                "ms": 340
+            }
+        }
+    }, "main", priest.G)
+    priest.entities.set(bee.id, bee)
+    priest.target = bee.id
+    expect(priest.getTargetEntity()).toBeTruthy()
+    expect(priest.getTargetEntity().id).toBe(bee.id)
+})
+
 test("Character.hasPVPMarkedItem", () => {
     expect(priest.hasPvPMarkedItem()).toBeFalsy()
 })

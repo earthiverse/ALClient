@@ -1978,7 +1978,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Retrieves target entity
+     * Retrieves the entity our character is currently targeting.
      *
      * @return {*}  {Entity}
      * @memberof Character
