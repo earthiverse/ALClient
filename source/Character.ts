@@ -2055,15 +2055,13 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Retrieves target entity
+     * Retrieves the entity our character is currently targeting.
      *
      * @return {*}  {Entity}
      * @memberof Character
      */
     public getTargetEntity(): Entity {
-        for (const [, entity] of this.entities) {
-            if (entity.id === this.target) return entity
-        }
+        return this.entities.get(this.target)
     }
 
     /**
