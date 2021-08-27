@@ -121,50 +121,52 @@ export class Game {
         if (mongo) await Database.connect(mongo)
 
         if (Database.connection) {
-        // See if we already have a userAuth stored in our database
+            // Use existing userAuth stored in our database if possible
             const find = await AuthModel.findOne({ email: email }).lean().exec()
             if (find?.userID && find?.userAuth) {
                 console.debug("Using auth data from database...")
                 this.user = { userAuth: find.userAuth, userID: find.userID }
-            }
 
-            // TODO: Test and see if it's still a good auth. If it's not, delete it.
-        } else {
-            // Login and save the auth
-            console.debug("Logging in...")
-            const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
-            let loginResult
-            for (const datum of login.data) {
-                if (datum.message) {
-                    loginResult = datum
+                // TODO: Test and see if it's still a good auth. If it's not, delete it.
+
+                return this.updateServersAndCharacters()
+            }
+        }
+
+        // Login and save the auth
+        console.debug("Logging in...")
+        const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
+        let loginResult
+        for (const datum of login.data) {
+            if (datum.message) {
+                loginResult = datum
+                break
+            }
+        }
+        if (loginResult && loginResult.message == "Logged In!") {
+            console.debug("Logged in!")
+            // We successfully logged in
+            // Find the auth cookie and save it
+            for (const cookie of login.headers["set-cookie"]) {
+                const result = /^auth=(.+?);/.exec(cookie)
+                if (result) {
+                    // Save our data to the database
+                    this.user = {
+                        userAuth: result[1].split("-")[1],
+                        userID: result[1].split("-")[0]
+                    }
+                    if (Database.connection) await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
                     break
                 }
             }
-            if (loginResult && loginResult.message == "Logged In!") {
-                console.debug("Logged in!")
-                // We successfully logged in
-                // Find the auth cookie and save it
-                for (const cookie of login.headers["set-cookie"]) {
-                    const result = /^auth=(.+?);/.exec(cookie)
-                    if (result) {
-                        // Save our data to the database
-                        this.user = {
-                            userAuth: result[1].split("-")[1],
-                            userID: result[1].split("-")[0]
-                        }
-                        if (Database.connection) await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
-                        break
-                    }
-                }
-            } else if (loginResult && loginResult.message) {
-                // We failed logging in, and we have a reason from the server
-                console.error(loginResult.message)
-                return Promise.reject(loginResult.message)
-            } else {
-                // We failed logging in, but we don't know what went wrong
-                console.error(login.data)
-                return Promise.reject("Failed logging in.")
-            }
+        } else if (loginResult && loginResult.message) {
+            // We failed logging in, and we have a reason from the server
+            console.error(loginResult.message)
+            return Promise.reject(loginResult.message)
+        } else {
+            // We failed logging in, but we don't know what went wrong
+            console.error(login.data)
+            return Promise.reject("Failed logging in.")
         }
 
         return this.updateServersAndCharacters()
