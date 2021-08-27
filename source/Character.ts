@@ -216,8 +216,10 @@ export class Character extends Observer implements CharacterData {
                 y: this.y
             }
             if (this.owner) updateData.owner = this.owner
-            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
-            Database.lastMongoUpdate.set(this.id, new Date())
+            if (Database.connection) {
+                PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                Database.lastMongoUpdate.set(this.id, new Date())
+            }
         }
     }
 
@@ -274,7 +276,7 @@ export class Character extends Observer implements CharacterData {
                     const cooldown = data.ms
                     this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
                 }
-            } else if (data.response == "defeated_by_a_monster") {
+            } else if (Database.connection && data.response == "defeated_by_a_monster") {
                 DeathModel.insertMany([{
                     cause: data.monster,
                     map: this.map,
@@ -420,21 +422,23 @@ export class Character extends Observer implements CharacterData {
             }
         })
 
-        this.socket.on("game_log", async (data: { message: string; color: string; }) => {
-            const result = /^Slain by (.+)$/.exec(data.message)
-            if (result) {
-                DeathModel.create({
-                    cause: result[1],
-                    map: this.map,
-                    name: this.id,
-                    serverIdentifier: this.server.name,
-                    serverRegion: this.server.region,
-                    time: Date.now(),
-                    x: this.x,
-                    y: this.y
-                })
-            }
-        })
+        if (Database.connection) {
+            this.socket.on("game_log", async (data: { message: string; color: string; }) => {
+                const result = /^Slain by (.+)$/.exec(data.message)
+                if (result) {
+                    DeathModel.create({
+                        cause: result[1],
+                        map: this.map,
+                        name: this.id,
+                        serverIdentifier: this.server.name,
+                        serverRegion: this.server.region,
+                        time: Date.now(),
+                        x: this.x,
+                        y: this.y
+                    })
+                }
+            })
+        }
 
         this.socket.on("game_response", (data: GameResponseData) => {
             this.parseGameResponse(data)
@@ -444,7 +448,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("party_update", (data: PartyData) => {
             this.partyData = data
 
-            if (data) {
+            if (data && Database.connection) {
                 const playerUpdates = []
                 for (const id in data.party) {
                     const cData = data.party[id]
@@ -479,10 +483,12 @@ export class Character extends Observer implements CharacterData {
             if (data.q.compound) this.q.compound = data.q.compound
         })
 
-        this.socket.on("tracker", async (data: TrackerData) => {
+        if (Database.connection) {
+            this.socket.on("tracker", async (data: TrackerData) => {
             // Add tracker data to the database
-            await AchievementModel.create({ date: Date.now(), max: data.max, monsters: data.monsters, name: this.id }).catch((e) => { console.error(e) })
-        })
+                await AchievementModel.create({ date: Date.now(), max: data.max, monsters: data.monsters, name: this.id }).catch((e) => { console.error(e) })
+            })
+        }
 
         this.socket.on("upgrade", (data: UpgradeData) => {
             if (data.type == "compound" && this.q.compound) delete this.q.compound

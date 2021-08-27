@@ -118,13 +118,17 @@ export class Game {
 
     static async login(email: string, password?: string, mongo?: string): Promise<boolean> {
         // Connect to Mongo
-        Database.connect(mongo)
+        if (mongo) await Database.connect(mongo)
 
+        if (Database.connection) {
         // See if we already have a userAuth stored in our database
-        const find = await AuthModel.findOne({ email: email }).lean().exec()
-        if (find?.userID && find?.userAuth) {
-            console.debug("Using auth data from database...")
-            this.user = { userID: find.userID, userAuth: find.userAuth }
+            const find = await AuthModel.findOne({ email: email }).lean().exec()
+            if (find?.userID && find?.userAuth) {
+                console.debug("Using auth data from database...")
+                this.user = { userAuth: find.userAuth, userID: find.userID }
+            }
+
+            // TODO: Test and see if it's still a good auth. If it's not, delete it.
         } else {
             // Login and save the auth
             console.debug("Logging in...")
@@ -145,10 +149,10 @@ export class Game {
                     if (result) {
                         // Save our data to the database
                         this.user = {
-                            userID: result[1].split("-")[0],
-                            userAuth: result[1].split("-")[1]
+                            userAuth: result[1].split("-")[1],
+                            userID: result[1].split("-")[0]
                         }
-                        await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
+                        if (Database.connection) await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
                         break
                     }
                 }
@@ -171,13 +175,13 @@ export class Game {
         return this.login(data.email, data.password, data.mongo)
     }
 
-    static async logoutEverywhere(): Promise<any> {
+    static async logoutEverywhere(): Promise<unknown> {
         if (!this.user) return Promise.reject("You must login first.")
 
-        const response = await axios.post<any>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<unknown>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         // Remove the auth from the database
-        await AuthModel.deleteOne({ userID: this.user.userID }).exec()
+        if (Database.connection) await AuthModel.deleteOne({ userID: this.user.userID }).exec()
         this.user = undefined
 
         return response.data

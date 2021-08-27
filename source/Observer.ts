@@ -55,7 +55,7 @@ export class Observer {
 
             this.updatePositions()
 
-            if (data.reason == "disconnect" || data.reason == "invis") return // We don't track these
+            if (!Database.connection || data.reason == "disconnect" || data.reason == "invis") return // We don't track these
 
             if ((data.effect == "blink" || data.effect == "magiport") && data.to !== undefined && data.s !== undefined) {
                 // They used "blink" or "magiport" and don't have a stealth cape
@@ -172,7 +172,7 @@ export class Observer {
 
                 data[mN] = goodData
 
-                if (Constants.SPECIAL_MONSTERS.includes(mN)) {
+                if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
                     databaseUpdates.push({
                         updateOne: {
                             filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
@@ -183,7 +183,7 @@ export class Observer {
                 }
             }
 
-            if (databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
+            if (Database.connection && databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
 
             this.S = data
         })
@@ -221,10 +221,12 @@ export class Observer {
             if (this.S[entity.type]) delete this.S[entity.type]
 
             // Delete the entity from the database on death
-            const lastUpdate = Database.lastMongoUpdate.get(entity.id)
-            if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).exec().catch(() => { /* Suppress errors */ })
-                Database.lastMongoUpdate.delete(id)
+            if (Database.connection) {
+                const lastUpdate = Database.lastMongoUpdate.get(entity.id)
+                if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                    EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).exec().catch(() => { /* Suppress errors */ })
+                    Database.lastMongoUpdate.delete(id)
+                }
             }
 
             this.entities.delete(id)
@@ -266,30 +268,32 @@ export class Observer {
             visibleIDs.push(e.id)
 
             // Update our database
-            if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
-                const lastUpdate = Database.lastMongoUpdate.get(e.id)
-                if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
-                    if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
+            if (Database.connection) {
+                if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
+                    const lastUpdate = Database.lastMongoUpdate.get(e.id)
+                    if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+                        if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
                         // Don't include the id in the filter, so it overwrites the last one
-                        entityUpdates.push({
-                            updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
-                                upsert: true
-                            }
-                        })
-                    } else {
+                            entityUpdates.push({
+                                updateOne: {
+                                    filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
+                                    update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
+                                    upsert: true
+                                }
+                            })
+                        } else {
                         // Include the id in the filter
-                        entityUpdates.push({
-                            updateOne: {
-                                filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
-                                upsert: true
-                            }
-                        })
-                    }
+                            entityUpdates.push({
+                                updateOne: {
+                                    filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
+                                    update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
+                                    upsert: true
+                                }
+                            })
+                        }
 
-                    Database.lastMongoUpdate.set(e.id, new Date())
+                        Database.lastMongoUpdate.set(e.id, new Date())
+                    }
                 }
             }
         }
@@ -307,87 +311,91 @@ export class Observer {
             }
 
             // Update our database
-            const lastUpdate = Database.lastMongoUpdate.get(p.id)
-            if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
-                if (p.isNPC()) {
-                    npcUpdates.push({
-                        updateOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: p.id },
-                            update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
-                            upsert: true
+            if (Database.connection) {
+                const lastUpdate = Database.lastMongoUpdate.get(p.id)
+                if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+                    if (p.isNPC()) {
+                        npcUpdates.push({
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: p.id },
+                                update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
+                                upsert: true
+                            }
+                        })
+                    } else {
+                        const updateData: Partial<IPlayer> = {
+                            lastSeen: Date.now(),
+                            map: p.map,
+                            s: p.s,
+                            serverIdentifier: this.serverData.name,
+                            serverRegion: this.serverData.region,
+                            slots: p.slots,
+                            type: p.ctype,
+                            x: p.x,
+                            y: p.y,
                         }
-                    })
-                } else {
-                    const updateData: Partial<IPlayer> = {
-                        lastSeen: Date.now(),
-                        map: p.map,
-                        s: p.s,
-                        serverIdentifier: this.serverData.name,
-                        serverRegion: this.serverData.region,
-                        slots: p.slots,
-                        type: p.ctype,
-                        x: p.x,
-                        y: p.y,
+                        if (p.owner) updateData.owner = p.owner
+                        playerUpdates.push({
+                            updateOne: {
+                                filter: { name: p.id },
+                                update: updateData,
+                                upsert: true
+                            }
+                        })
                     }
-                    if (p.owner) updateData.owner = p.owner
-                    playerUpdates.push({
-                        updateOne: {
-                            filter: { name: p.id },
-                            update: updateData,
-                            upsert: true
-                        }
-                    })
+                    Database.lastMongoUpdate.set(p.id, new Date())
                 }
-                Database.lastMongoUpdate.set(p.id, new Date())
             }
         }
 
-        if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch((e) => { console.error(e) })
-        if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch((e) => { console.error(e) })
-        if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
+        if (Database.connection) {
+            if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch((e) => { console.error(e) })
+            if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch((e) => { console.error(e) })
+            if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
 
-        if (data.type == "all") {
+            if (data.type == "all") {
             // Delete monsters that we should be able to see
-            EntityModel.aggregate([
-                {
-                    $match: {
-                        map: this.map,
-                        name: { $nin: visibleIDs },
-                        serverIdentifier: this.serverData.name,
-                        serverRegion: this.serverData.region,
-                    }
-                },
-                {
-                    $project: {
-                        distance: {
-                            $sqrt: {
-                                $add: [
-                                    { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
-                                    { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
-                                ]
+                EntityModel.aggregate([
+                    {
+                        $match: {
+                            map: this.map,
+                            name: { $nin: visibleIDs },
+                            serverIdentifier: this.serverData.name,
+                            serverRegion: this.serverData.region,
+                        }
+                    },
+                    {
+                        $project: {
+                            distance: {
+                                $sqrt: {
+                                    $add: [
+                                        { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
+                                        { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            distance: {
+                                $lt: Constants.MAX_VISIBLE_RANGE / 2
                             }
                         }
                     }
-                },
-                {
-                    $match: {
-                        distance: {
-                            $lt: Constants.MAX_VISIBLE_RANGE / 2
-                        }
+                ]).exec().then((toDeletes => {
+                    try {
+                        const ids = []
+                        for (const toDelete of toDeletes) ids.push(toDelete._id)
+                        EntityModel.deleteMany({ name: { $in: ids } }).exec()
+                    } catch (e) {
+                        console.error(e)
+                        console.log("DEBUG -----")
+                        console.log("toDeletes:")
+                        console.log(toDeletes)
                     }
-                }
-            ]).exec().then((toDeletes => {
-                try {
-                    const ids = []
-                    for (const toDelete of toDeletes) ids.push(toDelete._id)
-                    EntityModel.deleteMany({ name: { $in: ids } }).exec()
-                } catch (e) {
-                    console.error(e)
-                    console.log("DEBUG -----")
-                    console.log("toDeletes:")
-                    console.log(toDeletes)
-                }
-            })).catch((e) => { console.error(e) })
+                })).catch((e) => { console.error(e) })
+            }
         }
     }
 
