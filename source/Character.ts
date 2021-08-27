@@ -1984,9 +1984,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public getTargetEntity(): Entity {
-        for (const [, entity] of this.entities) {
-            if (entity.id === this.target) return entity
-        }
+        return this.entities.get(this.target)
     }
 
     /**
