@@ -2355,10 +2355,11 @@ export class Character extends Observer implements CharacterData {
     /**
      * If you are dead, you can call this function to respawn.
      *
-     * @return {*}  {Promise<NodeData>} Where you respawned
+     * @param {boolean} [safe] If set, you will spawn in Wizard's cave instead of near the goos.
+     * @return {*}  {Promise<NodeData>}
      * @memberof Character
      */
-    public respawn(): Promise<NodeData> {
+    public respawn(safe?: boolean): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [respawn].")
         const respawned = new Promise<NodeData>((resolve, reject) => {
             const respawnCheck = (data: NewMapData) => {
@@ -2383,7 +2384,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("new_map", respawnCheck)
             this.socket.on("game_log", failCheck)
         })
-        this.socket.emit("respawn")
+        this.socket.emit("respawn", { safe: safe })
         return respawned
     }
 
