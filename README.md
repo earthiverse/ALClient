@@ -4,14 +4,14 @@
 
 -----
 
-This code is essentially the 'alclient' package, but with a mongo database that tracks things like monster and player positions, and deaths.
+This is a node client for the game [Adventure Land - The Code MMORPG](https://adventure.land). It's 99% custom code that seems *much* more efficient than running the code in-game, or using the game's official CLI.
 
 This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull/ALBot) aims to be. The code that you run in the console in game **WILL NOT** run as-is if you try to run your in-game code using this project.
 
 ## Requirements
 
 * Node
-  * Tested with **14.9**
+  * Tested with **16.5**, but some earlier versions will most likely work, too.
 
 ## Basic Usage
 
@@ -26,6 +26,16 @@ In package.json, make sure `"type": "module"` is set.
 {
     "email": "hyprkookeez@gmail.com",
     "password": "thisisnotmyrealpasswordlol"
+}
+```
+
+You can also optionally add a Mongo URI to track various data with a mongo database.
+
+```javascript
+{
+    "email": "hyprkookeez@gmail.com",
+    "password": "thisisnotmyrealpasswordlol",
+    "mongo": "mongodb://localhost:27017/"
 }
 ```
 
