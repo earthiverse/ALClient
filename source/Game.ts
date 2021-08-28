@@ -93,9 +93,10 @@ export class Game {
             const informationDate = Date.now() - 300000 /** Assume the information is 5 minutes old */
 
             // Update the database with the merchant's information
+            const promises: Promise<unknown>[] = []
             for (const merchant of merchants) {
                 const server = merchant.server.split(" ")
-                PlayerModel.updateOne({ lastSeen: { $gt: informationDate }, name: merchant.name }, {
+                promises.push(PlayerModel.updateOne({ lastSeen: { $gt: informationDate }, name: merchant.name }, {
                     lastSeen: informationDate,
                     map: merchant.map,
                     serverIdentifier: server[1] as ServerIdentifier,
@@ -133,8 +134,9 @@ export class Game {
                     "slots.trade30": merchant.slots.trade30,
                     x: merchant.x,
                     y: merchant.y
-                })
+                }).exec())
             }
+            await Promise.all(promises)
         }
 
         return merchants
