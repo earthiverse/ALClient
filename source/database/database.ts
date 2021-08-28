@@ -26,14 +26,7 @@ export class Database {
             await Mongoose.disconnect()
         }
 
-        const connect = await Mongoose.connect(uri, {
-            family: 4,
-            poolSize: 2,
-            useCreateIndex: true,
-            useFindAndModify: true,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
+        const connect = await Mongoose.connect(uri)
 
         this.connection = Mongoose.connection
 
