@@ -1,6 +1,6 @@
 import axios from "axios"
 import fs from "fs"
-import { AuthModel, Database } from "./database/Database"
+import { AuthModel, Database, PlayerModel } from "./database/Database"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland"
 import { CharacterType, GData } from "./definitions/adventureland-data"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server"
@@ -86,6 +86,54 @@ export class Game {
                 for (const char of datum.chars) {
                     merchants.push(char)
                 }
+            }
+        }
+
+        if (Database.connection) {
+            const informationDate = Date.now() - 300000 /** Assume the information is 5 minutes old */
+
+            // Update the database with the merchant's information
+            for (const merchant of merchants) {
+                const server = merchant.server.split(" ")
+                PlayerModel.updateOne({ lastSeen: { $gt: informationDate }, name: merchant.name }, {
+                    lastSeen: informationDate,
+                    map: merchant.map,
+                    serverIdentifier: server[1] as ServerIdentifier,
+                    serverRegion: server[0] as ServerRegion,
+                    // We have to update all of the trade slots individually so we don't overwrite what they have equipped
+                    "slots.trade1": merchant.slots.trade1,
+                    "slots.trade2": merchant.slots.trade2,
+                    "slots.trade3": merchant.slots.trade3,
+                    "slots.trade4": merchant.slots.trade4,
+                    "slots.trade5": merchant.slots.trade5,
+                    "slots.trade6": merchant.slots.trade6,
+                    "slots.trade7": merchant.slots.trade7,
+                    "slots.trade8": merchant.slots.trade8,
+                    "slots.trade9": merchant.slots.trade9,
+                    "slots.trade10": merchant.slots.trade10,
+                    "slots.trade11": merchant.slots.trade11,
+                    "slots.trade12": merchant.slots.trade12,
+                    "slots.trade13": merchant.slots.trade13,
+                    "slots.trade14": merchant.slots.trade14,
+                    "slots.trade15": merchant.slots.trade15,
+                    "slots.trade16": merchant.slots.trade16,
+                    "slots.trade17": merchant.slots.trade17,
+                    "slots.trade18": merchant.slots.trade18,
+                    "slots.trade19": merchant.slots.trade19,
+                    "slots.trade20": merchant.slots.trade20,
+                    "slots.trade21": merchant.slots.trade21,
+                    "slots.trade22": merchant.slots.trade22,
+                    "slots.trade23": merchant.slots.trade23,
+                    "slots.trade24": merchant.slots.trade24,
+                    "slots.trade25": merchant.slots.trade25,
+                    "slots.trade26": merchant.slots.trade26,
+                    "slots.trade27": merchant.slots.trade27,
+                    "slots.trade28": merchant.slots.trade28,
+                    "slots.trade29": merchant.slots.trade29,
+                    "slots.trade30": merchant.slots.trade30,
+                    x: merchant.x,
+                    y: merchant.y
+                })
             }
         }
 
