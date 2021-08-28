@@ -96,7 +96,7 @@ export class Game {
             const promises: Promise<unknown>[] = []
             for (const merchant of merchants) {
                 const server = merchant.server.split(" ")
-                promises.push(PlayerModel.updateOne({ lastSeen: { $gt: informationDate }, name: merchant.name }, {
+                promises.push(PlayerModel.updateOne({ lastSeen: { $lt: informationDate }, name: merchant.name }, {
                     lastSeen: informationDate,
                     map: merchant.map,
                     serverIdentifier: server[1] as ServerIdentifier,
