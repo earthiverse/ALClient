@@ -58,7 +58,7 @@ export type StatusInfo = {
         c: number;
         /** What monster we have to kill */
         id: MonsterName;
-        /** What is this? */
+        /** A delevel flag. If true, killing a level 1 monster will delevel another monster that is higher than level 1. */
         dl?: boolean
     };
     citizen0aura?: {
