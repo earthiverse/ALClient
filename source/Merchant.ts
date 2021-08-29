@@ -247,6 +247,16 @@ export class Merchant extends PingCompensatedCharacter {
         }
 
         const mlucked = new Promise<void>((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]mluck['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.removeListener("entities", mluckCheck)
+                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.removeListener("player", selfMluckCheck)
+                    this.socket.removeListener("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
             const mluckCheck = (data: EntitiesData) => {
                 for (const player of data.players) {
                     if (player.id == target
@@ -255,6 +265,7 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
                         this.socket.removeListener("player", selfMluckCheck)
+                        this.socket.removeListener("eval", cooldownCheck)
                         resolve()
                     }
                 }
@@ -266,6 +277,7 @@ export class Merchant extends PingCompensatedCharacter {
                     this.socket.removeListener("entities", mluckCheck)
                     this.socket.removeListener("game_response", failCheck)
                     this.socket.removeListener("player", selfMluckCheck)
+                    this.socket.removeListener("eval", cooldownCheck)
                     resolve()
                 }
             }
@@ -276,12 +288,14 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
                         this.socket.removeListener("player", selfMluckCheck)
+                        this.socket.removeListener("eval", cooldownCheck)
                         await this.requestPlayerData().catch((e) => { console.error(e) })
                         reject(`We are too far from ${target} to mluck.`)
                     } else if (data == "no_level") {
                         this.socket.removeListener("entities", mluckCheck)
                         this.socket.removeListener("game_response", failCheck)
                         this.socket.removeListener("player", selfMluckCheck)
+                        this.socket.removeListener("eval", cooldownCheck)
                         reject("We aren't a high enough level to use mluck.")
                     }
                 }
@@ -291,13 +305,15 @@ export class Merchant extends PingCompensatedCharacter {
                 this.socket.removeListener("entities", mluckCheck)
                 this.socket.removeListener("game_response", failCheck)
                 this.socket.removeListener("player", selfMluckCheck)
+                this.socket.removeListener("eval", cooldownCheck)
                 reject(`mluck timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", failCheck)
             this.socket.on("player", selfMluckCheck)
             this.socket.on("entities", mluckCheck)
+            this.socket.on("eval", cooldownCheck)
         })
-        this.socket.emit("skill", { name: "mluck", id: target })
+        this.socket.emit("skill", { id: target, name: "mluck" })
         return mlucked
     }
 
