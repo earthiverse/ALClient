@@ -3456,61 +3456,29 @@ export class Character extends Observer implements CharacterData {
     }
 
     public locateDuplicateItems(inventory = this.items): {
-        [T in ItemName]?: number[];
+        [name in ItemName]?: {
+            [level in number]?: number[];
+        }
     } {
-        const items: (ItemData & { slotNum: number; })[] = []
-        for (let i = 0; i < inventory.length; i++) {
-            const item = inventory[i]
-            if (!item) continue
-            items.push({ ...item, slotNum: i })
-        }
-
-        // Sort the data to make it easier to parse the data later
-        items.sort((a, b) => {
-            // Sort alphabetically
-            const n = a.name.localeCompare(b.name)
-            if (n !== 0)
-                return n
-
-            // Sort lowest level first
-            if (a.level !== undefined && b.level !== undefined && a.level !== b.level)
-                return a.level - b.level
-
-            // Sort 'p' items first
-            if (a.p !== undefined && b.p === undefined)
-                return -1
-            else if (a.p === undefined && b.p !== undefined)
-                return 1
-
-            // Sort higher quantity stacks first
-            if (a.q !== undefined && b.q !== undefined)
-                return b.q - a.q
-
-            return 0
-        })
-
-        const duplicates: {
-            [T in ItemName]?: number[];
-        } = {}
-        for (let i = 0; i < items.length - 1; i++) {
-            const item1 = items[i]
-            for (let j = i + 1; j < items.length; j++) {
-                const item2 = items[j]
-
-                if (item1.name === item2.name) {
-                    if (j == i + 1) {
-                        duplicates[item1.name] = [item1.slotNum, item2.slotNum]
-                    } else {
-                        duplicates[item1.name].push(item2.slotNum)
-                    }
-                } else {
-                    i = j - 1
-                    break
-                }
+        const itemsByLevel = inventory.reduce((items, item, slotNum) => {
+            if (item) {
+                const { name, level } = item
+                items[name] = items[name] || {}
+                items[name][level + 1] = [...(items[name][level + 1] || []), slotNum]
             }
+            return items
+        }, {})
+
+        // Remove any items that are not in duplicate
+        for (const itemName in itemsByLevel) {
+            for (const itemLevel in itemsByLevel[itemName]) {
+                if (itemsByLevel[itemName][itemLevel].length < 2) delete itemsByLevel[itemName][itemLevel]
+            }
+
+            if (!Object.keys(itemsByLevel[itemName]).length) delete itemsByLevel[itemName]
         }
 
-        return duplicates
+        return itemsByLevel
     }
 
     /**
