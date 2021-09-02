@@ -3455,64 +3455,6 @@ export class Character extends Observer implements CharacterData {
         return this.server.pvp
     }
 
-    public locateDuplicateItems(inventory = this.items): {
-        [T in ItemName]?: number[];
-    } {
-        const items: (ItemData & { slotNum: number; })[] = []
-        for (let i = 0; i < inventory.length; i++) {
-            const item = inventory[i]
-            if (!item) continue
-            items.push({ ...item, slotNum: i })
-        }
-
-        // Sort the data to make it easier to parse the data later
-        items.sort((a, b) => {
-            // Sort alphabetically
-            const n = a.name.localeCompare(b.name)
-            if (n !== 0)
-                return n
-
-            // Sort lowest level first
-            if (a.level !== undefined && b.level !== undefined && a.level !== b.level)
-                return a.level - b.level
-
-            // Sort 'p' items first
-            if (a.p !== undefined && b.p === undefined)
-                return -1
-            else if (a.p === undefined && b.p !== undefined)
-                return 1
-
-            // Sort higher quantity stacks first
-            if (a.q !== undefined && b.q !== undefined)
-                return b.q - a.q
-
-            return 0
-        })
-
-        const duplicates: {
-            [T in ItemName]?: number[];
-        } = {}
-        for (let i = 0; i < items.length - 1; i++) {
-            const item1 = items[i]
-            for (let j = i + 1; j < items.length; j++) {
-                const item2 = items[j]
-
-                if (item1.name === item2.name) {
-                    if (j == i + 1) {
-                        duplicates[item1.name] = [item1.slotNum, item2.slotNum]
-                    } else {
-                        duplicates[item1.name].push(item2.slotNum)
-                    }
-                } else {
-                    i = j - 1
-                    break
-                }
-            }
-        }
-
-        return duplicates
-    }
-
     /**
      * Returns the index of the item in the given inventory
      * @param itemName The item to look for
@@ -3620,8 +3562,16 @@ export class Character extends Observer implements CharacterData {
      * Each item object has keys for each level.
      * Each level object is an array of item positions.
      *
-     * @param inventory Where to look for the item
-     * @param filters Options for sorting and filtering
+     * Set `minAmount` to 2 to find duplicate items. Set `minAmount` to 3 to find triplicate items.
+     *
+     * @param {*} [inventory=this.items]
+     * @param {{ minAmount?: number }} [options]
+     * @return {*}  {{
+     *         [name in ItemName]?: {
+     *             [level in number]?: number[];
+     *         }
+     *     }}
+     * @memberof Character
      */
     public locateItemsByLevel(inventory = this.items, options?: { minAmount?: number }): {
         [name in ItemName]?: {

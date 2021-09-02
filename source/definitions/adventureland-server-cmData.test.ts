@@ -1,11 +1,11 @@
 import { CMData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-05-20
  * It is used to confirm type correctness
  */
 
-test("DeathData type validation", async () => {
+test("CMData type validation", async () => {
     const cms: CMData[] = [
         { "name": "earthPal", "message": "{\"message\":\"hi\"}" }
     ]

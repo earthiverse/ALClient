@@ -743,6 +743,366 @@ test("Character.locateItems", async () => {
     priest.items = itemsBackup
 })
 
+test("Character.locateItemsByLevel", () => {
+    const itemsBackup = [...priest.items]
+
+    // This was previously returning the wrong amount of ringsj
+    priest.isize = 42
+    priest.esize = 0
+    priest.items = [
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "cclaw",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        }
+    ]
+    const duplicates = priest.locateItemsByLevel(priest.items, { minAmount: 2 })
+    expect(duplicates).toMatchObject({
+        "hpamulet": {
+            "0": [
+                0,
+                1,
+                2,
+                4,
+                6,
+                9,
+                12,
+                13,
+                14,
+                15,
+                16,
+                19,
+                20,
+                21,
+                26,
+                29,
+                31,
+                35
+            ]
+        },
+        "hpbelt": {
+            "0": [
+                5,
+                7,
+                8,
+                10,
+                11,
+                17,
+                18,
+                22,
+                23,
+                24,
+                25,
+                32,
+                34,
+                36,
+                39,
+                40,
+                41
+            ]
+        },
+        "ringsj": {
+            "0": [
+                27,
+                28,
+                30,
+                33,
+                37,
+                38
+            ]
+        }
+    })
+    const sevenplicates = priest.locateItemsByLevel(priest.items, { minAmount: 7 })
+    expect(sevenplicates).toMatchObject({
+        "hpamulet": {
+            "0": [
+                0,
+                1,
+                2,
+                4,
+                6,
+                9,
+                12,
+                13,
+                14,
+                15,
+                16,
+                19,
+                20,
+                21,
+                26,
+                29,
+                31,
+                35
+            ]
+        },
+        "hpbelt": {
+            "0": [
+                5,
+                7,
+                8,
+                10,
+                11,
+                17,
+                18,
+                22,
+                23,
+                24,
+                25,
+                32,
+                34,
+                36,
+                39,
+                40,
+                41
+            ]
+        }
+    })
+
+    priest.isize = 42
+    priest.esize = 22
+    priest.items = [
+        {
+            "q": 200,
+            "name": "hpot0",
+            "gift": 1
+        },
+        {
+            "q": 156,
+            "name": "mpot0",
+            "gift": 1
+        },
+        {
+            "name": "hpbelt",
+            "level": 0
+        },
+        {
+            "q": 2,
+            "name": "gslime"
+        },
+        {
+            "q": 217,
+            "name": "beewings"
+        },
+        {
+            "name": "ringsj",
+            "level": 0
+        },
+        {
+            "name": "hpamulet",
+            "level": 0
+        },
+        null,
+        null,
+        {
+            "name": "wshoes",
+            "level": 0
+        },
+        null,
+        null,
+        null,
+        {
+            "name": "wcap",
+            "level": 0
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    ]
+    const noDuplicates = priest.locateItemsByLevel(priest.items, { minAmount: 2 })
+    expect(noDuplicates).toMatchObject({})
+
+    priest.items = itemsBackup
+})
+
 test("Character.locateCraftNPC", () => {
     // craftsman location
     expect(priest.locateCraftNPC("pouchbow")).toStrictEqual<IPosition>({ map: "main", x: 92, y: 670 })
