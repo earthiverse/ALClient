@@ -3615,6 +3615,42 @@ export class Character extends Observer implements CharacterData {
         return found
     }
 
+    /**
+     * Returns an object with keys for each item name.
+     * Each item object has keys for each level.
+     * Each level object is an array of item positions.
+     *
+     * @param inventory Where to look for the item
+     * @param filters Options for sorting and filtering
+     */
+    public locateItemsByLevel(inventory = this.items, options?: { minAmount?: number }): {
+        [name in ItemName]?: {
+            [level in number]?: number[];
+        }
+    } {
+        const itemsByLevel = inventory.reduce((items, item, slotNum) => {
+            if (item) {
+                const { name, level } = item
+                items[name] = items[name] || {}
+                items[name][level] = [...(items[name][level] || []), slotNum]
+            }
+            return items
+        }, {})
+
+        // Remove any items that do not meet the minimum amount
+        if (options?.minAmount) {
+            for (const itemName in itemsByLevel) {
+                for (const itemLevel in itemsByLevel[itemName]) {
+                    if (itemsByLevel[itemName][itemLevel].length < options?.minAmount) delete itemsByLevel[itemName][itemLevel]
+                }
+
+                if (!Object.keys(itemsByLevel[itemName]).length) delete itemsByLevel[itemName]
+            }
+        }
+
+        return itemsByLevel
+    }
+
     public locateMonster(mType: MonsterName): NodeData[] {
         const locations: NodeData[] = []
 
