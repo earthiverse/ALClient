@@ -626,6 +626,8 @@ export type ItemData = {
     acc?: number
     /** Achievement name to which you are progressing to */
     ach?: AchievementName
+    /** For cxjars, it shows the cosmetic contained inside. */
+    data?: string
     /** TODO: What is this? Seen on an elixir. TODO: Check if this is only applicable to the elixir slot */
     ex?: boolean
     /** If this is set, once the date hits, the item will disappear */
