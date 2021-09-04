@@ -752,6 +752,7 @@ test("Character.locateItemsByLevel", () => {
     priest.items = [
         {
             "name": "hpamulet",
+            "p": "shiny",
             "level": 0
         },
         {
@@ -1018,6 +1019,61 @@ test("Character.locateItemsByLevel", () => {
                 39,
                 40,
                 41
+            ]
+        }
+    })
+    const noSpecial = priest.locateItemsByLevel(priest.items, { minAmount: 2, excludeSpecialItems: true })
+    expect(noSpecial).toMatchObject({
+        "hpamulet": {
+            "0": [
+                1,
+                2,
+                4,
+                6,
+                9,
+                12,
+                13,
+                14,
+                15,
+                16,
+                19,
+                20,
+                21,
+                26,
+                29,
+                31,
+                35
+            ]
+        },
+        "hpbelt": {
+            "0": [
+                5,
+                7,
+                8,
+                10,
+                11,
+                17,
+                18,
+                22,
+                23,
+                24,
+                25,
+                32,
+                34,
+                36,
+                39,
+                40,
+                41
+            ]
+        },
+        "ringsj": {
+            "0": [
+                27,
+                28,
+                30,
+                33,
+                37,
+                38
             ]
         }
     })

@@ -3573,7 +3573,10 @@ export class Character extends Observer implements CharacterData {
      *     }}
      * @memberof Character
      */
-    public locateItemsByLevel(inventory = this.items, options?: { minAmount?: number }): {
+    public locateItemsByLevel(inventory = this.items, options?: {
+        excludeSpecialItems?: boolean
+        minAmount?: number
+     }): {
         [name in ItemName]?: {
             [level in number]?: number[];
         }
@@ -3581,6 +3584,7 @@ export class Character extends Observer implements CharacterData {
         const itemsByLevel = inventory.reduce((items, item, slotNum) => {
             if (item) {
                 const { name, level } = item
+                if (options?.excludeSpecialItems && item.p) return items // Don't include special items if we're excluding them
                 items[name] = items[name] || {}
                 items[name][level] = [...(items[name][level] || []), slotNum]
             }
