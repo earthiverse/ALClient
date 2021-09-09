@@ -35,7 +35,7 @@ You can also optionally add a Mongo URI to track various data with a mongo datab
 {
     "email": "hyprkookeez@gmail.com",
     "password": "thisisnotmyrealpasswordlol",
-    "mongo": "mongodb://localhost:27017/"
+    "mongo": "mongodb://localhost:27017/alclient"
 }
 ```
 
