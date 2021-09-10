@@ -710,12 +710,14 @@ test("Character.locateItem", () => {
     // Create the character's inventory for testing
     priest.esize = 2
     const itemsBackup = [...priest.items]
-    priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0 }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
+    priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
     priest.isize = priest.items.length
 
     expect(priest.locateItem("pants")).toBeTruthy()
     expect(priest.locateItem("coat")).toBeTruthy()
     expect(priest.locateItem("pants", priest.items, { level: 0 })).toBe(3)
+    expect(priest.locateItem("pants", priest.items, { level: 0, locked: true })).toBe(3)
+    expect(priest.locateItem("pants", priest.items, { level: 0, locked: false })).toBe(undefined)
     expect(priest.locateItem("coat", priest.items, { level: 0 })).toBe(6)
     expect(priest.locateItem("pants", priest.items, { levelGreaterThan: 0 })).toBe(4)
     expect(priest.locateItem("coat", priest.items, { levelGreaterThan: 0 })).toBe(5)

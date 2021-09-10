@@ -3411,6 +3411,7 @@ export class Character extends Observer implements CharacterData {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
+            locked?: boolean;
             quantityGreaterThan?: number;
             statType?: Attribute;
         }): boolean {
@@ -3466,6 +3467,7 @@ export class Character extends Observer implements CharacterData {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
+            locked?: boolean;
             quantityGreaterThan?: number;
             statType?: Attribute;
         }): number {
@@ -3491,6 +3493,12 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a level
                 if (item.level >= filters.levelLessThan)
                     continue // This item is a higher level than desired
+            }
+            if (filters?.locked !== undefined) {
+                if (filters.locked && item.l !== "l")
+                    continue // This item isn't locked
+                if (!filters.locked && item.l == "l")
+                    continue // This item is locked
             }
             if (filters?.quantityGreaterThan !== undefined) {
                 if (item.q == undefined)
