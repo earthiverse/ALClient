@@ -3407,7 +3407,7 @@ export class Character extends Observer implements CharacterData {
      * @param inv Where to look for the item
      */
     public hasItem(iN: ItemName, inv = this.items,
-        args?: {
+        filters?: {
             level?: number;
             levelGreaterThan?: number;
             levelLessThan?: number;
@@ -3415,7 +3415,7 @@ export class Character extends Observer implements CharacterData {
             quantityGreaterThan?: number;
             statType?: Attribute;
         }): boolean {
-        return this.locateItem(iN, inv, args) !== undefined
+        return this.locateItems(iN, inv, filters).length > 0
     }
 
     /**
@@ -3458,11 +3458,11 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns the index of the item in the given inventory
-     * @param itemName The item to look for
-     * @param inventory Where to look for the item
+     * @param iN The item to look for
+     * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItem(itemName: ItemName, inventory = this.items,
+    public locateItem(iN: ItemName, inv = this.items,
         filters?: {
             level?: number;
             levelGreaterThan?: number;
@@ -3471,12 +3471,31 @@ export class Character extends Observer implements CharacterData {
             quantityGreaterThan?: number;
             statType?: Attribute;
         }): number {
+        return this.locateItems(iN, inv, filters)[0]
+    }
+
+    /**
+     * Returns a list of indexes of the items in the given inventory
+     * @param iN The item to look for
+     * @param inv Where to look for the item
+     * @param filters Filters to help search for specific properties on items
+     */
+    public locateItems(iN: ItemName, inv = this.items,
+        filters?: {
+            level?: number;
+            levelGreaterThan?: number;
+            levelLessThan?: number;
+            locked?: boolean;
+            quantityGreaterThan?: number;
+            statType?: Attribute;
+        }): number[] {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
 
-        for (let i = 0; i < inventory.length; i++) {
-            const item = inventory[i]
+        const found: number[] = []
+        for (let i = 0; i < inv.length; i++) {
+            const item = inv[i]
             if (!item) continue
-            if (item.name !== itemName) continue
+            if (item.name !== iN) continue
 
             if (filters?.level !== undefined) {
                 if (item.level !== filters.level)
@@ -3509,55 +3528,6 @@ export class Character extends Observer implements CharacterData {
             if (filters?.statType !== undefined) {
                 if (item.stat_type !== filters.statType)
                     continue // This item doesn't match the stat scroll
-            }
-
-            return i
-        }
-        return undefined
-    }
-
-    /**
-     * Returns a list of indexes of the items in the given inventory
-     * @param itemName The item to look for
-     * @param inventory Where to look for the item
-     * @param filters Filters to help search for specific properties on items
-     */
-    public locateItems(itemName: ItemName, inventory = this.items,
-        filters?: {
-            level?: number;
-            levelGreaterThan?: number;
-            levelLessThan?: number;
-            quantityGreaterThan?: number;
-        }): number[] {
-        const found: number[] = []
-        for (let i = 0; i < inventory.length; i++) {
-            const item = inventory[i]
-            if (!item) continue
-            if (item.name !== itemName) continue
-
-            if (filters) {
-                if (filters.level !== undefined) {
-                    if (item.level !== filters.level)
-                        continue // The item's level doesn't match
-                }
-                if (filters.levelGreaterThan !== undefined) {
-                    if (item.level == undefined)
-                        continue // This item doesn't have a level
-                    if (item.level <= filters.levelGreaterThan)
-                        continue // This item is a lower level than desired
-                }
-                if (filters.levelLessThan !== undefined) {
-                    if (item.level == undefined)
-                        continue // This item doesn't have a level
-                    if (item.level >= filters.levelLessThan)
-                        continue // This item is a higher level than desired
-                }
-                if (filters.quantityGreaterThan !== undefined) {
-                    if (item.q == undefined)
-                        continue // This item doesn't have a quantity
-                    if (item.q <= filters.quantityGreaterThan)
-                        continue // There isn't enough items in this stack
-                }
             }
 
             found.push(i)
