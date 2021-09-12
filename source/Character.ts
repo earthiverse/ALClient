@@ -1952,6 +1952,21 @@ export class Character extends Observer implements CharacterData {
         return entities
     }
 
+    /**
+     * Returns the index of the first empty slot in the given inventory
+     *
+     * @param {*} [items=this.items] The inventory to look in
+     * @return {*}  {number} The index of the first empty slot
+     * @memberof Character
+     */
+    public getFirstEmptyInventorySlot(items = this.items): number {
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i]
+            if (!item) return i
+        }
+        return undefined
+    }
+
     public async getMonsterHuntQuest(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [getMonsterHuntQuest].")
         if (this.s.monsterhunt && this.s.monsterhunt.c > 0) return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
