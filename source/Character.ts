@@ -2293,7 +2293,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkPlayer)
         })
 
-        if (this.going_x !== to.x || this.going_y !== to.y) {
+        if (!this.moving || this.going_x !== to.x || this.going_y !== to.y) {
             // Only send a move if it's to a different location than we're already going
             this.socket.emit("move", {
                 going_x: to.x,
