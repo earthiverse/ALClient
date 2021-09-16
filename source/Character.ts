@@ -224,6 +224,18 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected async parseEntities(data: EntitiesData): Promise<void> {
+        // Update our party members data if we have some
+        if (this.party) {
+            for (let i = 0; i < data.players.length; i++) {
+                const player = data.players[i]
+                const partyPlayer = this.partyData?.party?.[player.id]
+                if (!partyPlayer) continue // Not in our party
+
+                // Update all the information we can
+                for (const key in partyPlayer) if (player[key]) partyPlayer[key] = player[key]
+            }
+        }
+
         // Look for ourself in the players, and parse it differently so we don't get it mixed up with the other players
         for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
