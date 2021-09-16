@@ -58,14 +58,15 @@ export class Player implements PlayerData {
     tp?: boolean;
 
     // Soft Properties
-    in: MapName;
+    in: string;
     map: MapName;
 
-    public constructor(data: PlayerData, map: MapName, g: GData) {
+    public constructor(data: PlayerData, map: MapName, instance: string, g: GData) {
         this.G = g
 
         // Set soft properties
         this.map = map
+        this.in = instance
         if (!data.npc) this.damage_type = this.G.classes[data.ctype].damage_type
 
         // Set everything else

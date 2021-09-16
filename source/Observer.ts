@@ -258,7 +258,7 @@ export class Observer {
             let e: Entity
             if (!this.entities.has(monster.id)) {
                 // Create the entity and add it to our list
-                e = new Entity(monster, data.map, this.G)
+                e = new Entity(monster, data.map, data.in, this.G)
                 this.entities.set(monster.id, e)
             } else {
                 // Update everything
@@ -277,7 +277,7 @@ export class Observer {
                             entityUpdates.push({
                                 updateOne: {
                                     filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
+                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
                                     upsert: true
                                 }
                             })
@@ -286,7 +286,7 @@ export class Observer {
                             entityUpdates.push({
                                 updateOne: {
                                     filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
+                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, target: e.target, x: e.x, y: e.y },
                                     upsert: true
                                 }
                             })
@@ -302,7 +302,7 @@ export class Observer {
             let p: Player
             if (!this.players.has(player.id)) {
                 // Create the player and add it to our list
-                p = new Player(player, data.map, this.G)
+                p = new Player(player, data.map, data.in, this.G)
                 this.players.set(player.id, p)
             } else {
                 // Update everything
@@ -324,6 +324,7 @@ export class Observer {
                         })
                     } else {
                         const updateData: Partial<IPlayer> = {
+                            in: p.in,
                             lastSeen: Date.now(),
                             map: p.map,
                             s: p.s,

@@ -466,6 +466,7 @@ export class Character extends Observer implements CharacterData {
                     const cData = data.party[id]
 
                     const updateData: Partial<IPlayer> = {
+                        in: cData.in,
                         lastSeen: Date.now(),
                         map: cData.map,
                         serverIdentifier: this.serverData.name,

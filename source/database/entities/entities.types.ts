@@ -4,6 +4,7 @@ import { MapName, MonsterName } from "../../definitions/adventureland-data"
 
 export interface IEntity {
     map: MapName
+    in: string
     x: number
     y: number
     serverRegion: ServerRegion

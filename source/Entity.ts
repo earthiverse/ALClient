@@ -15,6 +15,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public cid: number
     public going_x: number
     public going_y: number
+    public in: string
     public map: MapName
     public move_num: number
     public moving = false
@@ -114,7 +115,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public type: MonsterName
     public xp: number
 
-    public constructor(data: MonsterData, map: MapName, G: GData) {
+    public constructor(data: MonsterData, map: MapName, instance: string, G: GData) {
         this.G = G
 
         // Set soft properties
@@ -122,6 +123,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         this.max_hp = (G.monsters[data.type] as GMonster).hp
         this.max_mp = (G.monsters[data.type] as GMonster).mp
         this.map = map
+        this.in = instance
         for (const gKey in G.monsters[data.type]) {
             this[gKey] = G.monsters[data.type][gKey]
         }
