@@ -21,10 +21,13 @@ export class Pathfinder {
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
     protected static pathWithoutTown = path.nba(Pathfinder.graph, {
         distance(fromNode, toNode, link) {
-            if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
+            if (link.data?.type == "leave" || link.data?.type == "transport") {
                 // We are using the transporter
                 return Pathfinder.TRANSPORT_COST
-            } else if (link.data && link.data.type == "town") {
+            } else if (link.data?.type == "enter") {
+                // We are entering a crypt
+                return 1000
+            } else if (link.data?.type == "town") {
                 // We are warping to town
                 return 999999
             }
@@ -37,10 +40,13 @@ export class Pathfinder {
     })
     protected static pathWithTown = path.nba(Pathfinder.graph, {
         distance(fromNode, toNode, link) {
-            if (link.data && (link.data.type == "leave" || link.data.type == "transport")) {
+            if (link.data?.type == "leave" || link.data?.type == "transport") {
                 // We are using the transporter
                 return Pathfinder.TRANSPORT_COST
-            } else if (link.data && link.data.type == "town") {
+            } else if (link.data?.type == "enter") {
+                // We are entering a crypt
+                return 1000
+            } else if (link.data?.type == "town") {
                 // We are warping to town
                 return Pathfinder.TOWN_COST
             }
