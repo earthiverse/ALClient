@@ -568,7 +568,7 @@ test("Character.canKillInOneShot", () => {
                 "ms": 340
             }
         }
-    }, "main", priest.G)
+    }, "main", "main", priest.G)
     expect(priest.canKillInOneShot(bee)).toBe(true)
 })
 
@@ -666,7 +666,7 @@ test("Character.getTargetEntitiy", () => {
                 "ms": 340
             }
         }
-    }, "main", priest.G)
+    }, "main", "main", priest.G)
     priest.entities.set(bee.id, bee)
     priest.target = bee.id
     expect(priest.getTargetEntity()).toBeTruthy()

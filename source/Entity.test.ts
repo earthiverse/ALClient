@@ -31,7 +31,7 @@ beforeAll(async () => {
         "cid": 19,
         "s": {},
         "level": 19
-    }, "main", G)
+    }, "main", "main", G)
 
     burningToDeathHen = new Entity({
         "mp": 1,
@@ -55,7 +55,7 @@ beforeAll(async () => {
                 f: "earthiverse"
             }
         }
-    }, "main", G)
+    }, "main", "main", G)
 }, 60000)
 
 test("Entity.willBurnToDeath", () => {

@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
+ * The following is from http://adventure.land/data.js, version 688 (2021-09-18)
  * It is used to confirm type correctness
  */
 
@@ -647,6 +647,15 @@ test("G.items type validation", async () => {
                 "credit": "Pluet",
                 "type": "shoes",
                 "scroll": true
+            },
+            "supercomputer": {
+                "name": "Super Computer",
+                "g": 64000000,
+                "explanation": "Networks you to NPC's, extends the CODE capabilities and tracks your encounters.",
+                "stand": "cstand",
+                "skin": "ancientcomputer",
+                "type": "computer",
+                "special": true
             },
             "t2dexamulet": {
                 "dex": 6,
@@ -5737,14 +5746,13 @@ test("G.items type validation", async () => {
                 "type": "material"
             },
             "tracker": {
-                "ignore": true,
                 "acolor": "#B969CE",
+                "onclick": "socket.emit('tracker')",
                 "name": "Tracktrix",
                 "g": 12,
                 "skin": "tracker",
                 "action": "INTERFACE!",
                 "explanation": "A tool that tracks all your experiences and encounters in Adventure Land so you can learn from them and grow as an adventurer!",
-                "onclick": "socket.emit('tracker')",
                 "type": "tracker",
                 "special": true
             },

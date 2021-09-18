@@ -163,7 +163,7 @@ beforeAll(async () => {
         speed: 50,
 
         ctype: "priest",
-    }, "main", G)
+    }, "main", "main", G)
 
     sameParty = new Player({
         id: "test_same_party",
@@ -215,7 +215,7 @@ beforeAll(async () => {
         speed: 50,
 
         ctype: "priest",
-    }, "main", G)
+    }, "main", "main", G)
 
     randomPlayer = new Player({
         id: "test_random_player",
@@ -267,7 +267,7 @@ beforeAll(async () => {
         speed: 50,
 
         ctype: "priest",
-    }, "main", G)
+    }, "main", "main", G)
 }, 60000)
 
 test("Player.isFriendly", async () => {

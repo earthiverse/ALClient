@@ -2643,6 +2643,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected lastSmartMove: number = Date.now();
+    public smartMoving = false;
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move across maps.
@@ -2746,6 +2747,7 @@ export class Character extends Observer implements CharacterData {
         if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
 
         const started = Date.now()
+        this.smartMoving = true
         this.lastSmartMove = started
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
@@ -2851,13 +2853,16 @@ export class Character extends Observer implements CharacterData {
             } catch (e) {
                 console.error(e)
                 await this.requestPlayerData().catch((e) => { console.error(e) })
-                if (lastMove == i)
+                if (lastMove == i) {
+                    this.smartMoving = false
                     return Promise.reject("We are having some trouble smartMoving...")
+                }
                 lastMove = i
                 i--
             }
         }
 
+        this.smartMoving = false
         return { map: this.map, x: this.x, y: this.y }
     }
 
@@ -2905,6 +2910,7 @@ export class Character extends Observer implements CharacterData {
 
     public async stopSmartMove(): Promise<NodeData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [stopSmartMove].")
+        this.smartMoving = false
         this.lastSmartMove = Date.now()
         if (this?.c?.town) {
             this.stopWarpToTown()
@@ -2918,6 +2924,21 @@ export class Character extends Observer implements CharacterData {
         // TODO: Check if we are warping to town, return reject promise if we are
 
         this.socket.emit("stop", { action: "town" })
+    }
+
+    /**
+     * Swaps two items in your inventory
+     *
+     * @param {number} itemPos1
+     * @param {number} itemPos2
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public swapItems(itemPos1: number, itemPos2: number): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [swapItems].")
+        if (itemPos1 == itemPos2) return Promise.resolve() // They're the same position
+
+        this.socket.emit("imove", { a: itemPos1, b: itemPos2 })
     }
 
     public takeMailItem(mailID: string): Promise<void> {
