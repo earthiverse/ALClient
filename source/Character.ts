@@ -2793,16 +2793,6 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            // Town check -- preemptively start the town warp
-            for (let j = i + 1; j < path.length; j++) {
-                const futureMove = path[j]
-                if (currentMove.map !== futureMove.map) break
-                if (futureMove.type == "town") {
-                    this.warpToTown().catch((e) => { console.error(e) })
-                    break
-                }
-            }
-
             // Blink skip check
             if (options?.useBlink && this.canUse("blink")) {
                 let blinked = false
@@ -2817,6 +2807,16 @@ export class Character extends Observer implements CharacterData {
                 }
                 if (blinked)
                     continue
+            }
+
+            // Town check -- preemptively start the town warp
+            for (let j = i + 1; j < path.length; j++) {
+                const futureMove = path[j]
+                if (currentMove.map !== futureMove.map) break
+                if (futureMove.type == "town") {
+                    this.warpToTown().catch((e) => { console.error(e) })
+                    break
+                }
             }
 
             // TODO: We should probably add a check that we won't move further away if this goes off
