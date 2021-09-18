@@ -2808,7 +2808,7 @@ export class Character extends Observer implements CharacterData {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
-                    if (potentialMove.map == currentMove.map) {
+                    if (potentialMove.map == this.map) {
                         await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
                         i = j
                         blinked = true
