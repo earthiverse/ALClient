@@ -35,8 +35,8 @@ export class Ranger extends PingCompensatedCharacter {
         })
 
         this.socket.emit("skill", {
-            name: "5shot",
-            ids: [target1, target2, target3, target4, target5]
+            ids: [target1, target2, target3, target4, target5],
+            name: "5shot"
         })
         return attackStarted
     }
@@ -61,8 +61,8 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "4fingers",
-            id: target
+            id: target,
+            name: "4fingers"
         })
         return marked
     }
@@ -84,8 +84,8 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "huntersmark",
-            id: target
+            id: target,
+            name: "huntersmark"
         })
         return marked
     }
@@ -122,7 +122,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "piercingshot", id: target })
+        this.socket.emit("skill", { id: target, name: "piercingshot" })
         return piercingShotStarted
     }
 
@@ -159,7 +159,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "poisonarrow", num: poison, id: target })
+        this.socket.emit("skill", { id: target, name: "poisonarrow", num: poison })
         return poisonArrowed
     }
 
@@ -212,7 +212,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "supershot", id: target })
+        this.socket.emit("skill", { id: target, name: "supershot" })
         return superShotStarted
     }
 
@@ -248,8 +248,8 @@ export class Ranger extends PingCompensatedCharacter {
         })
 
         this.socket.emit("skill", {
-            name: "3shot",
-            ids: [target1, target2, target3]
+            ids: [target1, target2, target3],
+            name: "3shot"
         })
         return attackStarted
     }
