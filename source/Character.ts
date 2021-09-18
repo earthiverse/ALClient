@@ -2,7 +2,7 @@ import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData } from "./definitions/adventureland-server"
-import { LinkData, NodeData } from "./definitions/pathfinder"
+import { LinkData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
 import { Mage } from "./Mage"
@@ -685,10 +685,10 @@ export class Character extends Observer implements CharacterData {
      * Accepts a magiport reequest from another character
      * @param name ID of the character that offered a magiport.
      */
-    public acceptMagiport(name: string): Promise<NodeData> {
+    public acceptMagiport(name: string): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [acceptMagiport].")
 
-        const acceptedMagiport = new Promise<NodeData>((resolve, reject) => {
+        const acceptedMagiport = new Promise<IPosition>((resolve, reject) => {
             const magiportCheck = (data: NewMapData) => {
                 if (data.effect == "magiport") {
                     this.socket.removeListener("new_map", magiportCheck)
@@ -2240,10 +2240,10 @@ export class Character extends Observer implements CharacterData {
      *
      * disableSafetyCheck - If set to true, move() will not check map bounds
      *
-     * @return {*}  {Promise<NodeData>}
+     * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<NodeData> {
+    public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [move].")
 
         let to: IPosition = { map: this.map, x: x, y: y }
@@ -2259,7 +2259,7 @@ export class Character extends Observer implements CharacterData {
         // Check if we're already there
         if (this.x == to.x && this.y == to.y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
-        const moveFinished = new Promise<NodeData>((resolve, reject) => {
+        const moveFinished = new Promise<IPosition>((resolve, reject) => {
             let timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
@@ -2388,12 +2388,12 @@ export class Character extends Observer implements CharacterData {
      * If you are dead, you can call this function to respawn.
      *
      * @param {boolean} [safe] If set, you will spawn in Wizard's cave instead of near the goos.
-     * @return {*}  {Promise<NodeData>}
+     * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public respawn(safe?: boolean): Promise<NodeData> {
+    public respawn(safe?: boolean): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [respawn].")
-        const respawned = new Promise<NodeData>((resolve, reject) => {
+        const respawned = new Promise<IPosition>((resolve, reject) => {
             const respawnCheck = (data: NewMapData) => {
                 if (data.effect == 1) {
                     this.socket.removeListener("new_map", respawnCheck)
@@ -2654,16 +2654,16 @@ export class Character extends Observer implements CharacterData {
      *         getWithin: 0,
      *         useBlink: false
      *     }]
-     * @return {*}  {Promise<NodeData>}
+     * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
     public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
         avoidTownWarps: false,
         getWithin: 0,
         useBlink: false
-    }): Promise<NodeData> {
+    }): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [smartMove].")
-        let fixedTo: NodeData
+        let fixedTo: IPosition & {map: MapName}
         let path: LinkData[]
         if (typeof to == "string") {
             // Check if our destination is a map name
@@ -2682,7 +2682,7 @@ export class Character extends Observer implements CharacterData {
                     const locations = this.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options?.avoidTownWarps == true)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -2699,7 +2699,7 @@ export class Character extends Observer implements CharacterData {
                 // Set `to` to the closest NPC
                 let closestDistance: number = Number.MAX_VALUE
                 for (const location of locations) {
-                    const potentialPath = await Pathfinder.getPath(this, location, options?.avoidTownWarps == true)
+                    const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options?.avoidTownWarps == true)
                     const distance = Pathfinder.computePathCost(potentialPath)
                     if (distance < closestDistance) {
                         path = potentialPath
@@ -2731,8 +2731,8 @@ export class Character extends Observer implements CharacterData {
 
             if (!fixedTo) return Promise.reject(`Could not find a suitable destination for '${to}'`)
         } else if (to.x !== undefined && to.y !== undefined) {
-            if (to.map) fixedTo = to as NodeData
-            else fixedTo = { map: this.map, x: to.x, y: to.y }
+            if (to.map) fixedTo = to as IPosition & {map: MapName}
+            else fixedTo = { map: to.map || this.map, x: to.x, y: to.y }
         } else {
             console.debug(to)
             return Promise.reject("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
@@ -2793,10 +2793,14 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            // Town check -- try to go to town right away
-            const nextMove = path[i + 1]
-            if (nextMove && nextMove.type == "town" && currentMove.map == nextMove.map) {
-                this.warpToTown().catch((e) => { console.error(e) })
+            // Town check -- preemptively start the town warp
+            for (let j = i + 1; j < path.length; j++) {
+                const futureMove = path[j]
+                if (currentMove.map !== futureMove.map) break
+                if (futureMove.type == "town") {
+                    this.warpToTown().catch((e) => { console.error(e) })
+                    break
+                }
             }
 
             // Blink skip check
@@ -2838,7 +2842,10 @@ export class Character extends Observer implements CharacterData {
 
             // Perform the next movement
             try {
-                if (currentMove.type == "leave") {
+                if (currentMove.type == "enter") {
+                    if (!fixedTo.in && !this.hasItem(currentMove.key)) return Promise.reject(`We need '${currentMove.key}' to enter '${currentMove.map}'.`)
+                    await this.enter(currentMove.map, fixedTo.in)
+                } else if (currentMove.type == "leave") {
                     await this.leaveMap()
                 } else if (currentMove.type == "move") {
                     if (currentMove.map !== this.map) {
@@ -2908,7 +2915,7 @@ export class Character extends Observer implements CharacterData {
         return started
     }
 
-    public async stopSmartMove(): Promise<NodeData> {
+    public async stopSmartMove(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [stopSmartMove].")
         this.smartMoving = false
         this.lastSmartMove = Date.now()
@@ -3270,15 +3277,15 @@ export class Character extends Observer implements CharacterData {
     }
 
     // TODO: This will probably reject because the move doesn't match with the destination
-    public warpToJail(): Promise<NodeData> {
+    public warpToJail(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [warpToJail].")
         return this.move(Number.MAX_VALUE, Number.MAX_VALUE, { disableSafetyCheck: true })
     }
 
-    public warpToTown(): Promise<NodeData> {
+    public warpToTown(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [warpToTown].")
         let startedWarp = false
-        const warpComplete = new Promise<NodeData>((resolve, reject) => {
+        const warpComplete = new Promise<IPosition>((resolve, reject) => {
             const failCheck = (data: CharacterData) => {
                 if (!startedWarp && data.c.town && data.c.town.ms == 3000) {
                     startedWarp = true
@@ -3632,8 +3639,8 @@ export class Character extends Observer implements CharacterData {
         return itemsByLevel
     }
 
-    public locateMonster(mType: MonsterName): NodeData[] {
-        const locations: NodeData[] = []
+    public locateMonster(mType: MonsterName): IPosition[] {
+        const locations: IPosition[] = []
 
         // Known special monster spawns
         if (mType == "goldenbat")
@@ -3665,8 +3672,8 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateNPC(npcID: NPCName): NodeData[] {
-        const locations: NodeData[] = []
+    public locateNPC(npcID: NPCName): IPosition[] {
+        const locations: IPosition[] = []
         for (const mapName in this.G.maps) {
             const map = this.G.maps[mapName as MapName]
             if (map.ignore) continue
@@ -3689,7 +3696,7 @@ export class Character extends Observer implements CharacterData {
         return locations
     }
 
-    public locateCraftNPC(itemName: ItemName): NodeData {
+    public locateCraftNPC(itemName: ItemName): IPosition {
         // Is the item craftable?
         const gCraft = this.G.craft[itemName]
         if (gCraft) {
@@ -3711,7 +3718,7 @@ export class Character extends Observer implements CharacterData {
         throw Error(`${itemName} is not craftable.`)
     }
 
-    public locateExchangeNPC(itemName: ItemName): NodeData {
+    public locateExchangeNPC(itemName: ItemName): IPosition {
         // Does the item have a quest involved?
         const gItem = this.G.items[itemName]
         if (gItem.quest) {

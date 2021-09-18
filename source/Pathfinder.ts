@@ -1,7 +1,7 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import path from "ngraph.path"
 import { IPosition } from "./definitions/adventureland"
-import { DoorInfo, GData, MapName } from "./definitions/adventureland-data"
+import { DoorInfo, GData, ItemName, MapName } from "./definitions/adventureland-data"
 import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Tools } from "./Tools"
@@ -359,7 +359,7 @@ export class Pathfinder {
         const doors: DoorInfo[] = []
         for (const door of this.G.maps[map].doors) {
             // TODO: Figure out how to know if we have access to a locked door
-            if (door[7] || door[8]) continue
+            if (door[7] == "complicated") continue
 
             // From
             const spawn = this.G.maps[map].spawns[door[6]]
@@ -397,7 +397,11 @@ export class Pathfinder {
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
                 const toDoor = this.addNodeToGraph(door[4], spawn2[0], spawn2[1])
-                this.graph.addLink(fromNode.id, toDoor.id, { type: "transport", map: toDoor.data.map, x: toDoor.data.x, y: toDoor.data.y, spawn: door[5] })
+                if (door[7] == "key") {
+                    this.graph.addLink(fromNode.id, toDoor.id, { key: door[8] as ItemName, map: toDoor.data.map, type: "enter", x: toDoor.data.x, y: toDoor.data.y })
+                } else {
+                    this.graph.addLink(fromNode.id, toDoor.id, { map: toDoor.data.map, spawn: door[5], type: "transport", x: toDoor.data.x, y: toDoor.data.y })
+                }
             }
 
             // Add destination nodes and links to maps that are reachable through the transporter
@@ -411,20 +415,20 @@ export class Pathfinder {
                     const toNode = this.addNodeToGraph(toMap as MapName, spawn[0], spawn[1])
 
                     this.addLinkToGraph(fromNode, toNode, {
-                        type: "transport",
                         map: toMap as MapName,
+                        spawn: spawnID,
+                        type: "transport",
                         x: toNode.data.x,
-                        y: toNode.data.y,
-                        spawn: spawnID
+                        y: toNode.data.y
                     })
                 }
             }
         }
 
         const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
-        const townLinkData: LinkData = { type: "town", map: map, x: townNode.data.x, y: townNode.data.y }
+        const townLinkData: LinkData = { map: map, type: "town", x: townNode.data.x, y: townNode.data.y }
         const leaveLink = this.addNodeToGraph("main", this.G.maps.main.spawns[0][0], this.G.maps.main.spawns[0][1])
-        const leaveLinkData: LinkData = { type: "leave", map: leaveLink.data.map, x: leaveLink.data.x, y: leaveLink.data.y }
+        const leaveLinkData: LinkData = { map: leaveLink.data.map, type: "leave", x: leaveLink.data.x, y: leaveLink.data.y }
         for (const node of walkableNodes) {
             // Create town links
             if (node.id !== townNode.id) this.addLinkToGraph(node, townNode, townLinkData)
@@ -462,10 +466,10 @@ export class Pathfinder {
 
     public static findClosestSpawn(map: MapName, x: number, y: number): { map: MapName, x: number, y: number, distance: number } {
         const closest = {
+            distance: Number.MAX_VALUE,
             map: map,
             x: Number.MAX_VALUE,
-            y: Number.MAX_VALUE,
-            distance: Number.MAX_VALUE
+            y: Number.MAX_VALUE
         }
         // Look through all the spawns, and find the closest one
         for (const spawn of this.G.maps[map].spawns) {
@@ -484,7 +488,7 @@ export class Pathfinder {
 
         if (from.map == to.map && this.canWalkPath(from, to) && Tools.distance(from, to) < this.TOWN_COST) {
             // Return a straight line to the destination
-            return [{ type: "move", map: from.map, x: from.x, y: from.y }, { type: "move", map: from.map, x: to.x, y: to.y }]
+            return [{ map: from.map, type: "move", x: from.x, y: from.y }, { map: from.map, type: "move", x: to.x, y: to.y }]
         }
 
         const fromNode = this.findClosestNode(from.map, from.x, from.y)
@@ -503,7 +507,7 @@ export class Pathfinder {
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
         }
-        path.push({ type: "move", map: fromNode.data.map, x: fromNode.data.x, y: fromNode.data.y })
+        path.push({ map: fromNode.data.map, type: "move", x: fromNode.data.x, y: fromNode.data.y })
         for (let i = rawPath.length - 1; i > 0; i--) {
             const currentNode = rawPath[i]
             const nextNode = rawPath[i - 1]
@@ -515,7 +519,7 @@ export class Pathfinder {
                 if (link.data.type == "town") {
                     // Town warps don't always go to the exact location, so sometimes we can't reach the next node.
                     // So... We will walk to the town node after town warping.
-                    path.push({ type: "move", map: link.data.map, x: this.G.maps[link.data.map].spawns[0][0], y: this.G.maps[link.data.map].spawns[0][1] })
+                    path.push({ map: link.data.map, type: "move", x: this.G.maps[link.data.map].spawns[0][0], y: this.G.maps[link.data.map].spawns[0][1] })
                 }
             } else {
                 // If the next move is the town node, check if it's faster to warp there.
@@ -523,18 +527,18 @@ export class Pathfinder {
                 if (!avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
                     if (Tools.distance(currentNode.data, nextNode.data) > this.TOWN_COST) {
                         // It's quicker to use 'town'
-                        path.push({ type: "town", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
-                        path.push({ type: "move", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
+                        path.push({ map: nextNode.data.map, type: "town", x: nextNode.data.x, y: nextNode.data.y })
+                        path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
                     } else {
                         // It's quicker to move
-                        path.push({ type: "move", map: nextNode.data.map, x: nextNode.data.x, y: nextNode.data.y })
+                        path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
                     }
                 } else {
                     path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
                 }
             }
         }
-        path.push({ type: "move", map: to.map, x: to.x, y: to.y })
+        path.push({ map: to.map, type: "move", x: to.x, y: to.y })
 
         // Clean the path
         for (let i = 0; i < path.length - 1; i++) {
