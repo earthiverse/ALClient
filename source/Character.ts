@@ -2800,13 +2800,13 @@ export class Character extends Observer implements CharacterData {
                     const potentialMove = path[j]
                     if (potentialMove.map == this.map) {
                         await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
+                        if (this.c.town) await this.stopWarpToTown()
                         i = j
                         blinked = true
                         break
                     }
                 }
-                if (blinked)
-                    continue
+                if (blinked) continue
             }
 
             // Town check -- preemptively start the town warp
@@ -2870,6 +2870,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         this.smartMoving = false
+        if (this.c.town) await this.stopWarpToTown()
         return { map: this.map, x: this.x, y: this.y }
     }
 
