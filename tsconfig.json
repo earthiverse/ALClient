@@ -14,7 +14,7 @@
         "moduleResolution": "node",
         "noImplicitAny": false,
         "outDir": "build",
-        "removeComments": true,
+        "removeComments": false,
         "rootDir": "source",
         "sourceMap": true,
         "watch": false
