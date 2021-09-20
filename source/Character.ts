@@ -1546,8 +1546,7 @@ export class Character extends Observer implements CharacterData {
             return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
 
         const item = this.items[inventoryPos]
-        if (!item)
-            return Promise.reject(`There is no item in inventory slot ${inventoryPos}.`)
+        if (!item) return Promise.reject(`There is no item in inventory slot ${inventoryPos}.`)
 
         if (bankPack) {
             // Check if we can access the supplied bankPack
@@ -3609,6 +3608,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public locateItemsByLevel(inventory = this.items, options?: {
+        excludeLockedItems?: boolean
         excludeSpecialItems?: boolean
         minAmount?: number
      }): {
@@ -3620,6 +3620,7 @@ export class Character extends Observer implements CharacterData {
             if (item) {
                 const { name, level } = item
                 if (options?.excludeSpecialItems && item.p) return items // Don't include special items if we're excluding them
+                if (options?.excludeLockedItems && item.l) return items // Don't include locked items if we're excluding them
                 items[name] = items[name] || {}
                 items[name][level] = [...(items[name][level] || []), slotNum]
             }
