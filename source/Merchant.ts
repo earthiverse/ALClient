@@ -3,6 +3,7 @@ import { TradeSlotType } from "./definitions/adventureland"
 import { Constants } from "./Constants"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
 import { Tools } from "./Tools"
+import { ItemName } from "./definitions/adventureland-data"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
@@ -321,14 +322,13 @@ export class Merchant extends PingCompensatedCharacter {
         if (!this.ready) return Promise.reject("We aren't ready yet [openMerchantStand].")
         if (this.stand) return Promise.resolve() // It's already open
 
-        // Find the stand
-        let stand = this.locateItem("stand0")
-        if (stand === undefined) {
-            // No stand, do we have a computer?
-            stand = this.locateItem("computer")
-            if (stand === undefined)
-                return Promise.reject("Could not find merchant stand ('stand0') or computer in inventory.")
+        // Find a suitable stand
+        let stand: number
+        for (const item of ["supercomputer", "computer", "stand1", "stand0"] as ItemName[]) {
+            stand = this.locateItem(item)
+            if (stand !== undefined) break
         }
+        if (stand == undefined) return Promise.reject("Could not find a suitable merchant in inventory.")
 
         const opened = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
