@@ -1,8 +1,8 @@
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
-import path from "ngraph.path"
+import ngraph from "ngraph.path"
 import { IPosition } from "./definitions/adventureland"
 import { DoorInfo, GData, ItemName, MapName } from "./definitions/adventureland-data"
-import { Grids, Grid, LinkData, NodeData } from "./definitions/pathfinder"
+import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Tools } from "./Tools"
 
@@ -16,47 +16,10 @@ export class Pathfinder {
     protected static FIRST_MAP: MapName = "main"
     protected static TRANSPORT_COST = 50
     protected static TOWN_COST = 450
+    protected static ENTER_COST = 1000
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
-    protected static pathWithoutTown = path.nba(Pathfinder.graph, {
-        distance(fromNode, toNode, link) {
-            if (link.data?.type == "leave" || link.data?.type == "transport") {
-                // We are using the transporter
-                return Pathfinder.TRANSPORT_COST
-            } else if (link.data?.type == "enter") {
-                // We are entering a crypt
-                return 1000
-            } else if (link.data?.type == "town") {
-                // We are warping to town
-                return 999999
-            }
-            // We are walking
-            if (fromNode.data.map == toNode.data.map) {
-                return Tools.distance(fromNode.data, toNode.data)
-            }
-        },
-        oriented: true
-    })
-    protected static pathWithTown = path.nba(Pathfinder.graph, {
-        distance(fromNode, toNode, link) {
-            if (link.data?.type == "leave" || link.data?.type == "transport") {
-                // We are using the transporter
-                return Pathfinder.TRANSPORT_COST
-            } else if (link.data?.type == "enter") {
-                // We are entering a crypt
-                return 1000
-            } else if (link.data?.type == "town") {
-                // We are warping to town
-                return Pathfinder.TOWN_COST
-            }
-            // We are walking
-            if (fromNode.data.map == toNode.data.map) {
-                return Tools.distance(fromNode.data, toNode.data)
-            }
-        },
-        oriented: true
-    })
 
     /**
      * Calculates the distance to a door. Used for optimizing movements to doors
@@ -195,19 +158,33 @@ export class Pathfinder {
         return true
     }
 
-    public static computePathCost(path: LinkData[]): number {
+    public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
+        if (link?.type == "leave" || link?.type == "transport") {
+            // We are using the transporter
+            return options?.costs?.transport !== undefined ? options.costs.transport : Pathfinder.TRANSPORT_COST
+        } else if (link?.type == "enter") {
+            // We are entering a crypt
+            return options?.costs?.enter !== undefined ? options.costs.enter : Pathfinder.ENTER_COST
+        } else if (link?.type == "town") {
+            // We are warping to town
+            if (options?.avoidTownWarps) return 999999
+            else return options?.costs?.town !== undefined ? options.costs.town : Pathfinder.TOWN_COST
+        }
+
+        // We are walking
+        if (from.map == to.map) {
+            return Tools.distance(from, to)
+        }
+    }
+
+    public static computePathCost(path: LinkData[], options: PathfinderOptions = {
+        avoidTownWarps: false
+    }): number {
         let cost = 0
         let current: LinkData = path[0]
         for (let i = 1; i < path.length; i++) {
             const next = path[i]
-            if (next.type == "move") {
-                cost += Tools.distance(current, next)
-            } else if (next.type == "leave" || next.type == "transport") {
-                cost += this.TRANSPORT_COST
-            } else if (next.type == "town") {
-                cost += this.TOWN_COST
-            }
-
+            cost += this.computeLinkCost(current, next, next, options)
             current = next
         }
         return cost
@@ -489,7 +466,7 @@ export class Pathfinder {
         return closest
     }
 
-    public static getPath(from: NodeData, to: NodeData, avoidTownWarps = false): LinkData[] {
+    public static getPath(from: NodeData, to: NodeData, options?: PathfinderOptions): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
 
         if (from.map == to.map && this.canWalkPath(from, to) && Tools.distance(from, to) < this.TOWN_COST) {
@@ -503,12 +480,15 @@ export class Pathfinder {
         const path: LinkData[] = []
 
         console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
-        let rawPath: Node<NodeData>[]
-        if (avoidTownWarps) {
-            rawPath = this.pathWithoutTown.find(fromNode.id, toNode.id)
-        } else {
-            rawPath = this.pathWithTown.find(fromNode.id, toNode.id)
-        }
+
+        const pathfinder = ngraph.nba(Pathfinder.graph, {
+            distance: (fromNode, toNode, link) => {
+                return this.computeLinkCost(fromNode.data, toNode.data, link.data, options)
+            },
+            oriented: true
+        })
+
+        const rawPath: Node<NodeData>[] = pathfinder.find(fromNode.id, toNode.id)
 
         if (rawPath.length == 0) {
             throw new Error("We did not find a path...")
@@ -530,7 +510,7 @@ export class Pathfinder {
             } else {
                 // If the next move is the town node, check if it's faster to warp there.
                 const townNode = this.G.maps[nextNode.data.map].spawns[0]
-                if (!avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
+                if (!options?.avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
                     if (Tools.distance(currentNode.data, nextNode.data) > this.TOWN_COST) {
                         // It's quicker to use 'town'
                         path.push({ map: nextNode.data.map, type: "town", x: nextNode.data.x, y: nextNode.data.y })

@@ -43,3 +43,14 @@ export type LinkData = NodeData & (
     {
         type: "move"
     })
+
+export type PathfinderOptions = {
+    avoidTownWarps?: boolean
+    getWithin?: number
+    useBlink?: boolean
+    costs?: {
+        enter?: number
+        town?: number
+        transport?: number
+    }
+}

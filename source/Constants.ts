@@ -15,6 +15,7 @@ export class Constants {
     /** Various distance related things */
     static MAX_VISIBLE_RANGE = 600
     static NPC_INTERACTION_DISTANCE = 400
+    static DASH_DISTANCE = 40
     static DOOR_REACH_DISTANCE = 40
     static TRANSPORTER_REACH_DISTANCE = 160
     static BASE = {

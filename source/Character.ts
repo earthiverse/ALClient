@@ -2,7 +2,7 @@ import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData } from "./definitions/adventureland-server"
-import { LinkData } from "./definitions/pathfinder"
+import { LinkData, PathfinderOptions } from "./definitions/pathfinder"
 import { Constants } from "./Constants"
 import { Entity } from "./Entity"
 import { Mage } from "./Mage"
@@ -1175,7 +1175,7 @@ export class Character extends Observer implements CharacterData {
         const gInfo = this.G.items[item]
         if (this.gold < gInfo.g) return false // We can't afford it
 
-        const computerAvailable = this.locateItem("computer") !== undefined
+        const computerAvailable = this.hasItem("computer") || this.hasItem("supercomputer")
 
         let buyable = false
         let close = false
@@ -1222,7 +1222,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
 
-        if (!this.hasItem("computer") && !options?.ignoreLocation) {
+        if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
             const craftableLocation = this.locateCraftNPC(itemToCraft)
             if (Tools.distance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false
@@ -1251,7 +1251,7 @@ export class Character extends Observer implements CharacterData {
         const gItem = this.G.items[itemToExchange]
         if (gItem.e !== undefined && this.countItem(itemToExchange) < gItem.e) return false // We don't have enough to exchange
 
-        if (!this.hasItem("computer") && !options?.ignoreLocation) {
+        if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             const exchangeableLocation = this.locateExchangeNPC(itemToExchange)
             if (Tools.distance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false // Too far away
         }
@@ -1288,7 +1288,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public canSell(): boolean {
-        if (this.hasItem("computer")) return true // We can sell anywhere with a computer
+        if (this.hasItem("computer") || this.hasItem("supercomputer")) return true // We can sell anywhere with a computer
 
         // Check if we're near an NPC merchant
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
@@ -1300,6 +1300,23 @@ export class Character extends Observer implements CharacterData {
         }
 
         return false
+    }
+
+    public canUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): boolean {
+        const itemInfo = this.items[itemPos]
+        if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
+        const gItemInfo = this.G.items[itemInfo.name]
+        if (!gItemInfo.upgrade) return false // Item is not upgradable
+        const scrollInfo = this.items[scrollPos]
+        if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+        const offeringInfo = this.items[offeringPos]
+
+        // Distance check
+        if (!this.hasItem("computer") && !this.hasItem("supercomputer")
+         && Tools.distance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE) return false
+
+        // Scroll compatibility check
+
     }
 
     /**
@@ -2648,7 +2665,7 @@ export class Character extends Observer implements CharacterData {
      * You can use this function to move across maps.
      *
      * @param {(IPosition | ItemName | MapName | MonsterName | NPCName)} to
-     * @param {{ avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; }} [options={
+     * @param {PathfinderOptions} [options={
      *         avoidTownWarps: false,
      *         getWithin: 0,
      *         useBlink: false
@@ -2656,12 +2673,17 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options: { avoidTownWarps?: boolean, getWithin?: number; useBlink?: boolean; } = {
-        avoidTownWarps: false,
-        getWithin: 0,
-        useBlink: false
-    }): Promise<IPosition> {
+    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options?: PathfinderOptions): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [smartMove].")
+
+        if (options == undefined) options = {}
+        if (options.costs == undefined) {
+            options.costs = {
+                town: this.speed * 4, // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+                transport: this.speed * (Math.min(...this.pings) / 500) // Based on how long it takes to confirm with the server
+            }
+        }
+
         let fixedTo: IPosition & {map: MapName}
         let path: LinkData[]
         if (typeof to == "string") {
@@ -2681,7 +2703,7 @@ export class Character extends Observer implements CharacterData {
                     const locations = this.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options?.avoidTownWarps == true)
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -2698,7 +2720,7 @@ export class Character extends Observer implements CharacterData {
                 // Set `to` to the closest NPC
                 let closestDistance: number = Number.MAX_VALUE
                 for (const location of locations) {
-                    const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options?.avoidTownWarps == true)
+                    const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
                     const distance = Pathfinder.computePathCost(potentialPath)
                     if (distance < closestDistance) {
                         path = potentialPath
@@ -2743,7 +2765,7 @@ export class Character extends Observer implements CharacterData {
         if (options?.getWithin >= distance) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         // If we don't have the path yet, get it
-        if (!path) path = await Pathfinder.getPath(this, fixedTo, options?.avoidTownWarps == true)
+        if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
 
         const started = Date.now()
         this.smartMoving = true
