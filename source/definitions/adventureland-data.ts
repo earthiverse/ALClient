@@ -1089,7 +1089,7 @@ export type CharacterType =
     "mage" | "merchant" | "paladin" | "priest" | "ranger" | "rogue" | "warrior"
 
 export type ConditionName =
-    "authfail" | "blink" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "hardshell" | "holidayspirit" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "xpower" | "xshotted"
+    "authfail" | "blink" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "hardshell" | "holidayspirit" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "xpower" | "xshotted"
 
 export type DamageType =
     "heal" | "magical" | "none" | "physical" | "pure"

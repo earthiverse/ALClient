@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
+ * The following is from http://adventure.land/data.js, version 688 (2021-09-24)
  * It is used to confirm type correctness
  */
 
@@ -111,6 +111,12 @@ test("G.conditions type validation", async () => {
                 "explanation": "Hidden from everyone else until you attack",
                 "name": "Invisible",
                 "skin": "skill_invis"
+            },
+            "mining": {
+                "explanation": "Mining in progress",
+                "name": "Mining",
+                "channel": true,
+                "skin": "skill_mining"
             },
             "rspeed": {
                 "name": "Rogue Swiftness",
@@ -261,10 +267,10 @@ test("G.conditions type validation", async () => {
                 "aura": true,
                 "ui": true,
                 "name": "Newcomers' Blessing",
-                "gold": 8,
+                "gold": 10,
                 "skin": "newcomersblessing",
-                "duration": 3600000,
-                "xp": 2,
+                "duration": 1800000,
+                "xp": 10,
                 "luck": 10
             },
             "fullguard": {
