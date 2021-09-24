@@ -503,6 +503,10 @@ test("Character.canCraft", () => {
     priest.y = witchLocation.y
     expect(priest.canCraft("elixirfires")).toBe(true)
 
+    priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    expect(priest.canCraft("firestars")).toBe(false)
+    priest.items = [{ "name": "throwingstars", "level": 0 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    expect(priest.canCraft("firestars")).toBe(true)
     // Restore
     priest.items = itemsBackup
     priest.map = locationBackup.map
@@ -673,6 +677,23 @@ test("Character.getTargetEntitiy", () => {
     expect(priest.getTargetEntity().id).toBe(bee.id)
 })
 
+test("Character.hasItem", () => {
+    const itemsBackup = [...priest.items]
+
+    priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }]
+    expect(priest.hasItem("firestars")).toBe(false)
+    expect(priest.hasItem("throwingstars")).toBe(true)
+    expect(priest.hasItem("throwingstars", priest.items, {
+        level: 6
+    })).toBe(false)
+    expect(priest.hasItem("throwingstars", priest.items, {
+        level: 7
+    })).toBe(true)
+
+    priest.items = itemsBackup
+    priest.isize = priest.items.length
+})
+
 test("Character.hasPVPMarkedItem", () => {
     expect(priest.hasPvPMarkedItem()).toBeFalsy()
 })
@@ -708,7 +729,6 @@ test("Character.isPVP", () => {
 
 test("Character.locateItem", () => {
     // Create the character's inventory for testing
-    priest.esize = 2
     const itemsBackup = [...priest.items]
     priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
     priest.isize = priest.items.length
@@ -726,6 +746,7 @@ test("Character.locateItem", () => {
     expect(priest.locateItem("mpot0")).toBeTruthy()
     expect(priest.locateItem("mpot0", priest.items, { quantityGreaterThan: 1 })).toBe(2)
     priest.items = itemsBackup
+    priest.isize = priest.items.length
 })
 
 test("Character.locateItems", async () => {

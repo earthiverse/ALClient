@@ -1218,7 +1218,14 @@ export class Character extends Observer implements CharacterData {
         if (!gCraft) return false // Item is not craftable
         if (gCraft.cost > this.gold) return false // We don't have enough money
         for (const [requiredQuantity, requiredItem, requiredItemLevel] of gCraft.items) {
-            if (!this.hasItem(requiredItem, this.items, { level: requiredItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
+            // If the item is compoundable or upgradable, the level needs to be 0
+            let fixedItemLevel = requiredItemLevel
+            if (requiredItemLevel === undefined) {
+                const gInfo = this.G.items[requiredItem]
+                if ((gInfo.upgrade || gInfo.compound) && fixedItemLevel == undefined) fixedItemLevel = 0
+            }
+
+            if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
 
