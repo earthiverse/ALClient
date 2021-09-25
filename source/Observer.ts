@@ -57,11 +57,11 @@ export class Observer {
 
             if (!Database.connection || data.reason == "disconnect" || data.reason == "invis") return // We don't track these
 
-            if ((data.effect == "blink" || data.effect == "magiport") && data.to !== undefined && data.s !== undefined) {
+            if ((data.effect == "blink" || data.effect == "magiport") && data.to !== undefined && this.G.maps[data.to] && data.s !== undefined) {
                 // They used "blink" or "magiport" and don't have a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
-                    map: data.to,
+                    map: data.to as MapName,
                     serverIdentifier: this.serverData.name,
                     serverRegion: this.serverData.region,
                     x: data.s[0],
@@ -73,16 +73,11 @@ export class Observer {
                 let s = 0
                 if (data.s !== undefined) s = data.s
                 // They used a "home" teleport and don't have a stealth cape
-                const spawnLocation = (this.G.maps[data.to] as GMap).spawns[s]
-                if (!spawnLocation) {
-                    console.error("DEBUG ----- spawnLocation unndefined -----")
-                    console.error(JSON.stringify(data))
-                    console.error("------------------------------------------")
-                    return
-                }
+                const spawnLocation = (this.G.maps[data.to as MapName] as GMap)?.spawns[s]
+                if (!spawnLocation) return // They are wearing a stealth cape, or entered an instance
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
-                    map: data.to,
+                    map: data.to as MapName,
                     serverIdentifier: this.serverData.name,
                     serverRegion: this.serverData.region,
                     x: spawnLocation[0],

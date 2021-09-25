@@ -275,7 +275,7 @@ export type DisappearData =
     /** The map spawn where the character will appear */
     s?: number
     /** The map the character went to */
-    to?: MapName
+    to?: MapName | string
 } |
 /** Character used a 'town' teleport */
 {
