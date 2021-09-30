@@ -1222,7 +1222,7 @@ export class Character extends Observer implements CharacterData {
             let fixedItemLevel = requiredItemLevel
             if (requiredItemLevel === undefined) {
                 const gInfo = this.G.items[requiredItem]
-                if ((gInfo.upgrade || gInfo.compound) && fixedItemLevel == undefined) fixedItemLevel = 0
+                if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
             }
 
             if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
@@ -3105,16 +3105,45 @@ export class Character extends Observer implements CharacterData {
         return transportComplete
     }
 
-    public unequip(slot: SlotType | TradeSlotType): Promise<void> {
+    /**
+     * Unequips the item in the given slot.
+     * Also used to remove items from the merchant stand.
+     *
+     * @param {(SlotType | TradeSlotType)} slot
+     * @return {*}  {Promise<number>} The position of the unequipped item in the inventory
+     * @memberof Character
+     */
+    public unequip(slot: SlotType | TradeSlotType): Promise<number> {
         if (!this.ready) return Promise.reject("We aren't ready yet [unequip].")
         if (this.slots[slot] === null) return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.slots[slot] === undefined) return Promise.reject(`Slot ${slot} does not exist.`)
 
-        const unequipped = new Promise<void>((resolve, reject) => {
+        const slotInfo = this.slots[slot]
+
+        const unequipped = new Promise<number>((resolve, reject) => {
             const unequipCheck = (data: CharacterData) => {
                 if (data.slots[slot] === null) {
                     this.socket.removeListener("player", unequipCheck)
-                    resolve()
+
+                    // Look for the unequipped item in the inventory
+                    let inventorySlot: number = undefined
+                    for (let i = data.isize - 1; i > 0; i--) {
+                        const item = data.items[i]
+                        if (!item) continue
+
+                        let same = true
+                        for (const key in slotInfo) {
+                            if (item[key] !== slotInfo[key]) {
+                                same = false
+                                break
+                            }
+                        }
+                        if (same) {
+                            inventorySlot = i
+                            break
+                        }
+                    }
+                    resolve(inventorySlot)
                 }
             }
 

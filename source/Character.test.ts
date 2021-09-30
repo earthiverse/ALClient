@@ -529,6 +529,10 @@ test("Character.canExchange", async () => {
     priest.items = [{ name: "computer" }, { name: "seashell", q: 20 }]
     expect(priest.canExchange("seashell")).toBe(true)
 
+    // Exchangeable without an 'e'
+    priest.items = [{ name: "computer" }, { level: 2, name: "lostearring" }]
+    expect(priest.canExchange("lostearring")).toBe(true)
+
     // Wrong location
     priest.items = [{ name: "seashell", q: 20 }]
     priest.map = xynLocation.map
