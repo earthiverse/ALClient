@@ -7,7 +7,7 @@ export class Rogue extends PingCompensatedCharacter {
     // TODO: Add promises
     public invis(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [invis].")
-        this.socket.emit("skill", { name: "invis" })
+        this.socket.volatile.emit("skill", { name: "invis" })
     }
 
     public mentalBurst(target: string): Promise<void> {
@@ -57,7 +57,7 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("death", deathCheck)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             id: target,
             name: "mentalburst"
         })
@@ -81,7 +81,7 @@ export class Rogue extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "pcoat"
         })
         return poisonCoated
@@ -104,7 +104,7 @@ export class Rogue extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             id: target,
             name: "quickpunch"
         })
@@ -158,7 +158,7 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("death", deathCheck)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             id: target,
             name: "quickstab"
         })
@@ -182,7 +182,7 @@ export class Rogue extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             id: target,
             name: "rspeed",
         })
@@ -208,7 +208,7 @@ export class Rogue extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "shadowstrike",
             num: shadowstone
         })

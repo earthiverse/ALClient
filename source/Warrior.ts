@@ -32,7 +32,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "agitate"
         })
         return agitated
@@ -72,7 +72,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", { name: "charge" })
+        this.socket.volatile.emit("skill", { name: "charge" })
         return charged
     }
 
@@ -105,7 +105,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "cleave"
         })
         return cleaved
@@ -164,7 +164,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", responseCheck)
         })
 
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "hardshell"
         })
         return hardshelled
@@ -199,7 +199,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", {
+        this.socket.volatile.emit("skill", {
             name: "stomp"
         })
         return stomped
@@ -245,7 +245,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", { name: "taunt", id: target })
+        this.socket.volatile.emit("skill", { name: "taunt", id: target })
         return tauntStarted
     }
 
@@ -266,7 +266,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "warcry" })
+        this.socket.volatile.emit("skill", { name: "warcry" })
         return warcried
     }
 }

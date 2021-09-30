@@ -514,7 +514,7 @@ export class Character extends Observer implements CharacterData {
             this.server = data
 
             // Send a response that we're ready to go
-            this.socket.emit("loaded", {
+            this.socket.volatile.emit("loaded", {
                 height: 1080,
                 scale: 2,
                 success: 1,
@@ -522,7 +522,7 @@ export class Character extends Observer implements CharacterData {
             } as LoadedData)
 
             // When we're loaded, authenticate
-            this.socket.emit("auth", {
+            this.socket.volatile.emit("auth", {
                 auth: this.userAuth,
                 character: this.characterID,
                 height: 1080,
@@ -614,7 +614,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("entities", checkEntitiesEvent)
 
-            this.socket.emit("send_updates", {})
+            this.socket.volatile.emit("send_updates", {})
         })
     }
 
@@ -638,7 +638,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("player", checkPlayerEvent)
 
-            this.socket.emit("property", { typing: true })
+            this.socket.volatile.emit("property", { typing: true })
         })
     }
 
@@ -677,7 +677,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("friend", successCheck)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.emit("friend", { event: "accept", name: id })
+        this.socket.volatile.emit("friend", { event: "accept", name: id })
         return friended
     }
 
@@ -703,7 +703,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("new_map", magiportCheck)
         })
 
-        this.socket.emit("magiport", { name: name })
+        this.socket.volatile.emit("magiport", { name: name })
         return acceptedMagiport
     }
 
@@ -757,7 +757,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_log", unableCheck)
         })
 
-        this.socket.emit("party", { event: "accept", name: id })
+        this.socket.volatile.emit("party", { event: "accept", name: id })
         return acceptedInvite
     }
 
@@ -780,7 +780,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("party_update", partyCheck)
         })
 
-        this.socket.emit("party", { event: "raccept", name: id })
+        this.socket.volatile.emit("party", { event: "raccept", name: id })
         return acceptedRequest
     }
 
@@ -867,7 +867,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("death", deathCheck)
         })
 
-        this.socket.emit("attack", { id: id })
+        this.socket.volatile.emit("attack", { id: id })
         return attackStarted
     }
 
@@ -920,10 +920,10 @@ export class Character extends Observer implements CharacterData {
 
         if (this.G.items[itemName].s) {
             // Item is stackable
-            this.socket.emit("buy", { name: itemName, quantity: quantity })
+            this.socket.volatile.emit("buy", { name: itemName, quantity: quantity })
         } else {
             // Item is not stackable.
-            this.socket.emit("buy", { name: itemName })
+            this.socket.volatile.emit("buy", { name: itemName })
         }
         return itemReceived
     }
@@ -959,7 +959,7 @@ export class Character extends Observer implements CharacterData {
             quantity = buyableQuantity
         }
 
-        this.socket.emit("trade_buy", { id: id, q: quantity.toString(), rid: rid, slot: slot })
+        this.socket.volatile.emit("trade_buy", { id: id, q: quantity.toString(), rid: rid, slot: slot })
     }
 
     /**
@@ -1005,7 +1005,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.emit("sbuy", { rid: item.rid })
+        this.socket.volatile.emit("sbuy", { rid: item.rid })
         return bought
     }
 
@@ -1487,7 +1487,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("compound", {
+        this.socket.volatile.emit("compound", {
             "clevel": item1Info.level,
             "items": [item1Pos, item2Pos, item3Pos],
             "offering_num": offeringPos,
@@ -1536,7 +1536,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
         })
 
-        this.socket.emit("craft", { items: itemPositions })
+        this.socket.volatile.emit("craft", { items: itemPositions })
         return crafted
     }
 
@@ -1552,7 +1552,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to deposit ${gold} gold.`)
         }
 
-        this.socket.emit("bank", { amount: gold, operation: "deposit" })
+        this.socket.volatile.emit("bank", { amount: gold, operation: "deposit" })
     }
 
     /**
@@ -1663,7 +1663,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkDeposit)
         })
 
-        this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankSlot })
+        this.socket.volatile.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankSlot })
         return swapped
     }
 
@@ -1710,7 +1710,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("emotion", successCheck)
         })
 
-        this.socket.emit("emotion", { name: emotionName })
+        this.socket.volatile.emit("emotion", { name: emotionName })
         return emoted
     }
 
@@ -1764,7 +1764,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.once("new_map", enterCheck)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.emit("enter", { name: instance, place: map })
+        this.socket.volatile.emit("enter", { name: instance, place: map })
         return enterComplete
     }
 
@@ -1816,7 +1816,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("disappearing_text", cantEquipCheck)
         })
 
-        this.socket.emit("equip", { num: inventoryPos, slot: equipSlot })
+        this.socket.volatile.emit("equip", { num: inventoryPos, slot: equipSlot })
         return equipFinished
     }
 
@@ -1865,7 +1865,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", completeCheck)
         })
 
-        this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
+        this.socket.volatile.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
         return exchangeFinished
     }
 
@@ -1898,7 +1898,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("player", successCheck)
         })
-        this.socket.emit("monsterhunt")
+        this.socket.volatile.emit("monsterhunt")
         return questFinished
     }
 
@@ -2054,7 +2054,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.emit("monsterhunt")
+        this.socket.volatile.emit("monsterhunt")
         return questGot
     }
 
@@ -2077,7 +2077,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.once("players", dataCheck)
         })
-        this.socket.emit("players")
+        this.socket.volatile.emit("players")
         return playersData
     }
 
@@ -2107,7 +2107,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", distanceCheck)
         })
 
-        this.socket.emit("secondhands")
+        this.socket.volatile.emit("secondhands")
         return pontyItems
     }
 
@@ -2143,7 +2143,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.once("tracker", gotCheck)
         })
 
-        this.socket.emit("tracker")
+        this.socket.volatile.emit("tracker")
         return gotTrackerData
     }
 
@@ -2194,7 +2194,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("party_update", kickedCheck)
         })
-        this.socket.emit("party", { event: "kick", name: toKick })
+        this.socket.volatile.emit("party", { event: "kick", name: toKick })
         return kicked
     }
 
@@ -2238,14 +2238,14 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("leave")
+        this.socket.volatile.emit("leave")
         return leaveComplete
     }
 
     // TODO: Add checks and promises
     public leaveParty(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [leaveParty].")
-        this.socket.emit("party", { event: "leave" })
+        this.socket.volatile.emit("party", { event: "leave" })
     }
 
     /**
@@ -2331,7 +2331,7 @@ export class Character extends Observer implements CharacterData {
 
         if (!this.moving || this.going_x !== to.x || this.going_y !== to.y) {
             // Only send a move if it's to a different location than we're already going
-            this.socket.emit("move", {
+            this.socket.volatile.emit("move", {
                 going_x: to.x,
                 going_y: to.y,
                 m: this.m,
@@ -2363,7 +2363,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("chest_opened", openCheck)
         })
-        this.socket.emit("open_chest", { id: id })
+        this.socket.volatile.emit("open_chest", { id: id })
         return chestOpened
     }
 
@@ -2383,7 +2383,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", regenCheck)
         })
 
-        this.socket.emit("use", { item: "hp" })
+        this.socket.volatile.emit("use", { item: "hp" })
         return regenReceived
     }
 
@@ -2403,7 +2403,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", regenCheck)
         })
 
-        this.socket.emit("use", { item: "mp" })
+        this.socket.volatile.emit("use", { item: "mp" })
         return regenReceived
     }
 
@@ -2439,7 +2439,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("new_map", respawnCheck)
             this.socket.on("game_log", failCheck)
         })
-        this.socket.emit("respawn", { safe: safe })
+        this.socket.volatile.emit("respawn", { safe: safe })
         return respawned
     }
 
@@ -2472,14 +2472,14 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "scare" })
+        this.socket.volatile.emit("skill", { name: "scare" })
         return scared
     }
 
     // TODO: Add promises
     public async sell(itemPos: number, quantity = 1): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sell].")
-        this.socket.emit("sell", { num: itemPos, quantity: quantity })
+        this.socket.volatile.emit("sell", { num: itemPos, quantity: quantity })
     }
 
     public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
@@ -2516,13 +2516,13 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("trade_sell", { id: id, q: q, rid: rid, slot: slot })
+        this.socket.volatile.emit("trade_sell", { id: id, q: q, rid: rid, slot: slot })
         return sold
     }
 
     public sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendCM].")
-        this.socket.emit("cm", { message: JSON.stringify(message), to: to })
+        this.socket.volatile.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
     public sendFriendRequest(id: string): Promise<void> {
@@ -2548,7 +2548,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("game_response", check)
         })
-        this.socket.emit("friend", { event: "request", name: id })
+        this.socket.volatile.emit("friend", { event: "request", name: id })
         return requestSent
     }
 
@@ -2577,7 +2577,7 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
         })
-        this.socket.emit("send", { gold: amount, name: to })
+        this.socket.volatile.emit("send", { gold: amount, name: to })
         return goldSent
     }
 
@@ -2610,7 +2610,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", sentCheck)
         })
 
-        this.socket.emit("send", { name: to, num: inventoryPos, q: quantity })
+        this.socket.volatile.emit("send", { name: to, num: inventoryPos, q: quantity })
         return itemSent
     }
 
@@ -2634,7 +2634,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_log", sentCheck)
         })
 
-        this.socket.emit("party", { event: "invite", name: id })
+        this.socket.volatile.emit("party", { event: "invite", name: id })
         return invited
     }
 
@@ -2645,7 +2645,7 @@ export class Character extends Observer implements CharacterData {
     // TODO: See what socket events happen, and see if we can see if the server picked up our request
     public sendPartyRequest(id: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendPartyRequest].")
-        this.socket.emit("party", { event: "request", name: id })
+        this.socket.volatile.emit("party", { event: "request", name: id })
     }
 
     /**
@@ -2662,7 +2662,7 @@ export class Character extends Observer implements CharacterData {
         if (!itemInfo) return Promise.reject(`Inventory Slot ${booster} is empty.`)
         if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) return Promise.reject(`The given item is not a booster (it's a '${itemInfo.name}')`)
 
-        this.socket.emit("booster", { action: "shift", num: booster, to: to })
+        this.socket.volatile.emit("booster", { action: "shift", num: booster, to: to })
     }
 
     protected lastSmartMove: number = Date.now();
@@ -2929,17 +2929,17 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", successCheck)
         })
 
-        this.socket.emit("move", { "key": "up" })
-        this.socket.emit("move", { "key": "up" })
-        this.socket.emit("move", { "key": "down" })
-        this.socket.emit("move", { "key": "down" })
-        this.socket.emit("move", { "key": "left" })
-        this.socket.emit("move", { "key": "right" })
-        this.socket.emit("move", { "key": "left" })
-        this.socket.emit("move", { "key": "right" })
-        this.socket.emit("interaction", { "key": "B" })
-        this.socket.emit("interaction", { "key": "A" })
-        this.socket.emit("interaction", { "key": "enter" })
+        this.socket.volatile.emit("move", { "key": "up" })
+        this.socket.volatile.emit("move", { "key": "up" })
+        this.socket.volatile.emit("move", { "key": "down" })
+        this.socket.volatile.emit("move", { "key": "down" })
+        this.socket.volatile.emit("move", { "key": "left" })
+        this.socket.volatile.emit("move", { "key": "right" })
+        this.socket.volatile.emit("move", { "key": "left" })
+        this.socket.volatile.emit("move", { "key": "right" })
+        this.socket.volatile.emit("interaction", { "key": "B" })
+        this.socket.volatile.emit("interaction", { "key": "A" })
+        this.socket.volatile.emit("interaction", { "key": "enter" })
 
         return started
     }
@@ -2959,7 +2959,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [stopWarpToTown].")
         // TODO: Check if we are warping to town, return reject promise if we are
 
-        this.socket.emit("stop", { action: "town" })
+        this.socket.volatile.emit("stop", { action: "town" })
     }
 
     /**
@@ -2974,7 +2974,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [swapItems].")
         if (itemPos1 == itemPos2) return Promise.resolve() // They're the same position
 
-        this.socket.emit("imove", { a: itemPos1, b: itemPos2 })
+        this.socket.volatile.emit("imove", { a: itemPos1, b: itemPos2 })
     }
 
     public takeMailItem(mailID: string): Promise<void> {
@@ -2997,7 +2997,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", successCheck)
         })
 
-        this.socket.emit("mail_take_item", { id: mailID })
+        this.socket.volatile.emit("mail_take_item", { id: mailID })
         return itemReceived
     }
 
@@ -3045,7 +3045,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("skill", { id: target, name: "snowball", num: snowball })
+        this.socket.volatile.emit("skill", { id: target, name: "snowball", num: snowball })
         return throwStarted
     }
 
@@ -3101,7 +3101,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.emit("transport", { s: spawn, to: map })
+        this.socket.volatile.emit("transport", { s: spawn, to: map })
         return transportComplete
     }
 
@@ -3155,7 +3155,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", unequipCheck)
         })
 
-        this.socket.emit("unequip", { slot: slot })
+        this.socket.volatile.emit("unequip", { slot: slot })
         return unequipped
     }
 
@@ -3195,7 +3195,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("friend", check)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.emit("friend", { event: "unfriend", name: id })
+        this.socket.volatile.emit("friend", { event: "unfriend", name: id })
         return unfriended
     }
 
@@ -3280,7 +3280,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
+        this.socket.volatile.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
         return upgradeComplete
     }
 
@@ -3305,7 +3305,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", healCheck)
         })
 
-        this.socket.emit("equip", { num: itemPos })
+        this.socket.volatile.emit("equip", { num: itemPos })
         return healReceived
     }
 
@@ -3330,7 +3330,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", healCheck)
         })
 
-        this.socket.emit("equip", { num: itemPos })
+        this.socket.volatile.emit("equip", { num: itemPos })
         return healReceived
     }
 
@@ -3380,7 +3380,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", failCheck)
         })
 
-        this.socket.emit("town")
+        this.socket.volatile.emit("town")
         return warpComplete
     }
 
@@ -3397,7 +3397,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to withdraw ${gold} gold.`)
         }
 
-        this.socket.emit("bank", { amount: gold, operation: "withdraw" })
+        this.socket.volatile.emit("bank", { amount: gold, operation: "withdraw" })
     }
 
     public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
@@ -3431,7 +3431,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", checkWithdrawal)
         })
 
-        this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankPos })
+        this.socket.volatile.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankPos })
         return swapped
     }
 
