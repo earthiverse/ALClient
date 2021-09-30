@@ -191,7 +191,7 @@ export class Observer {
                     if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
                         reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
                     } else {
-                        this.socket.volatile.emit("loaded", {
+                        this.socket.emit("loaded", {
                             height: 1080,
                             scale: 2,
                             success: 1,
@@ -505,7 +505,7 @@ export class Observer {
         this.pingMap.set(pingID, { log: log, time: Date.now() })
 
         // Get the ping
-        this.socket.volatile.emit("ping_trig", { id: pingID })
+        this.socket.emit("ping_trig", { id: pingID })
         return pingID
     }
 

@@ -25,7 +25,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", checkStand)
         })
 
-        this.socket.volatile.emit("merchant", { close: 1 })
+        this.socket.emit("merchant", { close: 1 })
         return closed
     }
 
@@ -115,7 +115,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", failCheck3)
         })
 
-        this.socket.volatile.emit("skill", { name: "fishing" })
+        this.socket.emit("skill", { name: "fishing" })
         return fished
     }
 
@@ -127,7 +127,7 @@ export class Merchant extends PingCompensatedCharacter {
         if (!merchant.slots[slot]?.giveaway) return Promise.reject(`${id}'s slot ${slot} is not a giveaway.`)
         if (merchant.slots[slot]?.list.includes(id)) return Promise.resolve() // We've already joined it
 
-        this.socket.volatile.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+        this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
     }
 
     // TODO: Add promises
@@ -136,7 +136,7 @@ export class Merchant extends PingCompensatedCharacter {
         const itemInfo = this.items[itemPos]
         if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
 
-        this.socket.volatile.emit("equip", {
+        this.socket.emit("equip", {
             num: itemPos,
             q: quantity,
             slot: tradeSlot,
@@ -147,7 +147,7 @@ export class Merchant extends PingCompensatedCharacter {
     // TODO: Add promises
     public merchantCourage(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [merchantCourage].")
-        this.socket.volatile.emit("skill", { name: "mcourage" })
+        this.socket.emit("skill", { name: "mcourage" })
     }
 
     public mine(): Promise<void> {
@@ -230,7 +230,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", failCheck3)
         })
 
-        this.socket.volatile.emit("skill", { name: "mining" })
+        this.socket.emit("skill", { name: "mining" })
         return mined
     }
 
@@ -314,7 +314,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("entities", mluckCheck)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", { id: target, name: "mluck" })
+        this.socket.emit("skill", { id: target, name: "mluck" })
         return mlucked
     }
 
@@ -345,7 +345,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", checkStand)
         })
 
-        this.socket.volatile.emit("merchant", { num: stand })
+        this.socket.emit("merchant", { num: stand })
         return opened
     }
 
@@ -366,7 +366,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("ui", productedCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "massproduction" })
+        this.socket.emit("skill", { name: "massproduction" })
         return massProductioned
     }
 
@@ -386,7 +386,7 @@ export class Merchant extends PingCompensatedCharacter {
     //         this.socket.on("ui", productedCheck)
     //     })
 
-    //     this.socket.volatile.emit("skill", { name: "massproductionpp" })
+    //     this.socket.emit("skill", { name: "massproductionpp" })
     //     return massProductioned
     // }
 }

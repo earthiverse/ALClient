@@ -21,7 +21,7 @@ export class Mage extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "alchemy"
         })
         return alchemied
@@ -46,7 +46,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("new_map", successCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "blink", x: x, y: y })
+        this.socket.emit("skill", { name: "blink", x: x, y: y })
         return blinked
     }
 
@@ -68,7 +68,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "burst", id: target })
+        this.socket.emit("skill", { name: "burst", id: target })
         return bursted
     }
 
@@ -93,7 +93,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "cburst", targets: targets })
+        this.socket.emit("skill", { name: "cburst", targets: targets })
         return cbursted
     }
 
@@ -114,7 +114,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { id: target, mp: mp, name: "energize" })
+        this.socket.emit("skill", { id: target, mp: mp, name: "energize" })
         return energized
     }
 
@@ -137,7 +137,7 @@ export class Mage extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "entangle",
             id: target,
             num: essenceofnature
@@ -161,7 +161,7 @@ export class Mage extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "light"
         })
         return lit
@@ -189,7 +189,7 @@ export class Mage extends PingCompensatedCharacter {
             this.socket.on("game_response", magiportCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "magiport", id: target })
+        this.socket.emit("skill", { name: "magiport", id: target })
         return magiportOfferSent
     }
 
@@ -216,7 +216,7 @@ export class Mage extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "reflection",
             id: target,
         })

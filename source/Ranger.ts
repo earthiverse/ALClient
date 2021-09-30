@@ -34,7 +34,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             ids: [target1, target2, target3, target4, target5],
             name: "5shot"
         })
@@ -60,7 +60,7 @@ export class Ranger extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             id: target,
             name: "4fingers"
         })
@@ -83,7 +83,7 @@ export class Ranger extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             id: target,
             name: "huntersmark"
         })
@@ -122,7 +122,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { id: target, name: "piercingshot" })
+        this.socket.emit("skill", { id: target, name: "piercingshot" })
         return piercingShotStarted
     }
 
@@ -159,7 +159,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { id: target, name: "poisonarrow", num: poison })
+        this.socket.emit("skill", { id: target, name: "poisonarrow", num: poison })
         return poisonArrowed
     }
 
@@ -212,7 +212,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { id: target, name: "supershot" })
+        this.socket.emit("skill", { id: target, name: "supershot" })
         return superShotStarted
     }
 
@@ -247,7 +247,7 @@ export class Ranger extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             ids: [target1, target2, target3],
             name: "3shot"
         })
