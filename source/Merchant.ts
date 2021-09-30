@@ -13,13 +13,13 @@ export class Merchant extends PingCompensatedCharacter {
         const closed = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
                 if (!data.stand) {
-                    this.socket.removeListener("player", checkStand)
+                    this.socket.off("player", checkStand)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", checkStand)
+                this.socket.off("player", checkStand)
                 reject(`closeMerchantStand timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", checkStand)
@@ -42,10 +42,10 @@ export class Merchant extends PingCompensatedCharacter {
         const fished = new Promise<void>((resolve, reject) => {
             const caughtCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]fishing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     resolve()
                 }
             }
@@ -53,18 +53,18 @@ export class Merchant extends PingCompensatedCharacter {
             const failCheck1 = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "skill_cant_wtype") {
-                        this.socket.removeListener("game_response", failCheck1)
-                        this.socket.removeListener("ui", failCheck2)
-                        this.socket.removeListener("eval", caughtCheck)
-                        this.socket.removeListener("player", failCheck3)
+                        this.socket.off("game_response", failCheck1)
+                        this.socket.off("ui", failCheck2)
+                        this.socket.off("eval", caughtCheck)
+                        this.socket.off("player", failCheck3)
                         reject("We don't have a fishing rod equipped")
                     }
                 } else if (typeof data == "object") {
                     if (data.response == "cooldown" && data.place == "fishing" && data.skill == "fishing") {
-                        this.socket.removeListener("game_response", failCheck1)
-                        this.socket.removeListener("ui", failCheck2)
-                        this.socket.removeListener("eval", caughtCheck)
-                        this.socket.removeListener("player", failCheck3)
+                        this.socket.off("game_response", failCheck1)
+                        this.socket.off("ui", failCheck2)
+                        this.socket.off("eval", caughtCheck)
+                        this.socket.off("player", failCheck3)
                         reject(`Fishing is on cooldown (${data.ms}ms remaining)`)
                     }
                 }
@@ -73,17 +73,17 @@ export class Merchant extends PingCompensatedCharacter {
             const failCheck2 = (data: UIData) => {
                 if (data.type == "fishing_fail" && data.name == this.id) {
                     // NOTE: We might not be in a fishing area?
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     reject("We failed to fish.")
                 } else if (data.type == "fishing_none") {
                     // We fished, but we didn't catch anything
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     resolve()
                 }
             }
@@ -92,10 +92,10 @@ export class Merchant extends PingCompensatedCharacter {
                 if (!startedFishing && data.c.fishing) {
                     startedFishing = true
                 } else if (startedFishing && !data.c.fishing) {
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     // TODO: Is there a reliable way to figure out if we got interrupted?
                     // TODO: Maybe the eval cooldown?
                     resolve() // We fished and caught nothing, or got interrupted.
@@ -103,10 +103,10 @@ export class Merchant extends PingCompensatedCharacter {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck1)
-                this.socket.removeListener("ui", failCheck2)
-                this.socket.removeListener("eval", caughtCheck)
-                this.socket.removeListener("player", failCheck3)
+                this.socket.off("game_response", failCheck1)
+                this.socket.off("ui", failCheck2)
+                this.socket.off("eval", caughtCheck)
+                this.socket.off("player", failCheck3)
                 reject("fish timeout (20000ms)")
             }, 20000)
             this.socket.on("game_response", failCheck1)
@@ -157,10 +157,10 @@ export class Merchant extends PingCompensatedCharacter {
         const mined = new Promise<void>((resolve, reject) => {
             const caughtCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mining['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     resolve()
                 }
             }
@@ -168,18 +168,18 @@ export class Merchant extends PingCompensatedCharacter {
             const failCheck1 = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "skill_cant_wtype") {
-                        this.socket.removeListener("game_response", failCheck1)
-                        this.socket.removeListener("ui", failCheck2)
-                        this.socket.removeListener("eval", caughtCheck)
-                        this.socket.removeListener("player", failCheck3)
+                        this.socket.off("game_response", failCheck1)
+                        this.socket.off("ui", failCheck2)
+                        this.socket.off("eval", caughtCheck)
+                        this.socket.off("player", failCheck3)
                         reject("We don't have a pickaxe equipped")
                     }
                 } else if (typeof data == "object") {
                     if (data.response == "cooldown" && data.place == "mining" && data.skill == "mining") {
-                        this.socket.removeListener("game_response", failCheck1)
-                        this.socket.removeListener("ui", failCheck2)
-                        this.socket.removeListener("eval", caughtCheck)
-                        this.socket.removeListener("player", failCheck3)
+                        this.socket.off("game_response", failCheck1)
+                        this.socket.off("ui", failCheck2)
+                        this.socket.off("eval", caughtCheck)
+                        this.socket.off("player", failCheck3)
                         reject(`Mining is on cooldown (${data.ms}ms remaining)`)
                     }
                 }
@@ -188,17 +188,17 @@ export class Merchant extends PingCompensatedCharacter {
             const failCheck2 = (data: UIData) => {
                 if (data.type == "mining_fail" && data.name == this.id) {
                     // NOTE: We might not be in a mining area?
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     reject("We failed to mine.")
                 } else if (data.type == "mining_none") {
                     // We mined, but we didn't get anything
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     resolve()
                 }
             }
@@ -207,10 +207,10 @@ export class Merchant extends PingCompensatedCharacter {
                 if (!startedMining && data.c.mining) {
                     startedMining = true
                 } else if (startedMining && !data.c.mining) {
-                    this.socket.removeListener("game_response", failCheck1)
-                    this.socket.removeListener("ui", failCheck2)
-                    this.socket.removeListener("eval", caughtCheck)
-                    this.socket.removeListener("player", failCheck3)
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("ui", failCheck2)
+                    this.socket.off("eval", caughtCheck)
+                    this.socket.off("player", failCheck3)
                     // TODO: Is there a reliable way to figure out if we got interrupted?
                     // TODO: Maybe the eval cooldown?
                     resolve() // We mined and caught nothing, or got interrupted.
@@ -218,10 +218,10 @@ export class Merchant extends PingCompensatedCharacter {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck1)
-                this.socket.removeListener("ui", failCheck2)
-                this.socket.removeListener("eval", caughtCheck)
-                this.socket.removeListener("player", failCheck3)
+                this.socket.off("game_response", failCheck1)
+                this.socket.off("ui", failCheck2)
+                this.socket.off("eval", caughtCheck)
+                this.socket.off("player", failCheck3)
                 reject("mine timeout (20000ms)")
             }, 20000)
             this.socket.on("game_response", failCheck1)
@@ -250,10 +250,10 @@ export class Merchant extends PingCompensatedCharacter {
         const mlucked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mluck['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("entities", mluckCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("player", selfMluckCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("entities", mluckCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("player", selfMluckCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
@@ -263,10 +263,10 @@ export class Merchant extends PingCompensatedCharacter {
                     if (player.id == target
                         && player.s?.mluck?.f == this.id
                         && player.s?.mluck?.ms == this.G.conditions.mluck.duration) {
-                        this.socket.removeListener("entities", mluckCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("player", selfMluckCheck)
-                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.off("entities", mluckCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("player", selfMluckCheck)
+                        this.socket.off("eval", cooldownCheck)
                         resolve()
                     }
                 }
@@ -275,10 +275,10 @@ export class Merchant extends PingCompensatedCharacter {
             const selfMluckCheck = (data: PlayerData) => {
                 if (data.s?.mluck?.f == this.id
                     && data.s?.mluck?.ms == this.G.conditions.mluck.duration) {
-                    this.socket.removeListener("entities", mluckCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("player", selfMluckCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("entities", mluckCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("player", selfMluckCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
@@ -286,27 +286,27 @@ export class Merchant extends PingCompensatedCharacter {
             const failCheck = async (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "skill_too_far") {
-                        this.socket.removeListener("entities", mluckCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("player", selfMluckCheck)
-                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.off("entities", mluckCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("player", selfMluckCheck)
+                        this.socket.off("eval", cooldownCheck)
                         await this.requestPlayerData().catch((e) => { console.error(e) })
                         reject(`We are too far from ${target} to mluck.`)
                     } else if (data == "no_level") {
-                        this.socket.removeListener("entities", mluckCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("player", selfMluckCheck)
-                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.off("entities", mluckCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("player", selfMluckCheck)
+                        this.socket.off("eval", cooldownCheck)
                         reject("We aren't a high enough level to use mluck.")
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("entities", mluckCheck)
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("player", selfMluckCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("entities", mluckCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("player", selfMluckCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`mluck timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", failCheck)
@@ -333,13 +333,13 @@ export class Merchant extends PingCompensatedCharacter {
         const opened = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {
                 if (data.stand) {
-                    this.socket.removeListener("player", checkStand)
+                    this.socket.off("player", checkStand)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", checkStand)
+                this.socket.off("player", checkStand)
                 reject(`openMerchantStand timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", checkStand)
@@ -354,13 +354,13 @@ export class Merchant extends PingCompensatedCharacter {
         const massProductioned = new Promise<void>((resolve, reject) => {
             const productedCheck = (data: UIData) => {
                 if (data.type == "massproduction" && data.name == this.id) {
-                    this.socket.removeListener("ui", productedCheck)
+                    this.socket.off("ui", productedCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("ui", productedCheck)
+                this.socket.off("ui", productedCheck)
                 reject(`massProduction timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", productedCheck)
@@ -374,13 +374,13 @@ export class Merchant extends PingCompensatedCharacter {
     //     const massProductioned = new Promise<void>((resolve, reject) => {
     //         const productedCheck = (data: UIData) => {
     //             if (data.type == "massproductionpp" && data.name == this.id) {
-    //                 this.socket.removeListener("ui", productedCheck)
+    //                 this.socket.off("ui", productedCheck)
     //                 resolve()
     //             }
     //         }
 
     //         setTimeout(() => {
-    //             this.socket.removeListener("ui", productedCheck)
+    //             this.socket.off("ui", productedCheck)
     //             reject(`massProductionPP timeout (${Constants.TIMEOUT}ms)`)
     //         }, Constants.TIMEOUT)
     //         this.socket.on("ui", productedCheck)

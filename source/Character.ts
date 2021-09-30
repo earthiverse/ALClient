@@ -538,33 +538,33 @@ export class Character extends Observer implements CharacterData {
         const connected = new Promise<void>((resolve, reject) => {
             const failCheck = (data: string | { message: string; }) => {
                 if (typeof data == "string") {
-                    this.socket.removeListener("start", startCheck)
-                    this.socket.removeListener("disconnect_reason", failCheck2)
+                    this.socket.off("start", startCheck)
+                    this.socket.off("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data}`)
                 } else {
-                    this.socket.removeListener("start", startCheck)
-                    this.socket.removeListener("disconnect_reason", failCheck2)
+                    this.socket.off("start", startCheck)
+                    this.socket.off("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data.message}`)
                 }
             }
 
             const failCheck2 = (data: string) => {
-                this.socket.removeListener("start", startCheck)
-                this.socket.removeListener("game_error", failCheck)
+                this.socket.off("start", startCheck)
+                this.socket.off("game_error", failCheck)
                 reject(`Failed to connect: ${data}`)
             }
 
             const startCheck = () => {
-                this.socket.removeListener("game_error", failCheck)
-                this.socket.removeListener("disconnect_reason", failCheck2)
+                this.socket.off("game_error", failCheck)
+                this.socket.off("disconnect_reason", failCheck2)
                 this.updateLoop()
                 resolve()
             }
 
             setTimeout(() => {
-                this.socket.removeListener("start", startCheck)
-                this.socket.removeListener("game_error", failCheck)
-                this.socket.removeListener("disconnect_reason", failCheck2)
+                this.socket.off("start", startCheck)
+                this.socket.off("game_error", failCheck)
+                this.socket.off("disconnect_reason", failCheck2)
                 reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
             }, Constants.CONNECT_TIMEOUT_MS)
 
@@ -583,8 +583,8 @@ export class Character extends Observer implements CharacterData {
 
         // Close & remove the socket
         if (this.socket) {
+            this.socket.off()
             this.socket.disconnect()
-            this.socket.removeAllListeners()
         }
 
         this.ready = false
@@ -603,13 +603,13 @@ export class Character extends Observer implements CharacterData {
         return new Promise<EntitiesData>((resolve, reject) => {
             const checkEntitiesEvent = (data: EntitiesData) => {
                 if (data.type == "all") {
-                    this.socket.removeListener("entities", checkEntitiesEvent)
+                    this.socket.off("entities", checkEntitiesEvent)
                     resolve(data)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("entities", checkEntitiesEvent)
+                this.socket.off("entities", checkEntitiesEvent)
                 reject(`requestEntitiesData timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("entities", checkEntitiesEvent)
@@ -627,13 +627,13 @@ export class Character extends Observer implements CharacterData {
         return new Promise<CharacterData>((resolve, reject) => {
             const checkPlayerEvent = (data: CharacterData) => {
                 if (data.s.typing) {
-                    this.socket.removeListener("player", checkPlayerEvent)
+                    this.socket.off("player", checkPlayerEvent)
                     resolve(data)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", checkPlayerEvent)
+                this.socket.off("player", checkPlayerEvent)
                 reject(`requestPlayerData timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", checkPlayerEvent)
@@ -655,23 +655,23 @@ export class Character extends Observer implements CharacterData {
         const friended = new Promise<FriendData>((resolve, reject) => {
             const successCheck = (data: FriendData) => {
                 if (data.event == "new") {
-                    this.socket.removeListener("friend", successCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("friend", successCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve(data)
                 }
             }
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "friend_expired") {
-                        this.socket.removeListener("friend", successCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("friend", successCheck)
+                        this.socket.off("game_response", failCheck)
                         reject("Friend request expired.")
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("friend", successCheck)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("friend", successCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`acceptFriendRequest timeout(${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("friend", successCheck)
@@ -691,13 +691,13 @@ export class Character extends Observer implements CharacterData {
         const acceptedMagiport = new Promise<IPosition>((resolve, reject) => {
             const magiportCheck = (data: NewMapData) => {
                 if (data.effect == "magiport") {
-                    this.socket.removeListener("new_map", magiportCheck)
+                    this.socket.off("new_map", magiportCheck)
                     resolve({ map: data.name, x: data.x, y: data.y })
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("new_map", magiportCheck)
+                this.socket.off("new_map", magiportCheck)
                 reject(`acceptMagiport timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("new_map", magiportCheck)
@@ -718,8 +718,8 @@ export class Character extends Observer implements CharacterData {
             const partyCheck = (data: PartyData) => {
                 if (data.list && data.list.includes(this.id)
                     && data.list.includes(id)) {
-                    this.socket.removeListener("party_update", partyCheck)
-                    this.socket.removeListener("game_log", unableCheck)
+                    this.socket.off("party_update", partyCheck)
+                    this.socket.off("game_log", unableCheck)
                     resolve(data)
                 }
             }
@@ -727,30 +727,30 @@ export class Character extends Observer implements CharacterData {
             const unableCheck = (data: GameLogData) => {
                 const notFound = RegExp("^.+? is not found$")
                 if (data == "Invitation expired") {
-                    this.socket.removeListener("party_update", partyCheck)
-                    this.socket.removeListener("game_log", unableCheck)
+                    this.socket.off("party_update", partyCheck)
+                    this.socket.off("game_log", unableCheck)
                     reject(data)
                 } else if (notFound.test(data)) {
-                    this.socket.removeListener("party_update", partyCheck)
-                    this.socket.removeListener("game_log", unableCheck)
+                    this.socket.off("party_update", partyCheck)
+                    this.socket.off("game_log", unableCheck)
                     reject(data)
                 } else if (data == "Already partying") {
                     if (this.partyData.list.includes(this.id) && this.partyData.list.includes(id)) {
                         // NOTE: We resolve the promise even if we have already accepted it if we're in the correct party.
-                        this.socket.removeListener("party_update", partyCheck)
-                        this.socket.removeListener("game_log", unableCheck)
+                        this.socket.off("party_update", partyCheck)
+                        this.socket.off("game_log", unableCheck)
                         resolve(this.partyData)
                     } else {
-                        this.socket.removeListener("party_update", partyCheck)
-                        this.socket.removeListener("game_log", unableCheck)
+                        this.socket.off("party_update", partyCheck)
+                        this.socket.off("game_log", unableCheck)
                         reject(data)
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("party_update", partyCheck)
-                this.socket.removeListener("game_log", unableCheck)
+                this.socket.off("party_update", partyCheck)
+                this.socket.off("game_log", unableCheck)
                 reject(`acceptPartyInvite timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("party_update", partyCheck)
@@ -768,13 +768,13 @@ export class Character extends Observer implements CharacterData {
         const acceptedRequest = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
                 if (data.list && data.list.includes(this.id) && data.list.includes(id)) {
-                    this.socket.removeListener("party_update", partyCheck)
+                    this.socket.off("party_update", partyCheck)
                     resolve(data)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("party_update", partyCheck)
+                this.socket.off("party_update", partyCheck)
                 reject(`acceptPartyRequest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("party_update", partyCheck)
@@ -794,71 +794,71 @@ export class Character extends Observer implements CharacterData {
         const attackStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
                 if (data.id == id) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("notthere", failCheck2)
-                    this.socket.removeListener("death", deathCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
+                    this.socket.off("death", deathCheck)
                     reject(`Entity ${id} not found`)
                 }
             }
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "disabled") {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("notthere", failCheck2)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
+                        this.socket.off("death", deathCheck)
                         reject(`Attack on ${id} failed (disabled).`)
                     } else if (data.response == "attack_failed" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("notthere", failCheck2)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
+                        this.socket.off("death", deathCheck)
                         reject(`Attack on ${id} failed.`)
                     } else if (data.response == "too_far" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("notthere", failCheck2)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
+                        this.socket.off("death", deathCheck)
                         reject(`${id} is too far away to attack (dist: ${data.dist}).`)
                     } else if (data.response == "cooldown" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("notthere", failCheck2)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
+                        this.socket.off("death", deathCheck)
                         reject(`Attack on ${id} failed due to cooldown (ms: ${data.ms}).`)
                     } else if (data.response == "no_mp" && data.place == "attack") {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("notthere", failCheck2)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
+                        this.socket.off("death", deathCheck)
                         reject(`Attack on ${id} failed due to insufficient MP.`)
                     }
                 }
             }
             const failCheck2 = (data: NotThereData) => {
                 if (data.place == "attack") {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("notthere", failCheck2)
-                    this.socket.removeListener("death", deathCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
+                    this.socket.off("death", deathCheck)
                     reject(`${id} could not be found to attack.`)
                 }
             }
             const attackCheck = (data: ActionData) => {
                 if (data.attacker == this.id && data.target == id && data.type == "attack") {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("notthere", failCheck2)
-                    this.socket.removeListener("death", deathCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
+                    this.socket.off("death", deathCheck)
                     resolve(data.pid)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("notthere", failCheck2)
-                this.socket.removeListener("death", deathCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("notthere", failCheck2)
+                this.socket.off("death", deathCheck)
                 reject(`attack timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -887,8 +887,8 @@ export class Character extends Observer implements CharacterData {
                             && data.response == "buy_success"
                             && data.name == itemName
                             && data.q == quantity) {
-                            this.socket.removeListener("player", buyCheck1)
-                            this.socket.removeListener("game_response", buyCheck2)
+                            this.socket.off("player", buyCheck1)
+                            this.socket.off("game_response", buyCheck2)
                             resolve(data.num)
                         }
                     }
@@ -896,22 +896,22 @@ export class Character extends Observer implements CharacterData {
             }
             const buyCheck2 = (data: GameResponseData) => {
                 if (data == "buy_cant_npc") {
-                    this.socket.removeListener("player", buyCheck1)
-                    this.socket.removeListener("game_response", buyCheck2)
+                    this.socket.off("player", buyCheck1)
+                    this.socket.off("game_response", buyCheck2)
                     reject(`Cannot buy ${quantity} ${itemName}(s) from an NPC`)
                 } else if (data == "buy_cant_space") {
-                    this.socket.removeListener("player", buyCheck1)
-                    this.socket.removeListener("game_response", buyCheck2)
+                    this.socket.off("player", buyCheck1)
+                    this.socket.off("game_response", buyCheck2)
                     reject(`Not enough inventory space to buy ${quantity} ${itemName}(s)`)
                 } else if (data == "buy_cost") {
-                    this.socket.removeListener("player", buyCheck1)
-                    this.socket.removeListener("game_response", buyCheck2)
+                    this.socket.off("player", buyCheck1)
+                    this.socket.off("game_response", buyCheck2)
                     reject(`Not enough gold to buy ${quantity} ${itemName}(s)`)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("player", buyCheck1)
-                this.socket.removeListener("game_response", buyCheck2)
+                this.socket.off("player", buyCheck1)
+                this.socket.off("game_response", buyCheck2)
                 reject(`buy timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", buyCheck1)
@@ -980,8 +980,8 @@ export class Character extends Observer implements CharacterData {
         const bought = new Promise<void>((resolve, reject) => {
             const failCheck = (message: string) => {
                 if (message == "Item gone") {
-                    this.socket.removeListener("game_log", failCheck)
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("game_log", failCheck)
+                    this.socket.off("player", successCheck)
                     reject(`${item.name} is no longer available from Ponty.`)
                 }
             }
@@ -990,15 +990,15 @@ export class Character extends Observer implements CharacterData {
                 const numNow = this.countItem(item.name, data.items)
                 if ((item.q && numNow == numBefore + item.q)
                     || (numNow == numBefore + 1)) {
-                    this.socket.removeListener("game_log", failCheck)
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("game_log", failCheck)
+                    this.socket.off("player", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_log", failCheck)
-                this.socket.removeListener("player", successCheck)
+                this.socket.off("game_log", failCheck)
+                this.socket.off("player", successCheck)
                 reject(`buyFromPonty timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_log", failCheck)
@@ -1449,13 +1449,13 @@ export class Character extends Observer implements CharacterData {
                     return
                 for (const [event, datum] of data.hitchhikers) {
                     if (event == "game_response" && datum.response == "compound_fail") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(false)
                         return
                     } else if (event == "game_response" && datum.response == "compound_success") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(true)
                         return
                     }
@@ -1465,22 +1465,22 @@ export class Character extends Observer implements CharacterData {
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "bank_restrictions" && data.place == "compound") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("You can't compound items in the bank.")
                     }
                 } else if (typeof data == "string") {
                     if (data == "compound_no_item") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject()
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", gameResponseCheck)
-                this.socket.removeListener("player", playerCheck)
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("player", playerCheck)
                 reject("compound timeout (60000ms)")
             }, 60000)
             this.socket.on("game_response", gameResponseCheck)
@@ -1524,14 +1524,14 @@ export class Character extends Observer implements CharacterData {
             const successCheck = async (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "craft" && data.name == item) {
-                        this.socket.removeListener("game_response", successCheck)
+                        this.socket.off("game_response", successCheck)
                         resolve()
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", successCheck)
+                this.socket.off("game_response", successCheck)
                 reject(`craft timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
         })
@@ -1643,21 +1643,21 @@ export class Character extends Observer implements CharacterData {
             const checkDeposit = (data: CharacterData) => {
                 if (!data.user) {
                     if (data.map !== "bank" && data.map !== "bank_b" && data.map !== "bank_u") {
-                        this.socket.removeListener("player", checkDeposit)
+                        this.socket.off("player", checkDeposit)
                         return reject(`We're not in the bank (we're in '${data.map}')`)
                     }
                 } else {
                     const newBankItemCount = this.countItem(item.name, data.user[bankPack])
                     if ((item.q && newBankItemCount == (bankItemCount + item.q))
                         || (!item.q && newBankItemCount == (bankItemCount + 1))) {
-                        this.socket.removeListener("player", checkDeposit)
+                        this.socket.off("player", checkDeposit)
                         return resolve()
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", checkDeposit)
+                this.socket.off("player", checkDeposit)
                 reject(`depositItem timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", checkDeposit)
@@ -1682,12 +1682,12 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "emotion_cooldown") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("emotion", successCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("emotion", successCheck)
                         reject()
                     } else if (data == "emotion_cant") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("emotion", successCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("emotion", successCheck)
                         reject()
                     }
                 }
@@ -1695,15 +1695,15 @@ export class Character extends Observer implements CharacterData {
 
             const successCheck = (data: EmotionData) => {
                 if (data.name == emotionName && data.player == this.name) {
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("emotion", successCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("emotion", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("emotion", successCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("emotion", successCheck)
                 reject(`emote timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", failCheck)
@@ -1741,7 +1741,7 @@ export class Character extends Observer implements CharacterData {
 
         const enterComplete = new Promise<void>((resolve, reject) => {
             const enterCheck = (data: NewMapData) => {
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("game_response", failCheck)
                 if (data.name == map) resolve()
                 else reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
@@ -1749,16 +1749,16 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "transport_cant_item") {
-                        this.socket.removeListener("new_map", enterCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("new_map", enterCheck)
+                        this.socket.off("game_response", failCheck)
                         return Promise.reject(`We don't have the required item to enter ${map}.`)
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("new_map", enterCheck)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("new_map", enterCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`enter timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", enterCheck)
@@ -1784,8 +1784,8 @@ export class Character extends Observer implements CharacterData {
                         && item.name == iInfo.name
                         && item.level == iInfo.level
                         && item.p == iInfo.p) {
-                        this.socket.removeListener("player", equipCheck)
-                        this.socket.removeListener("disappearing_text", cantEquipCheck)
+                        this.socket.off("player", equipCheck)
+                        this.socket.off("disappearing_text", cantEquipCheck)
                         resolve()
                     }
                 } else {
@@ -1793,8 +1793,8 @@ export class Character extends Observer implements CharacterData {
                     for (const slot in data.slots) {
                         const item = data.slots[slot as SlotType]
                         if (item && item.name == iInfo.name) {
-                            this.socket.removeListener("player", equipCheck)
-                            this.socket.removeListener("disappearing_text", cantEquipCheck)
+                            this.socket.off("player", equipCheck)
+                            this.socket.off("disappearing_text", cantEquipCheck)
                             resolve()
                         }
                     }
@@ -1802,14 +1802,14 @@ export class Character extends Observer implements CharacterData {
             }
             const cantEquipCheck = (data: DisappearingTextData) => {
                 if (data.id == this.id && data.message == "CAN'T EQUIP") {
-                    this.socket.removeListener("player", equipCheck)
-                    this.socket.removeListener("disappearing_text", cantEquipCheck)
+                    this.socket.off("player", equipCheck)
+                    this.socket.off("disappearing_text", cantEquipCheck)
                     reject(`Can't equip '${inventoryPos}' (${iInfo.name})`)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("player", equipCheck)
-                this.socket.removeListener("disappearing_text", cantEquipCheck)
+                this.socket.off("player", equipCheck)
+                this.socket.off("disappearing_text", cantEquipCheck)
                 reject(`equip timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", equipCheck)
@@ -1834,31 +1834,31 @@ export class Character extends Observer implements CharacterData {
                     return
                 }
                 if (startedExchange && !data.q.exchange) {
-                    this.socket.removeListener("player", completeCheck)
-                    this.socket.removeListener("game_response", bankCheck)
+                    this.socket.off("player", completeCheck)
+                    this.socket.off("game_response", bankCheck)
                     resolve()
                 }
             }
             const bankCheck = (data: GameResponseData) => {
                 if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.removeListener("player", completeCheck)
-                    this.socket.removeListener("game_response", bankCheck)
+                    this.socket.off("player", completeCheck)
+                    this.socket.off("game_response", bankCheck)
                     reject("You can't exchange items in the bank.")
                 } else if (typeof data == "string") {
                     if (data == "exchange_notenough") {
-                        this.socket.removeListener("player", completeCheck)
-                        this.socket.removeListener("game_response", bankCheck)
+                        this.socket.off("player", completeCheck)
+                        this.socket.off("game_response", bankCheck)
                         reject("We don't have enough items to exchange.")
                     } else if (data == "exchange_existing") {
-                        this.socket.removeListener("player", completeCheck)
-                        this.socket.removeListener("game_response", bankCheck)
+                        this.socket.off("player", completeCheck)
+                        this.socket.off("game_response", bankCheck)
                         reject("We are already exchanging something.")
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("player", completeCheck)
-                this.socket.removeListener("game_response", bankCheck)
+                this.socket.off("player", completeCheck)
+                this.socket.off("game_response", bankCheck)
                 reject("exchange timeout (60000ms)")
             }, 60000)
             this.socket.on("game_response", bankCheck)
@@ -1887,13 +1887,13 @@ export class Character extends Observer implements CharacterData {
         const questFinished = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (!data.s || data.s.monsterhunt == undefined) {
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("player", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", successCheck)
+                this.socket.off("player", successCheck)
                 reject(`getMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", successCheck)
@@ -2025,12 +2025,12 @@ export class Character extends Observer implements CharacterData {
         const questGot = new Promise<void>((resolve, reject) => {
             const failCheck = (data: GameResponseData) => {
                 if (data == "ecu_get_closer") {
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("player", successCheck)
                     reject("Too far away from Monster Hunt NPC.")
                 } else if (data == "monsterhunt_merchant") {
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("player", successCheck)
                     reject("Merchants can't do Monster Hunts.")
                 }
             }
@@ -2038,16 +2038,16 @@ export class Character extends Observer implements CharacterData {
                 if (!data.hitchhikers) return
                 for (const hitchhiker of data.hitchhikers) {
                     if (hitchhiker[0] == "game_response" && hitchhiker[1] == "monsterhunt_started") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("player", successCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("player", successCheck)
                         resolve()
                         return
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("player", successCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("player", successCheck)
                 reject(`getMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", failCheck)
@@ -2072,7 +2072,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("players", dataCheck)
+                this.socket.off("players", dataCheck)
                 reject(`getPlayers timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("players", dataCheck)
@@ -2086,21 +2086,21 @@ export class Character extends Observer implements CharacterData {
         const pontyItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
             const distanceCheck = (data: GameResponseData) => {
                 if (data == "buy_get_closer") {
-                    this.socket.removeListener("game_response", distanceCheck)
-                    this.socket.removeListener("secondhands", secondhandsItems)
+                    this.socket.off("game_response", distanceCheck)
+                    this.socket.off("secondhands", secondhandsItems)
                     reject("Too far away from secondhands NPC.")
                 }
             }
 
             const secondhandsItems = (data: ItemDataTrade[]) => {
-                this.socket.removeListener("game_response", distanceCheck)
-                this.socket.removeListener("secondhands", secondhandsItems)
+                this.socket.off("game_response", distanceCheck)
+                this.socket.off("secondhands", secondhandsItems)
                 resolve(data)
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", distanceCheck)
-                this.socket.removeListener("secondhands", secondhandsItems)
+                this.socket.off("game_response", distanceCheck)
+                this.socket.off("secondhands", secondhandsItems)
                 reject(`getPontyItems timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("secondhands", secondhandsItems)
@@ -2137,7 +2137,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("tracker", gotCheck)
+                this.socket.off("tracker", gotCheck)
                 reject(`getTrackerData timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("tracker", gotCheck)
@@ -2184,12 +2184,12 @@ export class Character extends Observer implements CharacterData {
             const kickedCheck = (data: PartyData) => {
                 if (!data.list || !data.list.includes(toKick)) {
                     // They're no longer in our party list
-                    this.socket.removeListener("party_update", kickedCheck)
+                    this.socket.off("party_update", kickedCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("party_update", kickedCheck)
+                this.socket.off("party_update", kickedCheck)
                 reject(`kickPartyMember timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("party_update", kickedCheck)
@@ -2209,12 +2209,12 @@ export class Character extends Observer implements CharacterData {
         const leaveComplete = new Promise<void>((resolve, reject) => {
             const leaveCheck = (data: NewMapData) => {
                 if (data.name == "main") {
-                    this.socket.removeListener("new_map", leaveCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("new_map", leaveCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve()
                 } else {
-                    this.socket.removeListener("new_map", leaveCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("new_map", leaveCheck)
+                    this.socket.off("game_response", failCheck)
                     reject(`We are now in ${data.name}, but we should be in main`)
                 }
             }
@@ -2222,16 +2222,16 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "cant_escape") {
-                        this.socket.removeListener("new_map", leaveCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("new_map", leaveCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`Can't escape from current map ${this.map}`)
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("new_map", leaveCheck)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("new_map", leaveCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`leaveMap timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", leaveCheck)
@@ -2292,7 +2292,7 @@ export class Character extends Observer implements CharacterData {
                         const newData = await this.requestPlayerData()
                         if (!newData.moving || newData.going_x !== to.x || newData.going_y !== to.y) {
                             clearTimeout(timeout)
-                            this.socket.removeListener("player", checkPlayer)
+                            this.socket.off("player", checkPlayer)
                             reject(`move to ${to.x}, ${to.y} failed`)
                         }
                     } catch (e) {
@@ -2313,14 +2313,14 @@ export class Character extends Observer implements CharacterData {
 
                 if (this.x == to.x && this.y == to.y) {
                     // We are here!
-                    this.socket.removeListener("player", checkPlayer)
+                    this.socket.off("player", checkPlayer)
                     resolve({ map: this.map, x: x, y: y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
-                    this.socket.removeListener("player", checkPlayer)
+                    this.socket.off("player", checkPlayer)
                     reject(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`)
                 }
             }
@@ -2353,12 +2353,12 @@ export class Character extends Observer implements CharacterData {
         const chestOpened = new Promise<ChestOpenedData>((resolve, reject) => {
             const openCheck = (data: ChestOpenedData) => {
                 if (data.id == id) {
-                    this.socket.removeListener("chest_opened", openCheck)
+                    this.socket.off("chest_opened", openCheck)
                     resolve(data)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("chest_opened", openCheck)
+                this.socket.off("chest_opened", openCheck)
                 reject(`openChest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("chest_opened", openCheck)
@@ -2372,12 +2372,12 @@ export class Character extends Observer implements CharacterData {
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.removeListener("eval", regenCheck)
+                    this.socket.off("eval", regenCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("eval", regenCheck)
+                this.socket.off("eval", regenCheck)
                 reject(`regenHP timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", regenCheck)
@@ -2392,12 +2392,12 @@ export class Character extends Observer implements CharacterData {
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.removeListener("eval", regenCheck)
+                    this.socket.off("eval", regenCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("eval", regenCheck)
+                this.socket.off("eval", regenCheck)
                 reject(`regenMP timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", regenCheck)
@@ -2419,21 +2419,21 @@ export class Character extends Observer implements CharacterData {
         const respawned = new Promise<IPosition>((resolve, reject) => {
             const respawnCheck = (data: NewMapData) => {
                 if (data.effect == 1) {
-                    this.socket.removeListener("new_map", respawnCheck)
-                    this.socket.removeListener("game_log", failCheck)
+                    this.socket.off("new_map", respawnCheck)
+                    this.socket.off("game_log", failCheck)
                     resolve({ map: data.name, x: data.x, y: data.y })
                 }
             }
             const failCheck = (data: GameLogData) => {
                 if (data == "Can't respawn yet.") {
-                    this.socket.removeListener("new_map", respawnCheck)
-                    this.socket.removeListener("game_log", failCheck)
+                    this.socket.off("new_map", respawnCheck)
+                    this.socket.off("game_log", failCheck)
                     reject(data)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("new_map", respawnCheck)
-                this.socket.removeListener("game_log", failCheck)
+                this.socket.off("new_map", respawnCheck)
+                this.socket.off("game_log", failCheck)
                 reject(`respawn timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("new_map", respawnCheck)
@@ -2451,21 +2451,21 @@ export class Character extends Observer implements CharacterData {
             const idsCheck = (data: UIData) => {
                 if (data.type == "scare") {
                     ids = data.ids
-                    this.socket.removeListener("ui", idsCheck)
+                    this.socket.off("ui", idsCheck)
                 }
             }
 
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]scare['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("ui", idsCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("ui", idsCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(ids)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("ui", idsCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("ui", idsCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`scare timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", idsCheck)
@@ -2490,8 +2490,8 @@ export class Character extends Observer implements CharacterData {
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("ui", soldCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("ui", soldCheck)
                     resolve()
                 }
             }
@@ -2499,8 +2499,8 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof (data) == "string") {
                     if (data == "trade_bspace") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("ui", soldCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("ui", soldCheck)
                         reject(`${id} doesn't have enough space, so we can't sell items.`)
                     }
                 }
@@ -2508,8 +2508,8 @@ export class Character extends Observer implements CharacterData {
             // TODO: Add a check that the merchant we're selling to isn't full
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("ui", soldCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("ui", soldCheck)
                 reject(`sellToMerchant timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", soldCheck)
@@ -2533,17 +2533,17 @@ export class Character extends Observer implements CharacterData {
                 if (typeof data == "string") {
                     if (data == "friend_already" || data == "friend_rsent") {
                         // We are already friends, or the request has been sent
-                        this.socket.removeListener("game_response", check)
+                        this.socket.off("game_response", check)
                         resolve()
                     } else if (data == "friend_rleft") {
                         // We couldn't send the friend request
-                        this.socket.removeListener("game_response", check)
+                        this.socket.off("game_response", check)
                         reject(`${id} is not online on the same server.`)
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("game_response", check)
+                this.socket.off("game_response", check)
                 reject(`sendFriendRequest timeout(${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", check)
@@ -2561,18 +2561,18 @@ export class Character extends Observer implements CharacterData {
         const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
                 if (data == "trade_get_closer") {
-                    this.socket.removeListener("game_response", sentCheck)
+                    this.socket.off("game_response", sentCheck)
                     reject(`We are too far away from ${to} to send gold.`)
                 } else if (typeof data == "object" && data.response == "gold_sent" && data.name == to) {
                     if (data.gold !== amount)
                         console.warn(`We wanted to send ${to} ${amount} gold, but we sent ${data.gold}.`)
-                    this.socket.removeListener("game_response", sentCheck)
+                    this.socket.off("game_response", sentCheck)
                     resolve(data.gold)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", sentCheck)
+                this.socket.off("game_response", sentCheck)
                 reject(`sendGold timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
@@ -2592,19 +2592,19 @@ export class Character extends Observer implements CharacterData {
         const itemSent = new Promise<void>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
                 if (data == "trade_get_closer") {
-                    this.socket.removeListener("game_response", sentCheck)
+                    this.socket.off("game_response", sentCheck)
                     reject(`sendItem failed, ${to} is too far away`)
                 } else if (data == "send_no_space") {
-                    this.socket.removeListener("game_response", sentCheck)
+                    this.socket.off("game_response", sentCheck)
                     reject(`sendItem failed, ${to} has no inventory space`)
                 } else if (typeof data == "object" && data.response == "item_sent" && data.name == to && data.item == item.name && data.q == quantity) {
-                    this.socket.removeListener("game_response", sentCheck)
+                    this.socket.off("game_response", sentCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", sentCheck)
+                this.socket.off("game_response", sentCheck)
                 reject(`sendItem timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", sentCheck)
@@ -2623,12 +2623,12 @@ export class Character extends Observer implements CharacterData {
         const invited = new Promise<void>((resolve, reject) => {
             const sentCheck = (data: string) => {
                 if (data == `Invited ${id} to party`) {
-                    this.socket.removeListener("game_log", sentCheck)
+                    this.socket.off("game_log", sentCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("game_log", sentCheck)
+                this.socket.off("game_log", sentCheck)
                 reject(`sendPartyInvite timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_log", sentCheck)
@@ -2919,11 +2919,11 @@ export class Character extends Observer implements CharacterData {
             const successCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
                 if (data.response !== "target_lock") return
-                this.socket.removeListener("game_response", successCheck)
+                this.socket.off("game_response", successCheck)
                 resolve(data.monster)
             }
             setTimeout(() => {
-                this.socket.removeListener("game_response", successCheck)
+                this.socket.off("game_response", successCheck)
                 reject("startKonami timeout (5000ms)")
             }, 5000)
             this.socket.on("game_response", successCheck)
@@ -2984,14 +2984,14 @@ export class Character extends Observer implements CharacterData {
             const successCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "mail_item_taken") {
-                        this.socket.removeListener("game_response", successCheck)
+                        this.socket.off("game_response", successCheck)
                         resolve()
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", successCheck)
+                this.socket.off("game_response", successCheck)
                 reject("takeMailItem timeout (5000ms)")
             }, 5000)
             this.socket.on("game_response", successCheck)
@@ -3019,8 +3019,8 @@ export class Character extends Observer implements CharacterData {
 
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]snowball['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectile)
                 }
             }
@@ -3028,16 +3028,16 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "attack_failed") {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("eval", cooldownCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("eval", cooldownCheck)
                         reject("throwsnowball failed")
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`throwsnowball timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -3063,7 +3063,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [transport].")
         const transportComplete = new Promise<void>((resolve, reject) => {
             const transportCheck = (data: NewMapData) => {
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("game_response", failCheck)
                 if (data.name == map) resolve()
                 else reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
@@ -3071,30 +3071,30 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "bank_opx" && data.reason == "mounted") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("new_map", transportCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
                         reject(`${data.name} is currently in the bank, we can't enter.`)
                     }
                 } else if (typeof data == "string") {
                     if (data == "cant_enter") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("new_map", transportCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
                         reject(`The door to spawn ${spawn} on ${map} requires a key. Use 'enter' instead of 'transport'.`)
                     } else if (data == "transport_cant_locked") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("new_map", transportCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
                         reject(`We haven't unlocked the door to spawn ${spawn} on ${map}.`)
                     } else if (data == "transport_cant_reach") {
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("new_map", transportCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
                         reject(`We are too far away from the door to spawn ${spawn} on ${map}.`)
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("new_map", transportCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("new_map", transportCheck)
                 reject(`transport timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("new_map", transportCheck)
@@ -3123,7 +3123,7 @@ export class Character extends Observer implements CharacterData {
         const unequipped = new Promise<number>((resolve, reject) => {
             const unequipCheck = (data: CharacterData) => {
                 if (data.slots[slot] === null) {
-                    this.socket.removeListener("player", unequipCheck)
+                    this.socket.off("player", unequipCheck)
 
                     // Look for the unequipped item in the inventory
                     let inventorySlot: number = undefined
@@ -3148,7 +3148,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", unequipCheck)
+                this.socket.off("player", unequipCheck)
                 reject(`unequip timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
@@ -3174,22 +3174,22 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "unfriend_failed") {
-                        this.socket.removeListener("friend", check)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("friend", check)
+                        this.socket.off("game_response", failCheck)
                         reject(`unfriend failed (${data.reason})`)
                     }
                 }
             }
             const check = (data: FriendData) => {
                 if (data.event == "lost") {
-                    this.socket.removeListener("friend", check)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("friend", check)
+                    this.socket.off("game_response", failCheck)
                     resolve(data)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("friend", check)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("friend", check)
+                this.socket.off("game_response", failCheck)
                 reject("unfriend timeout(2500ms)")
             }, 2500)
             this.socket.on("friend", check)
@@ -3219,13 +3219,13 @@ export class Character extends Observer implements CharacterData {
                     return
                 for (const [event, datum] of data.hitchhikers) {
                     if (event == "game_response" && datum.response == "upgrade_fail" && datum.num == itemPos) {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(false)
                         return
                     } else if (event == "game_response" && datum.response == "upgrade_success" && datum.num == itemPos) {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(true)
                         return
                     }
@@ -3235,45 +3235,45 @@ export class Character extends Observer implements CharacterData {
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "bank_restrictions" && data.place == "upgrade") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("You can't upgrade items in the bank.")
                     } else if (data.response == "item_locked" && data.place == "upgrade") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("You can't upgrade locked items.")
                     } else if (data.response == "get_closer" && data.place == "upgrade") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("We are too far away to upgrade items.")
                     }
                 } else if (typeof data == "string") {
                     if (data == "bank_restrictions") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("We can't upgrade things in the bank.")
                     } else if (data == "upgrade_in_progress") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject("We are already upgrading something.")
                     } else if (data == "upgrade_incompatible_scroll") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
                     } else if (data == "upgrade_fail") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(false)
                     } else if (data == "upgrade_success") {
-                        this.socket.removeListener("game_response", gameResponseCheck)
-                        this.socket.removeListener("player", playerCheck)
+                        this.socket.off("game_response", gameResponseCheck)
+                        this.socket.off("player", playerCheck)
                         resolve(true)
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("game_response", gameResponseCheck)
-                this.socket.removeListener("player", playerCheck)
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("player", playerCheck)
                 reject("upgrade timeout (60000ms)")
             }, 60000)
             this.socket.on("game_response", gameResponseCheck)
@@ -3294,12 +3294,12 @@ export class Character extends Observer implements CharacterData {
         const healReceived = new Promise<void>((resolve, reject) => {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.removeListener("eval", healCheck)
+                    this.socket.off("eval", healCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("eval", healCheck)
+                this.socket.off("eval", healCheck)
                 reject(`useHPPot timeout(${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", healCheck)
@@ -3319,12 +3319,12 @@ export class Character extends Observer implements CharacterData {
         const healReceived = new Promise<void>((resolve, reject) => {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.removeListener("eval", healCheck)
+                    this.socket.off("eval", healCheck)
                     resolve()
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("eval", healCheck)
+                this.socket.off("eval", healCheck)
                 reject(`useMPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", healCheck)
@@ -3350,30 +3350,30 @@ export class Character extends Observer implements CharacterData {
                     return
                 }
                 if (startedWarp && !data.c.town) {
-                    this.socket.removeListener("player", failCheck)
-                    this.socket.removeListener("new_map", warpedCheck2)
+                    this.socket.off("player", failCheck)
+                    this.socket.off("new_map", warpedCheck2)
                     reject("warpToTown failed.")
                 }
             }
             const warpedCheck2 = (data: NewMapData) => {
                 if (data.effect == 1) {
-                    this.socket.removeListener("player", failCheck)
-                    this.socket.removeListener("new_map", warpedCheck2)
+                    this.socket.off("player", failCheck)
+                    this.socket.off("new_map", warpedCheck2)
                     resolve({ map: data.name, x: data.x, y: data.y })
                 }
             }
 
             setTimeout(() => {
                 if (!startedWarp) {
-                    this.socket.removeListener("player", failCheck)
-                    this.socket.removeListener("new_map", warpedCheck2)
+                    this.socket.off("player", failCheck)
+                    this.socket.off("new_map", warpedCheck2)
                     reject("warpToTown timeout (1000ms)")
                 }
             }, 1000)
 
             setTimeout(() => {
-                this.socket.removeListener("player", failCheck)
-                this.socket.removeListener("new_map", warpedCheck2)
+                this.socket.off("player", failCheck)
+                this.socket.off("new_map", warpedCheck2)
                 reject("warpToTown timeout (5000ms)")
             }, 5000)
             this.socket.on("new_map", warpedCheck2)
@@ -3419,13 +3419,13 @@ export class Character extends Observer implements CharacterData {
                 const newCount = this.countItem(item.name, data.items)
                 if (item.q && newCount == (itemCount + item.q)
                     || !item.q && newCount == (itemCount + 1)) {
-                    this.socket.removeListener("player", checkWithdrawal)
+                    this.socket.off("player", checkWithdrawal)
                     return resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", checkWithdrawal)
+                this.socket.off("player", checkWithdrawal)
                 reject(`withdrawItem timeout(${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", checkWithdrawal)

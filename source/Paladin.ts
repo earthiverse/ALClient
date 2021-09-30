@@ -11,13 +11,13 @@ export class Paladin extends PingCompensatedCharacter {
         const shieldCheck = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (!data.s || !data.s.mshield) {
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("player", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", successCheck)
+                this.socket.off("player", successCheck)
                 reject(`manaShieldOff timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
         })
@@ -34,13 +34,13 @@ export class Paladin extends PingCompensatedCharacter {
         const shieldCheck = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (data.s?.mshield) {
-                    this.socket.removeListener("player", successCheck)
+                    this.socket.off("player", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("player", successCheck)
+                this.socket.off("player", successCheck)
                 reject(`manaShieldOn timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
         })
@@ -55,13 +55,13 @@ export class Paladin extends PingCompensatedCharacter {
         const healed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]selfheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`selfheal timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)

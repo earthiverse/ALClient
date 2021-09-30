@@ -19,15 +19,15 @@ export class Ranger extends PingCompensatedCharacter {
             // TODO: Confirm that the cooldown is always sent after the projectiles
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]5shot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectiles)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`5shot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -49,13 +49,13 @@ export class Ranger extends PingCompensatedCharacter {
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]4fingers['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`fourfinger timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -72,13 +72,13 @@ export class Ranger extends PingCompensatedCharacter {
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]huntersmark['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`huntersmark timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -107,15 +107,15 @@ export class Ranger extends PingCompensatedCharacter {
 
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]attack['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectile)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`piercingshot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -144,15 +144,15 @@ export class Ranger extends PingCompensatedCharacter {
 
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]poisonarrow['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectile)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`poisonarrow timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -197,15 +197,15 @@ export class Ranger extends PingCompensatedCharacter {
 
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]supershot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectile)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`supershot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -232,15 +232,15 @@ export class Ranger extends PingCompensatedCharacter {
             // TODO: Confirm that the cooldown is always sent after the projectiles
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]3shot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve(projectiles)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`3shot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)

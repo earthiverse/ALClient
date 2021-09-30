@@ -15,18 +15,18 @@ export class Rogue extends PingCompensatedCharacter {
         const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]mentalburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
-                    this.socket.removeListener("death", deathCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("eval", cooldownCheck)
+                    this.socket.off("death", deathCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve()
                 }
             }
 
             const deathCheck = (data: DeathData) => {
                 if (data.id == target) {
-                    this.socket.removeListener("eval", cooldownCheck)
-                    this.socket.removeListener("death", deathCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("eval", cooldownCheck)
+                    this.socket.off("death", deathCheck)
+                    this.socket.off("game_response", failCheck)
                     reject(`Entity ${target} not found`)
                 }
             }
@@ -34,23 +34,23 @@ export class Rogue extends PingCompensatedCharacter {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "cooldown" && data.skill == "mentalburst") {
-                        this.socket.removeListener("eval", cooldownCheck)
-                        this.socket.removeListener("death", deathCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("death", deathCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`mentalBurst on ${target} failed due to cooldown (ms: ${data.ms}).`)
                     } else if (data.response == "too_far" && data.place == "mentalburst") {
-                        this.socket.removeListener("eval", cooldownCheck)
-                        this.socket.removeListener("death", deathCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("death", deathCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`${target} is too far away to mentalBurst (dist: ${data.dist}).`)
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
-                this.socket.removeListener("death", deathCheck)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("eval", cooldownCheck)
+                this.socket.off("death", deathCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`mentalBurst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -70,13 +70,13 @@ export class Rogue extends PingCompensatedCharacter {
         const poisonCoated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]pcoat['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`poisoncoat timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -93,13 +93,13 @@ export class Rogue extends PingCompensatedCharacter {
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickpunch['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`quickPunch timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -116,9 +116,9 @@ export class Rogue extends PingCompensatedCharacter {
         const stabbed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]quickstab['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
-                    this.socket.removeListener("death", deathCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("eval", cooldownCheck)
+                    this.socket.off("death", deathCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve()
                 }
             }
@@ -126,14 +126,14 @@ export class Rogue extends PingCompensatedCharacter {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "cooldown" && data.skill == "quickstab") {
-                        this.socket.removeListener("eval", cooldownCheck)
-                        this.socket.removeListener("death", deathCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("death", deathCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`quickStab on ${target} failed due to cooldown (ms: ${data.ms}).`)
                     } else if (data.response == "too_far" && data.place == "quickstab") {
-                        this.socket.removeListener("eval", cooldownCheck)
-                        this.socket.removeListener("death", deathCheck)
-                        this.socket.removeListener("game_response", failCheck)
+                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("death", deathCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`${target} is too far away to quickStab (dist: ${data.dist}).`)
                     }
                 }
@@ -141,17 +141,17 @@ export class Rogue extends PingCompensatedCharacter {
 
             const deathCheck = (data: DeathData) => {
                 if (data.id == target) {
-                    this.socket.removeListener("eval", cooldownCheck)
-                    this.socket.removeListener("death", deathCheck)
-                    this.socket.removeListener("game_response", failCheck)
+                    this.socket.off("eval", cooldownCheck)
+                    this.socket.off("death", deathCheck)
+                    this.socket.off("game_response", failCheck)
                     reject(`Entity ${target} not found`)
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
-                this.socket.removeListener("death", deathCheck)
-                this.socket.removeListener("game_response", failCheck)
+                this.socket.off("eval", cooldownCheck)
+                this.socket.off("death", deathCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`quickStab timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -171,13 +171,13 @@ export class Rogue extends PingCompensatedCharacter {
         const swifted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]rspeed['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`rspeed timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -197,13 +197,13 @@ export class Rogue extends PingCompensatedCharacter {
         const shadowStriked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]shadowstrike['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`shadowstrike timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)

@@ -8,13 +8,13 @@ export class Priest extends PingCompensatedCharacter {
         const absorbed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`curse timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -29,13 +29,13 @@ export class Priest extends PingCompensatedCharacter {
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`curse timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -50,13 +50,13 @@ export class Priest extends PingCompensatedCharacter {
         const darkBlessed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`darkblessing timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -72,49 +72,49 @@ export class Priest extends PingCompensatedCharacter {
         const healStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
                 if (data.id == id) {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("death", deathCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("death", deathCheck)
                     reject(`Entity ${id} not found`)
                 }
             }
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "disabled") {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed (disabled).`)
                     } else if (data.response == "attack_failed" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed.`)
                     } else if (data.response == "too_far" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("death", deathCheck)
                         reject(`${id} is too far away to heal (dist: ${data.dist}).`)
                     } else if (data.response == "cooldown" && data.id == id) {
-                        this.socket.removeListener("action", attackCheck)
-                        this.socket.removeListener("game_response", failCheck)
-                        this.socket.removeListener("death", deathCheck)
+                        this.socket.off("action", attackCheck)
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed due to cooldown (ms: ${data.ms}).`)
                     }
                 }
             }
             const attackCheck = (data: ActionData) => {
                 if (data.attacker == this.id && data.target == id && data.type == "heal") {
-                    this.socket.removeListener("action", attackCheck)
-                    this.socket.removeListener("game_response", failCheck)
-                    this.socket.removeListener("death", deathCheck)
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("death", deathCheck)
                     resolve(data.pid)
                 }
             }
             setTimeout(() => {
-                this.socket.removeListener("action", attackCheck)
-                this.socket.removeListener("game_response", failCheck)
-                this.socket.removeListener("death", deathCheck)
+                this.socket.off("action", attackCheck)
+                this.socket.off("game_response", failCheck)
+                this.socket.off("death", deathCheck)
                 reject(`heal timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
@@ -131,13 +131,13 @@ export class Priest extends PingCompensatedCharacter {
         const healStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]partyheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`partyHeal timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -154,13 +154,13 @@ export class Priest extends PingCompensatedCharacter {
         const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`revive timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)

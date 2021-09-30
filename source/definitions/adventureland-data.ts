@@ -138,6 +138,8 @@ export type GData = {
             interval?: number
             /** How long the condition will affect your character. */
             duration?: number
+            /** Some conditions have a random chance of how long they will take. This is the minimum, if that's the case. */
+            duration_min?: number
             /** TODO: CONFIRM. If 'ui' is true, this will show the condition in the native game UI. */
             ui?: boolean
             /** Skin (image) for this condition */

@@ -10,13 +10,13 @@ export class Mage extends PingCompensatedCharacter {
         const alchemied = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`alchemy timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -34,13 +34,13 @@ export class Mage extends PingCompensatedCharacter {
         const blinked = new Promise<void>((resolve, reject) => {
             const successCheck = (data: NewMapData) => {
                 if (data.effect == "blink" && data.x == x && data.y == y) {
-                    this.socket.removeListener("new_map", successCheck)
+                    this.socket.off("new_map", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("new_map", successCheck)
+                this.socket.off("new_map", successCheck)
                 reject(`blink timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("new_map", successCheck)
@@ -56,13 +56,13 @@ export class Mage extends PingCompensatedCharacter {
         const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]burst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`burst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -81,13 +81,13 @@ export class Mage extends PingCompensatedCharacter {
         const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`cburst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -102,13 +102,13 @@ export class Mage extends PingCompensatedCharacter {
         const energized = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]energize['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`energize timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -126,13 +126,13 @@ export class Mage extends PingCompensatedCharacter {
         const tangled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]entangle['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`entangle timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -150,13 +150,13 @@ export class Mage extends PingCompensatedCharacter {
         const lit = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]light['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`light timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
@@ -173,17 +173,17 @@ export class Mage extends PingCompensatedCharacter {
             const magiportCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "magiport_failed" && data.id == target) {
-                        this.socket.removeListener("game_response", magiportCheck)
+                        this.socket.off("game_response", magiportCheck)
                         reject(`Magiport for '${target}' failed.`)
                     } else if (data.response == "magiport_sent" && data.id == target) {
-                        this.socket.removeListener("game_response", magiportCheck)
+                        this.socket.off("game_response", magiportCheck)
                         resolve()
                     }
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("game_response", magiportCheck)
+                this.socket.off("game_response", magiportCheck)
                 reject(`magiport timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("game_response", magiportCheck)
@@ -205,13 +205,13 @@ export class Mage extends PingCompensatedCharacter {
         const relectioned = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.removeListener("eval", cooldownCheck)
+                    this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.removeListener("eval", cooldownCheck)
+                this.socket.off("eval", cooldownCheck)
                 reject(`reflection timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)

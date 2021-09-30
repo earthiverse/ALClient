@@ -1,4 +1,4 @@
-import socketio from "socket.io-client"
+import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data"
 import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
@@ -8,7 +8,7 @@ import { Player } from "./Player"
 import { Tools } from "./Tools"
 
 export class Observer {
-    public socket: SocketIOClient.Socket;
+    public socket: Socket
 
     protected lastAllEntities: number
     protected lastPositionUpdate: number
