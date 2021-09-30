@@ -578,13 +578,13 @@ export class Character extends Observer implements CharacterData {
         return connected
     }
 
-    public async disconnect(): Promise<void> {
+    public disconnect(): void {
         console.warn("Disconnecting!")
 
         // Close & remove the socket
         if (this.socket) {
-            this.socket.off()
             this.socket.disconnect()
+            this.socket.off()
         }
 
         this.ready = false
