@@ -36,6 +36,7 @@ export class Observer {
     public async connect(reconnect = false, start = true): Promise<void> {
         this.socket = socketio(`ws://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
+            forceNew: true,
             reconnection: reconnect,
             transports: ["websocket"]
         })
