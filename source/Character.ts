@@ -31,9 +31,6 @@ export class Character extends Observer implements CharacterData {
     public apiercing = 0
     public blast = 0
     public controller: string
-    public x: number
-    public y: number
-    public map: MapName
     public in: string
     public name: string
     public id: string
