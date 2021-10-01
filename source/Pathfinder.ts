@@ -270,54 +270,64 @@ export class Pathfinder {
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let y = 1; y < height - 1; y++) {
             for (let x = 1; x < width; x++) {
-                if (grid[y * width + x] !== WALKABLE) continue
+                const mC = grid[y * width + x]
+                if (mC !== WALKABLE) continue
 
-                if (grid[(y - 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y - 1) * width + x] === UNWALKABLE
-                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
-                    && grid[y * width + x - 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x - 1] === UNWALKABLE) {
+                const bL = grid[(y - 1) * width + x - 1]
+                const bC = grid[(y - 1) * width + x]
+                const bR = grid[(y - 1) * width + x + 1]
+                const mL = grid[y * width + x - 1]
+                const mR = grid[y * width + x + 1]
+                const uL = grid[(y + 1) * width + x - 1]
+                const uC = grid[(y + 1) * width + x]
+                const uR = grid[(y + 1) * width + x + 1]
+
+                if (bL === UNWALKABLE
+                    && bC === UNWALKABLE
+                    && bR === UNWALKABLE
+                    && mL === UNWALKABLE
+                    && uL === UNWALKABLE) {
                     // Inside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y - 1) * width + x] === UNWALKABLE
-                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
-                    && grid[y * width + x + 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
+                } else if (bL === UNWALKABLE
+                    && bC === UNWALKABLE
+                    && bR === UNWALKABLE
+                    && mR === UNWALKABLE
+                    && uR === UNWALKABLE) {
                     // Inside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[(y - 1) * width + x + 1] === UNWALKABLE
-                    && grid[y * width + x + 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x] === UNWALKABLE
-                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
+                } else if (bR === UNWALKABLE
+                    && mR === UNWALKABLE
+                    && uL === UNWALKABLE
+                    && uC === UNWALKABLE
+                    && uR === UNWALKABLE) {
                     // Inside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
-                    && grid[y * width + x - 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x] === UNWALKABLE
-                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
+                } else if (bL === UNWALKABLE
+                    && mL === UNWALKABLE
+                    && uL === UNWALKABLE
+                    && uC === UNWALKABLE
+                    && uR === UNWALKABLE) {
                     // Inside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[(y - 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y - 1) * width + x] === WALKABLE
-                    && grid[y * width + x - 1] === WALKABLE) {
+                } else if (bL === UNWALKABLE
+                    && bC === WALKABLE
+                    && mL === WALKABLE) {
                     // Outside-1
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[(y - 1) * width + x] === WALKABLE
-                    && grid[(y - 1) * width + x + 1] === UNWALKABLE
-                    && grid[y * width + x + 1] === WALKABLE) {
+                } else if (bC === WALKABLE
+                    && bR === UNWALKABLE
+                    && mR === WALKABLE) {
                     // Outside-2
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y * width + x + 1] === WALKABLE
-                    && grid[(y + 1) * width + x] === WALKABLE
-                    && grid[(y + 1) * width + x + 1] === UNWALKABLE) {
+                } else if (mR === WALKABLE
+                    && uC === WALKABLE
+                    && uR === UNWALKABLE) {
                     // Outside-3
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
-                } else if (grid[y * width + x - 1] === WALKABLE
-                    && grid[(y + 1) * width + x - 1] === UNWALKABLE
-                    && grid[(y + 1) * width + x] === WALKABLE) {
+                } else if (mL === WALKABLE
+                    && uL === UNWALKABLE
+                    && uC === WALKABLE) {
                     // Outside-4
                     walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
                 }
