@@ -1,3 +1,4 @@
+import Delaunator from "delaunator"
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import ngraph from "ngraph.path"
 import { IPosition } from "./definitions/adventureland"
@@ -262,6 +263,7 @@ export class Pathfinder {
         this.grids[map] = grid
 
         const walkableNodes: Node<NodeData>[] = []
+        const points: number[] = []
 
         this.graph.beginUpdate()
 
@@ -282,54 +284,65 @@ export class Pathfinder {
                 const uC = grid[(y + 1) * width + x]
                 const uR = grid[(y + 1) * width + x + 1]
 
+                const mapX = x + this.G.geometry[map].min_x
+                const mapY = y + this.G.geometry[map].min_y
+
                 if (bL === UNWALKABLE
                     && bC === UNWALKABLE
                     && bR === UNWALKABLE
                     && mL === UNWALKABLE
                     && uL === UNWALKABLE) {
                     // Inside-1
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (bL === UNWALKABLE
                     && bC === UNWALKABLE
                     && bR === UNWALKABLE
                     && mR === UNWALKABLE
                     && uR === UNWALKABLE) {
                     // Inside-2
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (bR === UNWALKABLE
                     && mR === UNWALKABLE
                     && uL === UNWALKABLE
                     && uC === UNWALKABLE
                     && uR === UNWALKABLE) {
                     // Inside-3
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (bL === UNWALKABLE
                     && mL === UNWALKABLE
                     && uL === UNWALKABLE
                     && uC === UNWALKABLE
                     && uR === UNWALKABLE) {
                     // Inside-4
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (bL === UNWALKABLE
                     && bC === WALKABLE
                     && mL === WALKABLE) {
                     // Outside-1
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (bC === WALKABLE
                     && bR === UNWALKABLE
                     && mR === WALKABLE) {
                     // Outside-2
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (mR === WALKABLE
                     && uC === WALKABLE
                     && uR === UNWALKABLE) {
                     // Outside-3
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 } else if (mL === WALKABLE
                     && uL === UNWALKABLE
                     && uC === WALKABLE) {
                     // Outside-4
-                    walkableNodes.push(this.addNodeToGraph(map, x + this.G.geometry[map].min_x, y + this.G.geometry[map].min_y))
+                    walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
+                    points.push(mapX, mapY)
                 }
             }
         }
@@ -342,6 +355,7 @@ export class Pathfinder {
             if (npc.id !== "transporter") continue
             const closest = this.findClosestSpawn(map, npc.position[0], npc.position[1])
             const fromNode = this.addNodeToGraph(map, closest.x, closest.y)
+            points.push(closest.x, closest.y)
             walkableNodes.push(fromNode)
             transporters.push(npc)
         }
@@ -357,6 +371,7 @@ export class Pathfinder {
             // From
             const spawn = this.G.maps[map].spawns[door[6]]
             const fromDoor = this.addNodeToGraph(map, spawn[0], spawn[1])
+            points.push(spawn[0], spawn[1])
             walkableNodes.push(fromDoor)
             doors.push(door)
         }
@@ -364,28 +379,23 @@ export class Pathfinder {
         // Add nodes at spawns
         // console.debug("  Adding spawn nodes...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
-        for (const spawn of this.G.maps[map].spawns) {
+        const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
+        points.push(this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
+        const townLinkData: LinkData = { map: map, type: "town", x: townNode.data.x, y: townNode.data.y }
+        for (let i = 1; i < this.G.maps[map].spawns.length; i++) {
+            const spawn = this.G.maps[map].spawns[i]
             walkableNodes.push(this.addNodeToGraph(map, spawn[0], spawn[1]))
+            points.push(spawn[0], spawn[1])
         }
 
-        // TODO: Is there any way to optimize this!?!?
-        // TODO: This is what takes the most compute time...
         // console.debug("  Adding walkable links...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let i = 0; i < walkableNodes.length; i++) {
             const fromNode = walkableNodes[i]
 
-            // Check if we can walk to another node
-            for (let j = i + 1; j < walkableNodes.length; j++) {
-                if (this.canWalkPath(fromNode.data, walkableNodes[j].data)) {
-                    this.addLinkToGraph(fromNode, walkableNodes[j])
-                    this.addLinkToGraph(walkableNodes[j], fromNode)
-                }
-            }
-
             // Check if we can reach a door
             for (const door of doors) {
-                if (this.doorDistance(walkableNodes[i].data, door) > Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
+                if (this.doorDistance(fromNode.data, door) > Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
@@ -418,8 +428,6 @@ export class Pathfinder {
             }
         }
 
-        const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
-        const townLinkData: LinkData = { map: map, type: "town", x: townNode.data.x, y: townNode.data.y }
         const leaveLink = this.addNodeToGraph("main", this.G.maps.main.spawns[0][0], this.G.maps.main.spawns[0][1])
         const leaveLinkData: LinkData = { map: leaveLink.data.map, type: "leave", x: leaveLink.data.x, y: leaveLink.data.y }
         for (const node of walkableNodes) {
@@ -428,6 +436,29 @@ export class Pathfinder {
 
             // Create leave links
             if (map == "cyberland" || map == "jail") this.addLinkToGraph(node, leaveLink, leaveLinkData)
+        }
+
+        // Check if we can walk to other nodes
+        const delaunay = new Delaunator(points)
+        for (let i = 0; i < delaunay.triangles.length; i += 3) {
+            const point1i = delaunay.triangles[i]
+            const point2i = delaunay.triangles[i + 1]
+            const point3i = delaunay.triangles[i + 2]
+
+            const point1 = [delaunay.coords[point1i * 2], delaunay.coords[point1i * 2 + 1]]
+            const point2 = [delaunay.coords[point2i * 2], delaunay.coords[point2i * 2 + 1]]
+            const point3 = [delaunay.coords[point3i * 2], delaunay.coords[point3i * 2 + 1]]
+
+            const paths = [[point1[0], point1[1], point2[0], point2[1]],
+                [point2[0], point2[1], point3[0], point3[1]],
+                [point1[0], point1[1], point3[0], point3[1]]]
+
+            for (const path of paths) {
+                if (this.canWalkPath({ map: map, x: path[0], y: path[1] }, { map: map, x: path[2], y: path[3] })) {
+                    this.graph.addLink(`${map}:${path[0]},${path[1]}`, `${map}:${path[2]},${path[3]}`)
+                    this.graph.addLink(`${map}:${path[2]},${path[3]}`, `${map}:${path[0]},${path[1]}`)
+                }
+            }
         }
 
         this.graph.endUpdate()
