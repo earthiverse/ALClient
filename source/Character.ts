@@ -1493,7 +1493,13 @@ export class Character extends Observer implements CharacterData {
         return compoundComplete
     }
 
-    // TODO: Add promises
+    /**
+     * Crafts the given item name using items in the character's inventory.
+     *
+     * @param {ItemName} item
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
     public craft(item: ItemName): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [craft].")
         const gInfo = this.G.craft[item]
@@ -1508,7 +1514,7 @@ export class Character extends Observer implements CharacterData {
 
             const searchArgs = {
                 level: requiredLevel,
-                quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity : undefined,
+                quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity - 1 : undefined,
             }
 
             const itemPos = this.locateItem(requiredName, this.items, searchArgs)
