@@ -1,7 +1,7 @@
-import { EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server"
-import { Constants } from "./Constants"
-import { Pathfinder } from "./Pathfinder"
-import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server.js"
+import { Constants } from "./Constants.js"
+import { Pathfinder } from "./Pathfinder.js"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Mage extends PingCompensatedCharacter {
     // NOTE: UNTESTED

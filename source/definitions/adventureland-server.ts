@@ -3,8 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland"
-import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data"
+import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland.js"
+import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
     name: string

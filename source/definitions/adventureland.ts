@@ -1,5 +1,11 @@
-import { BankPackName, ConditionName, MapName, MonsterName } from "./adventureland-data"
-import { ItemData, ItemDataTrade } from "./adventureland-server"
+/**
+ * This file is deprecated.
+ * Please contribute to `adventureland-data` or `adventureland-server`
+ * Please help me transfer definitions to those files, too!
+ */
+
+import { BankPackName, ConditionName, MapName, MonsterName } from "./adventureland-data.js"
+import { ItemData, ItemDataTrade } from "./adventureland-server.js"
 
 export type BankInfo = {
     [T in Exclude<BankPackName, "gold">]?: ItemData[]

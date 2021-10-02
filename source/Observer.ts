@@ -1,11 +1,11 @@
 import socketio, { Socket } from "socket.io-client"
-import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database"
-import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server"
-import { Constants } from "./Constants"
-import { Entity } from "./Entity"
-import { Player } from "./Player"
-import { Tools } from "./Tools"
+import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
+import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server.js"
+import { Constants } from "./Constants.js"
+import { Entity } from "./Entity.js"
+import { Player } from "./Player.js"
+import { Tools } from "./Tools.js"
 
 export class Observer {
     public socket: Socket

@@ -1,6 +1,6 @@
-import { ItemType } from "./definitions/adventureland"
-import { Attribute, GData, GItem, ItemName, SkillName } from "./definitions/adventureland-data"
-import { ItemData } from "./definitions/adventureland-server"
+import { ItemType } from "./definitions/adventureland.js"
+import { Attribute, GData, GItem, ItemName, SkillName } from "./definitions/adventureland-data.js"
+import { ItemData } from "./definitions/adventureland-server.js"
 
 export class Item implements ItemData, GItem {
     protected G: GData

@@ -1,11 +1,11 @@
 import Delaunator from "delaunator"
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import ngraph from "ngraph.path"
-import { IPosition } from "./definitions/adventureland"
-import { DoorInfo, GData, ItemName, MapName } from "./definitions/adventureland-data"
-import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder"
-import { Constants } from "./Constants"
-import { Tools } from "./Tools"
+import { IPosition } from "./definitions/adventureland.js"
+import { DoorInfo, GData, ItemName, MapName } from "./definitions/adventureland-data.js"
+import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
+import { Constants } from "./Constants.js"
+import { Tools } from "./Tools.js"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -200,7 +200,7 @@ export class Pathfinder {
         if (this.grids[map]) return this.grids[map]
         if (!this.G) throw new Error("Prepare pathfinding before querying getGrid()!")
 
-        console.debug(`Preparing ${map}...`)
+        // console.debug(`Preparing ${map}...`)
 
         const width = this.G.geometry[map].max_x - this.G.geometry[map].min_x
         const height = this.G.geometry[map].max_y - this.G.geometry[map].min_y
@@ -440,24 +440,21 @@ export class Pathfinder {
 
         // Check if we can walk to other nodes
         const delaunay = new Delaunator(points)
-        for (let i = 0; i < delaunay.triangles.length; i += 3) {
-            const point1i = delaunay.triangles[i]
-            const point2i = delaunay.triangles[i + 1]
-            const point3i = delaunay.triangles[i + 2]
 
-            const point1 = [delaunay.coords[point1i * 2], delaunay.coords[point1i * 2 + 1]]
-            const point2 = [delaunay.coords[point2i * 2], delaunay.coords[point2i * 2 + 1]]
-            const point3 = [delaunay.coords[point3i * 2], delaunay.coords[point3i * 2 + 1]]
+        for (let i = 0; i < delaunay.halfedges.length; i++) {
+            const halfedge = delaunay.halfedges[i]
+            if (halfedge < i) continue
+            const ti = delaunay.triangles[i]
+            const tj = delaunay.triangles[halfedge]
 
-            const paths = [[point1[0], point1[1], point2[0], point2[1]],
-                [point2[0], point2[1], point3[0], point3[1]],
-                [point1[0], point1[1], point3[0], point3[1]]]
+            const x1 = delaunay.coords[ti * 2]
+            const y1 = delaunay.coords[ti * 2 + 1]
+            const x2 = delaunay.coords[tj * 2]
+            const y2 = delaunay.coords[tj * 2 + 1]
 
-            for (const path of paths) {
-                if (this.canWalkPath({ map: map, x: path[0], y: path[1] }, { map: map, x: path[2], y: path[3] })) {
-                    this.graph.addLink(`${map}:${path[0]},${path[1]}`, `${map}:${path[2]},${path[3]}`)
-                    this.graph.addLink(`${map}:${path[2]},${path[3]}`, `${map}:${path[0]},${path[1]}`)
-                }
+            if (this.canWalkPath({ map: map, x: x1, y: y1 }, { map: map, x: x2, y: y2 })) {
+                this.graph.addLink(`${map}:${x1},${y1}`, `${map}:${x2},${y2}`)
+                this.graph.addLink(`${map}:${x2},${y2}`, `${map}:${x1},${y1}`)
             }
         }
 

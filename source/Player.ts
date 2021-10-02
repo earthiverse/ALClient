@@ -1,9 +1,9 @@
-import { Character } from "./Character"
-import { SlotInfo, StatusInfo } from "./definitions/adventureland"
-import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data"
-import { PlayerData } from "./definitions/adventureland-server"
-import { Entity } from "./Entity"
-import { Tools } from "./Tools"
+import { Character } from "./Character.js"
+import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
+import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
+import { PlayerData } from "./definitions/adventureland-server.js"
+import { Entity } from "./Entity.js"
+import { Tools } from "./Tools.js"
 
 export class Player implements PlayerData {
     public lastMongoUpdate: number

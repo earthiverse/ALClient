@@ -1,5 +1,5 @@
 import { Document, Model } from "mongoose"
-import { MonsterName } from "../../definitions/adventureland-data"
+import { MonsterName } from "../../definitions/adventureland-data.js"
 
 export interface IAchievement {
     date: number

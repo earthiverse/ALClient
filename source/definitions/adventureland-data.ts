@@ -3,7 +3,7 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland"
+import { IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland.js"
 
 export type GData = {
     achievements: {

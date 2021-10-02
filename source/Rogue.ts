@@ -1,6 +1,6 @@
-import { DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server"
-import { Constants } from "./Constants"
-import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
+import { DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
+import { Constants } from "./Constants.js"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Rogue extends PingCompensatedCharacter {
     // NOTE: UNTESTED

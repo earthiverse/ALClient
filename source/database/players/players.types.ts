@@ -1,6 +1,6 @@
 import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../definitions/adventureland"
-import { CharacterType, MapName } from "../../definitions/adventureland-data"
+import { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../definitions/adventureland.js"
+import { CharacterType, MapName } from "../../definitions/adventureland-data.js"
 
 export interface IPlayer {
     in: string

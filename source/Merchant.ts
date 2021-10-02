@@ -1,9 +1,9 @@
-import { CharacterData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server"
-import { TradeSlotType } from "./definitions/adventureland"
-import { Constants } from "./Constants"
-import { PingCompensatedCharacter } from "./PingCompensatedCharacter"
-import { Tools } from "./Tools"
-import { ItemName } from "./definitions/adventureland-data"
+import { CharacterData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server.js"
+import { TradeSlotType } from "./definitions/adventureland.js"
+import { Constants } from "./Constants.js"
+import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
+import { Tools } from "./Tools.js"
+import { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
     public closeMerchantStand(): Promise<void> {
