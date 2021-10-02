@@ -166,6 +166,8 @@ export type GData = {
             cost: number
         }
     }
+    // TODO: Add Type Information
+    docs: any
     drops: {
         [T in DropName]: GDropItem[]
     } | {
@@ -200,43 +202,12 @@ export type GData = {
         }
     }
     geometry: {
-        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: {
-            /** TODO: ??? What is this? */
-            default?: number
-            /** [tileidx, min_x, min_y, max_x, max_y, y_disp]
-             *
-             * See: https://pixijs.download/dev/docs/PIXI.Container.html */
-            groups?: ([number, number, number, any, any, number] | [number, number, number])[][]
-            /** The maximum x-coordinate limit for this map */
-            max_x: number
-            /** The maximum y-coordinate limit for this map */
-            max_y: number
-            /** The minimum x-coordinate limit for this map */
-            min_x: number
-            /** The minimum y-coordinate limit for this map */
-            min_y: number
-            /** TODO: ??? What is this? */
-            placements: ([number, number, number, number, number] | [number, number, number])[]
-            /** [x, y]. Potentially used in the past for map traversal. */
-            points?: {
-                [T in string]: [number, number]
-            }
-            /** Related to G.maps[mapName].zones */
-            polygons?: {
-                [T in string]: [number, number][]
-            }
-            /** Related to doors, quirks, and spawns. */
-            rectangles?: {
-                [T in string]: [number, number, number, number]
-            }
-            /** Texture atlas for tiles, [name, x, y, height, width] */
-            tiles: ([TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
-            /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
-            x_lines?: [number, number, number][]
-            /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
-            y_lines?: [number, number, number][]
-        }
+        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: GGeometry
     }
+    // TODO: Add type information
+    images: any
+    // TODO: Add type information
+    imagesets: any
     items: {
         [T in ItemName]: GItem
     };
@@ -450,7 +421,8 @@ export type GData = {
         /** How much percent to vary the output by (random chance) */
         variance?: number
     } }
-
+    // TODO: Add type information
+    sprites: any
     tilesets: {
         [T in TilesetName]: {
             /** The URL that contains the tileset */
@@ -524,6 +496,43 @@ export type CXData = {
  * [8]: If [7] is "key", then this is the key that is required to open this door
  */
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
+
+export type GGeometry = {
+    /** TODO: ??? What is this? */
+    default?: number
+    /** [tileidx, min_x, min_y, max_x, max_y, y_disp]
+     *
+     * See: https://pixijs.download/dev/docs/PIXI.Container.html */
+    groups?: ([number, number, number, any, any, number] | [number, number, number])[][]
+    /** The maximum x-coordinate limit for this map */
+    max_x: number
+    /** The maximum y-coordinate limit for this map */
+    max_y: number
+    /** The minimum x-coordinate limit for this map */
+    min_x: number
+    /** The minimum y-coordinate limit for this map */
+    min_y: number
+    /** TODO: ??? What is this? */
+    placements: ([number, number, number, number, number] | [number, number, number])[]
+    /** [x, y]. Potentially used in the past for map traversal. */
+    points?: {
+        [T in string]: [number, number]
+    }
+    /** Related to G.maps[mapName].zones */
+    polygons?: {
+        [T in string]: [number, number][]
+    }
+    /** Related to doors, quirks, and spawns. */
+    rectangles?: {
+        [T in string]: [number, number, number, number]
+    }
+    /** Texture atlas for tiles, [name, x, y, height, width] */
+    tiles: ([TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
+    /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
+    x_lines?: [number, number, number][]
+    /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
+    y_lines?: [number, number, number][]
+}
 
 export type GItem = {
     [T in Exclude<Attribute, "stat">]?: number

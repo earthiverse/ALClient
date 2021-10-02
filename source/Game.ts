@@ -2,7 +2,7 @@ import axios from "axios"
 import fs from "fs"
 import { AuthModel, Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
-import { CharacterType, GData } from "./definitions/adventureland-data.js"
+import { CharacterType, GData, GGeometry, GMap, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server.js"
 import { Paladin } from "./Paladin.js"
 import { Mage } from "./Mage.js"
@@ -27,7 +27,7 @@ export class Game {
         // Private to force static methods
     }
 
-    static async getGData(cache = false): Promise<GData> {
+    static async getGData(cache = false, optimize = true): Promise<GData> {
         if (this.G) return this.G
         if (!this.version) await this.getVersion()
         const gFile = `G_${this.version}.json`
@@ -45,9 +45,11 @@ export class Game {
                 const rawG = matches[1]
                 this.G = JSON.parse(rawG) as GData
 
+                if (optimize) this.G = this.optimizeG(this.G)
+
                 console.debug("Updated 'G' data!")
 
-                if (cache) fs.writeFileSync(gFile, rawG)
+                if (cache) fs.writeFileSync(gFile, JSON.stringify(this.G))
                 return this.G
             } else {
                 console.error(response)
@@ -237,6 +239,80 @@ export class Game {
         this.user = undefined
 
         return response.data
+    }
+
+    /**
+     * This function optimizes G for ALClient. It removes unnecessary things, and optimizes other things to improve processing time.
+     *
+     * @static
+     * @param {GData} g
+     * @memberof Game
+     */
+    static optimizeG(g: GData): GData {
+        // Delete GUI-only stuff to reduce filesize and subsequent JSON parsing time
+        delete g.animations
+        delete g.docs
+        delete g.images
+        delete g.imagesets
+        delete g.sprites
+        delete g.positions
+        delete g.tilesets
+
+        // Optimize items to reduce filesize and subsequent JSON parsing time
+        for (const itemName in g.items) {
+            const gItem = g.items[itemName as ItemName]
+            delete gItem.cx
+            delete gItem.explanation
+            delete gItem.trex
+            delete gItem.skin
+            delete gItem.skin_a
+            delete gItem.skin_c
+            delete gItem.skin_r
+            delete gItem.xcx
+        }
+
+        // Optimize min and max values to improve pathfinding generation
+        for (const mapName in g.geometry) {
+            const gGeometry = (g.geometry[mapName as MapName]) as GGeometry
+            delete gGeometry.groups
+            delete gGeometry.placements
+            delete gGeometry.points
+            delete gGeometry.rectangles
+            if (!gGeometry.x_lines || !gGeometry.y_lines) continue // No geometry
+            let newMinX = Number.MAX_VALUE
+            let newMinY = Number.MAX_VALUE
+            let newMaxX = Number.MIN_VALUE
+            let newMaxY = Number.MIN_VALUE
+            for (const [x, y1, y2] of gGeometry.x_lines) {
+                if (x - 1 < newMinX) newMinX = x - 1
+                if (y1 - 1 < newMinY) newMinY = y1 - 1
+                if (y2 - 1 < newMinY) newMinY = y2 - 1
+                if (x + 1 > newMaxX) newMaxX = x + 1
+                if (y1 + 1 > newMaxY) newMaxY = y1 + 1
+                if (y2 + 1 > newMaxY) newMaxY = y2 + 1
+            }
+            for (const [y, x1, x2] of gGeometry.y_lines) {
+                if (x1 - 1 < newMinX) newMinX = x1 - 1
+                if (x2 - 1 < newMinX) newMinX = x2 - 1
+                if (y - 1 < newMinY) newMinY = y - 1
+                if (x1 + 1 > newMaxX) newMaxX = x1 + 1
+                if (x2 + 1 > newMaxX) newMaxX = x2 + 1
+                if (y + 1 > newMaxY) newMaxY = y + 1
+            }
+            gGeometry.min_x = newMinX
+            gGeometry.min_y = newMinY
+            gGeometry.max_x = newMaxX
+            gGeometry.max_y = newMaxY
+        }
+
+        // Optimize monsters to reduce filesize and subsequent JSON parsing time
+        for (const monsterName in g.monsters) {
+            const gMonster = g.monsters[monsterName as MonsterName] as GMonster
+            delete gMonster.explanation
+            delete gMonster.skin
+        }
+
+        return g
     }
 
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
