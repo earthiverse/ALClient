@@ -380,6 +380,7 @@ export class Pathfinder {
         // console.debug("  Adding spawn nodes...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
+        walkableNodes.push(townNode)
         points.push(this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
         const townLinkData: LinkData = { map: map, type: "town", x: townNode.data.x, y: townNode.data.y }
         for (let i = 1; i < this.G.maps[map].spawns.length; i++) {
