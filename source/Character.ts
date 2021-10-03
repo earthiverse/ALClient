@@ -3439,6 +3439,45 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Returns true if the entity has a >0% chance to die from projectiles already cast.
+     *
+     * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
+     * @param {Map<string, Player>} players (e.g.: bot.players)
+     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
+     * @return {*}  {boolean}
+     * @memberof Entity
+     */
+    public couldDieToProjectiles(): boolean {
+        // if (this.avoidance >= 100) return false
+        let incomingProjectileDamage = 0
+        for (const projectile of this.projectiles.values()) {
+            if (!projectile.damage) continue // Won't do any damage
+            if (projectile.target !== this.id) continue // This projectile is heading towards another entity
+
+            // NOTE: Entities can attack themselves if the projectile gets reflected
+            let attacker: Character | Entity | Player
+            if (!attacker && this.id == projectile.attacker) attacker = this
+            if (!attacker) attacker = this.players.get(projectile.attacker)
+            if (!attacker) attacker = this.entities.get(projectile.attacker)
+            if (!attacker) {
+                // Couldn't find attacker, assume it will crit with maximum damage
+                incomingProjectileDamage += projectile.damage * 2.2
+                if (incomingProjectileDamage >= this.hp) return true
+                continue
+            }
+
+            if (attacker.damage_type == "physical" && this.evasion >= 100) continue // We will avoid the attack
+            if (attacker.damage_type == "magical" && this.reflection >= 100) continue // We will reflect the attack
+
+            const maximumDamage = attacker.calculateDamageRange(this)[1]
+
+            incomingProjectileDamage += maximumDamage
+            if (incomingProjectileDamage >= this.hp) return true
+        }
+        return false
+    }
+
+    /**
      * Returns the number of items that match the given parameters
      * @param itemName The item to look for
      * @param inventory Where to look for the item
