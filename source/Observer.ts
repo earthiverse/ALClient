@@ -68,7 +68,7 @@ export class Observer {
                     x: data.s[0],
                     y: data.s[1]
                 }
-                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
                 Database.lastMongoUpdate.set(data.id, new Date())
             } else if (data.to !== undefined && data.effect == 1) {
                 let s = 0
@@ -84,7 +84,7 @@ export class Observer {
                     x: spawnLocation[0],
                     y: spawnLocation[1]
                 }
-                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).exec().catch((e) => { console.error(e) })
+                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
                 Database.lastMongoUpdate.set(data.id, new Date())
             }
         })
@@ -220,7 +220,7 @@ export class Observer {
             if (Database.connection) {
                 const lastUpdate = Database.lastMongoUpdate.get(entity.id)
                 if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                    EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).exec().catch(() => { /* Suppress errors */ })
+                    EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(() => { /* Suppress errors */ })
                     Database.lastMongoUpdate.delete(id)
                 }
             }
@@ -379,12 +379,15 @@ export class Observer {
                                 $lt: Constants.MAX_VISIBLE_RANGE / 2
                             }
                         }
-                    }
+                    },
+                    { $project: {
+                        _id: 1
+                    } }
                 ]).exec().then((toDeletes => {
                     try {
                         const ids = []
                         for (const toDelete of toDeletes) ids.push(toDelete._id)
-                        EntityModel.deleteMany({ name: { $in: ids } }).exec()
+                        EntityModel.deleteMany({ name: { $in: ids } }).lean().exec()
                     } catch (e) {
                         console.error(e)
                         console.log("DEBUG -----")

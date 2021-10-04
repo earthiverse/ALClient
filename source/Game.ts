@@ -136,7 +136,7 @@ export class Game {
                     "slots.trade30": merchant.slots.trade30,
                     x: merchant.x,
                     y: merchant.y
-                }).exec())
+                }).lean().exec())
             }
             await Promise.all(promises)
         }
@@ -235,7 +235,7 @@ export class Game {
         const response = await axios.post<unknown>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         // Remove the auth from the database
-        if (Database.connection) await AuthModel.deleteOne({ userID: this.user.userID }).exec()
+        if (Database.connection) await AuthModel.deleteOne({ userID: this.user.userID }).lean().exec()
         this.user = undefined
 
         return response.data
