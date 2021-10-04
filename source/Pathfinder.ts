@@ -374,6 +374,32 @@ export class Pathfinder {
             points.push(spawn[0], spawn[1])
             walkableNodes.push(fromDoor)
             doors.push(door)
+
+            // Make additional points near the door to speed up entry
+            const doorX = door[0]
+            const doorY = door[1]
+            const doorWidth = door[2]
+            const doorHeight = door[3]
+            const additionalDoorPoints: IPosition[] = [
+                // Top left
+                { map: map, x: doorX - doorWidth / 2, y: doorY - doorHeight / 2 - Constants.DOOR_REACH_DISTANCE + 1 },
+                { map: map, x: doorX - doorWidth / 2 - Constants.DOOR_REACH_DISTANCE + 1, y: doorY - doorHeight / 2 },
+                // Top right
+                { map: map, x: doorX + doorWidth / 2, y: doorY - doorHeight / 2 - Constants.DOOR_REACH_DISTANCE + 1 },
+                { map: map, x: doorX + doorWidth / 2 + Constants.DOOR_REACH_DISTANCE - 1, y: doorY - doorHeight / 2 },
+                // Bottom right
+                { map: map, x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 + Constants.DOOR_REACH_DISTANCE - 1 },
+                { map: map, x: doorX + doorWidth / 2 + Constants.DOOR_REACH_DISTANCE - 1, y: doorY + doorHeight / 2 },
+                // Bottom left
+                { map: map, x: doorX - doorWidth / 2, y: doorY + doorHeight / 2 + Constants.DOOR_REACH_DISTANCE - 1 },
+                { map: map, x: doorX - doorWidth / 2 - Constants.DOOR_REACH_DISTANCE + 1, y: doorY + doorHeight / 2 }
+            ]
+            for (const point of additionalDoorPoints) {
+                if (this.canStand(point)) {
+                    points.push(point.x, point.y)
+                    walkableNodes.push(this.addNodeToGraph(map, point.x, point.y))
+                }
+            }
         }
 
         // Add nodes at spawns
