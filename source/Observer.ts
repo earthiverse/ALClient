@@ -311,7 +311,7 @@ export class Observer {
                     if (p.isNPC()) {
                         npcUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, name: p.id },
+                                filter: { name: p.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
                                 update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
                                 upsert: true
                             }

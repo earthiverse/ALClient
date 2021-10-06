@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 688 (2021-09-24)
+ * The following is from http://adventure.land/data.js, version 690 (2021-10-06)
  * It is used to confirm type correctness
  */
 
@@ -51,10 +51,12 @@ test("G.conditions type validation", async () => {
                 "luck": 12
             },
             "fishing": {
-                "explanation": "Fishing in progress",
                 "name": "Fishing",
-                "channel": true,
-                "skin": "skill_fishing"
+                "explanation": "Fishing in progress",
+                "skin": "skill_fishing",
+                "duration": 15000,
+                "duration_min": 5000,
+                "channel": true
             },
             "stoned": {
                 "duration": 4000,
@@ -113,10 +115,12 @@ test("G.conditions type validation", async () => {
                 "skin": "skill_invis"
             },
             "mining": {
-                "explanation": "Mining in progress",
                 "name": "Mining",
-                "channel": true,
-                "skin": "skill_mining"
+                "explanation": "Mining in progress",
+                "skin": "skill_mining",
+                "duration": 15000,
+                "duration_min": 5000,
+                "channel": true
             },
             "rspeed": {
                 "name": "Rogue Swiftness",
@@ -178,11 +182,12 @@ test("G.conditions type validation", async () => {
                 "buff": true
             },
             "town": {
+                "name": "Town",
                 "explanation": "Town in progress",
                 "can_move": true,
-                "name": "Town",
-                "channel": true,
-                "skin": "condition_positive"
+                "skin": "condition_positive",
+                "duration": 3000,
+                "channel": true
             },
             "charmed": {
                 "duration": 30000,
@@ -273,6 +278,11 @@ test("G.conditions type validation", async () => {
                 "xp": 10,
                 "luck": 10
             },
+            "dash": {
+                "set_speed": 500,
+                "name": "Dashing",
+                "skin": "condition_positive"
+            },
             "fullguard": {
                 "armor": 10000,
                 "resistance": 10000,
@@ -345,6 +355,18 @@ test("G.conditions type validation", async () => {
                 "ui": true,
                 "skin": "notverified",
                 "luck": -25
+            },
+            "halloween1": {
+                "ui": true,
+                "name": "Halloween Spirit",
+                "gold": 5,
+                "skin": "halloween1",
+                "duration": 86400000,
+                "output": 2,
+                "xp": 50,
+                "buff": true,
+                "persistent": true,
+                "luck": 5
             },
             "burned": {
                 "bad": true,
@@ -419,6 +441,29 @@ test("G.conditions type validation", async () => {
                 "ui": false,
                 "skin": "condition_bad",
                 "duration": 12000
+            },
+            "halloween0": {
+                "ui": true,
+                "name": "Halloween Spirit",
+                "gold": 5,
+                "skin": "halloween0",
+                "duration": 172800000,
+                "xp": 100,
+                "buff": true,
+                "persistent": true,
+                "luck": 5
+            },
+            "halloween2": {
+                "ui": true,
+                "name": "Halloween Spirit",
+                "gold": 5,
+                "skin": "halloween2",
+                "duration": 28800000,
+                "output": 3,
+                "xp": 10,
+                "buff": true,
+                "persistent": true,
+                "luck": 5
             },
             "hardshell": {
                 "set_speed": 10,

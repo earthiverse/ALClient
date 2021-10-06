@@ -1306,6 +1306,16 @@ export class Character extends Observer implements CharacterData {
         return false
     }
 
+    /**
+     * UNFINISHED. DO NOT USE YET.
+     * TODO: Finish
+     *
+     * @param {number} itemPos
+     * @param {number} scrollPos
+     * @param {number} [offeringPos]
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
     public canUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): boolean {
         const itemInfo = this.items[itemPos]
         if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)

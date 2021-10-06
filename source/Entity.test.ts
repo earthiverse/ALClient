@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { GData } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Game } from "./Game"
@@ -7,7 +8,7 @@ let burningToDeathHen: Entity
 let idleBBPompom: Entity
 // const projectiles = new Map<string, ActionData>()
 beforeAll(async () => {
-    G = await Game.getGData(true)
+    G = await Game.getGData(true, false)
 
     idleBBPompom = new Entity({
         "speed": 20.88,

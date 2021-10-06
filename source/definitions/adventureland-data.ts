@@ -650,7 +650,7 @@ export type GItem = {
     skin_c?: string
     skin_r?: string
     /** Spawns the given monster */
-    spawn?: MonsterName
+    spawn?: MonsterName | "terracota"
     special?: boolean
     /** If set, you can use this item as a merchant stand */
     stand?: string
@@ -876,13 +876,15 @@ export type GMonster = {
     /** The higher the number, the more likely the monster will attack you if you're near it */
     aggro: number
     /** (GUI) The color of text used to announce this monster when it spawns. */
-    announce?: string
+    announce?: boolean | string
     /** TODO: ??? What is this? Documentation? */
     article?: string
     /** The amount of damage the monster can deal */
     attack: number
     /** TODO: ??? What is this? The name of the player that suggested changes for the monster? */
     balance?: string
+    /** If you kill this monster, you get the corresponding buff to your level */
+    cbuff?: [number, ConditionName][]
     /** The speed the monster will move when targeting something */
     charge?: number
     /** If set, drops are split among all players who help kill this monster */
@@ -1099,8 +1101,13 @@ export type BankPackName =
 export type CharacterType =
     "mage" | "merchant" | "paladin" | "priest" | "ranger" | "rogue" | "warrior"
 
+
+/**
+ * Generate with:
+ * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
+ */
 export type ConditionName =
-    "authfail" | "blink" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "hardshell" | "holidayspirit" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "xpower" | "xshotted"
+    "authfail" | "blink" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "xpower" | "xshotted"
 
 export type DamageType =
     "heal" | "magical" | "none" | "physical" | "pure"
@@ -1122,8 +1129,12 @@ export type ItemName =
 export type MapName =
     "abtesting" | "arena" | "bank_b" | "bank_u" | "bank" | "batcave" | "cave" | "cgallery" | "crypt" | "cyberland" | "d_a1" | "d_a2" | "d_b1" | "d_e" | "d_g" | "d1" | "d2" | "d3" | "desertland" | "duelland" | "dungeon0" | "frozencave" | "goobrawl" | "halloween" | "hut" | "jail" | "level1" | "level2" | "level2e" | "level2n" | "level2s" | "level2w" | "level3" | "level4" | "main" | "maintest" | "mansion" | "mtunnel" | "old_bank" | "old_main" | "original_main" | "resort_e" | "resort" | "shellsisland" | "ship0" | "spookytown" | "tavern" | "test" | "therush" | "tomb" | "tunnel" | "winter_cave" | "winter_inn_rooms" | "winter_inn" | "winter_instance" | "winterland" | "woffice"
 
+/**
+ * Generate with:
+ * { const is = []; for(const i in G.monsters) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
+ */
 export type MonsterName =
-    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "target" | "terracota" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
+    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
 
 export type NPCName =
     "antip2w" | "appearance" | "armors" | "basics" | "bean" | "beans" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"

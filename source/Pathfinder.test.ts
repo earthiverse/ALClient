@@ -5,7 +5,7 @@ import { LinkData, NodeData } from "./definitions/pathfinder"
 
 let G: GData
 beforeAll(async () => {
-    G = await Game.getGData(true)
+    G = await Game.getGData(true, false)
 }, 60000)
 
 test("Pathfinder.prepare", async () => {

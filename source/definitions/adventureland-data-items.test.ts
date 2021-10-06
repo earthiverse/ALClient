@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { GData } from "./adventureland-data"
 
 /**
@@ -131,7 +132,7 @@ test("G.items type validation", async () => {
                 "fzresistance": 10,
                 "skin": "snowboots",
                 "tier": 2,
-                "speed": 6.0,
+                "speed": 6,
                 "extra_stat": 1,
                 "upgrade": {
                     "armor": 2.5,
@@ -196,7 +197,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "vboots",
                 "tier": 3,
-                "speed": 7.0,
+                "speed": 7,
                 "dex": 3,
                 "extra_stat": 2,
                 "upgrade": {
@@ -284,7 +285,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "hboots",
                 "tier": 3,
-                "speed": 7.0,
+                "speed": 7,
                 "a": 2,
                 "extra_stat": 2,
                 "upgrade": {
@@ -318,9 +319,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Hat of the Hunter Priest",
                 "g": 64000,
@@ -399,9 +400,9 @@ test("G.items type validation", async () => {
                 "g": 90000,
                 "wtype": "bow",
                 "damage": "heal",
-                "range": 50.0,
+                "range": 50,
                 "projectile": "cupid",
-                "attack": 29.0,
+                "attack": 29,
                 "type": "weapon"
             },
             "mmshoes": {
@@ -417,16 +418,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mmshoes",
                 "tier": 2.125,
-                "speed": 6.0,
+                "speed": 6,
                 "class": [
                     "mage"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 0.90625,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Shoes of the Hunter Mage",
                 "g": 240000,
@@ -1003,9 +1004,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Merchant",
                 "g": 68000,
@@ -1037,7 +1038,7 @@ test("G.items type validation", async () => {
                 "damage": "physical",
                 "range": 5.4,
                 "str": 12,
-                "attack": 14.0,
+                "attack": 14,
                 "type": "weapon"
             },
             "weaver": {
@@ -1117,9 +1118,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Pants of the Hunter Mage",
                 "g": 128000,
@@ -1145,9 +1146,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Pants of the Hunter Merchant",
                 "g": 128000,
@@ -1291,7 +1292,7 @@ test("G.items type validation", async () => {
                 "wtype": "fist",
                 "apiercing": 20,
                 "range": 5.5,
-                "attack": 12.0,
+                "attack": 12,
                 "type": "weapon"
             },
             "mppants": {
@@ -1312,9 +1313,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Pants of the Hunter Priest",
                 "g": 128000,
@@ -1365,7 +1366,7 @@ test("G.items type validation", async () => {
                 "skin": "hbow",
                 "tier": 1.5,
                 "upgrade": {
-                    "range": 8.0,
+                    "range": 8,
                     "attack": 4.4,
                     "apiercing": 5
                 },
@@ -1373,9 +1374,9 @@ test("G.items type validation", async () => {
                 "g": 16000,
                 "wtype": "bow",
                 "apiercing": 40,
-                "range": 80.0,
+                "range": 80,
                 "projectile": "arrow",
-                "attack": 23.0,
+                "attack": 23,
                 "type": "weapon"
             },
             "darktristone": {
@@ -1776,8 +1777,8 @@ test("G.items type validation", async () => {
                 "skin": "staff",
                 "tier": 1,
                 "upgrade": {
-                    "range": 3.0,
-                    "attack": 5.0
+                    "range": 3,
+                    "attack": 5
                 },
                 "name": "Staff",
                 "g": 12400,
@@ -1919,7 +1920,7 @@ test("G.items type validation", async () => {
                 "tier": 3,
                 "upgrade": {
                     "range": 1,
-                    "attack": 12.0
+                    "attack": 12
                 },
                 "name": "Skeletor's Scythe",
                 "g": 8600000,
@@ -1966,7 +1967,7 @@ test("G.items type validation", async () => {
                 "skin": "merry",
                 "tier": 1.5,
                 "upgrade": {
-                    "range": 8.0,
+                    "range": 8,
                     "attack": 4.4,
                     "attr0": 2
                 },
@@ -1974,9 +1975,9 @@ test("G.items type validation", async () => {
                 "g": 124000,
                 "wtype": "bow",
                 "damage": "physical",
-                "range": 60.0,
+                "range": 60,
                 "projectile": "arrow",
-                "attack": 23.0,
+                "attack": 23,
                 "type": "weapon"
             },
             "xptome": {
@@ -2101,7 +2102,7 @@ test("G.items type validation", async () => {
                 "a": true,
                 "upgrade": {
                     "range": 1,
-                    "attack": 12.0
+                    "attack": 12
                 },
                 "reflection": 4,
                 "g": 124000,
@@ -2178,7 +2179,7 @@ test("G.items type validation", async () => {
                 "tier": 1,
                 "upgrade": {
                     "range": 7.666666666666666,
-                    "attack": 4.0
+                    "attack": 4
                 },
                 "name": "Bow",
                 "g": 16000,
@@ -2290,7 +2291,7 @@ test("G.items type validation", async () => {
                 "apiercing": 12,
                 "range": 17.8,
                 "str": 8,
-                "attack": 22.0,
+                "attack": 22,
                 "type": "weapon"
             },
             "frankypants": {
@@ -2567,8 +2568,8 @@ test("G.items type validation", async () => {
                 "skin": "wand",
                 "tier": 1,
                 "upgrade": {
-                    "range": 6.0,
-                    "attack": 3.0
+                    "range": 6,
+                    "attack": 3
                 },
                 "name": "Wand",
                 "g": 48600,
@@ -2633,7 +2634,7 @@ test("G.items type validation", async () => {
                 "vit": -12,
                 "skin": "swordofthedead",
                 "tier": 2.5,
-                "range": 8.0,
+                "range": 8,
                 "a": true,
                 "upgrade": {
                     "range": 1.5,
@@ -2644,7 +2645,7 @@ test("G.items type validation", async () => {
                 "g": 224000,
                 "wtype": "short_sword",
                 "damage": "physical",
-                "attack": 26.0,
+                "attack": 26,
                 "str": 10,
                 "type": "weapon"
             },
@@ -2782,9 +2783,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Warrior",
                 "g": 96000,
@@ -2841,16 +2842,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mcboots",
                 "tier": 2.75,
-                "speed": 7.0,
+                "speed": 7,
                 "class": [
                     "merchant"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 1.0625,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Boots of the Hunter Merchant",
                 "g": 240000,
@@ -3122,7 +3123,7 @@ test("G.items type validation", async () => {
                 "tier": 1,
                 "upgrade": {
                     "range": 1.5,
-                    "attack": 4.0
+                    "attack": 4
                 },
                 "name": "Blade",
                 "g": 8400,
@@ -3239,9 +3240,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Ranger",
                 "g": 96000,
@@ -3314,7 +3315,7 @@ test("G.items type validation", async () => {
                 "tier": 2,
                 "a": true,
                 "upgrade": {
-                    "range": 1.0,
+                    "range": 1,
                     "attack": 4.5
                 },
                 "name": "Candy Cane Sword",
@@ -3448,9 +3449,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Mage",
                 "g": 96000,
@@ -3495,9 +3496,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Hat of the Hunter Mage",
                 "g": 64000,
@@ -3615,7 +3616,7 @@ test("G.items type validation", async () => {
                 "vit": 2,
                 "skin": "xmasshoes",
                 "tier": 1.5,
-                "speed": 6.0,
+                "speed": 6,
                 "a": true,
                 "upgrade": {
                     "armor": 1.5,
@@ -3674,9 +3675,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Rogue",
                 "g": 96000,
@@ -3703,9 +3704,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Warrior",
                 "g": 68000,
@@ -3747,9 +3748,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Priest",
                 "g": 68000,
@@ -3776,9 +3777,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Underarmor of the Hunter Warrior",
                 "g": 128000,
@@ -3904,8 +3905,8 @@ test("G.items type validation", async () => {
                 "g": 48000,
                 "wtype": "short_sword",
                 "damage": "physical",
-                "range": 8.0,
-                "attack": 24.0,
+                "range": 8,
+                "attack": 24,
                 "type": "weapon"
             },
             "mrboots": {
@@ -3921,16 +3922,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mrboots",
                 "tier": 2.25,
-                "speed": 6.0,
+                "speed": 6,
                 "class": [
                     "rogue"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 0.9375,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Boots of the Hunter Rogue",
                 "g": 240000,
@@ -4156,7 +4157,7 @@ test("G.items type validation", async () => {
                 "tier": 3,
                 "a": true,
                 "upgrade": {
-                    "range": 9.0,
+                    "range": 9,
                     "attack": 5.6
                 },
                 "name": "Artisan's Bow",
@@ -4222,7 +4223,7 @@ test("G.items type validation", async () => {
                 "tier": 3,
                 "upgrade": {
                     "range": 20,
-                    "attack": 1.0
+                    "attack": 1
                 },
                 "name": "Golden Dart Gun",
                 "g": 20000000,
@@ -4499,7 +4500,7 @@ test("G.items type validation", async () => {
                 "name": "Shoes",
                 "g": 12100,
                 "armor": 3,
-                "speed": 5.0,
+                "speed": 5,
                 "grades": [
                     7,
                     9,
@@ -4619,7 +4620,7 @@ test("G.items type validation", async () => {
                 "g": 24000,
                 "wtype": "bow",
                 "mp_reduction": -10,
-                "range": 47.0,
+                "range": 47,
                 "projectile": "pouch",
                 "attack": 15.2,
                 "type": "weapon"
@@ -4651,7 +4652,7 @@ test("G.items type validation", async () => {
                 "skin": "daggerofthedead",
                 "tier": 2.4,
                 "range": 6.4,
-                "attack": 19.0,
+                "attack": 19,
                 "type": "weapon",
                 "explanation": "A deadly weapon",
                 "name": "Dagger of the Dead"
@@ -4674,9 +4675,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Mage",
                 "g": 68000,
@@ -4752,7 +4753,7 @@ test("G.items type validation", async () => {
                 "projectile": "arrow",
                 "damage": "physical",
                 "crit": 1,
-                "range": 59.0,
+                "range": 59,
                 "cx": {
                     "accent": "#D87F0E"
                 },
@@ -4807,7 +4808,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "shoes1",
                 "tier": 2,
-                "speed": 6.0,
+                "speed": 6,
                 "a": 2,
                 "extra_stat": 1,
                 "upgrade": {
@@ -5294,9 +5295,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Rogue",
                 "g": 68000,
@@ -5323,7 +5324,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "xboots",
                 "tier": 4,
-                "speed": 8.0,
+                "speed": 8,
                 "a": 2,
                 "extra_stat": 3,
                 "upgrade": {
@@ -5419,7 +5420,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "eslippers",
                 "cuteness": 24,
-                "speed": 6.0,
+                "speed": 6,
                 "upgrade": {
                     "cuteness": 2,
                     "armor": 1.5,
@@ -5676,11 +5677,10 @@ test("G.items type validation", async () => {
                 "name": "Lucky T-Shirt",
                 "g": 120000,
                 "skin": "luckyt",
-                // NOTE: Known error
-                // "res": 20,
                 "xp": 5,
-                "type": "chest",
                 "scroll": true,
+                "type": "chest",
+                "resistance": 20,
                 "luck": 7
             },
             "hpot1": {
@@ -5733,8 +5733,8 @@ test("G.items type validation", async () => {
                 "g": 16400,
                 "wtype": "staff",
                 "damage": "magical",
-                "range": 53.0,
-                "attack": 30.0,
+                "range": 53,
+                "attack": 30,
                 "type": "weapon"
             },
             "spidersilk": {
@@ -5806,9 +5806,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Gloves of the Hunter Ranger",
                 "g": 68000,
@@ -5896,9 +5896,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Helmet of the Hunter Warrior",
                 "g": 64000,
@@ -6209,9 +6209,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Pants of the Hunter Rogue",
                 "g": 128000,
@@ -6302,16 +6302,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mpshoes",
                 "tier": 2.125,
-                "speed": 6.0,
+                "speed": 6,
                 "class": [
                     "priest"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 0.90625,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Shoes of the Hunter Priest",
                 "g": 240000,
@@ -6400,8 +6400,8 @@ test("G.items type validation", async () => {
                 "skin": "staff",
                 "tier": 3,
                 "upgrade": {
-                    "range": 4.0,
-                    "attack": 6.0
+                    "range": 4,
+                    "attack": 6
                 },
                 "name": "T3 Staff",
                 "g": 12400,
@@ -6465,9 +6465,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Merchant",
                 "g": 96000,
@@ -6597,9 +6597,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Hat of the Hunter Ranger",
                 "g": 64000,
@@ -6834,9 +6834,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Hood of the Hunter Rogue",
                 "g": 64000,
@@ -6890,8 +6890,9 @@ test("G.items type validation", async () => {
                     10,
                     12
                 ],
-                // NOTE: Known error
-                // "strength": 6,
+                "cx": {
+                    "accent": "#D87F0E"
+                },
                 "vit": -8,
                 "skin": "maceofthedead",
                 "tier": 2.4,
@@ -6906,9 +6907,7 @@ test("G.items type validation", async () => {
                 "wtype": "mace",
                 "damage": "physical",
                 "range": 6.4,
-                "cx": {
-                    "accent": "#D87F0E"
-                },
+                "str": 6,
                 "attack": 28.4,
                 "type": "weapon"
             },
@@ -6956,9 +6955,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Hat of the Hunter Merchant",
                 "g": 64000,
@@ -7103,9 +7102,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Armor of the Hunter Priest",
                 "g": 96000,
@@ -7392,9 +7391,9 @@ test("G.items type validation", async () => {
                 "g": 224000,
                 "wtype": "staff",
                 "damage": "magical",
-                "range": 59.0,
+                "range": 59,
                 "str": 32,
-                "attack": 40.0,
+                "attack": 40,
                 "type": "weapon"
             },
             "cscroll0": {
@@ -7470,7 +7469,7 @@ test("G.items type validation", async () => {
                     "speed": 1,
                     "range": 1,
                     "stun": 0.5,
-                    "attack": 9.0
+                    "attack": 9
                 },
                 "name": "Basher",
                 "g": 72000,
@@ -7505,7 +7504,7 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "wshoes",
                 "tier": 1,
-                "speed": 5.0,
+                "speed": 5,
                 "upgrade": {
                     "armor": 0.5,
                     "stat": 1,
@@ -7776,16 +7775,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mrnboots",
                 "tier": 2.25,
-                "speed": 6.0,
+                "speed": 6,
                 "class": [
                     "ranger"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 0.9375,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Boots of the Hunter Ranger",
                 "g": 240000,
@@ -7818,8 +7817,8 @@ test("G.items type validation", async () => {
                 "g": 290000,
                 "wtype": "stars",
                 "damage": "physical",
-                "range": 65.0,
-                "attack": 8.0,
+                "range": 65,
+                "attack": 8,
                 "type": "weapon"
             },
             "ink": {
@@ -8101,9 +8100,9 @@ test("G.items type validation", async () => {
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
-                    "resistance": 4.0
+                    "resistance": 4
                 },
                 "name": "Pants of the Hunter Ranger",
                 "g": 128000,
@@ -8276,10 +8275,10 @@ test("G.items type validation", async () => {
                 "g": 3200000,
                 "wtype": "bow",
                 "damage": "physical",
-                "range": 70.0,
+                "range": 70,
                 "str": 3,
                 "projectile": "garrow",
-                "attack": 29.0,
+                "attack": 29,
                 "type": "weapon"
             },
             "stramulet": {
@@ -8337,7 +8336,7 @@ test("G.items type validation", async () => {
                 "tier": 1,
                 "upgrade": {
                     "range": 1,
-                    "attack": 4.0
+                    "attack": 4
                 },
                 "name": "Mace",
                 "g": 3700,
@@ -8425,16 +8424,16 @@ test("G.items type validation", async () => {
                 ],
                 "skin": "mwboots",
                 "tier": 2.625,
-                "speed": 7.0,
+                "speed": 7,
                 "class": [
                     "warrior"
                 ],
                 "extra_stat": 1,
                 "upgrade": {
-                    "armor": 4.0,
+                    "armor": 4,
                     "stat": 1,
                     "speed": 1.03125,
-                    "resistance": 2.0
+                    "resistance": 2
                 },
                 "name": "Boots of the Hunter Warrior",
                 "g": 240000,

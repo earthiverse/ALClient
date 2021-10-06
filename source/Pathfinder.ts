@@ -358,6 +358,8 @@ export class Pathfinder {
             points.push(closest.x, closest.y)
             walkableNodes.push(fromNode)
             transporters.push(npc)
+
+            // TODO: Make more points, in a circle around the transporter.
         }
 
         // Add nodes at doors. We'll look for close nodes to doors later.
@@ -376,6 +378,7 @@ export class Pathfinder {
             doors.push(door)
 
             // Make additional points near the door to speed up entry
+            // TODO: Make more points, in a circle around the 4 corners.
             const doorX = door[0]
             const doorY = door[1]
             const doorWidth = door[2]

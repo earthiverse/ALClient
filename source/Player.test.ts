@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
@@ -9,7 +10,7 @@ let sameOwner: Player
 let sameParty: Player
 let randomPlayer: Player
 beforeAll(async () => {
-    G = await Game.getGData(true)
+    G = await Game.getGData(true, false)
     character = new Character("12345", undefined, undefined, G, { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" })
     character.parseCharacter({
         id: "earthPri",
