@@ -16,6 +16,8 @@ export class Observer {
     public G: GData;
 
     public entities = new Map<string, Entity>()
+
+    protected pingIndex = 0
     protected pingMap = new Map<string, { log: boolean, time: number }>()
     protected pingNum = 1
     public pings: number[] = []
@@ -132,11 +134,9 @@ export class Observer {
             if (ping) {
                 // Add the new ping
                 const time = Date.now() - ping.time
-                this.pings.push(time)
+                this.pings[this.pingIndex++] = time
+                this.pingIndex = this.pingIndex % Constants.MAX_PINGS
                 if (ping.log) console.log(`Ping: ${time}`)
-
-                // Remove the oldest ping
-                if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
 
                 // Remove the ping from the map
                 this.pingMap.delete(data.id)
@@ -145,10 +145,8 @@ export class Observer {
 
         // Use the socket.io's built in pings to supplement AL's pings
         this.socket.on("pong", (ms: number) => {
-            this.pings.push(ms)
-
-            // Remove the oldest ping
-            if (this.pings.length > Constants.MAX_PINGS) this.pings.shift()
+            this.pings[this.pingIndex++] = ms
+            this.pingIndex = this.pingIndex % Constants.MAX_PINGS
         })
 
         this.socket.on("server_info", (data: ServerInfoData) => {

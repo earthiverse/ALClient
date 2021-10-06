@@ -2810,7 +2810,7 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            // Skip check -- check if we can move to the next node
+            // Shortcut check -- check if we can move to the next node
             if (currentMove.type == "move") {
                 for (let j = i + 1; j < path.length; j++) {
                     const potentialMove = path[j]
@@ -2824,7 +2824,15 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            // Blink skip check
+            // TODO: Door check -- check if we can enter the door from our current position
+            // if (currentMove.type == "move") {
+            //     for (let j = i + 1; j < path.length; j++) {
+            //         const potentialMove = path[j]
+            //
+            //     }
+            // }
+
+            // Blink check -- blink to the furthest node we can on the same map
             if (options?.useBlink && this.canUse("blink")) {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
@@ -2840,7 +2848,7 @@ export class Character extends Observer implements CharacterData {
                 if (blinked) continue
             }
 
-            // Town check -- preemptively start the town warp
+            // Town check -- Preemptively start the town warp
             for (let j = i + 1; j < path.length; j++) {
                 const futureMove = path[j]
                 if (currentMove.map !== futureMove.map) break
