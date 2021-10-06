@@ -62,10 +62,10 @@ export class Character extends Observer implements CharacterData {
     public party?: string
     public pdps: number
     public q: {
-        upgrade: { len: number; ms: number; num: number };
-        compound: { len: number; ms: number; num: number; nums: number[] };
-        exchange: { len: number; ms: number; num: number; name: ItemName; id: ItemName; q: number }
-    }
+        upgrade?: { len: number; ms: number; num: number };
+        compound?: { len: number; ms: number; num: number; nums: number[] };
+        exchange?: { len: number; ms: number; num: number; name: ItemName; id: ItemName; q: number }
+    } = {}
     public range = 1
     public resistance = 0
     public rip = true
@@ -489,8 +489,8 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("q_data", (data: QData) => {
-            if (data.q.upgrade) this.q.upgrade = data.q.upgrade
-            if (data.q.compound) this.q.compound = data.q.compound
+            if (data.q?.upgrade) this.q.upgrade = data.q.upgrade
+            if (data.q?.compound) this.q.compound = data.q.compound
         })
 
         if (Database.connection) {
