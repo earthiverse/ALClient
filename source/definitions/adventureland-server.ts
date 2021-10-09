@@ -488,6 +488,8 @@ export type GameResponseDataObject = {
 
 export type GameResponseDataString =
     | "bank_restrictions"
+    /** When you attempt to blink to a spot you can't reach */
+    | "blink_failed"
     | "buy_cant_npc"
     | "buy_cant_space"
     | "buy_cost"

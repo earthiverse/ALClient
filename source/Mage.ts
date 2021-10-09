@@ -35,15 +35,28 @@ export class Mage extends PingCompensatedCharacter {
             const successCheck = (data: NewMapData) => {
                 if (data.effect == "blink" && data.x == x && data.y == y) {
                     this.socket.off("new_map", successCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "blink_failed") {
+                        this.socket.off("new_map", successCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject(`Blink from ${this.map}:${this.x},${this.y} to ${this.map}:${x},${y} failed.`)
+                    }
                 }
             }
 
             setTimeout(() => {
                 this.socket.off("new_map", successCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`blink timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("new_map", successCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("skill", { name: "blink", x: x, y: y })
