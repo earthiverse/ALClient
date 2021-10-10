@@ -422,7 +422,21 @@ export type GData = {
         variance?: number
     } }
     // TODO: Add type information
-    sprites: any
+    sprites: {
+        [T in string]: {
+            columns: number
+            rows: number
+            type?: "a_hat" | "a_makeup" | "animation" | "armor" | "beard" | "body" | "character" | "emblem" | "face" | "gravestone" | "hair" | "hat" | "head" | "makeup" | "s_wings" | "skin" | "tail" | "v_animation"
+            /** The URL that contains the sprites in the matrix */
+            file: string
+            /** List of sprites in the given file */
+            matrix: string[][]
+            rskip?: boolean
+            size?: "large" | "normal" | "small" | "xsmall" | "xxsmall"
+            /** If set to true, the game will not load the sprite sheet. */
+            skip?: number
+        }
+    }
     tilesets: {
         [T in TilesetName]: {
             /** The URL that contains the tileset */
