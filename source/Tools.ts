@@ -21,6 +21,6 @@ export class Tools {
         if (!a || !b) return Number.MAX_VALUE // No data for one of the objects
         if ((a.map && b.map) && (a.map !== b.map)) return Number.MAX_VALUE // Different map
 
-        return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
+        return Math.hypot(a.x - b.x, a.y - b.y)
     }
 }
