@@ -147,6 +147,37 @@ export type GData = {
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
         } }
+    cosmetics: {
+        bundle: {
+            [T in string]: string[]
+        }
+        default_beard_position: number
+        default_face_position: number
+        default_hair_place: number
+        default_hat_place: number
+        default_head_place: number
+        default_makeup_position: number
+        gravestone: {
+            [T in string]: number
+        }
+        hair: {
+            [T in string]: [number, number]
+        }
+        hat: {
+            [T in string]: number
+        }
+        head: {
+            [T in string]: [string, string, string, number?]
+        }
+        map: {
+            old: string
+        }
+        no_upper: []
+        prop: {
+            [T in string]: string[]
+        }
+
+    }
     craft: { [T in ItemName]?: {
         /** These are the items that are required to craft the given item
          *  [quantity, item name, item level (0 if not set)] */
@@ -512,12 +543,14 @@ export type CXData = {
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
 
 export type GGeometry = {
-    /** TODO: ??? What is this? */
+    /** (GUI Related) This is the default tile index to use to tile the map.
+     *
+     * i.e.: `G.geometry[map].tiles[G.geometry[map].default]` */
     default?: number
-    /** [tileidx, min_x, min_y, max_x, max_y, y_disp]
+    /** [tile index, min_x, min_y, max_x, max_y, y_disp]
      *
      * See: https://pixijs.download/dev/docs/PIXI.Container.html */
-    groups?: ([number, number, number, any, any, number] | [number, number, number])[][]
+    groups?: ([number, number, number, number, number, number] | [number, number, number])[][]
     /** The maximum x-coordinate limit for this map */
     max_x: number
     /** The maximum y-coordinate limit for this map */
@@ -840,7 +873,7 @@ export type GMonster = {
 } & {
     /** If true, all attacks will only do 1 damage to this monster */
     "1hp"?: boolean
-    /** (GUI) If set, the sprite will continue its animation when it's standing still. */
+    /** (GUI) If set, the sprite will continue its animation when it's standing still. (AA = Always Animate) */
     aa?: number
     /** Abilities that this monster has */
     abilities?: {
