@@ -2,7 +2,7 @@ import Delaunator from "delaunator"
 import createGraph, { Graph, Link, Node } from "ngraph.graph"
 import ngraph from "ngraph.path"
 import { IPosition } from "./definitions/adventureland.js"
-import { DoorInfo, GData, ItemName, MapName } from "./definitions/adventureland-data.js"
+import { DoorInfo, GData, GMap, ItemName, MapName } from "./definitions/adventureland-data.js"
 import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Tools } from "./Tools.js"
@@ -47,6 +47,8 @@ export class Pathfinder {
     }
 
     protected static addNodeToGraph(map: MapName, x: number, y: number): Node<NodeData> {
+        const check = this.graph.getNode(`${map}:${x},${y}`)
+        if (check) return check
         return this.graph.addNode(`${map}:${x},${y}`, { map: map, x: x, y: y })
     }
 
@@ -352,7 +354,7 @@ export class Pathfinder {
         // console.debug("  Adding transporter node and links...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         const transporters = []
-        for (const npc of this.G.maps[map].npcs) {
+        for (const npc of (this.G.maps[map] as GMap).npcs) {
             if (npc.id !== "transporter") continue
             const closest = this.findClosestSpawn(map, npc.position[0], npc.position[1])
             const fromNode = this.addNodeToGraph(map, closest.x, closest.y)
@@ -360,7 +362,16 @@ export class Pathfinder {
             walkableNodes.push(fromNode)
             transporters.push(npc)
 
-            // TODO: Make more points, in a circle around the transporter.
+            // Make more points around the pathfinder
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
+                const x = Math.round(npc.position[0] + Math.cos(angle) * Constants.TRANSPORTER_REACH_DISTANCE) - 1
+                const y = Math.round(npc.position[1] + Math.sin(angle) * Constants.TRANSPORTER_REACH_DISTANCE) - 1
+                if (this.canStand({ map, x, y })) {
+                    const fromNode = this.addNodeToGraph(map, x, y)
+                    points.push(x, y)
+                    walkableNodes.push(fromNode)
+                }
+            }
         }
 
         // Add nodes at doors. We'll look for close nodes to doors later.
@@ -378,31 +389,28 @@ export class Pathfinder {
             walkableNodes.push(fromDoor)
             doors.push(door)
 
-            // Make additional points near the door to speed up entry
-            // TODO: Make more points, in a circle around the 4 corners.
+            // Make more points around the door
             const doorX = door[0]
             const doorY = door[1]
             const doorWidth = door[2]
             const doorHeight = door[3]
-            const additionalDoorPoints: IPosition[] = [
-                // Top left
-                { map: map, x: doorX - doorWidth / 2, y: doorY - doorHeight / 2 - Constants.DOOR_REACH_DISTANCE + 1 },
-                { map: map, x: doorX - doorWidth / 2 - Constants.DOOR_REACH_DISTANCE + 1, y: doorY - doorHeight / 2 },
-                // Top right
-                { map: map, x: doorX + doorWidth / 2, y: doorY - doorHeight / 2 - Constants.DOOR_REACH_DISTANCE + 1 },
-                { map: map, x: doorX + doorWidth / 2 + Constants.DOOR_REACH_DISTANCE - 1, y: doorY - doorHeight / 2 },
-                // Bottom right
-                { map: map, x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 + Constants.DOOR_REACH_DISTANCE - 1 },
-                { map: map, x: doorX + doorWidth / 2 + Constants.DOOR_REACH_DISTANCE - 1, y: doorY + doorHeight / 2 },
-                // Bottom left
-                { map: map, x: doorX - doorWidth / 2, y: doorY + doorHeight / 2 + Constants.DOOR_REACH_DISTANCE - 1 },
-                { map: map, x: doorX - doorWidth / 2 - Constants.DOOR_REACH_DISTANCE + 1, y: doorY + doorHeight / 2 }
+            const doorCorners: IPosition[] = [
+                { x: doorX - doorWidth / 2, y: doorY - doorHeight / 2 }, // Top left
+                { x: doorX + doorWidth / 2, y: doorY - doorHeight / 2 }, // Top right
+                { x: doorX - doorWidth / 2, y: doorY + doorHeight / 2 }, // Bottom right
+                { x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 } // Bottom left
             ]
-            for (const point of additionalDoorPoints) {
-                if (this.canStand(point)) {
-                    points.push(point.x, point.y)
-                    walkableNodes.push(this.addNodeToGraph(map, point.x, point.y))
+            for (const point of doorCorners) {
+                for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
+                    const x = Math.round(point.y + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE) - 1
+                    const y = Math.round(point.x + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE) - 1
+                    if (this.canStand({ map, x, y })) {
+                        const fromNode = this.addNodeToGraph(map, x, y)
+                        points.push(x, y)
+                        walkableNodes.push(fromNode)
+                    }
                 }
+
             }
         }
 
