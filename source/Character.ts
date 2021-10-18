@@ -220,7 +220,7 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
-    protected async parseEntities(data: EntitiesData): Promise<void> {
+    protected parseEntities(data: EntitiesData): void {
         // Update our party members data if we have some
         if (this.party) {
             for (let i = 0; i < data.players.length; i++) {
@@ -319,7 +319,7 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
-    protected async parseNewMap(data: NewMapData): Promise<void> {
+    protected parseNewMap(data: NewMapData): void {
         this.going_x = data.x
         this.going_y = data.y
         this.in = data.in
@@ -327,6 +327,11 @@ export class Character extends Observer implements CharacterData {
         this.moving = false
 
         super.parseNewMap(data)
+    }
+
+    protected parseQData(data: QData): void {
+        if (data.q?.upgrade) this.q.upgrade = data.q.upgrade
+        if (data.q?.compound) this.q.compound = data.q.compound
     }
 
     protected setNextSkill(skill: SkillName, next: Date): void {
@@ -489,8 +494,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("q_data", (data: QData) => {
-            if (data.q?.upgrade) this.q.upgrade = data.q.upgrade
-            if (data.q?.compound) this.q.compound = data.q.compound
+            this.parseQData(data)
         })
 
         if (Database.connection) {

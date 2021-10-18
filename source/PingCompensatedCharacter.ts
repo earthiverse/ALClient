@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, PlayerData, ServerData } from "./definitions/adventureland-server.js"
+import { CharacterData, EntitiesData, PlayerData, QData, ServerData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
 import { Tools } from "./Tools.js"
@@ -52,13 +52,26 @@ export class PingCompensatedCharacter extends Character {
 
         // Compensate conditions
         for (const condition in this.s) {
-            if (this.s[condition as ConditionName].ms) {
+            if (this.s[condition as ConditionName].ms !== undefined) {
                 this.s[condition as ConditionName].ms -= pingCompensation
+                if (this.s[condition as ConditionName].ms < 0) {
+                    delete this.s[condition as ConditionName]
+                }
+            }
+        }
+
+        // Compensate processes
+        for (const process in this.q) {
+            if (this.q[process].ms !== undefined) {
+                this.q[process].ms -= pingCompensation
+                if (this.q[process].ms < 0) {
+                    delete this.q[process]
+                }
             }
         }
     }
 
-    protected async parseEntities(data: EntitiesData): Promise<void> {
+    protected parseEntities(data: EntitiesData): void {
         super.parseEntities(data)
 
         // Get ping compensation
@@ -82,8 +95,11 @@ export class PingCompensatedCharacter extends Character {
 
             // Compensate conditions
             for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms) {
+                if (entity.s[condition as ConditionName].ms !== undefined) {
                     entity.s[condition as ConditionName].ms -= pingCompensation
+                    if (entity.s[condition as ConditionName].ms < 0) {
+                        delete entity.s[condition as ConditionName]
+                    }
                 }
             }
         }
@@ -106,9 +122,34 @@ export class PingCompensatedCharacter extends Character {
 
             // Compensate conditions
             for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms) {
+                if (entity.s[condition as ConditionName].ms !== undefined) {
                     entity.s[condition as ConditionName].ms -= pingCompensation
+                    if (entity.s[condition as ConditionName].ms < 0) {
+                        delete entity.s[condition as ConditionName]
+                    }
                 }
+            }
+        }
+    }
+
+    protected parseQData(data: QData): void {
+        // Get ping compensation
+        const pingCompensation = this.calculateCompensation()
+
+        if (data.q?.upgrade) {
+            data.q.upgrade.ms -= pingCompensation
+            if (data.q.upgrade.ms < 0) {
+                delete this.q.upgrade
+            } else {
+                this.q.upgrade = data.q.upgrade
+            }
+        }
+        if (data.q?.compound) {
+            data.q.compound.ms -= pingCompensation
+            if (data.q.compound.ms < 0) {
+                delete this.q.compound
+            } else {
+                this.q.compound = data.q.compound
             }
         }
     }

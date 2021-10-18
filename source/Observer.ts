@@ -143,12 +143,6 @@ export class Observer {
             }
         })
 
-        // Use the socket.io's built in pings to supplement AL's pings
-        this.socket.on("pong", (ms: number) => {
-            this.pings[this.pingIndex++] = ms
-            this.pingIndex = this.pingIndex % Constants.MAX_PINGS
-        })
-
         this.socket.on("server_info", (data: ServerInfoData) => {
             const databaseUpdates = []
             const now = Date.now()
@@ -227,7 +221,7 @@ export class Observer {
         }
     }
 
-    protected async parseEntities(data: EntitiesData): Promise<void> {
+    protected parseEntities(data: EntitiesData): void {
         if (data.type == "all") {
             this.lastAllEntities = Date.now()
 
@@ -397,7 +391,7 @@ export class Observer {
         }
     }
 
-    protected async parseNewMap(data: NewMapData): Promise<void> {
+    protected parseNewMap(data: NewMapData): void {
         this.projectiles.clear()
 
         this.x = data.x
