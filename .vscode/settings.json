@@ -1,9 +1,15 @@
 {
     "cSpell.words": [
+        "adventureland",
         "cyberland",
         "Delaunator",
         "halfedge",
         "halfedges",
-        "npcs"
+        "multigraph",
+        "ngraph",
+        "npcs",
+        "teleporter",
+        "UNWALKABLE",
+        "winterland"
     ]
 }
