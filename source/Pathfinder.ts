@@ -402,8 +402,8 @@ export class Pathfinder {
             ]
             for (const point of doorCorners) {
                 for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
-                    const x = Math.round(point.y + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE) - 1
-                    const y = Math.round(point.x + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE) - 1
+                    const x = Math.round(point.x + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE) - 1
+                    const y = Math.round(point.y + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE) - 1
                     if (this.canStand({ map, x, y })) {
                         const fromNode = this.addNodeToGraph(map, x, y)
                         points.push(x, y)
