@@ -543,11 +543,11 @@ export type CXData = {
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
 
 export type GGeometry = {
-    /** (GUI Related) This is the default tile index to use to tile the map.
+    /** (GUI Related) This is the default tile index to use to tile the map. This is below the player layer.
      *
      * i.e.: `G.geometry[map].tiles[G.geometry[map].default]` */
     default?: number
-    /** [tile index, min_x, min_y, max_x, max_y, y_disp]
+    /** (GUI Related) [tile index, min_x, min_y, max_x, max_y, y_disp]. These are above the player layer.
      *
      * See: https://pixijs.download/dev/docs/PIXI.Container.html */
     groups?: ([number, number, number, number, number, number] | [number, number, number])[][]
@@ -559,7 +559,7 @@ export type GGeometry = {
     min_x: number
     /** The minimum y-coordinate limit for this map */
     min_y: number
-    /** TODO: ??? What is this? */
+    /** (GUI Related) These are tiles that overlay the map, below the player layer. */
     placements: ([number, number, number, number, number] | [number, number, number])[]
     /** [x, y]. Potentially used in the past for map traversal. */
     points?: {
@@ -573,11 +573,11 @@ export type GGeometry = {
     rectangles?: {
         [T in string]: [number, number, number, number]
     }
-    /** Texture atlas for tiles, [name, x, y, height, width] */
+    /** (GUI Related) Texture atlas for tiles, [name, x, y, height, width] */
     tiles: ([TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
-    /* Walls in the x-direction. The wall is from ([0], [1]) to ([0], [2]) */
+    /* Walls along the x-axis. The wall is from ([0], [1]) to ([0], [2]) */
     x_lines?: [number, number, number][]
-    /* Walls in the y-direction. The wall is from ([1], [0]) to ([2], [0]) */
+    /* Walls along the y-axis. The wall is from ([1], [0]) to ([2], [0]) */
     y_lines?: [number, number, number][]
 }
 
@@ -605,7 +605,7 @@ export type GItem = {
     cooldown?: number
     /** TODO: ??? The user who came up with the idea for this item? */
     credit?: string
-    /** TODO: ??? GUI related? */
+    /** (GUI Related) Styles to apply to the item in the inventory */
     cx?: {
         accent?: string
         border?: number
@@ -712,6 +712,7 @@ export type GItem = {
     upgrade?: {
         [T in Attribute]?: number
     }
+    /** After consuming the item, and its effects wear off, you will get the following debuff  */
     withdrawal?: ConditionName
     wtype?: WeaponType
     /** TODO: Confirm. Equipping this item allows you to equip the following cosmetics */

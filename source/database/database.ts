@@ -1,3 +1,4 @@
+import LRU from "lru-cache"
 import Mongoose from "mongoose"
 export * from "./achievements/achievements.model.js"
 export * from "./achievements/achievements.types.js"
@@ -13,7 +14,7 @@ export * from "./players/players.model.js"
 export * from "./players/players.types.js"
 
 export class Database {
-    public static lastMongoUpdate = new Map<string, Date>()
+    public static nextUpdate = new LRU<string, number>({ max: 1000 })
     public static connection: Mongoose.Connection
 
     protected constructor() {

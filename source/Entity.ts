@@ -7,7 +7,6 @@ import { Tools } from "./Tools.js"
 
 export class Entity implements MonsterData, Partial<GMonster> {
     protected G: GData
-    public lastMongoUpdate: number
 
     // EntityData (required)
     public abs?: false

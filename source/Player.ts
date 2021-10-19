@@ -6,7 +6,6 @@ import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
 
 export class Player implements PlayerData {
-    public lastMongoUpdate: number
     protected G: GData
 
     public afk?: boolean | "code"

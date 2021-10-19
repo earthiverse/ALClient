@@ -48,13 +48,13 @@ export class Observer {
         })
 
         this.socket.on("death", (data: DeathData) => {
-            this.deleteEntity(data.id)
+            this.deleteEntity(data.id, true)
         })
 
         // Update database when characters move around the map by transporting
         this.socket.on("disappear", (data: DisappearData) => {
             // Remove them from their list
-            this.players.delete(data.id) || this.entities.delete(data.id)
+            this.players.delete(data.id) || this.deleteEntity(data.id)
 
             this.updatePositions()
 
@@ -70,14 +70,17 @@ export class Observer {
                     x: data.s[0],
                     y: data.s[1]
                 }
-                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                Database.lastMongoUpdate.set(data.id, new Date())
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${data.id}`)
+                if (!nextUpdate || Date.now() >= nextUpdate) {
+                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${data.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                }
             } else if (data.to !== undefined && data.effect == 1) {
                 let s = 0
                 if (data.s !== undefined) s = data.s
                 // They used a "home" teleport and don't have a stealth cape
                 const spawnLocation = (this.G.maps[data.to as MapName] as GMap)?.spawns[s]
-                if (!spawnLocation) return // They are wearing a stealth cape, or entered an instance
+                if (!spawnLocation) return // They are wearing a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
                     map: data.to as MapName,
@@ -86,8 +89,11 @@ export class Observer {
                     x: spawnLocation[0],
                     y: spawnLocation[1]
                 }
-                PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                Database.lastMongoUpdate.set(data.id, new Date())
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${data.id}`)
+                if (!nextUpdate || Date.now() >= nextUpdate) {
+                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${data.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                }
             }
         })
 
@@ -114,7 +120,7 @@ export class Observer {
 
             if (data.kill) {
                 this.projectiles.delete(data.pid)
-                this.deleteEntity(data.id)
+                this.deleteEntity(data.id, true)
             } else if (data.damage) {
                 this.projectiles.delete(data.pid)
                 const e = this.entities.get(data.id)
@@ -202,23 +208,24 @@ export class Observer {
         }
     }
 
-    public async deleteEntity(id: string): Promise<void> {
+    public deleteEntity(id: string, death?: boolean): boolean {
         const entity = this.entities.get(id)
         if (entity) {
             // If it was a special monster in 'S', delete it from 'S'.
-            if (this.S[entity.type]) delete this.S[entity.type]
+            if (this.S[entity.type] && death) delete this.S[entity.type]
 
             // Delete the entity from the database on death
-            if (Database.connection) {
-                const lastUpdate = Database.lastMongoUpdate.get(entity.id)
-                if (lastUpdate || Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+            if (Database.connection && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${entity.id}`)
+                if (death && nextUpdate !== Number.MAX_VALUE) {
                     EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(() => { /* Suppress errors */ })
-                    Database.lastMongoUpdate.delete(id)
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${entity.id}`, Number.MAX_VALUE)
                 }
             }
 
-            this.entities.delete(id)
+            return this.entities.delete(id)
         }
+        return false
     }
 
     protected parseEntities(data: EntitiesData): void {
@@ -229,9 +236,6 @@ export class Observer {
             this.entities.clear()
             this.players.clear()
             this.lastPositionUpdate = Date.now()
-
-            // Reset the lastUpdates
-            Database.lastMongoUpdate.clear()
         } else {
             // Update all positions
             this.updatePositions()
@@ -258,8 +262,8 @@ export class Observer {
             // Update our database
             if (Database.connection) {
                 if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
-                    const lastUpdate = Database.lastMongoUpdate.get(e.id)
-                    if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+                    const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
+                    if (!nextUpdate || Date.now() > nextUpdate) {
                         if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
                         // Don't include the id in the filter, so it overwrites the last one
                             entityUpdates.push({
@@ -279,8 +283,7 @@ export class Observer {
                                 }
                             })
                         }
-
-                        Database.lastMongoUpdate.set(e.id, new Date())
+                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
             }
@@ -300,8 +303,8 @@ export class Observer {
 
             // Update our database
             if (Database.connection) {
-                const lastUpdate = Database.lastMongoUpdate.get(p.id)
-                if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${p.id}`)
+                if (!nextUpdate || Date.now() > nextUpdate) {
                     if (p.isNPC()) {
                         npcUpdates.push({
                             updateOne: {
@@ -332,7 +335,7 @@ export class Observer {
                             }
                         })
                     }
-                    Database.lastMongoUpdate.set(p.id, new Date())
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${p.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
         }
@@ -469,8 +472,7 @@ export class Observer {
                 continue
             toDelete.push(id)
         }
-        for (const id of toDelete)
-            this.entities.delete(id)
+        for (const id of toDelete) this.deleteEntity(id)
 
         // Erase all players that are far away
         toDelete = []

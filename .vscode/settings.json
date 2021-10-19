@@ -1,15 +1,27 @@
 {
     "cSpell.words": [
         "adventureland",
+        "alclient",
+        "apiercing",
+        "auths",
+        "critdamage",
+        "ctype",
         "cyberland",
         "Delaunator",
+        "fastpriorityqueue",
         "halfedge",
         "halfedges",
+        "invis",
+        "magiport",
+        "mtype",
         "multigraph",
         "ngraph",
         "npcs",
+        "rpiercing",
+        "socketio",
         "teleporter",
         "UNWALKABLE",
+        "upsert",
         "winterland"
     ]
 }

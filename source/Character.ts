@@ -199,8 +199,10 @@ export class Character extends Observer implements CharacterData {
         // Set damage type if not set
         if (!this.damage_type && this.ctype) this.damage_type = this.G.classes[this.ctype].damage_type
 
-        const lastUpdate = Database.lastMongoUpdate.get(this.id)
-        if (!lastUpdate || (Date.now() - lastUpdate.getTime()) > Constants.MONGO_UPDATE_MS) {
+        // Update database with latest information
+        if (!Database.connection) return
+        const nextUpdate = Database.nextUpdate.get(`${this.server.name}${this.server.region}${this.id}`)
+        if (!nextUpdate || Date.now() >= nextUpdate) {
             const updateData: Partial<IPlayer> = {
                 lastSeen: Date.now(),
                 map: this.map,
@@ -213,10 +215,8 @@ export class Character extends Observer implements CharacterData {
                 y: this.y
             }
             if (this.owner) updateData.owner = this.owner
-            if (Database.connection) {
-                PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                Database.lastMongoUpdate.set(this.id, new Date())
-            }
+            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
+            Database.nextUpdate.set(`${this.server.name}${this.server.region}${this.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
         }
     }
 
