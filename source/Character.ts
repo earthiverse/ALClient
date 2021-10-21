@@ -1296,6 +1296,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public canSell(): boolean {
+        if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't sell in the bank
         if (this.hasItem("computer") || this.hasItem("supercomputer")) return true // We can sell anywhere with a computer
 
         // Check if we're near an NPC merchant
@@ -2496,6 +2497,7 @@ export class Character extends Observer implements CharacterData {
     // TODO: Add promises
     public async sell(itemPos: number, quantity = 1): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sell].")
+        if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return Promise.reject("We can't sell items in the bank.")
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
     }
 
