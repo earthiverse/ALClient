@@ -1000,8 +1000,8 @@ export class Character extends Observer implements CharacterData {
             setTimeout(() => {
                 this.socket.off("game_log", failCheck)
                 this.socket.off("player", successCheck)
-                reject(`buyFromPonty timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
+                reject("buyFromPonty timeout (5000ms)")
+            }, 5000)
             this.socket.on("game_log", failCheck)
             this.socket.on("player", successCheck)
         })
@@ -2118,8 +2118,8 @@ export class Character extends Observer implements CharacterData {
             setTimeout(() => {
                 this.socket.off("game_response", distanceCheck)
                 this.socket.off("secondhands", secondhandsItems)
-                reject(`getPontyItems timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
+                reject("getPontyItems timeout (5000ms)")
+            }, 5000)
             this.socket.on("secondhands", secondhandsItems)
             this.socket.on("game_response", distanceCheck)
         })
