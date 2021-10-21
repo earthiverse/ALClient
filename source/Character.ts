@@ -1028,7 +1028,7 @@ export class Character extends Observer implements CharacterData {
         magical: number;
         physical: number;
         pure: number;
-        } {
+    } {
         const targets = {
             magical: 0,
             physical: 0,
@@ -1039,15 +1039,15 @@ export class Character extends Observer implements CharacterData {
             targetingMe: true
         })) {
             switch (entity.damage_type) {
-            case "magical":
-                targets.magical += 1
-                break
-            case "physical":
-                targets.physical += 1
-                break
-            case "pure":
-                targets.pure += 1
-                break
+                case "magical":
+                    targets.magical += 1
+                    break
+                case "physical":
+                    targets.physical += 1
+                    break
+                case "pure":
+                    targets.pure += 1
+                    break
             }
         }
 
@@ -2684,8 +2684,8 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("booster", { action: "shift", num: booster, to: to })
     }
 
-    protected lastSmartMove: number = Date.now();
-    public smartMoving = false;
+    protected lastSmartMove: number = Date.now()
+    public smartMoving = false
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move across maps.
@@ -3735,11 +3735,11 @@ export class Character extends Observer implements CharacterData {
         excludeLockedItems?: boolean
         excludeSpecialItems?: boolean
         minAmount?: number
-     }): {
-        [name in ItemName]?: {
-            [level in number]?: number[];
-        }
-    } {
+    }): {
+            [name in ItemName]?: {
+                [level in number]?: number[];
+            }
+        } {
         const itemsByLevel = inventory.reduce((items, item, slotNum) => {
             if (item) {
                 const { name, level } = item

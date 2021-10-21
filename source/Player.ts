@@ -48,17 +48,17 @@ export class Player implements PlayerData {
     owner: string
     pdps: number
     q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; } = {}
-    range: number;
-    rip: boolean;
-    skin: string;
-    slots: SlotInfo;
-    speed: number;
-    stand?: boolean | "cstand" | "stand0";
+    range: number
+    rip: boolean
+    skin: string
+    slots: SlotInfo
+    speed: number
+    stand?: boolean | "cstand" | "stand0"
     tp?: boolean;
 
     // Soft Properties
-    in: string;
-    map: MapName;
+    in: string
+    map: MapName
 
     public constructor(data: PlayerData, map: MapName, instance: string, g: GData) {
         this.G = g

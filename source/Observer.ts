@@ -13,7 +13,7 @@ export class Observer {
     protected lastAllEntities: number
     protected lastPositionUpdate: number
 
-    public G: GData;
+    public G: GData
 
     public entities = new Map<string, Entity>()
 
@@ -26,9 +26,9 @@ export class Observer {
     public S: ServerInfoData = {}
 
     public serverData: ServerData
-    public map: MapName;
-    public x: number;
-    public y: number;
+    public map: MapName
+    public x: number
+    public y: number
 
     constructor(serverData: ServerData, g: GData) {
         this.serverData = serverData

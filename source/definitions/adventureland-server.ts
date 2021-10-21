@@ -371,6 +371,17 @@ export type EvalData = {
     code: string
 }
 
+export type LoginData = LoginDataItem[]
+export type LoginDataItem = {
+    code: string
+    type: string
+} | {
+    message: string
+    type: string
+} | {
+    html: string
+}
+
 export type GameLogData = GameLogDataString
 export type GameLogDataString =
     | string

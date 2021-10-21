@@ -2,8 +2,8 @@ import axios from "axios"
 import fs from "fs"
 import { AuthModel, Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
-import { CharacterType, GData, GGeometry, GMap, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData } from "./definitions/adventureland-server.js"
+import { CharacterType, GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData, LoginData } from "./definitions/adventureland-server.js"
 import { Paladin } from "./Paladin.js"
 import { Mage } from "./Mage.js"
 import { Merchant } from "./Merchant.js"
@@ -187,10 +187,10 @@ export class Game {
 
         // Login and save the auth
         console.debug("Logging in...")
-        const login = await axios.post("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
+        const login = await axios.post<LoginData>("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
         let loginResult
         for (const datum of login.data) {
-            if (datum.message) {
+            if (datum["message"]) {
                 loginResult = datum
                 break
             }
