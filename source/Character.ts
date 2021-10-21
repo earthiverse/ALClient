@@ -3362,7 +3362,7 @@ export class Character extends Observer implements CharacterData {
     // TODO: This will probably reject because the move doesn't match with the destination
     public warpToJail(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [warpToJail].")
-        return this.move(Number.MAX_VALUE, Number.MAX_VALUE, { disableSafetyCheck: true })
+        return this.move(100_000, 100_000, { disableSafetyCheck: true })
     }
 
     public warpToTown(): Promise<IPosition> {
