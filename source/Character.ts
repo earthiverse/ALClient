@@ -1322,6 +1322,8 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public canUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): boolean {
+        if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't upgrade in the bank
+
         const itemInfo = this.items[itemPos]
         if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
         const gItemInfo = this.G.items[itemInfo.name]
