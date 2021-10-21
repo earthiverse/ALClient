@@ -363,9 +363,9 @@ export class Pathfinder {
             transporters.push(npc)
 
             // Make more points around the transporter
-            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
-                const x = Math.round(npc.position[0] + Math.cos(angle) * Constants.TRANSPORTER_REACH_DISTANCE) - 1
-                const y = Math.round(npc.position[1] + Math.sin(angle) * Constants.TRANSPORTER_REACH_DISTANCE) - 1
+            for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 32) {
+                const x = Math.trunc(npc.position[0] + Math.cos(angle) * Constants.TRANSPORTER_REACH_DISTANCE)
+                const y = Math.trunc(npc.position[1] + Math.sin(angle) * Constants.TRANSPORTER_REACH_DISTANCE)
                 if (this.canStand({ map, x, y })) {
                     const fromNode = this.addNodeToGraph(map, x, y)
                     points.push(x, y)
@@ -401,9 +401,9 @@ export class Pathfinder {
                 { x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 } // Bottom left
             ]
             for (const point of doorCorners) {
-                for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
-                    const x = Math.round(point.x + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE) - 1
-                    const y = Math.round(point.y + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE) - 1
+                for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 32) {
+                    const x = Math.trunc(point.x + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE)
+                    const y = Math.trunc(point.y + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE)
                     if (this.canStand({ map, x, y })) {
                         const fromNode = this.addNodeToGraph(map, x, y)
                         points.push(x, y)
