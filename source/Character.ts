@@ -1584,10 +1584,16 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {unknown}
      * @memberof Character
      */
-    public depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): unknown {
+    public async depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): Promise<unknown> {
         if (!this.ready) return Promise.reject("We aren't ready yet [depositItem].")
-        if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
-            return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
+        if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u") return Promise.reject(`We're not in the bank (we're in '${this.map}')`)
+
+        // Wait up to 5s to get bank items
+        for (let i = 0; i < 20; i++) {
+            if (this.bank) break
+            await new Promise(resolve => setTimeout(resolve, 250))
+        }
+        if (!this.bank) return Promise.reject("We don't have bank information yet. Please try again in a bit.")
 
         const item = this.items[inventoryPos]
         if (!item) return Promise.reject(`There is no item in inventory slot ${inventoryPos}.`)
@@ -3429,8 +3435,17 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("bank", { amount: gold, operation: "withdraw" })
     }
 
-    public withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): unknown {
+    public async withdrawItem(bankPack: BankPackName, bankPos: number, inventoryPos = -1): Promise<unknown> {
         if (!this.ready) return Promise.reject("We aren't ready yet [withdrawItem].")
+
+        // Wait up to 5s to get bank items
+        for (let i = 0; i < 20; i++) {
+            if (this.bank) break
+            await new Promise(resolve => setTimeout(resolve, 250))
+        }
+        if (!this.bank) return Promise.reject("We don't have bank information yet. Please try again in a bit.")
+
+
         const item = this.bank[bankPack][bankPos]
         if (!item) return Promise.reject(`There is no item in bank ${bankPack}[${bankPos}]`)
 
