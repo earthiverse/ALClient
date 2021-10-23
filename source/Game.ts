@@ -1,5 +1,6 @@
 import axios from "axios"
 import fs from "fs"
+import url from "url"
 import { AuthModel, Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { CharacterType, GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
@@ -187,9 +188,12 @@ export class Game {
 
         // Login and save the auth
         console.debug("Logging in...")
+        const params = new url.URLSearchParams()
+        params.append("method", "signup_or_login")
+        params.append("arguments", JSON.stringify({ email: email, only_login: true, password: password }))
         const login = await axios.post<LoginData>(
             "https://adventure.land/api/signup_or_login",
-            encodeURIComponent(`method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`))
+            params.toString())
         let loginResult
         for (const datum of login.data) {
             if (datum["message"]) {
