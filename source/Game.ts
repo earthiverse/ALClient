@@ -187,7 +187,9 @@ export class Game {
 
         // Login and save the auth
         console.debug("Logging in...")
-        const login = await axios.post<LoginData>("https://adventure.land/api/signup_or_login", `method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`)
+        const login = await axios.post<LoginData>(
+            "https://adventure.land/api/signup_or_login",
+            encodeURIComponent(`method=signup_or_login&arguments={"email":"${email}","password":"${password}","only_login":true}`))
         let loginResult
         for (const datum of login.data) {
             if (datum["message"]) {
