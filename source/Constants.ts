@@ -36,7 +36,7 @@ export class Constants {
     static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "snowman", "stompy", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
-        "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "snowman", "stompy", "tinyp", "wabbit",
+        "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tinyp", "wabbit",
         // Crypt monsters
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "xmagefi", "xmagefz", "xmagen", "xmagex"
     ]

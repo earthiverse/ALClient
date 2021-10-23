@@ -955,8 +955,10 @@ export type ServerInfoDataLive = {
     map: MapName
     max_hp: number
     target?: string
-    x: number
-    y: number
+    /** NOTE: Some event monsters don't have x and y (e.g.: Slenderman) */
+    x?: number
+    /** NOTE: Some event monsters don't have x and y (e.g.: Slenderman) */
+    y?: number
 }
 export type ServerInfoDataNotLive = {
     live: false

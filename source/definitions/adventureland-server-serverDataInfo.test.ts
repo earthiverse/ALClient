@@ -1,6 +1,6 @@
 import { ServerInfoData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-04-23
  * It is used to confirm type correctness
  */
@@ -23,7 +23,7 @@ test("ServerInfoData type validation", async () => {
             "snowman": { "live": true, "map": "winterland", "hp": 1097, "max_hp": 1200, "target": "earthWar", "x": 1297.5140892582497, "y": -758.6716972073393 },
             "franky": { "live": true, "map": "level2w", "hp": 120000000, "max_hp": 120000000, "x": -442.1560348761702, "y": 138.29909855870474 }
         },
-        // Event
+        // Easter Event
         {
             "wabbit": {
                 "live": false,
@@ -38,6 +38,24 @@ test("ServerInfoData type validation", async () => {
                 "hp": 120000000,
                 "max_hp": 120000000,
             }
+        },
+        // Halloween Event
+        {
+            "mrpumpkin": {
+                "live": false,
+                "spawn": "2021-10-23T22:19:07.741Z"
+            },
+            "mrgreen": {
+                "live": false,
+                "spawn": "2021-10-23T22:46:21.998Z"
+            },
+            "slenderman": {
+                "live": true,
+                "map": "halloween",
+                "hp": 66666,
+                "max_hp": 66666
+            },
+            "halloween": true
         }
     ]
     for (const serverInfo of serverInfos) expect(serverInfo).not.toBe(undefined)

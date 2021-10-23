@@ -154,8 +154,9 @@ export class Observer {
             const now = Date.now()
 
             for (const mtype in data) {
-                if (typeof data[mtype] !== "object") continue // Event information, not monster information
-                if (!data[mtype].live) continue // Monster is not alive
+                if (typeof data[mtype as MonsterName] !== "object") continue // Event information, not monster information
+                if (!data[mtype as MonsterName].live) continue // Monster is not alive
+                if (data[mtype as MonsterName]["x"] == undefined || data[mtype as MonsterName]["y"] == undefined) continue // No location data (e.g.: Slenderman)
 
                 // Add soft properties to monster
                 const mN = mtype as MonsterName
