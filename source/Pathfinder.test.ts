@@ -32,10 +32,19 @@ test("Pathfinder.getPath", async () => {
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
     expect(path.length).toBe(2)
+    path = undefined
 
     // Complicated cross-map path
     expect(() => {
         path = Pathfinder.getPath(mainSpawn, halloweenSpawn)
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
+    path = undefined
+
+    // Don't use town warps
+    expect(() => {
+        path = Pathfinder.getPath({ map: "main", x: 17, y: -152 }, { map: "main", x: 383, y: 1480 }, { avoidTownWarps: true })
+    }).not.toThrowError()
+    expect(path).not.toBeUndefined()
+    for (const link of path) expect(link.type).not.toEqual("town")
 })

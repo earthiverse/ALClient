@@ -419,12 +419,13 @@ export class Pathfinder {
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         const townNode = this.addNodeToGraph(map, this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
         walkableNodes.push(townNode)
-        points.push(this.G.maps[map].spawns[0][0], this.G.maps[map].spawns[0][1])
+        points.push(townNode.data.x, townNode.data.y)
         const townLinkData: LinkData = { map: map, type: "town", x: townNode.data.x, y: townNode.data.y }
         for (let i = 1; i < this.G.maps[map].spawns.length; i++) {
             const spawn = this.G.maps[map].spawns[i]
-            walkableNodes.push(this.addNodeToGraph(map, spawn[0], spawn[1]))
-            points.push(spawn[0], spawn[1])
+            const node = this.addNodeToGraph(map, spawn[0], spawn[1])
+            walkableNodes.push(node)
+            points.push(node.data.x, node.data.y)
         }
 
         // console.debug("  Adding walkable links...")
@@ -575,30 +576,26 @@ export class Pathfinder {
             const currentNode = rawPath[i]
             const nextNode = rawPath[i - 1]
 
-            // TODO: Get links, and determine the faster link? This will help solve the walk to spawn issue on winterland.
-            const link = this.graph.getLink(currentNode.id, nextNode.id)
-            if (link.data) {
-                path.push(link.data)
-                if (link.data.type == "town") {
+            let lowestCostLinkData: LinkData
+            let lowestCost = Number.MAX_VALUE
+            for (const link of currentNode.links) {
+                if (link.toId !== nextNode.id) continue
+                const cost = this.computeLinkCost(fromNode.data, toNode.data, link.data, options)
+                if (cost < lowestCost || (cost == lowestCost && (link.data as LinkData)?.type == "move")) {
+                    lowestCost = cost
+                    lowestCostLinkData = link.data as LinkData
+                }
+            }
+
+            if (lowestCostLinkData) {
+                path.push(lowestCostLinkData)
+                if (lowestCostLinkData.type == "town") {
                     // Town warps don't always go to the exact location, so sometimes we can't reach the next node.
                     // So... We will walk to the town node after town warping.
-                    path.push({ map: link.data.map, type: "move", x: this.G.maps[link.data.map].spawns[0][0], y: this.G.maps[link.data.map].spawns[0][1] })
+                    path.push({ map: lowestCostLinkData.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
                 }
             } else {
-                // If the next move is the town node, check if it's faster to warp there.
-                const townNode = this.G.maps[nextNode.data.map].spawns[0]
-                if (!options?.avoidTownWarps && nextNode.data.x == townNode[0] && nextNode.data.y == townNode[1]) {
-                    if (Tools.distance(currentNode.data, nextNode.data) > this.TOWN_COST) {
-                        // It's quicker to use 'town'
-                        path.push({ map: nextNode.data.map, type: "town", x: nextNode.data.x, y: nextNode.data.y })
-                        path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
-                    } else {
-                        // It's quicker to move
-                        path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
-                    }
-                } else {
-                    path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
-                }
+                path.push({ map: nextNode.data.map, type: "move", x: nextNode.data.x, y: nextNode.data.y })
             }
         }
         path.push({ map: to.map, type: "move", x: to.x, y: to.y })

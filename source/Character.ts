@@ -2713,7 +2713,7 @@ export class Character extends Observer implements CharacterData {
         if (options == undefined) options = {}
         if (options.costs == undefined) {
             options.costs = {
-                town: this.speed * 4 + (Math.min(...this.pings) / 500), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+                town: this.speed * (4 + (Math.min(...this.pings) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
                 transport: this.speed * (Math.min(...this.pings) / 500) // Based on how long it takes to confirm with the server
             }
         }
