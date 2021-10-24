@@ -364,8 +364,8 @@ export class Pathfinder {
 
             // Make more points around the transporter
             for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 32) {
-                const x = Math.trunc(npc.position[0] + Math.cos(angle) * Constants.TRANSPORTER_REACH_DISTANCE)
-                const y = Math.trunc(npc.position[1] + Math.sin(angle) * Constants.TRANSPORTER_REACH_DISTANCE)
+                const x = Math.trunc(npc.position[0] + Math.cos(angle) * (Constants.TRANSPORTER_REACH_DISTANCE - 1))
+                const y = Math.trunc(npc.position[1] + Math.sin(angle) * (Constants.TRANSPORTER_REACH_DISTANCE - 1))
                 if (this.canStand({ map, x, y })) {
                     const fromNode = this.addNodeToGraph(map, x, y)
                     points.push(x, y)
