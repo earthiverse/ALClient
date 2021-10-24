@@ -304,17 +304,10 @@ export class Character extends Observer implements CharacterData {
                 if (cooldown) {
                     this.setNextSkill(data.name, new Date(Date.now() + cooldown))
                 }
-            } else {
-                // DEBUG
-                console.debug("Game Response Data -----")
-                console.debug(data)
             }
         } else if (typeof (data) == "string") {
             if (data == "resolve_skill") {
                 // Ignore. We resolve our skills a different way than the vanilla client
-            } else {
-                // DEBUG
-                console.debug(`Game Response: ${data}`)
             }
         }
     }
