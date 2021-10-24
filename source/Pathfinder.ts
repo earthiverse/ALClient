@@ -402,8 +402,8 @@ export class Pathfinder {
             ]
             for (const point of doorCorners) {
                 for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 32) {
-                    const x = Math.trunc(point.x + Math.cos(angle) * Constants.DOOR_REACH_DISTANCE)
-                    const y = Math.trunc(point.y + Math.sin(angle) * Constants.DOOR_REACH_DISTANCE)
+                    const x = Math.trunc(point.x + Math.cos(angle) * (Constants.DOOR_REACH_DISTANCE - 1))
+                    const y = Math.trunc(point.y + Math.sin(angle) * (Constants.DOOR_REACH_DISTANCE - 1))
                     if (this.canStand({ map, x, y })) {
                         const fromNode = this.addNodeToGraph(map, x, y)
                         points.push(x, y)
@@ -435,7 +435,7 @@ export class Pathfinder {
 
             // Check if we can reach a door
             for (const door of doors) {
-                if (this.doorDistance(fromNode.data, door) > Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
+                if (this.doorDistance(fromNode.data, door) >= Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]

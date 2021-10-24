@@ -3378,9 +3378,10 @@ export class Character extends Observer implements CharacterData {
     public warpToTown(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [warpToTown].")
         let startedWarp = false
+        if (this.c.town) startedWarp = true
         const warpComplete = new Promise<IPosition>((resolve, reject) => {
             const failCheck = (data: CharacterData) => {
-                if (!startedWarp && data.c.town && data.c.town.ms == 3000) {
+                if (!startedWarp && data.c.town) {
                     startedWarp = true
                     return
                 }
@@ -3415,7 +3416,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", failCheck)
         })
 
-        this.socket.emit("town")
+        if (!startedWarp) this.socket.emit("town")
         return warpComplete
     }
 

@@ -236,6 +236,7 @@ export class Merchant extends PingCompensatedCharacter {
 
     public mluck(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [mluck].")
+        let previousMs = 0
         if (target !== this.id) {
             const player = this.players.get(target)
             if (!player) return Promise.reject(`Could not find ${target} to mluck.`)
@@ -245,6 +246,9 @@ export class Merchant extends PingCompensatedCharacter {
                     || (player.s.mluck.f !== this.id))) { // Else, rely on the character id
                 return Promise.reject(`${target} has a strong mluck from ${player.s.mluck.f}.`)
             }
+            previousMs = player.s?.mluck?.ms ?? 0
+        } else {
+            previousMs = this.s?.mluck?.ms ?? 0
         }
 
         const mlucked = new Promise<void>((resolve, reject) => {
@@ -262,7 +266,7 @@ export class Merchant extends PingCompensatedCharacter {
                 for (const player of data.players) {
                     if (player.id == target
                         && player.s?.mluck?.f == this.id
-                        && player.s?.mluck?.ms == this.G.conditions.mluck.duration) {
+                        && player.s?.mluck?.ms >= previousMs) {
                         this.socket.off("entities", mluckCheck)
                         this.socket.off("game_response", failCheck)
                         this.socket.off("player", selfMluckCheck)
@@ -273,8 +277,9 @@ export class Merchant extends PingCompensatedCharacter {
             }
 
             const selfMluckCheck = (data: PlayerData) => {
-                if (data.s?.mluck?.f == this.id
-                    && data.s?.mluck?.ms == this.G.conditions.mluck.duration) {
+                if (this.id == target
+                    && data.s?.mluck?.f == this.id
+                    && data.s?.mluck?.ms >= previousMs) {
                     this.socket.off("entities", mluckCheck)
                     this.socket.off("game_response", failCheck)
                     this.socket.off("player", selfMluckCheck)
