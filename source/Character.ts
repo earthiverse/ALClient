@@ -2841,20 +2841,13 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            // TODO: Door check -- check if we can enter the door from our current position
-            // if (currentMove.type == "move") {
-            //     for (let j = i + 1; j < path.length; j++) {
-            //         const potentialMove = path[j]
-            //
-            //     }
-            // }
-
             // Blink check -- blink to the furthest node we can on the same map
             if (options?.useBlink && this.canUse("blink")) {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
                     if (potentialMove.map == this.map) {
+                        if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
                         await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
                         if (this.c.town) await this.stopWarpToTown()
                         i = j
