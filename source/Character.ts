@@ -2849,7 +2849,7 @@ export class Character extends Observer implements CharacterData {
                     if (potentialMove.map == this.map) {
                         if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
                         await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
-                        if (this.c.town) await this.stopWarpToTown()
+                        this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
                         i = j
                         blinked = true
                         break
@@ -2863,7 +2863,7 @@ export class Character extends Observer implements CharacterData {
                 const futureMove = path[j]
                 if (currentMove.map !== futureMove.map) break
                 if (futureMove.type == "town") {
-                    this.warpToTown().catch((e) => { console.error(e) })
+                    this.warpToTown()?.catch((e) => { console.error(e) })
                     break
                 }
             }
@@ -2919,7 +2919,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         this.smartMoving = false
-        if (this.c.town) await this.stopWarpToTown()
+        this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
         return { map: this.map, x: this.x, y: this.y }
     }
 

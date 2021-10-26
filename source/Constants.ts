@@ -13,7 +13,7 @@ export class Constants {
     static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
 
     /** Various distance related things */
-    static MAX_VISIBLE_RANGE = 600
+    static MAX_VISIBLE_RANGE = 800
     static NPC_INTERACTION_DISTANCE = 400
     static DASH_DISTANCE = 40
     static DOOR_REACH_DISTANCE = 39
