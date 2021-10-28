@@ -3,6 +3,8 @@ import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {
+    ctype: "priest" = "priest"
+
     public absorbSins(target: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [absorbSins].")
         const absorbed = new Promise<void>((resolve, reject) => {

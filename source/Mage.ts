@@ -4,6 +4,8 @@ import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Mage extends PingCompensatedCharacter {
+    ctype: "mage" = "mage"
+
     // NOTE: UNTESTED
     public alchemy(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [alchemy].")

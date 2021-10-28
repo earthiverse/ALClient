@@ -3,6 +3,8 @@ import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Paladin extends PingCompensatedCharacter {
+    ctype: "paladin" = "paladin"
+
     // NOTE: Untested
     public manaShieldOff(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [manaShieldOff].")

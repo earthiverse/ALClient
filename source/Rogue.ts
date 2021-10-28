@@ -3,6 +3,8 @@ import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Rogue extends PingCompensatedCharacter {
+    ctype: "rogue" = "rogue"
+
     // NOTE: UNTESTED
     // TODO: Add promises
     public invis(): Promise<void> {

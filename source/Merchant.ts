@@ -6,6 +6,8 @@ import { Tools } from "./Tools.js"
 import { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
+    ctype: "merchant" = "merchant"
+
     public closeMerchantStand(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [closeMerchantStand].")
         if (!this.stand) return Promise.resolve() // It's already closed

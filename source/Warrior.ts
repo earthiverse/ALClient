@@ -3,6 +3,8 @@ import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Warrior extends PingCompensatedCharacter {
+    ctype: "warrior" = "warrior"
+
     // TODO: Investigate why the cooldown check doesn't work.
     public agitate(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [agitate].")
