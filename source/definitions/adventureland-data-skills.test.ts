@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 680 (2021-05-05)
+ * The following is from http://adventure.land/data.js, version 697 (2021-10-28)
  * It is used to confirm type correctness
  */
 
@@ -123,7 +123,7 @@ test("G.skills type validation", async () => {
                     ],
                     [
                         70,
-                        1.0
+                        1
                     ],
                     [
                         80,
@@ -249,20 +249,21 @@ test("G.skills type validation", async () => {
                 "skin": "stop_g"
             },
             "snowball": {
-                "name": "Snowball",
-                "explanation": "Throw a snowball at someone!",
+                "range": 1000,
                 "cooldown": 180,
-                "mp": 120,
-                "skin": "snowball",
-                "type": "skill",
                 "inventory": [
                     "snowball"
-                ]
+                ],
+                "skin": "snowball",
+                "explanation": "Throw a snowball at someone!",
+                "type": "skill",
+                "mp": 120,
+                "name": "Snowball"
             },
             "warpstomp": {
-                "explanation": "Warps to a random player nearby and stomps players in viccinity",
+                "explanation": "Warps to a random player nearby and stomps players in vicinity",
                 "type": "monster",
-                "name": "Warmpstomp",
+                "name": "Warpstomp",
                 "hostile": true
             },
             "blink": {
@@ -969,6 +970,18 @@ test("G.skills type validation", async () => {
                 "name": "Toggle Inventory",
                 "skin": "inventory"
             },
+            "dash": {
+                "set_speed": 500,
+                "cooldown": 0,
+                "name": "Dash",
+                "skin": "skill_dash",
+                "explanation": "Push forward, jumping over obstacles, climbing hills, defying physics!",
+                "type": "skill",
+                "class": [
+                    "warrior"
+                ],
+                "mp": 120
+            },
             "anger": {
                 "explanation": "Randomly targets someone",
                 "type": "monster",
@@ -1059,12 +1072,13 @@ test("G.skills type validation", async () => {
                         "zapper"
                     ]
                 ],
-                "name": "Zap",
-                "explanation": "Zap your target for 200 pure damage",
+                "range": 420,
                 "cooldown": 200,
-                "mp": 140,
+                "name": "Zap",
                 "skin": "trigger",
-                "type": "skill"
+                "explanation": "Zap your target for 200 pure damage",
+                "type": "skill",
+                "mp": 140
             },
             "track": {
                 "range": 1440,

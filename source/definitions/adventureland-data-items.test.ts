@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 688 (2021-09-18)
+ * The following is from http://adventure.land/data.js, version 697 (2021-10-28)
  * It is used to confirm type correctness
  */
 
@@ -582,21 +582,18 @@ test("G.items type validation", async () => {
                 "scroll": true
             },
             "test_orb": {
-                "ability": "restore_mp",
-                "compound": {},
                 "grades": [
                     0,
                     0,
                     10,
                     12
                 ],
-                "attr0": 8,
-                "skin": "test_orb",
                 "fzresistance": 20,
                 "name": "Orb of Testing",
                 "g": 1,
+                "skin": "test_orb",
                 "firesistance": 20,
-                "mp_reduction": 20,
+                "compound": {},
                 "type": "orb"
             },
             "zapper": {
@@ -814,6 +811,27 @@ test("G.items type validation", async () => {
                 "type": "earring",
                 "apiercing": 15
             },
+            "sshield": {
+                "armor": 60,
+                "grades": [
+                    4,
+                    8,
+                    10,
+                    12
+                ],
+                "upgrade": {
+                    "armor": 10,
+                    "dreturn": 1.5,
+                    "resistance": 7
+                },
+                "name": "Spiked Shield",
+                "g": 24000,
+                "skin": "sshield",
+                "tier": 2,
+                "dreturn": 3,
+                "type": "shield",
+                "resistance": 20
+            },
             "strscroll": {
                 "stat": "str",
                 "name": "Strength Scroll",
@@ -938,19 +956,17 @@ test("G.items type validation", async () => {
                 "resistance": 8
             },
             "vsword": {
+                "set": "vampires",
                 "grades": [
                     0,
                     0,
                     9,
                     10
                 ],
-                "cx": {
-                    "accent": "#B91A6A"
-                },
+                "lifesteal": 5,
                 "skin": "vsword",
                 "tier": 3.25,
                 "speed": 1,
-                "lifesteal": 5,
                 "upgrade": {
                     "range": 1.5,
                     "attack": 6.25
@@ -960,6 +976,9 @@ test("G.items type validation", async () => {
                 "wtype": "sword",
                 "damage": "physical",
                 "range": 11.75,
+                "cx": {
+                    "accent": "#B91A6A"
+                },
                 "attack": 26.25,
                 "type": "weapon"
             },
@@ -1516,6 +1535,7 @@ test("G.items type validation", async () => {
                 "type": "elixir"
             },
             "vdagger": {
+                "set": "vampires",
                 "grades": [
                     0,
                     0,
@@ -1930,26 +1950,15 @@ test("G.items type validation", async () => {
                 "attack": 48,
                 "type": "weapon"
             },
-            "sshield": {
-                "armor": 60,
-                "grades": [
-                    4,
-                    8,
-                    10,
-                    12
-                ],
-                "upgrade": {
-                    "armor": 10,
-                    "dreturn": 1.5,
-                    "resistance": 7
-                },
-                "name": "Spiked Shield",
-                "g": 24000,
-                "skin": "sshield",
-                "tier": 2,
-                "dreturn": 3,
-                "type": "shield",
-                "resistance": 20
+            "forscroll": {
+                "stat": "for",
+                "name": "Fortitude Scroll",
+                "g": 8000,
+                "skin": "forscroll",
+                "explanation": "Adds Fortitude to an armor with a Stat attribute.",
+                "multiplier": 1,
+                "type": "pscroll",
+                "s": 9999
             },
             "merry": {
                 "set": "holidays",
@@ -2228,15 +2237,17 @@ test("G.items type validation", async () => {
                 "attack": 27.5,
                 "type": "weapon"
             },
-            "forscroll": {
-                "stat": "for",
-                "name": "Fortitude Scroll",
-                "g": 8000,
-                "skin": "forscroll",
-                "explanation": "Adds Fortitude to an armor with a Stat attribute.",
-                "multiplier": 1,
-                "type": "pscroll",
-                "s": 9999
+            "pico": {
+                "duration": 0.05,
+                "s": 9999,
+                "g": 150000,
+                "name": "Pixel Colada",
+                "rpiercing": 100,
+                "skin": "pico",
+                "crit": 20,
+                "miss": 15,
+                "type": "elixir",
+                "skin_a": "pico"
             },
             "pstem": {
                 "s": 9999,
@@ -2265,34 +2276,23 @@ test("G.items type validation", async () => {
                 "type": "pscroll",
                 "s": 9999
             },
-            "spearofthedead": {
-                "explanation": "A deadly weapon",
-                "damage": "physical",
-                "g": 724000,
+            "spookyamulet": {
+                "gold": 2,
+                "skin": "spookyamulet",
                 "grades": [
-                    0,
+                    3,
                     5,
                     10,
                     12
                 ],
-                "cx": {
-                    "accent": "#D87F0E"
-                },
-                "skin": "spearofthedead",
-                "tier": 2.4,
+                "evasion": 5,
+                "xp": 2,
+                "reflection": 2,
                 "a": true,
-                "upgrade": {
-                    "range": 2,
-                    "attack": 5.2299999999999995
-                },
-                "name": "Spear of the Dead",
-                "for": 3,
-                "wtype": "spear",
-                "apiercing": 12,
-                "range": 17.8,
-                "str": 8,
-                "attack": 22,
-                "type": "weapon"
+                "name": "Amulet of Spooks",
+                "g": 320000,
+                "type": "amulet",
+                "luck": 2
             },
             "frankypants": {
                 "stat": 3,
@@ -2746,6 +2746,31 @@ test("G.items type validation", async () => {
                 },
                 "type": "ring",
                 "apiercing": 10
+            },
+            "gloves1": {
+                "stat": 2,
+                "set": "rugged",
+                "resistance": 8,
+                "grades": [
+                    0,
+                    7,
+                    10,
+                    12
+                ],
+                "skin": "gloves1",
+                "tier": 2,
+                "a": 2,
+                "extra_stat": 1,
+                "upgrade": {
+                    "armor": 2.5,
+                    "stat": 1,
+                    "resistance": 2.5
+                },
+                "name": "Rugged Gloves",
+                "g": 34000,
+                "armor": 16,
+                "type": "gloves",
+                "scroll": true
             },
             "egg0": {
                 "name": "Easter Egg",
@@ -4063,18 +4088,6 @@ test("G.items type validation", async () => {
                 "explanation": "Rains fire upon the enemy",
                 "name": "Fire Bow"
             },
-            "pico": {
-                "duration": 0.05,
-                "s": 9999,
-                "g": 150000,
-                "name": "Pixel Colada",
-                "rpiercing": 100,
-                "skin": "pico",
-                "crit": 20,
-                "miss": 15,
-                "type": "elixir",
-                "skin_a": "pico"
-            },
             "vcape": {
                 "stat": 4,
                 "set": "vampires",
@@ -4390,13 +4403,34 @@ test("G.items type validation", async () => {
                 "g": 25,
                 "skin": "beewings"
             },
-            "egg1": {
-                "name": "Easter Egg",
-                "g": 4000,
-                "explanation": "A uniquely painted Egg!",
-                "s": 9999,
-                "skin": "egg1",
-                "type": "quest"
+            "spearofthedead": {
+                "explanation": "A deadly weapon",
+                "damage": "physical",
+                "g": 724000,
+                "grades": [
+                    0,
+                    5,
+                    10,
+                    12
+                ],
+                "cx": {
+                    "accent": "#D87F0E"
+                },
+                "skin": "spearofthedead",
+                "tier": 2.4,
+                "a": true,
+                "upgrade": {
+                    "range": 2,
+                    "attack": 5.2299999999999995
+                },
+                "name": "Spear of the Dead",
+                "for": 3,
+                "wtype": "spear",
+                "apiercing": 12,
+                "range": 17.8,
+                "str": 8,
+                "attack": 22,
+                "type": "weapon"
             },
             "coal": {
                 "a": true,
@@ -4512,6 +4546,33 @@ test("G.items type validation", async () => {
                 "type": "shoes",
                 "scroll": true
             },
+            "skullamulet": {
+                "a": true,
+                "int": 1,
+                "hp": 200,
+                "compound": {
+                    "dex": 1,
+                    "for": 1,
+                    "armor": 5,
+                    "hp": 320,
+                    "int": 1,
+                    "str": 1
+                },
+                "g": 30000,
+                "grades": [
+                    2,
+                    4,
+                    6,
+                    7
+                ],
+                "skin": "skullamulet",
+                "dex": 1,
+                "name": "Skull Amulet",
+                "for": 4,
+                "armor": 10,
+                "str": 1,
+                "type": "amulet"
+            },
             "resistancering": {
                 "a": true,
                 "grades": [
@@ -4596,6 +4657,34 @@ test("G.items type validation", async () => {
                 "skin": "elixirdex1",
                 "duration": 24,
                 "type": "elixir"
+            },
+            "glolipop": {
+                "explosion": 20,
+                "ability": "sugarrush",
+                "grades": [
+                    8,
+                    9,
+                    10,
+                    12
+                ],
+                "cx": {
+                    "accent": "#64B553"
+                },
+                "skin": "glolipop",
+                "tier": 0,
+                "dex": 24,
+                "upgrade": {
+                    "range": 1,
+                    "explosion": 2,
+                    "attack": 2.9
+                },
+                "name": "Lolipop Mace",
+                "g": 16000,
+                "wtype": "mace",
+                "damage": "physical",
+                "range": 4,
+                "attack": 14,
+                "type": "weapon"
             },
             "pouchbow": {
                 "explosion": 10,
@@ -4899,6 +4988,14 @@ test("G.items type validation", async () => {
                 "name": "Bat Wing",
                 "g": 120,
                 "skin": "bwing"
+            },
+            "essenceoflife": {
+                "name": "Essence of Life",
+                "g": 1,
+                "explanation": "Full of life, literally.",
+                "s": 9999,
+                "skin": "essenceoflife",
+                "type": "material"
             },
             "frozenstone": {
                 "onclick": "socket.emit('activate',{num:locate_item('frozenstone')})",
@@ -5522,6 +5619,13 @@ test("G.items type validation", async () => {
                 "skin": "ledger",
                 "type": "misc"
             },
+            "whiteegg": {
+                "s": 9999,
+                "type": "material",
+                "name": "White Egg",
+                "g": 5,
+                "skin": "whiteegg"
+            },
             "reflectionscroll": {
                 "stat": "reflection",
                 "name": "Reflection Scroll",
@@ -5906,19 +6010,33 @@ test("G.items type validation", async () => {
                 "type": "helmet",
                 "scroll": true
             },
-            "mpot0": {
-                "name": "MP Potion",
-                "g": 20,
-                "s": 9999,
-                "cooldown": 2000,
-                "skin": "mpot0",
-                "type": "pot",
-                "gives": [
-                    [
-                        "mp",
-                        300
-                    ]
-                ]
+            "broom": {
+                "skin": "broom",
+                "grades": [
+                    8,
+                    9,
+                    10,
+                    12
+                ],
+                "cx": {
+                    "accent": "#7B68A5"
+                },
+                "evasion": 5,
+                "tier": 0,
+                "speed": 2,
+                "upgrade": {
+                    "range": 2.5,
+                    "speed": 1,
+                    "attack": 4.5,
+                    "evasion": 1
+                },
+                "name": "Broom",
+                "g": 128,
+                "wtype": "staff",
+                "damage": "magical",
+                "range": 44,
+                "attack": 15,
+                "type": "weapon"
             },
             "manastealscroll": {
                 "stat": "manasteal",
@@ -6608,6 +6726,7 @@ test("G.items type validation", async () => {
                 "scroll": true
             },
             "vstaff": {
+                "set": "vampires",
                 "grades": [
                     0,
                     0,
@@ -6788,12 +6907,32 @@ test("G.items type validation", async () => {
                 "str": 10,
                 "type": "chest"
             },
-            "whiteegg": {
-                "s": 9999,
-                "type": "material",
-                "name": "White Egg",
-                "g": 5,
-                "skin": "whiteegg"
+            "pmaceofthedead": {
+                "grades": [
+                    0,
+                    0,
+                    9,
+                    10
+                ],
+                "cx": {
+                    "accent": "#D87F0E"
+                },
+                "skin": "pmaceofthedead",
+                "tier": 3,
+                "speed": -3,
+                "a": true,
+                "upgrade": {
+                    "range": 6,
+                    "attack": 7
+                },
+                "name": "Hand of the Dead",
+                "g": 824000,
+                "wtype": "pmace",
+                "damage": "magical",
+                "range": 15,
+                "str": 20,
+                "attack": 30,
+                "type": "weapon"
             },
             "santasbelt": {
                 "dex": 3,
@@ -7059,30 +7198,31 @@ test("G.items type validation", async () => {
                 "g": 50000,
                 "skin": "btusk"
             },
-            "gloves1": {
-                "stat": 2,
-                "set": "rugged",
-                "resistance": 8,
+            "sbelt": {
+                "a": true,
+                "int": 8,
+                "compound": {
+                    "int": 2,
+                    "dex": 2,
+                    "armor": 10,
+                    "resistance": 10,
+                    "str": 2
+                },
+                "resistance": 15,
+                "g": 640000,
                 "grades": [
                     0,
-                    7,
-                    10,
-                    12
+                    1,
+                    6,
+                    7
                 ],
-                "skin": "gloves1",
-                "tier": 2,
-                "a": 2,
-                "extra_stat": 1,
-                "upgrade": {
-                    "armor": 2.5,
-                    "stat": 1,
-                    "resistance": 2.5
-                },
-                "name": "Rugged Gloves",
-                "g": 34000,
-                "armor": 16,
-                "type": "gloves",
-                "scroll": true
+                "skin": "sbelt",
+                "dex": 8,
+                "name": "Belt of Hallowed Trials",
+                "for": 12,
+                "armor": 15,
+                "str": 8,
+                "type": "belt"
             },
             "mparmor": {
                 "stat": 2,
@@ -7604,6 +7744,14 @@ test("G.items type validation", async () => {
                     ]
                 ]
             },
+            "egg1": {
+                "name": "Easter Egg",
+                "g": 4000,
+                "explanation": "A uniquely painted Egg!",
+                "s": 9999,
+                "skin": "egg1",
+                "type": "quest"
+            },
             "rfangs": {
                 "s": 9999,
                 "type": "material",
@@ -7933,13 +8081,33 @@ test("G.items type validation", async () => {
                 "g": 5,
                 "skin": "bfur"
             },
-            "essenceoflife": {
-                "name": "Essence of Life",
-                "g": 1,
-                "explanation": "Full of life, literally.",
-                "s": 9999,
-                "skin": "essenceoflife",
-                "type": "material"
+            "ololipop": {
+                "explosion": 20,
+                "ability": "sugarrush",
+                "grades": [
+                    8,
+                    9,
+                    10,
+                    12
+                ],
+                "cx": {
+                    "accent": "#DB763B"
+                },
+                "skin": "ololipop",
+                "tier": 0,
+                "upgrade": {
+                    "range": 1,
+                    "explosion": 2,
+                    "attack": 2.9
+                },
+                "name": "Lolipop Mace",
+                "g": 16000,
+                "wtype": "mace",
+                "damage": "physical",
+                "range": 4,
+                "str": 24,
+                "attack": 14,
+                "type": "weapon"
             },
             "wbasher": {
                 "grades": [
@@ -8347,7 +8515,9 @@ test("G.items type validation", async () => {
                 "type": "weapon"
             },
             "vhammer": {
+                "set": "vampires",
                 "explosion": 10,
+                "g": 9600000,
                 "grades": [
                     0,
                     0,
@@ -8359,14 +8529,13 @@ test("G.items type validation", async () => {
                 },
                 "skin": "vhammer",
                 "tier": 3,
-                "lifesteal": 3,
                 "upgrade": {
                     "range": 1,
                     "explosion": 2,
                     "attack": 6.2
                 },
                 "name": "Vampiric Hammer",
-                "g": 9600000,
+                "lifesteal": 3,
                 "wtype": "mace",
                 "damage": "physical",
                 "range": 7,
@@ -8569,6 +8738,20 @@ test("G.items type validation", async () => {
                 "explanation": "A unique component of a curious puzzle",
                 "type": "quest",
                 "event": true
+            },
+            "mpot0": {
+                "name": "MP Potion",
+                "g": 20,
+                "s": 9999,
+                "cooldown": 2000,
+                "skin": "mpot0",
+                "type": "pot",
+                "gives": [
+                    [
+                        "mp",
+                        300
+                    ]
+                ]
             },
             "pmace": {
                 "a": true,
