@@ -1,7 +1,7 @@
 import axios from "axios"
 import fs from "fs"
 import url from "url"
-import { AuthModel, Database, PlayerModel } from "./database/Database.js"
+import { Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { CharacterType, GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
 import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData, LoginData } from "./definitions/adventureland-server.js"
@@ -171,77 +171,98 @@ export class Game {
 
     static async login(email: string, password?: string, mongo?: string): Promise<boolean> {
         // Connect to Mongo
-        if (mongo) await Database.connect(mongo)
+        if (!Database.connection && mongo) await Database.connect(mongo)
 
-        if (Database.connection) {
-            // Use existing userAuth stored in our database if possible
-            const find = await AuthModel.findOne({ email: email }).lean().exec()
-            if (find?.userID && find?.userAuth) {
-                console.debug("Using auth data from database...")
-                this.user = { userAuth: find.userAuth, userID: find.userID }
-
-                // TODO: Test and see if it's still a good auth. If it's not, delete it.
-
-                return this.updateServersAndCharacters()
-            }
-        }
-
-        // Login and save the auth
-        console.debug("Logging in...")
-        const params = new url.URLSearchParams()
-        params.append("method", "signup_or_login")
-        params.append("arguments", JSON.stringify({ email: email, only_login: true, password: password }))
-        const login = await axios.post<LoginData>(
-            "https://adventure.land/api/signup_or_login",
-            params.toString())
-        let loginResult
-        for (const datum of login.data) {
-            if (datum["message"]) {
-                loginResult = datum
-                break
-            }
-        }
-        if (loginResult && loginResult.message == "Logged In!") {
-            console.debug("Logged in!")
-            // We successfully logged in
-            // Find the auth cookie and save it
-            for (const cookie of login.headers["set-cookie"]) {
-                const result = /^auth=(.+?);/.exec(cookie)
-                if (result) {
-                    // Save our data to the database
-                    this.user = {
-                        userAuth: result[1].split("-")[1],
-                        userID: result[1].split("-")[0]
-                    }
-                    if (Database.connection) await AuthModel.updateOne({ email: email }, { userAuth: this.user.userAuth, userID: this.user.userID }, { upsert: true }).lean().exec()
+        if (!this.user) {
+            // Login and save the auth
+            console.debug("Logging in...")
+            const params = new url.URLSearchParams()
+            params.append("method", "signup_or_login")
+            params.append("arguments", JSON.stringify({ email: email, only_login: true, password: password }))
+            const login = await axios.post<LoginData>(
+                "https://adventure.land/api/signup_or_login",
+                params.toString())
+            let loginResult
+            for (const datum of login.data) {
+                if (datum["message"]) {
+                    loginResult = datum
                     break
                 }
             }
-        } else if (loginResult && loginResult.message) {
+            if (loginResult && loginResult.message == "Logged In!") {
+                console.debug("Logged in!")
+                // We successfully logged in
+                // Find the auth cookie and save it
+                for (const cookie of login.headers["set-cookie"]) {
+                    const result = /^auth=(.+?);/.exec(cookie)
+                    if (result) {
+                    // Save our data to the database
+                        this.user = {
+                            userAuth: result[1].split("-")[1],
+                            userID: result[1].split("-")[0]
+                        }
+                        break
+                    }
+                }
+            } else if (loginResult && loginResult.message) {
             // We failed logging in, and we have a reason from the server
-            console.error(loginResult.message)
-            return Promise.reject(loginResult.message)
-        } else {
+                console.error(loginResult.message)
+                return Promise.reject(loginResult.message)
+            } else {
             // We failed logging in, but we don't know what went wrong
-            console.error(login.data)
-            return Promise.reject("Failed logging in.")
+                console.error(login.data)
+                return Promise.reject("Failed logging in.")
+            }
         }
 
         return this.updateServersAndCharacters()
     }
 
     static async loginJSONFile(path: string): Promise<boolean> {
-        const data: { email: string, password: string, mongo: string } = JSON.parse(fs.readFileSync(path, "utf8"))
-        return this.login(data.email, data.password, data.mongo)
+        let fileData: string
+        try {
+            fileData = fs.readFileSync(path, "utf8")
+        } catch (e) {
+            return Promise.reject(`Could not locate '${path}'.`)
+        }
+        const data: { email: string, password: string, mongo: string, userAuth?: string, userID?: string } = JSON.parse(fileData)
+
+        // Set UserID & UserAuth if it exists in the credentials file
+        if (data.userID && data.userAuth) {
+            this.user = {
+                userAuth: data.userAuth,
+                userID: data.userID
+            }
+        }
+
+        try {
+            await this.login(data.email, data.password, data.mongo)
+        } catch (e) {
+            if (data.userID && data.userAuth) {
+                // Delete the userAuth and userID, and try again
+                delete data.userAuth
+                delete data.userID
+                fs.writeFileSync(path, JSON.stringify(data, undefined, 4), "utf8")
+                delete this.user
+                return this.loginJSONFile(path)
+            }
+
+            return false
+        }
+        if (this.user && this.user.userAuth !== data.userAuth) {
+            // Update the credentials file with the new auth
+            data.userAuth = this.user.userAuth
+            data.userID = this.user.userID
+            fs.writeFileSync(path, JSON.stringify(data, undefined, 4), "utf8")
+
+        }
+        return true
     }
 
     static async logoutEverywhere(): Promise<unknown> {
         if (!this.user) return Promise.reject("You must login first.")
 
         const response = await axios.post<unknown>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
-
-        // Remove the auth from the database
-        if (Database.connection) await AuthModel.deleteOne({ userID: this.user.userID }).lean().exec()
         this.user = undefined
 
         return response.data
@@ -412,7 +433,7 @@ export class Game {
                 this.characters[characterData.name] = characterData
             }
 
-            return Promise.resolve(true)
+            return true
         } else {
             console.error(data)
         }
