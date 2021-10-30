@@ -967,7 +967,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [buyFromPonty].")
         if (!item.rid) return Promise.reject("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * Constants.PONTY_MARKUP * (item.q ? item.q : 1)
-        if (price > this.gold) return Promise.reject("We don't have enough gold to buy this.")
+        if (price > this.gold) return Promise.reject(`We don't have enough gold to buy ${item.name} from Ponty.`)
 
         const numBefore = this.countItem(item.name, this.items)
 
