@@ -15,9 +15,21 @@ This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull
 
 ## Basic Usage
 
+**For Beginners:**
+
+1. Install the latest version of [node](https://nodejs.org/en/download/).
+2. Create a new folder for your project
+3. Run `npm init` and enter prompts. Check out [this link](https://nodesource.com/blog/an-absolute-beginners-guide-to-using-npm/#usingnpminittoinitializeaproject) for more information.
+4. If you are using Typescript, which is strongly recommended, install it by running `npm install typescript`. Save your files as `.ts` files instead of `.js` files.
+5. If you are using Typescript, build your code by running `npx tsc`.
+
 **Notes:**
-In tsconfig.json, make sure `"esModuleInterop": true` is set.
-In package.json, make sure `"type": "module"` is set.
+
+In your tsconfig.json, make sure `"esModuleInterop": true` is set.
+
+In your package.json, make sure `"type": "module"` is set.
+
+**General Steps:**
 
 1. Install the package using `npm install alclient`.
 2. Add a `credentials.json` file that looks like this:
