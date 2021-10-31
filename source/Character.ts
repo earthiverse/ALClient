@@ -273,6 +273,8 @@ export class Character extends Observer implements CharacterData {
             this.setNextSkill("use_mp", next)
             return
         }
+
+        console.error(`Unhandled 'eval': ${JSON.stringify(data)}`)
     }
 
     protected parseGameResponse(data: GameResponseData): void {
