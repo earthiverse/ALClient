@@ -24,6 +24,7 @@ export class Observer {
     public players = new Map<string, Player>()
     public projectiles = new Map<string, ActionData & { date: Date; }>()
     public S: ServerInfoData = {}
+    public server: WelcomeData
 
     public serverData: ServerData
     public map: MapName
@@ -181,6 +182,10 @@ export class Observer {
             if (Database.connection && databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
 
             this.S = data
+        })
+
+        this.socket.on("welcome", (data: WelcomeData) => {
+            this.server = data
         })
 
         if (start) {

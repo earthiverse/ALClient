@@ -22,7 +22,6 @@ export class Character extends Observer implements CharacterData {
     public chests = new Map<string, ChestData>()
     public nextSkill = new Map<SkillName, Date>()
     public partyData: PartyData
-    public server: WelcomeData
     public ready = false
 
     // CharacterData
@@ -507,8 +506,6 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.on("welcome", (data: WelcomeData) => {
-            this.server = data
-
             // Send a response that we're ready to go
             this.socket.emit("loaded", {
                 height: 1080,
@@ -924,8 +921,7 @@ export class Character extends Observer implements CharacterData {
         return itemReceived
     }
 
-    // TODO: Add promises
-    public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<void> {
+    public buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<ItemData> {
         if (!this.ready) return Promise.reject("We aren't ready yet [buyFromMerchant].")
         if (quantity <= 0) return Promise.reject(`We can not buy a quantity of ${quantity}.`)
         const merchant = this.players.get(id)
@@ -955,7 +951,23 @@ export class Character extends Observer implements CharacterData {
             quantity = buyableQuantity
         }
 
+        const itemBought = new Promise<ItemData>((resolve, reject) => {
+            const buyCheck = (data: UIData) => {
+                if (data.type == "+$$" && data.seller == id && data.buyer == this.id && data.slot == slot) {
+                    this.socket.off("ui", buyCheck)
+                    resolve(data.item)
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("ui", buyCheck)
+                reject(`buy timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("ui", buyCheck)
+        })
+
         this.socket.emit("trade_buy", { id: id, q: quantity.toString(), rid: rid, slot: slot })
+        return itemBought
     }
 
     /**

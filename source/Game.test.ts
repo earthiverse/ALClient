@@ -20,4 +20,4 @@ test("Game.login", async () => {
     }
 
     expect(await Game.loginJSONFile("credentials.json")).toBe(true)
-}, 30_000)
+}, 60_000)

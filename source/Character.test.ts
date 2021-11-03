@@ -614,6 +614,7 @@ test("Character.canUse", () => {
     expect(priest.canUse("attack")).toBe(true)
     expect(priest.canUse("partyheal")).toBe(true)
     expect(priest.canUse("3shot")).toBe(false)
+    expect(priest.canUse("blink")).toBe(false)
 
     // Make partyheal on cooldown
     const future = new Date()
@@ -627,6 +628,7 @@ test("Character.canUse", () => {
     expect(priest.canUse("attack")).toBe(false)
     priest.rip = false
 
+    expect(warrior.canUse("blink")).toBe(false)
     expect(warrior.canUse("cleave")).toBe(false)
     expect(warrior.canUse("cleave", { ignoreEquipped: true })).toBe(true)
 
