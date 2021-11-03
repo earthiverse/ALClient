@@ -33,7 +33,7 @@ export class Constants {
     static MONGO_UPDATE_MS = 5000
 
     /** Monsters that are worth tracking in our database */
-    static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "snowman", "stompy", "wabbit"]
+    static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
         "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tinyp", "wabbit",

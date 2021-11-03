@@ -2523,7 +2523,7 @@ export class Character extends Observer implements CharacterData {
 
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
-                if (data.type == "+$$" && data.seller == this.name && data.buyer == id) {
+                if (data.type == "+$$" && data.seller == this.id && data.buyer == id) {
                     this.socket.off("game_response", failCheck)
                     this.socket.off("ui", soldCheck)
                     resolve()
