@@ -1228,7 +1228,7 @@ export class Character extends Observer implements CharacterData {
         for (const [requiredQuantity, requiredItem, requiredItemLevel] of gCraft.items) {
             // If the item is compoundable or upgradable, the level needs to be 0
             let fixedItemLevel = requiredItemLevel
-            if (requiredItemLevel === undefined) {
+            if (fixedItemLevel === undefined) {
                 const gInfo = this.G.items[requiredItem]
                 if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
             }
@@ -1534,10 +1534,15 @@ export class Character extends Observer implements CharacterData {
         for (let i = 0; i < gInfo.items.length; i++) {
             const requiredQuantity = gInfo.items[i][0]
             const requiredName = gInfo.items[i][1]
-            const requiredLevel = gInfo.items[i][2]
+            // If the item is compoundable or upgradable, the level needs to be 0
+            let fixedItemLevel = gInfo.items[i][2]
+            if (fixedItemLevel === undefined) {
+                const gInfo = this.G.items[requiredName]
+                if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
+            }
 
             const searchArgs = {
-                level: requiredLevel,
+                level: fixedItemLevel,
                 quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity - 1 : undefined,
             }
 
