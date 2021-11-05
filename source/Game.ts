@@ -276,7 +276,7 @@ export class Game {
      * @memberof Game
      */
     static optimizeG(g: GData): GData {
-        // Delete GUI-only stuff to reduce filesize and subsequent JSON parsing time
+        // Delete GUI-only stuff to reduce file size and subsequent JSON parsing time
         delete g.animations
         delete g.docs
         delete g.images
@@ -285,7 +285,7 @@ export class Game {
         delete g.positions
         delete g.tilesets
 
-        // Optimize items to reduce filesize and subsequent JSON parsing time
+        // Optimize items to reduce file size and subsequent JSON parsing time
         for (const itemName in g.items) {
             const gItem = g.items[itemName as ItemName]
             delete gItem.cx
@@ -332,7 +332,7 @@ export class Game {
             gGeometry.max_y = newMaxY
         }
 
-        // Optimize monsters to reduce filesize and subsequent JSON parsing time
+        // Optimize monsters to reduce file size and subsequent JSON parsing time
         for (const monsterName in g.monsters) {
             const gMonster = g.monsters[monsterName as MonsterName] as GMonster
             delete gMonster.explanation
@@ -342,7 +342,7 @@ export class Game {
         return g
     }
 
-    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier, cType?: CharacterType): Promise<PingCompensatedCharacter> {
+    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<PingCompensatedCharacter> {
         if (!this.user) return Promise.reject("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
@@ -355,14 +355,29 @@ export class Game {
         try {
             // Create the player and connect
             let player: PingCompensatedCharacter
-            if (cType == "mage") player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "merchant") player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "paladin") player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "priest") player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "ranger") player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "rogue") player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else if (cType == "warrior") player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-            else player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+            switch (this.characters[cName].type) {
+                case "mage":
+                    player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                case "merchant":
+                    player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                case "priest":
+                    player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                case "ranger":
+                    player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                case "rogue":
+                    player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                case "warrior":
+                    player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+                default:
+                    player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
+            }
 
             try {
                 await player.connect()
@@ -377,31 +392,31 @@ export class Game {
     }
 
     static async startMage(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Mage> {
-        return await Game.startCharacter(cName, sRegion, sID, "mage") as Mage
+        return await Game.startCharacter(cName, sRegion, sID) as Mage
     }
 
     static async startMerchant(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Merchant> {
-        return await Game.startCharacter(cName, sRegion, sID, "merchant") as Merchant
+        return await Game.startCharacter(cName, sRegion, sID) as Merchant
     }
 
     static async startPaladin(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Paladin> {
-        return await Game.startCharacter(cName, sRegion, sID, "paladin") as Paladin
+        return await Game.startCharacter(cName, sRegion, sID) as Paladin
     }
 
     static async startPriest(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Priest> {
-        return await Game.startCharacter(cName, sRegion, sID, "priest") as Priest
+        return await Game.startCharacter(cName, sRegion, sID) as Priest
     }
 
     static async startRanger(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Ranger> {
-        return await Game.startCharacter(cName, sRegion, sID, "ranger") as Ranger
+        return await Game.startCharacter(cName, sRegion, sID) as Ranger
     }
 
     static async startRogue(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Rogue> {
-        return await Game.startCharacter(cName, sRegion, sID, "rogue") as Rogue
+        return await Game.startCharacter(cName, sRegion, sID) as Rogue
     }
 
     static async startWarrior(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Warrior> {
-        return await Game.startCharacter(cName, sRegion, sID, "warrior") as Warrior
+        return await Game.startCharacter(cName, sRegion, sID) as Warrior
     }
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
