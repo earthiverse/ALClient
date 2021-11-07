@@ -557,7 +557,7 @@ export class Pathfinder {
 
         const path: LinkData[] = []
 
-        console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id}...`)
+        console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id} (from ${from.map}:${from.x},${from.y} to ${to.map}:${to.x},${to.y})...`)
 
         const pathfinder = ngraph.nba(Pathfinder.graph, {
             distance: (fromNode, toNode, link) => {

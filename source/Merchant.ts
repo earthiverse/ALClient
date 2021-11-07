@@ -335,7 +335,7 @@ export class Merchant extends PingCompensatedCharacter {
             stand = this.locateItem(item)
             if (stand !== undefined) break
         }
-        if (stand == undefined) return Promise.reject("Could not find a suitable merchant in inventory.")
+        if (stand == undefined) return Promise.reject("Could not find a suitable merchant stand in inventory.")
 
         const opened = new Promise<void>((resolve, reject) => {
             const checkStand = (data: CharacterData) => {

@@ -2811,10 +2811,15 @@ export class Character extends Observer implements CharacterData {
         if (options?.getWithin >= distance) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         // If we don't have the path yet, get it
-        if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
+        this.smartMoving = true
+        try {
+            if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
+        } catch (e) {
+            this.smartMoving = false
+            throw Error(e)
+        }
 
         const started = Date.now()
-        this.smartMoving = true
         this.lastSmartMove = started
         let lastMove = -1
         for (let i = 0; i < path.length; i++) {
