@@ -28,7 +28,7 @@ export class Game {
         // Private to force static methods
     }
 
-    static async getGData(cache = false, optimize = true): Promise<GData> {
+    static async getGData(cache = false, optimize = false): Promise<GData> {
         if (this.G) return this.G
         if (!this.version) await this.getVersion()
         const gFile = `G_${this.version}.json`
