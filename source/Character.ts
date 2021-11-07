@@ -3797,22 +3797,16 @@ export class Character extends Observer implements CharacterData {
         const locations: IPosition[] = []
 
         // Known special monster spawns
-        if (mType == "goldenbat")
-            mType = "bat"
-        else if (mType == "snowman")
-            mType = "arcticbee"
+        if (mType == "goldenbat") mType = "bat"
+        else if (mType == "snowman") mType = "arcticbee"
 
         for (const mapName in this.G.maps) {
-            if (this.G.maps[mapName as MapName].ignore)
-                continue
-
             const map = this.G.maps[mapName as MapName]
-            if (map.instance || !map.monsters || map.monsters.length == 0)
-                continue // Map is unreachable, or there are no monsters
+            if (map.ignore) continue
+            if (map.instance || !map.monsters || map.monsters.length == 0) continue // Map is unreachable, or there are no monsters
 
             for (const monsterSpawn of map.monsters) {
-                if (monsterSpawn.type != mType)
-                    continue
+                if (monsterSpawn.type != mType) continue
                 if (monsterSpawn.boundary) {
                     locations.push({ "map": mapName as MapName, "x": (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2, "y": (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2 })
                 } else if (monsterSpawn.boundaries) {
