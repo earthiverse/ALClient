@@ -362,6 +362,9 @@ export class Game {
                 case "merchant":
                     player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
                     break
+                case "paladin":
+                    player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                    break
                 case "priest":
                     player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
                     break
