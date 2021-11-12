@@ -423,6 +423,8 @@ export type GData = {
         party?: boolean
         passive?: boolean
         persistent?: boolean
+        /** If this is set, this skill can be used against immune monsters. */
+        pierces_immunity?: boolean
         positive?: ItemName[]
         range?: number;
         range_bonus?: number;

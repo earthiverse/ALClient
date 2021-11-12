@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 697 (2021-10-28)
+ * The following is from http://adventure.land/data.js, version 700 (2021-11-13)
  * It is used to confirm type correctness
  */
 
@@ -196,6 +196,7 @@ test("G.skills type validation", async () => {
                     "bow",
                     "crossbow"
                 ],
+                "pierces_immunity": true,
                 "damage_multiplier": 0.7,
                 "class": [
                     "ranger"
@@ -456,6 +457,7 @@ test("G.skills type validation", async () => {
                     "bow",
                     "crossbow"
                 ],
+                "pierces_immunity": true,
                 "damage_multiplier": 0.5,
                 "class": [
                     "ranger"
@@ -585,6 +587,7 @@ test("G.skills type validation", async () => {
                     "axe",
                     "scythe"
                 ],
+                "pierces_immunity": true,
                 "range": 160,
                 "mp": 720,
                 "type": "skill"
@@ -1036,6 +1039,7 @@ test("G.skills type validation", async () => {
                     "crossbow"
                 ],
                 "range_multiplier": 3,
+                "pierces_immunity": true,
                 "damage_multiplier": 1.5,
                 "hostile": true,
                 "mp": 400,
