@@ -498,7 +498,7 @@ test("Character.canCraft", () => {
     expect(priest.canCraft("elixirfires")).toBe(false)
     expect(priest.canCraft("elixirfires", { ignoreLocation: true })).toBe(true)
 
-    //Right place (witch)
+    // Right place (witch)
     priest.map = witchLocation.map
     priest.x = witchLocation.x
     priest.y = witchLocation.y
@@ -507,6 +507,8 @@ test("Character.canCraft", () => {
     priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
     expect(priest.canCraft("firestars")).toBe(false)
     priest.items = [{ "name": "throwingstars", "level": 0 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    expect(priest.canCraft("firestars")).toBe(true)
+    priest.items = [{ "name": "throwingstars", "level": 8 }, { "name": "throwingstars", "level": 0 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
     expect(priest.canCraft("firestars")).toBe(true)
     // Restore
     priest.items = itemsBackup
@@ -628,6 +630,16 @@ test("Character.canUse", () => {
     expect(priest.canUse("attack")).toBe(false)
     priest.rip = false
 
+    priest.s.dampened = { ms: 1000 }
+    expect(priest.canUse("attack")).toBe(true)
+    priest.s.stoned = { ms: 1000 }
+    expect(priest.canUse("attack")).toBe(false)
+    delete priest.s.stoned
+    priest.s.fingered = { ms: 1000 }
+    expect(priest.canUse("attack")).toBe(false)
+    delete priest.s.fingered
+    delete priest.s.dampened
+
     expect(warrior.canUse("blink")).toBe(false)
     expect(warrior.canUse("cleave")).toBe(false)
     expect(warrior.canUse("cleave", { ignoreEquipped: true })).toBe(true)
@@ -653,7 +665,7 @@ test("Character.countItem", () => {
     expect(priest.countItem("mpot1")).toBe(999)
 })
 
-test("Character.getTargetEntitiy", () => {
+test("Character.getTargetEntity", () => {
     priest.target = undefined
     expect(priest.getTargetEntity()).toBeUndefined()
 

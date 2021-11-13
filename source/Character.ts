@@ -1375,7 +1375,10 @@ export class Character extends Observer implements CharacterData {
         ignoreEquipped?: boolean
     }): boolean {
         if (this.rip) return false // We are dead
-        if (this.s.stoned) return false // We are 'stoned' (oneeye condition)
+        for (const conditionName in this.s) {
+            const gCondition = this.G.conditions[conditionName as ConditionName]
+            if (gCondition?.blocked) return false // We have a condition that prevents us from using skills
+        }
         if (this.isOnCooldown(skill) && !options?.ignoreCooldown) return false // Skill is on cooldown
         if (this.G.skills[skill].hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
         const gInfoSkill = this.G.skills[skill]
