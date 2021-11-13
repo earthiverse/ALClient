@@ -423,6 +423,10 @@ export class Game {
     }
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
+        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.characters) await this.updateServersAndCharacters()
+        if (!this.G) await this.getGData()
+
         try {
             if (!this.G) await this.getGData()
             const observer = new Observer(this.servers[region][id], this.G)
