@@ -247,7 +247,7 @@ export class Character extends Observer implements CharacterData {
 
     protected parseEval(data: EvalData): void {
         // Skill timeouts (like attack) are sent via eval
-        const skillReg1 = /skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
+        const skillReg1 = /^skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
         if (skillReg1) {
             const skill = skillReg1[1] as SkillName
             let cooldown: number
@@ -264,12 +264,22 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Potion timeouts are sent via eval
-        const potReg = /pot_timeout\s*\(\s*(\d+\.?\d+?)\s*\)/.exec(data.code)
+        const potReg = /^pot_timeout\s*\(\s*(\d*\.?\d+)\s*\)/.exec(data.code)
         if (potReg) {
             const cooldown = Number.parseFloat(potReg[1])
             const next = new Date(Date.now() + Math.ceil(cooldown))
             this.setNextSkill("use_hp", next)
             this.setNextSkill("use_mp", next)
+            return
+        }
+
+        // Skills that move your character (e.g.: dash) are sent via eval
+        const uiMoveReg = /^ui_move\s*\(\s*(-?\d*\.{0,1}\d+)\s*,\s*(-?\d*\.{0,1}\d+)\s*\)/.exec(data.code)
+        if (uiMoveReg) {
+            const x = Number.parseFloat(uiMoveReg[1])
+            const y = Number.parseFloat(uiMoveReg[2])
+            this.x = x
+            this.y = y
             return
         }
 

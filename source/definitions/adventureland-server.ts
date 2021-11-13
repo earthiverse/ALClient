@@ -512,13 +512,15 @@ export type GameResponseDataString =
     | "cant_escape"
     /** ??? Maybe if we attempt to compound something with an inventory position that is empty ??? */
     | "compound_no_item"
+    /** When we try to dash too far */
+    | "dash_failed"
     /** Too far away from monster hunt npc */
     | "ecu_get_closer"
     /** When you try to do an emotion but it's not a valid emotion name, or you don't have that emotion */
     | "emotion_cant"
     /** When you try to do an emotion but it's rejected because it's on cooldown */
     | "emotion_cooldown"
-    /** We are already exchaning something */
+    /** We are already exchanging something */
     | "exchange_existing"
     /** The given item requires multiple to exchange */
     | "exchange_notenough"

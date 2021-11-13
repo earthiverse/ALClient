@@ -1,6 +1,7 @@
 import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
+import { IPosition } from "./index.js"
 
 export class Warrior extends PingCompensatedCharacter {
     ctype: "warrior" = "warrior"
@@ -111,6 +112,55 @@ export class Warrior extends PingCompensatedCharacter {
             name: "cleave"
         })
         return cleaved
+    }
+
+    /**
+     * Dash is a Warrior skill that lets you dash over small obstacles.
+     *
+     * NOTE: Dash currently (as of 2021-11-13) rounds to the nearest 10 for x and y coordinates,
+     * e.g. `{x: 213, y: 216}` will become `{x: 210, y: 220}`
+     *
+     * @param {IPosition} to
+     * @return {*}
+     * @memberof Warrior
+     */
+    public dash(to: IPosition): Promise<void> {
+        if (to.map && to.map !== this.map) return Promise.reject("We cannot dash across maps.")
+
+        const dashed = new Promise<void>((resolve, reject) => {
+            const dashedCheck = (data: EvalData) => {
+                if (/^ui_move/.test(data.code)) {
+                    this.socket.off("eval", dashedCheck)
+                    this.socket.off("game_response", failCheck)
+                    resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof (data) == "string") {
+                    if (data == "dash_failed") {
+                        this.socket.off("eval", dashedCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject("Dash failed")
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("eval", dashedCheck)
+                this.socket.off("game_response", failCheck)
+                reject(`dash timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", dashedCheck)
+            this.socket.on("game_response", failCheck)
+        })
+
+        this.socket.emit("skill", {
+            name: "dash",
+            x: to.x,
+            y: to.y
+        })
+        return dashed
     }
 
     public hardshell(): Promise<void> {
