@@ -274,6 +274,7 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.off("player", selfMluckCheck)
                         this.socket.off("eval", cooldownCheck)
                         resolve()
+                        return
                     }
                 }
             }
