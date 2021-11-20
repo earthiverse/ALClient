@@ -2738,8 +2738,8 @@ export class Character extends Observer implements CharacterData {
         if (options == undefined) options = {}
         if (options.costs == undefined) {
             options.costs = {
-                town: this.speed * (4 + (Math.min(...this.pings) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
-                transport: this.speed * (Math.min(...this.pings) / 500) // Based on how long it takes to confirm with the server
+                town: this.speed * (4 + (Math.min(...this.pings, 1000) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+                transport: this.speed * (Math.min(...this.pings, 1000) / 500) // Based on how long it takes to confirm with the server
             }
         }
 
@@ -2915,7 +2915,7 @@ export class Character extends Observer implements CharacterData {
             //     if (nextMove.type == "move") {
             //         time += 2 * Tools.distance(lastMove, nextMove) / this.speed
             //     } else if (nextMove.type == "transport" || nextMove.type == "leave") {
-            //         time += Math.min(...this.pings)
+            //         time += Math.min(...this.pings, 1000)
             //     } else if (nextMove.type == "town") {
             //         if (time < 2000) {
             //             console.log(`We're prematurely warping to town to save ${3000 - time}ms!`)
