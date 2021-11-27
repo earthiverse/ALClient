@@ -214,7 +214,7 @@ export class Observer {
         }
     }
 
-    public deleteEntity(id: string, death?: boolean): boolean {
+    public deleteEntity(id: string, death = false): boolean {
         const entity = this.entities.get(id)
         if (entity) {
             // If it was a special monster in 'S', delete it from 'S'.
