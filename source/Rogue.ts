@@ -216,4 +216,11 @@ export class Rogue extends PingCompensatedCharacter {
         })
         return shadowStriked
     }
+
+    // NOTE: Untested
+    // TODO: Add promises
+    public stopInvis() {
+        if (!this.ready) return Promise.reject("We aren't ready yet [stopInvis].")
+        this.socket.emit("stop", { action: "invis" })
+    }
 }
