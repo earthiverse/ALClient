@@ -193,7 +193,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             if (attacker.damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
             if (attacker.damage_type == "magical" && this.reflection >= 100) continue // It will reflect the attack
 
-            const maximumDamage = attacker.calculateDamageRange(this)[1]
+            const maximumDamage = attacker.calculateDamageRange(this, projectile.type)[1]
 
             incomingProjectileDamage += maximumDamage
             if (incomingProjectileDamage >= this.hp) return true
@@ -309,7 +309,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
             if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage
 
-            const minimumDamage = attacker.calculateDamageRange(this)[0]
+            const minimumDamage = attacker.calculateDamageRange(this, projectile.type)[0]
 
             incomingProjectileDamage += minimumDamage
             if (incomingProjectileDamage >= this.hp) return true
