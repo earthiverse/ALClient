@@ -34,6 +34,7 @@ export class Constants {
 
     /** Monsters that are worth tracking in our database */
     static ONE_SPAWN_MONSTERS: MonsterName[] = ["dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "wabbit"]
+    static SERVER_INFO_MONSTERS: MonsterName[] = ["dragold", "franky", "grinch", "icegolem", "pinkgoo", "slenderman", "snowman", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
         "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tinyp", "wabbit",

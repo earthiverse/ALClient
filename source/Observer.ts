@@ -152,12 +152,19 @@ export class Observer {
 
         this.socket.on("server_info", (data: ServerInfoData) => {
             const databaseUpdates = []
+            const databaseDeletes = new Set<MonsterName>()
             const now = Date.now()
+
+            if (Database.connection) {
+                for (const type of Constants.SERVER_INFO_MONSTERS) {
+                    if (!data[type] || !data[type].live) databaseDeletes.add(type)
+                }
+            }
 
             for (const mtype in data) {
                 if (typeof data[mtype as MonsterName] !== "object") continue // Event information, not monster information
                 if (!data[mtype as MonsterName].live) {
-                    if (Database.connection) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype as MonsterName }).catch((e) => console.error(e))
+                    if (Database.connection) databaseDeletes.add(mtype as MonsterName)
                     continue
                 }
                 if (data[mtype as MonsterName]["x"] == undefined || data[mtype as MonsterName]["y"] == undefined) continue // No location data (e.g.: Slenderman)
@@ -182,7 +189,10 @@ export class Observer {
                 }
             }
 
-            if (Database.connection && databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
+            if (Database.connection) {
+                if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch((e) => console.error(e))
+                if (databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
+            }
 
             this.S = data
         })
