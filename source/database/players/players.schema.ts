@@ -2,6 +2,7 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const PlayerSchema = new Schema({
+    discord: { required: false, type: String },
     in: String,
     lastSeen: { type: Number },
     map: String,

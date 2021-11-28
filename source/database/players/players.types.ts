@@ -3,6 +3,7 @@ import { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../defi
 import { CharacterType, MapName } from "../../definitions/adventureland-data.js"
 
 export interface IPlayer {
+    discord?: string
     in: string
     lastSeen?: number
     map: MapName
