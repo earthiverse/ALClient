@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server.js"
+import { CharacterData, DisappearingTextData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server.js"
 import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -132,18 +132,76 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
     }
 
-    // TODO: Add promises
+    /**
+     * Lists an item for sale on your merchant stand
+     *
+     * @param {number} itemPos
+     * @param {TradeSlotType} tradeSlot
+     * @param {number} price
+     * @param {number} [quantity=1]
+     * @return {*}  {unknown}
+     * @memberof Merchant
+     */
     public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
         if (!this.ready) return Promise.reject("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
         if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
+        if (price <= 0) return Promise.reject("The lowest you can set the price is 1.")
+        const slotInfo = this.slots[tradeSlot]
+        // TODO: Add ability to "stack" trade slots by unequipping what's there
+        // TODO: Only do this if the price is the same
+        // TODO: Only do this if it's stackable
+        if (slotInfo) return Promise.reject(`We are already trading something in ${tradeSlot}.`)
+
+        const listed = new Promise<void>((resolve, reject) => {
+            const failCheck1 = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "slot_occupied") {
+                        this.socket.off("game_response", failCheck1)
+                        this.socket.off("disappearing_text", failCheck2)
+                        this.socket.off("player", successCheck)
+                        reject(`We are already listing something in ${tradeSlot}.`)
+                    }
+                }
+            }
+
+            const failCheck2 = (data: DisappearingTextData) => {
+                if (data.message == "CAN'T EQUIP" && data.id == this.id) {
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("disappearing_text", failCheck2)
+                    this.socket.off("player", successCheck)
+                    reject(`We failed listing the item in ${tradeSlot}.`)
+                }
+            }
+
+            const successCheck = (data: CharacterData) => {
+                const newTradeSlot = data.slots[tradeSlot]
+                if (newTradeSlot && newTradeSlot.name == itemInfo.name && newTradeSlot.q == quantity) {
+                    this.socket.off("game_response", failCheck1)
+                    this.socket.off("disappearing_text", failCheck2)
+                    this.socket.off("player", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", failCheck1)
+                this.socket.off("disappearing_text", failCheck2)
+                this.socket.off("player", successCheck)
+                reject("listForSale timeout (1000ms)")
+            }, 1000)
+            this.socket.on("game_response", failCheck1)
+            this.socket.on("disappearing_text", failCheck2)
+            this.socket.on("player", successCheck)
+        })
 
         this.socket.emit("equip", {
             num: itemPos,
+            price: price,
             q: quantity,
-            slot: tradeSlot,
-            price: price
+            slot: tradeSlot
         })
+        return listed
     }
 
     // TODO: Add promises
