@@ -1,4 +1,4 @@
-import { EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server.js"
+import { DisappearingTextData, EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -96,16 +96,42 @@ export class Mage extends PingCompensatedCharacter {
         const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("disappearing_text", failCheck2)
                     this.socket.off("eval", cooldownCheck)
                     resolve()
                 }
             }
 
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "skill_cant_incapacitated") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("disappearing_text", failCheck2)
+                        this.socket.off("eval", cooldownCheck)
+                        reject("We can't cburst, we are incapacitated.")
+                    }
+                }
+            }
+
+            const failCheck2 = (data: DisappearingTextData) => {
+                if (data.message == "NO HITS" && data.id == this.id) {
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("disappearing_text", failCheck2)
+                    this.socket.off("eval", cooldownCheck)
+                    resolve() // We technically cbursted, we just didn't hit anything
+                }
+            }
+
             setTimeout(() => {
+                this.socket.off("game_response", failCheck)
+                this.socket.off("disappearing_text", failCheck2)
                 this.socket.off("eval", cooldownCheck)
                 reject(`cburst timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("game_response", failCheck)
+            this.socket.on("disappearing_text", failCheck2)
         })
 
         this.socket.emit("skill", { name: "cburst", targets: targets })
