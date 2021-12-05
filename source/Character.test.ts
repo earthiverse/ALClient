@@ -761,6 +761,7 @@ test("Character.locateItem", () => {
     expect(priest.locateItem("pants", priest.items, { levelGreaterThan: 0 })).toBe(4)
     expect(priest.locateItem("coat", priest.items, { levelGreaterThan: 0 })).toBe(5)
     expect(priest.locateItem("pants", priest.items, { levelLessThan: 0 })).toBe(undefined)
+    expect(priest.locateItem("pants", priest.items, { returnHighestLevel: true })).toBe(4)
 
     expect(priest.locateItem("mpot0")).toBeTruthy()
     expect(priest.locateItem("mpot0", priest.items, { quantityGreaterThan: 1 })).toBe(2)

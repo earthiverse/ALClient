@@ -3696,9 +3696,26 @@ export class Character extends Observer implements CharacterData {
             levelLessThan?: number;
             locked?: boolean;
             quantityGreaterThan?: number;
+            returnHighestLevel?: boolean;
             statType?: Attribute;
         }): number {
-        return this.locateItems(iN, inv, filters)[0]
+        const located = this.locateItems(iN, inv, filters)
+
+        if (filters?.returnHighestLevel) {
+            let highestLevel: number = Number.MIN_VALUE
+            let highestLevelIndex
+            for (let i = 0; i < located.length; i++) {
+                const j = located[i]
+                const item = inv[j]
+                if (item.level > highestLevel) {
+                    highestLevel = item.level
+                    highestLevelIndex = i
+                }
+            }
+            return located[highestLevelIndex]
+        }
+
+        return located[0]
     }
 
     /**
