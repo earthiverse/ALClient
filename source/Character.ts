@@ -11,8 +11,8 @@ import { Player } from "./Player.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { Tools } from "./Tools.js"
 import { AchievementModel } from "./database/achievements/achievements.model.js"
-import { BankModel } from "./database/bank/banks.model.js"
-import { IBank } from "./database/bank/banks.types.js"
+import { BankModel } from "./database/banks/banks.model.js"
+import { IBank } from "./database/banks/banks.types.js"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -214,6 +214,7 @@ export class Character extends Observer implements CharacterData {
         const nextUpdate = Database.nextUpdate.get(`${this.server.name}${this.server.region}${this.id}`)
         if (!nextUpdate || Date.now() >= nextUpdate) {
             const updateData: Partial<IPlayer> = {
+                items: this.items,
                 lastSeen: Date.now(),
                 map: this.map,
                 name: this.id,
@@ -487,6 +488,7 @@ export class Character extends Observer implements CharacterData {
                         in: cData.in,
                         lastSeen: Date.now(),
                         map: cData.map,
+                        name: id,
                         serverIdentifier: this.serverData.name,
                         serverRegion: this.serverData.region,
                         type: cData.type,

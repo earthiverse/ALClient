@@ -4,6 +4,7 @@ const { Schema } = pkg
 const PlayerSchema = new Schema({
     discord: { required: false, type: String },
     in: String,
+    items: { required: false, type: Object },
     lastSeen: { type: Number },
     map: String,
     name: { required: true, type: String },

@@ -36,6 +36,8 @@ import { Database } from "./database/Database.js"
 export * from "./database/Database.js"
 import { AchievementModel } from "./database/achievements/achievements.model.js"
 export * from "./database/achievements/achievements.model.js"
+import { BankModel } from "./database/banks/banks.model.js"
+export * from "./database/banks/banks.model.js"
 import { DeathModel } from "./database/deaths/deaths.model.js"
 export * from "./database/deaths/deaths.model.js"
 import { EntityModel } from "./database/entities/entities.model.js"
@@ -52,6 +54,7 @@ export * from "./definitions/adventureland-data.js"
 
 export default {
     AchievementModel,
+    BankModel,
     Character,
     Constants,
     Database,
