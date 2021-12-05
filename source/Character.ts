@@ -11,6 +11,8 @@ import { Player } from "./Player.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { Tools } from "./Tools.js"
 import { AchievementModel } from "./database/achievements/achievements.model.js"
+import { BankModel } from "./database/bank/banks.model.js"
+import { IBank } from "./database/bank/banks.types.js"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -180,6 +182,15 @@ export class Character extends Observer implements CharacterData {
                 // Bank information
                 this.bank = (data as CharacterData).user
 
+                if (Database.connection) {
+                    const updateData: Partial<IBank> = {
+                        lastUpdated: Date.now(),
+                        owner: this.owner,
+                        ...(data as CharacterData).user
+                    }
+                    BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
+                }
+
                 // Add empty bank slots
                 for (const datum in this.bank) {
                     if (Array.isArray(this.bank[datum])) {
@@ -205,6 +216,7 @@ export class Character extends Observer implements CharacterData {
             const updateData: Partial<IPlayer> = {
                 lastSeen: Date.now(),
                 map: this.map,
+                name: this.id,
                 s: this.s,
                 serverIdentifier: this.serverData.name,
                 serverRegion: this.serverData.region,
