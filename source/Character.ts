@@ -281,8 +281,8 @@ export class Character extends Observer implements CharacterData {
         if (potReg) {
             const cooldown = Number.parseFloat(potReg[1])
             const next = new Date(Date.now() + Math.ceil(cooldown))
-            this.setNextSkill("use_hp", next)
-            this.setNextSkill("use_mp", next)
+            this.setNextSkill("regen_hp", next)
+            this.setNextSkill("regen_mp", next)
             return
         }
 
@@ -295,6 +295,8 @@ export class Character extends Observer implements CharacterData {
             this.y = y
             return
         }
+
+        // TODO: Handle pvp_timeout
 
         console.error(`Unhandled 'eval': ${JSON.stringify(data)}`)
     }
@@ -699,7 +701,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Accepts a magiport reequest from another character
+     * Accepts a magiport request from another character
      * @param name ID of the character that offered a magiport.
      */
     public acceptMagiport(name: string): Promise<IPosition> {
