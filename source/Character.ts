@@ -834,13 +834,13 @@ export class Character extends Observer implements CharacterData {
                         this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`Attack on ${id} failed.`)
-                    } else if (data.response == "too_far" && data.id == id) {
+                    } else if (data.response == "too_far" && data.place == "attack" && data.id == id) {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
                         this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`${id} is too far away to attack (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.id == id) {
+                    } else if (data.response == "cooldown" && data.place == "attack" && data.id == id) {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
                         this.socket.off("notthere", failCheck2)

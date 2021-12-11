@@ -464,7 +464,7 @@ export type GameResponseDataObject = {
     response: "mail_item_taken"
 }| {
     response: "no_mp"
-    place: "attack"
+    place: SkillName
 } | {
     response: "no_target"
     // TODO: See what else gets returned

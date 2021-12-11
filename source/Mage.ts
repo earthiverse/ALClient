@@ -104,7 +104,24 @@ export class Mage extends PingCompensatedCharacter {
             }
 
             const failCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
+                if (typeof data == "object") {
+                    if (data.response == "cooldown" && data.skill == "cburst") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("disappearing_text", failCheck2)
+                        this.socket.off("eval", cooldownCheck)
+                        reject(`cburst failed due to cooldown (ms: ${data.ms}).`)
+                    } else if (data.response == "no_mp" && data.place == "cburst") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("disappearing_text", failCheck2)
+                        this.socket.off("eval", cooldownCheck)
+                        reject("cburst failed due to insufficient MP.")
+                    } else if (data.response == "too_far" && data.place == "cburst") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("disappearing_text", failCheck2)
+                        this.socket.off("eval", cooldownCheck)
+                        reject(`${data.id} is too far away to cburst (dist: ${data.dist}).`)
+                    }
+                } else if (typeof data == "string") {
                     if (data == "skill_cant_incapacitated") {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("disappearing_text", failCheck2)
