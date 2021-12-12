@@ -395,12 +395,12 @@ export class Observer {
                         }
                     },
                     { $project: {
-                        _id: 1
+                        name: 1
                     } }
                 ]).exec().then((toDeletes => {
                     try {
                         const ids = []
-                        for (const toDelete of toDeletes) ids.push(toDelete._id)
+                        for (const toDelete of toDeletes) ids.push(toDelete.name)
                         EntityModel.deleteMany({ name: { $in: ids } }).lean().exec()
                     } catch (e) {
                         console.error(e)

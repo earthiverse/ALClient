@@ -93,6 +93,7 @@ export class Mage extends PingCompensatedCharacter {
      */
     public cburst(targets: [string, number][]): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [cburst].")
+        if (targets.length == 0) return Promise.reject("No targets were given to cburst.")
         const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -116,6 +117,9 @@ export class Mage extends PingCompensatedCharacter {
                         this.socket.off("eval", cooldownCheck)
                         reject("cburst failed due to insufficient MP.")
                     } else if (data.response == "too_far" && data.place == "cburst") {
+                        // TODO: I don't think this is correct. What if you attack 2, and
+                        //       only one is out of range? We should keep track, and check
+                        //       against the length of the targets array.
                         this.socket.off("game_response", failCheck)
                         this.socket.off("disappearing_text", failCheck2)
                         this.socket.off("eval", cooldownCheck)
