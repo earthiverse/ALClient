@@ -1,6 +1,6 @@
 import { PlayersData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-04-24
  * It is used to confirm type correctness
  */

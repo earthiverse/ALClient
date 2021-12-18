@@ -142,16 +142,35 @@ export class Merchant extends PingCompensatedCharacter {
      * @return {*}  {unknown}
      * @memberof Merchant
      */
-    public listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): unknown {
+    public async listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): Promise<unknown> {
         if (!this.ready) return Promise.reject("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
         if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
         if (price <= 0) return Promise.reject("The lowest you can set the price is 1.")
         const slotInfo = this.slots[tradeSlot]
-        // TODO: Add ability to "stack" trade slots by unequipping what's there
-        // TODO: Only do this if the price is the same
-        // TODO: Only do this if it's stackable
-        if (slotInfo) return Promise.reject(`We are already trading something in ${tradeSlot}.`)
+        if (slotInfo) {
+            const gInfo = this.G.items[itemInfo.name]
+            if (itemInfo.name == slotInfo.name // Same item
+                && price >= slotInfo.price // Same, or higher price
+                && gInfo.s && (quantity + slotInfo.q) <= gInfo.s) // Stackable
+            {
+                if (itemPos !== 0) {
+                    // Swap items so when it gets stacked, it gets stacked in the correct position
+                    await this.swapItems(0, itemPos)
+                }
+
+                // Unequip, so we can combine the two slots
+                await this.unequip(tradeSlot)
+                quantity += slotInfo.q
+
+                if (itemPos !== 0) {
+                    // Swap back
+                    await this.swapItems(0, itemPos)
+                }
+            } else {
+                return Promise.reject(`We are already trading something in ${tradeSlot}.`)
+            }
+        }
 
         const listed = new Promise<void>((resolve, reject) => {
             const failCheck1 = (data: GameResponseData) => {

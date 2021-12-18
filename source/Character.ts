@@ -13,6 +13,7 @@ import { Tools } from "./Tools.js"
 import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
+import { isDeepStrictEqual } from "util"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -1316,9 +1317,8 @@ export class Character extends Observer implements CharacterData {
      */
     public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
         // Check if it can heal
-        const gInfo = this.G.monsters[entity.type]
-        if (gInfo.lifesteal) return false
-        if (gInfo.abilities?.self_healing) return false
+        if (entity.lifesteal) return false
+        if (entity.abilities?.self_healing) return false
 
         // Check if it can avoid our shot
         if (entity.avoidance) return false
@@ -3048,16 +3048,39 @@ export class Character extends Observer implements CharacterData {
     /**
      * Swaps two items in your inventory
      *
-     * @param {number} itemPos1
-     * @param {number} itemPos2
+     * @param {number} itemPosA
+     * @param {number} itemPosB
      * @return {*}  {Promise<void>}
      * @memberof Character
      */
-    public swapItems(itemPos1: number, itemPos2: number): Promise<void> {
+    public swapItems(itemPosA: number, itemPosB: number): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [swapItems].")
-        if (itemPos1 == itemPos2) return Promise.resolve() // They're the same position
+        if (itemPosA == itemPosB) return Promise.resolve() // They're the same position
 
-        this.socket.emit("imove", { a: itemPos1, b: itemPos2 })
+        const itemDataA = this.items[itemPosA]
+        const itemDataB = this.items[itemPosB]
+
+        const itemsSwapped = new Promise<void>((resolve, reject) => {
+            const successCheck = (data: CharacterData) => {
+                const checkItemDataA = data.items[itemPosA]
+                const checkItemDataB = data.items[itemPosB]
+
+                if (isDeepStrictEqual(checkItemDataB, itemDataA)
+                && isDeepStrictEqual(checkItemDataA, itemDataB)) {
+                    this.socket.off("playerData", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("playerData", successCheck)
+                reject("swapItems timeout (1000ms)")
+            }, 1000)
+            this.socket.on("playerData", successCheck)
+        })
+
+        this.socket.emit("imove", { a: itemPosA, b: itemPosB })
+        return itemsSwapped
     }
 
     public takeMailItem(mailID: string): Promise<void> {

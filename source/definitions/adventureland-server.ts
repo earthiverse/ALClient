@@ -171,6 +171,8 @@ export type CharacterData = PlayerData & {
     hitchhikers?: [string, any][]
     /** Holds bank information when the character is inside the bank */
     user?: BankInfo
+    /** (GUI Related) Set if you move inventory items. Flag for reopening player's inventory. */
+    reopen?: boolean
 }
 
 export type CharacterListData = {
