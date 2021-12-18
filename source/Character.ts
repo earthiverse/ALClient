@@ -2354,12 +2354,15 @@ export class Character extends Observer implements CharacterData {
 
         // Check if we're already there
         if (this.x == to.x && this.y == to.y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
-
+        const startTime = Date.now()
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
             let timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
                 if (!data.moving || data.going_x !== to.x || data.going_y !== to.y) {
+                    // Skip check if we get data less than our ping, because it's probably not correct.
+                    if (Date.now() - startTime < Math.min(...this.pings)) return
+
                     // We *might* not be moving in the right direction. Let's request new data and check.
                     try {
                         const newData = await this.requestPlayerData()
@@ -2382,7 +2385,6 @@ export class Character extends Observer implements CharacterData {
             const checkPosition = () => {
                 // Force an update of the character position
                 this.updatePositions()
-                timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
                 if (this.x == to.x && this.y == to.y) {
                     // We are here!
@@ -2390,6 +2392,7 @@ export class Character extends Observer implements CharacterData {
                     resolve({ map: this.map, x: x, y: y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
+                    timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
