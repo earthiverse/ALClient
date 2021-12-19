@@ -129,6 +129,9 @@ export class Player implements PlayerData {
      * @param character Our character (e.g.: bot.character)
      */
     public isFriendly(bot: Character): boolean {
+        // Check if it's an NPC
+        if (bot.npc) return true
+
         // Check if it's us
         if (bot.id == this.id) return true
 
