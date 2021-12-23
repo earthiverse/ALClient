@@ -3411,7 +3411,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", healCheck)
         })
 
-        this.socket.emit("equip", { num: itemPos })
+        this.socket.emit("equip", { consume: true, num: itemPos })
         return healReceived
     }
 
@@ -3436,7 +3436,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("eval", healCheck)
         })
 
-        this.socket.emit("equip", { num: itemPos })
+        this.socket.emit("equip", { consume: true, num: itemPos })
         return healReceived
     }
 
