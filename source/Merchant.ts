@@ -133,23 +133,55 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     /**
+     * NOTE: Untested.
      * Lists an item for sale on your merchant stand
      *
-     * @param {number} itemPos
-     * @param {TradeSlotType} tradeSlot
-     * @param {number} price
-     * @param {number} [quantity=1]
-     * @return {*}  {unknown}
+     * @param {number} itemPos the position of the item in your inventory
+     * @param {number} price the price to sell the item
+     * @param {TradeSlotType} [tradeSlot] the trade slot to list the item in
+     * @param {number} [quantity=1] the number of items to sell at this price
+     * @return {*}  {Promise<unknown>}
      * @memberof Merchant
      */
-    public async listForSale(itemPos: number, tradeSlot: TradeSlotType, price: number, quantity = 1): Promise<unknown> {
+    public async listForSale(itemPos: number, price: number, tradeSlot?: TradeSlotType, quantity = 1): Promise<unknown> {
         if (!this.ready) return Promise.reject("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
         if (!itemInfo) return Promise.reject(`We do not have an item in slot ${itemPos}`)
         if (price <= 0) return Promise.reject("The lowest you can set the price is 1.")
+        if (quantity <= 0) return Promise.reject("The lowest you can set the quantity to is 1.")
+        const gInfo = this.G.items[itemInfo.name]
+        if (!tradeSlot && itemInfo.q) {
+            // Look for an existing item to stack for sale
+            for (const slotName in this.slots) {
+                if (!slotName.startsWith("trade")) continue // Not a trade slot
+                const slotInfo = this.slots[slotName as TradeSlotType]
+                if (!slotInfo) continue // Nothing in this slot
+
+                if (slotInfo.name !== itemInfo.name) continue // Check if it's the same item
+                if (slotInfo.p !== itemInfo.p) continue
+
+                if (quantity + slotInfo.q > gInfo.s) continue // Check if it's stackable
+
+                if (price < slotInfo.price) continue // We're listing it for less, don't list them all at this price.
+
+                tradeSlot = slotName as TradeSlotType
+                break
+            }
+        }
+        if (!tradeSlot) {
+            // Look for an empty trade slot to list this item in
+            for (const slotName in this.slots) {
+                if (!slotName.startsWith("trade")) continue // Not a trade slot
+                const slotInfo = this.slots[slotName as TradeSlotType]
+                if (slotInfo) continue
+
+                tradeSlot = slotName as TradeSlotType
+                break
+            }
+            if (!tradeSlot) return Promise.reject("We don't have an empty trade slot to list the item for sale.")
+        }
         const slotInfo = this.slots[tradeSlot]
         if (slotInfo) {
-            const gInfo = this.G.items[itemInfo.name]
             if (itemInfo.name == slotInfo.name // Same item
                 && price >= slotInfo.price // Same, or higher price
                 && gInfo.s && (quantity + slotInfo.q) <= gInfo.s) // Stackable
