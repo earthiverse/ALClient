@@ -20,6 +20,7 @@ export class Observer {
     protected pingIndex = 0
     protected pingMap = new Map<string, { log: boolean, time: number }>()
     protected pingNum = 1
+    private static pingsPerServer = new Map<string, number[]>()
     public pings: number[] = []
     public players = new Map<string, Player>()
     public projectiles = new Map<string, ActionData & { date: Date; }>()
@@ -34,6 +35,15 @@ export class Observer {
     constructor(serverData: ServerData, g: GData) {
         this.serverData = serverData
         this.G = g
+
+        if (serverData) {
+            // Retrieve the cached pings data
+            const key = `${serverData.region}${serverData.name}`
+            const pings = Observer.pingsPerServer.get(key)
+            if (pings) {
+                this.pings = pings
+            }
+        }
     }
 
     public async connect(reconnect = false, start = true): Promise<void> {
@@ -96,6 +106,13 @@ export class Observer {
                     Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${data.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
+        })
+
+        this.socket.on("disconnect", () => {
+            // Save the ping data if we reconnect to the same server
+            if (!this.serverData || !this.pings || this.pings.length == 0) return
+            const key = `${this.serverData.region}${this.serverData.name}`
+            Observer.pingsPerServer.set(key, this.pings)
         })
 
         this.socket.on("entities", (data: EntitiesData) => {
