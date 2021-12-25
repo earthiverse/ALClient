@@ -2743,7 +2743,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected lastSmartMove: number = Date.now()
-    public smartMoving = false
+    public smartMoving: IPosition & {map: MapName} = undefined
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move across maps.
@@ -2836,8 +2836,7 @@ export class Character extends Observer implements CharacterData {
 
             if (!fixedTo) return Promise.reject(`Could not find a suitable destination for '${to}'`)
         } else if (to.x !== undefined && to.y !== undefined) {
-            if (to.map) fixedTo = to as IPosition & {map: MapName}
-            else fixedTo = { map: to.map || this.map, x: to.x, y: to.y }
+            fixedTo = { map: to.map || this.map, x: to.x, y: to.y }
         } else {
             console.debug(to)
             return Promise.reject("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
@@ -2849,11 +2848,11 @@ export class Character extends Observer implements CharacterData {
         if (options?.getWithin >= distance) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
 
         // If we don't have the path yet, get it
-        this.smartMoving = true
+        this.smartMoving = fixedTo
         try {
             if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
         } catch (e) {
-            this.smartMoving = false
+            this.smartMoving = undefined
             throw Error(e)
         }
 
@@ -2972,7 +2971,7 @@ export class Character extends Observer implements CharacterData {
                 console.error(e)
                 await this.requestPlayerData().catch((e) => { console.error(e) })
                 if (lastMove == i) {
-                    this.smartMoving = false
+                    this.smartMoving = undefined
                     return Promise.reject("We are having some trouble smartMoving...")
                 }
                 lastMove = i
@@ -2980,7 +2979,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        this.smartMoving = false
+        this.smartMoving = undefined
         this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
         return { map: this.map, x: this.x, y: this.y }
     }
@@ -3029,7 +3028,7 @@ export class Character extends Observer implements CharacterData {
 
     public async stopSmartMove(): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [stopSmartMove].")
-        this.smartMoving = false
+        this.smartMoving = undefined
         this.lastSmartMove = Date.now()
         if (this?.c?.town) {
             this.stopWarpToTown()
