@@ -14,6 +14,7 @@ import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
+import { GetEntitiesFilters, GetEntityFilters, LocateItemFilters, LocateItemsFilters } from "./definitions/alclient.js"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -1978,39 +1979,11 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns a list of nearby entities, with optional filters
      *
-     * @param {{
-     *         canWalkTo?: boolean
-     *         couldGiveCredit?: boolean
-     *         withinRange?: number
-     *         targetingMe?: boolean
-     *         targetingPartyMember?: boolean
-     *         targetingPlayer?: string
-     *         type?: MonsterName
-     *         typeList?: MonsterName[]
-     *         level?: number
-     *         levelGreaterThan?: number
-     *         levelLessThan?: number
-     *         willBurnToDeath?: boolean
-     *         willDieToProjectiles?: boolean
-     *     }} [filters={}]
+     * @param {GetEntitiesFilters} [filters={}]
      * @return {*}  {Entity[]}
      * @memberof Character
      */
-    public getEntities(filters: {
-        canWalkTo?: boolean
-        couldGiveCredit?: boolean
-        withinRange?: number
-        targetingMe?: boolean
-        targetingPartyMember?: boolean
-        targetingPlayer?: string
-        type?: MonsterName
-        typeList?: MonsterName[]
-        level?: number
-        levelGreaterThan?: number
-        levelLessThan?: number
-        willBurnToDeath?: boolean
-        willDieToProjectiles?: boolean
-    } = {}): Entity[] {
+    public getEntities(filters: GetEntitiesFilters = {}): Entity[] {
         const entities: Entity[] = []
         for (const [, entity] of this.entities) {
             if (filters.targetingMe !== undefined) {
@@ -2058,7 +2031,34 @@ export class Character extends Observer implements CharacterData {
 
             entities.push(entity)
         }
+
         return entities
+    }
+
+    /**
+     * Returns a nearby entity, with optional filters
+     *
+     * @param {GetEntityFilters} [filters={}]
+     * @return {*}  {Entity}
+     * @memberof Character
+     */
+    public getEntity(filters: GetEntityFilters = {}): Entity {
+        const entities = this.getEntities(filters)
+
+        if (filters.returnNearest) {
+            let closest: Entity
+            let closestDistance = Number.MAX_VALUE
+            for (const entity of entities) {
+                const distance = Tools.distance(this, entity)
+                if (distance < closestDistance) {
+                    closest = entity
+                    closestDistance = distance
+                }
+            }
+            return closest
+        }
+
+        if (entities.length > 0) return entities[0]
     }
 
     /**
@@ -3595,35 +3595,11 @@ export class Character extends Observer implements CharacterData {
      * @param inventory Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public countItem(item: ItemName, inventory = this.items,
-        filters?: {
-            levelGreaterThan?: number;
-            levelLessThan?: number;
-        }): number {
+    public countItem(item: ItemName, inventory = this.items, filters?: LocateItemsFilters): number {
         let count = 0
-        for (const inventoryItem of inventory) {
-            if (!inventoryItem) continue
-            if (inventoryItem.name !== item) continue
-
-            if (filters?.levelGreaterThan !== undefined) {
-                if (inventoryItem.level == undefined)
-                    continue // This item doesn't have a level
-                if (inventoryItem.level <= filters.levelGreaterThan)
-                    continue // This item is a lower level than desired
-            }
-            if (filters?.levelLessThan !== undefined) {
-                if (inventoryItem.level == undefined)
-                    continue // This item doesn't have a level
-                if (inventoryItem.level >= filters.levelLessThan)
-                    continue // This item is a higher level than desired
-            }
-
-            // We have the item!
-            if (inventoryItem.q) {
-                count += inventoryItem.q
-            } else {
-                count += 1
-            }
+        for (const index of this.locateItems(item, inventory, filters)) {
+            const item = inventory[index]
+            count += item.q ?? 1
         }
 
         return count
@@ -3639,8 +3615,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public getNearestAttackablePlayer(): { player: Player; distance: number; } {
-        if (!this.isPVP())
-            return undefined
+        if (!this.isPVP()) return undefined
 
         let closest: Player
         let closestD = Number.MAX_VALUE
@@ -3670,19 +3645,16 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns a boolean corresponding to whether or not the item is in our inventory.
-     * @param iN The item to look for
-     * @param inv Where to look for the item
+     * Check if we have the given item in the given inventory
+     *
+     * @param {ItemName} iN The item to look for
+     * @param {*} [inv=this.items] Where to look for the item
+     * @param {LocateItemsFilters>} [filters]
+     * @return {*}  {boolean}
+     * @memberof Character
      */
     public hasItem(iN: ItemName, inv = this.items,
-        filters?: {
-            level?: number;
-            levelGreaterThan?: number;
-            levelLessThan?: number;
-            locked?: boolean;
-            quantityGreaterThan?: number;
-            statType?: Attribute;
-        }): boolean {
+        filters?: LocateItemsFilters): boolean {
         return this.locateItems(iN, inv, filters).length > 0
     }
 
@@ -3731,15 +3703,7 @@ export class Character extends Observer implements CharacterData {
      * @param filters Filters to help search for specific properties on items
      */
     public locateItem(iN: ItemName, inv = this.items,
-        filters?: {
-            level?: number;
-            levelGreaterThan?: number;
-            levelLessThan?: number;
-            locked?: boolean;
-            quantityGreaterThan?: number;
-            returnHighestLevel?: boolean;
-            statType?: Attribute;
-        }): number {
+        filters?: LocateItemFilters): number {
         const located = this.locateItems(iN, inv, filters)
 
         if (filters?.returnHighestLevel) {
@@ -3766,14 +3730,7 @@ export class Character extends Observer implements CharacterData {
      * @param filters Filters to help search for specific properties on items
      */
     public locateItems(iN: ItemName, inv = this.items,
-        filters?: {
-            level?: number;
-            levelGreaterThan?: number;
-            levelLessThan?: number;
-            locked?: boolean;
-            quantityGreaterThan?: number;
-            statType?: Attribute;
-        }): number[] {
+        filters?: LocateItemsFilters): number[] {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
 
         const found: number[] = []
@@ -4003,7 +3960,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        // Is the item exchangable?
+        // Is the item exchangeable?
         if (gItem.e) {
             for (const mapName in this.G.maps) {
                 const gMap = this.G.maps[mapName as MapName]
@@ -4018,6 +3975,6 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        throw Error(`${itemName} is not exchangable`)
+        throw Error(`${itemName} is not exchangeable`)
     }
 }

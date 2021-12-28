@@ -52,6 +52,9 @@ export * from "./definitions/adventureland.js"
 export * from "./definitions/adventureland-server.js"
 export * from "./definitions/adventureland-data.js"
 
+// Export ALClient definitions
+export * from "./definitions/alclient.js"
+
 export default {
     AchievementModel,
     BankModel,

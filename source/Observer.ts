@@ -541,18 +541,4 @@ export class Observer {
         this.socket.emit("ping_trig", { id: pingID })
         return pingID
     }
-
-    public getNearestMonster(mtype?: MonsterName): { monster: Entity; distance: number; } {
-        let closest: Entity
-        let closestD = Number.MAX_VALUE
-        for (const [, entity] of this.entities) {
-            if (mtype && entity.type !== mtype) continue
-            const d = Tools.distance(this, entity)
-            if (d < closestD) {
-                closest = entity
-                closestD = d
-            }
-        }
-        if (closest) return { distance: closestD, monster: closest }
-    }
 }
