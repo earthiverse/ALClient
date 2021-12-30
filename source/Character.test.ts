@@ -415,6 +415,75 @@ beforeAll(async () => {
         "cc": 16,
         "name": "earthWar"
     })
+    warrior.entities.set("310", new Entity({
+        "x": 1132.9330374688902,
+        "y": -1490.2216005989717,
+        "type": "rudolph",
+        "hp": 12000000,
+        "max_hp": 12000000,
+        "mp": 60000,
+        "speed": 24,
+        "xp": 2000000,
+        "attack": 1600,
+        "frequency": 10,
+        "resistance": 1200,
+        "id": "310",
+        "move_num": 18599161,
+        "cid": 5,
+        "s": {},
+        "level": 1,
+        "moving": true,
+        "abs": false,
+        "going_x": 1099.9910932334997,
+        "going_y": -1489.247069218715,
+        "angle": 178.30549604505748,
+    }, "winterland", "winterland", G))
+    warrior.entities.set("3522746", new Entity({
+        "speed": 20.48,
+        "hp": 18000,
+        "mp": 60,
+        "attack": 300,
+        "xp": 21600,
+        "frequency": 0.768,
+        "resistance": 0,
+        "max_hp": 18000,
+        "id": "3522746",
+        "x": -32.47015687797802,
+        "y": -1189.7117335078665,
+        "moving": true,
+        "going_x": -75.23303846301431,
+        "going_y": -923.8665561296592,
+        "abs": false,
+        "move_num": 18598332,
+        "angle": 99.13811034660513,
+        "type": "boar",
+        "cid": 2,
+        "s": {},
+        "level": 2
+    }, "winterland", "winterland", G))
+    warrior.entities.set("3523318", new Entity({
+        "speed": 20.48,
+        "hp": 18000,
+        "mp": 60,
+        "attack": 300,
+        "xp": 21600,
+        "frequency": 0.768,
+        "resistance": 0,
+        "max_hp": 18000,
+        "id": "3523318",
+        "x": 66.57447859556282,
+        "y": -823.8041679458063,
+        "moving": true,
+        "going_x": -72.08830589834515,
+        "going_y": -981.8175155998056,
+        "abs": false,
+        "move_num": 18620031,
+        "angle": -131.26819535494937,
+        "type": "boar",
+        "cid": 2,
+        "s": {},
+        "level": 2
+    }, "winterland", "winterland", G))
 }, 60000)
 
 test("Character attributes", () => {
@@ -663,6 +732,50 @@ test("Character.countItem", () => {
     expect(priest.countItem("mpot0")).toBe(0)
     expect(priest.countItem("hpot1")).toBe(1000)
     expect(priest.countItem("mpot1")).toBe(999)
+})
+
+test("Character.getEntities", () => {
+    // NOTE: When we created the warrior, we created it in winterland with some boars around it
+    expect(warrior.getEntities().length).toBeGreaterThan(0)
+    expect(warrior.getEntities({ type: "boar" }).length).toBeGreaterThan(0)
+    expect(warrior.getEntities({ type: "goo" }).length).toBe(0)
+    expect(warrior.getEntities({ typeList: ["boar"] }).length).toBeGreaterThan(0)
+    expect(warrior.getEntities({ typeList: ["goo"] }).length).toBe(0)
+    expect(warrior.getEntities({ typeList: ["boar", "goo"] }).length).toBeGreaterThan(0)
+})
+
+test("Character.getEntity", () => {
+    // NOTE: When we created the warrior, we created it in winterland with some boars around it
+    expect(warrior.getEntity()).not.toBeUndefined()
+    expect(warrior.getEntity({ type: "boar" })).not.toBeUndefined()
+    expect(warrior.getEntity({ type: "goo" })).toBeUndefined()
+    expect(warrior.getEntity({ type: "boar", returnNearest: true })).not.toBeUndefined()
+    expect(warrior.getEntity({ type: "goo", returnNearest: true })).toBeUndefined()
+
+    warrior.entities.set("nearbyMonster", new Entity({
+        "x": warrior.x,
+        "y": warrior.y,
+        "type": "rudolph",
+        "hp": 12000000,
+        "max_hp": 12000000,
+        "mp": 60000,
+        "speed": 24,
+        "xp": 2000000,
+        "attack": 1600,
+        "frequency": 10,
+        "resistance": 1200,
+        "id": "nearbyMonster",
+        "move_num": 18599161,
+        "cid": 5,
+        "s": {},
+        "level": 1,
+        "moving": false,
+        "abs": false,
+        "going_x": warrior.x,
+        "going_y": warrior.y,
+        "angle": 0,
+    }, "winterland", "winterland", G))
+    expect(warrior.getEntity({ type: "rudolph", returnNearest: true }).id).toBe("nearbyMonster")
 })
 
 test("Character.getTargetEntity", () => {
