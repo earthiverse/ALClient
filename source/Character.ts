@@ -2449,14 +2449,27 @@ export class Character extends Observer implements CharacterData {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", regenCheck)
+                    this.socket.off("disappearing_text", failCheck)
                     resolve()
                 }
             }
+
+            const failCheck = (data: DisappearingTextData) => {
+                if (data.id == this.id && data.message == "NOT READY") {
+                    this.socket.off("eval", regenCheck)
+                    this.socket.off("disappearing_text", failCheck)
+                    reject("regenHP is on cooldown")
+                }
+            }
+
             setTimeout(() => {
                 this.socket.off("eval", regenCheck)
+                this.socket.off("disappearing_text", failCheck)
                 reject(`regenHP timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+
             this.socket.on("eval", regenCheck)
+            this.socket.on("disappearing_text", failCheck)
         })
 
         this.socket.emit("use", { item: "hp" })
@@ -2469,14 +2482,27 @@ export class Character extends Observer implements CharacterData {
             const regenCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", regenCheck)
+                    this.socket.off("disappearing_text", failCheck)
                     resolve()
                 }
             }
+
+            const failCheck = (data: DisappearingTextData) => {
+                if (data.id == this.id && data.message == "NOT READY") {
+                    this.socket.off("eval", regenCheck)
+                    this.socket.off("disappearing_text", failCheck)
+                    reject("regenMP is on cooldown")
+                }
+            }
+
             setTimeout(() => {
                 this.socket.off("eval", regenCheck)
+                this.socket.off("disappearing_text", failCheck)
                 reject(`regenMP timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+
             this.socket.on("eval", regenCheck)
+            this.socket.on("disappearing_text", failCheck)
         })
 
         this.socket.emit("use", { item: "mp" })
@@ -3400,16 +3426,27 @@ export class Character extends Observer implements CharacterData {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", healCheck)
+                    this.socket.off("disappearing_text", failCheck)
                     resolve()
+                }
+            }
+
+            const failCheck = (data: DisappearingTextData) => {
+                if (data.id == this.id && data.message == "NOT READY") {
+                    this.socket.off("eval", healCheck)
+                    this.socket.off("disappearing_text", failCheck)
+                    reject("useHPPot is on cooldown")
                 }
             }
 
             setTimeout(() => {
                 this.socket.off("eval", healCheck)
+                this.socket.off("disappearing_text", failCheck)
                 reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
             this.socket.on("eval", healCheck)
+            this.socket.on("disappearing_text", failCheck)
         })
 
         this.socket.emit("equip", { consume: true, num: itemPos })
@@ -3427,14 +3464,27 @@ export class Character extends Observer implements CharacterData {
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", healCheck)
+                    this.socket.off("disappearing_text", failCheck)
                     resolve()
                 }
             }
+
+            const failCheck = (data: DisappearingTextData) => {
+                if (data.id == this.id && data.message == "NOT READY") {
+                    this.socket.off("eval", healCheck)
+                    this.socket.off("disappearing_text", failCheck)
+                    reject("useMPPot is on cooldown")
+                }
+            }
+
             setTimeout(() => {
                 this.socket.off("eval", healCheck)
+                this.socket.off("disappearing_text", failCheck)
                 reject(`useMPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+
             this.socket.on("eval", healCheck)
+            this.socket.on("disappearing_text", failCheck)
         })
 
         this.socket.emit("equip", { consume: true, num: itemPos })
