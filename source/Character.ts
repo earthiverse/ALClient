@@ -3403,10 +3403,12 @@ export class Character extends Observer implements CharacterData {
                     resolve()
                 }
             }
+
             setTimeout(() => {
                 this.socket.off("eval", healCheck)
-                reject(`useHPPot timeout(${Constants.TIMEOUT}ms)`)
+                reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+
             this.socket.on("eval", healCheck)
         })
 
