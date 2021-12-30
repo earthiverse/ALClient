@@ -71,7 +71,9 @@ export class Observer {
 
             if (!Database.connection || data.reason == "disconnect" || data.reason == "invis") return // We don't track these
 
-            if ((data.effect == "blink" || data.effect == "magiport") && data.to !== undefined && this.G.maps[data.to] && data.s !== undefined) {
+            if ((data.effect == "blink" || data.effect == "magiport")
+                && data.to !== undefined && this.G.maps[data.to] && data.s !== undefined
+                && !/^(0|[1-9][0-9]*)$/.test(data.id)) {
                 // They used "blink" or "magiport" and don't have a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
