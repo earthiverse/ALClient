@@ -234,7 +234,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.isAttackingUs(player)) return true
 
         // Check if the entity is targeting a party member
-        if (player?.partyData?.list.includes(this.target)) return true
+        if (player?.partyData?.list?.includes(this.target)) return true
 
         return false
     }
