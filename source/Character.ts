@@ -1240,9 +1240,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (!buyable) return false
 
-        if (computerAvailable || close || options?.ignoreLocation) return true
-
-        return false
+        return (computerAvailable || close || options?.ignoreLocation)
     }
 
     /**
