@@ -1121,13 +1121,15 @@ export class Character extends Observer implements CharacterData {
 
         if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
-        let additonalApiercing = 0
-        if (this.G.skills[skill].apiercing) additonalApiercing = this.G.skills[skill].apiercing
+        const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
+
+        let additionalApiercing = 0
+        if (this.G.skills[skill].apiercing) additionalApiercing = this.G.skills[skill].apiercing
         // NOTE: currently no skills with rpiercing
-        // let additonalRpiercing = 0
-        // if (this.G.skills[skill].rpiercing) additonalRpiercing = this.G.skills[skill].rpiercing
-        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additonalApiercing)
-        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+        // let additionalRpiercing = 0
+        // if (this.G.skills[skill].rpiercing) additionalRpiercing = this.G.skills[skill].rpiercing
+        if (damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
+        else if (damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
         if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
 
@@ -1319,10 +1321,12 @@ export class Character extends Observer implements CharacterData {
         if (entity.lifesteal) return false
         if (entity.abilities?.self_healing) return false
 
+        const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
+
         // Check if it can avoid our shot
         if (entity.avoidance) return false
-        if (this.damage_type == "magical" && entity.reflection) return false
-        if (this.damage_type == "physical" && entity.evasion) return false
+        if (damage_type == "magical" && entity.reflection) return false
+        if (damage_type == "physical" && entity.evasion) return false
 
         return this.calculateDamageRange(entity, skill)[0] >= entity.hp
     }
