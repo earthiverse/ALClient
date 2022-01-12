@@ -190,7 +190,7 @@ export class Observer {
                     if (Database.connection) {
                         databaseDeletes.add(mtype as MonsterName)
 
-                        // The next respawn date is shown
+                        // The next respawn date is known
                         const nextSpawn = new Date((data[mtype as MonsterName] as ServerInfoDataNotLive).spawn)
                         databaseRespawnUpdates.push({
                             updateOne: {
@@ -228,8 +228,23 @@ export class Observer {
                 for (const type in Constants.MONSTER_RESPAWN_TIMES) {
                     const mtype = type as MonsterName
 
-                    if (data[mtype]) continue // Didn't die, or respawn date is known
+                    if (data[mtype]) continue // Alive, or respawn time is known
                     if (!this.S[mtype]) continue // It wasn't alive before
+
+                    if ((data[mtype] as ServerInfoDataLive).live) {
+                        // This special monster just spawned
+                        databaseRespawnUpdates.push({
+                            deleteOne: {
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type }
+                            }
+                        })
+                    }
+                }
+                for (const type in Constants.MONSTER_RESPAWN_TIMES) {
+                    const mtype = type as MonsterName
+
+                    if (!data[mtype]) continue // Not alive now
+                    if (this.S[mtype]) continue // It was alive before
 
                     // This special monster just died
                     const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
