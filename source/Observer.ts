@@ -412,15 +412,12 @@ export class Observer {
                                 $lt: Constants.MAX_VISIBLE_RANGE / 2
                             }
                         }
-                    },
-                    { $project: {
-                        name: 1
-                    } }
+                    }
                 ]).exec().then((toDeletes => {
                     try {
                         const ids = []
-                        for (const toDelete of toDeletes) ids.push(toDelete.name)
-                        EntityModel.deleteMany({ name: { $in: ids } }).lean().exec()
+                        for (const toDelete of toDeletes) ids.push(toDelete._id)
+                        if (ids.length) EntityModel.deleteMany({ _id: { $in: ids }, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec()
                     } catch (e) {
                         console.error(e)
                         console.log("DEBUG -----")
