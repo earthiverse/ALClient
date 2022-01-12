@@ -1,11 +1,13 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData } from "./definitions/adventureland-server.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
+import { ALL } from "dns"
+import { RespawnModel } from "./database/respawns/respawns.model.js"
 
 export class Observer {
     public socket: Socket
@@ -170,7 +172,8 @@ export class Observer {
         })
 
         this.socket.on("server_info", (data: ServerInfoData) => {
-            const databaseUpdates = []
+            const databaseEntityUpdates = []
+            const databaseRespawnUpdates = []
             const databaseDeletes = new Set<MonsterName>()
             const now = Date.now()
 
@@ -181,9 +184,22 @@ export class Observer {
             }
 
             for (const mtype in data) {
-                if (typeof data[mtype as MonsterName] !== "object") continue // Event information, not monster information
-                if (!data[mtype as MonsterName].live) {
-                    if (Database.connection) databaseDeletes.add(mtype as MonsterName)
+                const mData = data[mtype as MonsterName]
+                if (typeof mData !== "object") continue // Event information, not monster information
+                if (mData.live == false) {
+                    if (Database.connection) {
+                        databaseDeletes.add(mtype as MonsterName)
+
+                        // The next respawn date is shown
+                        const nextSpawn = new Date((data[mtype as MonsterName] as ServerInfoDataNotLive).spawn)
+                        databaseRespawnUpdates.push({
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
+                                update: { estimatedRespawn: nextSpawn.getTime() },
+                                upsert: true
+                            }
+                        })
+                    }
                     continue
                 }
                 if (data[mtype as MonsterName]["x"] == undefined || data[mtype as MonsterName]["y"] == undefined) continue // No location data (e.g.: Slenderman)
@@ -198,7 +214,7 @@ export class Observer {
                 data[mN] = goodData
 
                 if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
-                    databaseUpdates.push({
+                    databaseEntityUpdates.push({
                         updateOne: {
                             filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
                             update: { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y },
@@ -209,8 +225,25 @@ export class Observer {
             }
 
             if (Database.connection) {
+                for (const type in Constants.MONSTER_RESPAWN_TIMES) {
+                    const mtype = type as MonsterName
+
+                    if (!databaseDeletes.has(mtype)) continue // Didn't die
+                    if ((this.S[mtype] as ServerInfoDataNotLive).spawn) continue // Respawn date is known
+
+                    // This special monster just died
+                    const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
+                    databaseRespawnUpdates.push({
+                        updateOne: {
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type },
+                            update: { estimatedRespawn: nextSpawn },
+                            upsert: true
+                        }
+                    })
+                }
                 if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch((e) => console.error(e))
-                if (databaseUpdates.length) EntityModel.bulkWrite(databaseUpdates)
+                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates)
+                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates)
             }
 
             this.S = data
