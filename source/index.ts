@@ -46,6 +46,8 @@ import { NPCModel } from "./database/npcs/npcs.model.js"
 export * from "./database/npcs/npcs.model.js"
 import { PlayerModel } from "./database/players/players.model.js"
 export * from "./database/players/players.model.js"
+import { RespawnModel } from "./database/respawns/respawns.model.js"
+export * from "./database/respawns/respawns.model.js"
 
 // Export AL definitions
 export * from "./definitions/adventureland.js"
@@ -76,6 +78,7 @@ export default {
     PlayerModel,
     Priest,
     Ranger,
+    RespawnModel,
     Rogue,
     Tools,
     Warrior

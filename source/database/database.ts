@@ -10,6 +10,8 @@ export * from "./npcs/npcs.model.js"
 export * from "./npcs/npcs.types.js"
 export * from "./players/players.model.js"
 export * from "./players/players.types.js"
+export * from "./respawns/respawns.model.js"
+export * from "./respawns/respawns.types.js"
 
 export class Database {
     public static nextUpdate = new LRU<string, number>({ max: 1000 })
