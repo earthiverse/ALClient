@@ -221,25 +221,15 @@ export class Observer {
                             upsert: true
                         }
                     })
+                    databaseRespawnUpdates.push({
+                        deleteOne: {
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype }
+                        }
+                    })
                 }
             }
 
             if (Database.connection) {
-                for (const type in Constants.MONSTER_RESPAWN_TIMES) {
-                    const mtype = type as MonsterName
-
-                    if (data[mtype]) continue // Alive, or respawn time is known
-                    if (!this.S[mtype]) continue // It wasn't alive before
-
-                    if ((data[mtype] as ServerInfoDataLive).live) {
-                        // This special monster just spawned
-                        databaseRespawnUpdates.push({
-                            deleteOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type }
-                            }
-                        })
-                    }
-                }
                 for (const type in Constants.MONSTER_RESPAWN_TIMES) {
                     const mtype = type as MonsterName
 
