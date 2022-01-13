@@ -233,8 +233,8 @@ export class Observer {
                 for (const type in Constants.MONSTER_RESPAWN_TIMES) {
                     const mtype = type as MonsterName
 
-                    if (!data[mtype]) continue // Not alive now
-                    if (this.S[mtype]) continue // It was alive before
+                    if (data[mtype]) continue // It's still alive
+                    if (!this.S[mtype]) continue // It wasn't alive before
 
                     // This special monster just died
                     const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
