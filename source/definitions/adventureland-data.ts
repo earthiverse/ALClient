@@ -997,7 +997,7 @@ export type GMonster = {
     range: number
     /** If you kill this monster (TODO: Confirm you have to kill this monster), this condition will be applied to you */
     rbuff?: ConditionName
-    /** The monster will respawn within this many milliseonds. If it's set to -1, it's special / we don't know.
+    /** The monster will respawn within this many seconds. If it's set to -1, it's special / we don't know.
      * NOTE: For >200 second respawn monsters, the variance is from 0.6 to 2.2 of their base time
      * https://discordapp.com/channels/238332476743745536/238332476743745536/729997473484898327
      **/

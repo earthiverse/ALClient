@@ -1,12 +1,11 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive } from "./definitions/adventureland-server.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
-import { ALL } from "dns"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 
 export class Observer {
@@ -121,6 +120,28 @@ export class Observer {
 
         this.socket.on("entities", (data: EntitiesData) => {
             this.parseEntities(data)
+        })
+
+        this.socket.on("game_event", (data: GameEventData) => {
+            if (Database.connection) {
+                if (this.G.monsters[data.name]) {
+                    // The event is a monster
+                    EntityModel.updateOne({
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                        type: data.name
+                    }, {
+                        hp: this.G.monsters[data.name].hp,
+                        lastSeen: Date.now(),
+                        level: 1,
+                        map: data.map,
+                        x: data.x,
+                        y: data.y
+                    }, {
+                        upsert: true
+                    }).lean().exec().catch((e) => { console.error(e) })
+                }
+            }
         })
 
         this.socket.on("hit", (data: HitData) => {

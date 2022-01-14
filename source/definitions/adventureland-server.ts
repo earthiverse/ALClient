@@ -384,6 +384,13 @@ export type LoginDataItem = {
     html: string
 }
 
+export type GameEventData = {
+    name: MonsterName
+    map: MapName
+    x: number
+    y: number
+}
+
 export type GameLogData = GameLogDataString
 export type GameLogDataString =
     | string
@@ -970,6 +977,16 @@ export type ServerInfoDataNotLive = {
     live: false
     /** When the monster will spawn next */
     spawn: string
+}
+
+export type ServerMessageData = {
+    color: string
+    discord: string
+    message: string
+} | {
+    color: string
+    event: boolean
+    message: string
 }
 
 export type StartData = CharacterData & {
