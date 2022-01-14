@@ -123,21 +123,29 @@ export class Observer {
         })
 
         this.socket.on("game_event", (data: GameEventData) => {
-            if (Database.connection) {
-                if (this.G.monsters[data.name]) {
-                    // The event is a monster
+            if (this.G.monsters[data.name]) {
+                const monsterData = {
+                    hp: this.G.monsters[data.name].hp,
+                    lastSeen: Date.now(),
+                    level: 1,
+                    map: data.map,
+                    x: data.x,
+                    y: data.y
+                }
+
+                this.S[data.name] = {
+                    ...monsterData,
+                    live: true,
+                    max_hp: monsterData.hp
+                }
+
+                if (Database.connection) {
+                // The event is a monster
                     EntityModel.updateOne({
                         serverIdentifier: this.serverData.name,
                         serverRegion: this.serverData.region,
                         type: data.name
-                    }, {
-                        hp: this.G.monsters[data.name].hp,
-                        lastSeen: Date.now(),
-                        level: 1,
-                        map: data.map,
-                        x: data.x,
-                        y: data.y
-                    }, {
+                    }, monsterData, {
                         upsert: true
                     }).lean().exec().catch((e) => { console.error(e) })
                 }
