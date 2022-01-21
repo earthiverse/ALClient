@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData } from "./definitions/adventureland-server.js"
 import { LinkData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -2628,6 +2628,62 @@ export class Character extends Observer implements CharacterData {
     public sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendCM].")
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
+    }
+
+    public sendPM(to: string, message: string): Promise<Boolean> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [sendPM].")
+        const sent = new Promise<Boolean>((resolve, reject) => {
+            let isReceived = false;
+            const sentCheck = (data: PMData) => {
+                if(data.message == message && data.owner == this.id && data.to == to ){
+                    isReceived = true; // We still may receive a failed response after this, don't resolve yet
+                }
+                if(data.message == "(FAILED)" && data.owner == this.id && data.to == to){
+                    this.socket.off("pm", sentCheck);
+                    return reject(false);
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("pm", sentCheck)
+                return isReceived ? resolve(true) : reject(false)
+            }, 3000)
+
+            this.socket.on("pm", sentCheck)
+        })
+        
+        this.socket.emit("say", { message: message, name: to })
+        return sent
+    }
+    
+    public say(message: string): Promise<Boolean> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [say].")
+        const sent = new Promise<Boolean>((resolve, reject) => {
+            const sentCheck = (data: ChatLogData) => {
+                if(data.message == message && data.owner == this.id ){
+                    this.socket.off("chat_log", sentCheck)
+                    this.socket.off("game_error", failCheck)
+                    return resolve(true);
+                }
+            }
+            const failCheck = (data: string | { message: string; }) => {
+                if(data?.toString() == "You can't chat this fast."){
+                    this.socket.off("chat_log", sentCheck)
+                    this.socket.off("game_error", failCheck)
+                    return reject(false);
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("chat_log", sentCheck)
+                this.socket.off("game_error", failCheck)
+                return reject(false)
+            }, 3000)
+
+            this.socket.on("chat_log", sentCheck)
+            this.socket.on("game_error", failCheck)
+        })
+        
+        this.socket.emit("say", { message: message });
+        return sent
     }
 
     public sendFriendRequest(id: string): Promise<void> {
