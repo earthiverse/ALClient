@@ -130,16 +130,16 @@ export class Player implements PlayerData {
      */
     public isFriendly(bot: Character): boolean {
         // Check if it's an NPC
-        if (bot.npc) return true
+        if (this.npc) return true
 
         // Check if it's us
         if (bot.id == this.id) return true
 
         // Check if we're the owner
-        if (bot.owner == this.owner) return true
+        if (this.owner && bot.owner == this.owner) return true
 
         // Check if we're in the same party
-        if (bot.party == this.party) return true
+        if (this.party && bot.party == this.party) return true
 
         // TODO: Check if they're in our friends list
 

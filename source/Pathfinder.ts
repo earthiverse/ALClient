@@ -706,11 +706,11 @@ export class Pathfinder {
         return to
     }
 
-    public static prepare(g: GData, options: {
+    public static async prepare(g: GData, options: {
         include_bank_b?: boolean,
         include_bank_u?: boolean,
         include_test?: boolean
-    } = {}): void {
+    } = {}): Promise<void> {
         if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
 

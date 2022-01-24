@@ -1970,7 +1970,7 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("player", successCheck)
-                reject(`getMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
+                reject(`finishMonsterHuntQuest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("player", successCheck)
         })
