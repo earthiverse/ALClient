@@ -1,219 +1,207 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 690 (2021-10-06)
+ * The following is from http://adventure.land/data.js, version 707 (2022-01-24)
  * It is used to confirm type correctness
  */
 
 test("G.conditions type validation", async () => {
     const G_conditions: Pick<GData, "conditions"> = {
         "conditions": {
-            "stunned": {
-                "bad": true,
-                "blocked": true,
+            "authfail": {
+                "explanation": "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land",
+                "gold": -85,
+                "luck": -85,
+                "name": "Authorization Failure",
+                "skin": "notverified",
+                "technical": true,
                 "ui": true,
-                "name": "Stunned",
-                "skin": "condition_bad"
-            },
-            "massproductionpp": {
-                "name": "Mass Production++",
-                "explanation": "Speeds up the next upgrade or compound 90%",
-                "ui": true,
-                "skin": "skill_massproductionpp",
-                "duration": 10000,
-                "buff": true
-            },
-            "marked": {
-                "duration": 10000,
-                "explanation": "Marked by a ranger for death. Receive 10% more damage and can't stealth.",
-                "ui": true,
-                "name": "Marked",
-                "skin": "skill_huntersmark"
+                "xp": -20
             },
             "blink": {
                 "explanation": "Blink in progress",
                 "name": "Blinking",
                 "skin": "condition_positive"
             },
-            "cursed": {
-                "duration": 5000,
+            "burned": {
                 "bad": true,
-                "name": "Cursed",
-                "skin": "condition_bad"
+                "interval": 210,
+                "name": "Burned",
+                "skin": "fireblade",
+                "ui": true
             },
-            "mluck": {
-                "name": "Good Luck",
-                "persistent": true,
-                "ui": true,
-                "skin": "buff_luck",
-                "duration": 3600000,
-                "buff": true,
-                "luck": 12
-            },
-            "fishing": {
-                "name": "Fishing",
-                "explanation": "Fishing in progress",
-                "skin": "skill_fishing",
-                "duration": 15000,
-                "duration_min": 5000,
-                "channel": true
-            },
-            "stoned": {
-                "duration": 4000,
-                "bad": true,
-                "blocked": true,
-                "name": "Stoned",
-                "skin": "condition_neutral"
-            },
-            "darkblessing": {
-                "name": "Dark Blessing",
-                "ui": true,
-                "skin": "skill_dbuff",
-                "duration": 8000,
-                "output": 25,
-                "buff": true
-            },
-            "sugarrush": {
-                "name": "Sugar Rush",
-                "mp_cost": -200,
-                "frequency": 240,
-                "ui": true,
-                "skin": "candycanesword",
-                "duration": 10000,
-                "buff": true
-            },
-            "authfail": {
-                "ui": true,
-                "name": "Authorization Failure",
-                "gold": -85,
-                "skin": "notverified",
-                "technical": true,
-                "explanation": "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land",
-                "xp": -20,
-                "luck": -85
-            },
-            "mlifesteal": {
-                "name": "Lifesteal",
-                "lifesteal": 2.5,
-                "ui": true,
-                "skin": "lifestealscroll",
-                "duration": 3600000,
-                "buff": true
-            },
-            "phasedout": {
-                "name": "Phased Out",
-                "evasion": 64,
-                "frequency": -40,
-                "ui": true,
-                "skin": "skill_phaseout",
-                "duration": 5000,
-                "speed": -16
-            },
-            "invis": {
-                "explanation": "Hidden from everyone else until you attack",
-                "name": "Invisible",
-                "skin": "skill_invis"
-            },
-            "mining": {
-                "name": "Mining",
-                "explanation": "Mining in progress",
-                "skin": "skill_mining",
-                "duration": 15000,
-                "duration_min": 5000,
-                "channel": true
-            },
-            "rspeed": {
-                "name": "Rogue Swiftness",
-                "frequency": 8,
-                "ui": true,
-                "skin": "buff_speed",
-                "duration": 2700000,
-                "speed": 7,
-                "buff": true
-            },
-            "monsterhunt": {
-                "duration": 1800000,
-                "ui": true,
-                "name": "On The Hunt",
-                "skin": "quest_monsterhunt"
-            },
-            "weakness": {
-                "dex": -10,
-                "bad": true,
-                "ui": true,
-                "name": "Weakness",
-                "str": -10,
-                "skin": "condition_bad",
-                "duration": 20000,
-                "speed": -30
-            },
-            "easterluck": {
-                "name": "Easter Luck",
-                "persistent": true,
-                "ui": true,
-                "skin": "easterluck",
-                "duration": 86400000,
-                "buff": true,
-                "luck": 100
-            },
-            "fingered": {
-                "name": "Deep Meditation",
-                "evasion": 96,
-                "resistance": 1600,
-                "bad": true,
-                "skin": "condition_neutral",
-                "blocked": true
-            },
-            "deepfreezed": {
-                "name": "Deepfreezed",
-                "bad": true,
-                "ui": true,
-                "skin": "condition_bad",
-                "duration": 12000,
-                "blocked": true
-            },
-            "xpower": {
-                "name": "Power",
-                "mp_cost": -300,
-                "frequency": 480,
-                "ui": true,
-                "skin": "goldenpowerglove",
-                "duration": 6000,
-                "buff": true
-            },
-            "town": {
-                "name": "Town",
-                "explanation": "Town in progress",
-                "can_move": true,
+            "charging": {
+                "name": "Charging",
                 "skin": "condition_positive",
-                "duration": 3000,
-                "channel": true
+                "speed": 30
             },
             "charmed": {
                 "duration": 30000,
                 "explanation": "Mellow like a warm kitty",
-                "ui": true,
                 "name": "Charmed",
-                "skin": "charmer"
+                "skin": "charmer",
+                "ui": true
             },
-            "mshield": {
-                "ui": true,
-                "name": "Mana Shield",
-                "skin": "skill_mshield"
+            "cursed": {
+                "bad": true,
+                "duration": 5000,
+                "name": "Cursed",
+                "skin": "condition_bad"
             },
-            "massproduction": {
-                "name": "Mass Production",
-                "explanation": "Speeds up the next upgrade or compound 50%",
-                "ui": true,
-                "skin": "skill_massproduction",
-                "duration": 10000,
-                "buff": true
+            "dampened": {
+                "bad": true,
+                "duration": 300,
+                "explanation": "Can't blink or teleport",
+                "name": "Dampened",
+                "skin": "dampened"
+            },
+            "darkblessing": {
+                "buff": true,
+                "duration": 8000,
+                "name": "Dark Blessing",
+                "output": 25,
+                "skin": "skill_dbuff",
+                "ui": true
+            },
+            "dash": {
+                "name": "Dashing",
+                "set_speed": 500,
+                "skin": "condition_positive"
+            },
+            "deepfreezed": {
+                "bad": true,
+                "blocked": true,
+                "duration": 12000,
+                "name": "Deepfreezed",
+                "skin": "condition_bad",
+                "ui": true
+            },
+            "easterluck": {
+                "buff": true,
+                "duration": 86400000,
+                "luck": 100,
+                "name": "Easter Luck",
+                "persistent": true,
+                "skin": "easterluck",
+                "ui": true
+            },
+            "eburn": {
+                "bad": true,
+                "damage": 50,
+                "duration": 12000,
+                "intensity": "burnd",
+                "interval": 200,
+                "name": "Burn",
+                "skin": "essenceoffire",
+                "speed": 5,
+                "ui": true
+            },
+            "eheal": {
+                "duration": 4000,
+                "heal": 200,
+                "interval": 320,
+                "name": "Rejuvenate",
+                "skin": "essenceoflife",
+                "ui": true
+            },
+            "energized": {
+                "buff": true,
+                "duration": 800,
+                "frequency": 80,
+                "name": "Energized",
+                "skin": "skill_energize",
+                "ui": true
+            },
+            "fingered": {
+                "bad": true,
+                "blocked": true,
+                "evasion": 96,
+                "name": "Deep Meditation",
+                "resistance": 1600,
+                "skin": "condition_neutral"
+            },
+            "fishing": {
+                "channel": true,
+                "duration": 15000,
+                "duration_min": 5000,
+                "explanation": "Fishing in progress",
+                "name": "Fishing",
+                "skin": "skill_fishing"
             },
             "frozen": {
                 "bad": true,
-                "ui": true,
                 "name": "Frozen",
-                "skin": "frostbow"
+                "skin": "frostbow",
+                "ui": true
+            },
+            "fullguard": {
+                "armor": 10000,
+                "name": "Full Guard",
+                "resistance": 10000,
+                "skin": "fullguard",
+                "ui": true
+            },
+            "fullguardx": {
+                "armor": 10000,
+                "miss": 99,
+                "name": "Full Guard",
+                "resistance": 10000,
+                "skin": "fullguard",
+                "ui": true
+            },
+            "halloween0": {
+                "buff": true,
+                "duration": 172800000,
+                "gold": 5,
+                "luck": 5,
+                "name": "Halloween Spirit",
+                "persistent": true,
+                "skin": "halloween0",
+                "ui": true,
+                "xp": 100
+            },
+            "halloween1": {
+                "buff": true,
+                "duration": 86400000,
+                "gold": 5,
+                "luck": 5,
+                "name": "Halloween Spirit",
+                "output": 2,
+                "persistent": true,
+                "skin": "halloween1",
+                "ui": true,
+                "xp": 50
+            },
+            "halloween2": {
+                "buff": true,
+                "duration": 28800000,
+                "gold": 5,
+                "luck": 5,
+                "name": "Halloween Spirit",
+                "output": 3,
+                "persistent": true,
+                "skin": "halloween2",
+                "ui": true,
+                "xp": 10
+            },
+            "hardshell": {
+                "armor": 800,
+                "buff": true,
+                "duration": 8000,
+                "name": "Hard Shell",
+                "set_speed": 10,
+                "skin": "skill_hardshell"
+            },
+            "holidayspirit": {
+                "buff": true,
+                "duration": 86400000,
+                "gold": 20,
+                "luck": 20,
+                "name": "Holiday Spirit",
+                "persistent": true,
+                "skin": "holidayspirit",
+                "ui": true,
+                "xp": 20
             },
             "invincible": {
                 "duration": 6000,
@@ -221,257 +209,277 @@ test("G.conditions type validation", async () => {
                 "name": "Invincible",
                 "skin": "condition_positive"
             },
-            "slowness": {
-                "name": "Slowness",
-                "explanation": "Things like spiderwebs cause you to slow down.",
-                "bad": true,
-                "ui": true,
-                "skin": "condition_neutral",
-                "speed": -40
+            "invis": {
+                "explanation": "Hidden from everyone else until you attack",
+                "name": "Invisible",
+                "skin": "skill_invis"
             },
-            "withdrawal": {
-                "frequency": -30,
-                "skin": "withdrawal",
-                "duration": 10800000,
-                "speed": -20,
-                "dex": -20,
-                "name": "Withdrawal",
+            "licenced": {
+                "explanation": "A special, temporary immunity",
+                "name": "Licenced to Kill",
+                "skin": "licence",
+                "ui": true
+            },
+            "marked": {
+                "duration": 10000,
+                "explanation": "Marked by a ranger for death. Receive 10% more damage and can't stealth.",
+                "name": "Marked",
+                "skin": "skill_huntersmark",
+                "ui": true
+            },
+            "massproduction": {
+                "buff": true,
+                "duration": 10000,
+                "explanation": "Speeds up the next upgrade or compound 50%",
+                "name": "Mass Production",
+                "skin": "skill_massproduction",
+                "ui": true
+            },
+            "massproductionpp": {
+                "buff": true,
+                "duration": 10000,
+                "explanation": "Speeds up the next upgrade or compound 90%",
+                "name": "Mass Production++",
+                "skin": "skill_massproductionpp",
+                "ui": true
+            },
+            "mcourage": {
+                "buff": true,
+                "courage": 5,
+                "duration": 5000,
+                "evasion": 40,
+                "mcourage": 5,
+                "name": "Merchant's Courage",
+                "pcourage": 5,
+                "skin": "skill_mcourage",
+                "speed": 25,
+                "ui": true
+            },
+            "mining": {
+                "channel": true,
+                "duration": 15000,
+                "duration_min": 5000,
+                "explanation": "Mining in progress",
+                "name": "Mining",
+                "skin": "skill_mining"
+            },
+            "mlifesteal": {
+                "buff": true,
+                "duration": 3600000,
+                "lifesteal": 2.5,
+                "name": "Lifesteal",
+                "skin": "lifestealscroll",
+                "ui": true
+            },
+            "mluck": {
+                "buff": true,
+                "duration": 3600000,
+                "luck": 12,
+                "name": "Good Luck",
                 "persistent": true,
-                "bad": true,
-                "ui": true,
-                "mp": -300,
-                "str": -5
+                "skin": "buff_luck",
+                "ui": true
             },
-            "eheal": {
-                "name": "Rejuvenate",
-                "heal": 200,
-                "interval": 320,
-                "ui": true,
-                "skin": "essenceoflife",
-                "duration": 4000
+            "monsterhunt": {
+                "duration": 1800000,
+                "name": "On The Hunt",
+                "skin": "quest_monsterhunt",
+                "ui": true
             },
-            "poisoned": {
-                "healm": 0.25,
-                "name": "Poison",
-                "frequencym": 0.8,
-                "potionsm": 0.5,
-                "bad": true,
-                "skin": "poison",
-                "duration": 5000
-            },
-            "xshotted": {
-                "name": "X-Shot",
-                "explanation": "Good luck trying to find a tavern to play in.",
-                "persistent": true,
-                "bad": true,
-                "ui": true,
-                "skin": "xshotted",
-                "duration": 43200000
+            "mshield": {
+                "name": "Mana Shield",
+                "skin": "skill_mshield",
+                "ui": true
             },
             "newcomersblessing": {
                 "aura": true,
-                "ui": true,
-                "name": "Newcomers' Blessing",
-                "gold": 10,
-                "skin": "newcomersblessing",
                 "duration": 1800000,
-                "xp": 10,
-                "luck": 10
-            },
-            "dash": {
-                "set_speed": 500,
-                "name": "Dashing",
-                "skin": "condition_positive"
-            },
-            "fullguard": {
-                "armor": 10000,
-                "resistance": 10000,
+                "gold": 10,
+                "luck": 10,
+                "name": "Newcomers' Blessing",
+                "skin": "newcomersblessing",
                 "ui": true,
-                "name": "Full Guard",
-                "skin": "fullguard"
-            },
-            "warcry": {
-                "duration": 8000,
-                "frequency": 10,
-                "ui": true,
-                "name": "War Cry",
-                "skin": "skill_warcry",
-                "armor": 160,
-                "speed": 20,
-                "resistance": 160,
-                "buff": true
-            },
-            "mcourage": {
-                "courage": 5,
-                "ui": true,
-                "name": "Merchant's Courage",
-                "evasion": 40,
-                "skin": "skill_mcourage",
-                "duration": 5000,
-                "pcourage": 5,
-                "mcourage": 5,
-                "speed": 25,
-                "buff": true
-            },
-            "eburn": {
-                "intensity": "burnd",
-                "ui": true,
-                "name": "Burn",
-                "skin": "essenceoffire",
-                "duration": 12000,
-                "bad": true,
-                "interval": 200,
-                "speed": 5,
-                "damage": 50
-            },
-            "poisonous": {
-                "ui": true,
-                "name": "Poisonous",
-                "skin": "skill_pcoat"
-            },
-            "sanguine": {
-                "aura": true,
-                "ui": true,
-                "name": "Vampiric Aura",
-                "lifesteal": 1,
-                "skin": "sanguine",
-                "duration": 30000,
-                "attr0": "lifesteal",
-                "buff": true
-            },
-            "shocked": {
-                "name": "Shocked",
-                "explanation": "Imminent magical damage",
-                "bad": true,
-                "ui": true,
-                "skin": "essenceofthunder",
-                "duration": 1600
+                "xp": 10
             },
             "notverified": {
-                "name": "Not Verified",
-                "gold": -25,
-                "technical": true,
                 "explanation": "Reduced luck and gold until the associated email address is verified.",
-                "ui": true,
+                "gold": -25,
+                "luck": -25,
+                "name": "Not Verified",
                 "skin": "notverified",
-                "luck": -25
+                "technical": true,
+                "ui": true
             },
-            "halloween1": {
-                "ui": true,
-                "name": "Halloween Spirit",
-                "gold": 5,
-                "skin": "halloween1",
-                "duration": 86400000,
-                "output": 2,
-                "xp": 50,
-                "buff": true,
-                "persistent": true,
-                "luck": 5
+            "phasedout": {
+                "duration": 5000,
+                "evasion": 64,
+                "frequency": -40,
+                "name": "Phased Out",
+                "skin": "skill_phaseout",
+                "speed": -16,
+                "ui": true
             },
-            "burned": {
+            "poisoned": {
                 "bad": true,
-                "interval": 210,
-                "ui": true,
-                "name": "Burned",
-                "skin": "fireblade"
+                "duration": 5000,
+                "frequencym": 0.8,
+                "healm": 0.25,
+                "name": "Poison",
+                "potionsm": 0.5,
+                "skin": "poison"
             },
-            "charging": {
-                "speed": 30,
-                "name": "Charging",
-                "skin": "condition_positive"
+            "poisonous": {
+                "name": "Poisonous",
+                "skin": "skill_pcoat",
+                "ui": true
             },
             "power": {
-                "name": "Power",
-                "mp_cost": -200,
-                "frequency": 360,
-                "ui": true,
-                "skin": "powerglove",
+                "buff": true,
                 "duration": 4000,
-                "buff": true
+                "frequency": 360,
+                "mp_cost": -200,
+                "name": "Power",
+                "skin": "powerglove",
+                "ui": true
             },
-            "dampened": {
-                "duration": 300,
-                "explanation": "Can't blink or teleport",
+            "reflection": {
+                "cap_reflection": 50,
+                "duration": 5000,
+                "name": "Reflective Shield",
+                "reflection": 20,
+                "skin": "buff_reflection",
+                "ui": true
+            },
+            "rspeed": {
+                "buff": true,
+                "duration": 2700000,
+                "frequency": 8,
+                "name": "Rogue Swiftness",
+                "skin": "buff_speed",
+                "speed": 7,
+                "ui": true
+            },
+            "sanguine": {
+                "attr0": "lifesteal",
+                "aura": true,
+                "buff": true,
+                "duration": 30000,
+                "lifesteal": 1,
+                "name": "Vampiric Aura",
+                "skin": "sanguine",
+                "ui": true
+            },
+            "shocked": {
                 "bad": true,
-                "name": "Dampened",
-                "skin": "dampened"
+                "duration": 1600,
+                "explanation": "Imminent magical damage",
+                "name": "Shocked",
+                "skin": "essenceofthunder",
+                "ui": true
+            },
+            "slowness": {
+                "bad": true,
+                "explanation": "Things like spiderwebs cause you to slow down.",
+                "name": "Slowness",
+                "skin": "condition_neutral",
+                "speed": -40,
+                "ui": true
             },
             "stack": {
                 "explanation": "Bonus damage for each rogue attack",
                 "name": "Pure Damage",
                 "skin": "skill_stack"
             },
-            "licenced": {
-                "explanation": "A special, temporary immunity",
-                "ui": true,
-                "name": "Licenced to Kill",
-                "skin": "licence"
+            "stoned": {
+                "bad": true,
+                "blocked": true,
+                "duration": 4000,
+                "name": "Stoned",
+                "skin": "condition_neutral"
             },
-            "energized": {
-                "name": "Energized",
-                "frequency": 80,
-                "ui": true,
-                "skin": "skill_energize",
-                "duration": 800,
-                "buff": true
+            "stunned": {
+                "bad": true,
+                "blocked": true,
+                "name": "Stunned",
+                "skin": "condition_bad",
+                "ui": true
             },
-            "holidayspirit": {
-                "ui": true,
-                "name": "Holiday Spirit",
-                "gold": 20,
-                "skin": "holidayspirit",
-                "duration": 86400000,
-                "xp": 20,
+            "sugarrush": {
                 "buff": true,
-                "persistent": true,
-                "luck": 20
-            },
-            "reflection": {
-                "cap_reflection": 50,
-                "reflection": 20,
-                "ui": true,
-                "skin": "buff_reflection",
-                "duration": 5000,
-                "name": "Reflective Shield"
+                "duration": 10000,
+                "frequency": 240,
+                "mp_cost": -200,
+                "name": "Sugar Rush",
+                "skin": "candycanesword",
+                "ui": true
             },
             "tangled": {
-                "set_speed": 24,
-                "name": "Tangled",
                 "bad": true,
-                "ui": false,
+                "duration": 12000,
+                "name": "Tangled",
+                "set_speed": 24,
                 "skin": "condition_bad",
-                "duration": 12000
+                "ui": false
             },
-            "halloween0": {
-                "ui": true,
-                "name": "Halloween Spirit",
-                "gold": 5,
-                "skin": "halloween0",
-                "duration": 172800000,
-                "xp": 100,
+            "town": {
+                "can_move": true,
+                "channel": true,
+                "duration": 3000,
+                "explanation": "Town in progress",
+                "name": "Town",
+                "skin": "condition_positive"
+            },
+            "warcry": {
+                "armor": 160,
                 "buff": true,
-                "persistent": true,
-                "luck": 5
-            },
-            "halloween2": {
-                "ui": true,
-                "name": "Halloween Spirit",
-                "gold": 5,
-                "skin": "halloween2",
-                "duration": 28800000,
-                "output": 3,
-                "xp": 10,
-                "buff": true,
-                "persistent": true,
-                "luck": 5
-            },
-            "hardshell": {
-                "set_speed": 10,
-                "name": "Hard Shell",
-                "armor": 800,
-                "skin": "skill_hardshell",
                 "duration": 8000,
-                "buff": true
+                "frequency": 10,
+                "name": "War Cry",
+                "resistance": 160,
+                "skin": "skill_warcry",
+                "speed": 20,
+                "ui": true
+            },
+            "weakness": {
+                "bad": true,
+                "dex": -10,
+                "duration": 20000,
+                "name": "Weakness",
+                "skin": "condition_bad",
+                "speed": -30,
+                "str": -10,
+                "ui": true
+            },
+            "withdrawal": {
+                "bad": true,
+                "dex": -20,
+                "duration": 10800000,
+                "frequency": -30,
+                "mp": -300,
+                "name": "Withdrawal",
+                "persistent": true,
+                "skin": "withdrawal",
+                "speed": -20,
+                "str": -5,
+                "ui": true
+            },
+            "xpower": {
+                "buff": true,
+                "duration": 6000,
+                "frequency": 480,
+                "mp_cost": -300,
+                "name": "Power",
+                "skin": "goldenpowerglove",
+                "ui": true
+            },
+            "xshotted": {
+                "bad": true,
+                "duration": 43200000,
+                "explanation": "Good luck trying to find a tavern to play in.",
+                "name": "X-Shot",
+                "persistent": true,
+                "skin": "xshotted",
+                "ui": true
             }
         }
     }

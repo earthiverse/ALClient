@@ -2630,59 +2630,76 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
-    public sendPM(to: string, message: string): Promise<Boolean> {
+    /**
+     * Sends a PM to another character.
+     * NOTE: This function's promise will only resolve after 5 seconds due to game limitations.
+     *       Use caution when awaiting the promises!
+     *
+     * @param to The character ID to send a PM to
+     * @param message The message
+     * @returns true if we are pretty sure the PM was sent
+     */
+    public sendPM(to: string, message: string): Promise<boolean> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sendPM].")
-        const sent = new Promise<Boolean>((resolve, reject) => {
-            let isReceived = false;
+
+        const sent = new Promise<boolean>((resolve, reject) => {
+            let isReceived = false
             const sentCheck = (data: PMData) => {
-                if(data.message == message && data.owner == this.id && data.to == to ){
-                    isReceived = true; // We still may receive a failed response after this, don't resolve yet
+                if (data.message == message && data.owner == this.id && data.to == to) {
+                    // We still may receive a failed response after this, don't resolve yet
+                    isReceived = true
                 }
-                if(data.message == "(FAILED)" && data.owner == this.id && data.to == to){
-                    this.socket.off("pm", sentCheck);
-                    return reject(false);
+                if (data.message == "(FAILED)" && data.owner == this.id && data.to == to) {
+                    this.socket.off("pm", sentCheck)
+                    return reject(`Failed sending a PM to ${to}.`)
                 }
             }
             setTimeout(() => {
                 this.socket.off("pm", sentCheck)
-                return isReceived ? resolve(true) : reject(false)
-            }, 3000)
+                return isReceived ? resolve(true) : reject("send timeout (5000ms)")
+            }, 5000)
 
             this.socket.on("pm", sentCheck)
         })
-        
+
         this.socket.emit("say", { message: message, name: to })
         return sent
     }
-    
-    public say(message: string): Promise<Boolean> {
+
+    /**
+     * Sends a message to the server chat
+     * @param message The message to send
+     * @returns
+     */
+    public say(message: string): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [say].")
-        const sent = new Promise<Boolean>((resolve, reject) => {
+
+        const sent = new Promise<void>((resolve, reject) => {
             const sentCheck = (data: ChatLogData) => {
-                if(data.message == message && data.owner == this.id ){
+                if (data.message == message && data.owner == this.id) {
                     this.socket.off("chat_log", sentCheck)
                     this.socket.off("game_error", failCheck)
-                    return resolve(true);
+                    resolve()
                 }
             }
             const failCheck = (data: string | { message: string; }) => {
-                if(data?.toString() == "You can't chat this fast."){
+                if (data == "You can't chat this fast.") {
                     this.socket.off("chat_log", sentCheck)
                     this.socket.off("game_error", failCheck)
-                    return reject(false);
+                    reject("You can't chat this fast.")
                 }
             }
             setTimeout(() => {
                 this.socket.off("chat_log", sentCheck)
                 this.socket.off("game_error", failCheck)
-                return reject(false)
-            }, 3000)
+                reject(`say timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
 
             this.socket.on("chat_log", sentCheck)
             this.socket.on("game_error", failCheck)
         })
-        
-        this.socket.emit("say", { message: message });
+
+        this.socket.emit("say", { message: message })
         return sent
     }
 

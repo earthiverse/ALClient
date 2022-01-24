@@ -228,26 +228,26 @@ export type CMData = {
 
 export type PMData = {
     /* The name of the sending player */
-    owner: string,
+    owner: string
     /* The player the message is being sent to */
-    to: string, 
+    to: string
     /* The message of the sending player */
-    message: string, 
+    message: string
     /* The ID (name) Of the sending player */
-    id: string, 
+    id: string
     /* Denotes whether this message has been sent cross server */
     xserver?: string
 }
 
 export type ChatLogData = {
     /* The name of the sending player */
-    owner: string,
+    owner: string
     /* The message of the sending player */
-    message: string, 
+    message: string
     /* The ID (name) Of the sending player */
-    id: string, 
+    id: string
     /* Player */
-    p?: boolean    
+    p?: boolean
 }
 
 export type DeathData = {
@@ -421,6 +421,8 @@ export type GameLogDataString =
     | "Already partying"
     | "Can't respawn yet."
     | "Invitation expired"
+    /** Sent when you chat with { code: true } */
+    | "You can't chat this fast with Code yet. The interval is 15 seconds."
 
 export type GameResponseData = GameResponseDataObject | GameResponseDataString
 
