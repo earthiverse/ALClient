@@ -257,7 +257,6 @@ export class Warrior extends PingCompensatedCharacter {
         return stomped
     }
 
-    // TODO: Investigate if cooldown is before or after the "action" event. We are getting lots of "failed due to cooldowns"
     public taunt(target: string): Promise<string> {
         if (!this.ready) return Promise.reject("We aren't ready yet [taunt].")
         const tauntStarted = new Promise<string>((resolve, reject) => {
@@ -280,7 +279,7 @@ export class Warrior extends PingCompensatedCharacter {
                         this.socket.off("action", tauntCheck)
                         this.socket.off("game_response", failCheck)
                         reject(`${target} is too far away to taunt (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.id == target) {
+                    } else if (data.response == "cooldown" && data.id == target && data.skill == "taunt") {
                         this.socket.off("action", tauntCheck)
                         this.socket.off("game_response", failCheck)
                         reject(`Taunt on ${target} failed due to cooldown (ms: ${data.ms}).`)
