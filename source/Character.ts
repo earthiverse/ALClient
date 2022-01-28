@@ -3088,6 +3088,8 @@ export class Character extends Observer implements CharacterData {
                 }
                 await this.requestPlayerData().catch((e) => { console.error(e) })
                 i--
+                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
+
             }
         }
 
