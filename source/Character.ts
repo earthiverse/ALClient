@@ -3012,15 +3012,34 @@ export class Character extends Observer implements CharacterData {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
+
+                    // Get closest blinkable spot near the potential move
+                    for (const [dX, dY] of [[0, 0], [-10, 0], [10, 0], [0, -10], [0, 10], [-10, -10], [-10, 10], [10, -10], [10, 10]]) {
+                        // Check if we can blink there
+                        const roundedX = Math.round(potentialMove.x + dX / 10) * 10
+                        const roundedY = Math.round(potentialMove.y + dY / 10) * 10
+                        if (!Pathfinder.canStand({ map: potentialMove.map, x: roundedX, y: roundedY })) continue
+
+                        // We found a spot we can blink to
+                        potentialMove.x = roundedX
+                        potentialMove.y = roundedY
+                        break
+                    }
+
                     if (potentialMove.map == this.map) {
                         if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
-                        await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch(async (error) => {
-                            console.log(`Error blinking while smartMoving: ${error}, attempting 1 more time`)
-                            await new Promise(resolve => setTimeout(resolve, 1000))
-                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch((err) => {
-                                console.error("Failed blinking while smartMoving", err)
-                            })
-                        })
+                        try {
+                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
+                        } catch (e) {
+                            console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
+                            try {
+                                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
+                                await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
+                            } catch (e2) {
+                                console.error(`Failed blinking while smartMoving: ${e2}`)
+                                break
+                            }
+                        }
                         this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
                         i = j
                         blinked = true
@@ -3078,11 +3097,11 @@ export class Character extends Observer implements CharacterData {
                 } else if (currentMove.type == "transport") {
                     await this.transport(currentMove.map, currentMove.spawn)
                 }
-                numAttempts = 0;
+                numAttempts = 0
             } catch (e) {
                 console.error(e)
                 numAttempts++
-                if(numAttempts >= 3){
+                if (numAttempts >= 3) {
                     this.smartMoving = undefined
                     return Promise.reject("We are having some trouble smartMoving...")
                 }
