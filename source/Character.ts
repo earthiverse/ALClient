@@ -3016,8 +3016,8 @@ export class Character extends Observer implements CharacterData {
                     // Get closest blinkable spot near the potential move
                     for (const [dX, dY] of [[0, 0], [-10, 0], [10, 0], [0, -10], [0, 10], [-10, -10], [-10, 10], [10, -10], [10, 10]]) {
                         // Check if we can blink there
-                        const roundedX = Math.round(potentialMove.x + dX / 10) * 10
-                        const roundedY = Math.round(potentialMove.y + dY / 10) * 10
+                        const roundedX = Math.round((potentialMove.x + dX) / 10) * 10
+                        const roundedY = Math.round((potentialMove.y + dY) / 10) * 10
                         if (!Pathfinder.canStand({ map: potentialMove.map, x: roundedX, y: roundedY })) continue
 
                         // We found a spot we can blink to
