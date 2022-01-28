@@ -3014,17 +3014,17 @@ export class Character extends Observer implements CharacterData {
                     const potentialMove = path[j]
                     if (potentialMove.map == this.map) {
                         if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
+                        await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch(async (error) => {
+                            console.log(`Error blinking while smartMoving: ${error}, attempting 1 more time`)
+                            await new Promise(resolve => setTimeout(resolve, 1000))
+                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch((err) => {
+                                console.error("Failed blinking while smartMoving", err)
+                            })
+                        })
                         this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
-                        try {
-                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
-                            i = j
-                            blinked = true
-                            break
-                        } catch (e) {
-                            console.error(e)
-                            blinked = false
-                            break
-                        }
+                        i = j
+                        blinked = true
+                        break
                     }
                 }
                 if (blinked) continue
@@ -3078,19 +3078,16 @@ export class Character extends Observer implements CharacterData {
                 } else if (currentMove.type == "transport") {
                     await this.transport(currentMove.map, currentMove.spawn)
                 }
-                numAttempts = 0
+                numAttempts = 0;
             } catch (e) {
                 console.error(e)
-                await this.requestPlayerData().catch((e) => { console.error(e) })
-
-                numAttempts += 1
-                if (numAttempts >= 3) {
+                numAttempts++
+                if(numAttempts >= 3){
                     this.smartMoving = undefined
                     return Promise.reject("We are having some trouble smartMoving...")
                 }
-
+                await this.requestPlayerData().catch((e) => { console.error(e) })
                 i--
-                continue
             }
         }
 
