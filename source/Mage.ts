@@ -35,7 +35,7 @@ export class Mage extends PingCompensatedCharacter {
 
         const blinked = new Promise<void>((resolve, reject) => {
             const successCheck = (data: NewMapData) => {
-                if (data.effect == "blink") {
+                if (data.effect == "blink" && (Math.round(x / 10) * 10 == data.x) && (Math.round(y / 10) * 10 == data.y) ) { // Blink response coordinates are rounded to the nearest 10
                     this.socket.off("new_map", successCheck)
                     this.socket.off("game_response", failCheck)
                     resolve()
