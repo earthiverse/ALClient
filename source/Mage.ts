@@ -35,7 +35,7 @@ export class Mage extends PingCompensatedCharacter {
 
         const blinked = new Promise<void>((resolve, reject) => {
             const successCheck = (data: NewMapData) => {
-                if (data.effect == "blink" && data.x == x && data.y == y) {
+                if (data.effect == "blink") {
                     this.socket.off("new_map", successCheck)
                     this.socket.off("game_response", failCheck)
                     resolve()
