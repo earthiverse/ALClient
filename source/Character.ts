@@ -3413,6 +3413,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [unequip].")
         if (this.slots[slot] === null) return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.slots[slot] === undefined) return Promise.reject(`Slot ${slot} does not exist.`)
+        if (this.esize == 0) return Promise.reject(`Our inventory is full. We cannot unequip ${slot}.`)
 
         const slotInfo = this.slots[slot]
 
