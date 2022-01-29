@@ -3824,7 +3824,37 @@ export class Character extends Observer implements CharacterData {
     public isEquipped(itemName: ItemName): boolean {
         for (const slot in this.slots) {
             if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
-            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, we don't have it equipped
+            if (this.slots[slot as TradeSlotType].price) continue // This is a merchant transaction, it's not equipped, it's in our stand
+            if (this.slots[slot as SlotType].name == itemName) return true
+        }
+        return false
+    }
+
+    /**
+     * Returns a boolean corresponding to whether or not we have the given item listed for purchase.
+     * @param itemName The item to look for
+     * @returns
+     */
+    public isListedForPurchase(itemName: ItemName): boolean {
+        for (const slot in this.slots) {
+            if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
+            if (!this.slots[slot as TradeSlotType].price) continue // This is not a merchant transaction
+            if (!this.slots[slot as TradeSlotType].b) continue // We are selling this item, not buying it
+            if (this.slots[slot as SlotType].name == itemName) return true
+        }
+        return false
+    }
+
+    /**
+     * Returns a boolean corresponding to whether or not we have the given item listed for sale.
+     * @param itemName The item to look for
+     * @returns
+     */
+    public isListedForSale(itemName: ItemName): boolean {
+        for (const slot in this.slots) {
+            if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
+            if (!this.slots[slot as TradeSlotType].price) continue // This is not a merchant transaction
+            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, it's not for sale
             if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
