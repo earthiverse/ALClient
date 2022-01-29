@@ -205,6 +205,9 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // Keep name updated for those that prefer to use name instead of id.
+        this.name = data.id
+
         // Clear party info if we have no party
         if (!this.party) this.partyData = undefined
 
@@ -1832,7 +1835,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             const successCheck = (data: EmotionData) => {
-                if (data.name == emotionName && data.player == this.name) {
+                if (data.name == emotionName && data.player == this.id) {
                     this.socket.off("game_response", failCheck)
                     this.socket.off("emotion", successCheck)
                     resolve()
