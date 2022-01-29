@@ -899,8 +899,7 @@ export class Character extends Observer implements CharacterData {
 
         const itemReceived = new Promise<number>((resolve, reject) => {
             const buyCheck1 = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
+                if (!data.hitchhikers) return
                 for (const hitchhiker of data.hitchhikers) {
                     if (hitchhiker[0] == "game_response") {
                         const data: GameResponseData = hitchhiker[1]
@@ -946,6 +945,65 @@ export class Character extends Observer implements CharacterData {
             // Item is not stackable.
             this.socket.emit("buy", { name: itemName })
         }
+        return itemReceived
+    }
+
+    /**
+     * Buy an item from an NPC (e.g. monsterhunter) with tokens
+     * @param itemName The item to buy with tokens
+     * @returns
+     */
+    public buyWithTokens(itemName: ItemName): Promise<void> {
+        const numBefore = this.countItem(itemName)
+
+        // Check if this item is buyable with tokens, and if we have enough
+        let tokenTypeNeeded: "funtoken" | "monstertoken" | "pvptoken"
+        let numTokensNeeded: number
+        for (const t in this.G.tokens) {
+            const tokenType = t as "funtoken" | "monstertoken" | "pvptoken"
+            const tokenTable = this.G.tokens[tokenType]
+            for (const item in tokenTable) {
+                if (item !== itemName) continue
+
+                // We found it
+                tokenTypeNeeded = tokenType
+                numTokensNeeded = tokenTable[item as ItemName]
+                break
+            }
+            if (tokenTypeNeeded) break
+        }
+        if (tokenTypeNeeded === undefined) return Promise.reject(`${itemName} is not purchasable with tokens.`)
+        const numTokens = this.countItem(tokenTypeNeeded)
+        if (numTokens < numTokensNeeded) return Promise.reject(`We need ${numTokensNeeded} to buy ${itemName}, but we only have ${numTokens}.`)
+
+        const itemReceived = new Promise<void>((resolve, reject) => {
+            const buyCheck = (data: CharacterData) => {
+                const numNow = this.countItem(itemName, data.items)
+                if (numNow > numBefore) {
+                    this.socket.off("player", buyCheck)
+                    this.socket.off("game_response", failCheck)
+                    resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "exchange_notenough") {
+                        this.socket.off("player", buyCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject(`Not enough tokens to buy ${itemName}.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("player", buyCheck)
+                this.socket.off("game_response", failCheck)
+                reject(`buyWithTokens timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+
+            this.socket.on("player", buyCheck)
+            this.socket.on("game_response", failCheck)
+        })
         return itemReceived
     }
 
