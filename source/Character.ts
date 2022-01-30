@@ -3957,7 +3957,10 @@ export class Character extends Observer implements CharacterData {
         filters?: LocateItemFilters): number {
         const located = this.locateItems(iN, inv, filters)
 
+        if (located.length == 0) return undefined // No items found
+
         if (filters?.returnHighestLevel) {
+            if (filters.returnLowestLevel) throw new Error("Set either returnHighestLevel or returnLowestLevel, not both.")
             let highestLevel: number = Number.MIN_VALUE
             let highestLevelIndex
             for (let i = 0; i < located.length; i++) {
@@ -3969,6 +3972,20 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             return located[highestLevelIndex]
+        }
+
+        if (filters?.returnLowestLevel) {
+            let lowestLevel: number = Number.MAX_VALUE
+            let lowestLevelIndex
+            for (let i = 0; i < located.length; i++) {
+                const j = located[i]
+                const item = inv[j]
+                if (item.level < lowestLevel) {
+                    lowestLevel = item.level
+                    lowestLevelIndex = i
+                }
+            }
+            return located[lowestLevelIndex]
         }
 
         return located[0]
@@ -4017,6 +4034,12 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
+            }
+            if (filters?.special !== undefined) {
+                if (filters.special && !item.p)
+                    continue // The item isn't titled
+                if (!filters.special && item.p)
+                    continue // The item is titled
             }
             if (filters?.statType !== undefined) {
                 if (item.stat_type !== filters.statType)

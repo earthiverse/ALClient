@@ -29,10 +29,14 @@ export type LocateItemsFilters = {
     levelLessThan?: number;
     locked?: boolean;
     quantityGreaterThan?: number;
+    /** Is the item special? (e.g.: shiny, firehazard, lucky, glitched, ...) */
+    special?: boolean;
+    /** The scroll applied to the weapon (e.g.: int, dex, str, ...) */
     statType?: Attribute;
 }
 
 /** Filters for returning a single item */
 export type LocateItemFilters = LocateItemsFilters & {
     returnHighestLevel?: boolean;
+    returnLowestLevel?: boolean;
 }
