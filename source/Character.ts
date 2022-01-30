@@ -1007,6 +1007,9 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", buyCheck)
             this.socket.on("game_response", failCheck)
         })
+
+        const invTokens = this.locateItem(tokenTypeNeeded)
+        this.socket.emit("exchange_buy", { name: itemName, num: invTokens, q: this.items[invTokens].q })
         return itemReceived
     }
 
