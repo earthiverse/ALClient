@@ -288,6 +288,8 @@ export class Character extends Observer implements CharacterData {
             const next = new Date(Date.now() + Math.ceil(cooldown))
             this.setNextSkill("regen_hp", next)
             this.setNextSkill("regen_mp", next)
+            this.setNextSkill("use_hp", next)
+            this.setNextSkill("use_mp", next)
             return
         }
 
