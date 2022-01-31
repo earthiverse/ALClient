@@ -86,7 +86,11 @@ export class Player implements PlayerData {
         if (defender["1hp"] || skill == "taunt") return [1, 1]
 
         let baseDamage: number = this.attack
-        if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
+        if (!this.G.skills[skill]) {
+            console.log(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
+        } else {
+            if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
+        }
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
