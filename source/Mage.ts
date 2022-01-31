@@ -31,11 +31,23 @@ export class Mage extends PingCompensatedCharacter {
 
     public blink(x: number, y: number): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [blink].")
+
+        // Blink rounds to the nearest 10 on the server, so we're going to preemptively
+        // round to the nearest 10 and check if we can blink to that spot to avoid
+        // wasting MP.
+        const roundedX = Math.round(x / 10) * 10
+        const roundedY = Math.round(y / 10) * 10
+        if (x !== roundedX || y !== roundedY) {
+            console.log(`Blink position changed from ${x},${y} to ${roundedX},${roundedY}.`)
+            x = roundedX
+            y = roundedY
+        }
+
         if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) return Promise.reject(`We cannot blink to ${this.map},${x},${y}`)
 
         const blinked = new Promise<void>((resolve, reject) => {
             const successCheck = (data: NewMapData) => {
-                if (data.effect == "blink" && (Math.round(x / 10) * 10 == data.x) && (Math.round(y / 10) * 10 == data.y) ) { // Blink response coordinates are rounded to the nearest 10
+                if (data.effect == "blink" && x == data.x && y == data.y) {
                     this.socket.off("new_map", successCheck)
                     this.socket.off("game_response", failCheck)
                     resolve()

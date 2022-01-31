@@ -205,6 +205,9 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // Keep name updated for those that prefer to use name instead of id.
+        this.name = data.id
+
         // Clear party info if we have no party
         if (!this.party) this.partyData = undefined
 
@@ -285,6 +288,9 @@ export class Character extends Observer implements CharacterData {
             const next = new Date(Date.now() + Math.ceil(cooldown))
             this.setNextSkill("regen_hp", next)
             this.setNextSkill("regen_mp", next)
+            // NOTE: We don't need these, because regen_hp and regen_mp share these cooldowns in G.skills
+            // this.setNextSkill("use_hp", next)
+            // this.setNextSkill("use_mp", next)
             return
         }
 
@@ -899,8 +905,7 @@ export class Character extends Observer implements CharacterData {
 
         const itemReceived = new Promise<number>((resolve, reject) => {
             const buyCheck1 = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
+                if (!data.hitchhikers) return
                 for (const hitchhiker of data.hitchhikers) {
                     if (hitchhiker[0] == "game_response") {
                         const data: GameResponseData = hitchhiker[1]
@@ -946,6 +951,68 @@ export class Character extends Observer implements CharacterData {
             // Item is not stackable.
             this.socket.emit("buy", { name: itemName })
         }
+        return itemReceived
+    }
+
+    /**
+     * Buy an item from an NPC (e.g. monsterhunter) with tokens
+     * @param itemName The item to buy with tokens
+     * @returns
+     */
+    public buyWithTokens(itemName: ItemName): Promise<void> {
+        const numBefore = this.countItem(itemName)
+
+        // Check if this item is buyable with tokens, and if we have enough
+        let tokenTypeNeeded: "funtoken" | "monstertoken" | "pvptoken"
+        let numTokensNeeded: number
+        for (const t in this.G.tokens) {
+            const tokenType = t as "funtoken" | "monstertoken" | "pvptoken"
+            const tokenTable = this.G.tokens[tokenType]
+            for (const item in tokenTable) {
+                if (item !== itemName) continue
+
+                // We found it
+                tokenTypeNeeded = tokenType
+                numTokensNeeded = tokenTable[item as ItemName]
+                break
+            }
+            if (tokenTypeNeeded) break
+        }
+        if (tokenTypeNeeded === undefined) return Promise.reject(`${itemName} is not purchasable with tokens.`)
+        const numTokens = this.countItem(tokenTypeNeeded)
+        if (numTokens < numTokensNeeded) return Promise.reject(`We need ${numTokensNeeded} to buy ${itemName}, but we only have ${numTokens}.`)
+
+        const itemReceived = new Promise<void>((resolve, reject) => {
+            const buyCheck = (data: CharacterData) => {
+                const numNow = this.countItem(itemName, data.items)
+                if (numNow > numBefore) {
+                    this.socket.off("player", buyCheck)
+                    this.socket.off("game_response", failCheck)
+                    resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "exchange_notenough") {
+                        this.socket.off("player", buyCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject(`Not enough tokens to buy ${itemName}.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("player", buyCheck)
+                this.socket.off("game_response", failCheck)
+                reject(`buyWithTokens timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+
+            this.socket.on("player", buyCheck)
+            this.socket.on("game_response", failCheck)
+        })
+
+        const invTokens = this.locateItem(tokenTypeNeeded)
+        this.socket.emit("exchange_buy", { name: itemName, num: invTokens, q: this.items[invTokens].q })
         return itemReceived
     }
 
@@ -1774,7 +1841,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             const successCheck = (data: EmotionData) => {
-                if (data.name == emotionName && data.player == this.name) {
+                if (data.name == emotionName && data.player == this.id) {
                     this.socket.off("game_response", failCheck)
                     this.socket.off("emotion", successCheck)
                     resolve()
@@ -3030,15 +3097,34 @@ export class Character extends Observer implements CharacterData {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
+
+                    // Get closest blinkable spot near the potential move
+                    for (const [dX, dY] of [[0, 0], [-10, 0], [10, 0], [0, -10], [0, 10], [-10, -10], [-10, 10], [10, -10], [10, 10]]) {
+                        // Check if we can blink there
+                        const roundedX = Math.round((potentialMove.x + dX) / 10) * 10
+                        const roundedY = Math.round((potentialMove.y + dY) / 10) * 10
+                        if (!Pathfinder.canStand({ map: potentialMove.map, x: roundedX, y: roundedY })) continue
+
+                        // We found a spot we can blink to
+                        potentialMove.x = roundedX
+                        potentialMove.y = roundedY
+                        break
+                    }
+
                     if (potentialMove.map == this.map) {
                         if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
-                        await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch(async (error) => {
-                            console.log(`Error blinking while smartMoving: ${error}, attempting 1 more time`)
-                            await new Promise(resolve => setTimeout(resolve, 1000))
-                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y).catch((err) => {
-                                console.error("Failed blinking while smartMoving", err)
-                            })
-                        })
+                        try {
+                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
+                        } catch (e) {
+                            console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
+                            try {
+                                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
+                                await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
+                            } catch (e2) {
+                                console.error(`Failed blinking while smartMoving: ${e2}`)
+                                break
+                            }
+                        }
                         this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
                         i = j
                         blinked = true
@@ -3096,11 +3182,11 @@ export class Character extends Observer implements CharacterData {
                 } else if (currentMove.type == "transport") {
                     await this.transport(currentMove.map, currentMove.spawn)
                 }
-                numAttempts = 0;
+                numAttempts = 0
             } catch (e) {
                 console.error(e)
                 numAttempts++
-                if(numAttempts >= 3){
+                if (numAttempts >= 3) {
                     this.smartMoving = undefined
                     return Promise.reject("We are having some trouble smartMoving...")
                 }
@@ -3354,6 +3440,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [unequip].")
         if (this.slots[slot] === null) return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.slots[slot] === undefined) return Promise.reject(`Slot ${slot} does not exist.`)
+        if (this.esize == 0) return Promise.reject(`Our inventory is full. We cannot unequip ${slot}.`)
 
         const slotInfo = this.slots[slot]
 
@@ -3823,7 +3910,37 @@ export class Character extends Observer implements CharacterData {
     public isEquipped(itemName: ItemName): boolean {
         for (const slot in this.slots) {
             if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
-            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, we don't have it equipped
+            if (this.slots[slot as TradeSlotType].price) continue // This is a merchant transaction, it's not equipped, it's in our stand
+            if (this.slots[slot as SlotType].name == itemName) return true
+        }
+        return false
+    }
+
+    /**
+     * Returns a boolean corresponding to whether or not we have the given item listed for purchase.
+     * @param itemName The item to look for
+     * @returns
+     */
+    public isListedForPurchase(itemName: ItemName): boolean {
+        for (const slot in this.slots) {
+            if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
+            if (!this.slots[slot as TradeSlotType].price) continue // This is not a merchant transaction
+            if (!this.slots[slot as TradeSlotType].b) continue // We are selling this item, not buying it
+            if (this.slots[slot as SlotType].name == itemName) return true
+        }
+        return false
+    }
+
+    /**
+     * Returns a boolean corresponding to whether or not we have the given item listed for sale.
+     * @param itemName The item to look for
+     * @returns
+     */
+    public isListedForSale(itemName: ItemName): boolean {
+        for (const slot in this.slots) {
+            if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
+            if (!this.slots[slot as TradeSlotType].price) continue // This is not a merchant transaction
+            if (this.slots[slot as TradeSlotType].b) continue // We are buying this item, it's not for sale
             if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
@@ -3864,7 +3981,10 @@ export class Character extends Observer implements CharacterData {
         filters?: LocateItemFilters): number {
         const located = this.locateItems(iN, inv, filters)
 
+        if (located.length == 0) return undefined // No items found
+
         if (filters?.returnHighestLevel) {
+            if (filters.returnLowestLevel) throw new Error("Set either returnHighestLevel or returnLowestLevel, not both.")
             let highestLevel: number = Number.MIN_VALUE
             let highestLevelIndex
             for (let i = 0; i < located.length; i++) {
@@ -3876,6 +3996,20 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             return located[highestLevelIndex]
+        }
+
+        if (filters?.returnLowestLevel) {
+            let lowestLevel: number = Number.MAX_VALUE
+            let lowestLevelIndex
+            for (let i = 0; i < located.length; i++) {
+                const j = located[i]
+                const item = inv[j]
+                if (item.level < lowestLevel) {
+                    lowestLevel = item.level
+                    lowestLevelIndex = i
+                }
+            }
+            return located[lowestLevelIndex]
         }
 
         return located[0]
@@ -3924,6 +4058,12 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
+            }
+            if (filters?.special !== undefined) {
+                if (filters.special && !item.p)
+                    continue // The item isn't titled
+                if (!filters.special && item.p)
+                    continue // The item is titled
             }
             if (filters?.statType !== undefined) {
                 if (item.stat_type !== filters.statType)

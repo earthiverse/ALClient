@@ -352,7 +352,8 @@ beforeAll(async () => {
             },
             {
                 "name": "vitring",
-                "level": 0
+                "level": 0,
+                "v": "2022-01-29T00:31:16.690Z"
             },
             {
                 "name": "sshield",
@@ -828,6 +829,21 @@ test("Character.hasItem", () => {
 
 test("Character.hasPVPMarkedItem", () => {
     expect(priest.hasPvPMarkedItem()).toBeFalsy()
+    expect(warrior.hasPvPMarkedItem()).toBeTruthy()
+})
+
+test("Character.isEquipped", () => {
+    expect(priest.isEquipped("intamulet")).toBeTruthy()
+    expect(priest.isEquipped("dexamulet")).toBeFalsy()
+    expect(warrior.isEquipped("elixirluck")).toBeTruthy()
+})
+
+test("Character.isListedForPurchase", () => {
+    // TODO: Implement
+})
+
+test("Character.isListedForSale", () => {
+    // TODO: Implement
 })
 
 test("Character.isPVP", () => {
