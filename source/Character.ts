@@ -2651,11 +2651,29 @@ export class Character extends Observer implements CharacterData {
         return scared
     }
 
-    // TODO: Add promises
-    public async sell(itemPos: number, quantity = 1): Promise<void> {
+    public async sell(itemPos: number, quantity = 1): Promise<boolean> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sell].")
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return Promise.reject("We can't sell items in the bank.")
+        const sold = new Promise<boolean>((resolve, reject) => {
+            const soldCheck = (data: UIData) => {
+                if (data.type == "-$" && data.name == this.id && parseInt(data.num) == itemPos) {
+                    if(data?.item?.q && (quantity !== data?.item?.q)){
+                        reject(`Attempted to sell quantity ${quantity} for item ${data.item.name}, but actually sold ${data.item.q}`)
+                    }else{
+                        resolve(true)
+                    }
+                    this.socket.off("ui", soldCheck)
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("ui", soldCheck)
+                reject(`sell timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("ui", soldCheck)
+        })
+
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
+        return sold
     }
 
     public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
