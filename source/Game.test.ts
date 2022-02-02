@@ -2,7 +2,7 @@ import { Game } from "./Game"
 
 test("Game.login", async () => {
     try {
-        await Game.login("hyprkookeez@gmail.com", "thisisnotmyrealpasswordlol")
+        await Game.login("hyprkookeez@gmail.com", "thisIsNotMyRealPasswordLOL")
     } catch (e) {
         expect(e).toMatch("Wrong Password")
     }

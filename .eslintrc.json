@@ -88,6 +88,7 @@
             }
         ],
         "sort-vars": "error",
+        "space-before-blocks": "error",
         "space-infix-ops": "error",
         "space-in-parens": [
             "error",

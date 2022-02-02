@@ -2618,9 +2618,13 @@ export class Character extends Observer implements CharacterData {
         return respawned
     }
 
-    // TODO: Improve with item check
     public scare(): Promise<string[]> {
         if (!this.ready) return Promise.reject("We aren't ready yet [scare].")
+
+        const equipped = this.isEquipped("jacko")
+        const inInventory = this.hasItem("jacko")
+        if (!equipped && !inInventory) return Promise.reject("You need a jacko to use scare.")
+
         const scared = new Promise<string[]>((resolve, reject) => {
             let ids: string[]
             const idsCheck = (data: UIData) => {
@@ -2654,17 +2658,25 @@ export class Character extends Observer implements CharacterData {
     public async sell(itemPos: number, quantity = 1): Promise<boolean> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sell].")
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return Promise.reject("We can't sell items in the bank.")
+        if (!this.items[itemPos]) return Promise.reject(`We have no item in inventory slot ${itemPos}.`)
+
         const sold = new Promise<boolean>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
-                if (data.type == "-$" && data.name == this.id && parseInt(data.num) == itemPos) {
-                    if(data?.item?.q && (quantity !== data?.item?.q)){
-                        reject(`Attempted to sell quantity ${quantity} for item ${data.item.name}, but actually sold ${data.item.q}`)
-                    }else{
+                if (data?.type == "-$" && data.name == this.id && parseInt(data.num) == itemPos) {
+                    if (data.item?.q && (quantity !== data.item?.q)) {
+                        this.socket.off("ui", soldCheck)
+                        reject(`Attempted to sell ${quantity} ${data.item.name}(s), but actually sold ${data.item.q}.`)
+                    } else {
+                        this.socket.off("ui", soldCheck)
                         resolve(true)
                     }
-                    this.socket.off("ui", soldCheck)
                 }
             }
+
+            // TODO: Add check when you attempt to sell an item that is locked
+
+            // TODO: Add check when you attempt to sell a slot that was empty
+
             setTimeout(() => {
                 this.socket.off("ui", soldCheck)
                 reject(`sell timeout (${Constants.TIMEOUT}ms)`)
@@ -2679,7 +2691,18 @@ export class Character extends Observer implements CharacterData {
     public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q: number): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sellToMerchant].")
 
-        // TODO: Add a check that we have the item
+        // Check if the player buying the item is still valid
+        const player = this.players.get(id)
+        if (!player) return Promise.reject(`${id} is not nearby.`)
+
+        // Check if the slot is valid
+        const item = player.slots[slot]
+        if (!item) return Promise.reject(`${id} has no item in slot ${slot}.`)
+        if (!item.b) return Promise.reject(`${id}'s slot ${slot} is not a buy request.`)
+
+        // Check if we have the item they are buying
+        const ourItem = this.locateItem(item.name, this.items, { level: item.level, locked: false })
+        if (ourItem == undefined) return Promise.reject(`We do not have a ${item.name} to sell to ${id}.`)
 
         const sold = new Promise<void>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
@@ -2699,7 +2722,8 @@ export class Character extends Observer implements CharacterData {
                     }
                 }
             }
-            // TODO: Add a check that the merchant we're selling to isn't full
+
+            // TODO: Add a check that the merchant has enough money
 
             setTimeout(() => {
                 this.socket.off("game_response", failCheck)

@@ -9,7 +9,7 @@ export class Mage extends PingCompensatedCharacter {
     // NOTE: UNTESTED
     public alchemy(): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [alchemy].")
-        const alchemied = new Promise<void>((resolve, reject) => {
+        const performedAlchemy = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.off("eval", cooldownCheck)
@@ -26,7 +26,7 @@ export class Mage extends PingCompensatedCharacter {
         this.socket.emit("skill", {
             name: "alchemy"
         })
-        return alchemied
+        return performedAlchemy
     }
 
     public blink(x: number, y: number): Promise<void> {
