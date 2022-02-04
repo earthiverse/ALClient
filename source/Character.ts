@@ -2153,8 +2153,9 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [getMonsterHuntQuest].")
         if (this.s.monsterhunt && this.s.monsterhunt.c > 0) return Promise.reject(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
         if (this.ctype == "merchant") return Promise.reject("Merchants can't do Monster Hunts.")
+
+        // Check if we're close enough to get a monster hunt
         let close = false
-        // Look for a monsterhunter on the current map
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             if (npc.id !== "monsterhunter") continue // Not the monsterhunter
             if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
@@ -2658,30 +2659,42 @@ export class Character extends Observer implements CharacterData {
     public async sell(itemPos: number, quantity = 1): Promise<boolean> {
         if (!this.ready) return Promise.reject("We aren't ready yet [sell].")
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return Promise.reject("We can't sell items in the bank.")
-        if (!this.items[itemPos]) return Promise.reject(`We have no item in inventory slot ${itemPos}.`)
+        const item = this.items[itemPos]
+        if (!item) return Promise.reject(`We have no item in inventory slot ${itemPos} to sell.`)
+        if (item.l) return Promise.reject(`We can't sell ${item.name}, because it is locked.`)
 
         const sold = new Promise<boolean>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data?.type == "-$" && data.name == this.id && parseInt(data.num) == itemPos) {
                     if (data.item?.q && (quantity !== data.item?.q)) {
                         this.socket.off("ui", soldCheck)
+                        this.socket.off("game_response", failCheck)
                         reject(`Attempted to sell ${quantity} ${data.item.name}(s), but actually sold ${data.item.q}.`)
                     } else {
                         this.socket.off("ui", soldCheck)
+                        this.socket.off("game_response", failCheck)
                         resolve(true)
                     }
                 }
             }
 
-            // TODO: Add check when you attempt to sell an item that is locked
-
-            // TODO: Add check when you attempt to sell a slot that was empty
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "item_locked") {
+                        this.socket.off("ui", soldCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject(`We can't sell ${item.name}, because it is locked.`)
+                    }
+                }
+            }
 
             setTimeout(() => {
                 this.socket.off("ui", soldCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`sell timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", soldCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("sell", { num: itemPos, quantity: quantity })
@@ -3308,16 +3321,16 @@ export class Character extends Observer implements CharacterData {
 
                 if (isDeepStrictEqual(checkItemDataB, itemDataA)
                 && isDeepStrictEqual(checkItemDataA, itemDataB)) {
-                    this.socket.off("playerData", successCheck)
+                    this.socket.off("player", successCheck)
                     resolve()
                 }
             }
 
             setTimeout(() => {
-                this.socket.off("playerData", successCheck)
-                reject("swapItems timeout (1000ms)")
-            }, 1000)
-            this.socket.on("playerData", successCheck)
+                this.socket.off("player", successCheck)
+                reject(`swapItems timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("player", successCheck)
         })
 
         this.socket.emit("imove", { a: itemPosA, b: itemPosB })

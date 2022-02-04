@@ -1,7 +1,7 @@
 import { ServerInfoData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-04-23
+ * The following is from socket events received 2021-04-23 to 2022-02-04
  * It is used to confirm type correctness
  */
 
@@ -56,6 +56,14 @@ test("ServerInfoData type validation", async () => {
                 "max_hp": 66666
             },
             "halloween": true
+        },
+        // Lunar New Year Event
+        {
+            "dragold": {
+                "live": false,
+                "spawn": "2022-02-04T05:55:53.837Z"
+            },
+            "lunarnewyear": true
         }
     ]
     for (const serverInfo of serverInfos) expect(serverInfo).not.toBe(undefined)

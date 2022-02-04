@@ -567,6 +567,8 @@ export type GameResponseDataString =
     | "friend_rleft"
     /** When you send a friend request for a valid player name */
     | "friend_rsent"
+    /** When you try to sell a locked item */
+    | "item_locked"
     /** When a merchant tries to start a monster hunt */
     | "monsterhunt_merchant"
     | "monsterhunt_started"
