@@ -67,6 +67,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public balance?: string
     public cute = false
     public difficulty?: number
+    public drop_on_hit = false
     public escapist = false
     public explanation?: string
     public global = false
@@ -78,6 +79,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public operator = false
     public orientation?: number
     public passive = false
+    public peaceful = false
     public pet?: {
         aggression: [number, number]
         brightness: number
