@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 707 (2022-01-24)
+ * The following is from http://adventure.land/data.js, version 709 (2022-02-05)
  * It is used to confirm type correctness
  */
 
@@ -5900,6 +5900,17 @@ test("G.items type validation", async () => {
                 "skin": "redenvelopev3",
                 "type": "gem"
             },
+            "redenvelopev4": {
+                "a": true,
+                "e": 1,
+                "event": true,
+                "explanation": "Congratulations and prosperity",
+                "g": 24000,
+                "name": "Red Envelope",
+                "s": 9999,
+                "skin": "redenvelopev4",
+                "type": "gem"
+            },
             "rednose": {
                 "a": true,
                 "compound": {
@@ -7381,6 +7392,105 @@ test("G.items type validation", async () => {
                     "range": 4
                 },
                 "wtype": "stars"
+            },
+            "tigercape": {
+                "a": true,
+                "armor": 18,
+                "dex": 1,
+                "g": 2400000,
+                "grades": [
+                    0,
+                    4,
+                    10,
+                    12
+                ],
+                "name": "Cape of the Tiger",
+                "resistance": 12,
+                "set": "tiger",
+                "skin": "tigercape",
+                "speed": 1,
+                "stat": 4,
+                "str": 1,
+                "type": "cape",
+                "upgrade": {
+                    "armor": 3,
+                    "resistance": 2,
+                    "stat": 0.1
+                }
+            },
+            "tigerhelmet": {
+                "a": true,
+                "armor": 14,
+                "crit": 0.5,
+                "extra_stat": 1,
+                "g": 640000,
+                "grades": [
+                    0,
+                    6,
+                    10,
+                    12
+                ],
+                "name": "Helmet of the Tiger",
+                "protection": true,
+                "resistance": 16,
+                "scroll": true,
+                "set": "tiger",
+                "skin": "tigerhelmet",
+                "speed": 2,
+                "stat": 2,
+                "tier": 2,
+                "type": "helmet",
+                "upgrade": {
+                    "armor": 2.5,
+                    "resistance": 2.5,
+                    "stat": 1
+                }
+            },
+            "tigershield": {
+                "armor": 80,
+                "g": 240000,
+                "grades": [
+                    0,
+                    6,
+                    10,
+                    12
+                ],
+                "name": "Shield of the Tiger",
+                "resistance": 30,
+                "set": "tiger",
+                "skin": "tigershield",
+                "speed": 2,
+                "tier": 2.5,
+                "type": "shield",
+                "upgrade": {
+                    "armor": 13.5,
+                    "resistance": 8.5
+                }
+            },
+            "tigerstone": {
+                "armor": 30,
+                "compound": {
+                    "dex": 1,
+                    "int": 0.5,
+                    "str": 1,
+                    "vit": 4
+                },
+                "dex": 2,
+                "g": 600000,
+                "grades": [
+                    0,
+                    1,
+                    6,
+                    7
+                ],
+                "int": 1,
+                "name": "Tiger Stone",
+                "set": "tiger",
+                "skin": "tigerstone",
+                "speed": 1,
+                "str": 2,
+                "type": "orb",
+                "vit": 10
             },
             "tombkey": {
                 "explanation": "A key, imbued with magical energy.",
