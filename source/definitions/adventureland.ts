@@ -51,6 +51,10 @@ export type StatusInfo = {
         id: string;
         p: number;
     };
+    /** Set on a ghost if a priest heals it */
+    healed?: {
+        ms: number
+    }
     mluck?: {
         /** The ID of the merchant who cast mluck */
         f: string;

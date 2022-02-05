@@ -3151,6 +3151,7 @@ export class Character extends Observer implements CharacterData {
                     try {
                         await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                     } catch (e) {
+                        if (!this.canUse("blink")) break // We can't use it, don't bother trying again
                         console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
                         try {
                             await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
