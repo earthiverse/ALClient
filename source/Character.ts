@@ -3134,8 +3134,11 @@ export class Character extends Observer implements CharacterData {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
+                    if (potentialMove.map !== this.map) continue
+                    if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
 
                     // Get closest blinkable spot near the potential move
+                    let roundedMove: IPosition
                     for (const [dX, dY] of [[0, 0], [-10, 0], [10, 0], [0, -10], [0, 10], [-10, -10], [-10, 10], [10, -10], [10, 10]]) {
                         // Check if we can blink there
                         const roundedX = Math.round((potentialMove.x + dX) / 10) * 10
@@ -3143,30 +3146,27 @@ export class Character extends Observer implements CharacterData {
                         if (!Pathfinder.canStand({ map: potentialMove.map, x: roundedX, y: roundedY })) continue
 
                         // We found a spot we can blink to
-                        potentialMove.x = roundedX
-                        potentialMove.y = roundedY
+                        roundedMove = { map: potentialMove.map, x: roundedX, y: roundedY }
                         break
                     }
+                    if (!roundedMove) continue // We can't blink to a location near here...
 
-                    if (potentialMove.map == this.map) {
-                        if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
+                    try {
+                        await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
+                    } catch (e) {
+                        console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
                         try {
-                            await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
-                        } catch (e) {
-                            console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
-                            try {
-                                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
-                                await (this as unknown as Mage).blink(potentialMove.x, potentialMove.y)
-                            } catch (e2) {
-                                console.error(`Failed blinking while smartMoving: ${e2}`)
-                                break
-                            }
+                            await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
+                            await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
+                        } catch (e2) {
+                            console.error(`Failed blinking while smartMoving: ${e2}`)
+                            break
                         }
-                        this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
-                        i = j
-                        blinked = true
-                        break
                     }
+                    this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
+                    i = j - 1
+                    blinked = true
+                    break
                 }
                 if (blinked) continue
             }
