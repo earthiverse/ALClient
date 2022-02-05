@@ -86,11 +86,9 @@ export class Player implements PlayerData {
         if (defender["1hp"] || skill == "taunt") return [1, 1]
 
         let baseDamage: number = this.attack
-        if (!this.G.skills[skill]) {
-            console.log(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
-        } else {
-            if (this.G.skills[skill].damage) baseDamage = this.G.skills[skill].damage
-        }
+        if (!this.G.skills[skill]) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
+        if (this.G.skills[skill]?.damage) baseDamage = this.G.skills[skill].damage
+
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
@@ -98,15 +96,15 @@ export class Player implements PlayerData {
 
         if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
-        let additonalApiercing = 0
-        if (this.G.skills[skill].apiercing) additonalApiercing = this.G.skills[skill].apiercing
+        let additionalApiercing = 0
+        if (this.G.skills[skill]?.apiercing) additionalApiercing = this.G.skills[skill].apiercing
         // NOTE: currently no skills with rpiercing
-        // let additonalRpiercing = 0
-        // if (this.G.skills[skill].rpiercing) additonalRpiercing = this.G.skills[skill].rpiercing
-        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additonalApiercing)
+        // let additionalRpiercing = 0
+        // if (this.G.skills[skill].rpiercing) additionalRpiercing = this.G.skills[skill].rpiercing
+        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
         else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
-        if (this.G.skills[skill].damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
+        if (this.G.skills[skill]?.damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
 
         let lowerLimit = baseDamage * 0.9
         let upperLimit = baseDamage * 1.1

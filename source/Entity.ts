@@ -169,7 +169,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      *
      * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
      * @param {Map<string, Player>} players (e.g.: bot.players)
-     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
+     * @param {Map<string, Player>} entities (e.g.: bot.entities)
      * @return {*}  {boolean}
      * @memberof Entity
      */
@@ -290,7 +290,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
      *
      * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
      * @param {Map<string, Player>} players (e.g.: bot.players)
-     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
+     * @param {Map<string, Player>} entities (e.g.: bot.entities)
      * @return {*}  {boolean}
      * @memberof Entity
      */
