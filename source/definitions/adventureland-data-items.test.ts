@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 709 (2022-02-05)
+ * The following is from http://adventure.land/data.js, version 710 (2022-02-07)
  * It is used to confirm type correctness
  */
 
@@ -7433,6 +7433,12 @@ test("G.items type validation", async () => {
                 "name": "Helmet of the Tiger",
                 "protection": true,
                 "resistance": 16,
+                "rogue": {
+                    "crit": 2,
+                    "upgrade": {
+                        "crit": 0.25
+                    }
+                },
                 "scroll": true,
                 "set": "tiger",
                 "skin": "tigerhelmet",

@@ -50,6 +50,11 @@ test("DisappearData type validation", async () => {
             "to": "main",
             "s": [-50, 1890],
             "effect": "magiport"
+        },
+        {
+            id: "ScoutWarr",
+            reason: "transport",
+            to: "jail"
         }
     ]
     for (const report of reports) expect(report).not.toBe(undefined)

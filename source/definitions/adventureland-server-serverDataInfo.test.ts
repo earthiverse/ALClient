@@ -1,7 +1,7 @@
 import { ServerInfoData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-04-23 to 2022-02-04
+ * The following is from socket events received 2021-04-23 to 2022-02-07
  * It is used to confirm type correctness
  */
 
@@ -64,6 +64,28 @@ test("ServerInfoData type validation", async () => {
                 "spawn": "2022-02-04T05:55:53.837Z"
             },
             "lunarnewyear": true
+        },
+        // Dual events can happen, too. (2022-02-07)
+        {
+            "dragold": {
+                "live": false,
+                "spawn": "2022-02-07T04:09:48.006Z"
+            },
+            "tiger": {
+                "live": true,
+                "map": "cave",
+                "hp": 80141,
+                "max_hp": 96000
+            },
+            "pinkgoo": {
+                "live": true,
+                "map": "main",
+                "hp": 2,
+                "max_hp": 40,
+                "target": "facilitating"
+            },
+            "lunarnewyear": true,
+            "valentines": true
         }
     ]
     for (const serverInfo of serverInfos) expect(serverInfo).not.toBe(undefined)

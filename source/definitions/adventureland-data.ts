@@ -722,6 +722,15 @@ export type GItem = {
     xcx?: string[]
     /** TODO: ??? What is this? */
     xscroll?: boolean
+} & {
+    [T in CharacterType]?:
+    {
+        [T in Exclude<Attribute, "stat">]?: number
+    } & {
+        upgrade?: {
+            [T in Exclude<Attribute, "stat">]?: number
+        }
+    }
 }
 
 export type GDropItem =
