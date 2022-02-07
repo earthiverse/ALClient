@@ -2,6 +2,7 @@ import { Attribute, MonsterName } from "./adventureland-data.js"
 
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {
+    canDamage?: boolean
     canWalkTo?: boolean
     couldGiveCredit?: boolean
     withinRange?: number
@@ -19,6 +20,8 @@ export type GetEntitiesFilters = {
 
 /** Filters for returning a single entity */
 export type GetEntityFilters = GetEntitiesFilters & {
+    returnHighestHP?: boolean
+    returnLowestHP?: boolean
     returnNearest?: boolean
 }
 

@@ -2078,6 +2078,17 @@ export class Character extends Observer implements CharacterData {
             if (filters.type !== undefined && filters.type !== entity.type) continue
             if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
             if (filters.withinRange !== undefined && Tools.distance(this, entity) > filters.withinRange) continue
+            if (filters.canDamage !== undefined) {
+                // We can't damage if we avoidance is >= 100
+                if (filters.canDamage && entity.avoidance >= 100) continue
+                if (!filters.canDamage && entity.avoidance < 100) continue
+                // We can't damage if we do physical damage and evasion is >= 100
+                if (filters.canDamage && this.damage_type == "physical" && entity.evasion >= 100) continue
+                if (!filters.canDamage && this.damage_type == "physical" && entity.evasion < 100) continue
+                // We can't damage if we do magical damage and reflection is >= 100
+                if (filters.canDamage && this.damage_type == "magical" && entity.reflection >= 100) continue
+                if (!filters.canDamage && this.damage_type == "magical" && entity.reflection < 100) continue
+            }
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, entity)
                 if (filters.canWalkTo && !canWalkTo) continue
@@ -2106,7 +2117,8 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns a nearby entity, with optional filters
+     * Returns a nearby entity, with optional filters.
+     * Note the filters with the returnX pattern, as they are specific to `getEntity()`.
      *
      * @param {GetEntityFilters} [filters={}]
      * @return {*}  {Entity}
@@ -2114,6 +2126,39 @@ export class Character extends Observer implements CharacterData {
      */
     public getEntity(filters: GetEntityFilters = {}): Entity {
         const entities = this.getEntities(filters)
+
+        // Warn if using more than one option
+        let numReturnOptions = 0
+        if (filters.returnHighestHP) numReturnOptions++
+        if (filters.returnLowestHP) numReturnOptions++
+        if (filters.returnNearest) numReturnOptions++
+        if (numReturnOptions > 1) console.warn("You supplied getEntity with more than one returnX option. This function may not return the entity you want.")
+
+        if (entities.length <= 1 || numReturnOptions == 0) return entities[0]
+
+        if (filters.returnHighestHP) {
+            let highest: Entity
+            let highestHP = Number.MIN_VALUE
+            for (const entity of entities) {
+                if (entity.hp > highestHP) {
+                    highest = entity
+                    highestHP = entity.hp
+                }
+            }
+            return highest
+        }
+
+        if (filters.returnLowestHP) {
+            let lowest: Entity
+            let lowestHP = Number.MAX_VALUE
+            for (const entity of entities) {
+                if (entity.hp < lowestHP) {
+                    lowest = entity
+                    lowestHP = entity.hp
+                }
+            }
+            return lowest
+        }
 
         if (filters.returnNearest) {
             let closest: Entity
@@ -2127,8 +2172,6 @@ export class Character extends Observer implements CharacterData {
             }
             return closest
         }
-
-        if (entities.length > 0) return entities[0]
     }
 
     /**
