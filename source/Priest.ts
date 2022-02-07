@@ -1,4 +1,4 @@
-import { ActionData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
+import { ActionData, DeathData, EvalData, GameResponseData, NotThereData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
@@ -22,7 +22,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "absorb", id: target })
+        this.socket.emit("skill", { id: target, name: "absorb" })
         return absorbed
     }
 
@@ -43,7 +43,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "curse", id: target })
+        this.socket.emit("skill", { id: target, name: "curse" })
         return curseStarted
     }
 
@@ -76,6 +76,7 @@ export class Priest extends PingCompensatedCharacter {
                 if (data.id == id) {
                     this.socket.off("action", attackCheck)
                     this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
                     this.socket.off("death", deathCheck)
                     reject(`Entity ${id} not found`)
                 }
@@ -85,30 +86,44 @@ export class Priest extends PingCompensatedCharacter {
                     if (data.response == "disabled") {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed (disabled).`)
                     } else if (data.response == "attack_failed" && data.id == id) {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed.`)
                     } else if (data.response == "too_far" && data.id == id) {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`${id} is too far away to heal (dist: ${data.dist}).`)
                     } else if (data.response == "cooldown" && data.id == id) {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
+                        this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`Heal on ${id} failed due to cooldown (ms: ${data.ms}).`)
                     }
+                }
+            }
+            const failCheck2 = (data: NotThereData) => {
+                if (data.place == "attack") {
+                    this.socket.off("action", attackCheck)
+                    this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
+                    this.socket.off("death", deathCheck)
+                    reject(`${id} could not be found to attack.`)
                 }
             }
             const attackCheck = (data: ActionData) => {
                 if (data.attacker == this.id && data.target == id && data.type == "heal") {
                     this.socket.off("action", attackCheck)
                     this.socket.off("game_response", failCheck)
+                    this.socket.off("notthere", failCheck2)
                     this.socket.off("death", deathCheck)
                     resolve(data.pid)
                 }
@@ -116,11 +131,13 @@ export class Priest extends PingCompensatedCharacter {
             setTimeout(() => {
                 this.socket.off("action", attackCheck)
                 this.socket.off("game_response", failCheck)
+                this.socket.off("notthere", failCheck2)
                 this.socket.off("death", deathCheck)
                 reject(`heal timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("game_response", failCheck)
+            this.socket.on("notthere", failCheck2)
             this.socket.on("death", deathCheck)
         })
 
@@ -149,9 +166,10 @@ export class Priest extends PingCompensatedCharacter {
         return healStarted
     }
 
-    public revive(target: string, essenceoflife = this.locateItem("essenceoflife")): Promise<void> {
+    // NOTE: Untested. We might need to increase the timeout?
+    public revive(target: string, essenceOfLife = this.locateItem("essenceoflife")): Promise<void> {
         if (!this.ready) return Promise.reject("We aren't ready yet [revive].")
-        if (essenceoflife === undefined) return Promise.reject("We don't have any essenceoflife in our inventory.")
+        if (essenceOfLife === undefined) return Promise.reject("We don't have any essenceoflife in our inventory.")
 
         const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -168,7 +186,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "revive", id: target, num: essenceoflife })
+        this.socket.emit("skill", { id: target, name: "revive", num: essenceOfLife })
         return revived
     }
 }
