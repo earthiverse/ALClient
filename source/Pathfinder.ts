@@ -198,7 +198,7 @@ export class Pathfinder {
      * Generates a grid of walkable pixels that we use for pathfinding.
      * @param map The map to generate the grid for
      */
-    public static getGrid(map: MapName): Grid {
+    public static getGrid(map: MapName, base = Constants.BASE): Grid {
         // Return the grid we've prepared if we have it.
         if (this.grids[map]) return this.grids[map]
         if (!this.G) throw new Error("Prepare pathfinding before querying getGrid()!")
@@ -213,8 +213,8 @@ export class Pathfinder {
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
-            for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= yLine[0] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
-                for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - Constants.BASE.h); x <= yLine[2] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
+            for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - base.vn); y <= yLine[0] - this.G.geometry[map].min_y + base.v && y < height; y++) {
+                for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - base.h); x <= yLine[2] - this.G.geometry[map].min_x + base.h && x < width; x++) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
@@ -222,8 +222,8 @@ export class Pathfinder {
 
         // Make the x_lines unwalkable
         for (const xLine of this.G.geometry[map].x_lines) {
-            for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - Constants.BASE.h); x <= xLine[0] - this.G.geometry[map].min_x + Constants.BASE.h && x < width; x++) {
-                for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - Constants.BASE.vn); y <= xLine[2] - this.G.geometry[map].min_y + Constants.BASE.v && y < height; y++) {
+            for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - base.h); x <= xLine[0] - this.G.geometry[map].min_x + base.h && x < width; x++) {
+                for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - base.vn); y <= xLine[2] - this.G.geometry[map].min_y + base.v && y < height; y++) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
@@ -707,6 +707,12 @@ export class Pathfinder {
     }
 
     public static async prepare(g: GData, options: {
+        base?: {
+            h: number,
+            v: number,
+            vn: number
+        },
+        cheat?: boolean,
         include_bank_b?: boolean,
         include_bank_u?: boolean,
         include_test?: boolean
@@ -740,9 +746,19 @@ export class Pathfinder {
         // Prepare each map
         for (const map of maps) {
             if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
-            this.getGrid(map)
+            this.getGrid(map, options.base ?? Constants.BASE)
         }
-        this.getGrid("jail") // Jail is disconnected, prepare it
+        this.getGrid("jail", options.base ?? Constants.BASE) // Jail is disconnected, prepare it
+
+        if (options.cheat) {
+            if (maps.includes("winterland")) {
+                // Add a path to the icegolem's place
+                const from = this.findClosestNode("winterland", 721, 277)
+                const to = this.findClosestNode("winterland", 737, 352)
+                if (from && to && from !== to) this.addLinkToGraph(from, to)
+                else console.warn("The winterland map has changed, cheat to walk to icegolem is not enabled.")
+            }
+        }
 
         console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
         console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
