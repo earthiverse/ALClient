@@ -237,27 +237,26 @@ export class Pathfinder {
             const stack = [[y, x]]
             while (stack.length) {
                 [y, x] = stack.pop()
-                let x1 = x
-                while (x1 >= 0 && grid[y * width + x1] == UNKNOWN) x1--
-                x1++
+                while (x >= 0 && grid[y * width + x] == UNKNOWN) x--
+                x++
                 let spanAbove = 0
                 let spanBelow = 0
-                while (x1 < width && grid[y * width + x1] == UNKNOWN) {
-                    grid[y * width + x1] = WALKABLE
-                    if (!spanAbove && y > 0 && grid[(y - 1) * width + x1] == UNKNOWN) {
-                        stack.push([y - 1, x1])
+                while (x < width && grid[y * width + x] == UNKNOWN) {
+                    grid[y * width + x] = WALKABLE
+                    if (!spanAbove && y > 0 && grid[(y - 1) * width + x] == UNKNOWN) {
+                        stack.push([y - 1, x])
                         spanAbove = 1
-                    } else if (spanAbove && y > 0 && grid[(y - 1) * width + x1] !== UNKNOWN) {
+                    } else if (spanAbove && y > 0 && grid[(y - 1) * width + x] !== UNKNOWN) {
                         spanAbove = 0
                     }
 
-                    if (!spanBelow && y < height - 1 && grid[(y + 1) * width + x1] == UNKNOWN) {
-                        stack.push([y + 1, x1])
+                    if (!spanBelow && y < height - 1 && grid[(y + 1) * width + x] == UNKNOWN) {
+                        stack.push([y + 1, x])
                         spanBelow = 1
-                    } else if (spanBelow && y < height - 1 && grid[(y + 1) * width + x1] !== UNKNOWN) {
+                    } else if (spanBelow && y < height - 1 && grid[(y + 1) * width + x] !== UNKNOWN) {
                         spanBelow = 0
                     }
-                    x1++
+                    x++
                 }
             }
         }

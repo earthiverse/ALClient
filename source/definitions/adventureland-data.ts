@@ -546,6 +546,8 @@ export type CXData = {
 export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
 
 export type GGeometry = {
+    /** TODO: Not implemented yet */
+    animations?: unknown[]
     /** (GUI Related) This is the default tile index to use to tile the map. This is below the player layer.
      *
      * i.e.: `G.geometry[map].tiles[G.geometry[map].default]` */
@@ -749,16 +751,6 @@ export type GDropItem =
     | [number, "open", DropName]
 
 export type GMap = {
-    data?: {
-        /** The furthest west you can go on the map */
-        min_x: number
-        /** The furthest east you can go on the map */
-        max_x: number
-        /** The furthest north you can go on the map */
-        min_y: number
-        /** The furthest south you can go on the map */
-        max_y: number
-    }
     /** If true, this map is PVP. */
     pvp?: boolean
     /** If true, you cannot be attacked on this map. */

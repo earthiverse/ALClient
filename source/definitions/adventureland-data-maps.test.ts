@@ -2,322 +2,1097 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
+ * The following is from http://adventure.land/data.js, version 710 (2022-02-12)
  * It is used to confirm type correctness
  */
 
 test("G.maps type validation", async () => {
     const G_maps: Pick<GData, "maps"> = {
         "maps": {
-            "winterland": {
-                "freeze_multiplier": 1.5,
-                "npcs": [
-                    {
-                        "position": [
-                            262,
-                            -48.5
-                        ],
-                        "id": "leathermerchant"
-                    },
-                    {
-                        "position": [
-                            -73,
-                            -393
-                        ],
-                        "id": "transporter"
-                    },
-                    {
-                        "position": [
-                            -15,
-                            5
-                        ],
-                        "id": "citizen7"
-                    },
-                    {
-                        "position": [
-                            -15,
-                            5
-                        ],
-                        "id": "citizen8"
-                    },
-                    {
-                        "position": [
-                            -15,
-                            5
-                        ],
-                        "id": "citizen9"
-                    },
-                    {
-                        "position": [
-                            -15,
-                            5
-                        ],
-                        "id": "citizen10"
-                    }
+            "abtesting": {
+                "doors": [],
+                "instance": true,
+                "key": "jayson_vs_arena",
+                "monsters": [],
+                "name": "A/B Testing",
+                "npcs": [],
+                "on_death": [
+                    "abtesting",
+                    1
                 ],
-                "quirks": [
-                    [
-                        -247,
-                        -73,
-                        20,
-                        16,
-                        "sign",
-                        "The Wanderers' Inn"
-                    ],
-                    [
-                        202,
-                        -56,
-                        20,
-                        16,
-                        "sign",
-                        "Leather Shop. If I'm not outside, check inside!"
-                    ],
-                    [
-                        65,
-                        -1601,
-                        20,
-                        16,
-                        "sign",
-                        "Dangers Ahead. Beware!"
-                    ],
-                    [
-                        465,
-                        -2296,
-                        20,
-                        16,
-                        "note",
-                        "Stompy and his companions defeated me many times. However, I've discovered that If I stay just around the corner they can't even reach me! HAHA!"
-                    ],
-                    [
-                        -230,
-                        95,
-                        20,
-                        16,
-                        "log",
-                        "Old Man's House"
-                    ],
-                    [
-                        168,
-                        -83,
-                        32,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        138,
-                        223,
-                        32,
-                        40,
-                        "log",
-                        "Locked. This is probably where the guards stay"
-                    ],
-                    [
-                        413,
-                        -3080,
-                        24,
-                        30,
-                        "log",
-                        "Can't reach. This might be Stompy's lair"
-                    ],
-                    [
-                        600.5,
-                        -1273,
-                        0,
-                        0,
-                        "info",
-                        "darkmage"
-                    ]
-                ],
-                "name": "Winterland",
-                "key": "jayson_WinterLandV2",
-                "doors": [
-                    [
-                        -280,
-                        -132,
-                        32,
-                        40,
-                        "winter_inn",
-                        0,
-                        2
-                    ],
-                    [
-                        602,
-                        -1289,
-                        24,
-                        30,
-                        "winter_cave",
-                        0,
-                        3
-                    ],
-                    [
-                        -864,
-                        -1570,
-                        24,
-                        24,
-                        "level2n",
-                        2,
-                        4
-                    ],
-                    [
-                        1064.28,
-                        -2017.79,
-                        31.66,
-                        47.45,
-                        "winter_instance",
-                        0,
-                        5,
-                        "key",
-                        "frozenkey"
-                    ]
-                ],
+                "pvp": true,
                 "spawns": [
                     [
                         0,
                         0
                     ],
                     [
-                        -8,
-                        -337,
-                        3
+                        0,
+                        -232
                     ],
                     [
-                        -280,
-                        -123
+                        -832,
+                        0,
+                        2,
+                        160
                     ],
                     [
-                        600,
-                        -1275
-                    ],
-                    [
-                        -864,
-                        -1614,
-                        3
-                    ],
-                    [
-                        1063,
-                        -2007
-                    ],
-                    [
-                        864.5,
-                        429.5
-                    ],
-                    [
-                        1018.5,
-                        401.5
+                        832,
+                        0,
+                        1,
+                        160
                     ]
-                ],
-                "drop_norm": 3000,
-                "burn_multiplier": 0.6,
-                "monsters": [
-                    {
-                        "count": 1,
-                        "boundary": [
-                            30,
-                            -2954,
-                            836,
-                            -2536
-                        ],
-                        "type": "stompy"
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            30,
-                            -2954,
-                            836,
-                            -2536
-                        ],
-                        "type": "wolf"
-                    },
-                    {
-                        "count": 10,
-                        "boundary": [
-                            682,
-                            -967,
-                            1482,
-                            -779
-                        ],
-                        "type": "arcticbee",
-                        "grow": true
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            -367,
-                            -2234,
-                            29,
-                            -1819
-                        ],
-                        "type": "wolfie"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            236,
-                            -2232,
-                            460,
-                            -1847
-                        ],
-                        "type": "wolfie"
-                    },
-                    {
-                        "count": 8,
-                        "boundary": [
-                            -173,
-                            -1488,
-                            212,
-                            -730
-                        ],
-                        "type": "boar"
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            550,
-                            -240,
-                            1097,
-                            149
-                        ],
-                        "type": "iceroamer"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            1335,
-                            -71,
-                            1689,
-                            278
-                        ],
-                        "type": "iceroamer"
-                    },
-                    {
-                        "count": 0,
-                        "boundary": [
-                            782.25,
-                            395.96,
-                            888.71,
-                            450.28
-                        ],
-                        "type": "icegolem",
-                        "roam": true
-                    }
                 ]
             },
-            "d_b1": {
+            "arena": {
+                "doors": [
+                    [
+                        152.99,
+                        85.42,
+                        60.9,
+                        40.55,
+                        "main",
+                        6,
+                        0
+                    ]
+                ],
+                "drop_norm": 2000,
+                "key": "arena3",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -376,
+                            -888,
+                            1144,
+                            48
+                        ],
+                        "count": 32,
+                        "polygon": [
+                            [
+                                -376,
+                                48
+                            ],
+                            [
+                                1144,
+                                48
+                            ],
+                            [
+                                1144,
+                                -888
+                            ],
+                            [
+                                248,
+                                -888
+                            ],
+                            [
+                                248,
+                                -776
+                            ],
+                            [
+                                520,
+                                -776
+                            ],
+                            [
+                                520,
+                                -560
+                            ],
+                            [
+                                248,
+                                -560
+                            ],
+                            [
+                                248,
+                                -376
+                            ],
+                            [
+                                288,
+                                -376
+                            ],
+                            [
+                                288,
+                                -336
+                            ],
+                            [
+                                328,
+                                -336
+                            ],
+                            [
+                                328,
+                                -304
+                            ],
+                            [
+                                480,
+                                -304
+                            ],
+                            [
+                                480,
+                                -344
+                            ],
+                            [
+                                512,
+                                -344
+                            ],
+                            [
+                                512,
+                                -368
+                            ],
+                            [
+                                720,
+                                -368
+                            ],
+                            [
+                                720,
+                                -192
+                            ],
+                            [
+                                688,
+                                -192
+                            ],
+                            [
+                                688,
+                                -152
+                            ],
+                            [
+                                608,
+                                -152
+                            ],
+                            [
+                                608,
+                                -120
+                            ],
+                            [
+                                272,
+                                -120
+                            ],
+                            [
+                                272,
+                                -152
+                            ],
+                            [
+                                104,
+                                -152
+                            ],
+                            [
+                                104,
+                                -200
+                            ],
+                            [
+                                -128,
+                                -200
+                            ],
+                            [
+                                -128,
+                                -400
+                            ],
+                            [
+                                240,
+                                -400
+                            ],
+                            [
+                                240,
+                                -888
+                            ],
+                            [
+                                -376,
+                                -888
+                            ]
+                        ],
+                        "type": "cgoo"
+                    },
+                    {
+                        "boundary": [
+                            259,
+                            -764,
+                            500,
+                            -579
+                        ],
+                        "count": 1,
+                        "type": "skeletor"
+                    }
+                ],
+                "name": "Arena",
+                "npcs": [],
+                "on_death": [
+                    "main",
+                    7
+                ],
+                "pvp": true,
+                "safe_pvp": true,
+                "spawns": [
+                    [
+                        151.6,
+                        40.82
+                    ]
+                ]
+            },
+            "bank": {
+                "doors": [
+                    [
+                        0,
+                        -8,
+                        40,
+                        20,
+                        "main",
+                        3,
+                        0
+                    ],
+                    [
+                        0.13,
+                        -444.39,
+                        34.3,
+                        52.27,
+                        "bank_b",
+                        0,
+                        1,
+                        "ulocked"
+                    ]
+                ],
+                "key": "jayson_bank0",
+                "monsters": [],
+                "mount": true,
+                "name": "The Bank",
+                "npcs": [
+                    {
+                        "id": "goldnpc",
+                        "position": [
+                            1,
+                            -416
+                        ]
+                    },
+                    {
+                        "id": "items4",
+                        "position": [
+                            -64,
+                            -415
+                        ]
+                    },
+                    {
+                        "id": "items5",
+                        "position": [
+                            64,
+                            -415
+                        ]
+                    },
+                    {
+                        "id": "items6",
+                        "position": [
+                            -128,
+                            -415
+                        ]
+                    },
+                    {
+                        "id": "items7",
+                        "position": [
+                            128,
+                            -415
+                        ]
+                    },
+                    {
+                        "id": "items0",
+                        "position": [
+                            -64,
+                            -191
+                        ]
+                    },
+                    {
+                        "id": "items1",
+                        "position": [
+                            64,
+                            -191
+                        ]
+                    },
+                    {
+                        "id": "items2",
+                        "position": [
+                            -128,
+                            -191
+                        ]
+                    },
+                    {
+                        "id": "items3",
+                        "position": [
+                            128,
+                            -191
+                        ]
+                    },
+                    {
+                        "id": "rewards",
+                        "position": [
+                            155,
+                            -105,
+                            1
+                        ]
+                    }
+                ],
+                "on_exit": [
+                    "main",
+                    3
+                ],
+                "quirks": [
+                    [
+                        -40.34,
+                        -448.85,
+                        26.77,
+                        42.69,
+                        "log",
+                        "It's time."
+                    ]
+                ],
+                "safe": true,
+                "spawns": [
+                    [
+                        0,
+                        -37,
+                        3
+                    ],
+                    [
+                        0.75,
+                        -435.79
+                    ]
+                ]
+            },
+            "bank_b": {
+                "doors": [
+                    [
+                        -264.04,
+                        -421.14,
+                        66.84,
+                        65.15,
+                        "bank",
+                        1,
+                        0
+                    ],
+                    [
+                        -104.49,
+                        -179.73,
+                        32.05,
+                        45.25,
+                        "bank_u",
+                        1,
+                        1,
+                        "ulocked"
+                    ]
+                ],
+                "key": "jayson_theBank1",
+                "monsters": [],
+                "mount": true,
+                "name": "The Bank [Basement]",
+                "npcs": [
+                    {
+                        "id": "items8",
+                        "position": [
+                            -592.5,
+                            -300
+                        ]
+                    },
+                    {
+                        "id": "items9",
+                        "position": [
+                            -528,
+                            -318
+                        ]
+                    },
+                    {
+                        "id": "items10",
+                        "position": [
+                            -464,
+                            -333
+                        ]
+                    },
+                    {
+                        "id": "items11",
+                        "position": [
+                            -400.5,
+                            -350
+                        ]
+                    },
+                    {
+                        "id": "items12",
+                        "position": [
+                            -128.5,
+                            -429.5
+                        ]
+                    },
+                    {
+                        "id": "items13",
+                        "position": [
+                            -64.5,
+                            -413.5
+                        ]
+                    },
+                    {
+                        "id": "items14",
+                        "position": [
+                            -0.5,
+                            -398
+                        ]
+                    },
+                    {
+                        "id": "items15",
+                        "position": [
+                            63,
+                            -381.5
+                        ]
+                    },
+                    {
+                        "id": "items16",
+                        "position": [
+                            -480.5,
+                            50
+                        ]
+                    },
+                    {
+                        "id": "items17",
+                        "position": [
+                            -416.5,
+                            65.5
+                        ]
+                    },
+                    {
+                        "id": "items18",
+                        "position": [
+                            -352.5,
+                            81.5
+                        ]
+                    },
+                    {
+                        "id": "items19",
+                        "position": [
+                            -288.5,
+                            97.5
+                        ]
+                    },
+                    {
+                        "id": "items20",
+                        "position": [
+                            -16.5,
+                            -14
+                        ]
+                    },
+                    {
+                        "id": "items21",
+                        "position": [
+                            47.5,
+                            -14
+                        ]
+                    },
+                    {
+                        "id": "items22",
+                        "position": [
+                            111,
+                            -14
+                        ]
+                    },
+                    {
+                        "id": "items23",
+                        "position": [
+                            175,
+                            -14
+                        ]
+                    }
+                ],
+                "on_exit": [
+                    "main",
+                    3
+                ],
+                "quirks": [],
+                "safe": true,
+                "spawns": [
+                    [
+                        -264.38,
+                        -411.81
+                    ],
+                    [
+                        -103.51,
+                        -170.63
+                    ]
+                ]
+            },
+            "bank_u": {
+                "doors": [
+                    [
+                        -479.82,
+                        -36.54,
+                        31,
+                        49.64,
+                        "level2",
+                        6,
+                        0,
+                        "ulocked",
+                        "complicated"
+                    ],
+                    [
+                        0.22,
+                        -50.06,
+                        64.89,
+                        63.09,
+                        "bank_b",
+                        1,
+                        1,
+                        "ulocked"
+                    ]
+                ],
+                "key": "jayson_theBank2",
+                "monsters": [],
+                "mount": true,
+                "name": "The Bank [Underground]",
+                "npcs": [],
+                "on_exit": [
+                    "level2",
+                    6
+                ],
+                "quirks": [],
+                "safe": true,
+                "spawns": [
+                    [
+                        -479.47,
+                        -25.02
+                    ],
+                    [
+                        -0.4,
+                        -41.24
+                    ]
+                ]
+            },
+            "batcave": {
+                "doors": [
+                    [
+                        -195,
+                        213,
+                        24,
+                        20,
+                        "main",
+                        1
+                    ]
+                ],
+                "drop_norm": 4500,
+                "ignore": true,
+                "key": "batcave",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -210,
+                            -170,
+                            342,
+                            185
+                        ],
+                        "count": 12,
+                        "type": "bat"
+                    },
+                    {
+                        "boundary": [
+                            -210,
+                            -170,
+                            342,
+                            185
+                        ],
+                        "count": 1,
+                        "type": "mvampire"
+                    }
+                ],
+                "name": "Cave of Beginnings",
+                "npcs": [],
+                "spawns": [
+                    [
+                        -200,
+                        190,
+                        3
+                    ]
+                ]
+            },
+            "cave": {
+                "doors": [
+                    [
+                        0,
+                        33,
+                        36,
+                        20,
+                        "main",
+                        4,
+                        0
+                    ],
+                    [
+                        1880,
+                        -1086,
+                        32,
+                        32,
+                        "level1",
+                        3,
+                        1
+                    ],
+                    [
+                        -192.22,
+                        -1308.2,
+                        50.35,
+                        56.23,
+                        "crypt",
+                        0,
+                        2,
+                        "key",
+                        "cryptkey"
+                    ]
+                ],
+                "drop_norm": 4500,
+                "key": "jayson_cave02",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -396,
+                            -594,
+                            8,
+                            -328
+                        ],
+                        "count": 6,
+                        "type": "bat"
+                    },
+                    {
+                        "boundary": [
+                            182,
+                            -1282,
+                            465,
+                            -932
+                        ],
+                        "count": 7,
+                        "type": "bat"
+                    },
+                    {
+                        "boundary": [
+                            1018,
+                            -940,
+                            1385,
+                            -624
+                        ],
+                        "count": 8,
+                        "type": "bat"
+                    },
+                    {
+                        "boundary": [
+                            1066,
+                            -132,
+                            1420,
+                            78
+                        ],
+                        "count": 5,
+                        "type": "bat"
+                    },
+                    {
+                        "boundary": [
+                            964,
+                            11,
+                            1252,
+                            107
+                        ],
+                        "count": 2,
+                        "type": "bat"
+                    },
+                    {
+                        "boundaries": [
+                            [
+                                "cave",
+                                -367,
+                                -1296,
+                                -14,
+                                -1057
+                            ],
+                            [
+                                "cave",
+                                1068,
+                                -123,
+                                1420,
+                                78
+                            ]
+                        ],
+                        "count": 1,
+                        "stype": "randomrespawn",
+                        "type": "mvampire"
+                    }
+                ],
+                "name": "Cave of Darkness",
                 "npcs": [],
                 "quirks": [
                     [
-                        190.54,
-                        -1628.83,
-                        59.88,
-                        85.03,
+                        -192,
+                        -1309,
+                        48,
+                        64,
                         "log",
-                        "The passage is blocked"
+                        "Is this a gateway?"
+                    ],
+                    [
+                        -193.41,
+                        -1295.83,
+                        0,
+                        0,
+                        "info",
+                        "crypt"
                     ]
                 ],
+                "spawns": [
+                    [
+                        0,
+                        0,
+                        3
+                    ],
+                    [
+                        1877,
+                        -1078
+                    ],
+                    [
+                        -193.41,
+                        -1295.83
+                    ]
+                ]
+            },
+            "cgallery": {
+                "doors": [],
+                "instance": true,
+                "key": "cgallery",
+                "monsters": [],
+                "name": "Cosmetics Gallery",
+                "no_bounds": true,
+                "npcs": [],
+                "pvp": true,
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "crypt": {
+                "doors": [
+                    [
+                        -1.54,
+                        105.6,
+                        126.56,
+                        56.96,
+                        "cave",
+                        2,
+                        0
+                    ]
+                ],
+                "instance": true,
+                "key": "jayson_instance_dungeon1",
+                "monsters": [
+                    {
+                        "boundary": [
+                            2243.92,
+                            325.27,
+                            2689.64,
+                            505.06
+                        ],
+                        "count": 1,
+                        "type": "a1"
+                    },
+                    {
+                        "boundary": [
+                            726.81,
+                            -1076.19,
+                            726.81,
+                            -1076.19
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a7"
+                    },
+                    {
+                        "boundary": [
+                            1790.79,
+                            -1480.39,
+                            1790.79,
+                            -1480.39
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a3"
+                    },
+                    {
+                        "boundary": [
+                            2746.91,
+                            -1734.86,
+                            2746.91,
+                            -1734.86
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a6"
+                    },
+                    {
+                        "boundary": [
+                            2736.38,
+                            -1090.91,
+                            2736.38,
+                            -1090.91
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a5"
+                    },
+                    {
+                        "boundary": [
+                            1109.81,
+                            -632.68,
+                            1109.81,
+                            -632.68
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a2"
+                    },
+                    {
+                        "boundary": [
+                            2745.11,
+                            -655.82,
+                            2745.11,
+                            -655.82
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a4"
+                    },
+                    {
+                        "boundary": [
+                            2042.91,
+                            -883.27,
+                            2042.91,
+                            -883.27
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "a8"
+                    },
+                    {
+                        "boundary": [
+                            903.57,
+                            -465.05,
+                            1479.2,
+                            -304.03
+                        ],
+                        "count": 7,
+                        "type": "vbat"
+                    }
+                ],
+                "name": "The Crypt [Cave]",
+                "npcs": [],
+                "on_death": [
+                    "cave",
+                    2
+                ],
+                "on_exit": [
+                    "cave",
+                    2
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "cyberland": {
+                "doors": [
+                    [
+                        224,
+                        -162,
+                        16,
+                        16,
+                        "main",
+                        9,
+                        1
+                    ]
+                ],
+                "drop_norm": 1000,
+                "irregular": true,
+                "key": "cyberland",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -16,
+                            -88,
+                            -17,
+                            -89
+                        ],
+                        "count": 1,
+                        "type": "mechagnome"
+                    },
+                    {
+                        "boundary": [
+                            -6,
+                            -96,
+                            -7,
+                            -95
+                        ],
+                        "count": 1,
+                        "type": "mechagnome"
+                    },
+                    {
+                        "boundary": [
+                            8,
+                            -96,
+                            7,
+                            -95
+                        ],
+                        "count": 1,
+                        "type": "mechagnome"
+                    },
+                    {
+                        "boundary": [
+                            18,
+                            -88,
+                            17,
+                            -89
+                        ],
+                        "count": 1,
+                        "type": "mechagnome"
+                    }
+                ],
+                "name": "Cyberland",
+                "npcs": [],
+                "quirks": [
+                    [
+                        0,
+                        -100,
+                        80,
+                        30,
+                        "mainframe"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0,
+                        3
+                    ],
+                    [
+                        224,
+                        -162,
+                        3
+                    ]
+                ]
+            },
+            "d2": {
+                "doors": [
+                    [
+                        0,
+                        22,
+                        40,
+                        40,
+                        "d1",
+                        1,
+                        0
+                    ],
+                    [
+                        0,
+                        -684,
+                        20,
+                        50,
+                        "d3",
+                        0,
+                        1,
+                        "protected"
+                    ]
+                ],
+                "ignore": true,
+                "key": "d2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -49,
+                            -679,
+                            51,
+                            -640
+                        ],
+                        "count": 1,
+                        "gatekeeper": true,
+                        "rage": [
+                            -172,
+                            -685,
+                            219,
+                            -437
+                        ],
+                        "type": "d_wiz"
+                    }
+                ],
+                "name": "Dark World",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        -15
+                    ],
+                    [
+                        0,
+                        -671
+                    ]
+                ]
+            },
+            "d_a1": {
+                "doors": [
+                    [
+                        0.21,
+                        79.75,
+                        54.39,
+                        66.5,
+                        "d_b1",
+                        1,
+                        0
+                    ],
+                    [
+                        254.82,
+                        -916.88,
+                        61.73,
+                        99,
+                        "d_a2",
+                        0,
+                        1
+                    ]
+                ],
+                "key": "jayson_pvpDungeon_a1",
+                "monsters": [],
                 "name": "Dungeon",
-                "key": "jayson_pvpDungeon_b1",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        -2.2,
+                        1.48,
+                        3
+                    ],
+                    [
+                        255.6,
+                        -905.1
+                    ]
+                ],
+                "world": "dungeon"
+            },
+            "d_a2": {
+                "doors": [
+                    [
+                        0.6,
+                        77.16,
+                        56.2,
+                        64.21,
+                        "d_a1",
+                        1,
+                        0
+                    ]
+                ],
+                "key": "jayson_pvpDungeon_a2",
+                "monsters": [],
+                "name": "Dungeon",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        -2.12,
+                        -0.39,
+                        3
+                    ]
+                ],
+                "world": "dungeon"
+            },
+            "d_b1": {
                 "doors": [
                     [
                         0.09,
@@ -338,7 +1113,20 @@ test("G.maps type validation", async () => {
                         1
                     ]
                 ],
-                "world": "dungeon",
+                "key": "jayson_pvpDungeon_b1",
+                "monsters": [],
+                "name": "Dungeon",
+                "npcs": [],
+                "quirks": [
+                    [
+                        190.54,
+                        -1628.83,
+                        59.88,
+                        85.03,
+                        "log",
+                        "The passage is blocked"
+                    ]
+                ],
                 "spawns": [
                     [
                         -0.28,
@@ -350,10 +1138,8 @@ test("G.maps type validation", async () => {
                         -1655.63
                     ]
                 ],
-                "monsters": [],
                 "traps": [
                     {
-                        "type": "debuff",
                         "polygon": [
                             [
                                 -336,
@@ -595,605 +1381,1978 @@ test("G.maps type validation", async () => {
                                 -336,
                                 -1152
                             ]
-                        ]
-                    }
-                ]
-            },
-            "winter_inn": {
-                "npcs": [
-                    {
-                        "position": [
-                            -143,
-                            -220
                         ],
-                        "id": "wbartender"
-                    },
-                    {
-                        "position": [
-                            0,
-                            -5
-                        ],
-                        "id": "citizen1"
-                    },
-                    {
-                        "position": [
-                            0,
-                            -5
-                        ],
-                        "id": "citizen5"
-                    },
-                    {
-                        "position": [
-                            0,
-                            -5
-                        ],
-                        "id": "citizen6"
+                        "type": "debuff"
                     }
                 ],
-                "drop_norm": 1000,
+                "world": "dungeon"
+            },
+            "d_e": {
+                "doors": [
+                    [
+                        -0.15,
+                        -299.63,
+                        35.39,
+                        51.17,
+                        "d_g",
+                        0,
+                        1
+                    ]
+                ],
+                "fx": "storm",
+                "key": "jayson_pvpDungeon_entrance",
+                "monsters": [],
+                "name": "Dungeon [Entrance]",
+                "npcs": [
+                    {
+                        "id": "transporter",
+                        "position": [
+                            -9,
+                            0
+                        ]
+                    }
+                ],
                 "quirks": [],
-                "name": "Wanderers' Inn",
-                "key": "jayson_winter_inn",
+                "safe": true,
+                "spawns": [
+                    [
+                        -9.2,
+                        -0.91
+                    ],
+                    [
+                        0.08,
+                        -291.85
+                    ]
+                ],
+                "weather": "rain",
+                "world": "dungeon"
+            },
+            "d_g": {
+                "doors": [
+                    [
+                        0.14,
+                        47.88,
+                        46.19,
+                        36.62,
+                        "d_e",
+                        1,
+                        0
+                    ],
+                    [
+                        -320.6,
+                        -39.93,
+                        64.22,
+                        59.29,
+                        "d_b1",
+                        0,
+                        1
+                    ]
+                ],
+                "key": "jayson_pvpDungeon_gateway",
+                "monsters": [],
+                "name": "Dungeon [Gateway]",
+                "npcs": [],
+                "quirks": [
+                    [
+                        -320.64,
+                        -213.45,
+                        67.59,
+                        82.61,
+                        "log",
+                        "The passage is blocked"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0.03,
+                        1.13,
+                        3
+                    ],
+                    [
+                        -319.17,
+                        -102.09,
+                        3
+                    ]
+                ],
+                "world": "dungeon"
+            },
+            "desertland": {
+                "burn_multiplier": 1.6,
+                "doors": [
+                    [
+                        600,
+                        -2383,
+                        40,
+                        40,
+                        "level2s",
+                        1,
+                        2
+                    ]
+                ],
+                "drop_norm": 1000,
+                "freeze_multiplier": 0.4,
+                "key": "jayson_desertlandW",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -1013,
+                            -472,
+                            -575,
+                            -130
+                        ],
+                        "count": 4,
+                        "type": "plantoid"
+                    },
+                    {
+                        "boundary": [
+                            -1013,
+                            -624,
+                            -762,
+                            -137
+                        ],
+                        "count": 4,
+                        "type": "plantoid"
+                    },
+                    {
+                        "boundary": [
+                            -992,
+                            -58,
+                            -666,
+                            328
+                        ],
+                        "count": 8,
+                        "grow": true,
+                        "type": "porcupine"
+                    },
+                    {
+                        "boundary": [
+                            -757,
+                            -2034,
+                            -70,
+                            -1888
+                        ],
+                        "count": 3,
+                        "type": "ent"
+                    },
+                    {
+                        "boundary": [
+                            91,
+                            -952,
+                            353,
+                            -702
+                        ],
+                        "count": 4,
+                        "type": "fireroamer"
+                    },
+                    {
+                        "boundary": [
+                            161,
+                            -868,
+                            453,
+                            -697
+                        ],
+                        "count": 2,
+                        "type": "fireroamer"
+                    },
+                    {
+                        "boundary": [
+                            220.31,
+                            -1569.2,
+                            561.04,
+                            -1275.72
+                        ],
+                        "count": 6,
+                        "type": "scorpion"
+                    },
+                    {
+                        "boundary": [
+                            -522.44,
+                            -1340.19,
+                            -295.2,
+                            -1183.31
+                        ],
+                        "count": 1,
+                        "type": "bscorpion"
+                    }
+                ],
+                "name": "Desertland",
+                "npcs": [
+                    {
+                        "id": "transporter",
+                        "position": [
+                            -14,
+                            -477
+                        ]
+                    },
+                    {
+                        "id": "locksmith",
+                        "position": [
+                            316,
+                            -270
+                        ]
+                    }
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        10,
+                        -386
+                    ],
+                    [
+                        601,
+                        -2365
+                    ]
+                ]
+            },
+            "duelland": {
                 "doors": [
                     [
                         0,
-                        29,
-                        24,
+                        16,
+                        32,
                         20,
-                        "winterland",
+                        "main",
+                        7,
+                        0
+                    ]
+                ],
+                "drop_norm": 1000,
+                "instance": true,
+                "irregular": true,
+                "key": "jayson_duel_arena",
+                "loss": false,
+                "monsters": [],
+                "name": "Duelland",
+                "npcs": [],
+                "pvp": true,
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        0,
+                        3
+                    ],
+                    [
+                        -712,
+                        -800,
+                        0,
+                        40
+                    ],
+                    [
+                        712,
+                        -800,
+                        0,
+                        40
+                    ]
+                ]
+            },
+            "dungeon0": {
+                "doors": [],
+                "instance": true,
+                "key": "dungeon0",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -50,
+                            -50,
+                            50,
+                            50
+                        ],
+                        "count": 5,
+                        "type": "goo"
+                    }
+                ],
+                "name": "Dungeon",
+                "no_bounds": true,
+                "npcs": [],
+                "on_death": [
+                    "dungeon0",
+                    0
+                ],
+                "pvp": true,
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "goobrawl": {
+                "doors": [],
+                "instance": true,
+                "key": "jayson_gooisland",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -50,
+                            -50,
+                            50,
+                            50
+                        ],
+                        "count": 5,
+                        "type": "goo"
+                    }
+                ],
+                "name": "Goo Brawl!",
+                "npcs": [],
+                "on_death": [
+                    "goobrawl",
+                    0
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "halloween": {
+                "doors": [
+                    [
+                        784,
+                        -1085,
+                        80,
+                        40,
+                        "spookytown",
+                        1,
+                        2
+                    ],
+                    [
+                        -1071,
+                        -1496,
+                        40,
+                        40,
+                        "level1",
+                        2,
+                        3
+                    ],
+                    [
+                        1212,
+                        150,
+                        200,
+                        36,
+                        "main",
+                        15,
+                        4
+                    ]
+                ],
+                "drop_norm": 4000,
+                "key": "jayson_SpookyForestV2.2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -654,
+                            -384,
+                            -525,
+                            -287
+                        ],
+                        "count": 2,
+                        "type": "osnake"
+                    },
+                    {
+                        "boundary": [
+                            -620,
+                            -986,
+                            -356,
+                            -431
+                        ],
+                        "count": 4,
+                        "type": "osnake"
+                    },
+                    {
+                        "boundary": [
+                            -720,
+                            -820,
+                            -418,
+                            -203
+                        ],
+                        "count": 9,
+                        "grow": true,
+                        "type": "snake"
+                    },
+                    {
+                        "boundary": [
+                            -720,
+                            -820,
+                            -418,
+                            -203
+                        ],
+                        "count": 1,
+                        "type": "greenjr"
+                    },
+                    {
+                        "boundary": [
+                            -166,
+                            453,
+                            182,
+                            808
+                        ],
+                        "count": 8,
+                        "grow": true,
+                        "type": "minimush"
+                    },
+                    {
+                        "boundary": [
+                            -671,
+                            571,
+                            -300,
+                            800
+                        ],
+                        "count": 1,
+                        "special": true,
+                        "type": "mrpumpkin"
+                    },
+                    {
+                        "boundary": [
+                            -671,
+                            571,
+                            -300,
+                            800
+                        ],
+                        "count": 6,
+                        "type": "xscorpion"
+                    },
+                    {
+                        "boundary": [
+                            141,
+                            -792,
+                            552,
+                            -702
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "snake"
+                    },
+                    {
+                        "boundary": [
+                            141,
+                            -792,
+                            552,
+                            -702
+                        ],
+                        "count": 2,
+                        "type": "osnake"
+                    },
+                    {
+                        "boundary": [
+                            141,
+                            -792,
+                            552,
+                            -702
+                        ],
+                        "count": 1,
+                        "type": "tinyp"
+                    },
+                    {
+                        "boundary": [
+                            284,
+                            -1351,
+                            446,
+                            -1189
+                        ],
+                        "count": 5,
+                        "type": "ghost"
+                    },
+                    {
+                        "boundary": [
+                            54,
+                            -1277,
+                            237,
+                            -1078
+                        ],
+                        "count": 5,
+                        "type": "ghost"
+                    },
+                    {
+                        "boundary": [
+                            -664,
+                            -1808,
+                            -147,
+                            -1477
+                        ],
+                        "count": 1,
+                        "type": "fvampire"
+                    },
+                    {
+                        "boundary": [
+                            -664,
+                            -1808,
+                            -147,
+                            -1477
+                        ],
+                        "count": 9,
+                        "type": "ghost"
+                    }
+                ],
+                "name": "Spooky Forest",
+                "npcs": [
+                    {
+                        "id": "fancypots",
+                        "name": "Fancy Pots",
+                        "position": [
+                            201,
+                            -180
+                        ]
+                    },
+                    {
+                        "id": "transporter",
+                        "name": "Transporter",
+                        "position": [
+                            -97,
+                            -330
+                        ]
+                    },
+                    {
+                        "id": "witch",
+                        "position": [
+                            858,
+                            -160
+                        ]
+                    },
+                    {
+                        "id": "citizen11",
+                        "position": [
+                            201,
+                            -160
+                        ]
+                    },
+                    {
+                        "id": "citizen12",
+                        "position": [
+                            201,
+                            -160
+                        ]
+                    },
+                    {
+                        "id": "citizen13",
+                        "position": [
+                            201,
+                            -160
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        -228,
+                        -178,
+                        32,
+                        40,
+                        "log",
+                        "Locked but there are noises coming from inside"
+                    ],
+                    [
+                        331,
+                        -210,
+                        32,
+                        40,
+                        "log",
+                        "Locked"
+                    ],
+                    [
+                        128,
+                        -251,
+                        20,
+                        16,
+                        "sign",
+                        "Beware! Don't fall down!"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        -38,
+                        -283,
+                        2
+                    ],
+                    [
+                        784,
+                        -1060
+                    ],
+                    [
+                        -1071,
+                        -1485
+                    ],
+                    [
+                        1212,
+                        101,
+                        3
+                    ]
+                ]
+            },
+            "hut": {
+                "doors": [
+                    [
+                        0,
+                        17,
+                        32,
+                        24,
+                        "main",
+                        14,
+                        0
+                    ]
+                ],
+                "drop_norm": 1000,
+                "key": "jayson_smallHut",
+                "monsters": [],
+                "name": "The Hut",
+                "npcs": [],
+                "safe": true,
+                "spawns": [
+                    [
+                        0,
+                        -9,
+                        3
+                    ]
+                ]
+            },
+            "jail": {
+                "doors": [],
+                "drop_norm": 1000,
+                "irregular": true,
+                "key": "jayson_al_jail",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -223,
+                            -140,
+                            225,
+                            156
+                        ],
+                        "count": 3,
+                        "type": "jrat"
+                    }
+                ],
+                "name": "Jail",
+                "npcs": [
+                    {
+                        "id": "jailer",
+                        "position": [
+                            191,
+                            -156
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        -81,
+                        -165,
+                        30,
+                        40,
+                        "log",
+                        "Locked"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        -79,
+                        -153
+                    ]
+                ]
+            },
+            "level1": {
+                "doors": [
+                    [
+                        0,
+                        -4,
+                        20,
+                        50,
+                        "main",
+                        11,
+                        1
+                    ],
+                    [
+                        -408,
+                        -275,
+                        20,
+                        50,
+                        "halloween",
+                        3,
+                        2
+                    ],
+                    [
+                        -865,
+                        77,
+                        20,
+                        50,
+                        "cave",
+                        1,
+                        3
+                    ],
+                    [
+                        -313,
+                        544,
+                        24,
+                        24,
+                        "level2",
+                        1,
+                        4
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level1v2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -86,
+                            17,
+                            64,
+                            212
+                        ],
+                        "count": 5,
+                        "type": "prat"
+                    },
+                    {
+                        "boundary": [
+                            -308,
+                            629,
+                            0,
+                            762
+                        ],
+                        "count": 5,
+                        "type": "prat"
+                    }
+                ],
+                "name": "Underground [Entrance]",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        149,
+                        87,
+                        1
+                    ],
+                    [
+                        0,
+                        9
+                    ],
+                    [
+                        -408,
+                        -258,
+                        3
+                    ],
+                    [
+                        -863,
+                        89,
+                        3
+                    ],
+                    [
+                        -327,
+                        511,
+                        3
+                    ]
+                ]
+            },
+            "level2": {
+                "doors": [
+                    [
+                        40,
+                        219,
+                        24,
+                        24,
+                        "level3",
+                        0,
+                        0
+                    ],
+                    [
+                        0,
+                        -20,
+                        20,
+                        50,
+                        "level1",
+                        4,
+                        1
+                    ],
+                    [
+                        -87,
+                        300,
+                        80,
+                        40,
+                        "level2s",
+                        0,
+                        2
+                    ],
+                    [
+                        247,
+                        193,
+                        40,
+                        110,
+                        "level2e",
+                        1,
+                        3
+                    ],
+                    [
+                        -327,
+                        -45,
+                        40,
+                        110,
+                        "level2w",
+                        0,
+                        4
+                    ],
+                    [
+                        79,
+                        41,
+                        20,
+                        50,
+                        "spookytown",
+                        2,
+                        5
+                    ],
+                    [
+                        -280.14,
+                        -260.37,
+                        34.84,
+                        51.33,
+                        "bank_u",
+                        0,
+                        6,
+                        "ulocked",
+                        "complicated"
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level2.2",
+                "monsters": [],
+                "name": "Underground [Passing]",
+                "npcs": [
+                    {
+                        "id": "thief",
+                        "position": [
+                            -133,
+                            -187
+                        ]
+                    }
+                ],
+                "quirks": [],
+                "spawns": [
+                    [
+                        39,
+                        177,
+                        3
+                    ],
+                    [
+                        1,
+                        -5
+                    ],
+                    [
+                        -87,
+                        256,
+                        3
+                    ],
+                    [
+                        216,
+                        170,
+                        1
+                    ],
+                    [
+                        -303,
+                        -69,
+                        2
+                    ],
+                    [
+                        75,
+                        56
+                    ],
+                    [
+                        -279.95,
+                        -249.15
+                    ]
+                ],
+                "unlist": true
+            },
+            "level2e": {
+                "doors": [
+                    [
+                        -7,
+                        502,
+                        40,
+                        140,
+                        "level2s",
                         2,
                         0
                     ],
                     [
-                        47,
-                        -228,
-                        28,
-                        36,
-                        "winter_inn_rooms",
-                        0,
+                        -23,
+                        40,
+                        40,
+                        140,
+                        "level2",
+                        3,
                         1
                     ]
                 ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level2_eastv2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            344,
+                            -96,
+                            608,
+                            328
+                        ],
+                        "count": 3,
+                        "polygon": [
+                            [
+                                384,
+                                -96
+                            ],
+                            [
+                                464,
+                                -96
+                            ],
+                            [
+                                464,
+                                -64
+                            ],
+                            [
+                                608,
+                                -64
+                            ],
+                            [
+                                608,
+                                144
+                            ],
+                            [
+                                568,
+                                144
+                            ],
+                            [
+                                568,
+                                304
+                            ],
+                            [
+                                464,
+                                304
+                            ],
+                            [
+                                464,
+                                328
+                            ],
+                            [
+                                368,
+                                328
+                            ],
+                            [
+                                368,
+                                208
+                            ],
+                            [
+                                344,
+                                208
+                            ],
+                            [
+                                344,
+                                160
+                            ],
+                            [
+                                384,
+                                160
+                            ]
+                        ],
+                        "type": "pinkgoblin"
+                    }
+                ],
+                "name": "Underground [East]",
+                "npcs": [],
+                "quirks": [],
                 "spawns": [
+                    [
+                        18.5,
+                        459.5,
+                        2
+                    ],
+                    [
+                        3.5,
+                        0,
+                        2
+                    ]
+                ],
+                "unlist": true
+            },
+            "level2n": {
+                "doors": [
+                    [
+                        0,
+                        38,
+                        120,
+                        45,
+                        "level2w",
+                        1,
+                        0
+                    ],
+                    [
+                        -416,
+                        38,
+                        60,
+                        45,
+                        "level2w",
+                        2,
+                        1
+                    ],
+                    [
+                        -112,
+                        -691,
+                        20,
+                        40,
+                        "winterland",
+                        4,
+                        2
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level2_northv2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -621,
+                            -241,
+                            -234,
+                            -65
+                        ],
+                        "count": 6,
+                        "type": "pppompom"
+                    },
+                    {
+                        "boundary": [
+                            153,
+                            -303,
+                            432,
+                            -75
+                        ],
+                        "count": 7,
+                        "type": "pppompom"
+                    }
+                ],
+                "name": "Underground [North]",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        0,
+                        3
+                    ],
+                    [
+                        -416,
+                        0,
+                        3
+                    ],
+                    [
+                        -112,
+                        -676
+                    ]
+                ],
+                "unlist": true
+            },
+            "level2s": {
+                "doors": [
+                    [
+                        0,
+                        -20,
+                        40,
+                        40,
+                        "level2",
+                        2,
+                        0
+                    ],
+                    [
+                        -240,
+                        668,
+                        20,
+                        50,
+                        "desertland",
+                        2,
+                        1
+                    ],
+                    [
+                        406,
+                        580,
+                        40,
+                        140,
+                        "level2e",
+                        0,
+                        2
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level2_southv2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -52.5,
+                            359.33,
+                            120.29,
+                            646.25
+                        ],
+                        "count": 8,
+                        "type": "cgoo"
+                    }
+                ],
+                "name": "Underground [South]",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        -14
+                    ],
+                    [
+                        -240,
+                        681
+                    ],
+                    [
+                        383,
+                        539,
+                        1
+                    ]
+                ],
+                "unlist": true
+            },
+            "level2w": {
+                "doors": [
+                    [
+                        39,
+                        53,
+                        40,
+                        140,
+                        "level2",
+                        4,
+                        0
+                    ],
+                    [
+                        -96,
+                        -197,
+                        60,
+                        40,
+                        "level2n",
+                        0,
+                        1
+                    ],
+                    [
+                        -528,
+                        -197,
+                        60,
+                        40,
+                        "level2n",
+                        1,
+                        2
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_underground_level2_westv2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -447,
+                            9,
+                            -208,
+                            323
+                        ],
+                        "count": 5,
+                        "type": "oneeye"
+                    }
+                ],
+                "name": "Underground [West]",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        16,
+                        9,
+                        1
+                    ],
+                    [
+                        -96,
+                        -184
+                    ],
+                    [
+                        -528,
+                        -184
+                    ]
+                ],
+                "unlist": true
+            },
+            "level3": {
+                "doors": [
                     [
                         0,
                         -5,
-                        3
-                    ],
-                    [
-                        28,
-                        -208
-                    ]
-                ],
-                "monsters": []
-            },
-            "mansion": {
-                "npcs": [
-                    {
-                        "position": [
-                            0,
-                            -303
-                        ],
-                        "id": "pwincess"
-                    }
-                ],
-                "drop_norm": 1000,
-                "quirks": [
-                    [
-                        -335,
-                        -111,
-                        30,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        338,
-                        -111,
-                        30,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        -334,
-                        -618,
-                        30,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        338,
-                        -618,
-                        30,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        338,
-                        -618,
-                        30,
-                        40,
-                        "log",
-                        "Hotdamn. This one is locked too..."
-                    ]
-                ],
-                "name": "The Mansion",
-                "key": "jayson_Mansion",
-                "doors": [
-                    [
-                        -1,
-                        12,
-                        40,
-                        24,
-                        "main",
-                        10,
-                        0
-                    ],
-                    [
-                        -0.05,
-                        -493.95,
-                        31.8,
-                        46.7,
-                        "tomb",
-                        0,
-                        1,
-                        "key",
-                        "tombkey"
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -21,
-                        3
-                    ],
-                    [
-                        -0.18,
-                        -481.98
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -217,
-                            -272,
-                            200,
-                            -24
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            -408,
-                            -102,
-                            -158,
-                            27
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            160,
-                            -97,
-                            402,
-                            29
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            -388,
-                            -610,
-                            -282,
-                            -197
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            -388,
-                            -610,
-                            -282,
-                            -197
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            283,
-                            -604,
-                            382,
-                            -200
-                        ],
-                        "type": "rat"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            -240,
-                            -487,
-                            249,
-                            -401
-                        ],
-                        "type": "rat"
-                    }
-                ]
-            },
-            "d2": {
-                "npcs": [],
-                "ignore": true,
-                "quirks": [],
-                "name": "Dark World",
-                "key": "d2",
-                "doors": [
-                    [
-                        0,
-                        22,
-                        40,
-                        40,
-                        "d1",
-                        1,
-                        0
-                    ],
-                    [
-                        0,
-                        -684,
                         20,
                         50,
-                        "d3",
+                        "level2",
                         0,
-                        1,
-                        "protected"
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -15
+                        0
                     ],
                     [
-                        0,
-                        -671
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 1,
-                        "gatekeeper": true,
-                        "boundary": [
-                            -49,
-                            -679,
-                            51,
-                            -640
-                        ],
-                        "type": "d_wiz",
-                        "rage": [
-                            -172,
-                            -685,
-                            219,
-                            -437
-                        ]
-                    }
-                ]
-            },
-            "batcave": {
-                "ignore": true,
-                "npcs": [],
-                "name": "Cave of Beginnings",
-                "key": "batcave",
-                "doors": [
-                    [
-                        -195,
-                        213,
+                        -8,
+                        -409,
                         24,
-                        20,
-                        "main",
+                        24,
+                        "level4",
+                        0,
                         1
                     ]
                 ],
-                "spawns": [
-                    [
-                        -200,
-                        190,
-                        3
-                    ]
-                ],
-                "drop_norm": 4500,
+                "drop_norm": 5000,
+                "key": "jayson_underground_level3v2",
                 "monsters": [
                     {
-                        "count": 12,
                         "boundary": [
-                            -210,
-                            -170,
-                            342,
-                            185
+                            -451.21,
+                            -397.41,
+                            -240.59,
+                            -65.16
                         ],
-                        "type": "bat"
+                        "count": 3,
+                        "type": "mummy"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            -210,
-                            -170,
-                            342,
-                            185
+                            131.97,
+                            -368.95,
+                            398.99,
+                            -56.88
                         ],
-                        "type": "mvampire"
+                        "count": 4,
+                        "type": "bbpompom"
                     }
-                ]
-            },
-            "winter_instance": {
+                ],
+                "name": "Underground [Deeps]",
                 "npcs": [],
-                "drop_norm": 4000,
                 "quirks": [],
-                "instance": true,
-                "name": "Lair of the Dark Mage",
-                "key": "jayson_winterInstance",
-                "doors": [
-                    [
-                        -7.23,
-                        250.26,
-                        38.15,
-                        28.55,
-                        "winterland",
-                        5,
-                        0
-                    ]
-                ],
-                "on_exit": [
-                    "winterland",
-                    5
-                ],
                 "spawns": [
                     [
-                        -8,
-                        216,
-                        3
+                        0,
+                        10
+                    ],
+                    [
+                        -28,
+                        -438,
+                        2
                     ]
                 ],
-                "monsters": [
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -255.17,
-                            -261.64,
-                            239.07,
-                            221.4
-                        ],
-                        "type": "xmagefz"
-                    },
-                    {
-                        "count": 0,
-                        "boundary": [
-                            -255.17,
-                            -261.64,
-                            239.07,
-                            221.4
-                        ],
-                        "type": "xmagefi"
-                    },
-                    {
-                        "count": 0,
-                        "boundary": [
-                            -255.17,
-                            -261.64,
-                            239.07,
-                            221.4
-                        ],
-                        "type": "xmagen"
-                    },
-                    {
-                        "count": 0,
-                        "boundary": [
-                            -255.17,
-                            -261.64,
-                            239.07,
-                            221.4
-                        ],
-                        "type": "xmagex"
-                    }
-                ]
+                "unlist": true
             },
-            "resort": {
-                "npcs": [
-                    {
-                        "position": [
-                            -8,
-                            -108
-                        ],
-                        "id": "holo"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo0"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo1"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo2"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo3"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo4"
-                    },
-                    {
-                        "position": [
-                            -8,
-                            0
-                        ],
-                        "id": "holo5"
-                    }
-                ],
-                "drop_norm": 1000,
-                "quirks": [],
-                "name": "Holo Resort",
-                "key": "resort",
+            "level4": {
                 "doors": [
                     [
-                        -8,
-                        120,
-                        40,
-                        24,
-                        "tavern",
+                        0,
+                        -3,
+                        20,
+                        50,
+                        "level3",
                         1,
                         0
                     ]
                 ],
-                "spawns": [
-                    [
-                        -8,
-                        91,
-                        3
-                    ]
+                "drop_norm": 5000,
+                "key": "jayson_underground_level4v2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -366.74,
+                            -395.74,
+                            -109.59,
+                            -152.68
+                        ],
+                        "count": 6,
+                        "type": "cgoo"
+                    },
+                    {
+                        "boundary": [
+                            119.92,
+                            -4.27,
+                            378.46,
+                            338.17
+                        ],
+                        "count": 3,
+                        "type": "mummy"
+                    }
                 ],
-                "monsters": [],
-                "irregular": true
-            },
-            "d_a2": {
+                "name": "Underground [Abyss]",
                 "npcs": [],
                 "quirks": [],
-                "name": "Dungeon",
-                "key": "jayson_pvpDungeon_a2",
-                "doors": [
-                    [
-                        0.6,
-                        77.16,
-                        56.2,
-                        64.21,
-                        "d_a1",
-                        1,
-                        0
-                    ]
-                ],
-                "world": "dungeon",
                 "spawns": [
                     [
-                        -2.12,
-                        -0.39,
-                        3
+                        0,
+                        14
+                    ],
+                    [
+                        291,
+                        -140
                     ]
                 ],
-                "monsters": []
+                "unlist": true
             },
             "main": {
-                "on_death": [
-                    "main",
-                    5
+                "animatables": {
+                    "the_door": {
+                        "position": "door0",
+                        "x": 888,
+                        "y": -672
+                    }
+                },
+                "doors": [
+                    [
+                        -965,
+                        -176,
+                        24,
+                        30,
+                        "woffice",
+                        0,
+                        1
+                    ],
+                    [
+                        536,
+                        1665,
+                        64,
+                        32,
+                        "tunnel",
+                        0,
+                        2
+                    ],
+                    [
+                        168,
+                        -149,
+                        32,
+                        40,
+                        "bank",
+                        0,
+                        3
+                    ],
+                    [
+                        160,
+                        1370,
+                        24,
+                        32,
+                        "cave",
+                        0,
+                        4
+                    ],
+                    [
+                        232,
+                        384,
+                        24,
+                        30,
+                        "arena",
+                        0,
+                        6
+                    ],
+                    [
+                        -472,
+                        131,
+                        24,
+                        30,
+                        "tavern",
+                        0,
+                        8
+                    ],
+                    [
+                        616,
+                        610,
+                        32,
+                        40,
+                        "mansion",
+                        0,
+                        10
+                    ],
+                    [
+                        1936,
+                        -23,
+                        24,
+                        24,
+                        "level1",
+                        1,
+                        11
+                    ],
+                    [
+                        169,
+                        -404,
+                        24,
+                        40,
+                        "hut",
+                        0,
+                        14
+                    ],
+                    [
+                        1600,
+                        -547,
+                        60,
+                        40,
+                        "halloween",
+                        4,
+                        15
+                    ],
+                    [
+                        312,
+                        -335,
+                        32,
+                        32,
+                        "mtunnel",
+                        0,
+                        16
+                    ],
+                    [
+                        967,
+                        -584,
+                        32,
+                        32,
+                        "mtunnel",
+                        1,
+                        17
+                    ],
+                    [
+                        1472,
+                        -434,
+                        32,
+                        32,
+                        "mtunnel",
+                        2,
+                        18
+                    ]
                 ],
+                "drop_norm": 1000,
+                "key": "jayson_ALMap2_v2.lunarNewYear",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -1353,
+                            -254,
+                            -1052,
+                            122
+                        ],
+                        "count": 8,
+                        "grow": true,
+                        "type": "crab"
+                    },
+                    {
+                        "boundary": [
+                            -1353,
+                            126,
+                            -998,
+                            718
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "squig"
+                    },
+                    {
+                        "boundary": [
+                            -1353,
+                            126,
+                            -998,
+                            718
+                        ],
+                        "count": 2,
+                        "type": "squigtoad"
+                    },
+                    {
+                        "boundary": [
+                            -1353,
+                            720,
+                            -896,
+                            1516
+                        ],
+                        "count": 6,
+                        "type": "tortoise"
+                    },
+                    {
+                        "boundary": [
+                            -1353,
+                            720,
+                            -896,
+                            1516
+                        ],
+                        "count": 2,
+                        "type": "frog"
+                    },
+                    {
+                        "boundary": [
+                            -1256,
+                            1520,
+                            -712,
+                            2004
+                        ],
+                        "count": 5,
+                        "type": "crabx"
+                    },
+                    {
+                        "boundary": [
+                            -571,
+                            323,
+                            -571,
+                            323
+                        ],
+                        "count": 1,
+                        "type": "target"
+                    },
+                    {
+                        "boundary": [
+                            -290,
+                            280,
+                            -290,
+                            280
+                        ],
+                        "count": 1,
+                        "type": "target_a500"
+                    },
+                    {
+                        "boundary": [
+                            -270,
+                            280,
+                            -270,
+                            280
+                        ],
+                        "count": 1,
+                        "type": "target_a750"
+                    },
+                    {
+                        "boundary": [
+                            -250,
+                            280,
+                            -250,
+                            280
+                        ],
+                        "count": 1,
+                        "type": "target_r500"
+                    },
+                    {
+                        "boundary": [
+                            -230,
+                            280,
+                            -230,
+                            280
+                        ],
+                        "count": 1,
+                        "type": "target_r750"
+                    },
+                    {
+                        "boundary": [
+                            -210,
+                            280,
+                            -210,
+                            280
+                        ],
+                        "count": 1,
+                        "type": "target_ar900"
+                    },
+                    {
+                        "boundary": [
+                            -150,
+                            400,
+                            -150,
+                            400
+                        ],
+                        "count": 1,
+                        "type": "target_ar500red"
+                    },
+                    {
+                        "boundary": [
+                            -282,
+                            702,
+                            218,
+                            872
+                        ],
+                        "count": 9,
+                        "grow": true,
+                        "type": "goo"
+                    },
+                    {
+                        "boundary": [
+                            424,
+                            1014,
+                            668,
+                            1104
+                        ],
+                        "count": 4,
+                        "grow": true,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            418,
+                            994,
+                            570,
+                            1208
+                        ],
+                        "count": 3,
+                        "grow": true,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            52,
+                            1426,
+                            252,
+                            1548
+                        ],
+                        "count": 5,
+                        "grow": true,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            448,
+                            694,
+                            592,
+                            812
+                        ],
+                        "count": 3,
+                        "grow": true,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            678,
+                            676,
+                            796,
+                            764
+                        ],
+                        "count": 2,
+                        "grow": true,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            -262,
+                            1198,
+                            20,
+                            1522
+                        ],
+                        "count": 5,
+                        "grow": true,
+                        "type": "poisio"
+                    },
+                    {
+                        "boundary": [
+                            696,
+                            1498,
+                            906,
+                            1922
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "croc"
+                    },
+                    {
+                        "boundary": [
+                            376,
+                            1696,
+                            676,
+                            1996
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "armadillo"
+                    },
+                    {
+                        "boundary": [
+                            -254,
+                            1812,
+                            90,
+                            1990
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "snake"
+                    },
+                    {
+                        "boundary": [
+                            1100,
+                            160,
+                            1586,
+                            336
+                        ],
+                        "count": 5,
+                        "type": "bigbird"
+                    },
+                    {
+                        "boundary": [
+                            700,
+                            -282,
+                            1196,
+                            -6
+                        ],
+                        "count": 7,
+                        "grow": true,
+                        "type": "spider"
+                    },
+                    {
+                        "boundary": [
+                            1485,
+                            -390,
+                            1670,
+                            54
+                        ],
+                        "count": 6,
+                        "grow": true,
+                        "type": "scorpion"
+                    },
+                    {
+                        "boundaries": [
+                            [
+                                "main",
+                                708,
+                                -300,
+                                1668,
+                                -86
+                            ],
+                            [
+                                "main",
+                                378,
+                                1686,
+                                904,
+                                1920
+                            ],
+                            [
+                                "main",
+                                -1358,
+                                -118,
+                                -1010,
+                                1680
+                            ],
+                            [
+                                "halloween",
+                                -166,
+                                453,
+                                182,
+                                808
+                            ],
+                            [
+                                "cave",
+                                -375,
+                                -1287,
+                                14,
+                                -1041
+                            ]
+                        ],
+                        "count": 1,
+                        "stype": "randomrespawn",
+                        "type": "phoenix"
+                    },
+                    {
+                        "boundary": [
+                            -460,
+                            -908,
+                            -260,
+                            -710
+                        ],
+                        "count": 1,
+                        "type": "greenfairy"
+                    },
+                    {
+                        "boundary": [
+                            -460,
+                            -908,
+                            -260,
+                            -710
+                        ],
+                        "count": 1,
+                        "type": "redfairy"
+                    },
+                    {
+                        "boundary": [
+                            -460,
+                            -908,
+                            -260,
+                            -710
+                        ],
+                        "count": 1,
+                        "type": "bluefairy"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "puppy1"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "puppy2"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "puppy3"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "puppy4"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "kitty1"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "kitty2"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "kitty3"
+                    },
+                    {
+                        "boundary": [
+                            -766,
+                            1072,
+                            -643,
+                            1210
+                        ],
+                        "count": 1,
+                        "type": "kitty4"
+                    },
+                    {
+                        "boundary": [
+                            -118,
+                            -317,
+                            -5,
+                            -247
+                        ],
+                        "count": 2,
+                        "type": "hen"
+                    },
+                    {
+                        "boundary": [
+                            -118,
+                            -317,
+                            -5,
+                            -247
+                        ],
+                        "count": 1,
+                        "type": "rooster"
+                    }
+                ],
+                "name": "Mainland",
                 "npcs": [
                     {
+                        "id": "newupgrade",
                         "position": [
                             -207,
                             -220
-                        ],
-                        "id": "newupgrade"
+                        ]
                     },
                     {
+                        "id": "exchange",
+                        "name": "Exchanger",
                         "position": [
                             -25,
                             -478
-                        ],
-                        "name": "Exchanger",
-                        "id": "exchange"
+                        ]
                     },
                     {
+                        "id": "scrolls",
+                        "name": "Come Scroll Away",
                         "position": [
                             -464,
                             -96
-                        ],
-                        "name": "Come Scroll Away",
-                        "id": "scrolls"
+                        ]
                     },
                     {
+                        "id": "lotterylady",
                         "position": [
                             -341,
                             168
-                        ],
-                        "id": "lotterylady"
+                        ]
                     },
                     {
+                        "id": "fisherman",
                         "position": [
                             -1572,
                             552,
                             1
-                        ],
-                        "id": "fisherman"
+                        ]
                     },
                     {
+                        "id": "fancypots",
                         "position": [
                             -35,
                             -162
-                        ],
-                        "id": "fancypots"
+                        ]
                     },
                     {
+                        "id": "basics",
                         "position": [
                             -89,
                             -165
-                        ],
-                        "id": "basics"
+                        ]
                     },
                     {
+                        "id": "premium",
                         "position": [
                             192,
                             -564
-                        ],
-                        "id": "premium"
+                        ]
                     },
                     {
+                        "id": "transporter",
                         "position": [
                             -83,
                             -441
-                        ],
-                        "id": "transporter"
+                        ]
                     },
                     {
+                        "id": "standmerchant",
                         "position": [
                             -193,
                             680
-                        ],
-                        "id": "standmerchant"
+                        ]
                     },
                     {
+                        "id": "appearance",
+                        "name": "Zen Girl",
                         "position": [
                             -361,
                             -832
-                        ],
-                        "name": "Zen Girl",
-                        "id": "appearance"
+                        ]
                     },
                     {
+                        "id": "pvp",
                         "positions": [
                             [
                                 232,
@@ -1204,66 +3363,67 @@ test("G.maps type validation", async () => {
                                 499,
                                 1
                             ]
-                        ],
-                        "id": "pvp"
+                        ]
                     },
                     {
+                        "id": "craftsman",
                         "position": [
                             92,
                             670
-                        ],
-                        "id": "craftsman"
+                        ]
                     },
                     {
+                        "id": "pete",
                         "position": [
                             -776,
                             1256
-                        ],
-                        "id": "pete"
+                        ]
                     },
                     {
+                        "id": "citizen0",
                         "position": [
                             0,
                             0
-                        ],
-                        "id": "citizen0"
+                        ]
                     },
                     {
+                        "id": "citizen2",
                         "position": [
                             0,
                             0
-                        ],
-                        "id": "citizen2"
+                        ]
                     },
                     {
+                        "id": "citizen3",
                         "position": [
                             0,
                             0
-                        ],
-                        "id": "citizen3"
+                        ]
                     },
                     {
+                        "id": "citizen4",
                         "position": [
                             0,
                             0
-                        ],
-                        "id": "citizen4"
+                        ]
                     },
                     {
+                        "id": "antip2w",
                         "position": [
                             274,
                             -554
-                        ],
-                        "id": "antip2w"
+                        ]
                     },
                     {
+                        "id": "funtokens",
                         "position": [
                             303,
                             -87
-                        ],
-                        "id": "funtokens"
+                        ]
                     },
                     {
+                        "id": "bean",
+                        "loop": true,
                         "positions": [
                             [
                                 -94,
@@ -1277,48 +3437,223 @@ test("G.maps type validation", async () => {
                                 5,
                                 83
                             ]
-                        ],
-                        "id": "bean",
-                        "loop": true
+                        ]
                     },
                     {
+                        "id": "secondhands",
                         "position": [
                             106,
                             -47
-                        ],
-                        "id": "secondhands"
+                        ]
                     },
                     {
+                        "id": "pvptokens",
                         "position": [
                             159,
                             403
-                        ],
-                        "id": "pvptokens"
+                        ]
                     },
                     {
+                        "id": "monsterhunter",
                         "position": [
                             126,
                             -413
-                        ],
-                        "id": "monsterhunter"
+                        ]
                     },
                     {
+                        "id": "mcollector",
                         "position": [
                             81,
                             -283,
                             1
-                        ],
-                        "id": "mcollector"
+                        ]
                     }
                 ],
-                "key": "jayson_ALMap2_v2",
-                "animatables": {
-                    "the_door": {
-                        "y": -672,
-                        "x": 888,
-                        "position": "door0"
-                    }
+                "on_death": [
+                    "main",
+                    5
+                ],
+                "on_exit": [
+                    "main",
+                    0
+                ],
+                "quirks": [
+                    [
+                        -236,
+                        -189,
+                        24,
+                        24,
+                        "upgrade"
+                    ],
+                    [
+                        -179,
+                        -189,
+                        24,
+                        24,
+                        "compound"
+                    ],
+                    [
+                        350,
+                        424,
+                        30,
+                        24,
+                        "list_pvp"
+                    ],
+                    [
+                        -200,
+                        15,
+                        24,
+                        42,
+                        "log",
+                        "A relic from an old era"
+                    ],
+                    [
+                        200,
+                        15,
+                        24,
+                        42,
+                        "log",
+                        "A relic from an old era"
+                    ],
+                    [
+                        1689,
+                        -494,
+                        20,
+                        16,
+                        "note",
+                        "The Dark Forest. A curious place."
+                    ],
+                    [
+                        681,
+                        624,
+                        20,
+                        16,
+                        "sign",
+                        "The Mansion"
+                    ],
+                    [
+                        65,
+                        544,
+                        20,
+                        16,
+                        "sign",
+                        "Welcome to The New Town!"
+                    ],
+                    [
+                        -150,
+                        154,
+                        20,
+                        16,
+                        "sign",
+                        "Town Square"
+                    ],
+                    [
+                        -365,
+                        144,
+                        20,
+                        16,
+                        "sign",
+                        "Tavern"
+                    ]
+                ],
+                "ref": {
+                    "c_mid": [
+                        -180,
+                        -203
+                    ],
+                    "cx": [
+                        -479.65,
+                        -919.23,
+                        -240.96,
+                        -697.72
+                    ],
+                    "u_mid": [
+                        -235,
+                        -203
+                    ]
                 },
+                "spawns": [
+                    [
+                        0,
+                        0,
+                        0,
+                        100
+                    ],
+                    [
+                        -968,
+                        -163
+                    ],
+                    [
+                        535,
+                        1677
+                    ],
+                    [
+                        168,
+                        -134
+                    ],
+                    [
+                        160,
+                        1381
+                    ],
+                    [
+                        -87,
+                        673
+                    ],
+                    [
+                        232,
+                        397
+                    ],
+                    [
+                        294,
+                        498
+                    ],
+                    [
+                        -472,
+                        149
+                    ],
+                    [
+                        -85,
+                        -389,
+                        3
+                    ],
+                    [
+                        616,
+                        621
+                    ],
+                    [
+                        1937,
+                        -12
+                    ],
+                    [
+                        -1104,
+                        -924
+                    ],
+                    [
+                        -551,
+                        -375
+                    ],
+                    [
+                        169,
+                        -385
+                    ],
+                    [
+                        1600,
+                        -524
+                    ],
+                    [
+                        294,
+                        -347,
+                        1
+                    ],
+                    [
+                        968,
+                        -577
+                    ],
+                    [
+                        1471,
+                        -424
+                    ]
+                ],
                 "traps": [
                     {
                         "position": [
@@ -1331,7 +3666,6 @@ test("G.maps type validation", async () => {
                 "zones": [
                     {
                         "drop": "f1",
-                        "type": "fishing",
                         "polygon": [
                             [
                                 -880,
@@ -1549,774 +3883,713 @@ test("G.maps type validation", async () => {
                                 -872,
                                 -352
                             ]
+                        ],
+                        "type": "fishing"
+                    }
+                ]
+            },
+            "mansion": {
+                "doors": [
+                    [
+                        -1,
+                        12,
+                        40,
+                        24,
+                        "main",
+                        10,
+                        0
+                    ],
+                    [
+                        -0.05,
+                        -493.95,
+                        31.8,
+                        46.7,
+                        "tomb",
+                        0,
+                        1,
+                        "key",
+                        "tombkey"
+                    ]
+                ],
+                "drop_norm": 1000,
+                "key": "jayson_Mansion",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -217,
+                            -272,
+                            200,
+                            -24
+                        ],
+                        "count": 5,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            -408,
+                            -102,
+                            -158,
+                            27
+                        ],
+                        "count": 3,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            160,
+                            -97,
+                            402,
+                            29
+                        ],
+                        "count": 3,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            -388,
+                            -610,
+                            -282,
+                            -197
+                        ],
+                        "count": 3,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            -388,
+                            -610,
+                            -282,
+                            -197
+                        ],
+                        "count": 3,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            283,
+                            -604,
+                            382,
+                            -200
+                        ],
+                        "count": 3,
+                        "type": "rat"
+                    },
+                    {
+                        "boundary": [
+                            -240,
+                            -487,
+                            249,
+                            -401
+                        ],
+                        "count": 4,
+                        "type": "rat"
+                    }
+                ],
+                "name": "The Mansion",
+                "npcs": [
+                    {
+                        "id": "pwincess",
+                        "position": [
+                            0,
+                            -303
                         ]
                     }
                 ],
-                "name": "Mainland",
-                "drop_norm": 1000,
                 "quirks": [
                     [
-                        -236,
-                        -189,
-                        24,
-                        24,
-                        "upgrade"
-                    ],
-                    [
-                        -179,
-                        -189,
-                        24,
-                        24,
-                        "compound"
-                    ],
-                    [
-                        350,
-                        424,
-                        30,
-                        24,
-                        "list_pvp"
-                    ],
-                    [
-                        -200,
-                        15,
-                        24,
-                        42,
-                        "log",
-                        "A relic from an old era"
-                    ],
-                    [
-                        200,
-                        15,
-                        24,
-                        42,
-                        "log",
-                        "A relic from an old era"
-                    ],
-                    [
-                        1689,
-                        -494,
-                        20,
-                        16,
-                        "note",
-                        "The Dark Forest. A curious place."
-                    ],
-                    [
-                        681,
-                        624,
-                        20,
-                        16,
-                        "sign",
-                        "The Mansion"
-                    ],
-                    [
-                        65,
-                        544,
-                        20,
-                        16,
-                        "sign",
-                        "Welcome to The New Town!"
-                    ],
-                    [
-                        -150,
-                        154,
-                        20,
-                        16,
-                        "sign",
-                        "Town Square"
-                    ],
-                    [
-                        -365,
-                        144,
-                        20,
-                        16,
-                        "sign",
-                        "Tavern"
-                    ]
-                ],
-                "doors": [
-                    [
-                        -965,
-                        -176,
-                        24,
-                        30,
-                        "woffice",
-                        0,
-                        1
-                    ],
-                    [
-                        536,
-                        1665,
-                        64,
-                        32,
-                        "tunnel",
-                        0,
-                        2
-                    ],
-                    [
-                        168,
-                        -149,
-                        32,
-                        40,
-                        "bank",
-                        0,
-                        3
-                    ],
-                    [
-                        160,
-                        1370,
-                        24,
-                        32,
-                        "cave",
-                        0,
-                        4
-                    ],
-                    [
-                        232,
-                        384,
-                        24,
-                        30,
-                        "arena",
-                        0,
-                        6
-                    ],
-                    [
-                        -472,
-                        131,
-                        24,
-                        30,
-                        "tavern",
-                        0,
-                        8
-                    ],
-                    [
-                        616,
-                        610,
-                        32,
-                        40,
-                        "mansion",
-                        0,
-                        10
-                    ],
-                    [
-                        1936,
-                        -23,
-                        24,
-                        24,
-                        "level1",
-                        1,
-                        11
-                    ],
-                    [
-                        169,
-                        -404,
-                        24,
-                        40,
-                        "hut",
-                        0,
-                        14
-                    ],
-                    [
-                        1600,
-                        -547,
-                        60,
-                        40,
-                        "halloween",
-                        4,
-                        15
-                    ],
-                    [
-                        312,
                         -335,
-                        32,
-                        32,
-                        "mtunnel",
-                        0,
-                        16
+                        -111,
+                        30,
+                        40,
+                        "log",
+                        "Locked"
                     ],
                     [
-                        967,
-                        -584,
-                        32,
-                        32,
-                        "mtunnel",
-                        1,
-                        17
+                        338,
+                        -111,
+                        30,
+                        40,
+                        "log",
+                        "Locked"
                     ],
                     [
-                        1472,
-                        -434,
-                        32,
-                        32,
-                        "mtunnel",
-                        2,
-                        18
+                        -334,
+                        -618,
+                        30,
+                        40,
+                        "log",
+                        "Locked"
+                    ],
+                    [
+                        338,
+                        -618,
+                        30,
+                        40,
+                        "log",
+                        "Locked"
+                    ],
+                    [
+                        338,
+                        -618,
+                        30,
+                        40,
+                        "log",
+                        "Hotdamn. This one is locked too..."
                     ]
-                ],
-                "on_exit": [
-                    "main",
-                    0
                 ],
                 "spawns": [
                     [
                         0,
-                        0,
-                        0,
-                        100
-                    ],
-                    [
-                        -968,
-                        -163
-                    ],
-                    [
-                        535,
-                        1677
-                    ],
-                    [
-                        168,
-                        -134
-                    ],
-                    [
-                        160,
-                        1381
-                    ],
-                    [
-                        -87,
-                        673
-                    ],
-                    [
-                        232,
-                        397
-                    ],
-                    [
-                        294,
-                        498
-                    ],
-                    [
-                        -472,
-                        149
-                    ],
-                    [
-                        -85,
-                        -389,
+                        -21,
                         3
                     ],
                     [
-                        616,
-                        621
+                        -0.18,
+                        -481.98
+                    ]
+                ]
+            },
+            "mtunnel": {
+                "doors": [
+                    [
+                        0,
+                        -3,
+                        24,
+                        60,
+                        "main",
+                        16,
+                        0
                     ],
                     [
-                        1937,
-                        -12
-                    ],
-                    [
-                        -1104,
-                        -924
-                    ],
-                    [
-                        -551,
-                        -375
-                    ],
-                    [
-                        169,
-                        -385
-                    ],
-                    [
-                        1600,
-                        -524
-                    ],
-                    [
-                        294,
-                        -347,
+                        656,
+                        -240,
+                        24,
+                        60,
+                        "main",
+                        17,
                         1
                     ],
                     [
-                        968,
-                        -577
-                    ],
-                    [
-                        1471,
-                        -424
+                        1168,
+                        -65,
+                        24,
+                        60,
+                        "main",
+                        18,
+                        2
                     ]
                 ],
-                "ref": {
-                    "cx": [
-                        -479.65,
-                        -919.23,
-                        -240.96,
-                        -697.72
+                "drop_norm": 4500,
+                "key": "jayson_mainlandTunnel",
+                "monsters": [],
+                "name": "Underground [Tunnel]",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        8
                     ],
-                    "u_mid": [
-                        -235,
-                        -203
+                    [
+                        671,
+                        -225,
+                        3
                     ],
-                    "c_mid": [
-                        -180,
-                        -203
+                    [
+                        1169,
+                        -55,
+                        3
                     ]
-                },
+                ]
+            },
+            "old_bank": {
+                "doors": [
+                    [
+                        56,
+                        187,
+                        64,
+                        40,
+                        "main",
+                        5,
+                        0
+                    ]
+                ],
+                "ignore": true,
+                "key": "bank0",
+                "monsters": [],
+                "mount": true,
+                "name": "The Bank",
+                "npcs": [
+                    {
+                        "id": "goldnpc",
+                        "position": [
+                            57,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "items0",
+                        "position": [
+                            -24,
+                            49
+                        ]
+                    },
+                    {
+                        "id": "items1",
+                        "position": [
+                            128,
+                            49
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        56,
+                        -52,
+                        16,
+                        34,
+                        "log",
+                        "It's time."
+                    ]
+                ],
+                "spawns": [
+                    [
+                        56,
+                        129,
+                        3
+                    ]
+                ]
+            },
+            "old_main": {
+                "doors": [],
+                "ignore": true,
+                "key": "main5",
                 "monsters": [
                     {
-                        "count": 8,
-                        "boundary": [
-                            -1353,
-                            -254,
-                            -1052,
-                            122
+                        "count": 10,
+                        "position": [
+                            -400,
+                            0
                         ],
-                        "type": "crab",
-                        "grow": true
+                        "radius": 220,
+                        "type": "goo"
                     },
                     {
                         "count": 6,
-                        "boundary": [
-                            -1353,
-                            126,
-                            -998,
-                            718
+                        "position": [
+                            -300,
+                            100
                         ],
-                        "type": "squig",
-                        "grow": true
+                        "radius": 180,
+                        "type": "spider"
                     },
                     {
-                        "count": 2,
-                        "boundary": [
-                            -1353,
-                            126,
-                            -998,
-                            718
+                        "count": 12,
+                        "position": [
+                            -100,
+                            100
                         ],
-                        "type": "squigtoad"
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -1353,
-                            720,
-                            -896,
-                            1516
-                        ],
-                        "type": "tortoise"
-                    },
-                    {
-                        "count": 2,
-                        "boundary": [
-                            -1353,
-                            720,
-                            -896,
-                            1516
-                        ],
-                        "type": "frog"
+                        "radius": 180,
+                        "type": "scorpion"
                     },
                     {
                         "count": 5,
-                        "boundary": [
-                            -1256,
-                            1520,
-                            -712,
-                            2004
+                        "position": [
+                            200,
+                            100
                         ],
-                        "type": "crabx"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -571,
-                            323,
-                            -571,
-                            323
-                        ],
-                        "type": "target"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -290,
-                            280,
-                            -290,
-                            280
-                        ],
-                        "type": "target_a500"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -270,
-                            280,
-                            -270,
-                            280
-                        ],
-                        "type": "target_a750"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -250,
-                            280,
-                            -250,
-                            280
-                        ],
-                        "type": "target_r500"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -230,
-                            280,
-                            -230,
-                            280
-                        ],
-                        "type": "target_r750"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -210,
-                            280,
-                            -210,
-                            280
-                        ],
-                        "type": "target_ar900"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -150,
-                            400,
-                            -150,
-                            400
-                        ],
-                        "type": "target_ar500red"
-                    },
-                    {
-                        "count": 9,
-                        "boundary": [
-                            -282,
-                            702,
-                            218,
-                            872
-                        ],
-                        "type": "goo",
-                        "grow": true
+                        "radius": 180,
+                        "type": "bat"
                     },
                     {
                         "count": 4,
-                        "boundary": [
-                            424,
-                            1014,
-                            668,
-                            1104
+                        "position": [
+                            300,
+                            -100
                         ],
-                        "type": "bee",
-                        "grow": true
+                        "radius": 160,
+                        "type": "dknight2"
                     },
                     {
-                        "count": 3,
-                        "boundary": [
-                            418,
-                            994,
-                            570,
-                            1208
+                        "count": 1,
+                        "position": [
+                            0,
+                            0
                         ],
-                        "type": "bee",
-                        "grow": true
+                        "radius": 1200,
+                        "type": "phoenix"
+                    }
+                ],
+                "name": "Old Town",
+                "npcs": [
+                    {
+                        "id": "pots",
+                        "name": "Pots",
+                        "position": [
+                            10,
+                            10
+                        ]
                     },
                     {
-                        "count": 5,
-                        "boundary": [
-                            52,
-                            1426,
-                            252,
-                            1548
-                        ],
-                        "type": "bee",
-                        "grow": true
+                        "id": "scrolls",
+                        "name": "Come Scroll Away",
+                        "position": [
+                            112,
+                            -152
+                        ]
                     },
                     {
-                        "count": 3,
-                        "boundary": [
-                            448,
-                            694,
-                            592,
-                            812
-                        ],
-                        "type": "bee",
-                        "grow": true
+                        "id": "shrine",
+                        "name": "Shrine of Gods",
+                        "position": [
+                            4,
+                            -155
+                        ]
                     },
                     {
-                        "count": 2,
-                        "boundary": [
-                            678,
-                            676,
-                            796,
-                            764
-                        ],
-                        "type": "bee",
-                        "grow": true
+                        "id": "compound",
+                        "name": "Shrine of Combinations",
+                        "position": [
+                            46,
+                            -155
+                        ]
                     },
                     {
-                        "count": 5,
-                        "boundary": [
-                            -262,
-                            1198,
-                            20,
-                            1522
-                        ],
-                        "type": "poisio",
-                        "grow": true
+                        "id": "armors",
+                        "name": "Armorz",
+                        "position": [
+                            -20,
+                            10
+                        ]
                     },
                     {
-                        "count": 6,
-                        "boundary": [
-                            696,
-                            1498,
-                            906,
-                            1922
-                        ],
-                        "type": "croc",
-                        "grow": true
+                        "id": "weapons",
+                        "name": "Weaponz",
+                        "position": [
+                            40,
+                            10
+                        ]
                     },
                     {
-                        "count": 6,
-                        "boundary": [
-                            376,
-                            1696,
-                            676,
-                            1996
-                        ],
-                        "type": "armadillo",
-                        "grow": true
+                        "id": "transporter",
+                        "name": "Transporter",
+                        "position": [
+                            180,
+                            -210
+                        ]
+                    }
+                ],
+                "spawns": [
+                    [
+                        100,
+                        100
+                    ]
+                ]
+            },
+            "original_main": {
+                "doors": [
+                    [
+                        -273,
+                        -25,
+                        24,
+                        30,
+                        "batcave",
+                        0,
+                        1
+                    ],
+                    [
+                        -374,
+                        -113,
+                        24,
+                        30,
+                        "arena",
+                        0,
+                        2
+                    ],
+                    [
+                        600,
+                        -69,
+                        32,
+                        40,
+                        "bank",
+                        0,
+                        5
+                    ]
+                ],
+                "drop_norm": 700,
+                "ignore": true,
+                "instance": true,
+                "key": "main",
+                "name": "Town",
+                "npcs": [
+                    {
+                        "id": "shrine",
+                        "name": "Shrine of Gods",
+                        "position": [
+                            319,
+                            -178
+                        ]
                     },
                     {
-                        "count": 6,
-                        "boundary": [
-                            -254,
-                            1812,
-                            90,
-                            1990
-                        ],
-                        "type": "snake",
-                        "grow": true
+                        "id": "compound",
+                        "name": "Shrine of Combinations",
+                        "position": [
+                            362,
+                            -178
+                        ]
                     },
                     {
-                        "count": 5,
-                        "boundary": [
-                            1100,
-                            160,
-                            1586,
-                            336
-                        ],
-                        "type": "bigbird"
+                        "id": "pots",
+                        "name": "Pots",
+                        "position": [
+                            112,
+                            40
+                        ]
                     },
                     {
-                        "count": 7,
-                        "boundary": [
-                            700,
-                            -282,
-                            1196,
-                            -6
-                        ],
-                        "type": "spider",
-                        "grow": true
+                        "id": "exchange",
+                        "name": "Exchanger",
+                        "position": [
+                            163,
+                            -197
+                        ]
                     },
                     {
-                        "count": 6,
-                        "boundary": [
-                            1485,
-                            -390,
-                            1670,
-                            54
-                        ],
-                        "type": "scorpion",
-                        "grow": true
+                        "id": "scrolls",
+                        "name": "Come Scroll Away",
+                        "position": [
+                            241,
+                            -215
+                        ]
                     },
                     {
-                        "boundaries": [
+                        "id": "armors",
+                        "name": "Armorz",
+                        "position": [
+                            -106,
+                            -211
+                        ]
+                    },
+                    {
+                        "id": "weapons",
+                        "name": "Weaponz",
+                        "position": [
+                            61,
+                            -220
+                        ]
+                    },
+                    {
+                        "id": "lichteaser",
+                        "name": "Lich",
+                        "position": [
+                            1352,
+                            64
+                        ]
+                    },
+                    {
+                        "id": "appearance",
+                        "name": "Zen Girl",
+                        "position": [
+                            792,
+                            800
+                        ]
+                    },
+                    {
+                        "id": "pvp",
+                        "positions": [
                             [
-                                "main",
-                                708,
-                                -300,
-                                1668,
-                                -86
-                            ],
-                            [
-                                "main",
-                                378,
-                                1686,
-                                904,
-                                1920
-                            ],
-                            [
-                                "main",
-                                -1358,
-                                -118,
-                                -1010,
-                                1680
-                            ],
-                            [
-                                "halloween",
-                                -166,
-                                453,
-                                182,
-                                808
-                            ],
-                            [
-                                "cave",
                                 -375,
-                                -1287,
-                                14,
-                                -1041
+                                -104
+                            ],
+                            [
+                                -482,
+                                -10,
+                                2
                             ]
-                        ],
-                        "count": 1,
-                        "type": "phoenix",
-                        "stype": "randomrespawn"
+                        ]
                     },
                     {
-                        "count": 1,
+                        "id": "transporter",
+                        "name": "Transporter",
+                        "position": [
+                            409,
+                            36
+                        ]
+                    }
+                ],
+                "old_monsters": [
+                    {
                         "boundary": [
-                            -460,
-                            -908,
-                            -260,
-                            -710
+                            -84,
+                            95,
+                            255,
+                            234
                         ],
+                        "count": 12,
+                        "type": "goo"
+                    },
+                    {
+                        "boundary": [
+                            279,
+                            201,
+                            718,
+                            333
+                        ],
+                        "count": 7,
+                        "type": "squig"
+                    },
+                    {
+                        "boundary": [
+                            464,
+                            37,
+                            744,
+                            190
+                        ],
+                        "count": 10,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            -20,
+                            295,
+                            221,
+                            529
+                        ],
+                        "count": 6,
+                        "type": "armadillo"
+                    },
+                    {
+                        "boundary": [
+                            50,
+                            473,
+                            534,
+                            676
+                        ],
+                        "count": 4,
+                        "type": "squigtoad"
+                    },
+                    {
+                        "boundary": [
+                            440,
+                            377,
+                            752,
+                            567
+                        ],
+                        "count": 10,
+                        "type": "bee"
+                    },
+                    {
+                        "boundary": [
+                            1045,
+                            423,
+                            1371,
+                            713
+                        ],
+                        "count": 9,
+                        "type": "spider"
+                    },
+                    {
+                        "boundary": [
+                            997,
+                            733,
+                            1374,
+                            911
+                        ],
+                        "count": 9,
+                        "type": "scorpion"
+                    },
+                    {
+                        "boundary": [
+                            820,
+                            165,
+                            1375,
+                            465
+                        ],
+                        "count": 6,
+                        "type": "croc"
+                    },
+                    {
+                        "boundary": [
+                            690,
+                            745,
+                            895,
+                            775
+                        ],
+                        "count": 1,
                         "type": "greenfairy"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            -460,
-                            -908,
-                            -260,
-                            -710
+                            690,
+                            745,
+                            742,
+                            850
                         ],
+                        "count": 1,
                         "type": "redfairy"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            -460,
-                            -908,
-                            -260,
-                            -710
+                            840,
+                            745,
+                            895,
+                            850
                         ],
+                        "count": 1,
                         "type": "bluefairy"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "puppy1"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "puppy2"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "puppy3"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "puppy4"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "kitty1"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "kitty2"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "kitty3"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -766,
-                            1072,
-                            -643,
-                            1210
-                        ],
-                        "type": "kitty4"
-                    },
-                    {
-                        "count": 2,
-                        "boundary": [
-                            -118,
-                            -317,
-                            -5,
-                            -247
-                        ],
-                        "type": "hen"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -118,
-                            -317,
-                            -5,
-                            -247
-                        ],
-                        "type": "rooster"
                     }
-                ]
-            },
-            "resort_e": {
-                "npcs": [],
-                "drop_norm": 1000,
+                ],
+                "on_death": [
+                    "original_main",
+                    4
+                ],
+                "pvp": false,
                 "quirks": [
                     [
-                        -8,
-                        -92,
+                        664,
+                        -55,
                         20,
-                        24,
-                        "the_lever"
+                        16,
+                        "sign",
+                        "An Offshore Bank"
                     ]
                 ],
-                "name": "Holo Resort",
-                "key": "resort_e",
+                "spawns": [
+                    [
+                        41,
+                        -71
+                    ],
+                    [
+                        -271,
+                        -9,
+                        0
+                    ],
+                    [
+                        -376,
+                        -99,
+                        0
+                    ],
+                    [
+                        -460,
+                        63,
+                        2
+                    ],
+                    [
+                        224,
+                        48
+                    ],
+                    [
+                        600,
+                        -42
+                    ],
+                    [
+                        408,
+                        62,
+                        3
+                    ]
+                ]
+            },
+            "resort": {
                 "doors": [
                     [
                         -8,
@@ -2328,297 +4601,393 @@ test("G.maps type validation", async () => {
                         0
                     ]
                 ],
-                "animatables": {
-                    "the_lever": {
-                        "y": -92,
-                        "x": -8,
-                        "position": "lever0"
+                "drop_norm": 1000,
+                "irregular": true,
+                "key": "resort",
+                "monsters": [],
+                "name": "Holo Resort",
+                "npcs": [
+                    {
+                        "id": "holo",
+                        "position": [
+                            -8,
+                            -108
+                        ]
+                    },
+                    {
+                        "id": "holo0",
+                        "position": [
+                            -8,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "holo1",
+                        "position": [
+                            -8,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "holo2",
+                        "position": [
+                            -8,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "holo3",
+                        "position": [
+                            -8,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "holo4",
+                        "position": [
+                            -8,
+                            0
+                        ]
+                    },
+                    {
+                        "id": "holo5",
+                        "position": [
+                            -8,
+                            0
+                        ]
                     }
-                },
+                ],
+                "quirks": [],
                 "spawns": [
                     [
                         -8,
                         91,
                         3
                     ]
-                ],
-                "monsters": []
-            },
-            "dungeon0": {
-                "npcs": [],
-                "pvp": true,
-                "no_bounds": true,
-                "instance": true,
-                "name": "Dungeon",
-                "key": "dungeon0",
-                "doors": [],
-                "on_death": [
-                    "dungeon0",
-                    0
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -50,
-                            -50,
-                            50,
-                            50
-                        ],
-                        "type": "goo"
-                    }
                 ]
             },
-            "cgallery": {
-                "npcs": [],
-                "pvp": true,
-                "no_bounds": true,
-                "instance": true,
-                "name": "Cosmetics Gallery",
-                "key": "cgallery",
-                "doors": [],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": []
-            },
-            "hut": {
-                "npcs": [],
-                "drop_norm": 1000,
-                "name": "The Hut",
-                "key": "jayson_smallHut",
+            "resort_e": {
+                "animatables": {
+                    "the_lever": {
+                        "position": "lever0",
+                        "x": -8,
+                        "y": -92
+                    }
+                },
                 "doors": [
                     [
-                        0,
-                        17,
-                        32,
+                        -8,
+                        120,
+                        40,
                         24,
-                        "main",
-                        14,
+                        "tavern",
+                        1,
                         0
+                    ]
+                ],
+                "drop_norm": 1000,
+                "key": "resort_e",
+                "monsters": [],
+                "name": "Holo Resort",
+                "npcs": [],
+                "quirks": [
+                    [
+                        -8,
+                        -92,
+                        20,
+                        24,
+                        "the_lever"
                     ]
                 ],
                 "spawns": [
                     [
-                        0,
-                        -9,
+                        -8,
+                        91,
                         3
                     ]
-                ],
-                "safe": true,
-                "monsters": []
+                ]
             },
-            "d_a1": {
+            "shellsisland": {
+                "doors": [],
+                "drop_norm": 1000,
+                "instance": true,
+                "key": "jayson_shells_island01",
+                "monsters": [
+                    {
+                        "boundary": [
+                            123,
+                            -235,
+                            270,
+                            -176
+                        ],
+                        "count": 1,
+                        "type": "kitty1"
+                    },
+                    {
+                        "boundary": [
+                            123,
+                            -235,
+                            270,
+                            -176
+                        ],
+                        "count": 1,
+                        "type": "kitty2"
+                    },
+                    {
+                        "boundary": [
+                            123,
+                            -235,
+                            270,
+                            -176
+                        ],
+                        "count": 1,
+                        "type": "kitty3"
+                    },
+                    {
+                        "boundary": [
+                            123,
+                            -235,
+                            270,
+                            -176
+                        ],
+                        "count": 1,
+                        "type": "kitty4"
+                    },
+                    {
+                        "boundary": [
+                            211,
+                            -234,
+                            271,
+                            -100
+                        ],
+                        "count": 1,
+                        "type": "puppy1"
+                    },
+                    {
+                        "boundary": [
+                            211,
+                            -234,
+                            271,
+                            -100
+                        ],
+                        "count": 1,
+                        "type": "puppy2"
+                    },
+                    {
+                        "boundary": [
+                            211,
+                            -234,
+                            271,
+                            -100
+                        ],
+                        "count": 1,
+                        "type": "puppy3"
+                    },
+                    {
+                        "boundary": [
+                            211,
+                            -234,
+                            271,
+                            -100
+                        ],
+                        "count": 1,
+                        "type": "puppy4"
+                    }
+                ],
+                "name": "New Town!",
+                "npcs": [
+                    {
+                        "id": "wizardrepeater",
+                        "position": [
+                            -190,
+                            26
+                        ]
+                    }
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "ship0": {
+                "doors": [],
+                "event": "pirateship",
+                "key": "jayson_PirateShip0",
+                "monsters": [],
+                "name": "The Pirate Ship",
                 "npcs": [],
                 "quirks": [],
-                "name": "Dungeon",
-                "key": "jayson_pvpDungeon_a1",
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ]
+                ]
+            },
+            "spookytown": {
                 "doors": [
                     [
-                        0.21,
-                        79.75,
-                        54.39,
-                        66.5,
-                        "d_b1",
-                        1,
+                        34,
+                        1449,
+                        80,
+                        30,
+                        "halloween",
+                        2,
+                        1
+                    ],
+                    [
+                        240,
+                        -181,
+                        48,
+                        32,
+                        "level2",
+                        5,
+                        2
+                    ]
+                ],
+                "drop_norm": 4000,
+                "key": "jayson_holloweenmap2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            31,
+                            -1571,
+                            480,
+                            -1293
+                        ],
+                        "count": 9,
+                        "rage": [
+                            -124,
+                            -1631,
+                            614,
+                            -1130
+                        ],
+                        "type": "mummy"
+                    },
+                    {
+                        "boundary": [
+                            286,
+                            -842,
+                            544,
+                            -562
+                        ],
+                        "count": 5,
+                        "rage": [
+                            286,
+                            -842,
+                            544,
+                            -562
+                        ],
+                        "type": "booboo"
+                    },
+                    {
+                        "boundary": [
+                            501,
+                            61,
+                            852,
+                            197
+                        ],
+                        "count": 4,
+                        "type": "stoneworm"
+                    },
+                    {
+                        "boundary": [
+                            773,
+                            -198,
+                            1216,
+                            -68
+                        ],
+                        "count": 4,
+                        "type": "stoneworm"
+                    },
+                    {
+                        "boundary": [
+                            524,
+                            860,
+                            748,
+                            1129
+                        ],
+                        "count": 1,
+                        "special": true,
+                        "type": "mrgreen"
+                    },
+                    {
+                        "boundary": [
+                            -970,
+                            -413,
+                            -597,
+                            -189
+                        ],
+                        "count": 1,
+                        "type": "jr"
+                    }
+                ],
+                "name": "Spooky Town",
+                "npcs": [
+                    {
+                        "boundary": [
+                            281,
+                            -836,
+                            508,
+                            -570
+                        ],
+                        "id": "citizen15",
+                        "position": [
+                            300,
+                            -700
+                        ]
+                    },
+                    {
+                        "boundary": [
+                            -283,
+                            -222,
+                            289,
+                            234
+                        ],
+                        "id": "citizen14",
+                        "position": [
+                            0,
+                            0
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        -63,
+                        -44,
+                        30,
+                        24,
+                        "invisible_statue"
+                    ]
+                ],
+                "ref": {
+                    "poof": {
+                        "in": "spookytown",
+                        "map": "spookytown",
+                        "x": -63,
+                        "y": -44
+                    }
+                },
+                "spawns": [
+                    [
+                        0,
                         0
                     ],
                     [
-                        254.82,
-                        -916.88,
-                        61.73,
-                        99,
-                        "d_a2",
-                        0,
+                        32,
+                        1404,
+                        3
+                    ],
+                    [
+                        192,
+                        -194,
                         1
                     ]
-                ],
-                "world": "dungeon",
-                "spawns": [
-                    [
-                        -2.2,
-                        1.48,
-                        3
-                    ],
-                    [
-                        255.6,
-                        -905.1
-                    ]
-                ],
-                "monsters": []
-            },
-            "bank": {
-                "npcs": [
-                    {
-                        "position": [
-                            1,
-                            -416
-                        ],
-                        "id": "goldnpc"
-                    },
-                    {
-                        "position": [
-                            -64,
-                            -415
-                        ],
-                        "id": "items4"
-                    },
-                    {
-                        "position": [
-                            64,
-                            -415
-                        ],
-                        "id": "items5"
-                    },
-                    {
-                        "position": [
-                            -128,
-                            -415
-                        ],
-                        "id": "items6"
-                    },
-                    {
-                        "position": [
-                            128,
-                            -415
-                        ],
-                        "id": "items7"
-                    },
-                    {
-                        "position": [
-                            -64,
-                            -191
-                        ],
-                        "id": "items0"
-                    },
-                    {
-                        "position": [
-                            64,
-                            -191
-                        ],
-                        "id": "items1"
-                    },
-                    {
-                        "position": [
-                            -128,
-                            -191
-                        ],
-                        "id": "items2"
-                    },
-                    {
-                        "position": [
-                            128,
-                            -191
-                        ],
-                        "id": "items3"
-                    },
-                    {
-                        "position": [
-                            155,
-                            -105,
-                            1
-                        ],
-                        "id": "rewards"
-                    }
-                ],
-                "quirks": [
-                    [
-                        -40.34,
-                        -448.85,
-                        26.77,
-                        42.69,
-                        "log",
-                        "It's time."
-                    ]
-                ],
-                "mount": true,
-                "name": "The Bank",
-                "key": "jayson_bank0",
-                "doors": [
-                    [
-                        0,
-                        -8,
-                        40,
-                        20,
-                        "main",
-                        3,
-                        0
-                    ],
-                    [
-                        0.13,
-                        -444.39,
-                        34.3,
-                        52.27,
-                        "bank_b",
-                        0,
-                        1,
-                        "ulocked"
-                    ]
-                ],
-                "on_exit": [
-                    "main",
-                    3
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -37,
-                        3
-                    ],
-                    [
-                        0.75,
-                        -435.79
-                    ]
-                ],
-                "safe": true,
-                "monsters": []
+                ]
             },
             "tavern": {
-                "npcs": [
-                    {
-                        "position": [
-                            150,
-                            -202
-                        ],
-                        "id": "tbartender"
-                    },
-                    {
-                        "position": [
-                            208,
-                            -156
-                        ],
-                        "id": "bouncer"
-                    }
-                ],
-                "drop_norm": 1000,
-                "quirks": [
-                    [
-                        136,
-                        -215,
-                        32,
-                        40,
-                        "log",
-                        "Impossible to reach. This is probably where they keep all the rare items."
-                    ],
-                    [
-                        -103,
-                        -229,
-                        20,
-                        16,
-                        "tavern_info"
-                    ]
-                ],
-                "name": "The Tavern",
-                "key": "jayson_tavern02",
                 "doors": [
                     [
                         1,
@@ -2639,23 +5008,10 @@ test("G.maps type validation", async () => {
                         1
                     ]
                 ],
-                "spawns": [
-                    [
-                        0,
-                        -8,
-                        3
-                    ],
-                    [
-                        272,
-                        -200
-                    ]
-                ],
-                "monsters": [],
+                "drop_norm": 1000,
+                "key": "jayson_tavern02",
                 "machines": [
                     {
-                        "set": "custom",
-                        "y": -209,
-                        "x": -169,
                         "frames": [
                             [
                                 0,
@@ -2694,6 +5050,7 @@ test("G.maps type validation", async () => {
                                 44
                             ]
                         ],
+                        "set": "custom",
                         "subframes": [
                             [
                                 11,
@@ -2762,7 +5119,9 @@ test("G.maps type validation", async () => {
                                 1
                             ]
                         ],
-                        "type": "dice"
+                        "type": "dice",
+                        "x": -169,
+                        "y": -209
                     },
                     {
                         "frames": [
@@ -2785,9 +5144,9 @@ test("G.maps type validation", async () => {
                                 48
                             ]
                         ],
-                        "x": -272,
                         "set": "custom",
                         "type": "slots",
+                        "x": -272,
                         "y": -216
                     },
                     {
@@ -2811,40 +5170,195 @@ test("G.maps type validation", async () => {
                                 48
                             ]
                         ],
-                        "x": -64,
                         "set": "custom",
                         "type": "wheel",
+                        "x": -64,
                         "y": -216
                     }
+                ],
+                "monsters": [],
+                "name": "The Tavern",
+                "npcs": [
+                    {
+                        "id": "tbartender",
+                        "position": [
+                            150,
+                            -202
+                        ]
+                    },
+                    {
+                        "id": "bouncer",
+                        "position": [
+                            208,
+                            -156
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        136,
+                        -215,
+                        32,
+                        40,
+                        "log",
+                        "Impossible to reach. This is probably where they keep all the rare items."
+                    ],
+                    [
+                        -103,
+                        -229,
+                        20,
+                        16,
+                        "tavern_info"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0,
+                        -8,
+                        3
+                    ],
+                    [
+                        272,
+                        -200
+                    ]
                 ]
             },
-            "ship0": {
-                "npcs": [],
-                "quirks": [],
-                "name": "The Pirate Ship",
-                "key": "jayson_PirateShip0",
+            "test": {
                 "doors": [],
+                "irregular": true,
+                "key": "test",
+                "monsters": [],
+                "name": "Test",
+                "no_bounds": true,
+                "npcs": [
+                    {
+                        "id": "transporter",
+                        "name": "Transporter",
+                        "position": [
+                            -50,
+                            -50
+                        ]
+                    }
+                ],
                 "spawns": [
                     [
                         0,
                         0
                     ]
+                ]
+            },
+            "tomb": {
+                "doors": [
+                    [
+                        0,
+                        -68.83,
+                        33.4,
+                        57.5,
+                        "mansion",
+                        1,
+                        0
+                    ]
                 ],
-                "monsters": [],
-                "event": "pirateship"
+                "instance": true,
+                "key": "jayson_MansionCrypt",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -484.75,
+                            -400.63,
+                            -165.11,
+                            -188.4
+                        ],
+                        "count": 1,
+                        "type": "gredpro"
+                    },
+                    {
+                        "boundary": [
+                            -378.79,
+                            44.16,
+                            -115.78,
+                            308.73
+                        ],
+                        "count": 1,
+                        "type": "ggreenpro"
+                    },
+                    {
+                        "boundary": [
+                            198.5,
+                            -402.6,
+                            490.12,
+                            -43.68
+                        ],
+                        "count": 1,
+                        "type": "gbluepro"
+                    },
+                    {
+                        "boundary": [
+                            -137.74,
+                            -531.49,
+                            235.49,
+                            -476.06
+                        ],
+                        "count": 1,
+                        "type": "gpurplepro"
+                    }
+                ],
+                "name": "The Tomb",
+                "npcs": [],
+                "spawns": [
+                    [
+                        0.82,
+                        -53.5
+                    ]
+                ]
             },
             "tunnel": {
+                "doors": [
+                    [
+                        2,
+                        18,
+                        64,
+                        32,
+                        "main",
+                        2,
+                        0
+                    ]
+                ],
+                "drop_norm": 5000,
+                "key": "jayson_miningtunnel_new",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -210,
+                            -1291,
+                            238,
+                            -853
+                        ],
+                        "count": 8,
+                        "type": "mole"
+                    },
+                    {
+                        "boundary": [
+                            -238,
+                            -638,
+                            207,
+                            -21
+                        ],
+                        "count": 7,
+                        "type": "mole"
+                    }
+                ],
+                "name": "Mining Tunnel",
                 "npcs": [
                     {
+                        "id": "gemmerchant",
                         "position": [
                             -264,
                             -96,
                             2
-                        ],
-                        "id": "gemmerchant"
+                        ]
                     }
                 ],
-                "drop_norm": 5000,
                 "quirks": [
                     [
                         50,
@@ -2863,10 +5377,16 @@ test("G.maps type validation", async () => {
                         "Gloomy"
                     ]
                 ],
+                "spawns": [
+                    [
+                        0,
+                        -16,
+                        3
+                    ]
+                ],
                 "zones": [
                     {
                         "drop": "m1",
-                        "type": "mining",
                         "polygon": [
                             [
                                 296,
@@ -3060,2521 +5580,12 @@ test("G.maps type validation", async () => {
                                 384,
                                 -16
                             ]
-                        ]
-                    }
-                ],
-                "name": "Mining Tunnel",
-                "key": "jayson_miningtunnel_new",
-                "doors": [
-                    [
-                        2,
-                        18,
-                        64,
-                        32,
-                        "main",
-                        2,
-                        0
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -16,
-                        3
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 8,
-                        "boundary": [
-                            -210,
-                            -1291,
-                            238,
-                            -853
                         ],
-                        "type": "mole"
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            -238,
-                            -638,
-                            207,
-                            -21
-                        ],
-                        "type": "mole"
+                        "type": "mining"
                     }
                 ]
-            },
-            "level2e": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [East]",
-                "key": "jayson_underground_level2_eastv2",
-                "doors": [
-                    [
-                        -7,
-                        502,
-                        40,
-                        140,
-                        "level2s",
-                        2,
-                        0
-                    ],
-                    [
-                        -23,
-                        40,
-                        40,
-                        140,
-                        "level2",
-                        3,
-                        1
-                    ]
-                ],
-                "spawns": [
-                    [
-                        18.5,
-                        459.5,
-                        2
-                    ],
-                    [
-                        3.5,
-                        0,
-                        2
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 3,
-                        "boundary": [
-                            344,
-                            -96,
-                            608,
-                            328
-                        ],
-                        "type": "pinkgoblin",
-                        "polygon": [
-                            [
-                                384,
-                                -96
-                            ],
-                            [
-                                464,
-                                -96
-                            ],
-                            [
-                                464,
-                                -64
-                            ],
-                            [
-                                608,
-                                -64
-                            ],
-                            [
-                                608,
-                                144
-                            ],
-                            [
-                                568,
-                                144
-                            ],
-                            [
-                                568,
-                                304
-                            ],
-                            [
-                                464,
-                                304
-                            ],
-                            [
-                                464,
-                                328
-                            ],
-                            [
-                                368,
-                                328
-                            ],
-                            [
-                                368,
-                                208
-                            ],
-                            [
-                                344,
-                                208
-                            ],
-                            [
-                                344,
-                                160
-                            ],
-                            [
-                                384,
-                                160
-                            ]
-                        ]
-                    }
-                ],
-                "unlist": true
-            },
-            "d_g": {
-                "npcs": [],
-                "quirks": [
-                    [
-                        -320.64,
-                        -213.45,
-                        67.59,
-                        82.61,
-                        "log",
-                        "The passage is blocked"
-                    ]
-                ],
-                "name": "Dungeon [Gateway]",
-                "key": "jayson_pvpDungeon_gateway",
-                "doors": [
-                    [
-                        0.14,
-                        47.88,
-                        46.19,
-                        36.62,
-                        "d_e",
-                        1,
-                        0
-                    ],
-                    [
-                        -320.6,
-                        -39.93,
-                        64.22,
-                        59.29,
-                        "d_b1",
-                        0,
-                        1
-                    ]
-                ],
-                "world": "dungeon",
-                "spawns": [
-                    [
-                        0.03,
-                        1.13,
-                        3
-                    ],
-                    [
-                        -319.17,
-                        -102.09,
-                        3
-                    ]
-                ],
-                "monsters": []
-            },
-            "d_e": {
-                "fx": "storm",
-                "safe": true,
-                "npcs": [],
-                "weather": "rain",
-                "key": "jayson_pvpDungeon_entrance",
-                "world": "dungeon",
-                "name": "Dungeon [Entrance]",
-                "quirks": [],
-                "doors": [
-                    [
-                        -0.15,
-                        -299.63,
-                        35.39,
-                        51.17,
-                        "d_g",
-                        0,
-                        1
-                    ]
-                ],
-                "spawns": [
-                    [
-                        -9.2,
-                        -0.91
-                    ],
-                    [
-                        0.08,
-                        -291.85
-                    ]
-                ],
-                "monsters": []
-            },
-            "abtesting": {
-                "npcs": [],
-                "pvp": true,
-                "instance": true,
-                "name": "A/B Testing",
-                "key": "jayson_vs_arena",
-                "doors": [],
-                "on_death": [
-                    "abtesting",
-                    1
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        0,
-                        -232
-                    ],
-                    [
-                        -832,
-                        0,
-                        2,
-                        160
-                    ],
-                    [
-                        832,
-                        0,
-                        1,
-                        160
-                    ]
-                ],
-                "monsters": []
-            },
-            "halloween": {
-                "npcs": [
-                    {
-                        "position": [
-                            201,
-                            -180
-                        ],
-                        "name": "Fancy Pots",
-                        "id": "fancypots"
-                    },
-                    {
-                        "position": [
-                            -97,
-                            -330
-                        ],
-                        "name": "Transporter",
-                        "id": "transporter"
-                    },
-                    {
-                        "position": [
-                            858,
-                            -160
-                        ],
-                        "id": "witch"
-                    },
-                    {
-                        "position": [
-                            201,
-                            -160
-                        ],
-                        "id": "citizen11"
-                    },
-                    {
-                        "position": [
-                            201,
-                            -160
-                        ],
-                        "id": "citizen12"
-                    },
-                    {
-                        "position": [
-                            201,
-                            -160
-                        ],
-                        "id": "citizen13"
-                    }
-                ],
-                "drop_norm": 4000,
-                "quirks": [
-                    [
-                        -228,
-                        -178,
-                        32,
-                        40,
-                        "log",
-                        "Locked but there are noises coming from inside"
-                    ],
-                    [
-                        331,
-                        -210,
-                        32,
-                        40,
-                        "log",
-                        "Locked"
-                    ],
-                    [
-                        128,
-                        -251,
-                        20,
-                        16,
-                        "sign",
-                        "Beware! Don't fall down!"
-                    ]
-                ],
-                "name": "Spooky Forest",
-                "key": "jayson_SpookyForestV2.2",
-                "doors": [
-                    [
-                        784,
-                        -1085,
-                        80,
-                        40,
-                        "spookytown",
-                        1,
-                        2
-                    ],
-                    [
-                        -1071,
-                        -1496,
-                        40,
-                        40,
-                        "level1",
-                        2,
-                        3
-                    ],
-                    [
-                        1212,
-                        150,
-                        200,
-                        36,
-                        "main",
-                        15,
-                        4
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        -38,
-                        -283,
-                        2
-                    ],
-                    [
-                        784,
-                        -1060
-                    ],
-                    [
-                        -1071,
-                        -1485
-                    ],
-                    [
-                        1212,
-                        101,
-                        3
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 2,
-                        "boundary": [
-                            -654,
-                            -384,
-                            -525,
-                            -287
-                        ],
-                        "type": "osnake"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            -620,
-                            -986,
-                            -356,
-                            -431
-                        ],
-                        "type": "osnake"
-                    },
-                    {
-                        "count": 9,
-                        "boundary": [
-                            -720,
-                            -820,
-                            -418,
-                            -203
-                        ],
-                        "type": "snake",
-                        "grow": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -720,
-                            -820,
-                            -418,
-                            -203
-                        ],
-                        "type": "greenjr"
-                    },
-                    {
-                        "count": 8,
-                        "boundary": [
-                            -166,
-                            453,
-                            182,
-                            808
-                        ],
-                        "type": "minimush",
-                        "grow": true
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -671,
-                            571,
-                            -300,
-                            800
-                        ],
-                        "type": "xscorpion"
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            141,
-                            -792,
-                            552,
-                            -702
-                        ],
-                        "type": "snake",
-                        "grow": true
-                    },
-                    {
-                        "count": 2,
-                        "boundary": [
-                            141,
-                            -792,
-                            552,
-                            -702
-                        ],
-                        "type": "osnake"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            141,
-                            -792,
-                            552,
-                            -702
-                        ],
-                        "type": "tinyp"
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            284,
-                            -1351,
-                            446,
-                            -1189
-                        ],
-                        "type": "ghost"
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            54,
-                            -1277,
-                            237,
-                            -1078
-                        ],
-                        "type": "ghost"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -664,
-                            -1808,
-                            -147,
-                            -1477
-                        ],
-                        "type": "fvampire"
-                    },
-                    {
-                        "count": 9,
-                        "boundary": [
-                            -664,
-                            -1808,
-                            -147,
-                            -1477
-                        ],
-                        "type": "ghost"
-                    }
-                ]
-            },
-            "old_bank": {
-                "npcs": [
-                    {
-                        "position": [
-                            57,
-                            0
-                        ],
-                        "id": "goldnpc"
-                    },
-                    {
-                        "position": [
-                            -24,
-                            49
-                        ],
-                        "id": "items0"
-                    },
-                    {
-                        "position": [
-                            128,
-                            49
-                        ],
-                        "id": "items1"
-                    }
-                ],
-                "ignore": true,
-                "quirks": [
-                    [
-                        56,
-                        -52,
-                        16,
-                        34,
-                        "log",
-                        "It's time."
-                    ]
-                ],
-                "mount": true,
-                "name": "The Bank",
-                "key": "bank0",
-                "doors": [
-                    [
-                        56,
-                        187,
-                        64,
-                        40,
-                        "main",
-                        5,
-                        0
-                    ]
-                ],
-                "spawns": [
-                    [
-                        56,
-                        129,
-                        3
-                    ]
-                ],
-                "monsters": []
-            },
-            "level1": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [Entrance]",
-                "key": "jayson_underground_level1v2",
-                "doors": [
-                    [
-                        0,
-                        -4,
-                        20,
-                        50,
-                        "main",
-                        11,
-                        1
-                    ],
-                    [
-                        -408,
-                        -275,
-                        20,
-                        50,
-                        "halloween",
-                        3,
-                        2
-                    ],
-                    [
-                        -865,
-                        77,
-                        20,
-                        50,
-                        "cave",
-                        1,
-                        3
-                    ],
-                    [
-                        -313,
-                        544,
-                        24,
-                        24,
-                        "level2",
-                        1,
-                        4
-                    ]
-                ],
-                "spawns": [
-                    [
-                        149,
-                        87,
-                        1
-                    ],
-                    [
-                        0,
-                        9
-                    ],
-                    [
-                        -408,
-                        -258,
-                        3
-                    ],
-                    [
-                        -863,
-                        89,
-                        3
-                    ],
-                    [
-                        -327,
-                        511,
-                        3
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -86,
-                            17,
-                            64,
-                            212
-                        ],
-                        "type": "prat"
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -308,
-                            629,
-                            0,
-                            762
-                        ],
-                        "type": "prat"
-                    }
-                ]
-            },
-            "level2": {
-                "npcs": [
-                    {
-                        "position": [
-                            -133,
-                            -187
-                        ],
-                        "id": "thief"
-                    }
-                ],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [Passing]",
-                "key": "jayson_underground_level2.2",
-                "doors": [
-                    [
-                        40,
-                        219,
-                        24,
-                        24,
-                        "level3",
-                        0,
-                        0
-                    ],
-                    [
-                        0,
-                        -20,
-                        20,
-                        50,
-                        "level1",
-                        4,
-                        1
-                    ],
-                    [
-                        -87,
-                        300,
-                        80,
-                        40,
-                        "level2s",
-                        0,
-                        2
-                    ],
-                    [
-                        247,
-                        193,
-                        40,
-                        110,
-                        "level2e",
-                        1,
-                        3
-                    ],
-                    [
-                        -327,
-                        -45,
-                        40,
-                        110,
-                        "level2w",
-                        0,
-                        4
-                    ],
-                    [
-                        79,
-                        41,
-                        20,
-                        50,
-                        "spookytown",
-                        2,
-                        5
-                    ],
-                    [
-                        -280.14,
-                        -260.37,
-                        34.84,
-                        51.33,
-                        "bank_u",
-                        0,
-                        6,
-                        "ulocked",
-                        "complicated"
-                    ]
-                ],
-                "spawns": [
-                    [
-                        39,
-                        177,
-                        3
-                    ],
-                    [
-                        1,
-                        -5
-                    ],
-                    [
-                        -87,
-                        256,
-                        3
-                    ],
-                    [
-                        216,
-                        170,
-                        1
-                    ],
-                    [
-                        -303,
-                        -69,
-                        2
-                    ],
-                    [
-                        75,
-                        56
-                    ],
-                    [
-                        -279.95,
-                        -249.15
-                    ]
-                ],
-                "monsters": [],
-                "unlist": true
-            },
-            "level3": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [Deeps]",
-                "key": "jayson_underground_level3v2",
-                "doors": [
-                    [
-                        0,
-                        -5,
-                        20,
-                        50,
-                        "level2",
-                        0,
-                        0
-                    ],
-                    [
-                        -8,
-                        -409,
-                        24,
-                        24,
-                        "level4",
-                        0,
-                        1
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        10
-                    ],
-                    [
-                        -28,
-                        -438,
-                        2
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 3,
-                        "boundary": [
-                            -451.21,
-                            -397.41,
-                            -240.59,
-                            -65.16
-                        ],
-                        "type": "mummy"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            131.97,
-                            -368.95,
-                            398.99,
-                            -56.88
-                        ],
-                        "type": "bbpompom"
-                    }
-                ],
-                "unlist": true
-            },
-            "level4": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [Abyss]",
-                "key": "jayson_underground_level4v2",
-                "doors": [
-                    [
-                        0,
-                        -3,
-                        20,
-                        50,
-                        "level3",
-                        1,
-                        0
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        14
-                    ],
-                    [
-                        291,
-                        -140
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -366.74,
-                            -395.74,
-                            -109.59,
-                            -152.68
-                        ],
-                        "type": "cgoo"
-                    },
-                    {
-                        "count": 3,
-                        "boundary": [
-                            119.92,
-                            -4.27,
-                            378.46,
-                            338.17
-                        ],
-                        "type": "mummy"
-                    }
-                ],
-                "unlist": true
-            },
-            "cyberland": {
-                "npcs": [],
-                "drop_norm": 1000,
-                "quirks": [
-                    [
-                        0,
-                        -100,
-                        80,
-                        30,
-                        "mainframe"
-                    ]
-                ],
-                "name": "Cyberland",
-                "key": "cyberland",
-                "doors": [
-                    [
-                        224,
-                        -162,
-                        16,
-                        16,
-                        "main",
-                        9,
-                        1
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0,
-                        3
-                    ],
-                    [
-                        224,
-                        -162,
-                        3
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -16,
-                            -88,
-                            -17,
-                            -89
-                        ],
-                        "type": "mechagnome"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -6,
-                            -96,
-                            -7,
-                            -95
-                        ],
-                        "type": "mechagnome"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            8,
-                            -96,
-                            7,
-                            -95
-                        ],
-                        "type": "mechagnome"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            18,
-                            -88,
-                            17,
-                            -89
-                        ],
-                        "type": "mechagnome"
-                    }
-                ],
-                "irregular": true
-            },
-            "old_main": {
-                "ignore": true,
-                "name": "Old Town",
-                "npcs": [
-                    {
-                        "position": [
-                            10,
-                            10
-                        ],
-                        "name": "Pots",
-                        "id": "pots"
-                    },
-                    {
-                        "position": [
-                            112,
-                            -152
-                        ],
-                        "name": "Come Scroll Away",
-                        "id": "scrolls"
-                    },
-                    {
-                        "position": [
-                            4,
-                            -155
-                        ],
-                        "name": "Shrine of Gods",
-                        "id": "shrine"
-                    },
-                    {
-                        "position": [
-                            46,
-                            -155
-                        ],
-                        "name": "Shrine of Combinations",
-                        "id": "compound"
-                    },
-                    {
-                        "position": [
-                            -20,
-                            10
-                        ],
-                        "name": "Armorz",
-                        "id": "armors"
-                    },
-                    {
-                        "position": [
-                            40,
-                            10
-                        ],
-                        "name": "Weaponz",
-                        "id": "weapons"
-                    },
-                    {
-                        "position": [
-                            180,
-                            -210
-                        ],
-                        "name": "Transporter",
-                        "id": "transporter"
-                    }
-                ],
-                "key": "main5",
-                "doors": [],
-                "spawns": [
-                    [
-                        100,
-                        100
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 10,
-                        "position": [
-                            -400,
-                            0
-                        ],
-                        "radius": 220,
-                        "type": "goo"
-                    },
-                    {
-                        "count": 6,
-                        "position": [
-                            -300,
-                            100
-                        ],
-                        "radius": 180,
-                        "type": "spider"
-                    },
-                    {
-                        "count": 12,
-                        "position": [
-                            -100,
-                            100
-                        ],
-                        "radius": 180,
-                        "type": "scorpion"
-                    },
-                    {
-                        "count": 5,
-                        "position": [
-                            200,
-                            100
-                        ],
-                        "radius": 180,
-                        "type": "bat"
-                    },
-                    {
-                        "count": 4,
-                        "position": [
-                            300,
-                            -100
-                        ],
-                        "radius": 160,
-                        "type": "dknight2"
-                    },
-                    {
-                        "count": 1,
-                        "position": [
-                            0,
-                            0
-                        ],
-                        "radius": 1200,
-                        "type": "phoenix"
-                    }
-                ]
-            },
-            "crypt": {
-                "npcs": [],
-                "instance": true,
-                "name": "The Crypt [Cave]",
-                "key": "jayson_instance_dungeon1",
-                "doors": [
-                    [
-                        -1.54,
-                        105.6,
-                        126.56,
-                        56.96,
-                        "cave",
-                        2,
-                        0
-                    ]
-                ],
-                "on_death": [
-                    "cave",
-                    2
-                ],
-                "on_exit": [
-                    "cave",
-                    2
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 1,
-                        "boundary": [
-                            2243.92,
-                            325.27,
-                            2689.64,
-                            505.06
-                        ],
-                        "type": "a1"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            726.81,
-                            -1076.19,
-                            726.81,
-                            -1076.19
-                        ],
-                        "type": "a7",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            1790.79,
-                            -1480.39,
-                            1790.79,
-                            -1480.39
-                        ],
-                        "type": "a3",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            2746.91,
-                            -1734.86,
-                            2746.91,
-                            -1734.86
-                        ],
-                        "type": "a6",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            2736.38,
-                            -1090.91,
-                            2736.38,
-                            -1090.91
-                        ],
-                        "type": "a5",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            1109.81,
-                            -632.68,
-                            1109.81,
-                            -632.68
-                        ],
-                        "type": "a2",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            2745.11,
-                            -655.82,
-                            2745.11,
-                            -655.82
-                        ],
-                        "type": "a4",
-                        "roam": true
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            2042.91,
-                            -883.27,
-                            2042.91,
-                            -883.27
-                        ],
-                        "type": "a8",
-                        "roam": true
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            903.57,
-                            -465.05,
-                            1479.2,
-                            -304.03
-                        ],
-                        "type": "vbat"
-                    }
-                ]
-            },
-            "cave": {
-                "npcs": [],
-                "drop_norm": 4500,
-                "quirks": [
-                    [
-                        -192,
-                        -1309,
-                        48,
-                        64,
-                        "log",
-                        "Is this a gateway?"
-                    ],
-                    [
-                        -193.41,
-                        -1295.83,
-                        0,
-                        0,
-                        "info",
-                        "crypt"
-                    ]
-                ],
-                "name": "Cave of Darkness",
-                "key": "jayson_cave02",
-                "doors": [
-                    [
-                        0,
-                        33,
-                        36,
-                        20,
-                        "main",
-                        4,
-                        0
-                    ],
-                    [
-                        1880,
-                        -1086,
-                        32,
-                        32,
-                        "level1",
-                        3,
-                        1
-                    ],
-                    [
-                        -192.22,
-                        -1308.2,
-                        50.35,
-                        56.23,
-                        "crypt",
-                        0,
-                        2,
-                        "key",
-                        "cryptkey"
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0,
-                        3
-                    ],
-                    [
-                        1877,
-                        -1078
-                    ],
-                    [
-                        -193.41,
-                        -1295.83
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -396,
-                            -594,
-                            8,
-                            -328
-                        ],
-                        "type": "bat"
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            182,
-                            -1282,
-                            465,
-                            -932
-                        ],
-                        "type": "bat"
-                    },
-                    {
-                        "count": 8,
-                        "boundary": [
-                            1018,
-                            -940,
-                            1385,
-                            -624
-                        ],
-                        "type": "bat"
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            1066,
-                            -132,
-                            1420,
-                            78
-                        ],
-                        "type": "bat"
-                    },
-                    {
-                        "count": 2,
-                        "boundary": [
-                            964,
-                            11,
-                            1252,
-                            107
-                        ],
-                        "type": "bat"
-                    },
-                    {
-                        "boundaries": [
-                            [
-                                "cave",
-                                -367,
-                                -1296,
-                                -14,
-                                -1057
-                            ],
-                            [
-                                "cave",
-                                1068,
-                                -123,
-                                1420,
-                                78
-                            ]
-                        ],
-                        "count": 1,
-                        "type": "mvampire",
-                        "stype": "randomrespawn"
-                    }
-                ]
-            },
-            "original_main": {
-                "pvp": false,
-                "on_death": [
-                    "original_main",
-                    4
-                ],
-                "old_monsters": [
-                    {
-                        "count": 12,
-                        "boundary": [
-                            -84,
-                            95,
-                            255,
-                            234
-                        ],
-                        "type": "goo"
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            279,
-                            201,
-                            718,
-                            333
-                        ],
-                        "type": "squig"
-                    },
-                    {
-                        "count": 10,
-                        "boundary": [
-                            464,
-                            37,
-                            744,
-                            190
-                        ],
-                        "type": "bee"
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -20,
-                            295,
-                            221,
-                            529
-                        ],
-                        "type": "armadillo"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            50,
-                            473,
-                            534,
-                            676
-                        ],
-                        "type": "squigtoad"
-                    },
-                    {
-                        "count": 10,
-                        "boundary": [
-                            440,
-                            377,
-                            752,
-                            567
-                        ],
-                        "type": "bee"
-                    },
-                    {
-                        "count": 9,
-                        "boundary": [
-                            1045,
-                            423,
-                            1371,
-                            713
-                        ],
-                        "type": "spider"
-                    },
-                    {
-                        "count": 9,
-                        "boundary": [
-                            997,
-                            733,
-                            1374,
-                            911
-                        ],
-                        "type": "scorpion"
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            820,
-                            165,
-                            1375,
-                            465
-                        ],
-                        "type": "croc"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            690,
-                            745,
-                            895,
-                            775
-                        ],
-                        "type": "greenfairy"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            690,
-                            745,
-                            742,
-                            850
-                        ],
-                        "type": "redfairy"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            840,
-                            745,
-                            895,
-                            850
-                        ],
-                        "type": "bluefairy"
-                    }
-                ],
-                "npcs": [
-                    {
-                        "position": [
-                            319,
-                            -178
-                        ],
-                        "name": "Shrine of Gods",
-                        "id": "shrine"
-                    },
-                    {
-                        "position": [
-                            362,
-                            -178
-                        ],
-                        "name": "Shrine of Combinations",
-                        "id": "compound"
-                    },
-                    {
-                        "position": [
-                            112,
-                            40
-                        ],
-                        "name": "Pots",
-                        "id": "pots"
-                    },
-                    {
-                        "position": [
-                            163,
-                            -197
-                        ],
-                        "name": "Exchanger",
-                        "id": "exchange"
-                    },
-                    {
-                        "position": [
-                            241,
-                            -215
-                        ],
-                        "name": "Come Scroll Away",
-                        "id": "scrolls"
-                    },
-                    {
-                        "position": [
-                            -106,
-                            -211
-                        ],
-                        "name": "Armorz",
-                        "id": "armors"
-                    },
-                    {
-                        "position": [
-                            61,
-                            -220
-                        ],
-                        "name": "Weaponz",
-                        "id": "weapons"
-                    },
-                    {
-                        "position": [
-                            1352,
-                            64
-                        ],
-                        "name": "Lich",
-                        "id": "lichteaser"
-                    },
-                    {
-                        "position": [
-                            792,
-                            800
-                        ],
-                        "name": "Zen Girl",
-                        "id": "appearance"
-                    },
-                    {
-                        "positions": [
-                            [
-                                -375,
-                                -104
-                            ],
-                            [
-                                -482,
-                                -10,
-                                2
-                            ]
-                        ],
-                        "id": "pvp"
-                    },
-                    {
-                        "position": [
-                            409,
-                            36
-                        ],
-                        "name": "Transporter",
-                        "id": "transporter"
-                    }
-                ],
-                "key": "main",
-                "name": "Town",
-                "instance": true,
-                "ignore": true,
-                "drop_norm": 700,
-                "quirks": [
-                    [
-                        664,
-                        -55,
-                        20,
-                        16,
-                        "sign",
-                        "An Offshore Bank"
-                    ]
-                ],
-                "doors": [
-                    [
-                        -273,
-                        -25,
-                        24,
-                        30,
-                        "batcave",
-                        0,
-                        1
-                    ],
-                    [
-                        -374,
-                        -113,
-                        24,
-                        30,
-                        "arena",
-                        0,
-                        2
-                    ],
-                    [
-                        600,
-                        -69,
-                        32,
-                        40,
-                        "bank",
-                        0,
-                        5
-                    ]
-                ],
-                "spawns": [
-                    [
-                        41,
-                        -71
-                    ],
-                    [
-                        -271,
-                        -9,
-                        0
-                    ],
-                    [
-                        -376,
-                        -99,
-                        0
-                    ],
-                    [
-                        -460,
-                        63,
-                        2
-                    ],
-                    [
-                        224,
-                        48
-                    ],
-                    [
-                        600,
-                        -42
-                    ],
-                    [
-                        408,
-                        62,
-                        3
-                    ]
-                ]
-            },
-            "duelland": {
-                "pvp": true,
-                "npcs": [],
-                "key": "jayson_duel_arena",
-                "loss": false,
-                "name": "Duelland",
-                "irregular": true,
-                "instance": true,
-                "drop_norm": 1000,
-                "quirks": [],
-                "doors": [
-                    [
-                        0,
-                        16,
-                        32,
-                        20,
-                        "main",
-                        7,
-                        0
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0,
-                        3
-                    ],
-                    [
-                        -712,
-                        -800,
-                        0,
-                        40
-                    ],
-                    [
-                        712,
-                        -800,
-                        0,
-                        40
-                    ]
-                ],
-                "monsters": []
-            },
-            "spookytown": {
-                "npcs": [
-                    {
-                        "position": [
-                            300,
-                            -700
-                        ],
-                        "boundary": [
-                            281,
-                            -836,
-                            508,
-                            -570
-                        ],
-                        "id": "citizen15"
-                    },
-                    {
-                        "position": [
-                            0,
-                            0
-                        ],
-                        "boundary": [
-                            -283,
-                            -222,
-                            289,
-                            234
-                        ],
-                        "id": "citizen14"
-                    }
-                ],
-                "drop_norm": 4000,
-                "quirks": [
-                    [
-                        -63,
-                        -44,
-                        30,
-                        24,
-                        "invisible_statue"
-                    ]
-                ],
-                "name": "Spooky Town",
-                "key": "jayson_holloweenmap2",
-                "doors": [
-                    [
-                        34,
-                        1449,
-                        80,
-                        30,
-                        "halloween",
-                        2,
-                        1
-                    ],
-                    [
-                        240,
-                        -181,
-                        48,
-                        32,
-                        "level2",
-                        5,
-                        2
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        32,
-                        1404,
-                        3
-                    ],
-                    [
-                        192,
-                        -194,
-                        1
-                    ]
-                ],
-                "ref": {
-                    "poof": {
-                        "y": -44,
-                        "map": "spookytown",
-                        "x": -63,
-                        "in": "spookytown"
-                    }
-                },
-                "monsters": [
-                    {
-                        "count": 9,
-                        "boundary": [
-                            31,
-                            -1571,
-                            480,
-                            -1293
-                        ],
-                        "type": "mummy",
-                        "rage": [
-                            -124,
-                            -1631,
-                            614,
-                            -1130
-                        ]
-                    },
-                    {
-                        "count": 5,
-                        "boundary": [
-                            286,
-                            -842,
-                            544,
-                            -562
-                        ],
-                        "type": "booboo",
-                        "rage": [
-                            286,
-                            -842,
-                            544,
-                            -562
-                        ]
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            501,
-                            61,
-                            852,
-                            197
-                        ],
-                        "type": "stoneworm"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            773,
-                            -198,
-                            1216,
-                            -68
-                        ],
-                        "type": "stoneworm"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -970,
-                            -413,
-                            -597,
-                            -189
-                        ],
-                        "type": "jr"
-                    }
-                ]
-            },
-            "test": {
-                "npcs": [
-                    {
-                        "position": [
-                            -50,
-                            -50
-                        ],
-                        "name": "Transporter",
-                        "id": "transporter"
-                    }
-                ],
-                "irregular": true,
-                "no_bounds": true,
-                "name": "Test",
-                "key": "test",
-                "doors": [],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": []
-            },
-            "bank_u": {
-                "npcs": [],
-                "quirks": [],
-                "mount": true,
-                "name": "The Bank [Underground]",
-                "key": "jayson_theBank2",
-                "doors": [
-                    [
-                        -479.82,
-                        -36.54,
-                        31,
-                        49.64,
-                        "level2",
-                        6,
-                        0,
-                        "ulocked",
-                        "complicated"
-                    ],
-                    [
-                        0.22,
-                        -50.06,
-                        64.89,
-                        63.09,
-                        "bank_b",
-                        1,
-                        1,
-                        "ulocked"
-                    ]
-                ],
-                "on_exit": [
-                    "level2",
-                    6
-                ],
-                "spawns": [
-                    [
-                        -479.47,
-                        -25.02
-                    ],
-                    [
-                        -0.4,
-                        -41.24
-                    ]
-                ],
-                "safe": true,
-                "monsters": []
-            },
-            "shellsisland": {
-                "name": "New Town!",
-                "instance": true,
-                "npcs": [
-                    {
-                        "position": [
-                            -190,
-                            26
-                        ],
-                        "id": "wizardrepeater"
-                    }
-                ],
-                "drop_norm": 1000,
-                "key": "jayson_shells_island01",
-                "doors": [],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 1,
-                        "boundary": [
-                            123,
-                            -235,
-                            270,
-                            -176
-                        ],
-                        "type": "kitty1"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            123,
-                            -235,
-                            270,
-                            -176
-                        ],
-                        "type": "kitty2"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            123,
-                            -235,
-                            270,
-                            -176
-                        ],
-                        "type": "kitty3"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            123,
-                            -235,
-                            270,
-                            -176
-                        ],
-                        "type": "kitty4"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            211,
-                            -234,
-                            271,
-                            -100
-                        ],
-                        "type": "puppy1"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            211,
-                            -234,
-                            271,
-                            -100
-                        ],
-                        "type": "puppy2"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            211,
-                            -234,
-                            271,
-                            -100
-                        ],
-                        "type": "puppy3"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            211,
-                            -234,
-                            271,
-                            -100
-                        ],
-                        "type": "puppy4"
-                    }
-                ]
-            },
-            "goobrawl": {
-                "npcs": [],
-                "instance": true,
-                "name": "Goo Brawl!",
-                "key": "jayson_gooisland",
-                "doors": [],
-                "on_death": [
-                    "goobrawl",
-                    0
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -50,
-                            -50,
-                            50,
-                            50
-                        ],
-                        "type": "goo"
-                    }
-                ]
-            },
-            "level2s": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [South]",
-                "key": "jayson_underground_level2_southv2",
-                "doors": [
-                    [
-                        0,
-                        -20,
-                        40,
-                        40,
-                        "level2",
-                        2,
-                        0
-                    ],
-                    [
-                        -240,
-                        668,
-                        20,
-                        50,
-                        "desertland",
-                        2,
-                        1
-                    ],
-                    [
-                        406,
-                        580,
-                        40,
-                        140,
-                        "level2e",
-                        0,
-                        2
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        -14
-                    ],
-                    [
-                        -240,
-                        681
-                    ],
-                    [
-                        383,
-                        539,
-                        1
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 8,
-                        "boundary": [
-                            -52.5,
-                            359.33,
-                            120.29,
-                            646.25
-                        ],
-                        "type": "cgoo"
-                    }
-                ],
-                "unlist": true
-            },
-            "level2w": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [West]",
-                "key": "jayson_underground_level2_westv2",
-                "doors": [
-                    [
-                        39,
-                        53,
-                        40,
-                        140,
-                        "level2",
-                        4,
-                        0
-                    ],
-                    [
-                        -96,
-                        -197,
-                        60,
-                        40,
-                        "level2n",
-                        0,
-                        1
-                    ],
-                    [
-                        -528,
-                        -197,
-                        60,
-                        40,
-                        "level2n",
-                        1,
-                        2
-                    ]
-                ],
-                "spawns": [
-                    [
-                        16,
-                        9,
-                        1
-                    ],
-                    [
-                        -96,
-                        -184
-                    ],
-                    [
-                        -528,
-                        -184
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 5,
-                        "boundary": [
-                            -447,
-                            9,
-                            -208,
-                            323
-                        ],
-                        "type": "oneeye"
-                    }
-                ],
-                "unlist": true
-            },
-            "mtunnel": {
-                "npcs": [],
-                "drop_norm": 4500,
-                "quirks": [],
-                "name": "Underground [Tunnel]",
-                "key": "jayson_mainlandTunnel",
-                "doors": [
-                    [
-                        0,
-                        -3,
-                        24,
-                        60,
-                        "main",
-                        16,
-                        0
-                    ],
-                    [
-                        656,
-                        -240,
-                        24,
-                        60,
-                        "main",
-                        17,
-                        1
-                    ],
-                    [
-                        1168,
-                        -65,
-                        24,
-                        60,
-                        "main",
-                        18,
-                        2
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        8
-                    ],
-                    [
-                        671,
-                        -225,
-                        3
-                    ],
-                    [
-                        1169,
-                        -55,
-                        3
-                    ]
-                ],
-                "monsters": []
-            },
-            "level2n": {
-                "npcs": [],
-                "drop_norm": 5000,
-                "quirks": [],
-                "name": "Underground [North]",
-                "key": "jayson_underground_level2_northv2",
-                "doors": [
-                    [
-                        0,
-                        38,
-                        120,
-                        45,
-                        "level2w",
-                        1,
-                        0
-                    ],
-                    [
-                        -416,
-                        38,
-                        60,
-                        45,
-                        "level2w",
-                        2,
-                        1
-                    ],
-                    [
-                        -112,
-                        -691,
-                        20,
-                        40,
-                        "winterland",
-                        4,
-                        2
-                    ]
-                ],
-                "spawns": [
-                    [
-                        0,
-                        0,
-                        3
-                    ],
-                    [
-                        -416,
-                        0,
-                        3
-                    ],
-                    [
-                        -112,
-                        -676
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 6,
-                        "boundary": [
-                            -621,
-                            -241,
-                            -234,
-                            -65
-                        ],
-                        "type": "pppompom"
-                    },
-                    {
-                        "count": 7,
-                        "boundary": [
-                            153,
-                            -303,
-                            432,
-                            -75
-                        ],
-                        "type": "pppompom"
-                    }
-                ],
-                "unlist": true
-            },
-            "bank_b": {
-                "npcs": [
-                    {
-                        "position": [
-                            -592.5,
-                            -300
-                        ],
-                        "id": "items8"
-                    },
-                    {
-                        "position": [
-                            -528,
-                            -318
-                        ],
-                        "id": "items9"
-                    },
-                    {
-                        "position": [
-                            -464,
-                            -333
-                        ],
-                        "id": "items10"
-                    },
-                    {
-                        "position": [
-                            -400.5,
-                            -350
-                        ],
-                        "id": "items11"
-                    },
-                    {
-                        "position": [
-                            -128.5,
-                            -429.5
-                        ],
-                        "id": "items12"
-                    },
-                    {
-                        "position": [
-                            -64.5,
-                            -413.5
-                        ],
-                        "id": "items13"
-                    },
-                    {
-                        "position": [
-                            -0.5,
-                            -398
-                        ],
-                        "id": "items14"
-                    },
-                    {
-                        "position": [
-                            63,
-                            -381.5
-                        ],
-                        "id": "items15"
-                    },
-                    {
-                        "position": [
-                            -480.5,
-                            50
-                        ],
-                        "id": "items16"
-                    },
-                    {
-                        "position": [
-                            -416.5,
-                            65.5
-                        ],
-                        "id": "items17"
-                    },
-                    {
-                        "position": [
-                            -352.5,
-                            81.5
-                        ],
-                        "id": "items18"
-                    },
-                    {
-                        "position": [
-                            -288.5,
-                            97.5
-                        ],
-                        "id": "items19"
-                    },
-                    {
-                        "position": [
-                            -16.5,
-                            -14
-                        ],
-                        "id": "items20"
-                    },
-                    {
-                        "position": [
-                            47.5,
-                            -14
-                        ],
-                        "id": "items21"
-                    },
-                    {
-                        "position": [
-                            111,
-                            -14
-                        ],
-                        "id": "items22"
-                    },
-                    {
-                        "position": [
-                            175,
-                            -14
-                        ],
-                        "id": "items23"
-                    }
-                ],
-                "quirks": [],
-                "mount": true,
-                "name": "The Bank [Basement]",
-                "key": "jayson_theBank1",
-                "doors": [
-                    [
-                        -264.04,
-                        -421.14,
-                        66.84,
-                        65.15,
-                        "bank",
-                        1,
-                        0
-                    ],
-                    [
-                        -104.49,
-                        -179.73,
-                        32.05,
-                        45.25,
-                        "bank_u",
-                        1,
-                        1,
-                        "ulocked"
-                    ]
-                ],
-                "on_exit": [
-                    "main",
-                    3
-                ],
-                "spawns": [
-                    [
-                        -264.38,
-                        -411.81
-                    ],
-                    [
-                        -103.51,
-                        -170.63
-                    ]
-                ],
-                "safe": true,
-                "monsters": []
             },
             "winter_cave": {
-                "npcs": [],
-                "drop_norm": 4000,
-                "quirks": [],
-                "name": "Frozen Cave",
-                "key": "jayson_xmas_cave1",
                 "doors": [
                     [
                         3,
@@ -5586,354 +5597,110 @@ test("G.maps type validation", async () => {
                         0
                     ]
                 ],
-                "spawns": [
-                    [
-                        0,
-                        11,
-                        3
-                    ]
-                ],
+                "drop_norm": 4000,
+                "key": "jayson_xmas_cave1",
                 "monsters": [
                     {
-                        "count": 6,
                         "boundary": [
                             -234,
                             -300,
                             336,
                             -28
                         ],
+                        "count": 6,
                         "type": "bbpompom"
                     },
                     {
-                        "count": 7,
                         "boundary": [
                             -318,
                             -1112,
                             153,
                             -786
                         ],
+                        "count": 7,
                         "type": "bbpompom"
                     }
-                ]
-            },
-            "arena": {
+                ],
+                "name": "Frozen Cave",
                 "npcs": [],
-                "pvp": true,
-                "safe_pvp": true,
-                "name": "Arena",
-                "key": "arena3",
-                "doors": [
-                    [
-                        152.99,
-                        85.42,
-                        60.9,
-                        40.55,
-                        "main",
-                        6,
-                        0
-                    ]
-                ],
-                "on_death": [
-                    "main",
-                    7
-                ],
-                "spawns": [
-                    [
-                        151.6,
-                        40.82
-                    ]
-                ],
-                "drop_norm": 2000,
-                "monsters": [
-                    {
-                        "count": 32,
-                        "boundary": [
-                            -376,
-                            -888,
-                            1144,
-                            48
-                        ],
-                        "type": "cgoo",
-                        "polygon": [
-                            [
-                                -376,
-                                48
-                            ],
-                            [
-                                1144,
-                                48
-                            ],
-                            [
-                                1144,
-                                -888
-                            ],
-                            [
-                                248,
-                                -888
-                            ],
-                            [
-                                248,
-                                -776
-                            ],
-                            [
-                                520,
-                                -776
-                            ],
-                            [
-                                520,
-                                -560
-                            ],
-                            [
-                                248,
-                                -560
-                            ],
-                            [
-                                248,
-                                -376
-                            ],
-                            [
-                                288,
-                                -376
-                            ],
-                            [
-                                288,
-                                -336
-                            ],
-                            [
-                                328,
-                                -336
-                            ],
-                            [
-                                328,
-                                -304
-                            ],
-                            [
-                                480,
-                                -304
-                            ],
-                            [
-                                480,
-                                -344
-                            ],
-                            [
-                                512,
-                                -344
-                            ],
-                            [
-                                512,
-                                -368
-                            ],
-                            [
-                                720,
-                                -368
-                            ],
-                            [
-                                720,
-                                -192
-                            ],
-                            [
-                                688,
-                                -192
-                            ],
-                            [
-                                688,
-                                -152
-                            ],
-                            [
-                                608,
-                                -152
-                            ],
-                            [
-                                608,
-                                -120
-                            ],
-                            [
-                                272,
-                                -120
-                            ],
-                            [
-                                272,
-                                -152
-                            ],
-                            [
-                                104,
-                                -152
-                            ],
-                            [
-                                104,
-                                -200
-                            ],
-                            [
-                                -128,
-                                -200
-                            ],
-                            [
-                                -128,
-                                -400
-                            ],
-                            [
-                                240,
-                                -400
-                            ],
-                            [
-                                240,
-                                -888
-                            ],
-                            [
-                                -376,
-                                -888
-                            ]
-                        ]
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            259,
-                            -764,
-                            500,
-                            -579
-                        ],
-                        "type": "skeletor"
-                    }
-                ]
-            },
-            "desertland": {
-                "freeze_multiplier": 0.4,
-                "npcs": [
-                    {
-                        "position": [
-                            -14,
-                            -477
-                        ],
-                        "id": "transporter"
-                    },
-                    {
-                        "position": [
-                            316,
-                            -270
-                        ],
-                        "id": "locksmith"
-                    }
-                ],
-                "name": "Desertland",
-                "key": "jayson_desertlandW",
-                "doors": [
-                    [
-                        600,
-                        -2383,
-                        40,
-                        40,
-                        "level2s",
-                        1,
-                        2
-                    ]
-                ],
+                "quirks": [],
                 "spawns": [
                     [
                         0,
+                        11,
+                        3
+                    ]
+                ]
+            },
+            "winter_inn": {
+                "doors": [
+                    [
+                        0,
+                        29,
+                        24,
+                        20,
+                        "winterland",
+                        2,
                         0
                     ],
                     [
-                        10,
-                        -386
-                    ],
-                    [
-                        601,
-                        -2365
+                        47,
+                        -228,
+                        28,
+                        36,
+                        "winter_inn_rooms",
+                        0,
+                        1
                     ]
                 ],
                 "drop_norm": 1000,
-                "burn_multiplier": 1.6,
-                "monsters": [
+                "key": "jayson_winter_inn",
+                "monsters": [],
+                "name": "Wanderers' Inn",
+                "npcs": [
                     {
-                        "count": 4,
-                        "boundary": [
-                            -1013,
-                            -472,
-                            -575,
-                            -130
-                        ],
-                        "type": "plantoid"
+                        "id": "wbartender",
+                        "position": [
+                            -143,
+                            -220
+                        ]
                     },
                     {
-                        "count": 4,
-                        "boundary": [
-                            -1013,
-                            -624,
-                            -762,
-                            -137
-                        ],
-                        "type": "plantoid"
+                        "id": "citizen1",
+                        "position": [
+                            0,
+                            -5
+                        ]
                     },
                     {
-                        "count": 8,
-                        "boundary": [
-                            -992,
-                            -58,
-                            -666,
-                            328
-                        ],
-                        "type": "porcupine",
-                        "grow": true
+                        "id": "citizen5",
+                        "position": [
+                            0,
+                            -5
+                        ]
                     },
                     {
-                        "count": 3,
-                        "boundary": [
-                            -757,
-                            -2034,
-                            -70,
-                            -1888
-                        ],
-                        "type": "ent"
-                    },
-                    {
-                        "count": 4,
-                        "boundary": [
-                            91,
-                            -952,
-                            353,
-                            -702
-                        ],
-                        "type": "fireroamer"
-                    },
-                    {
-                        "count": 2,
-                        "boundary": [
-                            161,
-                            -868,
-                            453,
-                            -697
-                        ],
-                        "type": "fireroamer"
-                    },
-                    {
-                        "count": 6,
-                        "boundary": [
-                            220.31,
-                            -1569.2,
-                            561.04,
-                            -1275.72
-                        ],
-                        "type": "scorpion"
-                    },
-                    {
-                        "count": 1,
-                        "boundary": [
-                            -522.44,
-                            -1340.19,
-                            -295.2,
-                            -1183.31
-                        ],
-                        "type": "bscorpion"
+                        "id": "citizen6",
+                        "position": [
+                            0,
+                            -5
+                        ]
                     }
+                ],
+                "quirks": [],
+                "spawns": [
+                    [
+                        0,
+                        -5,
+                        3
+                    ],
+                    [
+                        28,
+                        -208
+                    ]
                 ]
             },
             "winter_inn_rooms": {
-                "npcs": [],
-                "drop_norm": 1000,
-                "quirks": [],
-                "name": "Rooms",
-                "key": "jayson_winter_inn_room1",
                 "doors": [
                     [
                         0,
@@ -5945,6 +5712,12 @@ test("G.maps type validation", async () => {
                         0
                     ]
                 ],
+                "drop_norm": 1000,
+                "key": "jayson_winter_inn_room1",
+                "monsters": [],
+                "name": "Rooms",
+                "npcs": [],
+                "quirks": [],
                 "spawns": [
                     [
                         0,
@@ -5952,139 +5725,383 @@ test("G.maps type validation", async () => {
                         3
                     ]
                 ],
-                "monsters": [],
                 "unlist": true
             },
-            "jail": {
-                "npcs": [
-                    {
-                        "position": [
-                            191,
-                            -156
-                        ],
-                        "id": "jailer"
-                    }
-                ],
-                "drop_norm": 1000,
-                "quirks": [
-                    [
-                        -81,
-                        -165,
-                        30,
-                        40,
-                        "log",
-                        "Locked"
-                    ]
-                ],
-                "name": "Jail",
-                "key": "jayson_al_jail",
-                "doors": [],
-                "spawns": [
-                    [
-                        -79,
-                        -153
-                    ]
-                ],
-                "monsters": [
-                    {
-                        "count": 3,
-                        "boundary": [
-                            -223,
-                            -140,
-                            225,
-                            156
-                        ],
-                        "type": "jrat"
-                    }
-                ],
-                "irregular": true
-            },
-            "tomb": {
-                "key": "jayson_MansionCrypt",
-                "name": "The Tomb",
-                "npcs": [],
-                "instance": true,
+            "winter_instance": {
                 "doors": [
                     [
-                        0,
-                        -68.83,
-                        33.4,
-                        57.5,
-                        "mansion",
-                        1,
+                        -7.23,
+                        250.26,
+                        38.15,
+                        28.55,
+                        "winterland",
+                        5,
                         0
                     ]
                 ],
-                "spawns": [
-                    [
-                        0.82,
-                        -53.5
-                    ]
-                ],
+                "drop_norm": 4000,
+                "instance": true,
+                "key": "jayson_winterInstance",
                 "monsters": [
                     {
-                        "count": 1,
                         "boundary": [
-                            -484.75,
-                            -400.63,
-                            -165.11,
-                            -188.4
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
                         ],
-                        "type": "gredpro"
+                        "count": 1,
+                        "type": "xmagefz"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            -378.79,
-                            44.16,
-                            -115.78,
-                            308.73
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
                         ],
-                        "type": "ggreenpro"
+                        "count": 0,
+                        "type": "xmagefi"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            198.5,
-                            -402.6,
-                            490.12,
-                            -43.68
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
                         ],
-                        "type": "gbluepro"
+                        "count": 0,
+                        "type": "xmagen"
                     },
                     {
-                        "count": 1,
                         "boundary": [
-                            -137.74,
-                            -531.49,
-                            235.49,
-                            -476.06
+                            -255.17,
+                            -261.64,
+                            239.07,
+                            221.4
                         ],
-                        "type": "gpurplepro"
+                        "count": 0,
+                        "type": "xmagex"
                     }
+                ],
+                "name": "Lair of the Dark Mage",
+                "npcs": [],
+                "on_exit": [
+                    "winterland",
+                    5
+                ],
+                "quirks": [],
+                "spawns": [
+                    [
+                        -8,
+                        216,
+                        3
+                    ]
+                ]
+            },
+            "winterland": {
+                "burn_multiplier": 0.6,
+                "doors": [
+                    [
+                        -280,
+                        -132,
+                        32,
+                        40,
+                        "winter_inn",
+                        0,
+                        2
+                    ],
+                    [
+                        602,
+                        -1289,
+                        24,
+                        30,
+                        "winter_cave",
+                        0,
+                        3
+                    ],
+                    [
+                        -864,
+                        -1570,
+                        24,
+                        24,
+                        "level2n",
+                        2,
+                        4
+                    ],
+                    [
+                        1064.28,
+                        -2017.79,
+                        31.66,
+                        47.45,
+                        "winter_instance",
+                        0,
+                        5,
+                        "key",
+                        "frozenkey"
+                    ]
+                ],
+                "drop_norm": 3000,
+                "freeze_multiplier": 1.5,
+                "key": "jayson_WinterLandV2",
+                "monsters": [
+                    {
+                        "boundary": [
+                            30,
+                            -2954,
+                            836,
+                            -2536
+                        ],
+                        "count": 1,
+                        "type": "stompy"
+                    },
+                    {
+                        "boundary": [
+                            30,
+                            -2954,
+                            836,
+                            -2536
+                        ],
+                        "count": 7,
+                        "type": "wolf"
+                    },
+                    {
+                        "boundary": [
+                            682,
+                            -967,
+                            1482,
+                            -779
+                        ],
+                        "count": 10,
+                        "grow": true,
+                        "type": "arcticbee"
+                    },
+                    {
+                        "boundary": [
+                            -367,
+                            -2234,
+                            29,
+                            -1819
+                        ],
+                        "count": 4,
+                        "type": "wolfie"
+                    },
+                    {
+                        "boundary": [
+                            236,
+                            -2232,
+                            460,
+                            -1847
+                        ],
+                        "count": 3,
+                        "type": "wolfie"
+                    },
+                    {
+                        "boundary": [
+                            -173,
+                            -1488,
+                            212,
+                            -730
+                        ],
+                        "count": 8,
+                        "type": "boar"
+                    },
+                    {
+                        "boundary": [
+                            550,
+                            -240,
+                            1097,
+                            149
+                        ],
+                        "count": 5,
+                        "type": "iceroamer"
+                    },
+                    {
+                        "boundary": [
+                            1335,
+                            -71,
+                            1689,
+                            278
+                        ],
+                        "count": 4,
+                        "type": "iceroamer"
+                    },
+                    {
+                        "boundary": [
+                            782.25,
+                            395.96,
+                            888.71,
+                            450.28
+                        ],
+                        "count": 0,
+                        "roam": true,
+                        "type": "icegolem"
+                    }
+                ],
+                "name": "Winterland",
+                "npcs": [
+                    {
+                        "id": "leathermerchant",
+                        "position": [
+                            262,
+                            -48.5
+                        ]
+                    },
+                    {
+                        "id": "transporter",
+                        "position": [
+                            -73,
+                            -393
+                        ]
+                    },
+                    {
+                        "id": "guard",
+                        "position": [
+                            1065,
+                            -2015
+                        ]
+                    },
+                    {
+                        "id": "citizen7",
+                        "position": [
+                            -15,
+                            5
+                        ]
+                    },
+                    {
+                        "id": "citizen8",
+                        "position": [
+                            -15,
+                            5
+                        ]
+                    },
+                    {
+                        "id": "citizen9",
+                        "position": [
+                            -15,
+                            5
+                        ]
+                    },
+                    {
+                        "id": "citizen10",
+                        "position": [
+                            -15,
+                            5
+                        ]
+                    }
+                ],
+                "quirks": [
+                    [
+                        -247,
+                        -73,
+                        20,
+                        16,
+                        "sign",
+                        "The Wanderers' Inn"
+                    ],
+                    [
+                        202,
+                        -56,
+                        20,
+                        16,
+                        "sign",
+                        "Leather Shop. If I'm not outside, check inside!"
+                    ],
+                    [
+                        65,
+                        -1601,
+                        20,
+                        16,
+                        "sign",
+                        "Dangers Ahead. Beware!"
+                    ],
+                    [
+                        465,
+                        -2296,
+                        20,
+                        16,
+                        "note",
+                        "Stompy and his companions defeated me many times. However, I've discovered that If I stay just around the corner they can't even reach me! HAHA!"
+                    ],
+                    [
+                        -230,
+                        95,
+                        20,
+                        16,
+                        "log",
+                        "Old Man's House"
+                    ],
+                    [
+                        168,
+                        -83,
+                        32,
+                        40,
+                        "log",
+                        "Locked"
+                    ],
+                    [
+                        138,
+                        223,
+                        32,
+                        40,
+                        "log",
+                        "Locked. This is probably where the guards stay"
+                    ],
+                    [
+                        413,
+                        -3080,
+                        24,
+                        30,
+                        "log",
+                        "Can't reach. This might be Stompy's lair"
+                    ],
+                    [
+                        600.5,
+                        -1273,
+                        0,
+                        0,
+                        "info",
+                        "darkmage"
+                    ]
+                ],
+                "spawns": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        -8,
+                        -337,
+                        3
+                    ],
+                    [
+                        -280,
+                        -123
+                    ],
+                    [
+                        600,
+                        -1275
+                    ],
+                    [
+                        -864,
+                        -1614,
+                        3
+                    ],
+                    [
+                        1063,
+                        -2007
+                    ],
+                    [
+                        864.5,
+                        429.5
+                    ],
+                    [
+                        1018.5,
+                        401.5
+                    ]
                 ]
             },
             "woffice": {
-                "npcs": [
-                    {
-                        "position": [
-                            -24,
-                            -178
-                        ],
-                        "id": "lostandfound"
-                    },
-                    {
-                        "position": [
-                            32,
-                            -178,
-                            3
-                        ],
-                        "id": "wnpc"
-                    }
-                ],
-                "drop_norm": 1000,
-                "name": "Wizard's Crib",
-                "key": "jayson_smallNPCcave",
                 "doors": [
                     [
                         -29,
@@ -6096,6 +6113,40 @@ test("G.maps type validation", async () => {
                         0
                     ]
                 ],
+                "drop_norm": 1000,
+                "key": "jayson_smallNPCcave",
+                "monsters": [
+                    {
+                        "boundary": [
+                            -112,
+                            -142,
+                            60,
+                            -16
+                        ],
+                        "count": 1,
+                        "special": true,
+                        "type": "grinch"
+                    }
+                ],
+                "name": "Wizard's Crib",
+                "npcs": [
+                    {
+                        "id": "lostandfound",
+                        "position": [
+                            -24,
+                            -178
+                        ]
+                    },
+                    {
+                        "id": "wnpc",
+                        "position": [
+                            32,
+                            -178,
+                            3
+                        ]
+                    }
+                ],
+                "safe": true,
                 "spawns": [
                     [
                         -24,
@@ -6103,18 +6154,28 @@ test("G.maps type validation", async () => {
                         3
                     ]
                 ],
-                "safe": true,
-                "monsters": [
+                "zones": [
                     {
-                        "count": 1,
-                        "boundary": [
-                            -112,
-                            -142,
-                            60,
-                            -16
+                        "drop": "m2",
+                        "polygon": [
+                            [
+                                -184,
+                                -232
+                            ],
+                            [
+                                -128,
+                                -232
+                            ],
+                            [
+                                -128,
+                                -184
+                            ],
+                            [
+                                -184,
+                                -184
+                            ]
                         ],
-                        "type": "grinch",
-                        "special": true
+                        "type": "mining"
                     }
                 ]
             }

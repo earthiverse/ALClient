@@ -288,7 +288,7 @@ export class Observer {
         })
 
         if (start) {
-            console.debug(`Connecting to ${this.serverData.region}${this.serverData.name}...`)
+            console.debug(`Connecting to ${this.serverData.region} ${this.serverData.name}...`)
             const connected = new Promise<void>((resolve, reject) => {
                 this.socket.on("welcome", (data: WelcomeData) => {
                     if (data.region !== this.serverData.region || data.name !== this.serverData.name) {

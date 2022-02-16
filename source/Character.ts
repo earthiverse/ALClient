@@ -3217,7 +3217,9 @@ export class Character extends Observer implements CharacterData {
                 const futureMove = path[j]
                 if (currentMove.map !== futureMove.map) break
                 if (futureMove.type == "town") {
-                    this.warpToTown()?.catch((e) => { console.error(e) })
+                    this.warpToTown()?.then(() => {
+                        i = j - 1
+                    })?.catch((e) => { console.error(e) })
                     break
                 }
             }
