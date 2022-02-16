@@ -3520,6 +3520,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) return Promise.reject("We aren't ready yet [unequip].")
         if (this.slots[slot] === null) return Promise.reject(`Slot ${slot} is empty; nothing to unequip.`)
         if (this.slots[slot] === undefined) return Promise.reject(`Slot ${slot} does not exist.`)
+        // TODO: If we're unequipping a trade slot, there's a chance we could stack the item even if our inventory was full
         if (this.esize == 0) return Promise.reject(`Our inventory is full. We cannot unequip ${slot}.`)
 
         const slotInfo = this.slots[slot]
@@ -3537,6 +3538,8 @@ export class Character extends Observer implements CharacterData {
 
                         let same = true
                         for (const key in slotInfo) {
+                            // TODO: Can we do something with the 'q' for stackable items?
+                            if (["b", "grace", "price", "rid"].includes(key)) continue // Ignore merchant specific data
                             if (item[key] !== slotInfo[key]) {
                                 same = false
                                 break
