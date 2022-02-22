@@ -10,6 +10,7 @@
         "alwaysStrict": true,
         "declaration": true,
         "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "node",
@@ -18,6 +19,10 @@
         "removeComments": false,
         "rootDir": "source",
         "sourceMap": true,
+        "types": [
+            "jest",
+            "mongoose"
+        ],
         "watch": false
     },
     "include": [
