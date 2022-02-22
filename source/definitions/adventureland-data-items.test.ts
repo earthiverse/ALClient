@@ -3402,6 +3402,12 @@ test("G.items type validation", async () => {
                     "armor": 2.5,
                     "speed": 1,
                     "stat": 1
+                },
+                "winterland": {
+                    "speed": 25,
+                    "upgrade": {
+                        "speed": 1
+                    }
                 }
             },
             "ijx": {

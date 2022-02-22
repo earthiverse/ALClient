@@ -725,7 +725,8 @@ export type GItem = {
     /** TODO: ??? What is this? */
     xscroll?: boolean
 } & {
-    [T in CharacterType]?:
+    /** Items can give bonus stats on certain maps, or for certain character types */
+    [T in CharacterType | MapName]?:
     {
         [T in Exclude<Attribute, "stat">]?: number
     } & {

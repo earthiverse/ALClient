@@ -151,6 +151,7 @@
         "preversion",
         "pvptoken",
         "pvptokens",
+        "raccept",
         "randomrespawn",
         "rbuff",
         "regen",
@@ -177,16 +178,18 @@
         "sugarrush",
         "supershot",
         "swordofthedead",
+        "tauntable",
         "teleporter",
         "terracota",
         "therush",
         "thesearch",
         "throwingstars",
-        "Tileset",
+        "tileset",
         "tilesets",
         "tinyp",
         "trex",
         "unequip",
+        "unequips",
         "unlist",
         "unwalkable",
         "upsert",
@@ -203,6 +206,7 @@
         "xrange",
         "xscroll",
         "xsmall",
-        "xxsmall"
+        "xxsmall",
+        "zapperzap"
     ]
 }

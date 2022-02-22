@@ -53,7 +53,9 @@ beforeAll(async () => {
             burned: {
                 ms: 10000,
                 intensity: 1000,
-                f: "earthiverse"
+                f: "earthiverse",
+                fid: "earthiverse",
+                last: new Date().toISOString()
             }
         }
     }, "main", "main", G)

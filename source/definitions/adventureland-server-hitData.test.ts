@@ -39,6 +39,19 @@ test("HitData type validation", async () => {
     }
     expect(burn).not.toBe(undefined)
 
+    const burn2: HitData = {
+        "anim": "explode_c",
+        "burn": true,
+        "damage": 149,
+        "hid": "3454686",
+        "id": "PriestMain",
+        "mobbing": 706,
+        "pid": "R0sK4T",
+        "projectile": "mmagic",
+        "source": "attack"
+    }
+    expect(burn2).not.toBe(undefined)
+
     const curse: HitData = {
         "hid": "Tsumiki",
         "source": "curse",

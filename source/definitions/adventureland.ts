@@ -39,10 +39,14 @@ export type StatusInfo = {
         ms: number;
     } } & {
     burned?: {
-        // Damage that the burn will do per second. Damage is currently split between an attack every 200ms (5 attacks/second).
+        /** Damage that the burn will do per second. Damage is currently split between an attack about every 200ms (about 5 attacks/second). */
         intensity: number
-        // The character ID that caused the burn (TODO: Is this the initial character? Or the last character to contribute?)
+        /** The character, or monster name (NOT ID!) that caused the burn */
         f: string
+        /** The entity ID that caused the burn */
+        fid: string
+        /** TODO: Is this the last date that burn was inflicted, or the last date that the burn did damage? */
+        last: string
     }
     cursed?: {
         ms: number

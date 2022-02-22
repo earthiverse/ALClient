@@ -454,4 +454,452 @@ test("EntitiesData type validation", async () => {
         "map": "level3"
     }
     expect(players).not.toBe(undefined)
+
+    const players2: EntitiesData = {
+        "in": "desertland",
+        "map": "desertland",
+        "monsters": [
+            {
+                "abs": false,
+                "angle": -173.17365672584762,
+                "cid": 155,
+                "going_x": 216,
+                "going_y": -808,
+                "hp": 1654,
+                "id": "3454573",
+                "move_num": 25573411,
+                "moving": false,
+                "mp": 420,
+                "s": {},
+                "speed": 38,
+                "target": "PriestMain",
+                "type": "fireroamer",
+                "x": 216,
+                "y": -808
+            },
+            {
+                "abs": false,
+                "angle": -170.5448326762524,
+                "cid": 81,
+                "going_x": 208,
+                "going_y": -808,
+                "hp": 19240,
+                "id": "3454617",
+                "move_num": 25573429,
+                "moving": false,
+                "mp": 420,
+                "s": {},
+                "speed": 38,
+                "target": "PriestMain",
+                "type": "fireroamer",
+                "x": 208,
+                "y": -808
+            },
+            {
+                "abs": false,
+                "angle": -170.5448326762524,
+                "cid": 77,
+                "going_x": 208,
+                "going_y": -808,
+                "hp": 48015,
+                "id": "3454686",
+                "move_num": 25573427,
+                "moving": false,
+                "mp": 420,
+                "s": {},
+                "speed": 38,
+                "target": "PriestMain",
+                "type": "fireroamer",
+                "x": 208,
+                "y": -808
+            },
+            {
+                "abs": false,
+                "angle": -102.91633428295093,
+                "cid": 32,
+                "going_x": 192,
+                "going_y": -792,
+                "hp": 55470,
+                "id": "3454736",
+                "move_num": 25573404,
+                "moving": false,
+                "mp": 420,
+                "s": {},
+                "speed": 38,
+                "target": "PriestMain",
+                "type": "fireroamer",
+                "x": 192,
+                "y": -792
+            }
+        ],
+        "players": [
+            {
+                "abs": false,
+                "afk": "code",
+                "age": 246,
+                "angle": -135.00000000000406,
+                "armor": 427,
+                "attack": 2160,
+                "c": {},
+                "cid": 106080,
+                "code": true,
+                "controller": "PriestMain",
+                "ctype": "warrior",
+                "cx": {
+                    "hat": "hat306",
+                    "head": "makeup117"
+                },
+                "focus": null,
+                "frequency": 1.122923925667828,
+                "going_x": 219.00934143748643,
+                "going_y": -804.990658562514,
+                "hp": 19575,
+                "id": "WarriorMain",
+                "level": 84,
+                "max_hp": 19575,
+                "max_mp": 2085,
+                "move_num": 25573451,
+                "moving": false,
+                "mp": 1106,
+                "owner": "5912409405915136",
+                "party": "PriestMain",
+                "pdps": 2461859.9773271414,
+                "q": {},
+                "range": 36,
+                "resistance": 264,
+                "rip": false,
+                "s": {
+                    "mluck": {
+                        "f": "MerchantMain",
+                        "ms": 3099844,
+                        "strong": true
+                    }
+                },
+                "skin": "marmor11c",
+                "slots": {
+                    "amulet": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "stramulet",
+                        "registry": {
+                            "76561197983907860": "MoneyS",
+                            "76561197986726436": "ImmortalMerc",
+                            "76561198007507208": "SyuuMerch",
+                            "76561198013955841": "Madora",
+                            "76561198017484541": "Kaylee",
+                            "76561198024874460": "Plutus",
+                            "76561198032692301": "CodeAnna",
+                            "76561198041871962": "MerchantMain",
+                            "76561198072933236": "kouin",
+                            "76561198074385093": "CurvyMoney",
+                            "76561198129567684": "Byakuya",
+                            "76561198138460241": "StrongMad",
+                            "76561198166019050": "Evergleem",
+                            "76561198333158770": "Biene",
+                            "76561198333629156": "Merchant001",
+                            "76561199016494300": "milkyway",
+                            "76561199131310181": "Stttonks"
+                        }
+                    },
+                    "belt": {
+                        "l": "l",
+                        "level": 5,
+                        "name": "strbelt"
+                    },
+                    "cape": {
+                        "acc": 48560,
+                        "ach": "festive",
+                        "l": "l",
+                        "level": 8,
+                        "name": "ecape",
+                        "p": "festive",
+                        "ps": [
+                            "festive"
+                        ],
+                        "registry": {
+                            "76561198004196810": "Crow",
+                            "76561198007507208": "SyuuMerch",
+                            "76561198009162916": "Bjarnu",
+                            "76561198010108867": "earthMer",
+                            "76561198017484541": "Kaylee",
+                            "76561198024874460": "Plutus",
+                            "76561198024917816": "AKATrader",
+                            "76561198041871962": "MerchantMain",
+                            "76561198044418993": "Zetchant",
+                            "76561198088066244": "Drippy",
+                            "76561198138460241": "StrongMad",
+                            "76561198163762805": "RisingTrader",
+                            "76561198841973606": "emptypockets",
+                            "76561199016494300": "milkyway"
+                        },
+                        "stat_type": "str"
+                    },
+                    "chest": {
+                        "l": "l",
+                        "level": 7,
+                        "name": "vattire",
+                        "stat_type": "str"
+                    },
+                    "earring1": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "cearring"
+                    },
+                    "earring2": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "cearring"
+                    },
+                    "elixir": null,
+                    "gloves": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "mittens",
+                        "stat_type": "str"
+                    },
+                    "helmet": {
+                        "acc": 1,
+                        "l": "l",
+                        "level": 5,
+                        "name": "fury",
+                        "stat_type": "str"
+                    },
+                    "mainhand": {
+                        "l": "l",
+                        "level": 8,
+                        "name": "vhammer"
+                    },
+                    "offhand": {
+                        "acc": 1,
+                        "l": "l",
+                        "level": 9,
+                        "name": "glolipop"
+                    },
+                    "orb": {
+                        "l": "l",
+                        "level": 3,
+                        "name": "orbofstr"
+                    },
+                    "pants": {
+                        "acc": 48,
+                        "ach": "gooped",
+                        "level": 9,
+                        "name": "pants",
+                        "stat_type": "str"
+                    },
+                    "ring1": {
+                        "l": "l",
+                        "level": 0,
+                        "name": "suckerpunch"
+                    },
+                    "ring2": {
+                        "l": "l",
+                        "level": 0,
+                        "name": "suckerpunch"
+                    },
+                    "shoes": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "wingedboots",
+                        "stat_type": "str"
+                    }
+                },
+                "speed": 79,
+                "target": "3454573",
+                "x": 219.00934143748643,
+                "xp": 2803177567,
+                "y": -804.990658562514
+            },
+            {
+                "abs": false,
+                "afk": true,
+                "age": 246,
+                "angle": 12.979316290367533,
+                "armor": 508,
+                "attack": 2990,
+                "c": {},
+                "cid": 258325,
+                "code": true,
+                "ctype": "priest",
+                "cx": {
+                    "hat": "hat410",
+                    "head": "makeup117"
+                },
+                "focus": null,
+                "frequency": 1.288157060588463,
+                "going_x": 187.54966364683872,
+                "going_y": -811.4057647468726,
+                "hp": 9335,
+                "id": "PriestMain",
+                "level": 81,
+                "max_hp": 11158,
+                "max_mp": 6010,
+                "move_num": 25573383,
+                "moving": false,
+                "mp": 4076,
+                "owner": "5912409405915136",
+                "party": "PriestMain",
+                "pdps": 1069259.9242556414,
+                "q": {},
+                "range": 224,
+                "resistance": 1088,
+                "rip": false,
+                "s": {
+                    "burned": {
+                        "f": "Fire Spirit",
+                        "fid": "3454686",
+                        "intensity": 988,
+                        "last": "2022-02-22T20:36:11.779Z",
+                        "ms": 4914
+                    },
+                    "mluck": {
+                        "f": "MerchantMain",
+                        "ms": 3047233,
+                        "strong": true
+                    }
+                },
+                "skin": "marmor11c",
+                "slots": {
+                    "amulet": {
+                        "l": "l",
+                        "level": 3,
+                        "name": "t2stramulet"
+                    },
+                    "belt": {
+                        "level": 1,
+                        "name": "sbelt"
+                    },
+                    "cape": {
+                        "acc": 218513,
+                        "ach": "festive",
+                        "l": "l",
+                        "level": 9,
+                        "name": "gcape",
+                        "p": "festive",
+                        "ps": [
+                            "festive"
+                        ],
+                        "stat_type": "int"
+                    },
+                    "chest": {
+                        "l": "l",
+                        "level": 8,
+                        "name": "xarmor",
+                        "registry": {
+                            "76561198004196810": "Crow",
+                            "76561198007507208": "SyuuMerch",
+                            "76561198009162916": "Bjarnu",
+                            "76561198010108867": "earthMer",
+                            "76561198017484541": "Kaylee",
+                            "76561198024874460": "Plutus",
+                            "76561198024917816": "AKATrader",
+                            "76561198041871962": "MerchantMain",
+                            "76561198044418993": "Zetchant",
+                            "76561198088066244": "Drippy",
+                            "76561198138460241": "StrongMad",
+                            "76561198163762805": "RisingTrader",
+                            "76561198841973606": "emptypockets",
+                            "76561199016494300": "milkyway"
+                        },
+                        "stat_type": "int"
+                    },
+                    "earring1": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "cearring"
+                    },
+                    "earring2": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "cearring",
+                        "p": "shiny",
+                        "registry": {
+                            "76561198004196810": "Crow",
+                            "76561198007507208": "SyuuMerch",
+                            "76561198009162916": "Bjarnu",
+                            "76561198010108867": "earthMer",
+                            "76561198017484541": "Kaylee",
+                            "76561198024917816": "AKATrader",
+                            "76561198041871962": "MerchantMain",
+                            "76561198044418993": "Zetchant",
+                            "76561198074385093": "CurvyMoney",
+                            "76561198077097097": "BuyThisShit",
+                            "76561198088066244": "Drippy",
+                            "76561198138460241": "StrongMad",
+                            "76561198163762805": "RisingTrader",
+                            "76561198841973606": "emptypockets",
+                            "76561199016494300": "milkyway",
+                            "76561199163789308": "orlyowl",
+                            "76561199172472357": "decisiveness"
+                        }
+                    },
+                    "elixir": {
+                        "ex": true,
+                        "expires": "2022-02-23T06:43:52.916Z",
+                        "name": "elixirluck"
+                    },
+                    "gloves": {
+                        "l": "l",
+                        "level": 8,
+                        "name": "vgloves",
+                        "stat_type": "int"
+                    },
+                    "helmet": {
+                        "l": "l",
+                        "level": 7,
+                        "name": "xhelmet",
+                        "stat_type": "int"
+                    },
+                    "mainhand": {
+                        "acc": 1,
+                        "l": "l",
+                        "level": 9,
+                        "name": "oozingterror"
+                    },
+                    "offhand": {
+                        "l": "l",
+                        "level": 4,
+                        "name": "wbookhs"
+                    },
+                    "orb": {
+                        "l": "l",
+                        "level": 1,
+                        "name": "rabbitsfoot",
+                        "p": "glitched"
+                    },
+                    "pants": {
+                        "acc": 487,
+                        "ach": "gooped",
+                        "l": "l",
+                        "level": 6,
+                        "name": "starkillers",
+                        "stat_type": "int"
+                    },
+                    "ring1": {
+                        "l": "l",
+                        "level": 3,
+                        "name": "resistancering"
+                    },
+                    "ring2": {
+                        "l": "l",
+                        "level": 3,
+                        "name": "resistancering"
+                    },
+                    "shoes": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "wingedboots",
+                        "stat_type": "int"
+                    }
+                },
+                "speed": 69,
+                "target": "PriestMain",
+                "x": 187.54966364683872,
+                "xp": 1748219222,
+                "y": -811.4057647468726
+            }
+        ],
+        "type": "xy"
+    }
+    expect(players2).not.toBe(undefined)
 })

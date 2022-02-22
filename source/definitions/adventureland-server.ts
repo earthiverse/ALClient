@@ -608,6 +608,8 @@ export type HitData = {
     anim?: AnimationName | "miss" | "reflect"
     /** If this is set, we avoided the projectile (by running?) */
     avoid?: boolean
+    /** If set, the projectile has inflicted burn on the target */
+    burn?: boolean
     damage?: number
     evade?: boolean
     heal?: number
@@ -618,6 +620,8 @@ export type HitData = {
     lifesteal?: number
     manasteal?: number
     miss?: boolean
+    /** TODO: What does this number mean? */
+    mobbing?: number
     pid?: string
     projectile?: string
     reflect?: number
@@ -706,6 +710,10 @@ export type ItemData = {
     ps?: TitleName[]
     /** The quantity of the item for stackable items */
     q?: number
+    /** A list of players that participated in the giveaway for this item. */
+    registry?: {
+        [T in string]: string
+    }
     /** If the item has a scroll applied to it, the scroll provides this attribute */
     stat_type?: Attribute
     /** If set, the item is PVP marked until the given date. If you die to another player, there is a chance to lose this item to them. */
@@ -730,6 +738,8 @@ export type LimitDCReportData = {
     /** How many of each call you made */
     mcalls: {
         auth?: number
+        bank?: number
+        buy?: number
         code?: number
         equip?: number
         leave?: number
@@ -743,6 +753,7 @@ export type LimitDCReportData = {
         property?: number
         render?: number
         secondhands?: number
+        send?: number
         send_updates?: number
         skill?: number
         stop?: number

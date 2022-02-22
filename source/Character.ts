@@ -812,7 +812,9 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * NOTE: We can't name this function `attack` because of the property `attack` that specifies damage.s
+     * Performs a basic attack on the given target.
+     *
+     * NOTE: We can't name this function `attack` because of the property `attack` that tells us how much damage we do.
      * @param id The ID of the entity or player to attack
      */
     public basicAttack(id: string): Promise<string> {
@@ -2436,6 +2438,18 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {{ disableSafetyCheck: boolean }} [options]
+     *
+     *
+     * @return {*}  {Promise<IPosition>}
+     * @memberof Character
+     */
+
+    /**
      * Moves the character to a given location. If the character can not move there safely,
      * i.e. there's a wall in the way, then we will move to the closest we can walk there in
      * a straight line.
@@ -2446,14 +2460,16 @@ export class Character extends Observer implements CharacterData {
      *
      * @param {number} x
      * @param {number} y
-     * @param {{ disableSafetyCheck: boolean }} [options]
+     * @param {{ disableSafetyCheck?: boolean, disableArrivalCheck?: boolean }} [options]
      *
      * disableSafetyCheck - If set to true, move() will not check map bounds
+     *
+     * resolveOnStart - If set to true, move() will resolve the promise when the move is confirmed, and not when it finishes
      *
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async move(x: number, y: number, options?: { disableSafetyCheck: boolean }): Promise<IPosition> {
+    public async move(x: number, y: number, options?: { disableSafetyCheck?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
         if (!this.ready) return Promise.reject("We aren't ready yet [move].")
 
         let to: IPosition = { map: this.map, x: x, y: y }
@@ -2468,13 +2484,21 @@ export class Character extends Observer implements CharacterData {
 
         // Check if we're already there
         if (this.x == to.x && this.y == to.y) return Promise.resolve({ map: this.map, x: this.x, y: this.y })
+
         const startTime = Date.now()
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
             let timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
+                if (options?.resolveOnStart && data.going_x == to.x && data.going_y == to.y) {
+                    clearTimeout(timeout)
+                    resolve({ map: this.map, x: data.x, y: data.y })
+                    this.socket.off("player", checkPlayer)
+                    return
+                }
+
                 if (!data.moving || data.going_x !== to.x || data.going_y !== to.y) {
-                    // Skip check if we get data less than our ping, because it's probably not correct.
+                    // Skip check if the data might be stale
                     if (Date.now() - startTime < Math.min(...this.pings)) return
 
                     // We *might* not be moving in the right direction. Let's request new data and check.
@@ -2503,7 +2527,7 @@ export class Character extends Observer implements CharacterData {
                 if (this.x == to.x && this.y == to.y) {
                     // We are here!
                     this.socket.off("player", checkPlayer)
-                    resolve({ map: this.map, x: x, y: y })
+                    resolve({ map: this.map, x: to.x, y: to.y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
                     timeToFinishMove = 1 + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
@@ -2532,7 +2556,6 @@ export class Character extends Observer implements CharacterData {
             this.going_x = to.x
             this.going_y = to.y
             this.moving = true
-            this.move_num += 1
         }
 
         return moveFinished
@@ -3879,11 +3902,38 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Performs the zapperzap skill you can use if you have a zapper equipped.
+     *
+     * @param id The ID of the entity or player to attack
+     */
+    public async zapperZap(id: string): Promise<void> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [zapperZap].")
+
+        const zapped = new Promise<void>((resolve, reject) => {
+            const cooldownCheck = (data: EvalData) => {
+                if (/skill_timeout\s*\(\s*['"]zapperzap['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
+                    this.socket.off("eval", cooldownCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("eval", cooldownCheck)
+                reject(`zapperZap timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("eval", cooldownCheck)
+        })
+
+        this.socket.emit("skill", { id: id, name: "zapperzap" })
+        return zapped
+    }
+
+    /**
      * Returns true if the entity has a >0% chance to die from projectiles already cast.
      *
      * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
      * @param {Map<string, Player>} players (e.g.: bot.players)
-     * @param {Map<string, Player>} entities (e.g.: bot.entitites)
+     * @param {Map<string, Player>} entities (e.g.: bot.entities)
      * @return {*}  {boolean}
      * @memberof Entity
      */

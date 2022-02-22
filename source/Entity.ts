@@ -262,8 +262,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.isAttackingPartyMember(by)) return true
 
         // If the player it's targeting is another character of ours, it is tauntable
-        const targetting = by.players.get(this.target)
-        if (targetting && targetting.owner == by.owner) return true
+        const targeting = by.players.get(this.target)
+        if (targeting && targeting.owner == by.owner) return true
 
         return false
     }
