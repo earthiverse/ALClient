@@ -3913,15 +3913,28 @@ export class Character extends Observer implements CharacterData {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]zapperzap['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.off("eval", cooldownCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve()
+                }
+            }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "skill_cant_slot") {
+                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject("We don't have a zapper equipped")
+                    }
                 }
             }
 
             setTimeout(() => {
                 this.socket.off("eval", cooldownCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`zapperZap timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("skill", { id: id, name: "zapperzap" })

@@ -581,6 +581,8 @@ export type GameResponseDataString =
     /** When you try to send an item to another character, but they don't have room for it in their inventory */
     | "send_no_space"
     | "skill_cant_incapacitated"
+    /** When you try to use a skill that requires a certain item to be equipped, but you don't have that item equipped */
+    | "skill_cant_slot"
     /** When you try to use a skill, but you don't have the right weapon type equipped for that skill */
     | "skill_cant_wtype"
     | "skill_too_far"
