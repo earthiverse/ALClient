@@ -4131,7 +4131,7 @@ export class Character extends Observer implements CharacterData {
 
         if (filters?.returnHighestLevel) {
             if (filters.returnLowestLevel) throw new Error("Set either returnHighestLevel or returnLowestLevel, not both.")
-            let highestLevel: number = Number.MIN_VALUE
+            let highestLevel: number = Number.MIN_SAFE_INTEGER
             let highestLevelIndex
             for (let i = 0; i < located.length; i++) {
                 const j = located[i]
@@ -4145,7 +4145,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         if (filters?.returnLowestLevel) {
-            let lowestLevel: number = Number.MAX_VALUE
+            let lowestLevel: number = Number.MAX_SAFE_INTEGER
             let lowestLevelIndex
             for (let i = 0; i < located.length; i++) {
                 const j = located[i]

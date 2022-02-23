@@ -722,6 +722,8 @@ test("Character.canUse", () => {
     }
     warrior.slots.offhand = null
     expect(warrior.canUse("cleave")).toBe(true)
+
+    expect(warrior.canUse("zapperzap", { ignoreEquipped: true })).toBe(true)
 })
 
 test("Character.countItem", () => {
@@ -878,7 +880,7 @@ test("Character.isPVP", () => {
 test("Character.locateItem", () => {
     // Create the character's inventory for testing
     const itemsBackup = [...priest.items]
-    priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined]
+    priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, { name: "zapper", level: 0, l: "l" }, undefined]
     priest.isize = priest.items.length
 
     expect(priest.locateItem("pants")).toBeTruthy()
@@ -891,6 +893,9 @@ test("Character.locateItem", () => {
     expect(priest.locateItem("coat", priest.items, { levelGreaterThan: 0 })).toBe(5)
     expect(priest.locateItem("pants", priest.items, { levelLessThan: 0 })).toBe(undefined)
     expect(priest.locateItem("pants", priest.items, { returnHighestLevel: true })).toBe(4)
+    expect(priest.locateItem("pants", priest.items, { returnLowestLevel: true })).toBe(3)
+    expect(priest.locateItem("zapper", priest.items, { returnHighestLevel: true })).toBe(7)
+    expect(priest.locateItem("zapper", priest.items, { returnLowestLevel: true })).toBe(7)
 
     expect(priest.locateItem("mpot0")).toBeTruthy()
     expect(priest.locateItem("mpot0", priest.items, { quantityGreaterThan: 1 })).toBe(2)
