@@ -9,11 +9,12 @@ const PlayerSchema = new Schema({
     map: String,
     name: { required: true, type: String },
     owner: String,
+    rip: { required: false, type: Boolean },
     s: { required: false, type: Object },
     serverIdentifier: String,
     serverRegion: String,
     slots: { type: Object },
-    type: String,
+    type: { type: String },
     x: Number,
     y: Number,
 })

@@ -11,6 +11,7 @@ export interface IPlayer {
     map: MapName
     name: string
     owner: string
+    rip?: boolean
     serverIdentifier: ServerIdentifier
     serverRegion: ServerRegion
     slots: SlotInfo

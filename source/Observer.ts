@@ -423,6 +423,7 @@ export class Observer {
                             in: p.in,
                             lastSeen: Date.now(),
                             map: p.map,
+                            rip: p.rip,
                             s: p.s,
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
