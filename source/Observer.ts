@@ -56,6 +56,16 @@ export class Observer {
         })
 
         this.socket.on("action", (data: ActionData) => {
+            // Fix the ETA
+            const attacker = this.players.get(data.attacker) ?? this.entities.get(data.attacker)
+            const target = this.entities.get(data.attacker) ?? this.players.get(data.attacker)
+            const projectileSpeed = this.G.projectiles[data.projectile]?.speed
+            if (attacker && target && projectileSpeed) {
+                const distance = Tools.distance(attacker, target)
+                const fixedETA = (distance / projectileSpeed) * 1000
+                data.eta = fixedETA
+            }
+
             this.projectiles.set(data.pid, { ...data, date: new Date() })
         })
 
