@@ -2815,6 +2815,11 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("cm", { message: JSON.stringify(message), to: to })
     }
 
+    // TODO: Add socket listeners and promises
+    public async sendMail(to: string, subject: string, message: string, item = false) {
+        this.socket.emit("mail", { item: item, message: message, subject: subject, to: to })
+    }
+
     /**
      * Sends a PM to another character.
      * NOTE: This function's promise will only resolve after 5 seconds due to game limitations.
