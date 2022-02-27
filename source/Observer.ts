@@ -1,7 +1,7 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents } from "./definitions/adventureland-server.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents, ActionDataRay, ActionDataProjectile } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
@@ -56,10 +56,12 @@ export class Observer {
         })
 
         this.socket.on("action", (data: ActionData) => {
+            if ((data as ActionDataRay).instant) return // It's instant, don't add a projectile
+
             // Fix the ETA
             const attacker = this.players.get(data.attacker) ?? this.entities.get(data.attacker)
             const target = this.entities.get(data.attacker) ?? this.players.get(data.attacker)
-            const projectileSpeed = this.G.projectiles[data.projectile]?.speed
+            const projectileSpeed = this.G.projectiles[(data as ActionDataProjectile).projectile]?.speed
             if (attacker && target && projectileSpeed) {
                 const distance = Tools.distance(attacker, target)
                 const fixedETA = (distance / projectileSpeed) * 1000

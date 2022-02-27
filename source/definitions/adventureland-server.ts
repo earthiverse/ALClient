@@ -16,20 +16,28 @@ export type AchievementProgressDataFirehazard = {
     needed: number
 }
 
-export type ActionData = {
+
+export type ActionDataBase = {
     attacker: string
     damage?: number
     heal?: number
     eta: number
     m: number
     pid: string
-    projectile: ProjectileName
     source: SkillName
     target: string
     type: SkillName
     x: number
     y: number
 }
+export type ActionDataProjectile = ActionDataBase & {
+    projectile: ProjectileName
+}
+export type ActionDataRay = ActionDataBase & {
+    instant?: boolean
+    ray: ProjectileName
+}
+export type ActionData = ActionDataProjectile | ActionDataRay
 
 export type AuthData = {
     // TODO: Find out where to get this auth string
