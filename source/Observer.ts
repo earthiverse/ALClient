@@ -596,7 +596,7 @@ export class Observer {
     }
 
     // TODO: Convert to async, and return a promise<number> with the ping ms time
-    public sendPing(log = true): string {
+    public async sendPing(log = true): Promise<string> {
         // Get the next pingID
         const pingID = this.pingNum.toString()
         this.pingNum++

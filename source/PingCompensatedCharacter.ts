@@ -15,7 +15,7 @@ export class PingCompensatedCharacter extends Character {
             this.pingLoop()
         } catch (e) {
             await this.disconnect()
-            return Promise.reject(e)
+            throw e
         }
     }
 

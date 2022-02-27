@@ -29,7 +29,7 @@ export class Game {
     }
 
     static async deleteMail(mailID: string): Promise<boolean> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         const response = await axios.post<MailDeleteResponse[]>("http://adventure.land/api/delete_mail", `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const data = response.data[0]
         if (data.message == "Mail deleted.") return true
@@ -68,7 +68,7 @@ export class Game {
     }
 
     static async getMail(all = true): Promise<MailMessageData[]> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         let response = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const mail: MailMessageData[] = []
 
@@ -87,7 +87,7 @@ export class Game {
     }
 
     static async getMerchants(): Promise<PullMerchantsCharData[]> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         //const merchants: PullMerchantsData[] = []
         const merchants: PullMerchantsCharData[] = []
 
@@ -172,7 +172,7 @@ export class Game {
      * @param mailID The mail message to mark as 'read'
      */
     static async markMailAsRead(mailID: string): Promise<void> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         const response = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         return response.data[0]
     }
@@ -215,11 +215,11 @@ export class Game {
             } else if (loginResult && loginResult.message) {
             // We failed logging in, and we have a reason from the server
                 console.error(loginResult.message)
-                return Promise.reject(loginResult.message)
+                throw loginResult.message
             } else {
             // We failed logging in, but we don't know what went wrong
                 console.error(login.data)
-                return Promise.reject("Failed logging in.")
+                throw "Failed logging in."
             }
         }
 
@@ -231,7 +231,7 @@ export class Game {
         try {
             fileData = fs.readFileSync(path, "utf8")
         } catch (e) {
-            return Promise.reject(`Could not locate '${path}'.`)
+            throw `Could not locate '${path}'.`
         }
         const data: { email: string, password: string, mongo: string, userAuth?: string, userID?: string } = JSON.parse(fileData)
 
@@ -268,7 +268,7 @@ export class Game {
     }
 
     static async logoutEverywhere(): Promise<unknown> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
 
         const response = await axios.post<unknown>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         this.user = undefined
@@ -351,55 +351,46 @@ export class Game {
     }
 
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<PingCompensatedCharacter> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
-        if (!this.characters[cName]) return Promise.reject(`You don't have a character with the name '${cName}'`)
+        if (!this.characters[cName]) throw `You don't have a character with the name '${cName}'`
         const characterID = this.characters[cName].id
 
-        try {
-            // Create the player and connect
-            let player: PingCompensatedCharacter
-            switch (this.characters[cName].type) {
-                case "mage":
-                    player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "merchant":
-                    player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "paladin":
-                    player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "priest":
-                    player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "ranger":
-                    player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "rogue":
-                    player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                case "warrior":
-                    player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-                default:
-                    player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
-                    break
-            }
-
-            try {
-                await player.connect()
-            } catch (e) {
-                return Promise.reject(e)
-            }
-
-            return player
-        } catch (e) {
-            return Promise.reject(e)
+        // Create the player and connect
+        let player: PingCompensatedCharacter
+        switch (this.characters[cName].type) {
+            case "mage":
+                player = new Mage(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "merchant":
+                player = new Merchant(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "paladin":
+                player = new Paladin(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "priest":
+                player = new Priest(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "ranger":
+                player = new Ranger(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "rogue":
+                player = new Rogue(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            case "warrior":
+                player = new Warrior(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
+            default:
+                player = new PingCompensatedCharacter(userID, userAuth, characterID, Game.G, this.servers[sRegion][sID])
+                break
         }
+
+        await player.connect()
+        return player
     }
 
     static async startMage(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Mage> {
@@ -431,24 +422,17 @@ export class Game {
     }
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
 
-        try {
-            if (!this.G) await this.getGData()
-            const observer = new Observer(this.servers[region][id], this.G)
-
-            await observer.connect(true)
-
-            return observer
-        } catch (e) {
-            return Promise.reject(e)
-        }
+        const observer = new Observer(this.servers[region][id], this.G)
+        await observer.connect(true)
+        return observer
     }
 
     static async updateServersAndCharacters(): Promise<boolean> {
-        if (!this.user) return Promise.reject("You must login first.")
+        if (!this.user) throw "You must login first."
         const data = await axios.post("http://adventure.land/api/servers_and_characters", "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         if (data.status == 200) {
@@ -468,6 +452,6 @@ export class Game {
             console.error(data)
         }
 
-        return Promise.reject("Error fetching http://adventure.land/api/servers_and_characters")
+        throw "Error fetching http://adventure.land/api/servers_and_characters"
     }
 }
