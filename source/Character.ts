@@ -416,7 +416,7 @@ export class Character extends Observer implements CharacterData {
             this.ready = false
         })
 
-        this.socket.on("friends", (data: FriendData) => {
+        this.socket.on("friend", (data: FriendData) => {
             if (data.event == "lost" || data.event == "new" || data.event == "update") {
                 this.friends = data.friends
             }
@@ -450,7 +450,7 @@ export class Character extends Observer implements CharacterData {
             this.parseEval(data)
         })
 
-        this.socket.on("game_error", (data: string | { message: string; }) => {
+        this.socket.on("game_error", (data: string | { message: string }) => {
             if (typeof data == "string") {
                 console.error(`Game Error: ${data}`)
             } else {
@@ -460,7 +460,8 @@ export class Character extends Observer implements CharacterData {
         })
 
         if (Database.connection) {
-            this.socket.on("game_log", async (data: { message: string; color: string; }) => {
+            this.socket.on("game_log", async (data: GameLogData) => {
+                if (typeof data !== "object") return
                 const result = /^Slain by (.+)$/.exec(data.message)
                 if (result) {
                     DeathModel.create({
@@ -535,7 +536,7 @@ export class Character extends Observer implements CharacterData {
             else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
         })
 
-        this.socket.on("welcome", (data: WelcomeData) => {
+        this.socket.on("welcome", () => {
             // Send a response that we're ready to go
             this.socket.emit("loaded", {
                 height: 1080,
@@ -748,12 +749,11 @@ export class Character extends Observer implements CharacterData {
             }
 
             const unableCheck = (data: GameLogData) => {
-                const notFound = RegExp("^.+? is not found$")
                 if (data == "Invitation expired") {
                     this.socket.off("party_update", partyCheck)
                     this.socket.off("game_log", unableCheck)
                     reject(data)
-                } else if (notFound.test(data)) {
+                } else if (typeof data == "string" && /^.+? is not found$/.test(data)) {
                     this.socket.off("party_update", partyCheck)
                     this.socket.off("game_log", unableCheck)
                     reject(data)

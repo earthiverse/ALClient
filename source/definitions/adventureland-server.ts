@@ -3,8 +3,8 @@
  * game uses to interact with the server.
  */
 
-import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType } from "./adventureland.js"
-import { AchievementName, AnimationName, Attribute, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
+import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType, SlotType } from "./adventureland.js"
+import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
     name: string
@@ -415,7 +415,7 @@ export type GameEventData = {
     y: number
 }
 
-export type GameLogData = GameLogDataString
+export type GameLogData = GameLogDataString | { color: string; message: GameLogDataString }
 export type GameLogDataString =
     | string
     | "Already partying"
@@ -1179,4 +1179,110 @@ export type WelcomeData = {
     pvp: boolean
     x: number
     y: number
+}
+
+export type ServerToClientEvents = {
+    "achievement_progress": (data: AchievementProgressData) => void
+    "action": (data: ActionData) => void
+    "chat_log": (data: ChatLogData) => void
+    "chest_opened": (data: ChestOpenedData) => void
+    "death": (data: DeathData) => void
+    "disappear": (data: DisappearData) => void
+    "disappearing_text": (data: DisappearingTextData) => void
+    // TODO: Add return data
+    "disconnect_reason": (data: unknown) => void
+    "drop": (data: ChestData) => void
+    "eval": (data: EvalData) => void
+    "emotion": (data: EmotionData) => void
+    "entities": (data: EntitiesData) => void
+    // TODO: Confirm that there isn't a separate `friends` socket event
+    "friend": (data: FriendData) => void
+    // TODO: Create GameErrorData type
+    "game_error": (data: string | { message: string }) => void
+    "game_event": (data: GameEventData) => void
+    "game_log": (data: GameLogData) => void
+    "game_response": (data: GameResponseData) => void
+    "hit": (data: HitData) => void
+    "new_map": (data: NewMapData) => void
+    "notthere": (data: NotThereData) => void
+    "party_update": (data: PartyData) => void
+    "ping_ack": (data: {id: string}) => void
+    "player": (data: CharacterData) => void
+    "players": (data: PlayersData) => void
+    "pm": (data: PMData) => void
+    "q_data": (data: QData) => void
+    "secondhands": (data: ItemDataTrade[]) => void
+    "server_info": (data: ServerInfoData) => void
+    "start": (data: StartData) => void
+    "tracker": (data: TrackerData) => void
+    "ui": (data: UIData) => void
+    "upgrade": (data: UpgradeData) => void
+    "welcome": (data: WelcomeData) => void
+}
+
+export type ClientToServerEvents = {
+    "attack": (data: { id: string }) => void
+    "auth": (data: AuthData) => void
+    // TODO: Create BankData type
+    "bank": (data: { amount: number, operation: "deposit" | "withdraw"} | { inv: number, operation: "swap", pack: BankPackName, str: number }) => void
+    "booster": (data: { action: "shift", num: number, to: string }) => void
+    // TODO: Create BuyData type
+    "buy": (data: { name: ItemName, quantity?: number }) => void
+    "cm": (data: { message: string, to: string[] }) => void
+    // TODO: Create CompoundData type
+    "compound": (data: { clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
+    // TODO: Create CraftData type
+    "craft": (data: { items: [number, number][] }) => void
+    "emotion": (data: { name: EmotionName }) => void
+    "enter": (data: { name: string, place: MapName }) => void
+    "equip": (data: { num: number, slot: SlotType } | { consume: true, num: number } | { num: number, price: number, q: number, slot: TradeSlotType }) => void
+    "exchange": (data: { item_num: number, q?: number }) => void
+    // TODO: Create ExchangeBuyData type
+    "exchange_buy": (data: { name: ItemName, num: number, q: number }) => void
+    // TODO: Create FriendData type
+    // NOTE: We already have FriendData for receiving `friend` sockets.
+    //       Maybe FriendEmitData type?
+    "friend": (data: { event: "accept" | "request" | "unfriend", name: string }) => void
+    "heal": (data: { id: string }) => void
+    "imove": (data: { a: number, b: number }) => void
+    "interaction": (data: { key: string }) => void
+    "join_giveaway": (data: { slot: TradeSlotType, id: string, rid: string }) => void
+    "leave": () => void
+    "loaded": (data: LoadedData) => void
+    "mail_take_item": (data: { id: string }) => void
+    "magiport": (data: { name: string }) => void
+    "merchant": (data: {close: number } | { num: number }) => void
+    "monsterhunt": () => void
+    "move": (data: { going_x: number, going_y: number, m: number, x: number, y: number } | { key: "down" | "left" | "right" | "up"}) => void
+    "open_chest": (data: { id: string }) => void
+    // TODO: Create PartyData type
+    // NOTE: We already have PartyData for receiving `party_update` sockets.
+    //       Maybe change existing PartyData to PartyUpdateData?
+    "party": (data: { event: "accept" | "invite" | "kick" | "raccept" | "request", name: string } | { event: "leave" }) => void
+    // TODO: Create PingTrigData type
+    "ping_trig": (data: { id: string }) => void
+    "players": () => void
+    // TODO: Create PropertyData type
+    "property": (data: { typing: boolean }) => void
+    "respawn": (data: { safe: boolean }) => void
+    "say": (data: { message: string, name?: string }) => void
+    // TODO: Create SBuyData type
+    "sbuy": (data: { rid: string }) => void
+    "secondhands": () => void
+    "sell": (data: { num: number, quantity: number }) => void
+    "send": (data: { gold: number, name: string } | { name: string, num: number, q: number }) => void
+    // TODO: Create SendUpdatesData type
+    "send_updates": (data: Record<string, never>) => void
+    "skill": (data: { name: SkillName } | { id: string, name: SkillName, num: number } | { name: "3shot", ids: [string, string, string] } | { name: "5shot", ids: [string, string, string, string, string] } | { name: "blink", x: number, y: number } | { name: "cburst", targets: [string, number][] } | { id: string, mp: number, name: "energize" }) => void
+    "stop": (data: { action: "invis" | "town" }) => void
+    "town": () => void
+    "tracker": () => void
+    "transport": (data: { s: number, to: MapName }) => void
+    "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
+    // TODO: Confirm that 'q' is a string
+    // TODO: Create TradeBuyData type
+    "trade_buy": (data: { id: string, q: string, rid: string, slot: TradeSlotType }) => void
+    "unequip": (data: { slot: SlotType | TradeSlotType }) => void
+    "upgrade": (data: { clevel: number, item_num: number, offering_num: number, scroll_num: number }) => void
+    "use": (data: { item: "hp" | "mp" }) => void
 }

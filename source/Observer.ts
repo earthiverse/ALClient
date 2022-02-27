@@ -1,7 +1,7 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData } from "./definitions/adventureland-server.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
@@ -9,7 +9,7 @@ import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 
 export class Observer {
-    public socket: Socket
+    public socket: Socket<ServerToClientEvents, ClientToServerEvents>
 
     protected lastAllEntities: number
     protected lastPositionUpdate: number
