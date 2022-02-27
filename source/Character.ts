@@ -3907,29 +3907,30 @@ export class Character extends Observer implements CharacterData {
      *
      * @param id The ID of the entity or player to attack
      */
-    public async zapperZap(id: string): Promise<void> {
+    public async zapperZap(id: string): Promise<string> {
         if (!this.ready) throw "We aren't ready yet [zapperZap]."
 
-        const zapped = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]zapperzap['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
+        const zapped = new Promise<string>((resolve, reject) => {
+            const successCheck = (data: ActionData) => {
+                if (data.attacker !== this.id) return // Not our attack
+                if (data.target !== id) return // Not attacking the target
+                if (data.source !== "zapperzap") return // Not a zapperzap
+                this.socket.off("action", successCheck)
+                this.socket.off("game_response", failCheck)
+                resolve(data.pid)
             }
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "string") {
                     if (data == "skill_cant_slot") {
-                        this.socket.off("eval", cooldownCheck)
+                        this.socket.off("action", successCheck)
                         this.socket.off("game_response", failCheck)
                         reject("We don't have a zapper equipped")
                     }
                 } else if (typeof data == "object") {
                     if (data.response == "cooldown") {
                         if (data.skill == "zapperzap") {
-                            this.socket.off("eval", cooldownCheck)
+                            this.socket.off("action", successCheck)
                             this.socket.off("game_response", failCheck)
                             reject(`zapperzap is on cooldown (${data.ms}ms remaining)`)
                         }
@@ -3938,11 +3939,10 @@ export class Character extends Observer implements CharacterData {
             }
 
             setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
                 this.socket.off("game_response", failCheck)
                 reject(`zapperZap timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
+            this.socket.on("action", successCheck)
             this.socket.on("game_response", failCheck)
         })
 
