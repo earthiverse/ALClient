@@ -4,7 +4,7 @@ import url from "url"
 import { Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData, LoginData } from "./definitions/adventureland-server.js"
+import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData, LoginData, MailDeleteResponse } from "./definitions/adventureland-server.js"
 import { Paladin } from "./Paladin.js"
 import { Mage } from "./Mage.js"
 import { Merchant } from "./Merchant.js"
@@ -26,6 +26,14 @@ export class Game {
 
     protected constructor() {
         // Private to force static methods
+    }
+
+    static async deleteMail(mailID: string): Promise<boolean> {
+        if (!this.user) return Promise.reject("You must login first.")
+        const response = await axios.post<MailDeleteResponse[]>("http://adventure.land/api/delete_mail", `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = response.data[0]
+        if (data.message == "Mail deleted.") return true
+        return false
     }
 
     static async getGData(cache = false, optimize = false): Promise<GData> {

@@ -534,7 +534,7 @@ export type GameResponseDataObject = {
 
 export type GameResponseDataString =
     | "bank_restrictions"
-    /** When you attempt to blink to a spot you can't reach */
+    /** When you attempt to blink to a spot you can't reach. */
     | "blink_failed"
     | "buy_cant_npc"
     | "buy_cant_space"
@@ -791,6 +791,14 @@ export type MailData = {
     type: "mail"
 }
 
+export type MailDeleteResponse = {
+    message: "Mail deleted."
+    type: "message"
+} | {
+    message: "Can't delete."
+    type: "ui_error"
+}
+
 export type MailMessageData = {
     /** The mail's ID */
     id: string
@@ -800,11 +808,11 @@ export type MailMessageData = {
     to: string
     /** The time this message was sent */
     sent: string
-    /** If true, we have taken the item attached to this mail. */
+    /** The body of the mail */
     message: string
-
     /** A string containing a JSON object that represents the item that was sent in the mail */
     item?: string
+    /** If true, we have taken the item attached to this mail. */
     taken?: boolean
 }
 
