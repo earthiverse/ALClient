@@ -2534,7 +2534,8 @@ export class Character extends Observer implements CharacterData {
                     reject(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`)
                 }
             }
-            let timeout = setTimeout(checkPosition, timeToFinishMove)
+            let timeout: NodeJS.Timeout
+            if (!options?.resolveOnStart) timeout = setTimeout(checkPosition, timeToFinishMove)
 
             this.socket.on("player", checkPlayer)
         })
