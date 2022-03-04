@@ -1551,6 +1551,29 @@ export class Character extends Observer implements CharacterData {
         return true
     }
 
+    public async closeMerchantStand(): Promise<void> {
+        if (!this.ready) throw "We aren't ready yet [closeMerchantStand]."
+        if (!this.stand) return // It's already closed
+
+        const closed = new Promise<void>((resolve, reject) => {
+            const checkStand = (data: CharacterData) => {
+                if (!data.stand) {
+                    this.socket.off("player", checkStand)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("player", checkStand)
+                reject(`closeMerchantStand timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("player", checkStand)
+        })
+
+        this.socket.emit("merchant", { close: 1 })
+        return closed
+    }
+
     public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) throw "We aren't ready yet [compound]."
         const item1Info = this.items[item1Pos]
@@ -2575,6 +2598,37 @@ export class Character extends Observer implements CharacterData {
         })
         this.socket.emit("open_chest", { id: id })
         return chestOpened
+    }
+
+    public async openMerchantStand(): Promise<void> {
+        if (!this.ready) throw "We aren't ready yet [openMerchantStand]."
+        if (this.stand) return // It's already open
+
+        // Find a suitable stand
+        let stand: number
+        for (const item of ["supercomputer", "computer", "stand1", "stand0"] as ItemName[]) {
+            stand = this.locateItem(item)
+            if (stand !== undefined) break
+        }
+        if (stand == undefined) throw "Could not find a suitable merchant stand in inventory."
+
+        const opened = new Promise<void>((resolve, reject) => {
+            const checkStand = (data: CharacterData) => {
+                if (data.stand) {
+                    this.socket.off("player", checkStand)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("player", checkStand)
+                reject(`openMerchantStand timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("player", checkStand)
+        })
+
+        this.socket.emit("merchant", { num: stand })
+        return opened
     }
 
     public async regenHP(): Promise<void> {

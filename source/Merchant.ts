@@ -3,33 +3,9 @@ import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 import { Tools } from "./Tools.js"
-import { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
     ctype: "merchant" = "merchant"
-
-    public async closeMerchantStand(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [closeMerchantStand]."
-        if (!this.stand) return // It's already closed
-
-        const closed = new Promise<void>((resolve, reject) => {
-            const checkStand = (data: CharacterData) => {
-                if (!data.stand) {
-                    this.socket.off("player", checkStand)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("player", checkStand)
-                reject(`closeMerchantStand timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("player", checkStand)
-        })
-
-        this.socket.emit("merchant", { close: 1 })
-        return closed
-    }
 
     /**
      * Fish for items
@@ -433,37 +409,6 @@ export class Merchant extends PingCompensatedCharacter {
         })
         this.socket.emit("skill", { id: target, name: "mluck" })
         return mlucked
-    }
-
-    public async openMerchantStand(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [openMerchantStand]."
-        if (this.stand) return // It's already open
-
-        // Find a suitable stand
-        let stand: number
-        for (const item of ["supercomputer", "computer", "stand1", "stand0"] as ItemName[]) {
-            stand = this.locateItem(item)
-            if (stand !== undefined) break
-        }
-        if (stand == undefined) throw "Could not find a suitable merchant stand in inventory."
-
-        const opened = new Promise<void>((resolve, reject) => {
-            const checkStand = (data: CharacterData) => {
-                if (data.stand) {
-                    this.socket.off("player", checkStand)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("player", checkStand)
-                reject(`openMerchantStand timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("player", checkStand)
-        })
-
-        this.socket.emit("merchant", { num: stand })
-        return opened
     }
 
     public async massProduction(): Promise<void> {
