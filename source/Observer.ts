@@ -33,6 +33,10 @@ export class Observer {
     public x: number
     public y: number
 
+    protected get ping(): number {
+        return this.pings.length == 0 ? 0 : Math.min(...this.pings)
+    }
+
     constructor(serverData: ServerData, g: GData) {
         this.serverData = serverData
         this.G = g

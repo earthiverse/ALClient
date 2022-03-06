@@ -2505,7 +2505,7 @@ export class Character extends Observer implements CharacterData {
         if (this.x == to.x && this.y == to.y) return { map: this.map, x: this.x, y: this.y }
 
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
-            let timeToFinishMove = 1 + Math.min(...this.pings) + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
+            let timeToFinishMove = 1 + this.ping + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
                 if (options?.resolveOnStart) {
@@ -2531,7 +2531,7 @@ export class Character extends Observer implements CharacterData {
                     }
                 } else {
                     // We're still moving in the right direction
-                    timeToFinishMove = 1 + Math.min(...this.pings) + Tools.distance(this, { x: data.going_x, y: data.going_y }) / data.speed
+                    timeToFinishMove = 1 + this.ping + Tools.distance(this, { x: data.going_x, y: data.going_y }) / data.speed
                     clearTimeout(timeout)
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 }
@@ -2547,7 +2547,7 @@ export class Character extends Observer implements CharacterData {
                     resolve({ map: this.map, x: to.x, y: to.y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
-                    timeToFinishMove = Math.min(...this.pings) + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
+                    timeToFinishMove = this.ping + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
@@ -3107,8 +3107,8 @@ export class Character extends Observer implements CharacterData {
         if (options == undefined) options = {}
         if (options.costs == undefined) {
             options.costs = {
-                town: this.speed * (4 + (Math.min(...this.pings, 1000) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
-                transport: this.speed * (Math.min(...this.pings, 1000) / 500) // Based on how long it takes to confirm with the server
+                town: this.speed * (4 + (Math.min(this.ping, 1000) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+                transport: this.speed * (Math.min(this.ping, 1000) / 500) // Based on how long it takes to confirm with the server
             }
         }
 
@@ -3311,7 +3311,7 @@ export class Character extends Observer implements CharacterData {
             //     if (nextMove.type == "move") {
             //         time += 2 * Tools.distance(lastMove, nextMove) / this.speed
             //     } else if (nextMove.type == "transport" || nextMove.type == "leave") {
-            //         time += Math.min(...this.pings, 1000)
+            //         time += Math.min(this.ping, 1000)
             //     } else if (nextMove.type == "town") {
             //         if (time < 2000) {
             //             console.log(`We're prematurely warping to town to save ${3000 - time}ms!`)
