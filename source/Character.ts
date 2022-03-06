@@ -3347,10 +3347,13 @@ export class Character extends Observer implements CharacterData {
                     this.smartMoving = undefined
                     throw "We are having some trouble smartMoving..."
                 }
-                await this.requestPlayerData().catch((e) => { console.error(e) })
-                i--
-                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
 
+                // Look for the path again
+                this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
+                await this.requestPlayerData().catch((e) => { console.error(e) })
+                path = await Pathfinder.getPath(this, fixedTo, options)
+                i = -1
+                await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
             }
         }
 
