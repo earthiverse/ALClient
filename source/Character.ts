@@ -2538,6 +2538,12 @@ export class Character extends Observer implements CharacterData {
             }
 
             const checkPosition = () => {
+                if (options?.resolveOnStart) {
+                    // Moves don't always show up on the player, so just resolve it, it probably went through
+                    resolve({ map: this.map, x: this.x, y: this.y })
+                    return
+                }
+
                 // Force an update of the character position
                 this.updatePositions()
 
@@ -2555,8 +2561,7 @@ export class Character extends Observer implements CharacterData {
                     reject(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`)
                 }
             }
-            let timeout: NodeJS.Timeout
-            if (!options?.resolveOnStart) timeout = setTimeout(checkPosition, timeToFinishMove)
+            let timeout = setTimeout(checkPosition, timeToFinishMove)
 
             this.socket.on("player", checkPlayer)
         })
