@@ -422,7 +422,7 @@ export class Character extends Observer implements CharacterData {
             }
         })
 
-        this.socket.on("start", (data: StartData) => {
+        this.socket.once("start", (data: StartData) => {
             this.going_x = data.x
             this.going_y = data.y
             this.moving = false
@@ -536,7 +536,7 @@ export class Character extends Observer implements CharacterData {
             else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
         })
 
-        this.socket.on("welcome", () => {
+        this.socket.once("welcome", () => {
             // Send a response that we're ready to go
             this.socket.emit("loaded", {
                 height: 1080,
@@ -2511,8 +2511,8 @@ export class Character extends Observer implements CharacterData {
                 if (options?.resolveOnStart) {
                     if (data.going_x == to.x && data.going_y == to.y) {
                         clearTimeout(timeout)
-                        resolve({ map: this.map, x: data.x, y: data.y })
                         this.socket.off("player", checkPlayer)
+                        resolve({ map: this.map, x: data.x, y: data.y })
                     }
                     return
                 }
@@ -3608,7 +3608,6 @@ export class Character extends Observer implements CharacterData {
         const unequipped = new Promise<number>((resolve, reject) => {
             const unequipCheck = (data: CharacterData) => {
                 if (data.slots[slot] === null) {
-                    this.socket.off("player", unequipCheck)
 
                     // Look for the unequipped item in the inventory
                     let inventorySlot: number = undefined
@@ -3630,6 +3629,8 @@ export class Character extends Observer implements CharacterData {
                             break
                         }
                     }
+
+                    this.socket.off("player", unequipCheck)
                     resolve(inventorySlot)
                 }
             }
