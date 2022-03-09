@@ -2540,6 +2540,7 @@ export class Character extends Observer implements CharacterData {
             const checkPosition = () => {
                 if (options?.resolveOnStart) {
                     // Moves don't always show up on the player, so just resolve it, it probably went through
+                    this.socket.off("player", checkPlayer)
                     resolve({ map: this.map, x: this.x, y: this.y })
                     return
                 }
