@@ -422,7 +422,7 @@ export class Character extends Observer implements CharacterData {
             }
         })
 
-        this.socket.once("start", (data: StartData) => {
+        this.socket.on("start", (data: StartData) => {
             this.going_x = data.x
             this.going_y = data.y
             this.moving = false
@@ -536,7 +536,7 @@ export class Character extends Observer implements CharacterData {
             else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
         })
 
-        this.socket.once("welcome", () => {
+        this.socket.on("welcome", () => {
             // Send a response that we're ready to go
             this.socket.emit("loaded", {
                 height: 1080,
@@ -1906,9 +1906,10 @@ export class Character extends Observer implements CharacterData {
 
         const enterComplete = new Promise<void>((resolve, reject) => {
             const enterCheck = (data: NewMapData) => {
+                this.socket.off("new_map", enterCheck)
                 this.socket.off("game_response", failCheck)
                 if (data.name == map) resolve()
-                else reject(`We are now in ${data.name}, but we should be in ${map}`)
+                else throw `We are now in ${data.name}, but we should be in ${map}`
             }
 
             const failCheck = (data: GameResponseData) => {
@@ -1926,7 +1927,7 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("game_response", failCheck)
                 reject(`enter timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
-            this.socket.once("new_map", enterCheck)
+            this.socket.on("new_map", enterCheck)
             this.socket.on("game_response", failCheck)
         })
         this.socket.emit("enter", { name: instance, place: map })
@@ -2341,6 +2342,7 @@ export class Character extends Observer implements CharacterData {
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
+                this.socket.off("tracker", gotCheck)
                 resolve(data)
             }
 
@@ -3586,8 +3588,8 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("new_map", transportCheck)
                 reject(`transport timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
-            this.socket.once("new_map", transportCheck)
             this.socket.on("game_response", failCheck)
+            this.socket.once("new_map", transportCheck)
         })
 
         this.socket.emit("transport", { s: spawn, to: map })
@@ -3897,8 +3899,8 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("new_map", warpedCheck2)
                 reject("warpToTown timeout (5000ms)")
             }, 5000)
-            this.socket.on("new_map", warpedCheck2)
             this.socket.on("player", failCheck)
+            this.socket.on("new_map", warpedCheck2)
         })
 
         if (!startedWarp) this.socket.emit("town")
