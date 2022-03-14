@@ -3112,6 +3112,8 @@ export class Character extends Observer implements CharacterData {
     public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options?: PathfinderOptions): Promise<IPosition> {
         if (!this.ready) throw "We aren't ready yet [smartMove]."
 
+        if (this.rip) throw "We can't smartMove, we are dead."
+
         if (options == undefined) options = {}
         if (options.costs == undefined) {
             options.costs = {
@@ -3220,6 +3222,8 @@ export class Character extends Observer implements CharacterData {
                 else
                     throw `smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`
             }
+
+            if (this.rip) throw "We died while smartMoving"
 
             if (options?.getWithin >= Tools.distance(this, fixedTo)) {
                 break // We're already close enough!
@@ -3347,7 +3351,6 @@ export class Character extends Observer implements CharacterData {
                 } else if (currentMove.type == "transport") {
                     await this.transport(currentMove.map, currentMove.spawn)
                 }
-                numAttempts = 0
             } catch (e) {
                 console.error(e)
                 numAttempts++
