@@ -2492,6 +2492,8 @@ export class Character extends Observer implements CharacterData {
      */
     public async move(x: number, y: number, options?: { disableSafetyCheck?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
         if (!this.ready) throw "We aren't ready yet [move]."
+        if (x == undefined || y == undefined) throw "Please provide an x and y coordinate to move."
+        if (typeof x !== "number" || typeof y !== "number") throw "Please use a number for both x and y."
 
         let to: IPosition = { map: this.map, x: x, y: y }
         if (!options?.disableSafetyCheck) {
