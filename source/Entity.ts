@@ -281,8 +281,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         const burnTime = Math.max(0, (this.s.burned.ms - (this.G.conditions.burned.interval * 2))) / 1000
         const burnDamage = burnTime * this.s.burned.intensity
 
-        if (burnDamage > this.hp) return true
-        return false
+        return burnDamage > this.hp
     }
 
     /**

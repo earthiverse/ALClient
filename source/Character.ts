@@ -1178,8 +1178,10 @@ export class Character extends Observer implements CharacterData {
     }
 
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
+        const gSkill = this.G.skills[skill]
+
         // If the entity is immune, most skills won't do damage
-        if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
+        if ((defender as Entity).immune && skill !== "attack" && !gSkill?.pierces_immunity) return [0, 0]
 
         if (defender["1hp"] || skill == "taunt") {
             if (this.crit) {
@@ -1190,8 +1192,8 @@ export class Character extends Observer implements CharacterData {
         }
 
         let baseDamage: number = this.attack
-        if (!this.G.skills[skill]) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
-        if (this.G.skills[skill]?.damage) baseDamage = this.G.skills[skill].damage
+        if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
+        if (gSkill?.damage) baseDamage = this.G.skills[skill].damage
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
@@ -1199,17 +1201,17 @@ export class Character extends Observer implements CharacterData {
 
         if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
-        const damage_type = this.G.skills[skill]?.damage_type ?? this.damage_type
+        const damage_type = gSkill[skill]?.damage_type ?? this.damage_type
 
         let additionalApiercing = 0
-        if (this.G.skills[skill]?.apiercing) additionalApiercing = this.G.skills[skill].apiercing
+        if (gSkill?.apiercing) additionalApiercing = gSkill.apiercing
         // NOTE: currently no skills with rpiercing
         // let additionalRpiercing = 0
-        // if (this.G.skills[skill].rpiercing) additionalRpiercing = this.G.skills[skill].rpiercing
+        // if (gSkill?.rpiercing) additionalRpiercing = gSkill.rpiercing
         if (damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
         else if (damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
-        if (this.G.skills[skill]?.damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
+        if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
 
         let lowerLimit = baseDamage * 0.9
         let upperLimit = baseDamage * 1.1
@@ -1473,22 +1475,22 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canUse(skill: SkillName, options?: {
+    public canUse(skill: SkillName, options: {
         ignoreCooldown?: boolean,
         ignoreEquipped?: boolean
-    }): boolean {
+    } = {}): boolean {
         if (this.rip) return false // We are dead
         for (const conditionName in this.s) {
             const gCondition = this.G.conditions[conditionName as ConditionName]
             if (gCondition?.blocked) return false // We have a condition that prevents us from using skills
         }
-        if (this.isOnCooldown(skill) && !options?.ignoreCooldown) return false // Skill is on cooldown
-        if (this.G.skills[skill].hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
+        if (this.isOnCooldown(skill) && !options.ignoreCooldown) return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
+        if (gInfoSkill.hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
-        if (gInfoSkill.wtype && !options?.ignoreEquipped) {
+        if (gInfoSkill.wtype && !options.ignoreEquipped) {
             // The skill requires a certain weapon type
             if (!this.slots.mainhand) return false // We don't have any weapon equipped
             const gInfoWeapon = this.G.items[this.slots.mainhand.name]
@@ -1509,15 +1511,15 @@ export class Character extends Observer implements CharacterData {
                     return false // We don't have the right weapon type equipped
             }
         }
-        if (gInfoSkill.consume && !options?.ignoreEquipped) {
+        if (gInfoSkill.consume && !options.ignoreEquipped) {
             if (!this.hasItem(gInfoSkill.consume)) return false // We don't have the required consumable
         }
-        if (gInfoSkill.inventory && !options?.ignoreEquipped) {
+        if (gInfoSkill.inventory && !options.ignoreEquipped) {
             for (const item of gInfoSkill.inventory) {
                 if (!this.hasItem(item)) return false // We don't have the required item in our inventory
             }
         }
-        if (gInfoSkill.slot && !options?.ignoreEquipped) {
+        if (gInfoSkill.slot && !options.ignoreEquipped) {
             // The skill requires an item to be equipped
             let hasSlot = false
             for (const [slot, item] of gInfoSkill.slot) {
