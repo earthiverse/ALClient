@@ -524,7 +524,19 @@ export class Character extends Observer implements CharacterData {
 
         if (Database.connection) {
             this.socket.on("tracker", async (data: TrackerData) => {
-            // Add tracker data to the database
+                // The maximum only gets updated when we re-login, but our characters kills are continuously updated.
+                // If we have a higher kill count than what our max says, override it.
+                for (const monsterName in data.max.monsters) {
+                    const characterKills = data.monsters[monsterName as MonsterName] ?? 0
+                    const maxData = data.max.monsters[monsterName as MonsterName]
+
+                    if (characterKills > maxData[0]) {
+                        maxData[0] = characterKills
+                        maxData[1] = this.id
+                    }
+                }
+
+                // Add tracker data to the database
                 await AchievementModel.create({ date: Date.now(), max: data.max, monsters: data.monsters, name: this.id }).catch((e) => { console.error(e) })
             })
         }
