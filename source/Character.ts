@@ -314,7 +314,7 @@ export class Character extends Observer implements CharacterData {
         if (typeof (data) == "object") {
             if (data.response == "cooldown") {
                 // A skill is on cooldown
-                const skill = data.skill
+                const skill = data.skill ?? data.place
                 if (skill) {
                     const cooldown = data.ms
                     this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
