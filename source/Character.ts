@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, GameResponseDataObject, NewMapData, PartyData, StartData, WelcomeData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData } from "./definitions/adventureland-server.js"
 import { LinkData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -2000,54 +2000,67 @@ export class Character extends Observer implements CharacterData {
         return equipFinished
     }
 
-    public async exchange(inventoryPos: number): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [exchange]."
-        if (!this.items[inventoryPos]) throw `No item in inventory slot ${inventoryPos}.`
-        if (this.G.maps[this.map].mount) throw "We can't exchange things in the bank."
+    public exchange(inventoryPos: number): Promise<number | string> {
+        if (!this.ready) return Promise.reject("We aren't ready yet [exchange].")
+        if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
+        if (this.G.maps[this.map].mount) return Promise.reject("We can't exchange things in the bank.")
 
         let startedExchange = false
         if (this.q.exchange) startedExchange = true
-        const exchangeFinished = new Promise<void>((resolve, reject) => {
-            const completeCheck = (data: CharacterData) => {
-                if (!startedExchange && data.q.exchange?.len == data.q.exchange?.ms) {
-                    startedExchange = true
-                    return
-                }
-                if (startedExchange && !data.q.exchange) {
-                    this.socket.off("player", completeCheck)
+        const exchangeFinished = new Promise<number>((resolve, reject) => {
+            const completeCheck = (data: UpgradeData) => {
+                if(data.type == "exchange"){
+                    this.socket.off("upgrade", completeCheck)
                     this.socket.off("game_response", bankCheck)
-                    resolve()
+                    this.socket.off("game_response", completeCheck2)
+                    return resolve(data.success)
                 }
             }
+            const completeCheck2 = (data: GameResponseDataObject) => {
+                if(['seashell_success'].includes(data.response)){
+                    this.socket.off("upgrade", completeCheck)
+                    this.socket.off("game_response", bankCheck)
+                    this.socket.off("game_response", completeCheck2)
+                    return resolve(1)
+                }
+            }
+
             const bankCheck = (data: GameResponseData) => {
                 if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.off("player", completeCheck)
+                    this.socket.off("upgrade", completeCheck)
                     this.socket.off("game_response", bankCheck)
+                    this.socket.off("game_response", completeCheck2)
                     reject("You can't exchange items in the bank.")
                 } else if (typeof data == "string") {
                     if (data == "exchange_notenough") {
-                        this.socket.off("player", completeCheck)
+                        this.socket.off("upgrade", completeCheck)
                         this.socket.off("game_response", bankCheck)
+                        this.socket.off("game_response", completeCheck2)
                         reject("We don't have enough items to exchange.")
                     } else if (data == "exchange_existing") {
-                        this.socket.off("player", completeCheck)
+                        this.socket.off("upgrade", completeCheck)
                         this.socket.off("game_response", bankCheck)
+                        this.socket.off("game_response", completeCheck2)
                         reject("We are already exchanging something.")
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.off("player", completeCheck)
+                this.socket.off("upgrade", completeCheck)
                 this.socket.off("game_response", bankCheck)
+                this.socket.off("game_response", completeCheck2)
+
                 reject("exchange timeout (60000ms)")
             }, 60000)
             this.socket.on("game_response", bankCheck)
-            this.socket.on("player", completeCheck)
+            this.socket.on("game_response", completeCheck2)
+            this.socket.on("upgrade", completeCheck)
         })
 
         this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
         return exchangeFinished
     }
+
 
     public async finishMonsterHuntQuest(): Promise<void> {
         if (!this.ready) throw "We aren't ready yet [finishMonsterHuntQuest]."
