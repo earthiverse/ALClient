@@ -4,6 +4,7 @@ import { CharacterType, MapName } from "../../definitions/adventureland-data.js"
 import { ItemData } from "../../index.js"
 
 export interface IPlayer {
+    aldata?: string
     discord?: string
     in: string
     items: ItemData[]

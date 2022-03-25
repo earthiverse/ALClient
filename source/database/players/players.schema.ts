@@ -2,6 +2,9 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const PlayerSchema = new Schema({
+    /** Key for use with ALData */
+    aldata: { required: false, type: String },
+    /** Discord ID for contacting the player */
     discord: { required: false, type: String },
     in: String,
     items: { required: false, type: Object },
