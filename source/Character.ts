@@ -2000,7 +2000,7 @@ export class Character extends Observer implements CharacterData {
         return equipFinished
     }
 
-    public exchange(inventoryPos: number): Promise<number | string> {
+    public async exchange(inventoryPos: number): Promise<number | string> {
         if (!this.ready) return Promise.reject("We aren't ready yet [exchange].")
         if (!this.items[inventoryPos]) return Promise.reject(`No item in inventory slot ${inventoryPos}.`)
         if (this.G.maps[this.map].mount) return Promise.reject("We can't exchange things in the bank.")
