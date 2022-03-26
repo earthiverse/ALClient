@@ -816,6 +816,8 @@ export type MailMessageData = {
     to: string
     /** The time this message was sent */
     sent: string
+    /** The subject of the mail */
+    subject: string
     /** The body of the mail */
     message: string
     /** A string containing a JSON object that represents the item that was sent in the mail */
