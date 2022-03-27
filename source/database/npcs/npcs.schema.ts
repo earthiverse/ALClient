@@ -2,6 +2,14 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const NPCSchema = new Schema({
+    __v: {
+        select: false,
+        type: Number
+    },
+    _id: {
+        select: false,
+        type: Object
+    },
     name: String,
     map: String,
     x: Number,

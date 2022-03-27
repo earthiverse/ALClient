@@ -2,6 +2,14 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const BankSchema = new Schema({
+    __v: {
+        select: false,
+        type: Number
+    },
+    _id: {
+        select: false,
+        type: Object
+    },
     gold: Number,
     items0: { required: false, type: Object },
     items1: { required: false, type: Object },

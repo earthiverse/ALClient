@@ -2,6 +2,14 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const AchievementSchema = new Schema({
+    __v: {
+        select: false,
+        type: Number
+    },
+    _id: {
+        select: false,
+        type: Object
+    },
     date: { type: Number, required: true },
     name: { type: String, required: true },
     monsters: { type: Object, required: true },

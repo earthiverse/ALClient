@@ -2,6 +2,14 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const EntitySchema = new Schema({
+    __v: {
+        select: false,
+        type: Number
+    },
+    _id: {
+        select: false,
+        type: Object
+    },
     hp: { required: false, type: Number },
     in: String,
     lastSeen: { required: false, type: Number },
