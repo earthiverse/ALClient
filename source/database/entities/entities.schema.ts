@@ -6,10 +6,6 @@ const EntitySchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        select: false,
-        type: Object
-    },
     hp: { required: false, type: Number },
     in: String,
     lastSeen: { required: false, type: Number },

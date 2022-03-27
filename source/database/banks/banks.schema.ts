@@ -7,8 +7,9 @@ const BankSchema = new Schema({
         type: Number
     },
     _id: {
+        auto: true,
         select: false,
-        type: Object
+        type: Schema.Types.ObjectId
     },
     gold: Number,
     items0: { required: false, type: Object },

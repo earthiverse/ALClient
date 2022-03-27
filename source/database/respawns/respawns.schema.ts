@@ -2,6 +2,15 @@ import pkg from "mongoose"
 const { Schema } = pkg
 
 const RespawnSchema = new Schema({
+    __v: {
+        select: false,
+        type: Number
+    },
+    _id: {
+        auto: true,
+        select: false,
+        type: Schema.Types.ObjectId
+    },
     estimatedRespawn: Number,
     serverIdentifier: String,
     serverRegion: String,

@@ -7,8 +7,9 @@ const NPCSchema = new Schema({
         type: Number
     },
     _id: {
+        auto: true,
         select: false,
-        type: Object
+        type: Schema.Types.ObjectId
     },
     name: String,
     map: String,

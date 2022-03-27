@@ -7,8 +7,9 @@ const AchievementSchema = new Schema({
         type: Number
     },
     _id: {
+        auto: true,
         select: false,
-        type: Object
+        type: Schema.Types.ObjectId
     },
     date: { type: Number, required: true },
     name: { type: String, required: true },
