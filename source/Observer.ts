@@ -33,7 +33,7 @@ export class Observer {
     public x: number
     public y: number
 
-    protected get ping(): number {
+    public get ping(): number {
         return this.pings.length == 0 ? 0 : Math.min(...this.pings)
     }
 
@@ -180,6 +180,7 @@ export class Observer {
                 if (p) {
                     p.damage = data.reflect
                     p.target = data.hid
+                    // TODO: Is this correct!? Shouldn't we check the `data.hid` position?
                     p.x = this.x
                     p.y = this.y
                 }
