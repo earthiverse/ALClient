@@ -4143,6 +4143,16 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Returns true if we are compounding something, false otherwise.
+     *
+     * NOTE: `Compounding`, `Upgrading`, and `Exchanging` are separate things and can be performed simultaneously.
+     * @returns true if we are compounding something
+     */
+    public isCompounding(): boolean {
+        return this.q.compound !== undefined
+    }
+
+    /**
      * Returns a boolean corresponding to whether or not we have a given item equipped.
      * @param itemName The item to look for
      */
@@ -4153,6 +4163,16 @@ export class Character extends Observer implements CharacterData {
             if (this.slots[slot as SlotType].name == itemName) return true
         }
         return false
+    }
+
+    /**
+     * Returns true if we are exchanging something, false otherwise.
+     *
+     * NOTE: `Exchanging`, `Upgrading`, and `Compounding` are separate things and can be performed simultaneously.
+     * @returns true if we are exchanging something
+     */
+    public isExchanging(): boolean {
+        return this.q.exchange !== undefined
     }
 
     /**
@@ -4196,6 +4216,16 @@ export class Character extends Observer implements CharacterData {
      */
     public isOnCooldown(skill: SkillName): boolean {
         return this.getCooldown(skill) !== 0
+    }
+
+    /**
+     * Returns true if we are upgrading something, false otherwise.
+     *
+     * NOTE: `Upgrading`, `Compounding`, and `Exchanging` are separate things and can be performed simultaneously.
+     * @returns true if we are upgrading something
+     */
+    public isUpgrading(): boolean {
+        return this.q.upgrade !== undefined
     }
 
     /**
