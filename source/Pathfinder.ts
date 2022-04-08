@@ -6,6 +6,7 @@ import { DoorInfo, GData, GMap, ItemName, MapName } from "./definitions/adventur
 import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Tools } from "./Tools.js"
+import { Game } from "./Game.js"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -61,7 +62,7 @@ export class Pathfinder {
      * @memberof Pathfinder
      */
     public static canStand(location: IPosition): boolean {
-        if (!this.G) throw new Error("Prepare pathfinding before querying canStand()!")
+        if (!this.G) throw "Prepare pathfinding before querying canStand()!"
 
         const y = Math.trunc(location.y) - this.G.geometry[location.map].min_y
         const x = Math.trunc(location.x) - this.G.geometry[location.map].min_x
@@ -84,7 +85,7 @@ export class Pathfinder {
      * @param to The ending position (where we walk to)
      */
     public static canWalkPath(from: IPosition, to: IPosition): boolean {
-        if (!this.G) throw new Error("Prepare pathfinding before querying canWalkPath()!")
+        if (!this.G) throw "Prepare pathfinding before querying canWalkPath()!"
         if (from.map !== to.map) return false // We can't walk across maps
 
         const grid = this.getGrid(from.map)
@@ -201,7 +202,7 @@ export class Pathfinder {
     public static getGrid(map: MapName, base = Constants.BASE): Grid {
         // Return the grid we've prepared if we have it.
         if (this.grids[map]) return this.grids[map]
-        if (!this.G) throw new Error("Prepare pathfinding before querying getGrid()!")
+        if (!this.G) throw "Prepare pathfinding before querying getGrid()!"
 
         // console.debug(`Preparing ${map}...`)
 
@@ -544,7 +545,7 @@ export class Pathfinder {
     }
 
     public static getPath(from: NodeData, to: NodeData, options?: PathfinderOptions): LinkData[] {
-        if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
+        if (!this.G) throw "Prepare pathfinding before querying getPath()!"
 
         if (from.map == to.map && this.canWalkPath(from, to) && Tools.distance(from, to) < this.TOWN_COST) {
             // Return a straight line to the destination
@@ -568,7 +569,7 @@ export class Pathfinder {
         const rawPath: Node<NodeData>[] = pathfinder.find(fromNode.id, toNode.id)
 
         if (rawPath.length == 0) {
-            throw new Error("We did not find a path...")
+            throw "We did not find a path..."
         }
         path.push({ map: fromNode.data.map, type: "move", x: fromNode.data.x, y: fromNode.data.y })
         for (let i = rawPath.length - 1; i > 0; i--) {
@@ -625,8 +626,8 @@ export class Pathfinder {
      * @param to
      */
     public static getSafeWalkTo(from: IPosition, to: IPosition): IPosition {
-        if (from.map !== to.map) throw new Error("We can't walk across maps.")
-        if (!this.G) throw new Error("Prepare pathfinding before querying getSafeWalkTo()!")
+        if (from.map !== to.map) throw "We can't walk across maps."
+        if (!this.G) throw "Prepare pathfinding before querying getSafeWalkTo()!"
 
         const grid = this.getGrid(from.map)
         const width = this.G.geometry[from.map].max_x - this.G.geometry[from.map].min_x

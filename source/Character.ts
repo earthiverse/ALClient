@@ -1447,11 +1447,11 @@ export class Character extends Observer implements CharacterData {
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't upgrade in the bank
 
         const itemInfo = this.items[itemPos]
-        if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
+        if (!itemInfo) throw `No item in inventory position '${itemPos}'.`
         const gItemInfo = this.G.items[itemInfo.name]
         if (!gItemInfo.upgrade) return false // Item is not upgradable
         const scrollInfo = this.items[scrollPos]
-        if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+        if (!scrollInfo) throw `No scroll in inventory position '${scrollPos}'.`
         const offeringInfo = this.items[offeringPos]
 
         // Distance check
@@ -1924,7 +1924,7 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("new_map", enterCheck)
                 this.socket.off("game_response", failCheck)
                 if (data.name == map) resolve()
-                else throw `We are now in ${data.name}, but we should be in ${map}`
+                else reject(`We are now in ${data.name}, but we should be in ${map}`)
             }
 
             const failCheck = (data: GameResponseData) => {
@@ -1932,7 +1932,7 @@ export class Character extends Observer implements CharacterData {
                     if (data == "transport_cant_item") {
                         this.socket.off("new_map", enterCheck)
                         this.socket.off("game_response", failCheck)
-                        throw `We don't have the required item to enter ${map}.`
+                        reject(`We don't have the required item to enter ${map}.`)
                     }
                 }
             }
@@ -3224,7 +3224,7 @@ export class Character extends Observer implements CharacterData {
             if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
         } catch (e) {
             this.smartMoving = undefined
-            throw Error(e)
+            throw e
         }
 
         const started = Date.now()
@@ -4255,7 +4255,7 @@ export class Character extends Observer implements CharacterData {
         if (located.length == 0) return undefined // No items found
 
         if (filters?.returnHighestLevel) {
-            if (filters.returnLowestLevel) throw new Error("Set either returnHighestLevel or returnLowestLevel, not both.")
+            if (filters.returnLowestLevel) throw "Set either returnHighestLevel or returnLowestLevel, not both."
             let highestLevel: number = Number.MIN_SAFE_INTEGER
             let highestLevelIndex
             for (let i = 0; i < located.length; i++) {

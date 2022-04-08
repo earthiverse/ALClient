@@ -134,7 +134,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     }
 
     public updateData(data: MonsterData): void {
-        if (this.id !== undefined && this.id !== data.id) throw Error("The entity's ID does not match")
+        if (this.id !== undefined && this.id !== data.id) throw "The entity's ID does not match"
 
         // Set everything
         for (const key in data) this[key] = data[key]
