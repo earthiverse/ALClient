@@ -4091,7 +4091,8 @@ export class Character extends Observer implements CharacterData {
     }
 
     public getCooldown(skill: SkillName): number {
-        const nextSkill = this.nextSkill.get(skill)
+        const share = this.G.skills[skill].share
+        const nextSkill = share ? this.nextSkill.get(share) : this.nextSkill.get(skill)
         if (nextSkill == undefined) return 0
 
         const cooldown = nextSkill.getTime() - Date.now()
