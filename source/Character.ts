@@ -1754,10 +1754,10 @@ export class Character extends Observer implements CharacterData {
 
         if (bankPack) {
             // Check if we can access the supplied bankPack
-            const bankPackNum = Number.parseInt(bankPack.substr(5, 2))
-            if ((this.map == "bank" && bankPackNum < 0 && bankPackNum > 7)
-                || (this.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
-                || (this.map == "bank_u" && bankPackNum < 24 && bankPackNum > 47)) {
+            const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
+            if ((this.map == "bank" && (bankPackNum < 0 || bankPackNum > 7))
+                || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
+                || (this.map == "bank_u" && (bankPackNum < 24 || bankPackNum > 47))) {
                 throw `We can not access ${bankPack} on ${this.map}.`
             }
         } else {
