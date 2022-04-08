@@ -1707,6 +1707,7 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("game_response", successCheck)
                 reject(`craft timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+            this.socket.on("game_response", successCheck)
         })
 
         this.socket.emit("craft", { items: itemPositions })
