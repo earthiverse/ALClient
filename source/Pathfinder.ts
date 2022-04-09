@@ -440,9 +440,9 @@ export class Pathfinder {
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
                 const toDoor = this.addNodeToGraph(door[4], spawn2[0], spawn2[1])
                 if (door[7] == "key") {
-                    this.graph.addLink(fromNode.id, toDoor.id, { key: door[8] as ItemName, map: toDoor.data.map, type: "enter", x: toDoor.data.x, y: toDoor.data.y })
+                    this.addLinkToGraph(fromNode, toDoor, { key: door[8] as ItemName, map: toDoor.data.map, type: "enter", x: toDoor.data.x, y: toDoor.data.y })
                 } else {
-                    this.graph.addLink(fromNode.id, toDoor.id, { map: toDoor.data.map, spawn: door[5], type: "transport", x: toDoor.data.x, y: toDoor.data.y })
+                    this.addLinkToGraph(fromNode, toDoor, { map: toDoor.data.map, spawn: door[5], type: "transport", x: toDoor.data.x, y: toDoor.data.y })
                 }
             }
 
