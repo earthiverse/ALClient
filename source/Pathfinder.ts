@@ -6,7 +6,6 @@ import { DoorInfo, GData, GMap, ItemName, MapName } from "./definitions/adventur
 import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Tools } from "./Tools.js"
-import { Game } from "./Game.js"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2
@@ -706,7 +705,7 @@ export class Pathfinder {
         return to
     }
 
-    public static async prepare(g?: GData, options: {
+    public static async prepare(g: GData, options: {
         base?: {
             h: number,
             v: number,
@@ -717,9 +716,7 @@ export class Pathfinder {
         include_bank_u?: boolean,
         include_test?: boolean
     } = {}): Promise<void> {
-        if (!g) {
-            g = await Game.getGData()
-        }
+        if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
 
         const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]

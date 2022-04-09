@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals"
 import { EvalData } from "./adventureland-server"
-import { Character } from "../Character"
 import { Game } from "../Game"
+import { Character } from "../Character"
 
 /**
  * The following is from socket events received 2021-11-13

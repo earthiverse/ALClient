@@ -4053,6 +4053,8 @@ export class Character extends Observer implements CharacterData {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             let attacker: Character | Entity | Player
+            // TODO: Is there a proper way to do this? Is this actually okay to do because we're in a class, and ESLint doesn't have great class support?
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
             if (!attacker && this.id == projectile.attacker) attacker = this
             if (!attacker) attacker = this.players.get(projectile.attacker)
             if (!attacker) attacker = this.entities.get(projectile.attacker)
