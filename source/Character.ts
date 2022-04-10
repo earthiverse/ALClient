@@ -4126,8 +4126,7 @@ export class Character extends Observer implements CharacterData {
     public hasPvPMarkedItem(inv = this.items): boolean {
         for (let i = 0; i < inv.length; i++) {
             const item = inv[i]
-            if (!item) continue
-            if (item.v) return true
+            if (item?.v) return true
         }
         return false
     }
@@ -4325,6 +4324,12 @@ export class Character extends Observer implements CharacterData {
                     continue // This item isn't locked
                 if (!filters.locked && item.l == "l")
                     continue // This item is locked
+            }
+            if (filters?.pvpMarked !== undefined) {
+                if (filters.pvpMarked && !item.v)
+                    continue // The item isn't pvp marked
+                if (!filters.pvpMarked && item.v)
+                    continue // The item is pvp marked
             }
             if (filters?.quantityGreaterThan !== undefined) {
                 if (item.q == undefined)

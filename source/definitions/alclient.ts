@@ -31,6 +31,8 @@ export type LocateItemsFilters = {
     levelGreaterThan?: number;
     levelLessThan?: number;
     locked?: boolean;
+    /** Is the item PvP marked? (i.e. does it have a chance to drop if we die to another player?) */
+    pvpMarked?: boolean;
     quantityGreaterThan?: number;
     /** Is the item special? (e.g.: shiny, firehazard, lucky, glitched, ...) */
     special?: boolean;
