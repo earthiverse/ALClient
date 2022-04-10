@@ -577,7 +577,7 @@ export class Pathfinder {
             let lowestCost = Number.MAX_VALUE
             for (const link of currentNode.links) {
                 if (link.toId !== nextNode.id) continue
-                const cost = this.computeLinkCost(fromNode.data, toNode.data, link.data, options)
+                const cost = this.computeLinkCost(currentNode.data, nextNode.data, link.data, options)
                 if (cost < lowestCost || (cost == lowestCost && (link.data as LinkData)?.type == "move")) {
                     lowestCost = cost
                     lowestCostLinkData = link.data as LinkData
