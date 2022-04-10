@@ -3128,12 +3128,10 @@ export class Character extends Observer implements CharacterData {
         if (this.rip) throw "We can't smartMove, we are dead."
 
         if (options == undefined) options = {}
-        if (options.costs == undefined) {
-            options.costs = {
-                town: this.speed * (4 + (Math.min(this.ping, 1000) / 500)), // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
-                transport: this.speed * (Math.min(this.ping, 1000) / 500) // Based on how long it takes to confirm with the server
-            }
-        }
+        if (options.costs == undefined) options.costs = {}
+        if (options.costs.blink == undefined) options.costs.blink = this.speed * 3.2 + 250 // We can't attack for 3.2 seconds after a blink, + it uses a lot of mana
+        if (options.costs.town == undefined) options.costs.town = this.speed * (4 + (Math.min(this.ping, 1000) / 500)) // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+        if (options.costs.transport == undefined) options.costs.transport = this.speed * (Math.min(this.ping, 1000) / 500) // Based on how long it takes to confirm with the server
 
         let fixedTo: IPosition & {map: MapName}
         let path: LinkData[]
@@ -3280,7 +3278,7 @@ export class Character extends Observer implements CharacterData {
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
                     if (potentialMove.map !== this.map) continue
-                    if (Tools.distance(currentMove, potentialMove) < (this.speed * 2)) break // We're close, don't waste a blink
+                    if (Tools.distance(currentMove, potentialMove) < (options.costs.blink)) break // We're close, don't waste a blink
 
                     // Get closest blinkable spot near the potential move
                     let roundedMove: IPosition

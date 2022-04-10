@@ -48,6 +48,7 @@ export type PathfinderOptions = {
     getWithin?: number
     useBlink?: boolean
     costs?: {
+        blink?: number
         enter?: number
         town?: number
         transport?: number
