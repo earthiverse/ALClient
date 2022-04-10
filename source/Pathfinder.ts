@@ -429,9 +429,7 @@ export class Pathfinder {
 
         // console.debug("  Adding walkable links...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
-        for (let i = 0; i < walkableNodes.length; i++) {
-            const fromNode = walkableNodes[i]
-
+        for (const fromNode of walkableNodes) {
             // Check if we can reach a door
             for (const door of doors) {
                 if (this.doorDistance(fromNode.data, door) >= Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
