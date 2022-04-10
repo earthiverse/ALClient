@@ -1,4 +1,5 @@
 import { Attribute, MonsterName } from "./adventureland-data.js"
+import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {
@@ -44,4 +45,9 @@ export type LocateItemsFilters = {
 export type LocateItemFilters = LocateItemsFilters & {
     returnHighestLevel?: boolean;
     returnLowestLevel?: boolean;
+}
+
+export type SmartMoveOptions = PathfinderOptions & {
+    /** If set, this function will be called before every action. Useful if you want to stop smartMoving early. */
+    stopIfTrue?: () => boolean
 }

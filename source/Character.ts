@@ -14,7 +14,7 @@ import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
-import { GetEntitiesFilters, GetEntityFilters, LocateItemFilters, LocateItemsFilters } from "./definitions/alclient.js"
+import { GetEntitiesFilters, GetEntityFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -3115,18 +3115,14 @@ export class Character extends Observer implements CharacterData {
     public smartMoving: IPosition & {map: MapName} = undefined
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
-     * You can use this function to move across maps.
+     * You can use this function to move between maps, too.
      *
      * @param {(IPosition | ItemName | MapName | MonsterName | NPCName)} to
-     * @param {PathfinderOptions} [options={
-     *         avoidTownWarps: false,
-     *         getWithin: 0,
-     *         useBlink: false
-     *     }]
+     * @param {SmartMoveOptions} [options]
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options?: PathfinderOptions): Promise<IPosition> {
+    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options?: SmartMoveOptions): Promise<IPosition> {
         if (!this.ready) throw "We aren't ready yet [smartMove]."
 
         if (this.rip) throw "We can't smartMove, we are dead."
@@ -3245,6 +3241,9 @@ export class Character extends Observer implements CharacterData {
             if (options?.getWithin >= Tools.distance(this, fixedTo)) {
                 break // We're already close enough!
             }
+
+            // Stop if we meet our conditions
+            if (options.stopIfTrue !== undefined && options.stopIfTrue()) break
 
             // Check if we can walk to a spot close to the goal if that's OK
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
