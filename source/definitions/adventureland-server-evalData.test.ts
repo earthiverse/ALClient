@@ -11,6 +11,7 @@ import { Character } from "../Character"
 test("EvalData type validation", async () => {
     const evalDatas: EvalData[] = [
         { code: "pot_timeout(2000)" },
+        { code: "skill_timeout('attack',3200)" },
         { code: "ui_move(-100,-40)" }
     ]
     for (const evalData of evalDatas) expect(evalData).not.toBe(undefined)

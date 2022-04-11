@@ -387,7 +387,7 @@ export type MonsterData = {
     frequency?: number
     going_x: number
     going_y: number
-    mp: number
+    mp?: number
     speed?: number
     resistance?: number
     s: StatusInfo
@@ -853,6 +853,7 @@ export type NewMapData = {
     direction: number
     effect: number | "blink" | "magiport"
     entities: EntitiesData
+    eval?: string
     in: string
     info: any
     m: number
