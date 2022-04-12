@@ -28,43 +28,28 @@ export class Pathfinder {
      * @param b The door's information (G.maps[mapName].doors[doorNum])
      */
     public static doorDistance(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
-        const doorX = b[0]
-        const doorY = b[1]
-        const doorWidth = b[2] / 2
-        const doorHeight = b[3] / 2
-        let closest = Number.MAX_VALUE
+        const b_x = b[0]
+        const b_y = b[1]
+        const halfWidth = b[2] / 2
+        const halfHeight = b[3] / 2
 
-        if (a.x > doorX + doorWidth) {
-            // Check the right points
-            const x = doorX + doorWidth
-            for (const y of [doorY - doorHeight, doorY + doorHeight]) {
-                const distance = Tools.distance(a, { x: x, y: y })
-                if (distance < closest) closest = distance
+        if (a.x >= b_x) {
+            if (a.y >= b_y) {
+                // Check top right
+                return Tools.distance(a, { x: b_x + halfWidth, y: b_y + halfHeight })
+            } else {
+                // Check bottom right
+                return Tools.distance(a, { x: b_x + halfWidth, y: b_y - halfHeight })
             }
-        } else if (a.x < doorX - doorWidth) {
-            // Check the left points
-            const x = doorX - doorWidth
-            for (const y of [doorY - doorHeight, doorY + doorHeight]) {
-                const distance = Tools.distance(a, { x: x, y: y })
-                if (distance < closest) closest = distance
+        } else {
+            if (a.y >= b_y) {
+                // Check top left
+                return Tools.distance(a, { x: b_x - halfWidth, y: b_y + halfHeight })
+            } else {
+                // Check bottom left
+                return Tools.distance(a, { x: b_x - halfWidth, y: b_y - halfHeight })
             }
-        } else if (a.y > doorY + doorHeight) {
-            // Check top points
-            const y = doorY + doorHeight
-            for (const x of [doorX - doorWidth, doorX + doorWidth]) {
-                const distance = Tools.distance(a, { x: x, y: y })
-                if (distance < closest) closest = distance
-            }
-        } else if (a.y < doorY - doorHeight) {
-            // Check bottom points
-            const y = doorY - doorHeight
-            for (const x of [doorX - doorWidth, doorX + doorWidth]) {
-                const distance = Tools.distance(a, { x: x, y: y })
-                if (distance < closest) closest = distance
-            }
-        } else return 0 // We're on the door
-
-        return closest
+        }
     }
 
     protected static addLinkToGraph(from: Node<NodeData>, to: Node<NodeData>, data?: LinkData): Link<LinkData> {
