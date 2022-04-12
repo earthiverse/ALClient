@@ -35,17 +35,29 @@ export class Pathfinder {
 
         if (a.x >= b_x) {
             if (a.y >= b_y) {
+                // Check inside door
+                if (a.x <= b_x + halfWidth && a.y <= b_y + halfHeight) return 0
+
                 // Check top right
                 return Tools.distance(a, { x: b_x + halfWidth, y: b_y + halfHeight })
             } else {
+                // Check inside door
+                if (a.x <= b_x + halfWidth && a.y >= b_y - halfHeight) return 0
+
                 // Check bottom right
                 return Tools.distance(a, { x: b_x + halfWidth, y: b_y - halfHeight })
             }
         } else {
             if (a.y >= b_y) {
+                // Check inside door
+                if (a.x >= b_x - halfWidth && a.y <= b_y + halfHeight) return 0
+
                 // Check top left
                 return Tools.distance(a, { x: b_x - halfWidth, y: b_y + halfHeight })
             } else {
+                // Check inside door
+                if (a.x >= b_x - halfWidth && a.y >= b_y - halfHeight) return 0
+
                 // Check bottom left
                 return Tools.distance(a, { x: b_x - halfWidth, y: b_y - halfHeight })
             }
