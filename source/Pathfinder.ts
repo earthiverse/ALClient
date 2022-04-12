@@ -30,15 +30,40 @@ export class Pathfinder {
     public static doorDistance(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
         const doorX = b[0]
         const doorY = b[1]
-        const doorWidth = b[2]
-        const doorHeight = b[3]
+        const doorWidth = b[2] / 2
+        const doorHeight = b[3] / 2
         let closest = Number.MAX_VALUE
-        for (const x of [doorX - doorWidth / 2, doorX + doorWidth / 2]) {
-            for (const y of [doorY - doorHeight / 2, doorY + doorHeight / 2]) {
+
+        if (a.x > doorX + doorWidth) {
+            // Check the right points
+            const x = doorX + doorWidth
+            for (const y of [doorY - doorHeight, doorY + doorHeight]) {
                 const distance = Tools.distance(a, { x: x, y: y })
                 if (distance < closest) closest = distance
             }
-        }
+        } else if (a.x < doorX - doorWidth) {
+            // Check the left points
+            const x = doorX - doorWidth
+            for (const y of [doorY - doorHeight, doorY + doorHeight]) {
+                const distance = Tools.distance(a, { x: x, y: y })
+                if (distance < closest) closest = distance
+            }
+        } else if (a.y > doorY + doorHeight) {
+            // Check top points
+            const y = doorY + doorHeight
+            for (const x of [doorX - doorWidth, doorX + doorWidth]) {
+                const distance = Tools.distance(a, { x: x, y: y })
+                if (distance < closest) closest = distance
+            }
+        } else if (a.y < doorY - doorHeight) {
+            // Check bottom points
+            const y = doorY - doorHeight
+            for (const x of [doorX - doorWidth, doorX + doorWidth]) {
+                const distance = Tools.distance(a, { x: x, y: y })
+                if (distance < closest) closest = distance
+            }
+        } else return 0 // We're on the door
+
         return closest
     }
 
