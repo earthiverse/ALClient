@@ -20,6 +20,30 @@ test("Pathfinder.prepare", async () => {
     expect(Pathfinder.getGrid("main")).toBeDefined()
 })
 
+test("Pathfinder.doorDistance", async () => {
+    const mainBankDoor = G.maps.main.doors[2]
+
+    // Test the door base coordinate
+    const doorPoint = { x: mainBankDoor[0], y: mainBankDoor[1] }
+    expect(Pathfinder.doorDistance(doorPoint, mainBankDoor)).toBe(0)
+    // Test the corners of the door
+    const doorCorner_1 = { x: mainBankDoor[0] + mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] }
+    expect(Pathfinder.doorDistance(doorCorner_1, mainBankDoor)).toBe(0)
+    const doorCorner_2 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] }
+    expect(Pathfinder.doorDistance(doorCorner_2, mainBankDoor)).toBe(0)
+    const doorCorner_3 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] }
+    expect(Pathfinder.doorDistance(doorCorner_3, mainBankDoor)).toBe(0)
+    const doorCorner_4 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] }
+    expect(Pathfinder.doorDistance(doorCorner_4, mainBankDoor)).toBe(0)
+    // Test inside the door
+    const doorInside = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] / 2 }
+    expect(Pathfinder.doorDistance(doorInside, mainBankDoor)).toBe(0)
+
+    // Test outside the door
+    const doorOutside_1 = { x: mainBankDoor[0] + mainBankDoor[2], y: mainBankDoor[1] - mainBankDoor[3] }
+    expect(Pathfinder.doorDistance(doorOutside_1, mainBankDoor)).toBe(mainBankDoor [2] / 2)
+})
+
 test("Pathfinder.getPath", async () => {
     const mainSpawn: NodeData = { map: "main", x: G.maps.main.spawns[0][0], y: G.maps.main.spawns[0][1] }
     const mainOffset: NodeData = { map: "main", x: G.maps.main.spawns[0][0] + 100, y: G.maps.main.spawns[0][1] + 100 }

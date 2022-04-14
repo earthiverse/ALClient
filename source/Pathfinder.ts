@@ -34,32 +34,32 @@ export class Pathfinder {
         const height = b[3]
 
         if (a.x >= b_x) {
-            if (a.y >= b_y + height / 2) {
+            if (a.y >= b_y - height / 2) {
                 // Check inside door
-                if (a.x <= b_x + halfWidth && a.y <= b_y + height) return 0
+                if (a.x <= b_x + halfWidth && a.y <= b_y) return 0
 
                 // Check top right
-                return Math.hypot(a.x - (b_x + halfWidth), a.y - (b_y + height))
+                return Math.hypot(a.x - (b_x + halfWidth), a.y - b_y)
             } else {
                 // Check inside door
                 if (a.x <= b_x + halfWidth && a.y >= b_y) return 0
 
                 // Check bottom right
-                return Math.hypot(a.x - (b_x + halfWidth), a.y - b_y)
+                return Math.hypot(a.x - (b_x + halfWidth), a.y - (b_y - height))
             }
         } else {
-            if (a.y >= b_y + height / 2) {
+            if (a.y >= b_y - height / 2) {
                 // Check inside door
-                if (a.x >= b_x - halfWidth && a.y <= b_y + height) return 0
+                if (a.x >= b_x - halfWidth && a.y <= b_y) return 0
 
                 // Check top left
-                return Math.hypot(a.x - (b_x - halfWidth), a.y - (b_y + height))
+                return Math.hypot(a.x - (b_x - halfWidth), a.y - b_y)
             } else {
                 // Check inside door
                 if (a.x >= b_x - halfWidth && a.y >= b_y) return 0
 
                 // Check bottom left
-                return Math.hypot(a.x - (b_x - halfWidth), a.y - b_y)
+                return Math.hypot(a.x - (b_x - halfWidth), a.y - (b_y - height))
             }
         }
     }
