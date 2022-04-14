@@ -31,35 +31,35 @@ export class Pathfinder {
         const b_x = b[0]
         const b_y = b[1]
         const halfWidth = b[2] / 2
-        const halfHeight = b[3] / 2
+        const height = b[3]
 
         if (a.x >= b_x) {
-            if (a.y >= b_y) {
+            if (a.y >= b_y + height / 2) {
                 // Check inside door
-                if (a.x <= b_x + halfWidth && a.y <= b_y + halfHeight) return 0
+                if (a.x <= b_x + halfWidth && a.y <= b_y + height) return 0
 
                 // Check top right
-                return Tools.distance(a, { x: b_x + halfWidth, y: b_y + halfHeight })
+                return Math.hypot(a.x - (b_x + halfWidth), a.y - (b_y + height))
             } else {
                 // Check inside door
-                if (a.x <= b_x + halfWidth && a.y >= b_y - halfHeight) return 0
+                if (a.x <= b_x + halfWidth && a.y >= b_y) return 0
 
                 // Check bottom right
-                return Tools.distance(a, { x: b_x + halfWidth, y: b_y - halfHeight })
+                return Math.hypot(a.x - (b_x + halfWidth), a.y - b_y)
             }
         } else {
-            if (a.y >= b_y) {
+            if (a.y >= b_y + height / 2) {
                 // Check inside door
-                if (a.x >= b_x - halfWidth && a.y <= b_y + halfHeight) return 0
+                if (a.x >= b_x - halfWidth && a.y <= b_y + height) return 0
 
                 // Check top left
-                return Tools.distance(a, { x: b_x - halfWidth, y: b_y + halfHeight })
+                return Math.hypot(a.x - (b_x - halfWidth), a.y - (b_y + height))
             } else {
                 // Check inside door
-                if (a.x >= b_x - halfWidth && a.y >= b_y - halfHeight) return 0
+                if (a.x >= b_x - halfWidth && a.y >= b_y) return 0
 
                 // Check bottom left
-                return Tools.distance(a, { x: b_x - halfWidth, y: b_y - halfHeight })
+                return Math.hypot(a.x - (b_x - halfWidth), a.y - b_y)
             }
         }
     }
@@ -198,9 +198,7 @@ export class Pathfinder {
         }
 
         // We are walking
-        if (from.map == to.map) {
-            return Tools.distance(from, to)
-        }
+        if (from.map == to.map) return Math.hypot(from.x - to.x, from.y - to.y)
     }
 
     public static computePathCost(path: LinkData[], options: PathfinderOptions = {
@@ -468,7 +466,7 @@ export class Pathfinder {
 
             // Add destination nodes and links to maps that are reachable through the transporter
             for (const npc of transporters) {
-                if (Tools.distance(fromNode.data, { x: npc.position[0], y: npc.position[1] }) > Constants.TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
+                if (Math.hypot(fromNode.data.x - npc.position[0], fromNode.data.y - npc.position[1]) > Constants.TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
                 for (const toMap in this.G.npcs.transporter.places) {
                     if (map == toMap) continue // Don't add links to ourself
 
@@ -528,7 +526,7 @@ export class Pathfinder {
         const from = { map, x, y }
         this.graph.forEachNode((node) => {
             if (node.data.map == map) {
-                const distance = Tools.distance(from, node.data)
+                const distance = Math.hypot(from.x - node.data.x, from.y - node.data.y)
 
                 // If we're further than one we can already walk to, don't check further
                 if (distance > closest.distance) return
@@ -553,7 +551,7 @@ export class Pathfinder {
         }
         // Look through all the spawns, and find the closest one
         for (const spawn of this.G.maps[map].spawns) {
-            const distance = Tools.distance({ x, y }, { x: spawn[0], y: spawn[1] })
+            const distance = Math.hypot(x - spawn[0], y - spawn[1])
             if (distance < closest.distance) {
                 closest.x = spawn[0]
                 closest.y = spawn[1]
@@ -566,7 +564,7 @@ export class Pathfinder {
     public static getPath(from: NodeData, to: NodeData, options?: PathfinderOptions): LinkData[] {
         if (!this.G) throw "Prepare pathfinding before querying getPath()!"
 
-        if (from.map == to.map && this.canWalkPath(from, to) && Tools.distance(from, to) < this.TOWN_COST) {
+        if (from.map == to.map && this.canWalkPath(from, to) && Math.hypot(from.x - to.x, from.y - to.y) < (options?.costs?.town ?? this.TOWN_COST)) {
             // Return a straight line to the destination
             return [{ map: from.map, type: "move", x: from.x, y: from.y }, { map: from.map, type: "move", x: to.x, y: to.y }]
         }
