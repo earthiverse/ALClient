@@ -833,7 +833,7 @@ export class Character extends Observer implements CharacterData {
 
         const attackStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
-                if (data.id == id) {
+                if (data.id == id && data.place == "attack") {
                     this.socket.off("action", attackCheck)
                     this.socket.off("game_response", failCheck)
                     this.socket.off("notthere", failCheck2)
