@@ -4034,7 +4034,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("skill", { id: id, name: "zapperzap" })
 
         // TODO: Short cooldowns don't get set correctly, so this is needed!?
-        this.setNextSkill("zapperzap", new Date(Date.now() + this.G.skills.zapperzap.cooldown))
+        this.nextSkill.set("zapperzap", new Date(Date.now() + this.G.skills.zapperzap.cooldown))
 
         return zapped
     }

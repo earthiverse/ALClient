@@ -410,7 +410,7 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("skill", { id: target, name: "mluck" })
 
         // TODO: Short cooldowns don't get set correctly, so this is needed!?
-        this.setNextSkill("mluck", new Date(Date.now() + this.G.skills.mluck.cooldown))
+        this.nextSkill.set("mluck", new Date(Date.now() + this.G.skills.mluck.cooldown))
 
         return mlucked
     }
