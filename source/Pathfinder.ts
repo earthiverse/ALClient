@@ -525,18 +525,17 @@ export class Pathfinder {
         let closestWalkable: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
         const from = { map, x, y }
         this.graph.forEachNode((node) => {
-            if (node.data.map == map) {
-                const distance = Math.hypot(from.x - node.data.x, from.y - node.data.y)
+            if (node.data.map !== map) return
+            const distance = Math.hypot(from.x - node.data.x, from.y - node.data.y)
 
-                // If we're further than one we can already walk to, don't check further
-                if (distance > closest.distance) return
+            // If we're further than one we can already walk to, don't check further
+            if (distance > closest.distance) return
 
-                const walkable = this.canWalkPath(from, node.data)
+            const walkable = this.canWalkPath(from, node.data)
 
-                if (distance < closest.distance) closest = { distance, node }
-                if (walkable && distance < closestWalkable.distance) closestWalkable = { distance, node }
-                if (distance < 1) return true
-            }
+            if (distance < closest.distance) closest = { distance, node }
+            if (walkable && distance < closestWalkable.distance) closestWalkable = { distance, node }
+            if (distance < 1) return true
         })
 
         return closestWalkable.node ? closestWalkable.node : closest.node
