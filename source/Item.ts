@@ -12,16 +12,19 @@ export class Item implements ItemData, GItem {
     public level?: number
     public stat_type?: Attribute
 
-    // GItem (required)
+    // Required
+    public g: number
     public id: ItemName
     public skin: string
     public type: ItemType
-    // GItem (optional)
+
+    // Optional
     public a: boolean | number = false
     public ability?: SkillName | "burn" | "freeze" | "poke" | "posion" | "restore_mp" | "secondchance" | "sugarrush" | "weave"
     public acolor?: string
     public action?: string
-    public g: number
+    public gift = 0
+    public v?: string
 
     public constructor(data: ItemData | ItemData, g: GData) {
         this.G = g
@@ -70,6 +73,9 @@ export class Item implements ItemData, GItem {
             }
         }
 
+        // The first level of a gifted item is only worth 1 gold.
+        if (this.gift) cost -= (gInfo.g - 1)
+
         return cost
     }
 
@@ -80,5 +86,14 @@ export class Item implements ItemData, GItem {
      */
     public isLocked(): boolean {
         return this.l == "l"
+    }
+
+    /**
+     * Returns true if the item is PVP marked. If you die to another player, there is a chance to lose this item to the other player.
+     *
+     * @memberof Item
+     */
+    public isPVPMarked(): boolean {
+        return this.v !== undefined
     }
 }
