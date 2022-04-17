@@ -616,6 +616,8 @@ export type GameResponseDataString =
 
 export type HitData = {
     anim?: AnimationName | "miss" | "reflect"
+    /** If this is true, the hit was due to an aoe attack */
+    aoe?: boolean
     /** If this is set, we avoided the projectile (by running?) */
     avoid?: boolean
     /** If set, the projectile has inflicted burn on the target */
@@ -632,8 +634,10 @@ export type HitData = {
     miss?: boolean
     /** TODO: What does this number mean? */
     mobbing?: number
+    /** UI Related. Skips drawing line to target (used for cleave, for example) */
+    no_lines?: boolean
     pid?: string
-    projectile?: string
+    projectile?: ProjectileName
     reflect?: number
     /** If set, this was a sneak attack by a rogue */
     sneak?: boolean

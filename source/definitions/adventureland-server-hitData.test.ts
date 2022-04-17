@@ -52,6 +52,21 @@ test("HitData type validation", async () => {
     }
     expect(burn2).not.toBe(undefined)
 
+    const cleave: HitData = {
+        "anim": "slash1",
+        "aoe": true,
+        "damage": 3235,
+        "hid": "earthWar",
+        "id": "2549449",
+        "kill": true,
+        "lifesteal": 21,
+        "no_lines": true,
+        "pid": "PUc91s",
+        "projectile": "momentum",
+        "source": "cleave"
+    }
+    expect(cleave).not.toBe(undefined)
+
     const curse: HitData = {
         "hid": "Tsumiki",
         "source": "curse",

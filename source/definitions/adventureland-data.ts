@@ -347,8 +347,8 @@ export type GData = {
     }
     projectiles: {
         [T in ProjectileName]: {
-            animation: string
-            hit_animation?: string
+            animation: AnimationName
+            hit_animation?: AnimationName
             pure?: boolean
             ray?: boolean
             /** Projectile speed */
