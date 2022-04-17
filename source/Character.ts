@@ -2096,6 +2096,11 @@ export class Character extends Observer implements CharacterData {
     public getEntities(filters: GetEntitiesFilters = {}): Entity[] {
         const entities: Entity[] = []
         for (const [, entity] of this.entities) {
+            if (filters.ignoreIDs !== undefined) {
+                for (const id in filters.ignoreIDs) {
+                    if (id == entity.id) continue
+                }
+            }
             if (filters.targetingMe !== undefined) {
                 if (filters.targetingMe) {
                     if (entity.target !== this.id) continue

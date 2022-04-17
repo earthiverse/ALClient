@@ -6,6 +6,7 @@ export type GetEntitiesFilters = {
     canDamage?: boolean
     canWalkTo?: boolean
     couldGiveCredit?: boolean
+    ignoreIDs?: Iterable<string>
     withinRange?: number
     targetingMe?: boolean
     targetingPartyMember?: boolean
