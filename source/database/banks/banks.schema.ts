@@ -6,11 +6,6 @@ const BankSchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        auto: true,
-        select: false,
-        type: Schema.Types.ObjectId
-    },
     gold: Number,
     items0: { required: false, type: Object },
     items1: { required: false, type: Object },

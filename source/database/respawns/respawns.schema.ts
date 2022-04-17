@@ -6,11 +6,6 @@ const RespawnSchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        auto: true,
-        select: false,
-        type: Schema.Types.ObjectId
-    },
     estimatedRespawn: Number,
     serverIdentifier: String,
     serverRegion: String,

@@ -6,11 +6,6 @@ const DeathSchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        auto: true,
-        select: false,
-        type: Schema.Types.ObjectId
-    },
     name: String,
     cause: String,
     map: String,

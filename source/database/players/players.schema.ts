@@ -6,11 +6,6 @@ const PlayerSchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        auto: true,
-        select: false,
-        type: Schema.Types.ObjectId
-    },
     /** Key for use with ALData */
     aldata: { required: false, type: String },
     /** Discord ID for contacting the player */

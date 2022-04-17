@@ -6,11 +6,6 @@ const AchievementSchema = new Schema({
         select: false,
         type: Number
     },
-    _id: {
-        auto: true,
-        select: false,
-        type: Schema.Types.ObjectId
-    },
     date: { type: Number, required: true },
     name: { type: String, required: true },
     monsters: { type: Object, required: true },
