@@ -3646,16 +3646,6 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "attack_failed") {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        reject("throwsnowball failed")
-                    }
-                }
-            }
-
             setTimeout(() => {
                 this.socket.off("action", attackCheck)
                 this.socket.off("eval", cooldownCheck)
@@ -3663,7 +3653,6 @@ export class Character extends Observer implements CharacterData {
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
             this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("skill", { id: target, name: "snowball", num: snowball })
