@@ -1850,6 +1850,31 @@ export class Character extends Observer implements CharacterData {
         return swapped
     }
 
+    public async donateGold(amount: number): Promise<void> {
+        if (!this.ready) throw "We aren't ready yet [donateGold]."
+        if (this.gold < amount) throw `We don't have ${amount} gold to donate.`
+        const donated = new Promise<void>((resolve, reject) => {
+            const checkDonate = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "donate_gum"
+                    || data.response == "donate_low"
+                     || data.response == "donate_thx") {
+                        this.socket.off("game_response", checkDonate)
+                        resolve()
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", checkDonate)
+                reject(`depositItem timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", checkDonate)
+        })
+        this.socket.emit("donate", { gold: amount })
+        return donated
+    }
+
     /**
      * Perform an emotion
      *
@@ -2234,6 +2259,37 @@ export class Character extends Observer implements CharacterData {
         return undefined
     }
 
+    public getLostAndFoundItems(): Promise<ItemDataTrade[]> {
+        if (!this.ready) throw "We aren't ready yet [getLostAndFoundItems]."
+        if (this.map !== "woffice") throw "Too far away from lostandfound NPC."
+        const lostAndFoundItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
+            const distanceCheck = (data: GameResponseData) => {
+                if (data == "buy_get_closer") {
+                    this.socket.off("game_response", distanceCheck)
+                    this.socket.off("lostandfound", lostAndFoundItems)
+                    reject("Too far away from lostandfound NPC.")
+                }
+            }
+
+            const lostAndFoundItems = (data: ItemDataTrade[]) => {
+                this.socket.off("game_response", distanceCheck)
+                this.socket.off("lostandfound", lostAndFoundItems)
+                resolve(data)
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", distanceCheck)
+                this.socket.off("lostandfound", lostAndFoundItems)
+                reject("getLostAndFoundItems timeout (5000ms)")
+            }, 5000)
+            this.socket.on("lostandfound", lostAndFoundItems)
+            this.socket.on("game_response", distanceCheck)
+        })
+
+        this.socket.emit("lostandfound")
+        return lostAndFoundItems
+    }
+
     public async getMonsterHuntQuest(): Promise<void> {
         if (!this.ready) throw "We aren't ready yet [getMonsterHuntQuest]."
         if (this.s.monsterhunt && this.s.monsterhunt.c > 0) throw `We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`
@@ -2416,6 +2472,28 @@ export class Character extends Observer implements CharacterData {
         })
         this.socket.emit("players")
         return playersData
+    }
+
+    public async getServerReserveGold(): Promise<number> {
+        if (!this.ready) throw "We aren't ready yet [getServerReserveGold]."
+        const reserveGold = new Promise<number>((resolve, reject) => {
+            const reserveCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "lostandfound_info") {
+                        this.socket.off("game_response", reserveCheck)
+                        resolve(data.gold)
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", reserveCheck)
+                reject(`getServerReserveGold timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", reserveCheck)
+        })
+        this.socket.emit("lostandfound", "info")
+        return reserveGold
     }
 
     public async getPontyItems(): Promise<ItemDataTrade[]> {

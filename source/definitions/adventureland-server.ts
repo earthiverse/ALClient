@@ -473,6 +473,15 @@ export type GameResponseDataObject = {
     response: "disabled"
     place: "attack"
 } |
+/** Called when donating to the goblin.
+ * donation < 100k ➡️ low
+ * 100k <= donation > 1m ➡️ gum
+ * donation >= 1m ➡️ ability to see lost and found */
+{
+    response: "donate_gum" | "donate_low" | "donate_thx"
+    gold: number
+    xprate: number
+} |
 /** Called when a condition expires */
 {
     response: "ex_condition"
@@ -495,6 +504,11 @@ export type GameResponseDataObject = {
     name: string
     item: ItemName
     q: number
+} |
+/** When you talk to the goblin, it has info about the server's gold reserves */
+{
+    response: "lostandfound_info"
+    gold: number
 } | {
     response: "magiport_failed"
     // User ID the magiport offer was sent to
@@ -577,6 +591,8 @@ export type GameResponseDataString =
     | "friend_rsent"
     /** When you try to sell a locked item */
     | "item_locked"
+    /** When you try to look at the lost and found, but haven't donated enough */
+    | "lostandfound_donate"
     /** When a merchant tries to start a monster hunt */
     | "monsterhunt_merchant"
     | "monsterhunt_started"
@@ -1221,6 +1237,7 @@ export type ServerToClientEvents = {
     "hit": (data: HitData) => void
     "invite": (data: InviteData) => void
     "limitdcreport": (data: LimitDCReportData) => void
+    "lostandfound": (data: ItemDataTrade[]) => void
     "magiport": (data: { name: string }) => void
     "new_map": (data: NewMapData) => void
     "notthere": (data: NotThereData) => void
@@ -1253,6 +1270,7 @@ export type ClientToServerEvents = {
     "compound": (data: { clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
     // TODO: Create CraftData type
     "craft": (data: { items: [number, number][] }) => void
+    "donate": (donation: { gold: number }) => void
     "emotion": (data: { name: EmotionName }) => void
     "enter": (data: { name: string, place: MapName }) => void
     "equip": (data: { num: number, slot: SlotType } | { consume: true, num: number } | { num: number, price: number, q: number, slot: TradeSlotType }) => void
@@ -1269,6 +1287,7 @@ export type ClientToServerEvents = {
     "join_giveaway": (data: { slot: TradeSlotType, id: string, rid: string }) => void
     "leave": () => void
     "loaded": (data: LoadedData) => void
+    "lostandfound": (reserveInfo?: "info") => void
     "mail": (data: { item: boolean, message: string, subject: string, to: string }) => void
     "mail_take_item": (data: { id: string }) => void
     "magiport": (data: { name: string }) => void
