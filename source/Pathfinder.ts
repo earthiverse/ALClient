@@ -767,12 +767,40 @@ export class Pathfinder {
         this.getGrid("jail", options.base ?? Constants.BASE) // Jail is disconnected, prepare it
 
         if (options.cheat) {
+            const addCheatPath = (from: IPosition & { map: MapName }, to: IPosition & { map: MapName }) => {
+                const fromNodeID = `${from.map}:${from.x},${from.y}`
+                const fromNode = this.graph.getNode(fromNodeID)
+                if (!fromNode) {
+                    console.log(`Can't cheat path on ${from.map}:${from.x},${from.y} to ${to.map}:${from.x},${from.y} (missing from node)`)
+                    return
+                }
+                const toNodeID = `${to.map}:${to.x},${to.y}`
+                const toNode = this.graph.getNode(toNodeID)
+                if (!toNode) {
+                    console.log(`Can't cheat path on ${from.map}:${from.x},${from.y} to ${to.map}:${from.x},${from.y} (missing to node)`)
+                    return
+                }
+                this.addLinkToGraph(fromNode, toNode)
+            }
+
+            if (maps.includes("arena")) {
+                // Add paths to hop the northern ledges of the hill in the middle
+                addCheatPath({ map: "arena", x: 199, y: -360 }, { map: "main", x: 233, y: -391 })
+                addCheatPath({ map: "arena", x: 565, y: -332 }, { map: "main", x: 531, y: -359 })
+            }
+
+            if (maps.includes("main")) {
+                // Add a path to hop the NE corner of the target monsters fence
+                addCheatPath({ map: "main", x: -95, y: 229 }, { map: "main", x: -137, y: 248 })
+                // Add a path to hop the SE corner of the target monsters fence
+                addCheatPath({ map: "main", x: -95, y: 533 }, { map: "main", x: -137, y: 549 })
+                // Add a path to hop the fence near Rose
+                addCheatPath({ map: "main", x: -311, y: 149 }, { map: "main", x: -345, y: 160 })
+            }
+
             if (maps.includes("winterland")) {
                 // Add a path to the icegolem's place
-                const from = this.findClosestNode("winterland", 721, 277)
-                const to = this.findClosestNode("winterland", 737, 352)
-                if (from && to && from !== to) this.addLinkToGraph(from, to)
-                else console.warn("The winterland map has changed, cheat to walk to icegolem is not enabled.")
+                addCheatPath({ map: "winterland", x: 721, y: 277 }, { map: "winterland", x: 737, y: 352 })
             }
         }
 
