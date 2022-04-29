@@ -4205,23 +4205,6 @@ export class Character extends Observer implements CharacterData {
         return cooldown
     }
 
-    public getNearestAttackablePlayer(): { player: Player; distance: number; } {
-        if (!this.isPVP()) return undefined
-
-        let closest: Player
-        let closestD = Number.MAX_VALUE
-        for (const [, player] of this.players) {
-            if (player.s?.invincible) return
-            if (player.npc) return
-            const d = Tools.distance(this, player)
-            if (d < closestD) {
-                closest = player
-                closestD = d
-            }
-        }
-        if (closest) return { distance: closestD, player: closest }
-    }
-
     /**
      * Returns a boolean corresponding to whether or not we have a PvP marked item in our inventory
      * @param inv The inventory to look in
