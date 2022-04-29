@@ -27,6 +27,27 @@ export type GetEntityFilters = GetEntitiesFilters & {
     returnNearest?: boolean
 }
 
+/** Filters for returning a list of players */
+export type GetPlayersFilters = {
+    canDamage?: boolean
+    canWalkTo?: boolean
+    ignoreIDs?: Iterable<string>
+    withinRange?: number
+    targetingMe?: boolean
+    targetingPartyMember?: boolean
+    targetingPlayer?: string
+    level?: number
+    levelGreaterThan?: number
+    levelLessThan?: number
+}
+
+/** Filters for returning a single player */
+export type GetPlayerFilters = GetPlayersFilters & {
+    returnHighestHP?: boolean
+    returnLowestHP?: boolean
+    returnNearest?: boolean
+}
+
 /** Filters for returning a list of items */
 export type LocateItemsFilters = {
     level?: number;

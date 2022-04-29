@@ -14,7 +14,7 @@ import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
-import { GetEntitiesFilters, GetEntityFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
+import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
@@ -2290,14 +2290,119 @@ export class Character extends Observer implements CharacterData {
         return questGot
     }
 
+    public getPlayer(filters: GetPlayerFilters): Player {
+        const players = this.getPlayers(filters)
+
+        // Warn if using more than one option
+        let numReturnOptions = 0
+        if (filters.returnHighestHP) numReturnOptions++
+        if (filters.returnLowestHP) numReturnOptions++
+        if (filters.returnNearest) numReturnOptions++
+        if (numReturnOptions > 1) console.warn("You supplied getPlayer with more than one returnX option. This function may not return the player you want.")
+
+        if (players.length <= 1 || numReturnOptions == 0) return players[0]
+
+        if (filters.returnHighestHP) {
+            let highest: Player
+            let highestHP = Number.MIN_VALUE
+            for (const player of players) {
+                if (player.hp > highestHP) {
+                    highest = player
+                    highestHP = player.hp
+                }
+            }
+            return highest
+        }
+
+        if (filters.returnLowestHP) {
+            let lowest: Player
+            let lowestHP = Number.MAX_VALUE
+            for (const player of players) {
+                if (player.hp < lowestHP) {
+                    lowest = player
+                    lowestHP = player.hp
+                }
+            }
+            return lowest
+        }
+
+        if (filters.returnNearest) {
+            let closest: Player
+            let closestDistance = Number.MAX_VALUE
+            for (const player of players) {
+                const distance = Tools.distance(this, player)
+                if (distance < closestDistance) {
+                    closest = player
+                    closestDistance = distance
+                }
+            }
+            return closest
+        }
+    }
+
+    public getPlayers(filters: GetPlayersFilters): Player[] {
+        const players: Player[] = []
+
+        for (const [, player] of this.players) {
+            if (filters.ignoreIDs !== undefined) {
+                for (const id in filters.ignoreIDs) {
+                    if (id == player.id) continue
+                }
+            }
+            if (filters.targetingMe !== undefined) {
+                if (filters.targetingMe) {
+                    if (player.target !== this.id) continue
+                } else {
+                    if (player.target == this.id) continue
+                }
+            }
+            if (filters.targetingPartyMember !== undefined) {
+                const attackingPartyMember = player.isAttackingPartyMember(this)
+                if (filters.targetingPartyMember) {
+                    if (!attackingPartyMember) continue
+                } else {
+                    if (attackingPartyMember) continue
+                }
+            }
+            if (filters.targetingPlayer !== undefined && player.target !== filters.targetingPlayer) continue
+            if (filters.level !== undefined && filters.level !== player.level) continue
+            if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= player.level) continue
+            if (filters.levelLessThan !== undefined && filters.levelLessThan >= player.level) continue
+            if (filters.withinRange !== undefined && Tools.distance(this, player) > filters.withinRange) continue
+            if (filters.canDamage !== undefined) {
+                // We can't damage if we're not PVP
+                if (filters.canDamage && !this.isPVP()) continue
+                if (!filters.canDamage && this.isPVP()) continue
+                // We can't damage if we avoidance is >= 100
+                if (filters.canDamage && player.avoidance >= 100) continue
+                if (!filters.canDamage && player.avoidance < 100) continue
+                // We can't damage if we do physical damage and evasion is >= 100
+                if (filters.canDamage && this.damage_type == "physical" && player.evasion >= 100) continue
+                if (!filters.canDamage && this.damage_type == "physical" && player.evasion < 100) continue
+                // We can't damage if we do magical damage and reflection is >= 100
+                if (filters.canDamage && this.damage_type == "magical" && player.reflection >= 100) continue
+                if (!filters.canDamage && this.damage_type == "magical" && player.reflection < 100) continue
+            }
+            if (filters.canWalkTo !== undefined) {
+                const canWalkTo = Pathfinder.canWalkPath(this, player)
+                if (filters.canWalkTo && !canWalkTo) continue
+                if (!filters.canWalkTo && canWalkTo) continue
+            }
+
+            players.push(player)
+        }
+
+        return players
+    }
+
     /**
      * Returns a list of the players that are online on the server
      *
      * @return {*}  {Promise<PlayersData>}
      * @memberof Character
      */
-    public async getPlayers(): Promise<PlayersData> {
-        if (!this.ready) throw "We aren't ready yet [getPlayers]."
+    public async getServerPlayers(): Promise<PlayersData> {
+        if (!this.ready) throw "We aren't ready yet [getServerPlayers]."
         const playersData = new Promise<PlayersData>((resolve, reject) => {
             const dataCheck = (data: PlayersData) => {
                 resolve(data)
@@ -2305,7 +2410,7 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("players", dataCheck)
-                reject(`getPlayers timeout (${Constants.TIMEOUT}ms)`)
+                reject(`getServerPlayers timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.once("players", dataCheck)
         })

@@ -270,7 +270,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
     /**
      * Returns true if the entity will burn to death without taking any additional damage
-     * @param entity The entity to check
+     * @return {*}  {boolean}
+     * @memberof Entity
      */
     public willBurnToDeath(): boolean {
         if (this["1hp"]) return false // TODO: Improve to check if it will die to 1hp burns

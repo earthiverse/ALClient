@@ -127,6 +127,32 @@ export class Player implements PlayerData {
     }
 
     /**
+     * Returns true if the player is attacking us, or one of our party members
+     * @param player The player whose party to check if they are attacking
+     */
+    public isAttackingPartyMember(player: Character): boolean {
+        // Check if the entity is targeting anything
+        if (this.target == undefined) return false
+
+        // Check if the entity is attacking us
+        // NOTE: I don't want to get in to the semantics if we are actually in a party, I'm assuming if we aren't in a party, we're a party of "1".
+        if (this.isAttackingUs(player)) return true
+
+        // Check if the entity is targeting a party member
+        if (player?.partyData?.list?.includes(this.target)) return true
+
+        return false
+    }
+
+    /**
+     * Returns true if they are attacking us specifically, false otherwise
+     * @param player The player to check if they are attacking
+     */
+    public isAttackingUs(player: Character): boolean {
+        return this.target == player.id
+    }
+
+    /**
      * Returns true if the player is "friendly", for example, if it's one of our characters, in our party, or in our friends list.
      * @param character Our character (e.g.: bot.character)
      */
