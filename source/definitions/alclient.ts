@@ -72,4 +72,6 @@ export type LocateItemFilters = LocateItemsFilters & {
 export type SmartMoveOptions = PathfinderOptions & {
     /** If set, this function will be called before every action. Useful if you want to stop smartMoving early. */
     stopIfTrue?: () => boolean
+    /** If set, we will resolve the promise when we start moving our final move instead of completing the final move */
+    resolveOnFinalMoveStart?: boolean
 }

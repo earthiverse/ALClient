@@ -3464,7 +3464,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Blink check -- blink to the furthest node we can on the same map
-            if (options?.useBlink && this.canUse("blink")) {
+            if (options.useBlink && this.canUse("blink")) {
                 let blinked = false
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
@@ -3550,7 +3550,11 @@ export class Character extends Observer implements CharacterData {
                     if (currentMove.map !== this.map) {
                         throw `We are supposed to be in ${currentMove.map}, but we are in ${this.map}`
                     }
-                    await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
+                    if (options.resolveOnFinalMoveStart && i == path.length - 1) {
+                        await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true, resolveOnStart: true })
+                    } else {
+                        await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
+                    }
                 } else if (currentMove.type == "town") {
                     await this.warpToTown()
                 } else if (currentMove.type == "transport") {
