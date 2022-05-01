@@ -21,3 +21,14 @@ test("Game.login", async () => {
 
     expect(await Game.loginJSONFile("credentials.json")).toBe(true)
 }, 60_000)
+
+test("Game.disconnectCharacter", async () => {
+    const disconnectWizard = await Game.disconnectCharacter("Wizard")
+    expect(disconnectWizard).toBe(false)
+
+    const disconnectGarbage = await Game.disconnectCharacter(`a${Math.random().toString(36).substring(2, 9)}`)
+    expect(disconnectGarbage).toBe(false)
+
+    const disconnectMer3 = await Game.disconnectCharacter("earthMer3")
+    expect(disconnectMer3).toBe(true)
+}, 60_000)
