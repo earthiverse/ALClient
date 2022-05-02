@@ -1473,14 +1473,16 @@ export class Character extends Observer implements CharacterData {
      * @param {SkillName} skill
      * @param {{
      *         ignoreCooldown?: boolean,
-     *         ignoreEquipped?: boolean
+     *         ignoreEquipped?: boolean,
+     *         ignoreMP?: boolean,
      *     }} [options]
      * @return {*}  {boolean}
      * @memberof Character
      */
     public canUse(skill: SkillName, options: {
         ignoreCooldown?: boolean,
-        ignoreEquipped?: boolean
+        ignoreEquipped?: boolean,
+        ignoreMP?: boolean
     } = {}): boolean {
         if (this.rip) return false // We are dead
         for (const conditionName in this.s) {
@@ -1490,8 +1492,8 @@ export class Character extends Observer implements CharacterData {
         if (this.isOnCooldown(skill) && !options.ignoreCooldown) return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
         if (gInfoSkill.hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
-        if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp) return false // Not enough MP
-        if (skill == "attack" && this.mp < this.mp_cost) return false // Not enough MP (attack)
+        if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp && !options.ignoreMP) return false // Not enough MP
+        if (skill == "attack" && this.mp < this.mp_cost && !options.ignoreMP) return false // Not enough MP (attack)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
         if (gInfoSkill.wtype && !options.ignoreEquipped) {
             // The skill requires a certain weapon type
