@@ -22,6 +22,7 @@ export class Paladin extends PingCompensatedCharacter {
                 this.socket.off("player", successCheck)
                 reject(`manaShieldOff timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+            this.socket.on("player", successCheck)
         })
 
         this.socket.emit("skill", { name: "mshield" })
@@ -45,6 +46,7 @@ export class Paladin extends PingCompensatedCharacter {
                 this.socket.off("player", successCheck)
                 reject(`manaShieldOn timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+            this.socket.on("player", successCheck)
         })
 
         this.socket.emit("skill", { name: "mshield" })
