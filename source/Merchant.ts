@@ -103,9 +103,14 @@ export class Merchant extends PingCompensatedCharacter {
         const merchant = this.players.get(id)
         if (!merchant || Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) throw `${id} is too far away.`
         if (!merchant.slots[slot]?.giveaway) throw `${id}'s slot ${slot} is not a giveaway.`
-        if (merchant.slots[slot]?.list.includes(id)) return // We've already joined it
+        if (merchant.slots[slot]?.list.includes(this.id)) return // We've already joined it
+
+        // const joined = new Promise<void>((resolve, reject) => {
+        //     // TODO
+        // })
 
         this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+        // return joined
     }
 
     /**
