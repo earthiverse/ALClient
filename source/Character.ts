@@ -22,7 +22,7 @@ export class Character extends Observer implements CharacterData {
     public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
     public achievements = new Map<string, AchievementProgressData>()
-    public bank: BankInfo = { gold: 0 }
+    public get bank(): BankInfo { return this.user }
     public chests = new Map<string, ChestData>()
     public nextSkill = new Map<SkillName, Date>()
     public partyData: PartyData
@@ -118,7 +118,7 @@ export class Character extends Observer implements CharacterData {
     acx?: any
     xcx?: string[]
     hitchhikers?: [string, any][]
-    user?: BankInfo
+    user: BankInfo = { gold: 0 }
     fear: number
     courage: number
     mcourage: number
@@ -182,7 +182,7 @@ export class Character extends Observer implements CharacterData {
                 // We just teleported, but we don't want to keep the data.
             } else if (datum == "user") {
                 // Bank information
-                this.bank = (data as CharacterData).user
+                this.user = (data as CharacterData).user
 
                 if (Database.connection) {
                     const updateData: Partial<IBank> = {
