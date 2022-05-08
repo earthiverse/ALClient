@@ -263,6 +263,21 @@ export type DeathData = {
     place?: string | "attack"
 }
 
+export type DiceData = {
+    state: "bets"
+    hex: string
+    algorithm: "hmac-sha256"
+} | {
+    state: "lock"
+    key: string
+    /** The result of the dice roll (##.##) */
+    num: string
+    /** If you compute the HMAC-SHA256 of this string, with the key provided, you can confirm that it matches the hex from the `bets` state */
+    text: string
+} | {
+    state: "roll"
+}
+
 export type DisappearData =
 /** Character used 'blink' */
 {
@@ -570,6 +585,8 @@ export type GameResponseDataObject = {
 
 export type GameResponseDataString =
     | "bank_restrictions"
+    /** When you attempt to place a bet while after you drank an xshot */
+    | "bet_xshot"
     /** When you attempt to blink to a spot you can't reach. */
     | "blink_failed"
     | "buy_cant_npc"
@@ -860,6 +877,19 @@ export type MailMessageData = {
     taken?: boolean
 }
 
+export type MapInfo = {
+    dice: "bets"
+    num: string
+    seconds: number
+} | {
+    dice: "roll"
+    seconds: number
+} | {
+    dice: "lock"
+    seconds: number
+    num: string
+} | Record<string, never>
+
 export type PullMerchantsData = {
     type: "merchants"
     chars: PullMerchantsCharData[]
@@ -889,7 +919,7 @@ export type NewMapData = {
     entities: EntitiesData
     eval?: string
     in: string
-    info: any
+    info?: MapInfo
     m: number
     name: MapName
     x: number
@@ -1095,8 +1125,7 @@ export type ServerMessageData = {
 }
 
 export type StartData = CharacterData & {
-    // TODO: Figure this out
-    info: any
+    info?: MapInfo
     code_slot: number
     code_version: number
     base_gold: {
@@ -1273,6 +1302,7 @@ export type ServerToClientEvents = {
 
 export type ClientToServerEvents = {
     "attack": (data: { id: string }) => void
+    "bet": (data: { type: "dice", dir: "up" | "down", num: number, gold: number }) => void
     "auth": (data: AuthData) => void
     // TODO: Create BankData type
     "bank": (data: { amount: number, operation: "deposit" | "withdraw"} | { inv: number, operation: "swap", pack: BankPackName, str: number }) => void

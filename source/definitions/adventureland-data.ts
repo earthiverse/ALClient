@@ -232,6 +232,26 @@ export type GData = {
             fx: EmotionName
         }
     }
+    games: {
+        dice: Record<string, never>
+        slots: {
+            glyphs: string[]
+            gold: number
+        }
+        /** TODO: I don't think tarot is implemented... */
+        tarot: {
+            cards: string[]
+            // TODO: What's this?
+            hours: number
+            // TODO: Is this an old NPC? It's not in `NPCName`...
+            npc: "twitch"
+        }
+        wheel: {
+            gold: number
+            /** Slice ID, Prize Type, Prize, Color */
+            slices: ([string, "gold", number, string ] | [string, "item", ItemName, string])[]
+        }
+    }
     geometry: {
         [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: GGeometry
     }

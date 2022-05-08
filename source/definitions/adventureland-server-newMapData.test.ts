@@ -1,7 +1,7 @@
 import { NewMapData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-04-25
+ * The following is from socket events received 2021-04-25 to 2022-05-05
  * It is used to confirm type correctness
  */
 
@@ -2030,4 +2030,134 @@ test("NewMapData type validation", async () => {
         "y": -16
     }
     expect(townTeleport).not.toBe(undefined)
+
+    const tavern: NewMapData = {
+        "direction": 3,
+        "effect": 0,
+        "entities": {
+            "in": "tavern",
+            "map": "tavern",
+            "monsters": [],
+            "players": [
+                {
+                    "abs": false,
+                    "afk": false,
+                    "age": 258,
+                    "angle": 70.55378139074305,
+                    "armor": 254,
+                    "attack": 55,
+                    "c": {},
+                    "cid": 49,
+                    "ctype": "merchant",
+                    "cx": {
+                        "hair": "hairdo521",
+                        "hat": "hat407",
+                        "head": "makeup117",
+                        "upper": "marmor4h"
+                    },
+                    "focus": null,
+                    "frequency": 0.8164744241192411,
+                    "going_x": -9.403406187475646,
+                    "going_y": 5.9999999,
+                    "hp": 5520,
+                    "id": "attackMer",
+                    "level": 68,
+                    "max_hp": 5520,
+                    "max_mp": 3085,
+                    "move_num": 22406263,
+                    "moving": false,
+                    "mp": 3085,
+                    "owner": "6133449939746816",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 22,
+                    "resistance": 338,
+                    "rip": false,
+                    "s": {
+                        "mluck": {
+                            "f": "attackMer",
+                            "ms": 1251818,
+                            "strong": true
+                        }
+                    },
+                    "skin": "marmor12a",
+                    "slots": {
+                        "amulet": {
+                            "level": 3,
+                            "name": "intamulet"
+                        },
+                        "belt": {
+                            "level": 1,
+                            "name": "mbelt"
+                        },
+                        "cape": null,
+                        "chest": {
+                            "level": 8,
+                            "name": "coat1"
+                        },
+                        "earring1": {
+                            "level": 0,
+                            "name": "intearring"
+                        },
+                        "earring2": {
+                            "level": 0,
+                            "name": "dexearring"
+                        },
+                        "elixir": null,
+                        "gloves": {
+                            "level": 8,
+                            "name": "gloves1"
+                        },
+                        "helmet": {
+                            "name": "ghatp"
+                        },
+                        "mainhand": {
+                            "level": 0,
+                            "name": "pickaxe"
+                        },
+                        "offhand": null,
+                        "orb": {
+                            "level": 0,
+                            "name": "jacko"
+                        },
+                        "pants": {
+                            "level": 8,
+                            "name": "pants1"
+                        },
+                        "ring1": {
+                            "level": 0,
+                            "name": "intring"
+                        },
+                        "ring2": {
+                            "level": 0,
+                            "name": "intring"
+                        },
+                        "shoes": {
+                            "level": 8,
+                            "name": "shoes1"
+                        }
+                    },
+                    "speed": 60,
+                    "stand": false,
+                    "target": null,
+                    "x": 0,
+                    "xp": 60303981,
+                    "y": -8
+                }
+            ],
+            "type": "all"
+        },
+        "eval": "skill_timeout('attack',4491)",
+        "in": "tavern",
+        "info": {
+            "dice": "bets",
+            "num": "09.41",
+            "seconds": 27
+        },
+        "m": 3,
+        "name": "tavern",
+        "x": 0,
+        "y": -8
+    }
+    expect(tavern).not.toBe(undefined)
 })

@@ -2847,6 +2847,19 @@ export class Character extends Observer implements CharacterData {
         return opened
     }
 
+    public async playSlots(bet): Promise<void> {
+        if (!this.ready) throw "We aren't ready yet [playSlots]."
+        if (this.s.xshotted) throw "You can't play the slots while x-shotted."
+        if (this.gold < this.G.games.slots.gold) throw "You don't have enough gold to play the slots."
+
+        // const playedSlots = new Promise<void>((resolve, reject) => {
+        // TODO
+        // })
+        this.socket.emit("bet", { "type": "dice", "dir": "up", "num": 50, "gold": 100000 })
+
+        // return playedSlots
+    }
+
     public async regenHP(): Promise<void> {
         if (!this.ready) throw "We aren't ready yet [regenHP]."
         const regenReceived = new Promise<void>((resolve, reject) => {
