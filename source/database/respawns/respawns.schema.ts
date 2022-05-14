@@ -14,6 +14,6 @@ const RespawnSchema = new Schema({
 
 RespawnSchema.index({ type: 1 })
 RespawnSchema.index({ serverIdentifier: 1, serverRegion: 1, type: 1 }, { unique: true })
-RespawnSchema.index({ respawn: 1 })
+RespawnSchema.index({ estimatedRespawn: 1 })
 
 export default RespawnSchema
