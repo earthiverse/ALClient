@@ -61,6 +61,14 @@ beforeAll(async () => {
     }, "main", "main", G)
 }, 60000)
 
+test("Entity.level", () => {
+    // Entity's level is not specified, should be initialized to 1
+    expect(burningToDeathHen.level).toBe(1)
+
+    // Entity's level is specified
+    expect(idleBBPompom.level).toBe(19)
+})
+
 test("Entity.willBurnToDeath", () => {
     // Won't burn to death
     expect(idleBBPompom.willBurnToDeath()).toBe(false)
