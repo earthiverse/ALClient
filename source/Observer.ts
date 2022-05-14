@@ -7,6 +7,8 @@ import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
+import isNumber from "is-number"
+
 
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
@@ -90,7 +92,8 @@ export class Observer {
 
             if ((data.effect == "blink" || data.effect == "magiport")
                 && data.to !== undefined && this.G.maps[data.to] && data.s !== undefined
-                && !/^(0|[1-9][0-9]*)$/.test(data.id)) {
+                // NOTE: entity IDs are numbers, so the isNumber check filters out entities
+                && !isNumber(data.id)) {
                 // They used "blink" or "magiport" and don't have a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
