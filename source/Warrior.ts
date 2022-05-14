@@ -264,8 +264,9 @@ export class Warrior extends PingCompensatedCharacter {
                 if (data.attacker == this.id
                     && data.type == "taunt"
                     && data.target == target) {
-                    resolve(data.pid)
                     this.socket.off("action", tauntCheck)
+                    this.socket.off("game_response", failCheck)
+                    resolve(data.pid)
                 }
             }
 

@@ -141,6 +141,7 @@ export class Ranger extends PingCompensatedCharacter {
             }
 
             const cooldownCheck = (data: EvalData) => {
+                // NOTE: This is `attack`, not `piercingshot`, because they share a cooldown.
                 if (/skill_timeout\s*\(\s*['"]attack['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.off("action", attackCheck)
                     this.socket.off("eval", cooldownCheck)
