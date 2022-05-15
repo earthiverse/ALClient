@@ -193,7 +193,8 @@ export class Character extends Observer implements CharacterData {
                     BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
                 }
 
-                // Add empty bank slots
+                // NOTE: When you have a "new" bank slot, the length of the array won't be the bank slot's size until you use the last slot.
+                //       This block of code solves that issue.
                 for (const datum in this.bank) {
                     if (Array.isArray(this.bank[datum])) {
                         this.bank[datum].length = Constants.BANK_PACK_SIZE
@@ -4143,12 +4144,13 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw "We aren't ready yet [withdrawItem]."
 
         // Wait up to 5s to get bank items
-        for (let i = 0; i < 20; i++) {
-            if (this.bank) break
-            await new Promise(resolve => setTimeout(resolve, 250))
+        if (!this.bank) {
+            for (let i = 0; i < 20; i++) {
+                if (this.bank) break
+                await new Promise(resolve => setTimeout(resolve, 250))
+            }
+            if (!this.bank) throw "We don't have bank information yet. Please try again in a bit."
         }
-        if (!this.bank) throw "We don't have bank information yet. Please try again in a bit."
-
 
         const item = this.bank[bankPack][bankPos]
         if (!item) throw `There is no item in bank ${bankPack}[${bankPos}]`
@@ -4165,8 +4167,8 @@ export class Character extends Observer implements CharacterData {
         const swapped = new Promise<void>((resolve, reject) => {
             const checkWithdrawal = (data: CharacterData) => {
                 const newCount = this.countItem(item.name, data.items)
-                if (item.q && newCount == (itemCount + item.q)
-                    || !item.q && newCount == (itemCount + 1)) {
+                if ((item.q && newCount == (itemCount + item.q))
+                    || (!item.q && newCount == (itemCount + 1))) {
                     this.socket.off("player", checkWithdrawal)
                     return resolve()
                 }
