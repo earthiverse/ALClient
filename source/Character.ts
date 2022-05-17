@@ -3912,6 +3912,16 @@ export class Character extends Observer implements CharacterData {
         return unfriended
     }
 
+    /**
+     * Upgrades the given item using the given scroll and offering.
+     *
+     * You need to be near the upgrade NPC, or have a computer, in order to upgrade.
+     *
+     * @param itemPos The position of the item to upgrade in your inventory
+     * @param scrollPos The position of the scroll to use to upgrade the item in your inventory
+     * @param offeringPos The position of the offering to use to upgrade the item in your inventory
+     * @returns
+     */
     public async upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) throw "We aren't ready yet [upgrade]."
         if (this.G.maps[this.map].mount) throw "We can't upgrade things in the bank."

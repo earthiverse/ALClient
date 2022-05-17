@@ -16,7 +16,7 @@ import { Rogue } from "./Rogue.js"
 import { Warrior } from "./Warrior.js"
 
 export class Game {
-    protected static user: { userID: string, userAuth: string }
+    protected static user: { userID: string, userAuth: string, secure: boolean }
 
     public static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
     public static characters: { [T in string]?: CharacterListData } = {}
@@ -30,7 +30,7 @@ export class Game {
 
     static async deleteMail(mailID: string): Promise<boolean> {
         if (!this.user) throw "You must login first."
-        const response = await axios.post<MailDeleteResponse[]>("http://adventure.land/api/delete_mail", `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<MailDeleteResponse[]>("https://adventure.land/api/delete_mail", `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const data = response.data[0]
         if (data.message == "Mail deleted.") return true
         return false
@@ -38,7 +38,7 @@ export class Game {
 
     static async disconnectCharacter(characterName: string): Promise<boolean> {
         if (!this.user) throw "You must login first."
-        const response = await axios.post<DisconnectCharacterResponse[]>("http://adventure.land/api/disconnect_character", `method=disconnect_character&arguments={"name":"${characterName}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<DisconnectCharacterResponse[]>("https://adventure.land/api/disconnect_character", `method=disconnect_character&arguments={"name":"${characterName}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const data = response.data[0]
         if (data.message == "Sent the disconnect signal to the server" || data.message == "Character is not in game.") return true
         return false
@@ -55,7 +55,7 @@ export class Game {
         } catch (e) {
             // There's no cached data, download it
             console.debug("Updating 'G' data...")
-            const response = await axios.get<string>("http://adventure.land/data.js")
+            const response = await axios.get<string>("https://adventure.land/data.js")
             if (response.status == 200) {
                 // Update G with the latest data
                 const matches = response.data.match(/var\s+G\s*=\s*(\{.+\});/)
@@ -70,14 +70,14 @@ export class Game {
                 return this.G
             } else {
                 console.error(response)
-                console.error("Error fetching http://adventure.land/data.js")
+                console.error("Error fetching https://adventure.land/data.js")
             }
         }
     }
 
     static async getMail(all = true): Promise<MailMessageData[]> {
         if (!this.user) throw "You must login first."
-        let response = await axios.post<MailData[]>("http://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        let response = await axios.post<MailData[]>("https://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const mail: MailMessageData[] = []
 
         while (response.data.length > 0) {
@@ -85,7 +85,7 @@ export class Game {
 
             if (all && response.data[0].more) {
                 // Get more mail
-                response = await axios.post("http://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+                response = await axios.post("https://adventure.land/api/pull_mail", `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
             } else {
                 break
             }
@@ -99,7 +99,7 @@ export class Game {
         //const merchants: PullMerchantsData[] = []
         const merchants: PullMerchantsCharData[] = []
 
-        const data = await axios.post<PullMerchantsData[]>("http://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = await axios.post<PullMerchantsData[]>("https://adventure.land/api/pull_merchants", "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         for (const datum of data.data) {
             if (datum.type == "merchants") {
                 for (const char of datum.chars) {
@@ -162,7 +162,7 @@ export class Game {
     }
 
     static async getVersion(): Promise<number> {
-        const response = await axios.get("http://adventure.land/comm")
+        const response = await axios.get("https://adventure.land/comm")
         if (response.status == 200) {
             // Find the version
             const matches = (response.data as string).match(/var\s+VERSION\s*=\s*'(\d+)/)
@@ -171,7 +171,7 @@ export class Game {
             return this.version
         } else {
             console.error(response)
-            console.error("Error fetching http://adventure.land/comm")
+            console.error("Error fetching https://adventure.land/comm")
         }
     }
 
@@ -181,11 +181,11 @@ export class Game {
      */
     static async markMailAsRead(mailID: string): Promise<void> {
         if (!this.user) throw "You must login first."
-        const response = await axios.post("http://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post("https://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         return response.data[0]
     }
 
-    static async login(email: string, password?: string, mongo?: string): Promise<boolean> {
+    static async login(email: string, password?: string, mongo?: string, secure = true): Promise<boolean> {
         // Connect to Mongo
         if (!Database.connection && mongo) await Database.connect(mongo)
 
@@ -215,7 +215,8 @@ export class Game {
                     // Save our data to the database
                         this.user = {
                             userAuth: result[1].split("-")[1],
-                            userID: result[1].split("-")[0]
+                            userID: result[1].split("-")[0],
+                            secure: secure
                         }
                         break
                     }
@@ -234,7 +235,7 @@ export class Game {
         return this.updateServersAndCharacters()
     }
 
-    static async loginJSONFile(path: string): Promise<boolean> {
+    static async loginJSONFile(path: string, secure = true): Promise<boolean> {
         let fileData: string
         try {
             fileData = fs.readFileSync(path, "utf8")
@@ -246,13 +247,14 @@ export class Game {
         // Set UserID & UserAuth if it exists in the credentials file
         if (data.userID && data.userAuth) {
             this.user = {
+                secure: secure,
                 userAuth: data.userAuth,
                 userID: data.userID
             }
         }
 
         try {
-            await this.login(data.email, data.password, data.mongo)
+            await this.login(data.email, data.password, data.mongo, secure)
         } catch (e) {
             if (data.userID && data.userAuth) {
                 // Delete the userAuth and userID, and try again
@@ -260,7 +262,7 @@ export class Game {
                 delete data.userID
                 fs.writeFileSync(path, JSON.stringify(data, undefined, 4), "utf8")
                 delete this.user
-                return this.loginJSONFile(path)
+                return this.loginJSONFile(path, secure)
             }
 
             return false
@@ -278,7 +280,7 @@ export class Game {
     static async logoutEverywhere(): Promise<unknown> {
         if (!this.user) throw "You must login first."
 
-        const response = await axios.post<unknown>("http://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<unknown>("https://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         this.user = undefined
 
         return response.data
@@ -439,15 +441,20 @@ export class Game {
         return observer
     }
 
+    /**
+     * Retrieves your character list, and a list of available servers.
+     * @returns true if successfully updated
+     */
     static async updateServersAndCharacters(): Promise<boolean> {
         if (!this.user) throw "You must login first."
-        const data = await axios.post("http://adventure.land/api/servers_and_characters", "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = await axios.post(`http${this.user.secure ? "s" : ""}://adventure.land/api/servers_and_characters`, "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         if (data.status == 200) {
             // Populate server information
             for (const serverData of data.data[0].servers as ServerData[]) {
                 if (!this.servers[serverData.region]) this.servers[serverData.region] = {}
                 this.servers[serverData.region][serverData.name] = serverData
+                this.servers[serverData.region][serverData.name].secure = this.user.secure
             }
 
             // Populate character information

@@ -1086,6 +1086,9 @@ export type ServerData = {
     name: ServerIdentifier
     players: number
     key: string
+
+    /** This is an ALClient only property. If the server addr should use `wss` instead of `ws`, we set this to true */
+    secure?: boolean
 }
 
 export type ServerInfoData = {
