@@ -3390,17 +3390,29 @@ export class Character extends Observer implements CharacterData {
             if (!fixedTo) {
                 const gItem = this.G.items[to as ItemName]
                 if (gItem) {
+                    const locations: IPosition[] = []
                     for (const map in this.G.maps) {
                         if ((this.G.maps[map as MapName] as GMap).ignore) continue
                         for (const npc of (this.G.maps[map as MapName] as GMap).npcs) {
                             if (this.G.npcs[npc.id].items === undefined) continue
                             for (const i of this.G.npcs[npc.id].items) {
                                 if (i == to as ItemName) {
-                                    // We found the NPC that sells the item
-                                    // We're going to run smartMove again to the NPC
-                                    return this.smartMove(npc.id, options)
+                                    // We found an NPC that sells the item
+                                    locations.push({ map: map as MapName, x: npc.position[0], y: npc.position[1] })
                                 }
                             }
+                        }
+                    }
+
+                    // Find the closest NPC
+                    let closestDistance: number = Number.MAX_VALUE
+                    for (const location of locations) {
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
+                        const distance = Pathfinder.computePathCost(potentialPath)
+                        if (distance < closestDistance) {
+                            path = potentialPath
+                            fixedTo = path[path.length - 1]
+                            closestDistance = distance
                         }
                     }
                 }
