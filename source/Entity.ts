@@ -132,8 +132,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
         }
 
         // Set width and height if it is known
-        this.width = G.dimensions[data.type]?.[0] ?? 0
-        this.height = G.dimensions[data.type]?.[1] ?? 0
+        this.width = (G.dimensions[data.type]?.[0] ?? 0) * (G.monsters[data.type].size ?? 1)
+        this.height = (G.dimensions[data.type]?.[1] ?? 0) * (G.monsters[data.type].size ?? 1)
 
         // Set everything else
         this.updateData(data)
