@@ -380,16 +380,16 @@ export class Character extends Observer implements CharacterData {
 
             // Update character
             if (this.moving) {
-                const distanceTravelled = this.speed * msSinceLastUpdate / 1000
+                const distanceTraveled = this.speed * msSinceLastUpdate / 1000
                 const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
                 const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
-                if (distanceTravelled > distanceToGoal) {
+                if (distanceTraveled > distanceToGoal) {
                     this.moving = false
                     this.x = this.going_x
                     this.y = this.going_y
                 } else {
-                    this.x = this.x + Math.cos(angle) * distanceTravelled
-                    this.y = this.y + Math.sin(angle) * distanceTravelled
+                    this.x = this.x + Math.cos(angle) * distanceTraveled
+                    this.y = this.y + Math.sin(angle) * distanceTraveled
                 }
             }
 

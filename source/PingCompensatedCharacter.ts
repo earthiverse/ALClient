@@ -31,16 +31,16 @@ export class PingCompensatedCharacter extends Character {
 
         // Compensate movement
         if (this.moving) {
-            const distanceTravelled = this.speed * pingCompensation / 1000
+            const distanceTraveled = this.speed * pingCompensation / 1000
             const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
             const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
-            if (distanceTravelled > distanceToGoal) {
+            if (distanceTraveled > distanceToGoal) {
                 this.moving = false
                 this.x = this.going_x
                 this.y = this.going_y
             } else {
-                this.x = this.x + Math.cos(angle) * distanceTravelled
-                this.y = this.y + Math.sin(angle) * distanceTravelled
+                this.x = this.x + Math.cos(angle) * distanceTraveled
+                this.y = this.y + Math.sin(angle) * distanceTraveled
             }
         }
 
@@ -75,16 +75,16 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.entities.get(monster.id)
             if (!entity || !entity.moving) continue
-            const distanceTravelled = entity.speed * pingCompensation / 1000
+            const distanceTraveled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTravelled > distanceToGoal) {
+            if (distanceTraveled > distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
             } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                entity.y = entity.y + Math.sin(angle) * distanceTravelled
+                entity.x = entity.x + Math.cos(angle) * distanceTraveled
+                entity.y = entity.y + Math.sin(angle) * distanceTraveled
             }
 
             // Compensate conditions
@@ -102,16 +102,16 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.players.get(player.id)
             if (!entity || !entity.moving) continue
-            const distanceTravelled = entity.speed * pingCompensation / 1000
+            const distanceTraveled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTravelled > distanceToGoal) {
+            if (distanceTraveled > distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
             } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                entity.y = entity.y + Math.sin(angle) * distanceTravelled
+                entity.x = entity.x + Math.cos(angle) * distanceTraveled
+                entity.y = entity.y + Math.sin(angle) * distanceTraveled
             }
 
             // Compensate conditions

@@ -539,16 +539,16 @@ export class Observer {
 
                 const speed = entity.speed
 
-                const distanceTravelled = speed * msSinceLastUpdate / 1000
+                const distanceTraveled = speed * msSinceLastUpdate / 1000
                 const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
                 const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-                if (distanceTravelled > distanceToGoal) {
+                if (distanceTraveled > distanceToGoal) {
                     entity.moving = false
                     entity.x = entity.going_x
                     entity.y = entity.going_y
                 } else {
-                    entity.x = entity.x + Math.cos(angle) * distanceTravelled
-                    entity.y = entity.y + Math.sin(angle) * distanceTravelled
+                    entity.x = entity.x + Math.cos(angle) * distanceTraveled
+                    entity.y = entity.y + Math.sin(angle) * distanceTraveled
                 }
 
                 // Update conditions
@@ -565,16 +565,16 @@ export class Observer {
             for (const [, player] of this.players) {
                 if (!player.moving)
                     continue
-                const distanceTravelled = player.speed * msSinceLastUpdate / 1000
+                const distanceTraveled = player.speed * msSinceLastUpdate / 1000
                 const angle = Math.atan2(player.going_y - player.y, player.going_x - player.x)
                 const distanceToGoal = Tools.distance({ x: player.x, y: player.y }, { x: player.going_x, y: player.going_y })
-                if (distanceTravelled > distanceToGoal) {
+                if (distanceTraveled > distanceToGoal) {
                     player.moving = false
                     player.x = player.going_x
                     player.y = player.going_y
                 } else {
-                    player.x = player.x + Math.cos(angle) * distanceTravelled
-                    player.y = player.y + Math.sin(angle) * distanceTravelled
+                    player.x = player.x + Math.cos(angle) * distanceTraveled
+                    player.y = player.y + Math.sin(angle) * distanceTraveled
                 }
 
                 // Update conditions
