@@ -124,6 +124,9 @@ export class Character extends Observer implements CharacterData {
     mcourage: number
     pcourage: number
 
+    public width = Constants.CHARACTER_WIDTH
+    public height = Constants.CHARACTER_HEIGHT
+
     constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
         super(serverData, g)
         this.owner = userID

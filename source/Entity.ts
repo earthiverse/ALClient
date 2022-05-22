@@ -115,6 +115,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public s: StatusInfo = {}
     public type: MonsterName
     public xp: number
+    public width: number
+    public height: number
 
     public constructor(data: MonsterData, map: MapName, instance: string, G: GData) {
         this.G = G
@@ -128,6 +130,10 @@ export class Entity implements MonsterData, Partial<GMonster> {
         for (const gKey in G.monsters[data.type]) {
             this[gKey] = G.monsters[data.type][gKey]
         }
+
+        // Set width and height if it is known
+        this.width = G.dimensions[data.type]?.[0] ?? 0
+        this.height = G.dimensions[data.type]?.[1] ?? 0
 
         // Set everything else
         this.updateData(data)

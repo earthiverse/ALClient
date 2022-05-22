@@ -4,6 +4,7 @@ import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName }
 import { PlayerData } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
+import { Constants } from "./Constants.js"
 
 export class Player implements PlayerData {
     protected G: GData
@@ -59,6 +60,9 @@ export class Player implements PlayerData {
     // Soft Properties
     in: string
     map: MapName
+
+    public width = Constants.CHARACTER_WIDTH
+    public height = Constants.CHARACTER_HEIGHT
 
     public constructor(data: PlayerData, map: MapName, instance: string, g: GData) {
         this.G = g

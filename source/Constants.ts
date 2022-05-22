@@ -24,6 +24,10 @@ export class Constants {
         vn: 2
     }
 
+    /** Character size */
+    static CHARACTER_WIDTH = 27
+    static CHARACTER_HEIGHT = 34
+
     /** Miscellaneous game related things */
     static BANK_PACK_SIZE = 42
     static MAX_PARTY_SIZE = 9 // TODO: It might actually be 9 + 1 merchant?
