@@ -2702,7 +2702,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async move(x: number, y: number, options?: { disableSafetyCheck?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
+    public async move(x: number, y: number, options?: { disableAlreadyThereCheck?: boolean, disableSafetyCheck?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
         if (!this.ready) throw "We aren't ready yet [move]."
         if (x == undefined || y == undefined) throw "Please provide an x and y coordinate to move."
         if (typeof x !== "number" || typeof y !== "number") throw "Please use a number for both x and y."
@@ -2718,7 +2718,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already there
-        if (this.x == to.x && this.y == to.y) return { map: this.map, x: this.x, y: this.y }
+        if (!options?.disableAlreadyThereCheck && this.x == to.x && this.y == to.y) return { map: this.map, x: this.x, y: this.y }
 
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
             let timeToFinishMove = 1 + this.ping + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
@@ -3662,7 +3662,7 @@ export class Character extends Observer implements CharacterData {
         if (this?.c?.town) {
             this.stopWarpToTown()
         }
-        return this.move(this.x, this.y)
+        return this.move(this.x, this.y, { disableAlreadyThereCheck: true, resolveOnStart: true })
     }
 
     // TODO: Add promises
