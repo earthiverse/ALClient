@@ -1038,7 +1038,7 @@ export class Character extends Observer implements CharacterData {
         if (quantity <= 0) throw `We can not buy a quantity of ${quantity}.`
         const merchant = this.players.get(id)
         if (!merchant) throw `We can not see ${id} nearby.`
-        if (Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) throw `We are too far away from ${id} to buy from.`
+        if (Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw `We are too far away from ${id} to buy from.`
 
         const item = merchant.slots[slot]
         if (!item) throw `We could not find an item in slot ${slot} on ${id}.`
@@ -1321,7 +1321,7 @@ export class Character extends Observer implements CharacterData {
                 for (const i of this.G.npcs[npc.id].items) {
                     if (i == item) {
                         buyable = true
-                        if (Tools.distance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE) close = true
+                        if (Tools.squaredDistance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE_SQUARED) close = true
                         break
                     }
                 }
@@ -1361,7 +1361,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
             const craftableLocation = this.locateCraftNPC(itemToCraft)
-            if (Tools.distance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false
+            if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
         }
 
         return true
@@ -1389,7 +1389,7 @@ export class Character extends Observer implements CharacterData {
 
         if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             const exchangeableLocation = this.locateExchangeNPC(itemToExchange)
-            if (Tools.distance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE) return false // Too far away
+            if (Tools.squaredDistance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false // Too far away
         }
 
         return true
@@ -1432,7 +1432,7 @@ export class Character extends Observer implements CharacterData {
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             const gNPC = this.G.npcs[npc.id]
             if (!gNPC.items) continue // This NPC doesn't do merchant stuff
-            if (Tools.distance(this, { map: this.map, x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+            if (Tools.squaredDistance(this, { map: this.map, x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
 
             return true
         }
@@ -1463,7 +1463,7 @@ export class Character extends Observer implements CharacterData {
 
         // Distance check
         if (!this.hasItem("computer") && !this.hasItem("supercomputer")
-         && Tools.distance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE) return false
+         && Tools.squaredDistance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
 
         // Scroll compatibility check
 
@@ -2093,7 +2093,7 @@ export class Character extends Observer implements CharacterData {
         // Look for a monsterhunter on the current map
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             if (npc.id !== "monsterhunter") continue // Not the monsterhunter
-            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+            if (Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
             close = true
             break
         }
@@ -2153,7 +2153,7 @@ export class Character extends Observer implements CharacterData {
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= entity.level) continue
             if (filters.type !== undefined && filters.type !== entity.type) continue
             if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
-            if (filters.withinRange !== undefined && Tools.distance(this, entity) > filters.withinRange) continue
+            if (filters.withinRange !== undefined && Tools.squaredDistance(this, entity) > (filters.withinRange * filters.withinRange)) continue
             if (filters.canDamage !== undefined) {
                 // We can't damage if we avoidance is >= 100
                 if (filters.canDamage && entity.avoidance >= 100) continue
@@ -2240,7 +2240,7 @@ export class Character extends Observer implements CharacterData {
             let closest: Entity
             let closestDistance = Number.MAX_VALUE
             for (const entity of entities) {
-                const distance = Tools.distance(this, entity)
+                const distance = Tools.squaredDistance(this, entity)
                 if (distance < closestDistance) {
                     closest = entity
                     closestDistance = distance
@@ -2305,7 +2305,7 @@ export class Character extends Observer implements CharacterData {
         let close = false
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             if (npc.id !== "monsterhunter") continue // Not the monsterhunter
-            if (Tools.distance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE) continue // Too far away
+            if (Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
             close = true
             break
         }
@@ -2392,7 +2392,7 @@ export class Character extends Observer implements CharacterData {
             let closest: Player
             let closestDistance = Number.MAX_VALUE
             for (const player of players) {
-                const distance = Tools.distance(this, player)
+                const distance = Tools.squaredDistance(this, player)
                 if (distance < closestDistance) {
                     closest = player
                     closestDistance = distance
@@ -2430,7 +2430,7 @@ export class Character extends Observer implements CharacterData {
             if (filters.level !== undefined && filters.level !== player.level) continue
             if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= player.level) continue
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= player.level) continue
-            if (filters.withinRange !== undefined && Tools.distance(this, player) > filters.withinRange) continue
+            if (filters.withinRange !== undefined && Tools.squaredDistance(this, player) > (filters.withinRange * filters.withinRange)) continue
             if (filters.canDamage !== undefined) {
                 // We can't damage if we're not PVP
                 if (filters.canDamage && !this.isPVP()) continue
@@ -3211,8 +3211,9 @@ export class Character extends Observer implements CharacterData {
     public async sendGold(to: string, amount: number): Promise<number> {
         if (!this.ready) throw "We aren't ready yet [sendGold]."
         if (this.gold == 0) throw "We have no gold to send."
-        if (!this.players.has(to)) throw `We can't see ${to} nearby to send gold.`
-        if (Tools.distance(this, this.players.get(to)) > Constants.NPC_INTERACTION_DISTANCE) throw `We are too far away from ${to} to send gold.`
+        const player = this.players.get(to)
+        if (!player) throw `We can't see ${to} nearby to send gold.`
+        if (Tools.squaredDistance(this, player) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw `We are too far away from ${to} to send gold.`
 
         const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
@@ -3500,7 +3501,7 @@ export class Character extends Observer implements CharacterData {
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
                     if (potentialMove.map !== this.map) continue
-                    if (Tools.distance(currentMove, potentialMove) < (options.costs.blink)) break // We're close, don't waste a blink
+                    if (Tools.squaredDistance(currentMove, potentialMove) < (options.costs.blink * options.costs.blink)) break // We're close, don't waste a blink
 
                     // Get closest blinkable spot near the potential move
                     let roundedMove: IPosition

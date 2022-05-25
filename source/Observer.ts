@@ -591,7 +591,7 @@ export class Observer {
         // Erase all entities that are far away
         let toDelete: string[] = []
         for (const [id, entity] of this.entities) {
-            if (Tools.distance(this, entity) < Constants.MAX_VISIBLE_RANGE)
+            if (Tools.squaredDistance(this, entity) < Constants.MAX_VISIBLE_RANGE_SQUARED)
                 continue
             toDelete.push(id)
         }
@@ -600,7 +600,7 @@ export class Observer {
         // Erase all players that are far away
         toDelete = []
         for (const [id, player] of this.players) {
-            if (Tools.distance(this, player) < Constants.MAX_VISIBLE_RANGE)
+            if (Tools.squaredDistance(this, player) < Constants.MAX_VISIBLE_RANGE_SQUARED)
                 continue
             toDelete.push(id)
         }

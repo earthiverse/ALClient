@@ -101,7 +101,7 @@ export class Merchant extends PingCompensatedCharacter {
     public async joinGiveaway(slot: TradeSlotType, id: string, rid: string): Promise<void> {
         if (!this.ready) throw "We aren't ready yet [joinGiveaway]."
         const merchant = this.players.get(id)
-        if (!merchant || Tools.distance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE) throw `${id} is too far away.`
+        if (!merchant || Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw `${id} is too far away.`
         if (!merchant.slots[slot]?.giveaway) throw `${id}'s slot ${slot} is not a giveaway.`
         if (merchant.slots[slot]?.list.includes(this.id)) return // We've already joined it
 
