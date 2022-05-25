@@ -1946,12 +1946,12 @@ export class Character extends Observer implements CharacterData {
         for (const d of (this.G.maps[this.map] as GMap).doors) {
             if (d[4] !== map) continue
             found = true
-            distance = Pathfinder.doorDistance(this, d)
-            if (distance > Constants.DOOR_REACH_DISTANCE) continue
+            distance = Pathfinder.doorDistanceSquared(this, d)
+            if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED) continue
             break
         }
         if (!found) throw `There is no door to ${map} from ${this.map}.`
-        if (distance > Constants.DOOR_REACH_DISTANCE) throw `We are too far (${distance}) from the door to ${map}.`
+        if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED) throw `We are too far (${Math.sqrt(distance)}) from the door to ${map}.`
 
         const enterComplete = new Promise<void>((resolve, reject) => {
             const enterCheck = (data: NewMapData) => {

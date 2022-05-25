@@ -23,11 +23,11 @@ export class Pathfinder {
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
 
     /**
-     * Calculates the distance to a door. Used for optimizing movements to doors
+     * Calculates the squared distance to a door. Used for optimizing movements to doors
      * @param a The position to check the distance to the door
      * @param b The door's information (G.maps[mapName].doors[doorNum])
      */
-    public static doorDistance(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
+    public static doorDistanceSquared(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
         const b_x = b[0]
         const b_y = b[1]
         const halfWidth = b[2] / 2
@@ -39,13 +39,13 @@ export class Pathfinder {
                 if (a.x <= b_x + halfWidth && a.y <= b_y) return 0
 
                 // Check top right
-                return Math.hypot(a.x - (b_x + halfWidth), a.y - b_y)
+                return ((a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth))) + ((a.y - b_y) * (a.y - b_y))
             } else {
                 // Check inside door
                 if (a.x <= b_x + halfWidth && a.y >= b_y) return 0
 
                 // Check bottom right
-                return Math.hypot(a.x - (b_x + halfWidth), a.y - (b_y - height))
+                return ((a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth))) + ((a.y - (b_y - height)) * (a.y - (b_y - height)))
             }
         } else {
             if (a.y >= b_y - height / 2) {
@@ -53,13 +53,13 @@ export class Pathfinder {
                 if (a.x >= b_x - halfWidth && a.y <= b_y) return 0
 
                 // Check top left
-                return Math.hypot(a.x - (b_x - halfWidth), a.y - b_y)
+                return ((a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth))) + ((a.y - b_y) * (a.y - b_y))
             } else {
                 // Check inside door
                 if (a.x >= b_x - halfWidth && a.y >= b_y) return 0
 
                 // Check bottom left
-                return Math.hypot(a.x - (b_x - halfWidth), a.y - (b_y - height))
+                return ((a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth))) + ((a.y - (b_y - height)) * (a.y - (b_y - height)))
             }
         }
     }
@@ -452,7 +452,7 @@ export class Pathfinder {
         for (const fromNode of walkableNodes) {
             // Check if we can reach a door
             for (const door of doors) {
-                if (this.doorDistance(fromNode.data, door) >= Constants.DOOR_REACH_DISTANCE) continue // Door is too far away
+                if (this.doorDistanceSquared(fromNode.data, door) >= Constants.DOOR_REACH_DISTANCE_SQUARED) continue // Door is too far away
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
@@ -466,7 +466,7 @@ export class Pathfinder {
 
             // Add destination nodes and links to maps that are reachable through the transporter
             for (const npc of transporters) {
-                if (Math.hypot(fromNode.data.x - npc.position[0], fromNode.data.y - npc.position[1]) > Constants.TRANSPORTER_REACH_DISTANCE) continue // Transporter is too far away
+                if (((fromNode.data.x - npc.position[0]) * (fromNode.data.x - npc.position[0])) + ((fromNode.data.y - npc.position[1]) * (fromNode.data.y - npc.position[1])) > Constants.TRANSPORTER_REACH_DISTANCE_SQUARED) continue // Transporter is too far away
                 for (const toMap in this.G.npcs.transporter.places) {
                     if (map == toMap) continue // Don't add links to ourself
 
@@ -526,7 +526,7 @@ export class Pathfinder {
         const from = { map, x, y }
         this.graph.forEachNode((node) => {
             if (node.data.map !== map) return
-            const distance = Math.hypot(from.x - node.data.x, from.y - node.data.y)
+            const distance = ((from.x - node.data.x) * (from.x - node.data.x)) + ((from.y - node.data.y) * (from.y - node.data.y))
 
             // If we're further than one we can already walk to, don't check further
             if (distance > closest.distance) return
@@ -550,7 +550,7 @@ export class Pathfinder {
         }
         // Look through all the spawns, and find the closest one
         for (const spawn of this.G.maps[map].spawns) {
-            const distance = Math.hypot(x - spawn[0], y - spawn[1])
+            const distance = ((x - spawn[0]) * (x - spawn[0])) + ((y - spawn[1]) * (y - spawn[1]))
             if (distance < closest.distance) {
                 closest.x = spawn[0]
                 closest.y = spawn[1]

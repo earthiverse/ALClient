@@ -19,7 +19,9 @@ export class Constants {
     static NPC_INTERACTION_DISTANCE_SQUARED = 160_000
     static DASH_DISTANCE = 40
     static DOOR_REACH_DISTANCE = 39
+    static DOOR_REACH_DISTANCE_SQUARED = 1521
     static TRANSPORTER_REACH_DISTANCE = 159
+    static TRANSPORTER_REACH_DISTANCE_SQUARED = 25_281
     static BASE = {
         h: 8,
         v: 7,
