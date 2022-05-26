@@ -1264,6 +1264,7 @@ export type ServerToClientEvents = {
     "chat_log": (data: ChatLogData) => void
     "chest_opened": (data: ChestOpenedData) => void
     "cm": (data: CMData) => void
+    "code_eval": (data: string) => void
     "death": (data: DeathData) => void
     "disappear": (data: DisappearData) => void
     "disappearing_text": (data: DisappearingTextData) => void
