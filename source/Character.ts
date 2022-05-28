@@ -1478,6 +1478,7 @@ export class Character extends Observer implements CharacterData {
      * @param {{
      *         ignoreCooldown?: boolean,
      *         ignoreEquipped?: boolean,
+     *         ignoreLocation?: boolean,
      *         ignoreMP?: boolean,
      *     }} [options]
      * @return {*}  {boolean}
@@ -1486,6 +1487,7 @@ export class Character extends Observer implements CharacterData {
     public canUse(skill: SkillName, options: {
         ignoreCooldown?: boolean,
         ignoreEquipped?: boolean,
+        ignoreLocation?: boolean,
         ignoreMP?: boolean
     } = {}): boolean {
         if (this.rip) return false // We are dead
@@ -1495,7 +1497,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (this.isOnCooldown(skill) && !options.ignoreCooldown) return false // Skill is on cooldown
         const gInfoSkill = this.G.skills[skill]
-        if (gInfoSkill.hostile && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
+        if (gInfoSkill.hostile && !options.ignoreLocation && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
         if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp && !options.ignoreMP) return false // Not enough MP
         if (skill == "attack" && this.mp < this.mp_cost && !options.ignoreMP) return false // Not enough MP (attack)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
@@ -1558,6 +1560,10 @@ export class Character extends Observer implements CharacterData {
                 if (this[stat] < gInfoSkill.requirements[stat]) return false
             }
         }
+
+        // Special circumstance -- fishing and mining can only be done in certain locations
+        // TODO: Check fishing and mining zone
+        // TODO: Include `!options.ignoreLocation`
 
         // Special circumstance -- we can't use blink if we're being dampened
         if (this.s.dampened) {

@@ -442,6 +442,7 @@ export type GData = {
         /** If this is set, this skill will affect all party members */
         party?: boolean
         passive?: boolean
+        /** If true, the cooldown will persist while your character is disconnected */
         persistent?: boolean
         /** If this is set, this skill can be used against immune monsters. */
         pierces_immunity?: boolean
