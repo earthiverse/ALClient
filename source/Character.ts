@@ -1,5 +1,5 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
-import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo } from "./definitions/adventureland.js"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
@@ -2094,6 +2094,9 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw "We aren't ready yet [finishMonsterHuntQuest]."
         if (!this.s.monsterhunt) throw "We don't have a monster hunt to turn in."
         if (this.s.monsterhunt.c > 0) throw `We still have to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`
+
+        const [region, id] = this.s.monsterhunt.sn.split(" ") as [ServerRegion, ServerIdentifier]
+        if (region !== this.serverData.region || id !== this.serverData.name) throw `The monster hunt is for '${region} ${id}', but we are on '${this.serverData.region} ${this.serverData.name}'`
 
         let close = false
         // Look for a monsterhunter on the current map
