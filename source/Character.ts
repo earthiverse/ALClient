@@ -1565,7 +1565,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Special circumstance -- merchants can't attack unless they have a dartgun
-        if (this.ctype == "merchant" && skill == "attack") {
+        if (this.ctype == "merchant" && (skill == "attack" || skill == "zapperzap")) {
             if (!this.slots.mainhand) return false // No weapon
             if (this.slots.mainhand.name !== "dartgun") return false // Wrong weapon
             if (this.gold < 100) return false // Not enough gold to shoot
