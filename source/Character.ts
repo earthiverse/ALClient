@@ -4211,8 +4211,8 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("player", checkWithdrawal)
-                reject(`withdrawItem timeout(${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
+                reject("withdrawItem timeout(2500ms)")
+            }, 2500)
             this.socket.on("player", checkWithdrawal)
         })
 
