@@ -3433,7 +3433,7 @@ export class Character extends Observer implements CharacterData {
 
             if (!fixedTo) throw `Could not find a suitable destination for '${to}'`
         } else if (to.x !== undefined && to.y !== undefined) {
-            fixedTo = { map: to.map || this.map, x: to.x, y: to.y }
+            fixedTo = { in: to.in, map: to.map || this.map, x: to.x, y: to.y }
         } else {
             console.debug(to)
             throw "'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'."
