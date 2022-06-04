@@ -785,8 +785,20 @@ export class Pathfinder {
 
             if (maps.includes("arena")) {
                 // Add paths to hop the northern ledges of the hill in the middle
-                addCheatPath({ map: "arena", x: 199, y: -360 }, { map: "main", x: 233, y: -391 })
-                addCheatPath({ map: "arena", x: 565, y: -332 }, { map: "main", x: 531, y: -359 })
+                addCheatPath({ map: "arena", x: 199, y: -360 }, { map: "arena", x: 233, y: -391 })
+                addCheatPath({ map: "arena", x: 565, y: -332 }, { map: "arena", x: 531, y: -359 })
+            }
+
+            if (maps.includes("cave")) {
+                // Add path near bridge
+                addCheatPath({ map: "cave", x: 120, y: -1050 }, { map: "cave", x: 24, y: -1074 })
+            }
+
+            if (maps.includes("level1")) {
+                // Add path across cliff and water
+                addCheatPath({ map: "level1", x: -104, y: 159 }, { map: "level1", x: -296, y: 183 })
+                // Add path up cliff to ladder
+                addCheatPath({ map: "level1", x: -272, y: 615 }, { map: "level1", x: -296, y: 558 })
             }
 
             if (maps.includes("main")) {
@@ -796,6 +808,8 @@ export class Pathfinder {
                 addCheatPath({ map: "main", x: -95, y: 533 }, { map: "main", x: -137, y: 549 })
                 // Add a path to hop the fence near Rose
                 addCheatPath({ map: "main", x: -311, y: 149 }, { map: "main", x: -345, y: 160 })
+                // Add a path across wall from goos to mansion
+                addCheatPath({ map: "main", x: 303, y: 808 }, { map: "main", x: 433, y: 805 })
             }
 
             if (maps.includes("winterland")) {
