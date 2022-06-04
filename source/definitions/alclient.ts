@@ -11,6 +11,10 @@ export type GetEntitiesFilters = {
     targetingMe?: boolean
     targetingPartyMember?: boolean
     targetingPlayer?: string
+    /** Returns entities with types not equal to this type */
+    notType?: MonsterName
+    /** Returns entities with types not equal to any in the provided list */
+    notTypeList?: MonsterName[]
     type?: MonsterName
     typeList?: MonsterName[]
     level?: number

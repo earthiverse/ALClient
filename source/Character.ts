@@ -2160,6 +2160,8 @@ export class Character extends Observer implements CharacterData {
             if (filters.level !== undefined && filters.level !== entity.level) continue
             if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= entity.level) continue
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= entity.level) continue
+            if (filters.notType !== undefined && filters.type == entity.type) continue
+            if (filters.notTypeList !== undefined && filters.notTypeList.includes(entity.type)) continue
             if (filters.type !== undefined && filters.type !== entity.type) continue
             if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
             if (filters.withinRange !== undefined && Tools.squaredDistance(this, entity) > (filters.withinRange * filters.withinRange)) continue
