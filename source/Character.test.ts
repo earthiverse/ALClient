@@ -724,6 +724,12 @@ test("Character.canUse", () => {
     expect(warrior.canUse("cleave")).toBe(true)
 
     expect(warrior.canUse("zapperzap", { ignoreEquipped: true })).toBe(true)
+
+    // Snowball skill needs a snowball in the inventory
+    expect(warrior.canUse("snowball")).toBe(false)
+    warrior.items.push({ name: "snowball", q: 200 })
+    expect(warrior.canUse("snowball")).toBe(true)
+    warrior.items.pop()
 })
 
 test("Character.countItem", () => {
