@@ -188,12 +188,16 @@ export class Character extends Observer implements CharacterData {
                 this.user = (data as CharacterData).user
 
                 if (Database.connection) {
-                    const updateData: Partial<IBank> = {
-                        lastUpdated: Date.now(),
-                        owner: this.owner,
-                        ...(data as CharacterData).user
+                    const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}*bank*`)
+                    if (!nextUpdate || Date.now() >= nextUpdate) {
+                        const updateData: Partial<IBank> = {
+                            lastUpdated: Date.now(),
+                            owner: this.owner,
+                            ...(data as CharacterData).user
+                        }
+                        BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
+                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*bank*`, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
-                    BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
                 }
 
                 // NOTE: When you have a "new" bank slot, the length of the array won't be the bank slot's size until you use the last slot.
