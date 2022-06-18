@@ -18,7 +18,7 @@ import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilte
 
 export class Character extends Observer implements CharacterData {
     protected userAuth: string
-    protected characterID: string
+    public characterID: string
     public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
     public achievements = new Map<string, AchievementProgressData>()

@@ -5,7 +5,6 @@ import { IPosition } from "./definitions/adventureland.js"
 import { DoorInfo, GData, GMap, ItemName, MapName } from "./definitions/adventureland-data.js"
 import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
-import { Tools } from "./Tools.js"
 
 const UNKNOWN = 1
 const UNWALKABLE = 2

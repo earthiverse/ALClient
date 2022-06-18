@@ -390,7 +390,7 @@ export class Observer {
                     const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
                     if (!nextUpdate || Date.now() > nextUpdate) {
                         if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
-                        // Don't include the id in the filter, so it overwrites the last one
+                            // Don't include the id in the filter, so it overwrites the last one
                             entityUpdates.push({
                                 updateOne: {
                                     filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
