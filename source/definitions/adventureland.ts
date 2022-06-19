@@ -28,9 +28,9 @@ export type TradeItemInfo = ItemData & {
 }
 
 export type SlotInfo = {
-    [T in SlotType]: ItemData
+    [T in SlotType]: (ItemData | null)
 } & {
-    [T in TradeSlotType]?: ItemDataTrade
+    [T in TradeSlotType]?: (ItemDataTrade | null)
 }
 
 export type StatusInfo = {

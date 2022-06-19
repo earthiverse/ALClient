@@ -1,18 +1,18 @@
 /* eslint-disable sort-keys */
 import { Game } from "./Game"
 import { Character } from "./Character"
-import { GData } from "./definitions/adventureland-data"
 import { ServerData } from "./definitions/adventureland-server"
-import { IPosition } from "./definitions/adventureland"
 import { Entity } from "./Entity"
+import { Pathfinder } from "./Pathfinder"
+import { MapName } from "./definitions/adventureland-data"
 
-let G: GData
 let priest: Character
 let warrior: Character
 const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" }
 beforeAll(async () => {
-    G = await Game.getGData(true, false)
-    priest = new Character(undefined, undefined, undefined, G, serverData)
+    await Game.getGData(true, false)
+    await Pathfinder.prepare(Game.G)
+    priest = new Character("", "", "", Game.G, serverData)
     priest.parseCharacter({
         id: "earthPri",
         party: "earthMer",
@@ -115,7 +115,7 @@ beforeAll(async () => {
         y: -176.41020450644513,
     })
 
-    warrior = new Character(undefined, undefined, undefined, G, serverData)
+    warrior = new Character("", "", "", Game.G, serverData)
     warrior.parseCharacter({
         "hp": 8021,
         "max_hp": 17379,
@@ -438,7 +438,7 @@ beforeAll(async () => {
         "going_x": 1099.9910932334997,
         "going_y": -1489.247069218715,
         "angle": 178.30549604505748,
-    }, "winterland", "winterland", G))
+    }, "winterland", "winterland", Game.G))
     warrior.entities.set("3522746", new Entity({
         "speed": 20.48,
         "hp": 18000,
@@ -461,7 +461,7 @@ beforeAll(async () => {
         "cid": 2,
         "s": {},
         "level": 2
-    }, "winterland", "winterland", G))
+    }, "winterland", "winterland", Game.G))
     warrior.entities.set("3523318", new Entity({
         "speed": 20.48,
         "hp": 18000,
@@ -484,20 +484,20 @@ beforeAll(async () => {
         "cid": 2,
         "s": {},
         "level": 2
-    }, "winterland", "winterland", G))
+    }, "winterland", "winterland", Game.G))
 }, 60000)
 
 test("Character attributes", () => {
-    expect(priest.damage_type).toBe<string>(G.classes.priest.damage_type)
-    expect(warrior.damage_type).toBe<string>(G.classes.warrior.damage_type)
+    expect(priest.damage_type).toBe<string>(Game.G.classes.priest.damage_type)
+    expect(warrior.damage_type).toBe<string>(Game.G.classes.warrior.damage_type)
 })
 
 test("Character.calculateItemCost", async () => {
     // The costs below assume these G costs, so check that they're still good
-    expect(G.items.scroll0.g).toBe(1000)
-    expect(G.items.scroll1.g).toBe(40000)
-    expect(G.items.pants.g).toBe(7800)
-    expect(G.items.dexring.g).toBe(24000)
+    expect(Game.G.items.scroll0.g).toBe(1000)
+    expect(Game.G.items.scroll1.g).toBe(40000)
+    expect(Game.G.items.pants.g).toBe(7800)
+    expect(Game.G.items.dexring.g).toBe(24000)
 
     // Normal item
     expect(priest.calculateItemCost({ name: "scroll0" })).toBe(1000)
@@ -532,8 +532,8 @@ test("Character.canCraft", () => {
     // Backup so we can change things
     const itemsBackup = [...priest.items]
     const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
-    const craftsmanLocation = priest.locateNPC("craftsman")[0]
-    const witchLocation = priest.locateNPC("witch")[0]
+    const craftsmanLocation = Pathfinder.locateNPC("craftsman")[0]
+    const witchLocation = Pathfinder.locateNPC("witch")[0]
 
     // Insufficient items
     priest.items = [{ name: "computer" }, { name: "bow", level: 0 }, { name: "essenceoffrost", q: 2 }]
@@ -545,7 +545,7 @@ test("Character.canCraft", () => {
 
     // Wrong place
     priest.items = [{ name: "bow", level: 0 }, { name: "essenceoffrost", q: 3 }]
-    priest.map = witchLocation.map
+    priest.map = witchLocation.map as MapName
     priest.x = witchLocation.x
     priest.y = witchLocation.y
     expect(priest.canCraft("frostbow")).toBe(false)
@@ -553,7 +553,7 @@ test("Character.canCraft", () => {
     expect(priest.canCraft("frostbow", { ignoreLocation: true })).toBe(true)
 
     // Right place
-    priest.map = craftsmanLocation.map
+    priest.map = craftsmanLocation.map as MapName
     priest.x = craftsmanLocation.x
     priest.y = craftsmanLocation.y
     expect(priest.canCraft("frostbow")).toBe(true)
@@ -562,14 +562,14 @@ test("Character.canCraft", () => {
 
     // Wrong place (witch)
     priest.items = [{ name: "cshell", q: 10 }, { name: "hpot0", q: 9999 }]
-    priest.map = craftsmanLocation.map
+    priest.map = craftsmanLocation.map as MapName
     priest.x = craftsmanLocation.x
     priest.y = craftsmanLocation.y
     expect(priest.canCraft("elixirfires")).toBe(false)
     expect(priest.canCraft("elixirfires", { ignoreLocation: true })).toBe(true)
 
     // Right place (witch)
-    priest.map = witchLocation.map
+    priest.map = witchLocation.map as MapName
     priest.x = witchLocation.x
     priest.y = witchLocation.y
     expect(priest.canCraft("elixirfires")).toBe(true)
@@ -591,8 +591,8 @@ test("Character.canExchange", async () => {
     // Backup so we can change things
     const itemsBackup = [...priest.items]
     const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
-    const xynLocation = priest.locateNPC("exchange")[0]
-    const shellLocation = priest.locateNPC("fisherman")[0]
+    const xynLocation = Pathfinder.locateNPC("exchange")[0]
+    const shellLocation = Pathfinder.locateNPC("fisherman")[0]
 
     // Insufficient items
     priest.items = [{ name: "computer" }, { name: "seashell", q: 1 }]
@@ -608,7 +608,7 @@ test("Character.canExchange", async () => {
 
     // Wrong location
     priest.items = [{ name: "seashell", q: 20 }]
-    priest.map = xynLocation.map
+    priest.map = xynLocation.map as MapName
     priest.x = xynLocation.x
     priest.y = xynLocation.y
     expect(priest.canExchange("seashell")).toBe(false)
@@ -616,7 +616,7 @@ test("Character.canExchange", async () => {
 
     // Correct Location
     priest.items = [{ name: "seashell", q: 20 }]
-    priest.map = shellLocation.map
+    priest.map = shellLocation.map as MapName
     priest.x = shellLocation.x
     priest.y = shellLocation.y
     expect(priest.canExchange("seashell")).toBe(true)
@@ -649,7 +649,7 @@ test("Character.canKillInOneShot", () => {
                 "ms": 340
             }
         }
-    }, "main", "main", priest.G)
+    }, "main", "main", Game.G)
     expect(priest.canKillInOneShot(bee)).toBe(true)
 })
 
@@ -660,16 +660,16 @@ test("Character.canSell", () => {
     priest.items = [{ name: "helmet", level: 1 }]
 
     // Sellable location
-    const standMerchant = priest.locateNPC("standmerchant")[0]
-    priest.map = standMerchant.map
+    const standMerchant = Pathfinder.locateNPC("standmerchant")[0]
+    priest.map = standMerchant.map as MapName
     priest.x = standMerchant.x
     priest.y = standMerchant.y
     expect(priest.canSell()).toBe(true)
 
     // Unsellable location
     priest.map = "arena"
-    priest.x = G.maps.arena.spawns[0][0]
-    priest.y = G.maps.arena.spawns[0][0]
+    priest.x = Game.G.maps.arena.spawns[0][0]
+    priest.y = Game.G.maps.arena.spawns[0][0]
     expect(priest.canSell()).toBe(false)
     // This time with a computer
     priest.items = [{ name: "computer" }, { name: "helmet", level: 1 }]
@@ -783,7 +783,7 @@ test("Character.getEntity", () => {
         "going_x": warrior.x,
         "going_y": warrior.y,
         "angle": 0,
-    }, "winterland", "winterland", G))
+    }, "winterland", "winterland", Game.G))
     expect(warrior.getEntity({ type: "rudolph", returnNearest: true }).id).toBe("nearbyMonster")
 })
 
@@ -811,7 +811,7 @@ test("Character.getTargetEntity", () => {
                 "ms": 340
             }
         }
-    }, "main", "main", priest.G)
+    }, "main", "main", Game.G)
     priest.entities.set(bee.id, bee)
     priest.target = bee.id
     expect(priest.getTargetEntity()).toBeTruthy()
@@ -886,7 +886,7 @@ test("Character.isPVP", () => {
 test("Character.locateItem", () => {
     // Create the character's inventory for testing
     const itemsBackup = [...priest.items]
-    priest.items = [undefined, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, { name: "zapper", level: 0, l: "l" }, undefined]
+    priest.items = [null, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, { name: "zapper", level: 0, l: "l" }, null]
     priest.isize = priest.items.length
 
     expect(priest.locateItem("pants")).toBeTruthy()
@@ -913,7 +913,7 @@ test("Character.locateItems", async () => {
     // Create the character's inventory for testing
     priest.esize = 2
     const itemsBackup = [...priest.items]
-    priest.items = [{ name: "mpot0", q: 1 }, undefined, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, undefined, { name: "mpot0", q: 10 }]
+    priest.items = [{ name: "mpot0", q: 1 }, null, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, null, { name: "mpot0", q: 10 }]
     priest.isize = priest.items.length
 
     expect(priest.locateItems("pants").length).toBe(2)
@@ -1342,26 +1342,4 @@ test("Character.locateItemsByLevel", () => {
     expect(noDuplicates).toMatchObject({})
 
     priest.items = itemsBackup
-})
-
-test("Character.locateCraftNPC", () => {
-    // craftsman location
-    expect(priest.locateCraftNPC("pouchbow")).toStrictEqual<IPosition>({ map: "main", x: 92, y: 670 })
-    // witch location
-    expect(priest.locateCraftNPC("elixirpnres")).toStrictEqual<IPosition>({ map: "halloween", x: 858, y: -160 })
-    // mcollector location
-    expect(priest.locateCraftNPC("resistancering")).toStrictEqual<IPosition>({ map: "main", x: 81, y: -283 })
-    // not craftable
-    expect(() => { priest.locateCraftNPC("gem0") }).toThrowError()
-})
-
-test("Character.locateExchangeNPC", () => {
-    // general exchangable
-    expect(priest.locateExchangeNPC("gem0")).toStrictEqual<IPosition>({ map: "main", x: -25, y: -478 })
-    // token
-    expect(priest.locateExchangeNPC("monstertoken")).toStrictEqual<IPosition>({ map: "main", x: 126, y: -413 })
-    // quest
-    expect(priest.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 262, y: -48.5 })
-    // not exchangable
-    expect(() => { priest.locateExchangeNPC("mpot0") }).toThrowError()
 })

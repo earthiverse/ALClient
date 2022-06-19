@@ -2,16 +2,14 @@ import { Game } from "./Game"
 import { GData } from "./definitions/adventureland-data"
 import { Pathfinder } from "./Pathfinder"
 import { LinkData, NodeData } from "./definitions/pathfinder"
+import { IPosition } from "./definitions/adventureland"
 
-let G: GData
 beforeAll(async () => {
-    G = await Game.getGData(true, false)
+    await Game.getGData(true, false)
 }, 60000)
 
 test("Pathfinder.prepare", async () => {
-    expect(() => { Pathfinder.getGrid("main") }).toThrowError()
-
-    expect(() => { Pathfinder.prepare(G, {
+    expect(() => { Pathfinder.prepare(Game.G, {
         include_bank_b: true,
         include_bank_u: true,
         include_test: true
@@ -21,7 +19,7 @@ test("Pathfinder.prepare", async () => {
 })
 
 test("Pathfinder.doorDistance", async () => {
-    const mainBankDoor = G.maps.main.doors[2]
+    const mainBankDoor = Game.G.maps.main.doors[2]
 
     // Test the door base coordinate
     const doorPoint = { x: mainBankDoor[0], y: mainBankDoor[1] }
@@ -45,12 +43,12 @@ test("Pathfinder.doorDistance", async () => {
 })
 
 test("Pathfinder.getPath", async () => {
-    const mainSpawn: NodeData = { map: "main", x: G.maps.main.spawns[0][0], y: G.maps.main.spawns[0][1] }
-    const mainOffset: NodeData = { map: "main", x: G.maps.main.spawns[0][0] + 100, y: G.maps.main.spawns[0][1] + 100 }
-    const halloweenSpawn: NodeData = { map: "halloween", x: G.maps.halloween.spawns[0][0], y: G.maps.halloween.spawns[0][1] }
+    const mainSpawn: NodeData = { map: "main", x: Game.G.maps.main.spawns[0][0], y: Game.G.maps.main.spawns[0][1] }
+    const mainOffset: NodeData = { map: "main", x: Game.G.maps.main.spawns[0][0] + 100, y: Game.G.maps.main.spawns[0][1] + 100 }
+    const halloweenSpawn: NodeData = { map: "halloween", x: Game.G.maps.halloween.spawns[0][0], y: Game.G.maps.halloween.spawns[0][1] }
 
     // Simple line of sight path
-    let path: LinkData[]
+    let path: LinkData[] | undefined
     expect(() => {
         path = Pathfinder.getPath(mainSpawn, mainOffset)
     }).not.toThrowError()
@@ -71,4 +69,26 @@ test("Pathfinder.getPath", async () => {
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
     for (const link of path) expect(link.type).not.toEqual("town")
+})
+
+test("Pathfinder.locateCraftNPC", () => {
+    // craftsman location
+    expect(Pathfinder.locateCraftNPC("pouchbow")).toStrictEqual<IPosition>({ map: "main", x: 92, y: 670 })
+    // witch location
+    expect(Pathfinder.locateCraftNPC("elixirpnres")).toStrictEqual<IPosition>({ map: "halloween", x: 858, y: -160 })
+    // mcollector location
+    expect(Pathfinder.locateCraftNPC("resistancering")).toStrictEqual<IPosition>({ map: "main", x: 81, y: -283 })
+    // not craftable
+    expect(() => { Pathfinder.locateCraftNPC("gem0") }).toThrowError()
+})
+
+test("Pathfinder.locateExchangeNPC", () => {
+    // general exchangable
+    expect(Pathfinder.locateExchangeNPC("gem0")).toStrictEqual<IPosition>({ map: "main", x: -25, y: -478 })
+    // token
+    expect(Pathfinder.locateExchangeNPC("monstertoken")).toStrictEqual<IPosition>({ map: "main", x: 126, y: -413 })
+    // quest
+    expect(Pathfinder.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 262, y: -48.5 })
+    // not exchangable
+    expect(() => { Pathfinder.locateExchangeNPC("mpot0") }).toThrowError()
 })

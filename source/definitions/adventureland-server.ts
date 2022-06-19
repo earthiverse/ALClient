@@ -162,7 +162,7 @@ export type CharacterData = PlayerData & {
     }
     tax: number
     xrange: number
-    items: ItemData[]
+    items: (ItemData | null)[]
     cc: number
 
     // (Probably) GUI Related things
