@@ -3,7 +3,7 @@ import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {
-    canDamage?: boolean
+    canDamage?: boolean | SkillName
     canWalkTo?: boolean
     couldGiveCredit?: boolean
     ignoreIDs?: Iterable<string>
@@ -33,7 +33,7 @@ export type GetEntityFilters = GetEntitiesFilters & {
 
 /** Filters for returning a list of players */
 export type GetPlayersFilters = {
-    canDamage?: boolean
+    canDamage?: boolean | SkillName
     canWalkTo?: boolean
     ignoreIDs?: Iterable<string>
     withinRange?: number | SkillName

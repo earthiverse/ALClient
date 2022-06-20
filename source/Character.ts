@@ -2173,13 +2173,15 @@ export class Character extends Observer implements CharacterData {
                 if (typeof filters.withinRange == "number") {
                     squaredRange = filters.withinRange * filters.withinRange
                 } else {
-                    if (filters.withinRange == "attack") squaredRange = this.range * this.range
-                    else if (this.G.skills[filters.withinRange].range) {
-                        // It has its own range
+                    if (filters.withinRange == "attack") {
+                        // Normal attack range
+                        squaredRange = this.range * this.range
+                    } else if (this.G.skills[filters.withinRange].range) {
+                        // This skill has its own range
                         const range = this.G.skills[filters.withinRange].range
                         squaredRange = range * range
                     } else {
-                        // It's based on attack range
+                        // This skill is based on attack range
                         let range = this.range
                         if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
                         if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
@@ -2192,12 +2194,19 @@ export class Character extends Observer implements CharacterData {
                 // We can't damage if we avoidance is >= 100
                 if (filters.canDamage && entity.avoidance >= 100) continue
                 if (!filters.canDamage && entity.avoidance < 100) continue
+
                 // We can't damage if we do physical damage and evasion is >= 100
-                if (filters.canDamage && this.damage_type == "physical" && entity.evasion >= 100) continue
-                if (!filters.canDamage && this.damage_type == "physical" && entity.evasion < 100) continue
+                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "physical" && entity.evasion >= 100) continue
+                if (filters.canDamage === false && this.damage_type == "physical" && entity.evasion < 100) continue
+
                 // We can't damage if we do magical damage and reflection is >= 100
-                if (filters.canDamage && this.damage_type == "magical" && entity.reflection >= 100) continue
-                if (!filters.canDamage && this.damage_type == "magical" && entity.reflection < 100) continue
+                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "magical" && entity.reflection >= 100) continue
+                if (filters.canDamage === false && this.damage_type == "magical" && entity.reflection < 100) continue
+
+                if (typeof filters.canDamage == "string") {
+                    // This entity is immune, and our skill doesn't pierce immunity, so we won't do damage
+                    if (entity.immune && !this.G.skills[filters.canDamage].pierces_immunity) continue
+                }
             }
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, entity)
@@ -2469,13 +2478,15 @@ export class Character extends Observer implements CharacterData {
                 if (typeof filters.withinRange == "number") {
                     squaredRange = filters.withinRange * filters.withinRange
                 } else {
-                    if (filters.withinRange == "attack") squaredRange = this.range * this.range
-                    else if (this.G.skills[filters.withinRange].range) {
-                        // It has its own range
+                    if (filters.withinRange == "attack") {
+                        // Normal attack range
+                        squaredRange = this.range * this.range
+                    } else if (this.G.skills[filters.withinRange].range) {
+                        // This skill has its own range
                         const range = this.G.skills[filters.withinRange].range
                         squaredRange = range * range
                     } else {
-                        // It's based on attack range
+                        // This skill is based on attack range
                         let range = this.range
                         if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
                         if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
@@ -2488,15 +2499,18 @@ export class Character extends Observer implements CharacterData {
                 // We can't damage if we're not PVP
                 if (filters.canDamage && !this.isPVP()) continue
                 if (!filters.canDamage && this.isPVP()) continue
+
                 // We can't damage if we avoidance is >= 100
                 if (filters.canDamage && player.avoidance >= 100) continue
                 if (!filters.canDamage && player.avoidance < 100) continue
+
                 // We can't damage if we do physical damage and evasion is >= 100
-                if (filters.canDamage && this.damage_type == "physical" && player.evasion >= 100) continue
-                if (!filters.canDamage && this.damage_type == "physical" && player.evasion < 100) continue
+                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "physical" && player.evasion >= 100) continue
+                if (filters.canDamage === false && this.damage_type == "physical" && player.evasion < 100) continue
+
                 // We can't damage if we do magical damage and reflection is >= 100
-                if (filters.canDamage && this.damage_type == "magical" && player.reflection >= 100) continue
-                if (!filters.canDamage && this.damage_type == "magical" && player.reflection < 100) continue
+                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "magical" && player.reflection >= 100) continue
+                if (filters.canDamage === false && this.damage_type == "magical" && player.reflection < 100) continue
             }
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, player)
