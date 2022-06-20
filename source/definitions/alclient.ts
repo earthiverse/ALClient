@@ -1,4 +1,4 @@
-import { Attribute, MonsterName } from "./adventureland-data.js"
+import { Attribute, MonsterName, SkillName } from "./adventureland-data.js"
 import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
@@ -7,7 +7,7 @@ export type GetEntitiesFilters = {
     canWalkTo?: boolean
     couldGiveCredit?: boolean
     ignoreIDs?: Iterable<string>
-    withinRange?: number
+    withinRange?: number | SkillName
     targetingMe?: boolean
     targetingPartyMember?: boolean
     targetingPlayer?: string
@@ -36,7 +36,7 @@ export type GetPlayersFilters = {
     canDamage?: boolean
     canWalkTo?: boolean
     ignoreIDs?: Iterable<string>
-    withinRange?: number
+    withinRange?: number | SkillName
     targetingMe?: boolean
     targetingPartyMember?: boolean
     targetingPlayer?: string

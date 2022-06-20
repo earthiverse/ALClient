@@ -9,7 +9,6 @@ import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
 
-
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
 

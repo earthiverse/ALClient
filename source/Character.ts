@@ -2168,7 +2168,26 @@ export class Character extends Observer implements CharacterData {
             if (filters.notTypeList !== undefined && filters.notTypeList.includes(entity.type)) continue
             if (filters.type !== undefined && filters.type !== entity.type) continue
             if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
-            if (filters.withinRange !== undefined && Tools.squaredDistance(this, entity) > (filters.withinRange * filters.withinRange)) continue
+            if (filters.withinRange !== undefined) {
+                let squaredRange: number
+                if (typeof filters.withinRange == "number") {
+                    squaredRange = filters.withinRange * filters.withinRange
+                } else {
+                    if (filters.withinRange == "attack") squaredRange = this.range * this.range
+                    else if (this.G.skills[filters.withinRange].range) {
+                        // It has its own range
+                        const range = this.G.skills[filters.withinRange].range
+                        squaredRange = range * range
+                    } else {
+                        // It's based on attack range
+                        let range = this.range
+                        if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
+                        if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
+                        squaredRange = range * range
+                    }
+                }
+                if (Tools.squaredDistance(this, entity) > squaredRange) continue
+            }
             if (filters.canDamage !== undefined) {
                 // We can't damage if we avoidance is >= 100
                 if (filters.canDamage && entity.avoidance >= 100) continue
@@ -2445,7 +2464,26 @@ export class Character extends Observer implements CharacterData {
             if (filters.level !== undefined && filters.level !== player.level) continue
             if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= player.level) continue
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= player.level) continue
-            if (filters.withinRange !== undefined && Tools.squaredDistance(this, player) > (filters.withinRange * filters.withinRange)) continue
+            if (filters.withinRange !== undefined) {
+                let squaredRange: number
+                if (typeof filters.withinRange == "number") {
+                    squaredRange = filters.withinRange * filters.withinRange
+                } else {
+                    if (filters.withinRange == "attack") squaredRange = this.range * this.range
+                    else if (this.G.skills[filters.withinRange].range) {
+                        // It has its own range
+                        const range = this.G.skills[filters.withinRange].range
+                        squaredRange = range * range
+                    } else {
+                        // It's based on attack range
+                        let range = this.range
+                        if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
+                        if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
+                        squaredRange = range * range
+                    }
+                }
+                if (Tools.squaredDistance(this, player) > squaredRange) continue
+            }
             if (filters.canDamage !== undefined) {
                 // We can't damage if we're not PVP
                 if (filters.canDamage && !this.isPVP()) continue
