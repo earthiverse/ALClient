@@ -2449,6 +2449,7 @@ export class Character extends Observer implements CharacterData {
         const players: Player[] = []
 
         for (const [, player] of this.players) {
+            if (filters.ctype !== undefined && player.ctype !== filters.ctype) continue
             if (filters.ignoreIDs !== undefined) {
                 for (const id in filters.ignoreIDs) {
                     if (id == player.id) continue
