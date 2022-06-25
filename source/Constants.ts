@@ -35,7 +35,10 @@ export class Constants {
     /** Miscellaneous game related things */
     static BANK_PACK_SIZE = 42
     static MAX_PARTY_SIZE = 9 // TODO: It might actually be 9 + 1 merchant?
+    /** Ponty sells items for more than `G.items[itemName].g`. */
     static PONTY_MARKUP = 1.2
+    /** NPCs buy items for less than `G.items[itemName].g`. */
+    static NPC_SELL_TAX = 0.6
 
     /** Mongo related things */
     static MONGO_UPDATE_MS = 5000
