@@ -37,6 +37,8 @@ export type GetPlayersFilters = {
     canWalkTo?: boolean
     ctype?: CharacterType
     ignoreIDs?: Iterable<string>
+    isFriendly?: boolean
+    isNPC?: boolean
     withinRange?: number | SkillName
     targetingMe?: boolean
     targetingPartyMember?: boolean

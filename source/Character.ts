@@ -2450,6 +2450,16 @@ export class Character extends Observer implements CharacterData {
 
         for (const [, player] of this.players) {
             if (filters.ctype !== undefined && player.ctype !== filters.ctype) continue
+            if (filters.isFriendly !== undefined) {
+                const friendly = player.isFriendly(this)
+                if (filters.isFriendly && !friendly) continue
+                if (!filters.isFriendly && friendly) continue
+            }
+            if (filters.isNPC !== undefined) {
+                const npc = player.isNPC()
+                if (filters.isNPC && !npc) continue
+                if (!filters.isNPC && npc) continue
+            }
             if (filters.ignoreIDs !== undefined) {
                 for (const id in filters.ignoreIDs) {
                     if (id == player.id) continue
@@ -2498,8 +2508,9 @@ export class Character extends Observer implements CharacterData {
             }
             if (filters.canDamage !== undefined) {
                 // We can't damage if we're not PVP
-                if (filters.canDamage && !this.isPVP()) continue
-                if (!filters.canDamage && this.isPVP()) continue
+                const pvp = this.isPVP()
+                if (filters.canDamage && !pvp) continue
+                if (!filters.canDamage && pvp) continue
 
                 // We can't damage if we avoidance is >= 100
                 if (filters.canDamage && player.avoidance >= 100) continue
