@@ -1317,11 +1317,11 @@ export class Character extends Observer implements CharacterData {
         // Double check if we can buy from an NPC
         for (const map in this.G.maps) {
             if (buyable == true) break
-            if (!computerAvailable && map !== this.map) continue // We aren't close, and we don't have a computer, so don't check this map
+            if (!computerAvailable && !options?.ignoreLocation && map !== this.map) continue // We aren't close, and we don't have a computer, so don't check this map
             if (this.G.maps[map as MapName].ignore) continue
-            for (const npc of this.G.maps[map as MapName].npcs) {
+            for (const npc of (this.G.maps[map as MapName] as GMap).npcs) {
                 if (buyable == true) break
-                if (this.G.npcs[npc.id].items == undefined) continue
+                if (!this.G.npcs[npc.id].items) continue
                 for (const i of this.G.npcs[npc.id].items) {
                     if (i == item) {
                         buyable = true

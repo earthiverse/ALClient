@@ -302,9 +302,7 @@ beforeAll(async () => {
         "pcourage": 2,
         "fear": 0,
         "items": [
-            {
-                "name": "computer"
-            },
+            null,
             {
                 "name": "tracker"
             },
@@ -523,9 +521,19 @@ test("Character.calculateItemCost", async () => {
 })
 
 test("Character.canBuy", () => {
-    expect(priest.canBuy("mpot1")).toBe(true) // We have a computer and enough gold
-    expect(priest.canBuy("hpot1")).toBe(true)
+    // Priest has a computer, warrior doesn't. You can buy the following from an NPC, so they should all return true
+    expect(priest.canBuy("mpot1")).toBe(true)
+    expect(warrior.canBuy("mpot1")).toBe(false)
+    expect(priest.canBuy("elixirluck")).toBe(true)
+    expect(warrior.canBuy("elixirluck")).toBe(false)
+
+    // Ignore location
+    expect(priest.canBuy("mpot1", { ignoreLocation: true })).toBe(true)
+    expect(warrior.canBuy("mpot1", { ignoreLocation: true })).toBe(true)
+
+    // You can't buy this from an NPC
     expect(priest.canBuy("computer")).toBe(false)
+    expect(priest.canBuy("computer", { ignoreLocation: true })).toBe(false)
 })
 
 test("Character.canCraft", () => {
