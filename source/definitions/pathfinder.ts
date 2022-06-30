@@ -53,4 +53,6 @@ export type PathfinderOptions = {
         town?: number
         transport?: number
     }
+    /** If set, we will console.log() messages */
+    showConsole?: boolean
 }

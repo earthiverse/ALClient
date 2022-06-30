@@ -572,7 +572,7 @@ export class Pathfinder {
 
         const path: LinkData[] = []
 
-        console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id} (from ${from.map}:${from.x},${from.y} to ${to.map}:${to.x},${to.y})...`)
+        if (options?.showConsole) console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id} (from ${from.map}:${from.x},${from.y} to ${to.map}:${to.x},${to.y})...`)
 
         const pathfinder = ngraph.nba(Pathfinder.graph, {
             distance: (fromNode, toNode, link) => {
@@ -630,7 +630,7 @@ export class Pathfinder {
             path.splice(i, 1)
         }
 
-        console.debug(`Path from ${fromNode.id} to ${toNode.id} found!`)
+        if (options?.showConsole) console.debug(`Path from ${fromNode.id} to ${toNode.id} found!`)
         return path
     }
 
@@ -730,14 +730,15 @@ export class Pathfinder {
         cheat?: boolean,
         include_bank_b?: boolean,
         include_bank_u?: boolean,
-        include_test?: boolean
+        include_test?: boolean,
+        showConsole?: boolean
     } = {}): Promise<void> {
         if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
 
         const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]
 
-        console.debug("Preparing pathfinding...")
+        if (options.showConsole) console.debug("Preparing pathfinding...")
         const start = Date.now()
 
         for (let i = 0; i < maps.length; i++) {
@@ -817,9 +818,11 @@ export class Pathfinder {
             }
         }
 
-        console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
-        console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
-        console.debug(`  # Links: ${this.graph.getLinkCount()}`)
+        if (options.showConsole) {
+            console.debug(`Pathfinding prepared! (${((Date.now() - start) / 1000).toFixed(3)}s)`)
+            console.debug(`  # Nodes: ${this.graph.getNodeCount()}`)
+            console.debug(`  # Links: ${this.graph.getLinkCount()}`)
+        }
     }
 
     public static locateMonster(mType: MonsterName): IPosition[] {

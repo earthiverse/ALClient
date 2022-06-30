@@ -3505,7 +3505,7 @@ export class Character extends Observer implements CharacterData {
         } else if (to.x !== undefined && to.y !== undefined) {
             fixedTo = { in: to.in, map: to.map || this.map, x: to.x, y: to.y }
         } else {
-            if (options?.showErrors) console.debug(to)
+            if (options?.showConsole) console.debug(to)
             throw "'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'."
         }
 
@@ -3600,12 +3600,12 @@ export class Character extends Observer implements CharacterData {
                         await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                     } catch (e) {
                         if (!this.canUse("blink")) break // We can't use it, don't bother trying again
-                        if (options?.showErrors)console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
+                        if (options?.showConsole)console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
                         try {
                             await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
                             await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                         } catch (e2) {
-                            if (options?.showErrors)console.error(`Failed blinking while smartMoving: ${e2}`)
+                            if (options?.showConsole)console.error(`Failed blinking while smartMoving: ${e2}`)
                             break
                         }
                     }
@@ -3624,7 +3624,7 @@ export class Character extends Observer implements CharacterData {
                 if (futureMove.type == "town") {
                     this.warpToTown()?.then(() => {
                         i = j - 1
-                    })?.catch((e) => { if (options?.showErrors) console.error(e) })
+                    })?.catch((e) => { if (options?.showConsole) console.error(e) })
                     break
                 }
             }
@@ -3672,7 +3672,7 @@ export class Character extends Observer implements CharacterData {
                     await this.transport(currentMove.map, currentMove.spawn)
                 }
             } catch (e) {
-                if (options?.showErrors) console.error(e)
+                if (options?.showConsole) console.error(e)
                 numAttempts++
                 if (numAttempts >= 3) {
                     this.smartMoving = undefined
@@ -3681,7 +3681,7 @@ export class Character extends Observer implements CharacterData {
 
                 // Look for the path again
                 this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
-                await this.requestPlayerData().catch((e) => { if (options?.showErrors) console.error(e) })
+                await this.requestPlayerData().catch((e) => { if (options?.showConsole) console.error(e) })
                 path = await Pathfinder.getPath(this, fixedTo, options)
                 i = -1
                 await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))

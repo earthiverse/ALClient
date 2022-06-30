@@ -81,6 +81,6 @@ export type SmartMoveOptions = PathfinderOptions & {
     stopIfTrue?: () => boolean
     /** If set, we will resolve the promise when we start moving our final move instead of completing the final move */
     resolveOnFinalMoveStart?: boolean
-    /** If set, we will console.error() messages */
-    showErrors?: boolean
+    /** If set, we will console.log() messages */
+    showConsole?: boolean
 }
