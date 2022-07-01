@@ -3,6 +3,7 @@ import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 import { Tools } from "./Tools.js"
+import { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
     ctype: "merchant" = "merchant"
@@ -114,7 +115,6 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     /**
-     * NOTE: Untested.
      * Lists an item for sale on your merchant stand
      *
      * @param {number} itemPos the position of the item in your inventory
@@ -234,6 +234,78 @@ export class Merchant extends PingCompensatedCharacter {
             slot: tradeSlot
         })
         return listed
+    }
+
+    /**
+     * NOTE: Untested
+     *
+     * Adds an item that you want to purchase to your trade listing
+     *
+     * To remove a listing, call unequip(tradeSlot)
+     *
+     * @param itemName The item you want to buy
+     * @param price The price you'll pay for it
+     * @param tradeSlot The trade slot you want to put the request in
+     * @param quantity How many of the item you want to buy
+     * @param level For equipment, the level of the item you wish to buy
+     */
+    public async listForPurchase(itemName: ItemName, price: number, tradeSlot?: TradeSlotType, quantity = 1, level?: number): Promise<unknown> {
+        if (!this.ready) throw "We aren't ready yet [listForPurchase]."
+
+        if (price <= 0) throw "The lowest you can set the price is 1."
+        if (quantity <= 0) throw "The lowest you can set the quantity to is 1."
+        if (!tradeSlot) {
+            for (const slotName in this.slots) {
+                if (!slotName.startsWith("trade")) continue // Not a trade slot
+                const slotInfo = this.slots[slotName as TradeSlotType]
+                if (slotInfo) continue
+
+                tradeSlot = slotName as TradeSlotType
+                break
+            }
+            if (!tradeSlot) throw "We don't have any empty trade slot to wishlist the item."
+        } else {
+            if (this.slots[tradeSlot]) throw `We already have something listed in '${tradeSlot}'.`
+            if (this.slots[tradeSlot] === undefined) throw `We don't have a trade slot '${tradeSlot}'.`
+        }
+        const wishListed = new Promise<void>((resolve, reject) => {
+            const successCheck = (data: CharacterData) => {
+                const newTradeSlot = data.slots[tradeSlot]
+                if (!newTradeSlot) return // No data (yet?)
+                if (!newTradeSlot.b) return
+                if (newTradeSlot.name !== itemName) return
+                if (newTradeSlot.q !== quantity) return
+                if (newTradeSlot.price !== price) return
+
+                this.socket.off("player", successCheck)
+                this.socket.off("game_response", failCheck)
+                resolve()
+            }
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "slot_occupied") {
+                        this.socket.off("player", successCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject(`We already have something listed in '${tradeSlot}'.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("player", successCheck)
+                this.socket.off("game_response", failCheck)
+                reject("listForPurchase timeout (1000ms)")
+            }, 1000)
+            this.socket.on("player", successCheck)
+            this.socket.on("game_response", failCheck)
+        })
+        this.socket.emit("trade_wishlist", {
+            level: level,
+            name: itemName,
+            price: price,
+            q: quantity,
+            slot: tradeSlot
+        })
+        return wishListed
     }
 
     // TODO: Add promises

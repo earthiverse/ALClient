@@ -641,7 +641,7 @@ export type GameResponseDataString =
     /** When you try to use a skill, but you don't have the right weapon type equipped for that skill */
     | "skill_cant_wtype"
     | "skill_too_far"
-    /** When you try to list an item for sale in a slot that already has something listed */
+    /** When you try to list an item for sale/purchase in a slot that already has something listed */
     | "slot_occupied"
     /** When you try to sell an item to another merchant, but there's no space on that merchant */
     | "trade_bspace"
@@ -1366,10 +1366,11 @@ export type ClientToServerEvents = {
     "town": () => void
     "tracker": () => void
     "transport": (data: { s: number, to: MapName }) => void
-    "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
     // TODO: Confirm that 'q' is a string
     // TODO: Create TradeBuyData type
     "trade_buy": (data: { id: string, q: string, rid: string, slot: TradeSlotType }) => void
+    "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
+    "trade_wishlist": (data: { level?: number, name: ItemName, price: number, q: number, slot: TradeSlotType }) => void
     "unequip": (data: { slot: SlotType | TradeSlotType }) => void
     "upgrade": (data: { clevel: number, item_num: number, offering_num: number, scroll_num: number }) => void
     "use": (data: { item: "hp" | "mp" }) => void
