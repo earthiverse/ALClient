@@ -1,5 +1,5 @@
+import { jest } from "@jest/globals"
 import { Game } from "./Game"
-import { GData } from "./definitions/adventureland-data"
 import { Pathfinder } from "./Pathfinder"
 import { LinkData, NodeData } from "./definitions/pathfinder"
 import { IPosition } from "./definitions/adventureland"
@@ -9,13 +9,38 @@ beforeAll(async () => {
 }, 60000)
 
 test("Pathfinder.prepare", async () => {
-    expect(() => { Pathfinder.prepare(Game.G, {
+    // Replace log with mock
+    const log = console.log
+    const debug = console.debug
+    const logMock = jest.fn()
+    const debugMock = jest.fn()
+    console.log = logMock
+    console.debug = debugMock
+
+    await expect(async () => { await Pathfinder.prepare(Game.G, {
         include_bank_b: true,
         include_bank_u: true,
-        include_test: true
+        include_test: true,
+        showConsole: false
     }) }).not.toThrowError()
-
     expect(Pathfinder.getGrid("main")).toBeDefined()
+    expect(logMock).not.toHaveBeenCalled()
+    expect(debugMock).not.toHaveBeenCalled()
+
+    // Cheat
+    await expect(async () => { await Pathfinder.prepare(Game.G, {
+        cheat: true,
+        include_bank_b: true,
+        include_bank_u: true,
+        include_test: true,
+        showConsole: true
+    }) }).not.toThrowError()
+    expect(logMock).not.toHaveBeenCalled()
+    expect(debugMock).toHaveBeenCalled()
+
+    // Set log back to normal
+    console.log = log
+    console.debug = debug
 })
 
 test("Pathfinder.doorDistance", async () => {
@@ -53,7 +78,7 @@ test("Pathfinder.getPath", async () => {
         path = Pathfinder.getPath(mainSpawn, mainOffset)
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
-    expect(path.length).toBe(2)
+    expect((path as LinkData[]).length).toBe(2)
     path = undefined
 
     // Complicated cross-map path
@@ -68,7 +93,7 @@ test("Pathfinder.getPath", async () => {
         path = Pathfinder.getPath({ map: "main", x: 17, y: -152 }, { map: "main", x: 383, y: 1480 }, { avoidTownWarps: true })
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
-    for (const link of path) expect(link.type).not.toEqual("town")
+    for (const link of (path as unknown as LinkData[])) expect(link.type).not.toEqual("town")
 })
 
 test("Pathfinder.locateCraftNPC", () => {
@@ -83,12 +108,12 @@ test("Pathfinder.locateCraftNPC", () => {
 })
 
 test("Pathfinder.locateExchangeNPC", () => {
-    // general exchangable
+    // general exchangeable
     expect(Pathfinder.locateExchangeNPC("gem0")).toStrictEqual<IPosition>({ map: "main", x: -25, y: -478 })
     // token
     expect(Pathfinder.locateExchangeNPC("monstertoken")).toStrictEqual<IPosition>({ map: "main", x: 126, y: -413 })
     // quest
     expect(Pathfinder.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 262, y: -48.5 })
-    // not exchangable
+    // not exchangeable
     expect(() => { Pathfinder.locateExchangeNPC("mpot0") }).toThrowError()
 })

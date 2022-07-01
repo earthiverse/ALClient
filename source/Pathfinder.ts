@@ -769,15 +769,15 @@ export class Pathfinder {
         if (options.cheat) {
             const addCheatPath = (from: IPosition & { map: MapName }, to: IPosition & { map: MapName }) => {
                 const fromNodeID = `${from.map}:${from.x},${from.y}`
+                const toNodeID = `${to.map}:${to.x},${to.y}`
                 const fromNode = this.graph.getNode(fromNodeID)
                 if (!fromNode) {
-                    console.log(`Can't cheat path on ${from.map}:${from.x},${from.y} to ${to.map}:${from.x},${from.y} (missing from node)`)
+                    console.log(`Can't cheat path on ${fromNodeID} to ${toNodeID} (missing from node)`)
                     return
                 }
-                const toNodeID = `${to.map}:${to.x},${to.y}`
                 const toNode = this.graph.getNode(toNodeID)
                 if (!toNode) {
-                    console.log(`Can't cheat path on ${from.map}:${from.x},${from.y} to ${to.map}:${from.x},${from.y} (missing to node)`)
+                    console.log(`Can't cheat path on ${fromNodeID} to ${toNodeID} (missing to node)`)
                     return
                 }
                 this.addLinkToGraph(fromNode, toNode)
@@ -791,14 +791,14 @@ export class Pathfinder {
 
             if (maps.includes("cave")) {
                 // Add path near bridge
-                addCheatPath({ map: "cave", x: 120, y: -1050 }, { map: "cave", x: 24, y: -1074 })
+                addCheatPath({ map: "cave", x: 121, y: -1051 }, { map: "cave", x: 23, y: -1075 })
             }
 
             if (maps.includes("level1")) {
                 // Add path across cliff and water
-                addCheatPath({ map: "level1", x: -104, y: 159 }, { map: "level1", x: -296, y: 183 })
+                addCheatPath({ map: "level1", x: -103, y: 160 }, { map: "level1", x: -297, y: 184 })
                 // Add path up cliff to ladder
-                addCheatPath({ map: "level1", x: -272, y: 615 }, { map: "level1", x: -296, y: 558 })
+                addCheatPath({ map: "level1", x: -271, y: 616 }, { map: "level1", x: -297, y: 557 })
             }
 
             if (maps.includes("main")) {
