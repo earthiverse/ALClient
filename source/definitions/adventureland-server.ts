@@ -1309,7 +1309,7 @@ export type ClientToServerEvents = {
     "bet": (data: { type: "dice", dir: "up" | "down", num: number, gold: number }) => void
     "auth": (data: AuthData) => void
     // TODO: Create BankData type
-    "bank": (data: { amount: number, operation: "deposit" | "withdraw"} | { inv: number, operation: "swap", pack: BankPackName, str: number }) => void
+    "bank": (data: { amount: number, operation: "deposit" | "withdraw"} | { inv: number, operation: "swap", pack: BankPackName, str: number } | { operation: "move", a: number, b: number, pack: BankPackName }) => void
     "booster": (data: { action: "shift", num: number, to: string }) => void
     // TODO: Create BuyData type
     "buy": (data: { name: ItemName, quantity?: number }) => void

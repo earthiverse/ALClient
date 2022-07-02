@@ -3754,6 +3754,45 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Swaps two items in your bank
+     * 
+     * @param {number} itemPosA
+     * @param {number} itemPosB
+     * @param {BankPackName} pack
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public async swapBankItems(itemPosA: number, itemPosB: number, pack: BankPackName): Promise<void> {
+        if (!this.ready) throw "We aren't ready yet [swapBankItems]."
+        if (itemPosA == itemPosB) return // They're the same position
+
+        const itemDataA = this.bank[pack][itemPosA]
+        const itemDataB = this.bank[pack][itemPosB]
+
+        const itemsSwapped = new Promise<void>((resolve, reject) => {
+            const successCheck = (data: CharacterData) => {
+                const checkItemDataA = data.user[pack][itemPosA]
+                const checkItemDataB = data.user[pack][itemPosB]
+
+                if (isDeepStrictEqual(checkItemDataB, itemDataA)
+                && isDeepStrictEqual(checkItemDataA, itemDataB)) {
+                    this.socket.off("player", successCheck)
+                    resolve()
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("player", successCheck)
+                reject(`swapBankItems timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("player", successCheck)
+        })
+
+        this.socket.emit("bank", { operation: "move", a: itemPosA, b: itemPosB, pack: pack })
+        return itemsSwapped
+    }
+
+    /**
      * Swaps two items in your inventory
      *
      * @param {number} itemPosA
