@@ -295,8 +295,8 @@ export class Observer {
                     })
                 }
                 if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch((e) => console.error(e))
-                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates)
-                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates)
+                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch((e) => console.error(e))
+                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch((e) => console.error(e))
             }
 
             this.S = data
