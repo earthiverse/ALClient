@@ -983,27 +983,52 @@ export class Character extends Observer implements CharacterData {
     public async buyWithTokens(itemName: ItemName): Promise<void> {
         const numBefore = this.countItem(itemName)
 
-        const tokenTypes = ["monstertoken", "pvptoken", "funtoken"]
+        const tokenTypes = {
+            funtoken: {
+                numOwned: this.countItem("funtoken"),
+                npcLoc: Pathfinder.locateNPC("funtokens")[0],
+                error: null
+            },
+            pvptoken: {
+                numOwned: this.countItem("pvptoken"),
+                npcLoc: Pathfinder.locateNPC("pvptokens")[0],
+                error: null
+            },
+            monstertoken: {
+                numOwned: this.countItem("monstertoken"),
+                npcLoc: Pathfinder.locateNPC("monsterhunter")[0],
+                error: null
+            }
+        }
 
         // Check if this item is buyable with tokens, and if we have enough
         let tokenTypeNeeded: "funtoken" | "monstertoken" | "pvptoken"
         let numTokensNeeded: number
-        for (const t in tokenTypes) {
+        for (const t in this.G.tokens) {
             const tokenType = t as "funtoken" | "monstertoken" | "pvptoken"
             const tokenTable = this.G.tokens[tokenType]
             for (const item in tokenTable) {
                 if (item !== itemName) continue
+                if (Tools.distance(this, tokenTypes[tokenType].npcLoc) > Constants.NPC_INTERACTION_DISTANCE) {
+                    tokenTypes[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
+                    continue
+                }
+                numTokensNeeded = tokenTable[item as ItemName]
+                if (tokenTypes[tokenType].numOwned < numTokensNeeded) {
+                    tokenTypes[tokenType].error = new Error(`We need ${numTokensNeeded} of ${tokenType} to buy ${itemName}, but we only have ${tokenTypes[tokenType].numOwned}`)
+                    continue
+                }
 
                 // We found it
                 tokenTypeNeeded = tokenType
-                numTokensNeeded = tokenTable[item as ItemName]
                 break
             }
             if (tokenTypeNeeded) break
+            else tokenTypes[tokenType].error = new Error(`${itemName} is not purchaseable with ${tokenType}s`)
         }
-        if (tokenTypeNeeded === undefined) throw `${itemName} is not purchasable with tokens.`
-        const numTokens = this.countItem(tokenTypeNeeded)
-        if (numTokens < numTokensNeeded) throw `We need ${numTokensNeeded} to buy ${itemName}, but we only have ${numTokens}.`
+        if (tokenTypes.monstertoken.error && tokenTypes.funtoken.error && tokenTypes.pvptoken.error) {
+            throw new AggregateError([tokenTypes.monstertoken.error, tokenTypes.funtoken.error, tokenTypes.pvptoken.error])
+        }
 
         const itemReceived = new Promise<void>((resolve, reject) => {
             const buyCheck = (data: CharacterData) => {
