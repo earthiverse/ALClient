@@ -983,10 +983,12 @@ export class Character extends Observer implements CharacterData {
     public async buyWithTokens(itemName: ItemName): Promise<void> {
         const numBefore = this.countItem(itemName)
 
+        const tokenTypes = ["monstertoken", "pvptoken", "funtoken"]
+
         // Check if this item is buyable with tokens, and if we have enough
         let tokenTypeNeeded: "funtoken" | "monstertoken" | "pvptoken"
         let numTokensNeeded: number
-        for (const t in this.G.tokens) {
+        for (const t in tokenTypes) {
             const tokenType = t as "funtoken" | "monstertoken" | "pvptoken"
             const tokenTable = this.G.tokens[tokenType]
             for (const item in tokenTable) {
