@@ -977,57 +977,68 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Buy an item from an NPC (e.g. monsterhunter) with tokens
-     * @param itemName The item to buy with tokens
-     * @returns
+     * @param itemName The item you wish to purchase with tokens
+     * @param useToken If set, we will only use this token to purchase the item, otherwise we will use any available token.
      */
-    public async buyWithTokens(itemName: ItemName): Promise<void> {
+    public async buyWithTokens(itemName: ItemName, useToken?: (keyof GData["tokens"])): Promise<void> {
         const numBefore = this.countItem(itemName)
 
-        const tokenTypes = {
+        const tokenInfo: {
+            [T in (keyof GData["tokens"])]: {
+                error: Error
+                npcLocs: IPosition[]
+            }
+        } = {
             funtoken: {
-                numOwned: this.countItem("funtoken"),
-                npcLoc: Pathfinder.locateNPC("funtokens")[0],
-                error: null
-            },
-            pvptoken: {
-                numOwned: this.countItem("pvptoken"),
-                npcLoc: Pathfinder.locateNPC("pvptokens")[0],
-                error: null
+                error: null,
+                npcLocs: Pathfinder.locateNPC("funtokens")
             },
             monstertoken: {
-                numOwned: this.countItem("monstertoken"),
-                npcLoc: Pathfinder.locateNPC("monsterhunter")[0],
-                error: null
+                error: null,
+                npcLocs: Pathfinder.locateNPC("monsterhunter")
+            },
+            pvptoken: {
+                error: null,
+                npcLocs: Pathfinder.locateNPC("pvptokens")
             }
         }
 
-        // Check if this item is buyable with tokens, and if we have enough
-        let tokenTypeNeeded: "funtoken" | "monstertoken" | "pvptoken"
-        let numTokensNeeded: number
+        // Check if we can purchase the items with tokens
         for (const t in this.G.tokens) {
-            const tokenType = t as "funtoken" | "monstertoken" | "pvptoken"
-            const tokenTable = this.G.tokens[tokenType]
-            for (const item in tokenTable) {
-                if (item !== itemName) continue
-                if (Tools.distance(this, tokenTypes[tokenType].npcLoc) > Constants.NPC_INTERACTION_DISTANCE) {
-                    tokenTypes[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
-                    continue
-                }
-                numTokensNeeded = tokenTable[item as ItemName]
-                if (tokenTypes[tokenType].numOwned < numTokensNeeded) {
-                    tokenTypes[tokenType].error = new Error(`We need ${numTokensNeeded} of ${tokenType} to buy ${itemName}, but we only have ${tokenTypes[tokenType].numOwned}`)
+            const tokenType = t as keyof GData["tokens"]
+            if (useToken && tokenType !== useToken) continue // We don't want to use this token
+
+            const gToken = this.G.tokens[tokenType]
+
+            // TODO: Check if we can use a computer to exchange tokens
+            // Check if we're nearby the token exchange NPC
+            const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
+            if (!inRange) {
+                tokenInfo[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
+                continue
+            }
+
+            if (gToken[itemName] !== undefined) {
+                // Check if we have enough tokens
+                const numTokensNeeded = gToken[itemName]
+                const numTokens = this.countItem(tokenType)
+                if (numTokens < numTokensNeeded) {
+                    tokenInfo[tokenType].error = new Error(`We need ${numTokensNeeded} of ${tokenType} to buy ${itemName}, but we only have ${numTokens}`)
                     continue
                 }
 
-                // We found it
-                tokenTypeNeeded = tokenType
+                // We can afford it!
+                useToken = tokenType
                 break
             }
-            if (tokenTypeNeeded) break
-            else tokenTypes[tokenType].error = new Error(`${itemName} is not purchaseable with ${tokenType}s`)
+
+            tokenInfo[tokenType].error = new Error(`${itemName} is not purchaseable with ${tokenType}`)
         }
-        if (tokenTypes.monstertoken.error && tokenTypes.funtoken.error && tokenTypes.pvptoken.error) {
-            throw new AggregateError([tokenTypes.monstertoken.error, tokenTypes.funtoken.error, tokenTypes.pvptoken.error])
+
+        if (useToken && tokenInfo[useToken].error) {
+            throw tokenInfo[useToken].error
+        } else if (!useToken) {
+            throw new AggregateError([tokenInfo.monstertoken.error, tokenInfo.funtoken.error, tokenInfo.pvptoken.error])
         }
 
         const itemReceived = new Promise<void>((resolve, reject) => {
@@ -1059,7 +1070,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", failCheck)
         })
 
-        const invTokens = this.locateItem(tokenTypeNeeded)
+        const invTokens = this.locateItem(useToken)
         this.socket.emit("exchange_buy", { name: itemName, num: invTokens, q: this.items[invTokens].q })
         return itemReceived
     }
@@ -3782,7 +3793,7 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Swaps two items in your bank
-     * 
+     *
      * @param {number} itemPosA
      * @param {number} itemPosB
      * @param {BankPackName} pack
