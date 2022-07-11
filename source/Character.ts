@@ -217,7 +217,10 @@ export class Character extends Observer implements CharacterData {
         this.name = data.id
 
         // Clear party info if we have no party
-        if (!this.party) this.partyData = undefined
+        if (!data.party) {
+            this.party = undefined
+            this.partyData = undefined
+        }
 
         // Set damage type if not set
         if (!this.damage_type && this.ctype) this.damage_type = this.G.classes[this.ctype].damage_type
