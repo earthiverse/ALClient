@@ -136,13 +136,13 @@ export class Character extends Observer implements CharacterData {
 
     protected async updateLoop(): Promise<void> {
         if (!this.socket || this.socket.disconnected || !this.ready) {
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
@@ -154,11 +154,11 @@ export class Character extends Observer implements CharacterData {
         if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
             // Update now
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         } else {
             // Update in a bit
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
             return
         }
     }
