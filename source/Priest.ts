@@ -22,7 +22,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { id: target, name: "absorb" })
+        this.socket.volatile.emit("skill", { id: target, name: "absorb" })
         return absorbed
     }
 
@@ -43,7 +43,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { id: target, name: "curse" })
+        this.socket.volatile.emit("skill", { id: target, name: "curse" })
         return curseStarted
     }
 
@@ -64,7 +64,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "darkblessing" })
+        this.socket.volatile.emit("skill", { name: "darkblessing" })
         return darkBlessed
     }
 
@@ -141,7 +141,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("death", deathCheck)
         })
 
-        this.socket.emit("heal", { id: id })
+        this.socket.volatile.emit("heal", { id: id })
         return healStarted
     }
 
@@ -162,7 +162,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { name: "partyheal" })
+        this.socket.volatile.emit("skill", { name: "partyheal" })
         return healStarted
     }
 
@@ -186,7 +186,7 @@ export class Priest extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.emit("skill", { id: target, name: "revive", num: essenceOfLife })
+        this.socket.volatile.emit("skill", { id: target, name: "revive", num: essenceOfLife })
         return revived
     }
 }
