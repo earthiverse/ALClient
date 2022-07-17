@@ -796,7 +796,7 @@ export class Pathfinder {
 
             if (maps.includes("level1")) {
                 // Add path across cliff and water
-                addCheatPath({ map: "level1", x: -103, y: 160 }, { map: "level1", x: -297, y: 184 })
+                // addCheatPath({ map: "level1", x: -103, y: 160 }, { map: "level1", x: -297, y: 184 })
                 // Add path up cliff to ladder
                 addCheatPath({ map: "level1", x: -271, y: 616 }, { map: "level1", x: -297, y: 557 })
             }
