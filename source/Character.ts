@@ -136,13 +136,13 @@ export class Character extends Observer implements CharacterData {
 
     protected async updateLoop(): Promise<void> {
         if (!this.socket || this.socket.disconnected || !this.ready) {
-            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop.bind(this), Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop.bind(this), Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
@@ -154,11 +154,11 @@ export class Character extends Observer implements CharacterData {
         if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
             // Update now
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop.bind(this), Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         } else {
             // Update in a bit
-            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop.bind(this), Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
             return
         }
     }
@@ -564,7 +564,7 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("welcome", () => {
             // Send a response that we're ready to go
-            this.socket.volatile.emit("loaded", {
+            this.socket.emit("loaded", {
                 height: 1080,
                 scale: 2,
                 success: 1,
@@ -572,7 +572,7 @@ export class Character extends Observer implements CharacterData {
             } as LoadedData)
 
             // When we're loaded, authenticate
-            this.socket.volatile.emit("auth", {
+            this.socket.emit("auth", {
                 auth: this.userAuth,
                 character: this.characterID,
                 height: 1080,
