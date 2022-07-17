@@ -35,7 +35,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "agitate"
         })
         return agitated
@@ -75,7 +75,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "charge" })
+        this.socket.emit("skill", { name: "charge" })
         return charged
     }
 
@@ -108,7 +108,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "cleave"
         })
         return cleaved
@@ -155,7 +155,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "dash",
             x: to.x,
             y: to.y
@@ -216,7 +216,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", responseCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "hardshell"
         })
         return hardshelled
@@ -251,7 +251,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", {
+        this.socket.emit("skill", {
             name: "stomp"
         })
         return stomped
@@ -297,7 +297,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("game_response", failCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "taunt", id: target })
+        this.socket.emit("skill", { name: "taunt", id: target })
         return tauntStarted
     }
 
@@ -318,7 +318,7 @@ export class Warrior extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "warcry" })
+        this.socket.emit("skill", { name: "warcry" })
         return warCried
     }
 }

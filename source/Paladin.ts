@@ -25,7 +25,7 @@ export class Paladin extends PingCompensatedCharacter {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "mshield" })
+        this.socket.emit("skill", { name: "mshield" })
         return shieldCheck
     }
 
@@ -49,7 +49,7 @@ export class Paladin extends PingCompensatedCharacter {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "mshield" })
+        this.socket.emit("skill", { name: "mshield" })
         return shieldCheck
     }
 
@@ -70,7 +70,7 @@ export class Paladin extends PingCompensatedCharacter {
             }, Constants.TIMEOUT)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", { name: "selfheal" })
+        this.socket.emit("skill", { name: "selfheal" })
         return healed
     }
 }

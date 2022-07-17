@@ -94,7 +94,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", failCheck3)
         })
 
-        this.socket.volatile.emit("skill", { name: "fishing" })
+        this.socket.emit("skill", { name: "fishing" })
         return fished
     }
 
@@ -110,7 +110,7 @@ export class Merchant extends PingCompensatedCharacter {
         //     // TODO
         // })
 
-        this.socket.volatile.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+        this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
         // return joined
     }
 
@@ -227,7 +227,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.volatile.emit("equip", {
+        this.socket.emit("equip", {
             num: itemPos,
             price: price,
             q: quantity,
@@ -298,7 +298,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", successCheck)
             this.socket.on("game_response", failCheck)
         })
-        this.socket.volatile.emit("trade_wishlist", {
+        this.socket.emit("trade_wishlist", {
             level: level,
             name: itemName,
             price: price,
@@ -311,7 +311,7 @@ export class Merchant extends PingCompensatedCharacter {
     // TODO: Add promises
     public async merchantCourage(): Promise<void> {
         if (!this.ready) throw "We aren't ready yet [merchantCourage]."
-        this.socket.volatile.emit("skill", { name: "mcourage" })
+        this.socket.emit("skill", { name: "mcourage" })
     }
 
     public async mine(): Promise<void> {
@@ -394,7 +394,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("player", failCheck3)
         })
 
-        this.socket.volatile.emit("skill", { name: "mining" })
+        this.socket.emit("skill", { name: "mining" })
         return mined
     }
 
@@ -484,7 +484,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("entities", mluckCheck)
             this.socket.on("eval", cooldownCheck)
         })
-        this.socket.volatile.emit("skill", { id: target, name: "mluck" })
+        this.socket.emit("skill", { id: target, name: "mluck" })
 
         // TODO: Short cooldowns don't get set correctly, so this is needed!?
         this.nextSkill.set("mluck", new Date(Date.now() + this.G.skills.mluck.cooldown))
@@ -509,7 +509,7 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("ui", productedCheck)
         })
 
-        this.socket.volatile.emit("skill", { name: "massproduction" })
+        this.socket.emit("skill", { name: "massproduction" })
         return massProductioned
     }
 
@@ -529,7 +529,7 @@ export class Merchant extends PingCompensatedCharacter {
     //         this.socket.on("ui", productedCheck)
     //     })
 
-    //     this.socket.volatile.emit("skill", { name: "massproductionpp" })
+    //     this.socket.emit("skill", { name: "massproductionpp" })
     //     return massProductioned
     // }
 }
