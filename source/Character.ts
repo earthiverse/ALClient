@@ -1011,12 +1011,13 @@ export class Character extends Observer implements CharacterData {
 
             const gToken = this.G.tokens[tokenType]
 
-            // TODO: Check if we can use a computer to exchange tokens
-            // Check if we're nearby the token exchange NPC
-            const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
-            if (!inRange) {
-                tokenInfo[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
-                continue
+            if (!this.hasItem("computer") || !this.hasItem("supercomputer")) {
+                // Check if we're nearby the token exchange NPC
+                const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
+                if (!inRange) {
+                    tokenInfo[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
+                    continue
+                }
             }
 
             if (gToken[itemName] !== undefined) {
