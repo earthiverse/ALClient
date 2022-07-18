@@ -3498,6 +3498,9 @@ export class Character extends Observer implements CharacterData {
 
             // Check if our destination is an NPC role
             if (!fixedTo) {
+                // Move within NPC buy distance
+                if (!options.getWithin) options.getWithin = Constants.NPC_INTERACTION_DISTANCE / 2
+
                 const locations = Pathfinder.locateNPC(to as NPCName)
                 // Set `to` to the closest NPC
                 let closestDistance: number = Number.MAX_VALUE
@@ -3516,6 +3519,9 @@ export class Character extends Observer implements CharacterData {
             if (!fixedTo) {
                 const gItem = this.G.items[to as ItemName]
                 if (gItem) {
+                    // Move within NPC buy distance
+                    if (!options.getWithin) options.getWithin = Constants.NPC_INTERACTION_DISTANCE / 2
+
                     const locations: IPosition[] = []
                     for (const map in this.G.maps) {
                         if ((this.G.maps[map as MapName] as GMap).ignore) continue
