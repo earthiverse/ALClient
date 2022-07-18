@@ -628,6 +628,9 @@ export class Character extends Observer implements CharacterData {
         return connected
     }
 
+    /**
+     * Disconnects your bot from the server, cancels all timeouts that have been registered, and turns off all socket listeners.
+     */
     public disconnect(): void {
         // Close & remove the socket
         if (this.socket) {

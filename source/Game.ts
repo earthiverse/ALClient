@@ -224,7 +224,7 @@ export class Game {
             } else if (loginResult && loginResult.message) {
             // We failed logging in, and we have a reason from the server
                 console.error(loginResult.message)
-                throw loginResult.message
+                throw new Error(loginResult.message)
             } else {
             // We failed logging in, but we don't know what went wrong
                 console.error(login.data)
@@ -278,7 +278,7 @@ export class Game {
     }
 
     static async logoutEverywhere(): Promise<unknown> {
-        if (!this.user) throw ("You must login first.")
+        if (!this.user) throw new Error("You must login first.")
 
         const response = await axios.post<unknown>("https://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         this.user = undefined
