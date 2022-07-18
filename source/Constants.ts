@@ -1,7 +1,7 @@
 import { MapName, MonsterName } from "./definitions/adventureland-data.js"
 
 export class Constants {
-    /** Various client related things */
+    // Various client related things
     static PATHFINDER_FIRST_MAP: MapName = "main"
     static MAX_PINGS = 50
     static PING_EVERY_MS = 30000
@@ -9,6 +9,7 @@ export class Constants {
     static RECONNECT_TIMEOUT_MS = 40000
     static STALE_MONSTER_MS = 60000
     static STALE_PROJECTILE_MS = 10000
+    /** How long we wait for a response from the server before rejecting the promise */
     static TIMEOUT = 1000
     static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
 

@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -17,7 +17,7 @@ import { isDeepStrictEqual } from "util"
 import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
 
 export class Character extends Observer implements CharacterData {
-    protected userAuth: string
+    public userAuth: string
     public characterID: string
     public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
@@ -1231,6 +1231,126 @@ export class Character extends Observer implements CharacterData {
         return targets
     }
 
+    /**
+     * Calculates the compound chance for the given item using the given scroll and offering.
+     *
+     * You need to be near the upgrade NPC, or have a computer, in order to calculate the compound chance.
+     */
+    public async calculateCompound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
+        if (!this.ready) throw new Error("We aren't ready yet [compound].")
+        const item1Info = this.items[item1Pos]
+        const item2Info = this.items[item2Pos]
+        const item3Info = this.items[item3Pos]
+        const cscrollInfo = this.items[cscrollPos]
+        if (!item1Info) throw new Error(`There is no item in inventory slot ${item1Pos} (item1).`)
+        if (!item2Info) throw new Error(`There is no item in inventory slot ${item2Pos} (item2).`)
+        if (!item3Info) throw new Error(`There is no item in inventory slot ${item3Pos} (item3).`)
+        if (!cscrollInfo) throw new Error(`There is no item in inventory slot ${cscrollPos} (cscroll).`)
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
+        }
+        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) throw new Error("You can only combine 3 of the same items.")
+        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) throw new Error("You can only combine 3 items of the same level.")
+
+        const compoundChance = new Promise<GameResponseDataUpgradeChance>((resolve, reject) => {
+            const gameResponseCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "bank_restrictions" && data.place == "compound") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("You can't compound items in the bank.")
+                    } else if (data.response == "compound_chance" && data.item.name == item1Info.name && data.item.level == item1Info.level) {
+                        resolve(data)
+                    }
+                } else if (typeof data == "string") {
+                    if (data == "compound_no_item") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject()
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", gameResponseCheck)
+                reject(`calculateCompound timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", gameResponseCheck)
+        })
+
+        this.socket.emit("compound", {
+            calculate: true,
+            clevel: item1Info.level,
+            items: [item1Pos, item2Pos, item3Pos],
+            offering_num: offeringPos,
+            scroll_num: cscrollPos
+        })
+        return compoundChance
+    }
+
+    /**
+     * Calculates the upgrade chance for the given item using the given scroll and offering.
+     *
+     * You need to be near the upgrade NPC, or have a computer, in order to calculate the upgrade chance.
+     *
+     * @param itemPos The position of the item to upgrade in your inventory
+     * @param scrollPos The position of the scroll to use to upgrade the item in your inventory
+     * @param offeringPos The position of the offering to use to upgrade the item in your inventory
+     * @returns
+     */
+    public async calculateUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
+        if (!this.ready) throw new Error("We aren't ready yet [upgrade].")
+        if (this.G.maps[this.map].mount) throw new Error("We can't upgrade things in the bank.")
+
+        const itemInfo = this.items[itemPos]
+        const scrollInfo = this.items[scrollPos]
+        if (!itemInfo) throw new Error(`There is no item in inventory slot ${itemPos}.`)
+        if (this.G.items[itemInfo.name].upgrade == undefined) throw new Error("This item is not upgradable.")
+        if (!scrollInfo) throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
+        }
+
+        const upgradeChance = new Promise<GameResponseDataUpgradeChance>((resolve, reject) => {
+            const gameResponseCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "bank_restrictions" && data.place == "upgrade") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("You can't upgrade items in the bank.")
+                    } else if (data.response == "item_locked" && data.place == "upgrade") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("You can't upgrade locked items.")
+                    } else if (data.response == "get_closer" && data.place == "upgrade") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("We are too far away to upgrade items.")
+                    } else if (data.response == "upgrade_chance" && data.item.name == itemInfo.name && data.item.level == itemInfo.level) {
+                        this.socket.off("game_response", gameResponseCheck)
+                        resolve(data)
+                    }
+                } else if (typeof data == "string") {
+                    if (data == "bank_restrictions") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("We can't upgrade things in the bank.")
+                    } else if (data == "upgrade_in_progress") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject("We are already upgrading something.")
+                    } else if (data == "upgrade_incompatible_scroll") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
+                    }
+                }
+            }
+            setTimeout(() => {
+                this.socket.off("game_response", gameResponseCheck)
+                reject(`calculateUpgrade timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", gameResponseCheck)
+        })
+
+        this.socket.emit("upgrade", { calculate: true, clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
+        return upgradeChance
+    }
+
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
         const gSkill = this.G.skills[skill]
 
@@ -1650,6 +1770,16 @@ export class Character extends Observer implements CharacterData {
         return closed
     }
 
+    /**
+     * Combines 3 items to 1 at a higher level
+     *
+     * @param item1Pos
+     * @param item2Pos
+     * @param item3Pos
+     * @param cscrollPos
+     * @param offeringPos
+     * @returns
+     */
     public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [compound].")
         const item1Info = this.items[item1Pos]

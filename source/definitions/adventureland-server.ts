@@ -461,7 +461,22 @@ export type GameLogDataString =
     /** Sent when you chat with { code: true } */
     | "You can't chat this fast with Code yet. The interval is 15 seconds."
 
-export type GameResponseData = GameResponseDataObject | GameResponseDataString
+export type GameResponseData =
+    GameResponseDataObject
+    | GameResponseDataString
+    | GameResponseDataUpgradeChance
+
+export type GameResponseDataUpgradeChance = {
+    response: "compound_chance" | "upgrade_chance",
+    /** The chance for a success */
+    chance: number,
+    /** The item being compounded */
+    item: ItemData,
+    /** The scroll used for the compound calculation */
+    scroll: ItemName,
+    /** Related to compound chance */
+    grace: number
+}
 
 // TODO: split these in to other objects
 export type GameResponseDataObject = {
@@ -1315,7 +1330,7 @@ export type ClientToServerEvents = {
     "buy": (data: { name: ItemName, quantity?: number }) => void
     "cm": (data: { message: string, to: string[] }) => void
     // TODO: Create CompoundData type
-    "compound": (data: { clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
+    "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
     // TODO: Create CraftData type
     "craft": (data: { items: [number, number][] }) => void
     "donate": (donation: { gold: number }) => void
@@ -1372,6 +1387,6 @@ export type ClientToServerEvents = {
     "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
     "trade_wishlist": (data: { level?: number, name: ItemName, price: number, q: number, slot: TradeSlotType }) => void
     "unequip": (data: { slot: SlotType | TradeSlotType }) => void
-    "upgrade": (data: { clevel: number, item_num: number, offering_num: number, scroll_num: number }) => void
+    "upgrade": (data: { calculate?: boolean, clevel: number, item_num: number, offering_num: number, scroll_num: number }) => void
     "use": (data: { item: "hp" | "mp" }) => void
 }
