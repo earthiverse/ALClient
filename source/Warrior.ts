@@ -8,7 +8,7 @@ export class Warrior extends PingCompensatedCharacter {
 
     // TODO: Investigate why the cooldown check doesn't work.
     public async agitate(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [agitate]."
+        if (!this.ready) throw new Error("We aren't ready yet [agitate].")
         const agitated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]agitate['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -42,7 +42,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public async charge(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [charge]."
+        if (!this.ready) throw new Error("We aren't ready yet [charge].")
         const charged = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
                 if (!data.hitchhikers) return
@@ -80,7 +80,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public async cleave(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [cleave]."
+        if (!this.ready) throw new Error("We aren't ready yet [cleave].")
 
         const cleaved = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -125,7 +125,7 @@ export class Warrior extends PingCompensatedCharacter {
      * @memberof Warrior
      */
     public async dash(to: IPosition): Promise<void> {
-        if (to.map && to.map !== this.map) throw "We cannot dash across maps."
+        if (to.map && to.map !== this.map) throw new Error("We cannot dash across maps.")
 
         const dashed = new Promise<void>((resolve, reject) => {
             const dashedCheck = (data: EvalData) => {
@@ -164,7 +164,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public async hardshell(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [hardshell]."
+        if (!this.ready) throw new Error("We aren't ready yet [hardshell].")
         const hardshelled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]hardshell['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -224,7 +224,7 @@ export class Warrior extends PingCompensatedCharacter {
 
     // TODO: Return ids of those monsters & players that are now stomped
     public async stomp(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [stomp]."
+        if (!this.ready) throw new Error("We aren't ready yet [stomp].")
         const stomped = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]stomp['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -258,7 +258,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public async taunt(target: string): Promise<string> {
-        if (!this.ready) throw "We aren't ready yet [taunt]."
+        if (!this.ready) throw new Error("We aren't ready yet [taunt].")
         const tauntStarted = new Promise<string>((resolve, reject) => {
             const tauntCheck = (data: ActionData) => {
                 if (data.attacker == this.id
@@ -302,7 +302,7 @@ export class Warrior extends PingCompensatedCharacter {
     }
 
     public async warcry(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [warcry]."
+        if (!this.ready) throw new Error("We aren't ready yet [warcry].")
         const warCried = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]warcry['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

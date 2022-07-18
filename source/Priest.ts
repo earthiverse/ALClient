@@ -6,7 +6,7 @@ export class Priest extends PingCompensatedCharacter {
     ctype: "priest" = "priest"
 
     public async absorbSins(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [absorbSins]."
+        if (!this.ready) throw new Error("We aren't ready yet [absorbSins].")
         const absorbed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -27,7 +27,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public async curse(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [curse]."
+        if (!this.ready) throw new Error("We aren't ready yet [curse].")
         const curseStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -48,7 +48,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public async darkBlessing(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [darkBlessing]."
+        if (!this.ready) throw new Error("We aren't ready yet [darkBlessing].")
         const darkBlessed = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -69,8 +69,8 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public async heal(id: string): Promise<string> {
-        if (!this.ready) throw "We aren't ready yet [heal]."
-        // if (!this.game.entities.has(id) && !this.game.players.has(id)) throw `No Entity with ID '${id}'`
+        if (!this.ready) throw new Error("We aren't ready yet [heal].")
+        // if (!this.game.entities.has(id) && !this.game.players.has(id)) throw new Error(`No Entity with ID '${id}'`)
         const healStarted = new Promise<string>((resolve, reject) => {
             const deathCheck = (data: DeathData) => {
                 if (data.id == id) {
@@ -146,7 +146,7 @@ export class Priest extends PingCompensatedCharacter {
     }
 
     public async partyHeal(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [partyHeal]."
+        if (!this.ready) throw new Error("We aren't ready yet [partyHeal].")
         const healStarted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]partyheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -168,8 +168,8 @@ export class Priest extends PingCompensatedCharacter {
 
     // NOTE: Untested. We might need to increase the timeout?
     public async revive(target: string, essenceOfLife = this.locateItem("essenceoflife")): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [revive]."
-        if (essenceOfLife === undefined) throw "We don't have any essenceoflife in our inventory."
+        if (!this.ready) throw new Error("We aren't ready yet [revive].")
+        if (essenceOfLife === undefined) throw new Error("We don't have any essenceoflife in our inventory.")
 
         const revived = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {

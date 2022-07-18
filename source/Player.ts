@@ -77,7 +77,7 @@ export class Player implements PlayerData {
     }
 
     public updateData(data: PlayerData): void {
-        if (this.id !== undefined && this.id !== data.id) throw "The entity's ID does not match"
+        if (this.id !== undefined && this.id !== data.id) throw new Error("The entity's ID does not match")
 
         // Set everything
         for (const key in data) this[key] = data[key]
