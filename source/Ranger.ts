@@ -6,7 +6,7 @@ export class Ranger extends PingCompensatedCharacter {
     ctype: "ranger" = "ranger"
 
     public async fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
-        if (!this.ready) throw "We aren't ready yet [fiveShot]."
+        if (!this.ready) throw new Error("We aren't ready yet [fiveShot].")
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
 
@@ -78,7 +78,7 @@ export class Ranger extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public async fourFinger(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [fourFinger]."
+        if (!this.ready) throw new Error("We aren't ready yet [fourFinger].")
         // TODO: Check that the target is not a monster.
 
         const marked = new Promise<void>((resolve, reject) => {
@@ -103,7 +103,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public async huntersMark(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [huntersMark]."
+        if (!this.ready) throw new Error("We aren't ready yet [huntersMark].")
         const marked = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]huntersmark['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -126,8 +126,8 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public async piercingShot(target: string): Promise<string> {
-        if (!this.ready) throw "We aren't ready yet [piercingShot]."
-        if (this.G.skills.piercingshot.mp > this.mp) throw "Not enough MP to use piercingShot"
+        if (!this.ready) throw new Error("We aren't ready yet [piercingShot].")
+        if (this.G.skills.piercingshot.mp > this.mp) throw new Error("Not enough MP to use piercingShot")
 
         const piercingShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
@@ -164,8 +164,8 @@ export class Ranger extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public async poisonArrow(target: string, poison = this.locateItem("poison")): Promise<string> {
-        if (!this.ready) throw "We aren't ready yet [poisonArrow]."
-        if (poison === undefined) throw "We need poison to use this skill."
+        if (!this.ready) throw new Error("We aren't ready yet [poisonArrow].")
+        if (poison === undefined) throw new Error("We need poison to use this skill.")
 
         const poisonArrowed = new Promise<string>((resolve, reject) => {
             let projectile: string
@@ -207,8 +207,8 @@ export class Ranger extends PingCompensatedCharacter {
      * @memberof Ranger
      */
     public async superShot(target: string): Promise<string> {
-        if (!this.ready) throw "We aren't ready yet [superShot]."
-        if (this.G.skills.supershot.mp > this.mp) throw "Not enough MP to use superShot"
+        if (!this.ready) throw new Error("We aren't ready yet [superShot].")
+        if (this.G.skills.supershot.mp > this.mp) throw new Error("Not enough MP to use superShot")
 
         const superShotStarted = new Promise<string>((resolve, reject) => {
             let projectile: string
@@ -252,7 +252,7 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     public async threeShot(target1: string, target2: string, target3: string): Promise<string[]> {
-        if (!this.ready) throw "We aren't ready yet [threeShot]."
+        if (!this.ready) throw new Error("We aren't ready yet [threeShot].")
         const attackStarted = new Promise<string[]>((resolve, reject) => {
             const projectiles: string[] = []
 

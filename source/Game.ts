@@ -29,7 +29,7 @@ export class Game {
     }
 
     static async deleteMail(mailID: string): Promise<boolean> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         const response = await axios.post<MailDeleteResponse[]>("https://adventure.land/api/delete_mail", `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const data = response.data[0]
         if (data.message == "Mail deleted.") return true
@@ -37,7 +37,7 @@ export class Game {
     }
 
     static async disconnectCharacter(characterName: string): Promise<boolean> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         const response = await axios.post<DisconnectCharacterResponse[]>("https://adventure.land/api/disconnect_character", `method=disconnect_character&arguments={"name":"${characterName}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const data = response.data[0]
         if (data.message == "Sent the disconnect signal to the server" || data.message == "Character is not in game.") return true
@@ -76,7 +76,7 @@ export class Game {
     }
 
     static async getMail(all = true): Promise<MailMessageData[]> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         let response = await axios.post<MailData[]>("https://adventure.land/api/pull_mail", "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         const mail: MailMessageData[] = []
 
@@ -95,7 +95,7 @@ export class Game {
     }
 
     static async getMerchants(): Promise<PullMerchantsCharData[]> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         //const merchants: PullMerchantsData[] = []
         const merchants: PullMerchantsCharData[] = []
 
@@ -180,7 +180,7 @@ export class Game {
      * @param mailID The mail message to mark as 'read'
      */
     static async markMailAsRead(mailID: string): Promise<void> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         const response = await axios.post("https://adventure.land/api/read_mail", `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         return response.data[0]
     }
@@ -228,7 +228,7 @@ export class Game {
             } else {
             // We failed logging in, but we don't know what went wrong
                 console.error(login.data)
-                throw "Failed logging in."
+                throw new Error("Failed logging in.")
             }
         }
 
@@ -240,7 +240,7 @@ export class Game {
         try {
             fileData = fs.readFileSync(path, "utf8")
         } catch (e) {
-            throw `Could not locate '${path}'.`
+            throw new Error(`Could not locate '${path}'.`)
         }
         const data: { email: string, password: string, mongo: string, userAuth?: string, userID?: string } = JSON.parse(fileData)
 
@@ -278,7 +278,7 @@ export class Game {
     }
 
     static async logoutEverywhere(): Promise<unknown> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw ("You must login first.")
 
         const response = await axios.post<unknown>("https://adventure.land/api/logout_everywhere", "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
         this.user = undefined
@@ -361,13 +361,13 @@ export class Game {
     }
 
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<PingCompensatedCharacter> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
-        if (!this.characters[cName]) throw `You don't have a character with the name '${cName}'`
+        if (!this.characters[cName]) throw new Error(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         // Create the player and connect
@@ -432,7 +432,7 @@ export class Game {
     }
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.G) await this.getGData()
 
@@ -446,7 +446,7 @@ export class Game {
      * @returns true if successfully updated
      */
     static async updateServersAndCharacters(): Promise<boolean> {
-        if (!this.user) throw "You must login first."
+        if (!this.user) throw new Error("You must login first.")
         const data = await axios.post(`http${this.user.secure ? "s" : ""}://adventure.land/api/servers_and_characters`, "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
 
         if (data.status == 200) {
@@ -467,6 +467,6 @@ export class Game {
             console.error(data)
         }
 
-        throw "Error fetching http://adventure.land/api/servers_and_characters"
+        throw new Error("Error fetching http://adventure.land/api/servers_and_characters")
     }
 }

@@ -8,7 +8,7 @@ export class Mage extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public async alchemy(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [alchemy]."
+        if (!this.ready) throw new Error("We aren't ready yet [alchemy].")
         const performedAlchemy = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -30,7 +30,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public async blink(x: number, y: number): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [blink]."
+        if (!this.ready) throw new Error("We aren't ready yet [blink].")
 
         // Blink rounds to the nearest 10 on the server, so we're going to preemptively
         // round to the nearest 10 and check if we can blink to that spot to avoid
@@ -43,7 +43,7 @@ export class Mage extends PingCompensatedCharacter {
             y = roundedY
         }
 
-        if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) throw `We cannot blink to ${this.map},${x},${y}`
+        if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) throw new Error(`We cannot blink to ${this.map},${x},${y}`)
 
         const blinked = new Promise<void>((resolve, reject) => {
             const successCheck = (data: NewMapData) => {
@@ -79,7 +79,7 @@ export class Mage extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public async burst(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [burst]."
+        if (!this.ready) throw new Error("We aren't ready yet [burst].")
         const bursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]burst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -104,8 +104,8 @@ export class Mage extends PingCompensatedCharacter {
      * @param targets Put in pairs of entity IDs, and how much mp to spend attacking each target. E.g.: [["12345", "100"]]
      */
     public async cburst(targets: [string, number][]): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [cburst]."
-        if (targets.length == 0) throw "No targets were given to cburst."
+        if (!this.ready) throw new Error("We aren't ready yet [cburst].")
+        if (targets.length == 0) throw new Error("No targets were given to cburst.")
         const cbursted = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -172,7 +172,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public async energize(target: string, mp?: number): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [energize]."
+        if (!this.ready) throw new Error("We aren't ready yet [energize].")
         const energized = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]energize['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -194,8 +194,8 @@ export class Mage extends PingCompensatedCharacter {
 
     // NOTE: UNTESTED
     public async entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [entangle]."
-        if (essenceofnature === undefined) throw "We need an essenceofnature in order to entangle."
+        if (!this.ready) throw new Error("We aren't ready yet [entangle].")
+        if (essenceofnature === undefined) throw new Error("We need an essenceofnature in order to entangle.")
 
         const tangled = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
@@ -220,7 +220,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public async light(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [light]."
+        if (!this.ready) throw new Error("We aren't ready yet [light].")
         const lit = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]light['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -242,7 +242,7 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     public async magiport(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [magiport]."
+        if (!this.ready) throw new Error("We aren't ready yet [magiport].")
         const magiportOfferSent = new Promise<void>((resolve, reject) => {
             const magiportCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
@@ -275,7 +275,7 @@ export class Mage extends PingCompensatedCharacter {
      * @memberof Mage
      */
     public async applyReflection(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [applyReflection]."
+        if (!this.ready) throw new Error("We aren't ready yet [applyReflection].")
         const relectioned = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {

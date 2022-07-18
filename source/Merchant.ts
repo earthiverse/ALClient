@@ -15,7 +15,7 @@ export class Merchant extends PingCompensatedCharacter {
      * @memberof Merchant
      */
     public async fish(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [fish]."
+        if (!this.ready) throw new Error("We aren't ready yet [fish].")
         let startedFishing = false
         if (this.c.fishing) startedFishing = true // We're already fishing!?
         const fished = new Promise<void>((resolve, reject) => {
@@ -100,10 +100,10 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public async joinGiveaway(slot: TradeSlotType, id: string, rid: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [joinGiveaway]."
+        if (!this.ready) throw new Error("We aren't ready yet [joinGiveaway].")
         const merchant = this.players.get(id)
-        if (!merchant || Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw `${id} is too far away.`
-        if (!merchant.slots[slot]?.giveaway) throw `${id}'s slot ${slot} is not a giveaway.`
+        if (!merchant || Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw new Error(`${id} is too far away.`)
+        if (!merchant.slots[slot]?.giveaway) throw new Error(`${id}'s slot ${slot} is not a giveaway.`)
         if (merchant.slots[slot]?.list.includes(this.id)) return // We've already joined it
 
         // const joined = new Promise<void>((resolve, reject) => {
@@ -125,11 +125,11 @@ export class Merchant extends PingCompensatedCharacter {
      * @memberof Merchant
      */
     public async listForSale(itemPos: number, price: number, tradeSlot?: TradeSlotType, quantity = 1): Promise<unknown> {
-        if (!this.ready) throw "We aren't ready yet [listForSale]."
+        if (!this.ready) throw new Error("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
-        if (!itemInfo) throw `We do not have an item in slot ${itemPos}`
-        if (price <= 0) throw "The lowest you can set the price is 1."
-        if (quantity <= 0) throw "The lowest you can set the quantity to is 1."
+        if (!itemInfo) throw new Error(`We do not have an item in slot ${itemPos}`)
+        if (price <= 0) throw new Error("The lowest you can set the price is 1.")
+        if (quantity <= 0) throw new Error("The lowest you can set the quantity to is 1.")
         const gInfo = this.G.items[itemInfo.name]
         if (!tradeSlot && itemInfo.q) {
             // Look for an existing item to stack for sale
@@ -159,7 +159,7 @@ export class Merchant extends PingCompensatedCharacter {
                 tradeSlot = slotName as TradeSlotType
                 break
             }
-            if (!tradeSlot) throw "We don't have an empty trade slot to list the item for sale."
+            if (!tradeSlot) throw new Error("We don't have an empty trade slot to list the item for sale.")
         }
         const slotInfo = this.slots[tradeSlot]
         if (slotInfo) {
@@ -181,7 +181,7 @@ export class Merchant extends PingCompensatedCharacter {
                     await this.swapItems(0, itemPos)
                 }
             } else {
-                throw `We are already trading something in ${tradeSlot}.`
+                throw new Error(`We are already trading something in ${tradeSlot}.`)
             }
         }
 
@@ -250,10 +250,10 @@ export class Merchant extends PingCompensatedCharacter {
      * @param level For equipment, the level of the item you wish to buy
      */
     public async listForPurchase(itemName: ItemName, price: number, tradeSlot?: TradeSlotType, quantity = 1, level?: number): Promise<unknown> {
-        if (!this.ready) throw "We aren't ready yet [listForPurchase]."
+        if (!this.ready) throw new Error("We aren't ready yet [listForPurchase].")
 
-        if (price <= 0) throw "The lowest you can set the price is 1."
-        if (quantity <= 0) throw "The lowest you can set the quantity to is 1."
+        if (price <= 0) throw new Error("The lowest you can set the price is 1.")
+        if (quantity <= 0) throw new Error("The lowest you can set the quantity to is 1.")
         if (!tradeSlot) {
             for (const slotName in this.slots) {
                 if (!slotName.startsWith("trade")) continue // Not a trade slot
@@ -263,10 +263,10 @@ export class Merchant extends PingCompensatedCharacter {
                 tradeSlot = slotName as TradeSlotType
                 break
             }
-            if (!tradeSlot) throw "We don't have any empty trade slot to wishlist the item."
+            if (!tradeSlot) throw new Error("We don't have any empty trade slot to wishlist the item.")
         } else {
-            if (this.slots[tradeSlot]) throw `We already have something listed in '${tradeSlot}'.`
-            if (this.slots[tradeSlot] === undefined) throw `We don't have a trade slot '${tradeSlot}'.`
+            if (this.slots[tradeSlot]) throw new Error(`We already have something listed in '${tradeSlot}'.`)
+            if (this.slots[tradeSlot] === undefined) throw new Error(`We don't have a trade slot '${tradeSlot}'.`)
         }
         const wishListed = new Promise<void>((resolve, reject) => {
             const successCheck = (data: CharacterData) => {
@@ -310,12 +310,12 @@ export class Merchant extends PingCompensatedCharacter {
 
     // TODO: Add promises
     public async merchantCourage(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [merchantCourage]."
+        if (!this.ready) throw new Error("We aren't ready yet [merchantCourage].")
         this.socket.emit("skill", { name: "mcourage" })
     }
 
     public async mine(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [mine]."
+        if (!this.ready) throw new Error("We aren't ready yet [mine].")
         let startedMining = false
         if (this.c.mining) startedMining = true // We're already mining!?
         const mined = new Promise<void>((resolve, reject) => {
@@ -399,16 +399,16 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public async mluck(target: string): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [mluck]."
+        if (!this.ready) throw new Error("We aren't ready yet [mluck].")
         let previousMs = 0
         if (target !== this.id) {
             const player = this.players.get(target)
-            if (!player) throw `Could not find ${target} to mluck.`
-            if (player.npc) throw `${target} is an NPC. You can't mluck NPCs.`
+            if (!player) throw new Error(`Could not find ${target} to mluck.`)
+            if (player.npc) throw new Error(`${target} is an NPC. You can't mluck NPCs.`)
             if (player.s.mluck && player.s.mluck.strong // They have a strong mluck
                 && ((player.owner && player.owner !== this.owner) // If they are public, check if they are from different owners
                     || (player.s.mluck.f !== this.id))) { // Else, rely on the character id
-                throw `${target} has a strong mluck from ${player.s.mluck.f}.`
+                throw new Error(`${target} has a strong mluck from ${player.s.mluck.f}.`)
             }
             previousMs = player.s?.mluck?.ms ?? 0
         } else {
@@ -493,7 +493,7 @@ export class Merchant extends PingCompensatedCharacter {
     }
 
     public async massProduction(): Promise<void> {
-        if (!this.ready) throw "We aren't ready yet [massProduction]."
+        if (!this.ready) throw new Error("We aren't ready yet [massProduction].")
         const massProductioned = new Promise<void>((resolve, reject) => {
             const productedCheck = (data: UIData) => {
                 if (data.type == "massproduction" && data.name == this.id) {
