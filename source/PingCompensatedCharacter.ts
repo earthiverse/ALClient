@@ -154,7 +154,7 @@ export class PingCompensatedCharacter extends Character {
             return
         }
 
-        this.sendPing(false)
+        this.sendPing(false).catch(console.error)
         if (this.pings.length > Math.ceil(Constants.MAX_PINGS / 10)) {
             this.timeouts.set("pingLoop", setTimeout(this.pingLoop.bind(this), Constants.PING_EVERY_MS))
         } else {

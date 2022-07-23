@@ -340,7 +340,7 @@ export class Character extends Observer implements CharacterData {
                     time: Date.now(),
                     x: this.x,
                     y: this.y
-                }])
+                }]).catch(console.error)
             } else if (data.response == "ex_condition") {
                 // The condition expired
                 delete this.s[data.name]
@@ -487,7 +487,7 @@ export class Character extends Observer implements CharacterData {
                         time: Date.now(),
                         x: this.x,
                         y: this.y
-                    })
+                    }).catch(console.error)
                 }
             })
         }
@@ -607,7 +607,7 @@ export class Character extends Observer implements CharacterData {
             const startCheck = () => {
                 this.socket.off("game_error", failCheck)
                 this.socket.off("disconnect_reason", failCheck2)
-                this.updateLoop()
+                this.updateLoop().catch(console.error)
                 resolve()
             }
 
@@ -1368,6 +1368,9 @@ export class Character extends Observer implements CharacterData {
         let baseDamage: number = this.attack
         if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
         if (gSkill?.damage) baseDamage = this.G.skills[skill].damage
+
+        // Zapper zap does exactly 200 damage
+        if (skill == "zapperzap" && gSkill?.damage) return [gSkill.damage, gSkill.damage]
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
@@ -3628,19 +3631,22 @@ export class Character extends Observer implements CharacterData {
 
             // Check if our destination is an NPC role
             if (!fixedTo) {
-                // Move within NPC buy distance
-                if (!options.getWithin) options.getWithin = Constants.NPC_INTERACTION_DISTANCE / 2
-
                 const locations = Pathfinder.locateNPC(to as NPCName)
-                // Set `to` to the closest NPC
-                let closestDistance: number = Number.MAX_VALUE
-                for (const location of locations) {
-                    const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
-                    const distance = Pathfinder.computePathCost(potentialPath)
-                    if (distance < closestDistance) {
-                        path = potentialPath
-                        fixedTo = path[path.length - 1]
-                        closestDistance = distance
+
+                if (locations.length) {
+                    // Move within NPC buy distance
+                    if (!options.getWithin) options.getWithin = Constants.NPC_INTERACTION_DISTANCE / 2
+
+                    // Set `to` to the closest NPC
+                    let closestDistance: number = Number.MAX_VALUE
+                    for (const location of locations) {
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
+                        const distance = Pathfinder.computePathCost(potentialPath)
+                        if (distance < closestDistance) {
+                            path = potentialPath
+                            fixedTo = path[path.length - 1]
+                            closestDistance = distance
+                        }
                     }
                 }
             }
@@ -3918,9 +3924,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [stopSmartMove].")
         this.smartMoving = undefined
         this.lastSmartMove = Date.now()
-        if (this?.c?.town) {
-            this.stopWarpToTown()
-        }
+        if (this?.c?.town) this.stopWarpToTown().catch(console.error)
         return this.move(this.x, this.y, { disableAlreadyThereCheck: true, resolveOnStart: true })
     }
 

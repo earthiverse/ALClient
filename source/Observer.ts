@@ -504,7 +504,7 @@ export class Observer {
                     try {
                         const ids = []
                         for (const toDelete of toDeletes) ids.push(toDelete._id)
-                        if (ids.length) EntityModel.deleteMany({ _id: { $in: ids }, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec()
+                        if (ids.length) EntityModel.deleteMany({ _id: { $in: ids }, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(console.error)
                     } catch (e) {
                         console.error(e)
                         console.log("DEBUG -----")
