@@ -3785,12 +3785,12 @@ export class Character extends Observer implements CharacterData {
                         await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                     } catch (e) {
                         if (!this.canUse("blink")) break // We can't use it, don't bother trying again
-                        if (options?.showConsole)console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
+                        if (options?.showConsole) console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
                         try {
                             await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))
                             await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                         } catch (e2) {
-                            if (options?.showConsole)console.error(`Failed blinking while smartMoving: ${e2}`)
+                            if (options?.showConsole) console.error(`Failed blinking while smartMoving: ${e2}`)
                             break
                         }
                     }
@@ -3846,7 +3846,7 @@ export class Character extends Observer implements CharacterData {
                     if (currentMove.map !== this.map) {
                         throw new Error(`We are supposed to be in ${currentMove.map}, but we are in ${this.map}`)
                     }
-                    if (options.resolveOnFinalMoveStart && i == path.length - 1) {
+                    if (options.resolveOnFinalMoveStart && i >= path.length - 1) {
                         await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true, resolveOnStart: true })
                     } else {
                         await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
