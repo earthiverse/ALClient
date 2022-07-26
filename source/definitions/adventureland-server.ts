@@ -1110,6 +1110,7 @@ export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive
 } & {
     egghunt?: boolean
+    // TODO: This isn't a boolean, it's an object with an 'end' time. Do all events from G.events have this format?
     goobrawl?: boolean
     halloween?: boolean
     holidayseason?: boolean
