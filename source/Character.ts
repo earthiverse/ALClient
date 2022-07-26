@@ -2973,7 +2973,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async move(x: number, y: number, options?: { disableAlreadyThereCheck?: boolean, disableSafetyCheck?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
+    public async move(x: number, y: number, options?: { disableAlreadyThereCheck?: boolean, disableSafetyCheck?: boolean, disableErrorLogs?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
         if (!this.ready) throw new Error("We aren't ready yet [move].")
         if (x == undefined || y == undefined) throw new Error("Please provide an x and y coordinate to move.")
         if (typeof x !== "number" || typeof y !== "number") throw new Error("Please use a number for both x and y.")
@@ -2983,7 +2983,7 @@ export class Character extends Observer implements CharacterData {
             to = Pathfinder.getSafeWalkTo(
                 { map: this.map, x: this.x, y: this.y },
                 { map: this.map, x, y })
-            if (to.x !== x || to.y !== y) {
+            if ((to.x !== x || to.y !== y) && !options?.disableErrorLogs) {
                 console.warn(`move: We can't move to {x: ${x}, y: ${y}} safely. We will move to {x: ${to.x}, y: ${to.y}}.`)
             }
         }

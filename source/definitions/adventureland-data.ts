@@ -232,6 +232,11 @@ export type GData = {
             fx: EmotionName
         }
     }
+    events: {
+        [T in EventName]: {
+            duration: number
+        }
+    }
     games: {
         dice: Record<string, never>
         slots: {
@@ -256,9 +261,23 @@ export type GData = {
         [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: GGeometry
     }
     // TODO: Add type information
-    images: any
+    images: {
+        [T in string]: {
+            width: number
+            height: number
+            type: string
+        }
+    }
     // TODO: Add type information
-    imagesets: any
+    imagesets: {
+        [T in ImageSetName]: {
+            load?: boolean
+            rows: number
+            file: string
+            columns: number
+            size: number
+        }
+    }
     items: {
         [T in ItemName]: GItem
     };
@@ -1211,6 +1230,9 @@ export type EmotionName =
     | "drop_egg"
     | "hearts_single"
 
+export type EventName = "abtesting" | "goobrawl"
+
+export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
 /**
  * Generate with:
  * { const is = []; for(const i in G.items) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
