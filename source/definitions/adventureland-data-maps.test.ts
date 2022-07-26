@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 710 (2022-02-12)
+ * The following is from http://adventure.land/data.js, version 722 (2022-07-26)
  * It is used to confirm type correctness
  */
 
@@ -1682,22 +1682,195 @@ test("G.maps type validation", async () => {
             },
             "goobrawl": {
                 "doors": [],
-                "instance": true,
-                "key": "jayson_gooisland",
+                "key": "jayson_GooIsland",
                 "monsters": [
                     {
                         "boundary": [
-                            -50,
-                            -50,
-                            50,
-                            50
+                            -432,
+                            -472,
+                            448,
+                            208
                         ],
-                        "count": 5,
+                        "count": 0,
+                        "polygon": [
+                            [
+                                -344,
+                                192
+                            ],
+                            [
+                                -288,
+                                192
+                            ],
+                            [
+                                -288,
+                                208
+                            ],
+                            [
+                                184,
+                                208
+                            ],
+                            [
+                                376,
+                                208
+                            ],
+                            [
+                                376,
+                                184
+                            ],
+                            [
+                                416,
+                                184
+                            ],
+                            [
+                                416,
+                                -96
+                            ],
+                            [
+                                448,
+                                -96
+                            ],
+                            [
+                                448,
+                                -240
+                            ],
+                            [
+                                400,
+                                -240
+                            ],
+                            [
+                                400,
+                                -344
+                            ],
+                            [
+                                288,
+                                -344
+                            ],
+                            [
+                                288,
+                                -264
+                            ],
+                            [
+                                264,
+                                -264
+                            ],
+                            [
+                                264,
+                                -240
+                            ],
+                            [
+                                232,
+                                -240
+                            ],
+                            [
+                                232,
+                                -184
+                            ],
+                            [
+                                200,
+                                -184
+                            ],
+                            [
+                                200,
+                                -152
+                            ],
+                            [
+                                16,
+                                -152
+                            ],
+                            [
+                                16,
+                                -128
+                            ],
+                            [
+                                -128,
+                                -128
+                            ],
+                            [
+                                -128,
+                                -168
+                            ],
+                            [
+                                -192,
+                                -168
+                            ],
+                            [
+                                -192,
+                                -216
+                            ],
+                            [
+                                -248,
+                                -216
+                            ],
+                            [
+                                -248,
+                                -240
+                            ],
+                            [
+                                -288,
+                                -240
+                            ],
+                            [
+                                -288,
+                                -408
+                            ],
+                            [
+                                -320,
+                                -408
+                            ],
+                            [
+                                -320,
+                                -472
+                            ],
+                            [
+                                -408,
+                                -472
+                            ],
+                            [
+                                -408,
+                                -416
+                            ],
+                            [
+                                -432,
+                                -416
+                            ],
+                            [
+                                -432,
+                                -112
+                            ],
+                            [
+                                -400,
+                                -112
+                            ],
+                            [
+                                -400,
+                                136
+                            ],
+                            [
+                                -384,
+                                136
+                            ],
+                            [
+                                -384,
+                                168
+                            ],
+                            [
+                                -344,
+                                168
+                            ]
+                        ],
                         "type": "goo"
                     }
                 ],
                 "name": "Goo Brawl!",
-                "npcs": [],
+                "npcs": [
+                    {
+                        "id": "transporter",
+                        "position": [
+                            -347,
+                            -483
+                        ]
+                    }
+                ],
                 "on_death": [
                     "goobrawl",
                     0
@@ -2121,6 +2294,7 @@ test("G.maps type validation", async () => {
                 "name": "Underground [Entrance]",
                 "npcs": [],
                 "quirks": [],
+                "small_steps": true,
                 "spawns": [
                     [
                         149,
@@ -2819,7 +2993,7 @@ test("G.maps type validation", async () => {
                     ]
                 ],
                 "drop_norm": 1000,
-                "key": "jayson_ALMap2_v2.lunarNewYear",
+                "key": "jayson_ALMap2_v2",
                 "monsters": [
                     {
                         "boundary": [
@@ -2882,6 +3056,16 @@ test("G.maps type validation", async () => {
                         ],
                         "count": 5,
                         "type": "crabx"
+                    },
+                    {
+                        "boundary": [
+                            -1256,
+                            1520,
+                            -712,
+                            2004
+                        ],
+                        "count": 0,
+                        "type": "crabxx"
                     },
                     {
                         "boundary": [

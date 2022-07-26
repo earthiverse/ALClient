@@ -1110,6 +1110,7 @@ export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive
 } & {
     egghunt?: boolean
+    goobrawl?: boolean
     halloween?: boolean
     holidayseason?: boolean
     lunarnewyear?: boolean

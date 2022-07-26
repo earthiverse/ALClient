@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 710 (2022-02-07)
+ * The following is from http://adventure.land/data.js, version 722 (2022-07-26)
  * It is used to confirm type correctness
  */
 
@@ -1218,7 +1218,6 @@ test("G.items type validation", async () => {
             },
             "cyber": {
                 "armor": 25,
-                "courage": 1,
                 "dex": 2,
                 "extra_stat": 2,
                 "g": 320000,
@@ -1229,7 +1228,9 @@ test("G.items type validation", async () => {
                     10
                 ],
                 "int": 6,
+                "mcourage": 1,
                 "name": "Cybernetic Implants",
+                "pcourage": 1,
                 "pnresistance": 4,
                 "protection": true,
                 "resistance": 28,
@@ -2327,6 +2328,14 @@ test("G.items type validation", async () => {
                 "skin": "frequencyscroll",
                 "stat": "frequency",
                 "type": "pscroll"
+            },
+            "friendtoken": {
+                "explanation": "A token representing friendship. Awarded each time a friend joins the adventure!",
+                "g": 36000,
+                "name": "Friend Token",
+                "s": 9999,
+                "skin": "friendtoken",
+                "type": "token"
             },
             "frogt": {
                 "g": 3,
@@ -7992,16 +8001,20 @@ test("G.items type validation", async () => {
                 "type": "pscroll"
             },
             "vorb": {
-                "compound": {},
+                "compound": {
+                    "courage": 1
+                },
                 "courage": 1,
                 "g": 12000000,
                 "grades": [
                     0,
                     0,
-                    10,
-                    12
+                    6,
+                    7
                 ],
                 "name": "Vampiric Canine Teeth",
+                "pcourage": 1,
+                "set": "vampires",
                 "skin": "vorb",
                 "type": "orb"
             },
