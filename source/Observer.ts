@@ -294,9 +294,9 @@ export class Observer {
                         }
                     })
                 }
-                if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch((e) => console.error(e))
-                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch((e) => console.error(e))
-                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch((e) => console.error(e))
+                if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch(console.error)
+                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
+                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
             }
 
             this.S = data
