@@ -442,10 +442,6 @@ export class Character extends Observer implements CharacterData {
             this.moving = false
             this.damage_type = this.G.classes[data.ctype].damage_type
 
-            if (data.code_version !== this.G.version) {
-                console.warn(`We're using old 'G' data! The game must have updated! (${this.G.version} -> ${data.code_version})`)
-            }
-
             this.parseCharacter(data)
             if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
