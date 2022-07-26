@@ -4000,6 +4000,36 @@ test("G.monsters type validation", async () => {
                 "speed": 10,
                 "xp": 2000000
             },
+            "rgoo": {
+                "aa": 1,
+                "achievements": [
+                    [
+                        1,
+                        "stat",
+                        "hp",
+                        20
+                    ],
+                    [
+                        100,
+                        "stat",
+                        "for",
+                        1
+                    ]
+                ],
+                "aggro": 0.1,
+                "attack": 320,
+                "damage_type": "physical",
+                "frequency": 1.2,
+                "hp": 1000000,
+                "mp": 20000,
+                "name": "Rainbow Goo",
+                "rage": 0,
+                "range": 64,
+                "respawn": -1,
+                "skin": "gooD",
+                "speed": 9,
+                "xp": 48000000
+            },
             "rooster": {
                 "aa": 1,
                 "achievements": [
