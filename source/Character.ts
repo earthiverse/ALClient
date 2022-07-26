@@ -2845,6 +2845,18 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Joins a daily event.
+     *
+     * @param eventName
+     */
+    public async join(eventName: "goobrawl"): Promise<void> {
+        if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
+
+        // TODO: Add promises
+        this.socket.emit("join", { name: eventName })
+    }
+
+    /**
      * Removes a party member
      *
      * @param {string} toKick

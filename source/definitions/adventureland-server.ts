@@ -1348,6 +1348,7 @@ export type ClientToServerEvents = {
     "heal": (data: { id: string }) => void
     "imove": (data: { a: number, b: number }) => void
     "interaction": (data: { key: string } | { type: "newyear_tree" }) => void
+    "join": (data: { name: string }) => void
     "join_giveaway": (data: { slot: TradeSlotType, id: string, rid: string }) => void
     "leave": () => void
     "loaded": (data: LoadedData) => void
