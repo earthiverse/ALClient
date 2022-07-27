@@ -4,6 +4,7 @@ import { PathfinderOptions } from "./pathfinder.js"
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {
     canDamage?: boolean | SkillName
+    canKillInOneShot?: SkillName
     canWalkTo?: boolean
     couldGiveCredit?: boolean
     ignoreIDs?: Iterable<string>
@@ -28,6 +29,7 @@ export type GetEntitiesFilters = {
 export type GetEntityFilters = GetEntitiesFilters & {
     returnHighestHP?: boolean
     returnLowestHP?: boolean
+    returnFurthest?: boolean
     returnNearest?: boolean
 }
 

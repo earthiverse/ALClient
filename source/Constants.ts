@@ -55,6 +55,8 @@ export class Constants {
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
         "crabxx", "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "tinyp", "wabbit",
+        // Goo Brawl
+        "rgoo",
         // Crypt monsters
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "vbat", "xmagefi", "xmagefz", "xmagen", "xmagex"
     ]

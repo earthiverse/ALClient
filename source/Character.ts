@@ -2384,6 +2384,10 @@ export class Character extends Observer implements CharacterData {
                     if (entity.immune && !this.G.skills[filters.canDamage].pierces_immunity) continue
                 }
             }
+            if (filters.canKillInOneShot !== undefined) {
+                const canKillInOneShot = this.canKillInOneShot(entity, filters.canKillInOneShot)
+                if (!canKillInOneShot) continue
+            }
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, entity)
                 if (filters.canWalkTo && !canWalkTo) continue
@@ -2426,6 +2430,7 @@ export class Character extends Observer implements CharacterData {
         let numReturnOptions = 0
         if (filters.returnHighestHP) numReturnOptions++
         if (filters.returnLowestHP) numReturnOptions++
+        if (filters.returnFurthest) numReturnOptions++
         if (filters.returnNearest) numReturnOptions++
         if (numReturnOptions > 1) console.warn("You supplied getEntity with more than one returnX option. This function may not return the entity you want.")
 
@@ -2453,6 +2458,19 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             return lowest
+        }
+
+        if (filters.returnFurthest) {
+            let furthest: Entity
+            let furthestDistance = -1
+            for (const entity of entities) {
+                const distance = Tools.squaredDistance(this, entity)
+                if (distance > furthestDistance) {
+                    furthest = entity
+                    furthestDistance = distance
+                }
+            }
+            return furthest
         }
 
         if (filters.returnNearest) {
