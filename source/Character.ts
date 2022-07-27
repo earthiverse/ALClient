@@ -2315,10 +2315,11 @@ export class Character extends Observer implements CharacterData {
      */
     public getEntities(filters: GetEntitiesFilters = {}): Entity[] {
         const entities: Entity[] = []
+        filterCheck:
         for (const [, entity] of this.entities) {
             if (filters.ignoreIDs !== undefined) {
-                for (const id in filters.ignoreIDs) {
-                    if (id == entity.id) continue
+                for (const id of filters.ignoreIDs) {
+                    if (id == entity.id) continue filterCheck
                 }
             }
             if (filters.targetingMe !== undefined) {

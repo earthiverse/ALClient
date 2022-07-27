@@ -759,6 +759,9 @@ test("Character.getEntities", () => {
     expect(warrior.getEntities({ typeList: ["boar"] }).length).toBeGreaterThan(0)
     expect(warrior.getEntities({ typeList: ["goo"] }).length).toBe(0)
     expect(warrior.getEntities({ typeList: ["boar", "goo"] }).length).toBeGreaterThan(0)
+
+    const originalLength = warrior.entities.size
+    expect(warrior.getEntities({ ignoreIDs: ["3522746"] }).length).toBe(originalLength - 1)
 })
 
 test("Character.getEntity", () => {
