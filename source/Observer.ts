@@ -278,25 +278,29 @@ export class Observer {
             }
 
             if (Database.connection) {
-                for (const type in Constants.MONSTER_RESPAWN_TIMES) {
-                    const mtype = type as MonsterName
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}*server_info*`)
+                if (!nextUpdate || Date.now() >= nextUpdate) {
+                    for (const type in Constants.MONSTER_RESPAWN_TIMES) {
+                        const mtype = type as MonsterName
 
-                    if (data[mtype]) continue // It's still alive
-                    if (!this.S[mtype]) continue // It wasn't alive before
+                        if (data[mtype]) continue // It's still alive
+                        if (!this.S[mtype]) continue // It wasn't alive before
 
-                    // This special monster just died
-                    const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
-                    databaseRespawnUpdates.push({
-                        updateOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type },
-                            update: { estimatedRespawn: nextSpawn },
-                            upsert: true
-                        }
-                    })
+                        // This special monster just died
+                        const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
+                        databaseRespawnUpdates.push({
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type },
+                                update: { estimatedRespawn: nextSpawn },
+                                upsert: true
+                            }
+                        })
+                    }
+                    if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch(console.error)
+                    if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
+                    if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*server_info*`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
-                if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch(console.error)
-                if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
-                if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
             }
 
             this.S = data
