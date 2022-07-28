@@ -3827,6 +3827,7 @@ export class Character extends Observer implements CharacterData {
                     }
                     this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
                     i = j - 1
+                    if (potentialMove.type !== "move") i -= 1 // We have more movement to do, we just warped to a door
                     blinked = true
                     break
                 }
