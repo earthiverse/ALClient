@@ -1014,7 +1014,7 @@ export class Character extends Observer implements CharacterData {
 
             const gToken = this.G.tokens[tokenType]
 
-            if (!this.hasItem("computer") || !this.hasItem("supercomputer")) {
+            if (!this.hasItem("computer") && !this.hasItem("supercomputer")) {
                 // Check if we're nearby the token exchange NPC
                 const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
                 if (!inRange) {
