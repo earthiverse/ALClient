@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -494,6 +494,20 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("game_response", (data: GameResponseData) => {
             this.parseGameResponse(data)
+        })
+
+        // The listener in Observer will deal with most of this, we just have to deal with our own character's hp here
+        this.socket.on("hit", (data: HitData) => {
+            if (data.miss || data.evade || data.reflect || data.id !== this.id) {
+                return
+            }
+
+            if (data.kill) {
+                this.hp = 0
+                this.rip = true
+            } else if (data.damage) {
+                this.hp -= data.damage
+            }
         })
 
         // TODO: Confirm this works for leave_party(), too.
