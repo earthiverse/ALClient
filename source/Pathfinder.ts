@@ -731,40 +731,52 @@ export class Pathfinder {
         include_bank_b?: boolean,
         include_bank_u?: boolean,
         include_test?: boolean,
+        maps?: MapName[],
         showConsole?: boolean
     } = {}): Promise<void> {
         if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
 
-        const maps: MapName[] = [Constants.PATHFINDER_FIRST_MAP]
 
+        if (!options) options = {}
         if (options.showConsole) console.debug("Preparing pathfinding...")
+        if (!options.base) options.base = Constants.BASE
         const start = Date.now()
 
-        for (let i = 0; i < maps.length; i++) {
-            const map = maps[i]
+        if (!options.maps) {
+            // Prepare all connected maps
+            options.maps = [Constants.PATHFINDER_FIRST_MAP]
+            for (let i = 0; i < options.maps.length; i++) {
+                const map = options.maps[i]
 
-            // Add the connected maps
-            for (const door of this.G.maps[map].doors) {
-                if (door[4] == "bank_b" && !options.include_bank_b) continue
-                if (door[4] == "bank_u" && !options.include_bank_u) continue
-                if (door[4] == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
-                if (!maps.includes(door[4])) maps.push(door[4])
+                // Add the connected maps
+                for (const door of this.G.maps[map].doors) {
+                    if (door[4] == "bank_b" && !options.include_bank_b) continue
+                    if (door[4] == "bank_u" && !options.include_bank_u) continue
+                    if (door[4] == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
+                    if (!options.maps.includes(door[4])) options.maps.push(door[4])
+                }
             }
-        }
 
-        // Add maps that we can reach through the teleporter
-        for (const map in this.G.npcs.transporter.places) {
-            if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
-            if (!maps.includes(map as MapName)) maps.push(map as MapName)
+            // Add maps that we can reach through the teleporter
+            for (const map in this.G.npcs.transporter.places) {
+                if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
+                if (!options.maps.includes(map as MapName)) options.maps.push(map as MapName)
+            }
+
+            // Remove the test map if it snuck in
+            const hasTest = options.maps.indexOf("test")
+            if (hasTest >= 0) options.maps.splice(hasTest, 1)
         }
 
         // Prepare each map
-        for (const map of maps) {
-            if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
-            this.getGrid(map, options.base ?? Constants.BASE)
+        for (const map of options.maps) {
+            this.getGrid(map, options.base)
         }
-        this.getGrid("jail", options.base ?? Constants.BASE) // Jail is disconnected, prepare it
+
+        // Prepare disconnected maps
+        this.getGrid("jail", options.base)
+        this.getGrid("goobrawl", options.base)
 
         if (options.cheat) {
             const addCheatPath = (from: IPosition & { map: MapName }, to: IPosition & { map: MapName }) => {
@@ -783,25 +795,25 @@ export class Pathfinder {
                 this.addLinkToGraph(fromNode, toNode)
             }
 
-            if (maps.includes("arena")) {
+            if (options.maps.includes("arena")) {
                 // Add paths to hop the northern ledges of the hill in the middle
                 addCheatPath({ map: "arena", x: 199, y: -360 }, { map: "arena", x: 233, y: -391 })
                 addCheatPath({ map: "arena", x: 565, y: -332 }, { map: "arena", x: 531, y: -359 })
             }
 
-            if (maps.includes("cave")) {
+            if (options.maps.includes("cave")) {
                 // Add path near bridge
                 addCheatPath({ map: "cave", x: 121, y: -1051 }, { map: "cave", x: 23, y: -1075 })
             }
 
-            if (maps.includes("level1")) {
+            if (options.maps.includes("level1")) {
                 // Add path across cliff and water
                 // addCheatPath({ map: "level1", x: -103, y: 160 }, { map: "level1", x: -297, y: 184 })
                 // Add path up cliff to ladder
                 addCheatPath({ map: "level1", x: -271, y: 616 }, { map: "level1", x: -297, y: 557 })
             }
 
-            if (maps.includes("main")) {
+            if (options.maps.includes("main")) {
                 // Add a path to hop the NE corner of the target monsters fence
                 addCheatPath({ map: "main", x: -95, y: 229 }, { map: "main", x: -137, y: 248 })
                 // Add a path to hop the SE corner of the target monsters fence
@@ -812,7 +824,7 @@ export class Pathfinder {
                 addCheatPath({ map: "main", x: 303, y: 808 }, { map: "main", x: 433, y: 805 })
             }
 
-            if (maps.includes("winterland")) {
+            if (options.maps.includes("winterland")) {
                 // Add a path to the icegolem's place
                 addCheatPath({ map: "winterland", x: 721, y: 277 }, { map: "winterland", x: 737, y: 352 })
             }
