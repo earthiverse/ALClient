@@ -2056,6 +2056,36 @@ export class Character extends Observer implements CharacterData {
         return swapped
     }
 
+    public async dismantle(item: ItemName): Promise<void> {
+        if (!this.ready) throw new Error("We aren't ready yet [dismantle].")
+        const gInfo = this.G.dismantle[item]
+        if (!gInfo) throw new Error(`Can not find a recipe for ${item}.`)
+        if (gInfo.cost > this.gold) throw new Error(`We don't have enough gold to dismantle ${item}.`)
+
+        const itemPos: number = this.locateItem(item)
+        if (!itemPos) throw new Error(`We don't have ${item} to dismantle.`)
+
+        const dismantled = new Promise<void>((resolve, reject) => {
+            const successCheck = async (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "dismantle" && data.name == item) {
+                        this.socket.off("game_response", successCheck)
+                        resolve()
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", successCheck)
+                reject(`dismantle timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", successCheck)
+        })
+
+        this.socket.emit("dismantle", { num: itemPos })
+        return dismantled
+    }
+
     public async donateGold(amount: number): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [donateGold].")
         if (this.gold < amount) throw new Error(`We don't have ${amount} gold to donate.`)
