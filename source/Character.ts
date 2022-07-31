@@ -1,6 +1,6 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, EventName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
@@ -101,6 +101,7 @@ export class Character extends Observer implements CharacterData {
     cash: number
     targets: number
     target?: string
+    team?: string
     evasion: number
     miss: number
     reflection: number
@@ -2882,7 +2883,7 @@ export class Character extends Observer implements CharacterData {
      *
      * @param eventName
      */
-    public async join(eventName: "goobrawl"): Promise<void> {
+    public async join(eventName: EventName): Promise<void> {
         if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
 
         // TODO: Add promises
