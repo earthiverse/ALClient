@@ -34,6 +34,7 @@ export class Player implements PlayerData {
     public resistance = 0
     public rpiercing = 0
     public target: string
+    public team?: string
     public x: number
     public y: number
     public s: StatusInfo = {}
@@ -172,6 +173,9 @@ export class Player implements PlayerData {
 
         // Check if we're in the same party
         if (this.party && bot.party == this.party) return true
+
+        // Check if we're on the same team
+        if (this.team && bot.team == this.team) return true
 
         // TODO: Check if they're in our friends list
 
