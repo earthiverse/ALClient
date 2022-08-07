@@ -9,10 +9,12 @@ test("G.conditions type validation", async () => {
     const G_conditions: Pick<GData, "conditions"> = {
         "conditions": {
             "authfail": {
+                "debuff": true,
                 "explanation": "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land",
                 "gold": -85,
                 "luck": -85,
                 "name": "Authorization Failure",
+                "persistent": true,
                 "skin": "notverified",
                 "technical": true,
                 "ui": true,
@@ -23,19 +25,29 @@ test("G.conditions type validation", async () => {
                 "name": "Blinking",
                 "skin": "condition_positive"
             },
+            "block": {
+                "debuff": true,
+                "explanation": "After engaging in PVP, blocked from safely leaving!",
+                "name": "PVP Block",
+                "persistent": true,
+                "skin": "condition_neutral"
+            },
             "burned": {
                 "bad": true,
+                "debuff": true,
                 "interval": 210,
                 "name": "Burned",
                 "skin": "fireblade",
                 "ui": true
             },
             "charging": {
+                "duration": 3200,
                 "name": "Charging",
                 "skin": "condition_positive",
                 "speed": 30
             },
             "charmed": {
+                "debuff": true,
                 "duration": 30000,
                 "explanation": "Mellow like a warm kitty",
                 "name": "Charmed",
@@ -44,12 +56,14 @@ test("G.conditions type validation", async () => {
             },
             "cursed": {
                 "bad": true,
+                "debuff": true,
                 "duration": 5000,
                 "name": "Cursed",
                 "skin": "condition_bad"
             },
             "dampened": {
                 "bad": true,
+                "debuff": true,
                 "duration": 300,
                 "explanation": "Can't blink or teleport",
                 "name": "Dampened",
@@ -65,12 +79,14 @@ test("G.conditions type validation", async () => {
             },
             "dash": {
                 "name": "Dashing",
+                "persistent": true,
                 "set_speed": 500,
                 "skin": "condition_positive"
             },
             "deepfreezed": {
                 "bad": true,
                 "blocked": true,
+                "debuff": true,
                 "duration": 12000,
                 "name": "Deepfreezed",
                 "skin": "condition_bad",
@@ -88,6 +104,7 @@ test("G.conditions type validation", async () => {
             "eburn": {
                 "bad": true,
                 "damage": 50,
+                "debuff": true,
                 "duration": 12000,
                 "intensity": "burnd",
                 "interval": 200,
@@ -97,6 +114,7 @@ test("G.conditions type validation", async () => {
                 "ui": true
             },
             "eheal": {
+                "buff": true,
                 "duration": 4000,
                 "heal": 200,
                 "interval": 320,
@@ -115,6 +133,7 @@ test("G.conditions type validation", async () => {
             "fingered": {
                 "bad": true,
                 "blocked": true,
+                "debuff": true,
                 "evasion": 96,
                 "name": "Deep Meditation",
                 "resistance": 1600,
@@ -130,21 +149,27 @@ test("G.conditions type validation", async () => {
             },
             "frozen": {
                 "bad": true,
+                "debuff": true,
+                "duration": 5000,
                 "name": "Frozen",
                 "skin": "frostbow",
                 "ui": true
             },
             "fullguard": {
                 "armor": 10000,
+                "buff": true,
                 "name": "Full Guard",
+                "persistent": true,
                 "resistance": 10000,
                 "skin": "fullguard",
                 "ui": true
             },
             "fullguardx": {
                 "armor": 10000,
+                "buff": true,
                 "miss": 99,
                 "name": "Full Guard",
+                "persistent": true,
                 "resistance": 10000,
                 "skin": "fullguard",
                 "ui": true
@@ -203,24 +228,39 @@ test("G.conditions type validation", async () => {
                 "ui": true,
                 "xp": 20
             },
+            "hopsickness": {
+                "debuff": true,
+                "explanation": "Feeling queasy from all the server hopping.",
+                "gold": -10,
+                "luck": -10,
+                "name": "Hop Sickness",
+                "persistent": true,
+                "skin": "condition_bad",
+                "ui": true,
+                "xp": -10
+            },
             "invincible": {
                 "duration": 6000,
                 "explanation": "When you spawn in a PVP area. This prevents you from receiving damage or marked as engaged in PVP. If you get attacked, disconnect before this runs out - or fight!",
                 "name": "Invincible",
+                "persistent": true,
                 "skin": "condition_positive"
             },
             "invis": {
+                "buff": true,
                 "explanation": "Hidden from everyone else until you attack",
                 "name": "Invisible",
                 "skin": "skill_invis"
             },
             "licenced": {
+                "buff": true,
                 "explanation": "A special, temporary immunity",
                 "name": "Licenced to Kill",
                 "skin": "licence",
                 "ui": true
             },
             "marked": {
+                "debuff": true,
                 "duration": 10000,
                 "explanation": "Marked by a ranger for death. Receive 10% more damage and can't stealth.",
                 "name": "Marked",
@@ -283,10 +323,12 @@ test("G.conditions type validation", async () => {
             "monsterhunt": {
                 "duration": 1800000,
                 "name": "On The Hunt",
+                "persistent": true,
                 "skin": "quest_monsterhunt",
                 "ui": true
             },
             "mshield": {
+                "buff": true,
                 "name": "Mana Shield",
                 "skin": "skill_mshield",
                 "ui": true
@@ -297,20 +339,24 @@ test("G.conditions type validation", async () => {
                 "gold": 10,
                 "luck": 10,
                 "name": "Newcomers' Blessing",
+                "persistent": true,
                 "skin": "newcomersblessing",
                 "ui": true,
                 "xp": 10
             },
             "notverified": {
+                "debuff": true,
                 "explanation": "Reduced luck and gold until the associated email address is verified.",
                 "gold": -25,
                 "luck": -25,
                 "name": "Not Verified",
+                "persistent": true,
                 "skin": "notverified",
                 "technical": true,
                 "ui": true
             },
             "phasedout": {
+                "buff": true,
                 "duration": 5000,
                 "evasion": 64,
                 "frequency": -40,
@@ -321,6 +367,7 @@ test("G.conditions type validation", async () => {
             },
             "poisoned": {
                 "bad": true,
+                "debuff": true,
                 "duration": 5000,
                 "frequencym": 0.8,
                 "healm": 0.25,
@@ -329,6 +376,8 @@ test("G.conditions type validation", async () => {
                 "skin": "poison"
             },
             "poisonous": {
+                "buff": true,
+                "duration": 5000,
                 "name": "Poisonous",
                 "skin": "skill_pcoat",
                 "ui": true
@@ -342,7 +391,18 @@ test("G.conditions type validation", async () => {
                 "skin": "powerglove",
                 "ui": true
             },
+            "purifier": {
+                "buff": true,
+                "duration": 8000,
+                "frequency": 20,
+                "name": "Purifier",
+                "output": 20,
+                "skin": "skill_purify",
+                "str": 30,
+                "ui": true
+            },
             "reflection": {
+                "buff": true,
                 "cap_reflection": 50,
                 "duration": 5000,
                 "name": "Reflective Shield",
@@ -371,6 +431,7 @@ test("G.conditions type validation", async () => {
             },
             "shocked": {
                 "bad": true,
+                "debuff": true,
                 "duration": 1600,
                 "explanation": "Imminent magical damage",
                 "name": "Shocked",
@@ -379,6 +440,7 @@ test("G.conditions type validation", async () => {
             },
             "slowness": {
                 "bad": true,
+                "debuff": true,
                 "explanation": "Things like spiderwebs cause you to slow down.",
                 "name": "Slowness",
                 "skin": "condition_neutral",
@@ -386,6 +448,7 @@ test("G.conditions type validation", async () => {
                 "ui": true
             },
             "stack": {
+                "debuff": true,
                 "explanation": "Bonus damage for each rogue attack",
                 "name": "Pure Damage",
                 "skin": "skill_stack"
@@ -393,6 +456,7 @@ test("G.conditions type validation", async () => {
             "stoned": {
                 "bad": true,
                 "blocked": true,
+                "debuff": true,
                 "duration": 4000,
                 "name": "Stoned",
                 "skin": "condition_neutral"
@@ -400,6 +464,8 @@ test("G.conditions type validation", async () => {
             "stunned": {
                 "bad": true,
                 "blocked": true,
+                "debuff": true,
+                "duration": 3200,
                 "name": "Stunned",
                 "skin": "condition_bad",
                 "ui": true
@@ -415,6 +481,7 @@ test("G.conditions type validation", async () => {
             },
             "tangled": {
                 "bad": true,
+                "debuff": true,
                 "duration": 12000,
                 "name": "Tangled",
                 "set_speed": 24,
@@ -442,6 +509,7 @@ test("G.conditions type validation", async () => {
             },
             "weakness": {
                 "bad": true,
+                "debuff": true,
                 "dex": -10,
                 "duration": 20000,
                 "name": "Weakness",
@@ -452,6 +520,7 @@ test("G.conditions type validation", async () => {
             },
             "withdrawal": {
                 "bad": true,
+                "debuff": true,
                 "dex": -20,
                 "duration": 10800000,
                 "frequency": -30,
@@ -461,6 +530,15 @@ test("G.conditions type validation", async () => {
                 "skin": "withdrawal",
                 "speed": -20,
                 "str": -5,
+                "ui": true
+            },
+            "woven": {
+                "bad": true,
+                "debuff": true,
+                "explanation": "Slowed down from all the spider silk sticking around.",
+                "name": "Woven",
+                "skin": "spidersilk",
+                "speed": -10,
                 "ui": true
             },
             "xpower": {
@@ -474,6 +552,7 @@ test("G.conditions type validation", async () => {
             },
             "xshotted": {
                 "bad": true,
+                "debuff": true,
                 "duration": 43200000,
                 "explanation": "Good luck trying to find a tavern to play in.",
                 "name": "X-Shot",
