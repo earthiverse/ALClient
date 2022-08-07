@@ -227,14 +227,14 @@ export class Observer {
 
             if (Database.connection) {
                 for (const type of Constants.SERVER_INFO_MONSTERS) {
-                    if (!data[type] || !data[type].live) databaseDeletes.add(type)
+                    if (!data[type] || !(data[type] as ServerInfoDataLive).live) databaseDeletes.add(type)
                 }
             }
 
             for (const mtype in data) {
                 const mData = data[mtype as MonsterName]
                 if (typeof mData !== "object") continue // Event information, not monster information
-                if (mData.live == false) {
+                if ((mData as ServerInfoDataNotLive).live == false) {
                     if (Database.connection) {
                         databaseDeletes.add(mtype as MonsterName)
 

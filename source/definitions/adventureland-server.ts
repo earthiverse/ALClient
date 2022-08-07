@@ -1107,15 +1107,15 @@ export type ServerData = {
 
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
-} | {
+} & {
     egghunt?: boolean
     halloween?: boolean
     holidayseason?: boolean
     lunarnewyear?: boolean
     valentines?: boolean
-} | {
+} & {
     goobrawl?: ServerInfoDataEvent
-} | {
+} & {
     abtesting?: ServerInfoDataEvent | {
         /** A date string of when sign-ups will stop for the event */
         signup_end: string
