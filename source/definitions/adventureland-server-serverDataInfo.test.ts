@@ -86,6 +86,22 @@ test("ServerInfoData type validation", async () => {
             },
             "lunarnewyear": true,
             "valentines": true
+        },
+        // A B testing event
+        {
+            "abtesting": {
+                "end": "2022-08-02T04:08:00.674Z",
+                "signup_end": "2022-08-02T04:01:00.674Z",
+                "A": 0,
+                "B": 0,
+                "id": "ATf0e"
+            }
+        },
+        // goo brawl event
+        {
+            "goobrawl": {
+                "end": "2022-08-02T04:08:00.229Z"
+            }
         }
     ]
     for (const serverInfo of serverInfos) expect(serverInfo).not.toBe(undefined)

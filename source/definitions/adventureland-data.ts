@@ -116,6 +116,7 @@ export type GData = {
         } & {
             /** TODO: ??? What is this? The attribute the condition provides!? */
             attr0?: string
+            debuff?: boolean
             /** TODO: ??? Does this mean it is caused by an aura, or it causes an aura? */
             aura?: boolean
             /** The condition name (human readable) */
@@ -233,8 +234,10 @@ export type GData = {
         }
     }
     events: {
-        [T in EventName]: {
+        [T in MapName | MonsterName]?: {
+            daily: boolean
             duration: number
+            join: boolean
         }
     }
     games: {
@@ -400,12 +403,23 @@ export type GData = {
     }
     projectiles: {
         [T in ProjectileName]: {
-            animation: AnimationName
+            /** Projectile animation (a projectile traveling from the attacker to the target) */
+            animation?: AnimationName
+            /** Hit animation (animation drawn over the target on hit) */
             hit_animation?: AnimationName
+            /** A message that pops up to complement the animation on hit. [message string, color string] */
+            hit_text?: [string, string]
+            /** A message that pops up to complement the animation on kill. [message string, color string] */
+            kill_text?: [string, string]
+            /** If true, the hit animation will be drawn on the target */
+            instant?: boolean
+            /** TODO: What is this? It's on the `snowball`. */
             pure?: boolean
-            ray?: boolean
+            /** Ray animation (a line drawn from the attacker to the target) */
+            ray?: AnimationName
             /** Projectile speed */
-            speed: number
+            speed?: number
+
         }
     }
     sets: {
@@ -451,10 +465,12 @@ export type GData = {
         duration?: number
         /** An exlpanation of what this skill does */
         explanation?: string
+        heal?: boolean
         /** If true, we can't use this skill in a safe zone */
         hostile?: boolean;
         /** Items that this we need to use the skill */
         inventory?: ItemName[];
+        kill_buff?: ConditionName
         level?: number;
         levels?: [number, number][]
         /** If set, the skill requires a list of targets */
@@ -464,6 +480,7 @@ export type GData = {
         monsters?: boolean;
         /** MP Cost for skill */
         mp?: number;
+        multi?: boolean;
         /** The name of the skill */
         name: string;
         negative?: ItemName[]
@@ -478,6 +495,8 @@ export type GData = {
         /** If this is set, this skill can be used against immune monsters. */
         pierces_immunity?: boolean
         positive?: ItemName[]
+        procs?: boolean
+        projectile?: ProjectileName
         range?: number;
         range_bonus?: number;
         range_multiplier?: number;
@@ -501,6 +520,7 @@ export type GData = {
         /** NOTE: If the type is 'monster', only monsters have this ability */
         type?: "ability" | "gm" | "monster" | "passive" | "skill" | "utility"
         ui?: boolean
+        use_range?: boolean
         warning?: string;
         /** The weapon type needed to use this skill */
         wtype?: WeaponType | WeaponType[];
@@ -1203,8 +1223,12 @@ export type Attribute =
 export type AchievementName =
     "100boss" | "1000boss" | "discoverlair" | "festive" | "firehazard" | "gooped" | "lucky" | "monsterhunter" | "reach40" | "reach50" | "reach60" | "reach70" | "reach80" | "reach90" | "stomped" | "upgrade10"
 
+/**
+ * Generate with:
+ * { const is = []; for(const i in G.animations) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
+ */
 export type AnimationName =
-    "acid" | "arrow_hit" | "arrow1" | "block" | "burst" | "carrow" | "confetti" | "crackle" | "cuarrow" | "curse_new" | "curse_projectile" | "curse" | "dampened" | "exchange" | "explode_a" | "explode_b" | "explode_c" | "explode_p" | "explode_up" | "failure" | "firearrow" | "fireball" | "fog" | "frostarrow" | "frostball" | "garrow" | "gm" | "gold_anim" | "gold" | "hardshell" | "heal_projectile" | "heal" | "hearts_single" | "icecrack" | "invincible" | "light" | "magic0" | "magic1" | "magic2" | "magic3" | "magic4" | "mblob_purplish" | "mblob_red" | "mblob" | "mluck" | "party_heal" | "pblob" | "pinky" | "poucharrow" | "rain" | "reflection" | "revival" | "rspeed" | "slash" | "slash0" | "slash1" | "slash2" | "slash3" | "snow" | "snowball_hit" | "snowball" | "snowflake" | "spark0" | "starkiller" | "stunned" | "success" | "superarrow" | "supershot" | "tangle" | "taunt" | "tiling_burst" | "tiling_burstj" | "transport" | "typing" | "wandy" | "wslash"
+    "acid" | "arrow1" | "arrow_hit" | "block" | "burst" | "carrow" | "confetti" | "crackle" | "cuarrow" | "curse" | "curse_new" | "curse_projectile" | "dampened" | "exchange" | "explode_a" | "explode_b" | "explode_c" | "explode_p" | "explode_up" | "failure" | "firearrow" | "fireball" | "flare_blue" | "flare_yellow" | "fog" | "frostarrow" | "frostball" | "garrow" | "gburst" | "gm" | "gold" | "gold_anim" | "hardshell" | "heal" | "heal_projectile" | "hearts_single" | "icecrack" | "invincible" | "light" | "magic0" | "magic1" | "magic2" | "magic3" | "magic4" | "mblob" | "mblob_purplish" | "mblob_red" | "mluck" | "party_heal" | "pblob" | "pinky" | "poucharrow" | "rain" | "reflection" | "revival" | "rspeed" | "slash" | "slash0" | "slash1" | "slash2" | "slash3" | "snow" | "snowball" | "snowball_hit" | "snowflake" | "spark0" | "starkiller" | "stunned" | "success" | "superarrow" | "supershot" | "tangle" | "taunt" | "tiling_burst" | "tiling_burst_g" | "tiling_burstj" | "transport" | "typing" | "wandy" | "wslash"
 
 export type BankPackName =
     "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47"
@@ -1218,7 +1242,7 @@ export type CharacterType =
  * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ConditionName =
-    "authfail" | "blink" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "xpower" | "xshotted"
+    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
 
 export type DamageType =
     "heal" | "magical" | "none" | "physical" | "pure"
@@ -1229,8 +1253,6 @@ export type DropName =
 export type EmotionName =
     | "drop_egg"
     | "hearts_single"
-
-export type EventName = "abtesting" | "goobrawl"
 
 export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
 /**
@@ -1248,13 +1270,17 @@ export type MapName =
  * { const is = []; for(const i in G.monsters) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type MonsterName =
-    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
+    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
 
 export type NPCName =
     "antip2w" | "appearance" | "armors" | "basics" | "bean" | "beans" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
 
+/**
+ * Generate with:
+ * { const is = []; for(const i in G.projectiles) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
+ */
 export type ProjectileName =
-    "acid" | "arrow" | "bigmagic" | "burst" | "crossbowarrow" | "cupid" | "curse" | "firearrow" | "fireball" | "frostarrow" | "frostball" | "garrow" | "magic_divine" | "magic_purple" | "magic" | "mmagic" | "momentum" | "pinky" | "plight" | "pmagic" | "poisonarrow" | "pouch" | "snowball" | "stone_k" | "stone" | "supershot" | "wandy" | "wmomentum"
+    "acid" | "arrow" | "bigmagic" | "burst" | "crossbowarrow" | "cupid" | "curse" | "firearrow" | "fireball" | "frostarrow" | "frostball" | "garrow" | "gburst" | "magic" | "magic_divine" | "magic_purple" | "mentalburst" | "mmagic" | "momentum" | "partyheal" | "pinky" | "plight" | "pmagic" | "poisonarrow" | "pouch" | "purify" | "quickpunch" | "quickstab" | "sburst" | "smash" | "snowball" | "stone" | "stone_k" | "supershot" | "wandy" | "wmomentum"
 
 export type SetName =
     "easter" | "fury" | "holidays" | "legends" | "mmage" | "mmerchant" | "mpriest" | "mpx" | "mranger" | "mrogue" | "mwarrior" | "rugged" | "swift" | "vampires" | "wanderers" | "wt3" | "wt4"
@@ -1264,7 +1290,7 @@ export type SetName =
  * { const is = []; for(const i in G.skills) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type SkillName =
-    "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fishing" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "poisonarrow" | "portal" | "power" | "pure_eval" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
+    "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fireball" | "fishing" | "frostball" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "poisonarrow" | "portal" | "power" | "pure_eval" | "purify" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "smash" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
 
 export type TilesetName =
     "ash" | "beach" | "castle" | "custom_a" | "custom" | "custom2" | "dark" | "doors" | "dungeon" | "fort" | "house" | "inside" | "jungle" | "licht" | "new" | "outside" | "puzzle" | "ruins" | "ship" | "stands" | "tree" | "water" | "winter"

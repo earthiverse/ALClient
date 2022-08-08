@@ -111,34 +111,34 @@ test("ActionData type validation", async () => {
     expect(fiveShot).not.toBe(undefined)
 
     const cburst: ActionData = {
-        "attacker": "attackMag3",
-        "damage": 1332.0000000000002,
+        "attacker": "facilitating",
+        "damage": 1.11,
         "eta": 400,
         "instant": true,
         "m": 0,
-        "pid": "JUcoui",
-        "ray": "burst",
+        "pid": "Tfs1At",
+        "projectile": "burst",
         "source": "cburst",
-        "target": "6157941",
+        "target": "89776",
         "type": "cburst",
-        "x": -50.64963979880396,
-        "y": 1472.632007837244
+        "x": -1258.7406861256309,
+        "y": 659.3266795166778
     }
     expect(cburst).not.toBe(undefined)
 
     const zapperZap: ActionData = {
-        "attacker": "earthWar",
+        "attacker": "earthiverse",
         "damage": 200,
         "eta": 400,
         "instant": true,
         "m": 0,
-        "pid": "zIktt1",
-        "ray": "burst",
+        "pid": "TgyqoR",
+        "projectile": "gburst",
         "source": "zapperzap",
-        "target": "8957498",
+        "target": "83873",
         "type": "zapperzap",
-        "x": 32.16258422906021,
-        "y": 199.46870572032924
+        "x": 271.10034441380475,
+        "y": -239.95362827974216
     }
     expect(zapperZap).not.toBe(undefined)
 })

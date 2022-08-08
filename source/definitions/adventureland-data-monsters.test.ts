@@ -606,6 +606,36 @@ test("G.monsters type validation", async () => {
                 "speed": 12,
                 "xp": 400
             },
+            "bgoo": {
+                "aa": 1,
+                "achievements": [
+                    [
+                        1000,
+                        "stat",
+                        "vit",
+                        1
+                    ]
+                ],
+                "aggro": 0,
+                "armor": 200,
+                "attack": 5,
+                "charge": 12,
+                "cooperative": true,
+                "damage_type": "physical",
+                "frequency": 0.4,
+                "hp": 100000,
+                "mp": 2000,
+                "name": "Brawl Goo",
+                "rage": 0,
+                "range": 15,
+                "resistance": 200,
+                "respawn": -1,
+                "size": 1.5,
+                "skin": "goo4",
+                "special": true,
+                "speed": 6,
+                "xp": 100000
+            },
             "bigbird": {
                 "achievements": [
                     [
@@ -1565,7 +1595,6 @@ test("G.monsters type validation", async () => {
                 "hit": "explode_c",
                 "hp": 120000000,
                 "humanoid": true,
-                "immune": true,
                 "mp": 2400000,
                 "name": "Franky",
                 "rage": 0,
@@ -4017,7 +4046,9 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.1,
+                "armor": 300,
                 "attack": 320,
+                "cooperative": true,
                 "damage_type": "physical",
                 "frequency": 1.2,
                 "hp": 1000000,
@@ -4025,8 +4056,11 @@ test("G.monsters type validation", async () => {
                 "name": "Rainbow Goo",
                 "rage": 0,
                 "range": 64,
+                "resistance": 300,
                 "respawn": -1,
+                "size": 1.5,
                 "skin": "gooD",
+                "special": true,
                 "speed": 9,
                 "xp": 48000000
             },

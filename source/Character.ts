@@ -1,6 +1,6 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, EventName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
+import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
@@ -2913,7 +2913,7 @@ export class Character extends Observer implements CharacterData {
      *
      * @param eventName
      */
-    public async join(eventName: EventName): Promise<void> {
+    public async join(eventName: MapName | MonsterName): Promise<void> {
         if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
 
         // TODO: Add promises
@@ -3668,6 +3668,16 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [smartMove].")
 
         if (this.rip) throw new Error("We can't smartMove, we are dead.")
+
+        // If it's an event, try to join it
+        if (typeof to == "string" && this.S[to as MapName | MonsterName]?.join) {
+            try {
+                await this.join(to as MapName)
+                return
+            } catch (e) {
+                // Suppress errors?
+            }
+        }
 
         if (options == undefined) options = {}
         if (options.costs == undefined) options.costs = {}

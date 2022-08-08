@@ -775,8 +775,9 @@ export class Pathfinder {
         }
 
         // Prepare disconnected maps
-        this.getGrid("jail", options.base)
+        this.getGrid("abtesting", options.base)
         this.getGrid("goobrawl", options.base)
+        this.getGrid("jail", options.base)
 
         if (options.cheat) {
             const addCheatPath = (from: IPosition & { map: MapName }, to: IPosition & { map: MapName }) => {

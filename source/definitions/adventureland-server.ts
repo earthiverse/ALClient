@@ -34,8 +34,7 @@ export type ActionDataProjectile = ActionDataBase & {
     projectile: ProjectileName
 }
 export type ActionDataRay = ActionDataBase & {
-    instant?: boolean
-    ray: ProjectileName
+    instant: boolean
 }
 export type ActionData = ActionDataProjectile | ActionDataRay
 
@@ -1110,16 +1109,33 @@ export type ServerData = {
 }
 
 export type ServerInfoData = {
-    [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive
+    [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
 } & {
     egghunt?: boolean
-    // TODO: This isn't a boolean, it's an object with an 'end' time. Do all events from G.events have this format?
-    goobrawl?: boolean
     halloween?: boolean
     holidayseason?: boolean
     lunarnewyear?: boolean
     valentines?: boolean
+} & {
+    goobrawl?: ServerInfoDataEvent
+} & {
+    abtesting?: ServerInfoDataEvent | {
+        /** A date string of when sign-ups will stop for the event */
+        signup_end: string
+        /** How many characters are on team A. TODO: Check that this is actually what it means */
+        A: number
+        /** How many characters are on team B. TODO: Check that this is actually what it means */
+        B: number
+        /** The event ID. TODO: Do we need this? */
+        id: string
+    }
 }
+
+export type ServerInfoDataEvent = {
+    /** A date string of when the event will end */
+    end?: string
+}
+
 export type ServerInfoDataLive = {
     hp: number
     live: true
