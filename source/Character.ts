@@ -2271,48 +2271,70 @@ export class Character extends Observer implements CharacterData {
         if (!this.items[inventoryPos]) throw new Error(`No item in inventory slot ${inventoryPos}.`)
         if (this.G.maps[this.map].mount) throw new Error("We can't exchange things in the bank.")
 
-        let startedExchange = false
-        if (this.q.exchange) startedExchange = true
-        const exchangeFinished = new Promise<void>((resolve, reject) => {
-            const completeCheck = (data: CharacterData) => {
-                if (!startedExchange && data.q.exchange) {
-                    startedExchange = true
-                    return
-                }
-                if (startedExchange && !data.q.exchange) {
-                    this.socket.off("player", completeCheck)
+        const exchanged = new Promise<number>((resolve, reject) => {
+            const startedCheck = (data: CharacterData) => {
+                if (data.q.exchange) {
+                    this.socket.off("player", startedCheck)
                     this.socket.off("game_response", bankCheck)
-                    resolve()
+                    resolve(data.q.exchange.ms)
                 }
             }
             const bankCheck = (data: GameResponseData) => {
                 if (typeof data == "object" && data.response == "bank_restrictions" && data.place == "upgrade") {
-                    this.socket.off("player", completeCheck)
+                    this.socket.off("player", startedCheck)
                     this.socket.off("game_response", bankCheck)
                     reject("You can't exchange items in the bank.")
                 } else if (typeof data == "string") {
                     if (data == "exchange_notenough") {
-                        this.socket.off("player", completeCheck)
+                        this.socket.off("player", startedCheck)
                         this.socket.off("game_response", bankCheck)
                         reject("We don't have enough items to exchange.")
                     } else if (data == "exchange_existing") {
-                        this.socket.off("player", completeCheck)
+                        this.socket.off("player", startedCheck)
                         this.socket.off("game_response", bankCheck)
                         reject("We are already exchanging something.")
                     }
                 }
             }
             setTimeout(() => {
-                this.socket.off("player", completeCheck)
+                this.socket.off("player", startedCheck)
                 this.socket.off("game_response", bankCheck)
-                reject("exchange timeout (60000ms)")
-            }, 60000)
+                reject("exchange_start timeout (5000ms)")
+            }, 5000)
             this.socket.on("game_response", bankCheck)
-            this.socket.on("player", completeCheck)
+            this.socket.on("player", startedCheck)
+        }).then((exchangeTime: number) => {
+            const waitTime = exchangeTime + (this.ping * 2)
+            const exchangeFinished = new Promise<void>((resolve, reject) => {
+                const completeCheck1 = (data: CharacterData) => {
+                    if (!data.q.exchange) {
+                        this.socket.off("player", completeCheck1)
+                        this.socket.off("game_response", completeCheck2)
+                        resolve()
+                    }
+                }
+                const completeCheck2 = (data: GameResponseData) => {
+                    if (typeof data == "object") {
+                        const result = /success/.test(data.response)
+                        if (result) {
+                            this.socket.off("player", completeCheck1)
+                            this.socket.off("game_response", completeCheck2)
+                            resolve()
+                        }
+                    }
+                }
+                setTimeout(() => {
+                    this.socket.off("player", completeCheck1)
+                    this.socket.off("game_response", completeCheck2)
+                    reject(`exchange_complete timeout (${waitTime}ms)`)
+                }, waitTime)
+                this.socket.on("player", completeCheck1)
+                this.socket.on("game_response", completeCheck2)
+            })
         })
 
         this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
-        return exchangeFinished
+        return exchanged
     }
 
     public async finishMonsterHuntQuest(): Promise<void> {
