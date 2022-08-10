@@ -515,6 +515,9 @@ export type GameResponseDataObject = {
 } | {
     response: "disabled"
     place: "attack"
+} | {
+    response: "dismantle"
+    name: ItemName
 } |
 /** Called when donating to the goblin.
  * donation < 100k ➡️ low
@@ -1351,6 +1354,7 @@ export type ClientToServerEvents = {
     "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
     // TODO: Create CraftData type
     "craft": (data: { items: [number, number][] }) => void
+    "dismantle": (data: { num: number }) => void
     "donate": (donation: { gold: number }) => void
     "emotion": (data: { name: EmotionName }) => void
     "enter": (data: { name: string, place: MapName }) => void
