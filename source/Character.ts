@@ -1,5 +1,5 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
-import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, QInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
@@ -64,11 +64,7 @@ export class Character extends Observer implements CharacterData {
     public owner: string
     public party?: string
     public pdps: number
-    public q: {
-        upgrade?: { len: number; ms: number; num: number };
-        compound?: { len: number; ms: number; num: number; nums: number[] };
-        exchange?: { len: number; ms: number; num: number; name: ItemName; id: ItemName; q: number }
-    } = {}
+    public q: QInfo = {}
     public range = 1
     public resistance = 0
     public rip = true
@@ -2310,6 +2306,7 @@ export class Character extends Observer implements CharacterData {
                     if (!data.q.exchange) {
                         this.socket.off("player", completeCheck1)
                         this.socket.off("game_response", completeCheck2)
+                        this.socket.off("upgrade", completeCheck3)
                         resolve()
                     }
                 }
@@ -2319,8 +2316,17 @@ export class Character extends Observer implements CharacterData {
                         if (result) {
                             this.socket.off("player", completeCheck1)
                             this.socket.off("game_response", completeCheck2)
+                            this.socket.off("upgrade", completeCheck3)
                             resolve()
                         }
+                    }
+                }
+                const completeCheck3 = (data: UpgradeData) => {
+                    if (typeof data == "object" && data.type == "exchange" && data.success) {
+                        this.socket.off("player", completeCheck1)
+                        this.socket.off("game_response", completeCheck2)
+                        this.socket.off("upgrade", completeCheck3)
+                        resolve()
                     }
                 }
                 setTimeout(() => {

@@ -4,6 +4,7 @@
  * Please help me transfer definitions to those files, too!
  */
 
+import { ItemName } from "alclient";
 import { BankPackName, ConditionName, MapName, MonsterName } from "./adventureland-data.js"
 import { ItemData, ItemDataTrade } from "./adventureland-server.js"
 
@@ -31,6 +32,28 @@ export type SlotInfo = {
     [T in SlotType]: (ItemData | null)
 } & {
     [T in TradeSlotType]?: (ItemDataTrade | null)
+}
+
+export type QInfo = {
+    compound?: {
+        len: number
+        ms: number
+        num: number
+        nums: number[]
+    }
+    exchange?: {
+        ms: number
+        len: number
+        name: ItemName
+        id: ItemName
+        q: number
+        num: number
+    }
+    upgrade?: {
+        len: number
+        ms: number
+        num: number
+    }
 }
 
 export type StatusInfo = {
