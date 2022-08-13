@@ -639,6 +639,8 @@ export type GameResponseDataString =
     | "friend_rsent"
     /** When you try to sell a locked item */
     | "item_locked"
+    /** When you try to loot a chest with items but there's no space in your inventory to loot */
+    | "loot_no_space"
     /** When you try to look at the lost and found, but haven't donated enough */
     | "lostandfound_donate"
     /** When a merchant tries to start a monster hunt */

@@ -1159,8 +1159,20 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (message: string) => {
                 if (message == "Item gone") {
                     this.socket.off("game_log", failCheck)
+                    this.socket.off("game_response", failCheck2)
                     this.socket.off("player", successCheck)
                     reject(`${item.name} is no longer available from Ponty.`)
+                }
+            }
+
+            const failCheck2 = (message: GameResponseData) => {
+                if (typeof message == "string") {
+                    if (message == "buy_cost") {
+                        this.socket.off("game_log", failCheck)
+                        this.socket.off("game_response", failCheck2)
+                        this.socket.off("player", successCheck)
+                        reject(`We don't have enough money to buy ${item.name} from Ponty.`)
+                    }
                 }
             }
 
@@ -1169,6 +1181,7 @@ export class Character extends Observer implements CharacterData {
                 if ((item.q && numNow == numBefore + item.q)
                     || (numNow == numBefore + 1)) {
                     this.socket.off("game_log", failCheck)
+                    this.socket.off("game_response", failCheck2)
                     this.socket.off("player", successCheck)
                     resolve()
                 }
@@ -1176,10 +1189,12 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("game_log", failCheck)
+                this.socket.off("game_response", failCheck2)
                 this.socket.off("player", successCheck)
                 reject("buyFromPonty timeout (5000ms)")
             }, 5000)
             this.socket.on("game_log", failCheck)
+            this.socket.on("game_response", failCheck2)
             this.socket.on("player", successCheck)
         })
 
@@ -2301,7 +2316,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", startedCheck)
         }).then((exchangeTime: number) => {
             const waitTime = exchangeTime + (this.ping * 2)
-            const exchangeFinished = new Promise<void>((resolve, reject) => {
+            const exchangefinished = new Promise<void>((resolve, reject) => {
                 const completeCheck1 = (data: CharacterData) => {
                     if (!data.q.exchange) {
                         this.socket.off("player", completeCheck1)
@@ -2332,10 +2347,12 @@ export class Character extends Observer implements CharacterData {
                 setTimeout(() => {
                     this.socket.off("player", completeCheck1)
                     this.socket.off("game_response", completeCheck2)
+                    this.socket.off("upgrade", completeCheck3)
                     reject(`exchange_complete timeout (${waitTime}ms)`)
                 }, waitTime)
                 this.socket.on("player", completeCheck1)
                 this.socket.on("game_response", completeCheck2)
+                this.socket.on("upgrade", completeCheck3)
             })
             return exchangeFinished
         })
@@ -3167,13 +3184,27 @@ export class Character extends Observer implements CharacterData {
             const openCheck = (data: ChestOpenedData) => {
                 if (data.id == id) {
                     this.socket.off("chest_opened", openCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve(data)
                 }
             }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "loot_no_space") {
+                        this.socket.off("chest_opened", openCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject("No space in inventory to open chest.")
+                    }
+                }
+            }
+
             setTimeout(() => {
                 this.socket.off("chest_opened", openCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`openChest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+            this.socket.on("game_response", failCheck)
             this.socket.on("chest_opened", openCheck)
         })
         this.socket.emit("open_chest", { id: id })
