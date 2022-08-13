@@ -1163,8 +1163,20 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (message: string) => {
                 if (message == "Item gone") {
                     this.socket.off("game_log", failCheck)
+                    this.socket.off("game_response", failCheck2)
                     this.socket.off("player", successCheck)
                     reject(`${item.name} is no longer available from Ponty.`)
+                }
+            }
+
+            const failCheck2 = (message: GameResponseData) => {
+                if (typeof message == "string") {
+                    if (message == "buy_cost") {
+                        this.socket.off("game_log", failCheck)
+                        this.socket.off("game_response", failCheck2)
+                        this.socket.off("player", successCheck)
+                        reject(`We don't have enough money to buy ${item.name} from Ponty.`)
+                    }
                 }
             }
 
@@ -1173,6 +1185,7 @@ export class Character extends Observer implements CharacterData {
                 if ((item.q && numNow == numBefore + item.q)
                     || (numNow == numBefore + 1)) {
                     this.socket.off("game_log", failCheck)
+                    this.socket.off("game_response", failCheck2)
                     this.socket.off("player", successCheck)
                     resolve()
                 }
@@ -1180,10 +1193,12 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("game_log", failCheck)
+                this.socket.off("game_response", failCheck2)
                 this.socket.off("player", successCheck)
                 reject("buyFromPonty timeout (5000ms)")
             }, 5000)
             this.socket.on("game_log", failCheck)
+            this.socket.on("game_response", failCheck2)
             this.socket.on("player", successCheck)
         })
 
