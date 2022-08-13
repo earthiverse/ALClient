@@ -2316,7 +2316,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", startedCheck)
         }).then((exchangeTime: number) => {
             const waitTime = exchangeTime + (this.ping * 2)
-            const exchangefinished = new Promise<void>((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 const completeCheck1 = (data: CharacterData) => {
                     if (!data.q.exchange) {
                         this.socket.off("player", completeCheck1)
@@ -2354,7 +2354,6 @@ export class Character extends Observer implements CharacterData {
                 this.socket.on("game_response", completeCheck2)
                 this.socket.on("upgrade", completeCheck3)
             })
-            return exchangeFinished
         })
 
         this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
