@@ -3175,13 +3175,27 @@ export class Character extends Observer implements CharacterData {
             const openCheck = (data: ChestOpenedData) => {
                 if (data.id == id) {
                     this.socket.off("chest_opened", openCheck)
+                    this.socket.off("game_response", failCheck)
                     resolve(data)
                 }
             }
+
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (data == "loot_no_space") {
+                        this.socket.off("chest_opened", openCheck)
+                        this.socket.off("game_response", failCheck)
+                        reject("No space in inventory to open chest.")
+                    }
+                }
+            }
+
             setTimeout(() => {
                 this.socket.off("chest_opened", openCheck)
+                this.socket.off("game_response", failCheck)
                 reject(`openChest timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
+            this.socket.on("game_response", failCheck)
             this.socket.on("chest_opened", openCheck)
         })
         this.socket.emit("open_chest", { id: id })
