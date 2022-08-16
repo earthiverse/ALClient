@@ -1,7 +1,7 @@
 import { Character } from "./Character.js"
 import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
 import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { PlayerData } from "./definitions/adventureland-server.js"
+import { PlayerData, QInfo } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
 import { Constants } from "./Constants.js"
@@ -49,7 +49,7 @@ export class Player implements PlayerData {
     npc?: NPCName
     owner: string
     pdps: number
-    q: { compound?: { len: number; ms: number; num: number; nums: number[]; }; upgrade?: { len: number; ms: number; num: number; }; } = {}
+    q: QInfo = {}
     range: number
     rip: boolean
     skin: string

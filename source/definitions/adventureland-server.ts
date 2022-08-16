@@ -78,25 +78,7 @@ export type CharacterData = PlayerData & {
     s: StatusInfo
     // TODO: Figure this type out
     c: any
-    q: {
-        compound?: {
-            len: number
-            ms: number
-            num: number
-            // NOTE: I don't think this value is used?
-            nums: number[]
-        }
-        upgrade?: {
-            len: number
-            ms: number
-            num: number
-        }
-        exchange?: {
-            len: number
-            ms: number
-            // TODO: add more variables
-        }
-    }
+    q: QInfo
     /** TODO: What is this? */
     abs?: boolean
     age: number
@@ -1016,28 +998,7 @@ export type PlayerData = {
     party?: string
     // TODO: Figure out what this is
     pdps?: number
-    q: {
-        compound?: {
-            len: number
-            ms: number
-            num: number
-            // NOTE: I don't think this value is used?
-            nums: number[]
-        }
-        exchange?: {
-            ms: number
-            len: number
-            name: ItemName
-            id: ItemName
-            q: number
-            num: number
-        }
-        upgrade?: {
-            len: number
-            ms: number
-            num: number
-        }
-    }
+    q: QInfo
     range?: number
     resistance?: number
     rip?: boolean | number
@@ -1072,7 +1033,8 @@ export type PlayersData = {
     type: CharacterType
 }[]
 
-export type QData = {
+/** This is for the data that is returned in the `q_data` socket event */
+export type PQData = {
     num: number
     p: {
         chance: number
@@ -1082,19 +1044,29 @@ export type QData = {
         scroll: ItemName
         success?: boolean
     }
-    q: {
-        compound?: {
-            len: number
-            ms: number
-            num: number
-            // NOTE: I don't think this value is used?
-            nums: number[]
-        }
-        upgrade?: {
-            len: number
-            ms: number
-            num: number
-        }
+    q: QInfo
+}
+
+/** This is for the data of `character.q` and `player.q` */
+export type QInfo = {
+    compound?: {
+        len: number
+        ms: number
+        num: number
+        nums: number[]
+    }
+    exchange?: {
+        ms: number
+        len: number
+        name: ItemName
+        id: ItemName
+        q: number
+        num: number
+    }
+    upgrade?: {
+        len: number
+        ms: number
+        num: number
     }
 }
 
@@ -1331,7 +1303,7 @@ export type ServerToClientEvents = {
     "player": (data: CharacterData) => void
     "players": (data: PlayersData) => void
     "pm": (data: PMData) => void
-    "q_data": (data: QData) => void
+    "q_data": (data: PQData) => void
     "request": (data: { name: string }) => void
     "secondhands": (data: ItemDataTrade[]) => void
     "server_info": (data: ServerInfoData) => void

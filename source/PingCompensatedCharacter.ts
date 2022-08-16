@@ -1,4 +1,4 @@
-import { CharacterData, EntitiesData, PlayerData, QData, ServerData } from "./definitions/adventureland-server.js"
+import { CharacterData, EntitiesData, PlayerData, PQData, ServerData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
 import { Tools } from "./Tools.js"
@@ -126,7 +126,7 @@ export class PingCompensatedCharacter extends Character {
         }
     }
 
-    protected parseQData(data: QData): void {
+    protected parseQData(data: PQData): void {
         // Get ping compensation
         const pingCompensation = this.ping
 

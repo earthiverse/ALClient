@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
-import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, QInfo } from "./definitions/adventureland.js"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, QData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, NotThereData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -367,7 +367,7 @@ export class Character extends Observer implements CharacterData {
         super.parseNewMap(data)
     }
 
-    protected parseQData(data: QData): void {
+    protected parseQData(data: PQData): void {
         if (data.q?.upgrade) this.q.upgrade = data.q.upgrade
         if (data.q?.compound) this.q.compound = data.q.compound
     }
@@ -543,7 +543,7 @@ export class Character extends Observer implements CharacterData {
             this.parseCharacter(data)
         })
 
-        this.socket.on("q_data", (data: QData) => {
+        this.socket.on("q_data", (data: PQData) => {
             this.parseQData(data)
         })
 
