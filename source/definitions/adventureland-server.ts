@@ -1137,6 +1137,12 @@ export type ServerMessageData = {
     message: string
 }
 
+export type SkillTimeoutData = {
+    name: SkillName
+    ms: number
+    penalty: number
+}
+
 export type StartData = CharacterData & {
     info?: MapInfo
     code_slot: number
@@ -1307,6 +1313,7 @@ export type ServerToClientEvents = {
     "request": (data: { name: string }) => void
     "secondhands": (data: ItemDataTrade[]) => void
     "server_info": (data: ServerInfoData) => void
+    "skill_timeout": (data: SkillTimeoutData) => void
     "start": (data: StartData) => void
     "tracker": (data: TrackerData) => void
     "ui": (data: UIData) => void
