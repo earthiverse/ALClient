@@ -27,6 +27,8 @@ export class Character extends Observer implements CharacterData {
     public nextSkill = new Map<SkillName, Date>()
     public partyData: PartyData
     public ready = false
+    /** Because of game server limitations, if your character disconnects you need make a new Character object, you can't call `connect()` again. */
+    public noReconnect = false
 
     // CharacterData
     public afk: "code"
@@ -417,14 +419,18 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
+        if (this.noReconnect) throw new Error("You can no longer reconnect with this character. Call `Game.startCharacter()` and make a new Character.")
+
         await super.connect(false, false)
 
         this.socket.on("disconnect", () => {
             this.ready = false
+            this.noReconnect = true
         })
 
         this.socket.on("disconnect_reason", () => {
             this.ready = false
+            this.noReconnect = true
         })
 
         this.socket.on("friend", (data: FriendData) => {
@@ -648,16 +654,17 @@ export class Character extends Observer implements CharacterData {
      * Disconnects your bot from the server, cancels all timeouts that have been registered, and turns off all socket listeners.
      */
     public disconnect(): void {
+        // Cancel all timeouts
+        for (const [, timer] of this.timeouts) clearTimeout(timer)
+
+        this.ready = false
+        this.noReconnect = true
+
         // Close & remove the socket
         if (this.socket) {
             this.socket.disconnect()
             this.socket.off()
         }
-
-        this.ready = false
-
-        // Cancel all timeouts
-        for (const [, timer] of this.timeouts) clearTimeout(timer)
     }
 
     /**
