@@ -1,6 +1,6 @@
 import { PartyData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-05-10
  * It is used to confirm type correctness
  */

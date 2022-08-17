@@ -264,29 +264,24 @@ export class Ranger extends PingCompensatedCharacter {
                 }
             }
 
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]3shot['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("disappearing_text", failCheck2)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve(projectiles)
-                }
-            }
-
-            const failCheck = (data: GameResponseData) => {
+            const successCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.skill == "3shot") {
+                    if (data.response == "data" && data.place == "3shot") {
+                        if (data.success) {
+                            this.socket.off("action", attackCheck)
+                            this.socket.off("game_response", successCheck)
+                            this.socket.off("disappearing_text", failCheck2)
+                            resolve(projectiles)
+                        }
+                    } else if (data.response == "cooldown" && data.place == "3shot") {
                         this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
+                        this.socket.off("game_response", successCheck)
                         this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
                         reject(`threeShot failed due to cooldown (ms: ${data.ms}).`)
                     } else if (data.response == "no_mp" && data.place == "3shot") {
                         this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
+                        this.socket.off("game_response", successCheck)
                         this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
                         reject("threeShot failed due to insufficient MP.")
                     }
                 }
@@ -295,24 +290,21 @@ export class Ranger extends PingCompensatedCharacter {
             const failCheck2 = (data: DisappearingTextData) => {
                 if (data.message == "NO HITS" && data.id == this.id) {
                     this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
+                    this.socket.off("game_response", successCheck)
                     this.socket.off("disappearing_text", failCheck2)
-                    this.socket.off("eval", cooldownCheck)
                     resolve(projectiles) // We technically 3shot, we just didn't hit anything
                 }
             }
 
             setTimeout(() => {
                 this.socket.off("action", attackCheck)
-                this.socket.off("game_response", failCheck)
+                this.socket.off("game_response", successCheck)
                 this.socket.off("disappearing_text", failCheck2)
-                this.socket.off("eval", cooldownCheck)
                 reject(`3shot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("action", attackCheck)
-            this.socket.on("game_response", failCheck)
+            this.socket.on("game_response", successCheck)
             this.socket.on("disappearing_text", failCheck2)
-            this.socket.on("eval", cooldownCheck)
         })
 
         this.socket.emit("skill", {

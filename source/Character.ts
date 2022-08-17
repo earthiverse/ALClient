@@ -896,7 +896,7 @@ export class Character extends Observer implements CharacterData {
                         this.socket.off("notthere", failCheck2)
                         this.socket.off("death", deathCheck)
                         reject(`${id} is too far away to attack (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.place == "attack" && data.id == id) {
+                    } else if (data.response == "cooldown" && data.place == "attack") {
                         this.socket.off("action", attackCheck)
                         this.socket.off("game_response", failCheck)
                         this.socket.off("notthere", failCheck2)
@@ -3878,7 +3878,10 @@ export class Character extends Observer implements CharacterData {
                     throw new Error(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
             }
 
-            if (this.rip) throw new Error("We died while smartMoving")
+            if (this.rip) {
+                this.smartMoving = undefined
+                throw new Error("We died while smartMoving")
+            }
 
             if (options?.getWithin >= Tools.distance(this, fixedTo)) {
                 break // We're already close enough!
@@ -4024,7 +4027,7 @@ export class Character extends Observer implements CharacterData {
 
                 // Look for the path again
                 this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
-                await this.requestPlayerData().catch((e) => { if (options?.showConsole) console.error(e) })
+                await this.requestPlayerData()?.catch((e) => { if (options?.showConsole) console.error(e) })
                 path = await Pathfinder.getPath(this, fixedTo, options)
                 i = -1
                 await new Promise(resolve => setTimeout(resolve, Constants.TIMEOUT))

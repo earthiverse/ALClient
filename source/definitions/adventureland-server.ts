@@ -402,7 +402,7 @@ export type MonsterData = {
     resistance?: number
     s: StatusInfo
     /** The ID of the target */
-    target?: string
+    target?: string | null
 
     abs?: false
     hp?: number
@@ -483,14 +483,29 @@ export type GameResponseDataObject = {
     q: number
 } | {
     response: "cooldown"
+    failed: true
     skill?: SkillName
+    id?: string
     place: SkillName
-    id: string
     ms: number
 } | {
     response: "craft"
     name: ItemName
 } | {
+    response: "data"
+    place: Exclude<SkillName, "attack">
+    success: true
+} |
+/** The 'attack' response is its own mess currently */
+(
+    {
+        response: "data"
+        place: "attack"
+        reason?: string
+        failed?: boolean
+        id?: string
+    } & Partial<ActionDataProjectile>
+) | {
     response: "defeated_by_a_monster"
     xp: number
     monster: MonsterName
@@ -550,6 +565,7 @@ export type GameResponseDataObject = {
 }| {
     response: "no_mp"
     place: SkillName
+    failed: true
 } | {
     response: "no_target"
     // TODO: See what else gets returned
@@ -982,7 +998,7 @@ export type PlayerData = {
     code?: boolean | string
     controller?: string
     cx: CXData
-    focus?: string
+    focus?: string | null
     frequency?: number
     x: number
     y: number
@@ -1007,7 +1023,7 @@ export type PlayerData = {
     slots?: SlotInfo
     speed: number
     stand?: boolean | "cstand" | "stand0"
-    target?: string
+    target?: string | null
     tp?: boolean
     xp?: number
 }
