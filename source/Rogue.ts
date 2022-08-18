@@ -67,8 +67,10 @@ export class Rogue extends PingCompensatedCharacter {
     }
 
     // NOTE: UNTESTED
-    public async poisonCoat(): Promise<void> {
+    public async poisonCoat(poison = this.locateItem("poison")): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [poisonCoat].")
+        if (poison === undefined) throw new Error("We don't have any poison in our inventory.")
+
         const poisonCoated = new Promise<void>((resolve, reject) => {
             const cooldownCheck = (data: EvalData) => {
                 if (/skill_timeout\s*\(\s*['"]pcoat['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
@@ -84,7 +86,8 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.on("eval", cooldownCheck)
         })
         this.socket.emit("skill", {
-            name: "pcoat"
+            name: "pcoat",
+            num: poison
         })
         return poisonCoated
     }
