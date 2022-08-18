@@ -398,7 +398,7 @@ export class Merchant extends PingCompensatedCharacter {
         return mined
     }
 
-    public async mluck(target: string): Promise<void> {
+    public async mluck(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [mluck].")
         if (target !== this.id) {
             const player = this.players.get(target)
