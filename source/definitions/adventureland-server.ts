@@ -1337,6 +1337,22 @@ export type ServerToClientEvents = {
     "welcome": (data: WelcomeData) => void
 }
 
+export type ClientToServerSkillData =
+/** Skills that don't take any parameters */
+| { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
+/** Skills that target an entity */
+| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "supershot" | "taunt" | "zapperzap">, id: string }
+/** Skills that use an item */
+| { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
+/** Skills that target an entity and use an item */
+| { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">, id: string, num: number }
+/** Other special skills */
+| { name: Extract<SkillName, "3shot">, ids: [string, string, string] }
+| { name: Extract<SkillName, "5shot">, ids: [string, string, string, string, string] }
+| { name: Extract<SkillName, "blink" | "dash">, x: number, y: number }
+| { name: Extract<SkillName, "cburst">, targets: [string, number][] }
+| { name: Extract<SkillName, "energize">, id: string, mp: number }
+
 export type ClientToServerEvents = {
     "attack": (data: { id: string }) => void
     "bet": (data: { type: "dice", dir: "up" | "down", num: number, gold: number }) => void
@@ -1396,7 +1412,7 @@ export type ClientToServerEvents = {
     "send": (data: { gold: number, name: string } | { name: string, num: number, q: number }) => void
     // TODO: Create SendUpdatesData type
     "send_updates": (data: Record<string, never>) => void
-    "skill": (data: { name: SkillName } | { id: string, name: SkillName, num: number } | { name: "3shot", ids: [string, string, string] } | { name: "5shot", ids: [string, string, string, string, string] } | { name: "blink", x: number, y: number } | { name: "cburst", targets: [string, number][] } | { id: string, mp: number, name: "energize" }) => void
+    "skill": (data: ClientToServerSkillData) => void
     "stop": (data: { action: "invis" | "town" }) => void
     "town": () => void
     "tracker": () => void
