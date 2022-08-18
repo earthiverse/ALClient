@@ -958,7 +958,7 @@ export class Character extends Observer implements CharacterData {
         const response = this.getResponsePromise(
             "buy",
             {
-                extraChecks(data: any) {
+                extraGameResponseCheck(data: any) {
                     if (data.name !== itemName) return false
                     if (data.q !== quantity) return false
                     return true
@@ -2881,32 +2881,45 @@ export class Character extends Observer implements CharacterData {
      * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getResponsePromise(skill: SkillName | "buy", options?: { extraChecks?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+    protected getResponsePromise(skill: SkillName | "buy", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
         return new Promise<unknown>((resolve, reject) => {
-            const check = (data: GameResponseData) => {
+            const clear = () => {
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("death", checkDeath)
+                clearTimeout(timeout)
+            }
+
+            const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
                 if ((data as any).place !== skill) return // The response is for a different skill
 
-                if (options.extraChecks && !options.extraChecks(data)) return // Didn't pass extra checks
+                if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
                 if ((data as any).success) {
-                    this.socket.off("game_response", check)
+                    clear()
                     resolve(data)
                 } else if ((data as any).failed) {
-                    this.socket.off("game_response", check)
+                    clear()
                     reject(`Failed to use skill '${skill}'${(data as any).reason ? ` (${(data as any).reason})` : ""}.`)
                 }
             }
 
-            setTimeout(() => {
-                this.socket.off("game_response", check)
+            const checkDeath = (data: DeathData) => {
+                if (data.place !== skill) return
+                clear()
+                reject(`Failed to use skill '${skill}' (Entity with ID '${data.id}' not found)`)
+            }
+
+            const timeout = setTimeout(() => {
+                clear()
                 reject(`Failed to use skill '${skill}' (Timeout (${options.timeoutMs}ms))`)
             }, options.timeoutMs)
 
-            this.socket.on("game_response", check)
+            this.socket.on("game_response", gameResponseCheck)
+            this.socket.on("death", checkDeath)
         })
     }
 
@@ -3393,12 +3406,10 @@ export class Character extends Observer implements CharacterData {
             const response = this.getResponsePromise("scare")
             this.socket.emit("skill", { name: "scare" })
             await response
-        } catch (e) {
+        } finally {
             this.socket.off("ui", getIDs)
-            throw e
         }
 
-        this.socket.off("ui", getIDs)
         return ids
     }
 

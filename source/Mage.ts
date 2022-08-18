@@ -100,171 +100,85 @@ export class Mage extends PingCompensatedCharacter {
     }
 
     /**
-     *
-     * @param targets Put in pairs of entity IDs, and how much mp to spend attacking each target. E.g.: [["12345", "100"]]
+     * Controlled burst allows mages to spend MP to attack each target that they specify
+     * @param targets [[entityID, mpForTarget], ...]
+     * @returns
      */
-    public async cburst(targets: [string, number][]): Promise<void> {
+    public async cburst(targets: [string, number][]): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [cburst].")
         if (targets.length == 0) throw new Error("No targets were given to cburst.")
-        const cbursted = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]cburst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("disappearing_text", failCheck2)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.skill == "cburst") {
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
-                        reject(`cburst failed due to cooldown (ms: ${data.ms}).`)
-                    } else if (data.response == "no_mp" && data.place == "cburst") {
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
-                        reject("cburst failed due to insufficient MP.")
-                    } else if (data.response == "too_far" && data.place == "cburst") {
-                        // TODO: I don't think this is correct. What if you attack 2, and
-                        //       only one is out of range? We should keep track, and check
-                        //       against the length of the targets array.
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
-                        reject(`${data.id} is too far away to cburst (dist: ${data.dist}).`)
-                    }
-                } else if (typeof data == "string") {
-                    if (data == "skill_cant_incapacitated") {
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("disappearing_text", failCheck2)
-                        this.socket.off("eval", cooldownCheck)
-                        reject("We can't cburst, we are incapacitated.")
-                    }
-                }
-            }
-
-            const failCheck2 = (data: DisappearingTextData) => {
-                if (data.message == "NO HITS" && data.id == this.id) {
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("disappearing_text", failCheck2)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve() // We technically cbursted, we just didn't hit anything
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("game_response", failCheck)
-                this.socket.off("disappearing_text", failCheck2)
-                this.socket.off("eval", cooldownCheck)
-                reject(`cburst timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", failCheck)
-            this.socket.on("disappearing_text", failCheck2)
-        })
-
+        const response = this.getResponsePromise("cburst")
         this.socket.emit("skill", { name: "cburst", targets: targets })
-        return cbursted
+        return response
     }
 
-    public async energize(target: string, mp?: number): Promise<void> {
+    public async energize(target: string, mp?: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [energize].")
-        const energized = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]energize['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`energize timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("energize")
         this.socket.emit("skill", { id: target, mp: mp, name: "energize" })
-        return energized
+        return response
     }
 
     // NOTE: UNTESTED
-    public async entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<void> {
+    public async entangle(target: string, essenceofnature = this.locateItem("essenceofnature")): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [entangle].")
         if (essenceofnature === undefined) throw new Error("We need an essenceofnature in order to entangle.")
 
-        const tangled = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]entangle['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`entangle timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getResponsePromise("entangle")
         this.socket.emit("skill", {
             name: "entangle",
             id: target,
             num: essenceofnature
         })
-        return tangled
+        return response
     }
 
-    public async light(): Promise<void> {
+    public async light(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [light].")
-        const lit = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]light['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`light timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getResponsePromise("light")
         this.socket.emit("skill", {
             name: "light"
         })
-        return lit
+        return response
     }
 
-    public async magiport(target: string): Promise<void> {
+    /**
+     * Sends an offer to teleport another player to your location
+     *
+     * NOTE: If you offer to magiport a player that is not online, it will still use MP.
+     *
+     * @param target The ID of the player to teleport
+     * @returns A boolean representing whether or not the offer was sent
+     */
+    public async magiport(target: string): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [magiport].")
-        const magiportOfferSent = new Promise<void>((resolve, reject) => {
-            const magiportCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "magiport_failed" && data.id == target) {
-                        this.socket.off("game_response", magiportCheck)
-                        reject(`Magiport for '${target}' failed.`)
-                    } else if (data.response == "magiport_sent" && data.id == target) {
-                        this.socket.off("game_response", magiportCheck)
-                        resolve()
-                    }
-                }
+
+        let status: boolean
+        const getMagiportStatus = (data: GameResponseData) => {
+            if (typeof data !== "object") return
+            if (data.response == "magiport_failed" && data.id == target) {
+                status = false
+                return
             }
+            if (data.response == "magiport_sent" && data.id == target) {
+                status = true
+                return
+            }
+        }
+        this.socket.on("game_response", getMagiportStatus)
 
-            setTimeout(() => {
-                this.socket.off("game_response", magiportCheck)
-                reject(`magiport timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("game_response", magiportCheck)
-        })
+        try {
+            const response = this.getResponsePromise("magiport")
+            this.socket.emit("skill", { id: target, name: "magiport" })
+            await response
+        } finally {
+            this.socket.off("game_response", getMagiportStatus)
+        }
 
-        this.socket.emit("skill", { name: "magiport", id: target })
-        return magiportOfferSent
+        return status
     }
 
     /**

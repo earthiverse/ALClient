@@ -170,28 +170,16 @@ export class Rogue extends PingCompensatedCharacter {
         return stabbed
     }
 
-    // TODO: Improve to check if we applied it on the given character
-    public async rspeed(target: string): Promise<void> {
+    public async rspeed(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [rspeed].")
-        const rSpeedApplied = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]rspeed['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`rspeed timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        // TODO: Improve to check if we applied it on the given character
+        const response = this.getResponsePromise("rspeed")
         this.socket.emit("skill", {
             id: target,
             name: "rspeed",
         })
-        return rSpeedApplied
+        return response
     }
 
     // NOTE: UNTESTED
