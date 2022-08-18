@@ -9,5 +9,5 @@ test("DeathData type validation", async () => {
     const deathDatas: DeathData[] = [
         { "id": "368523" }
     ]
-    for (const deathData of deathDatas) expect(deathData).not.toBe(undefined)
+    for (const deathData of deathDatas) expect(deathData).toBeDefined()
 })

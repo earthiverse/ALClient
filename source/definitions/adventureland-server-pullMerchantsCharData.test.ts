@@ -1479,5 +1479,5 @@ test("PullMerchantsData type validation", async () => {
             }
         ]
     }
-    expect(merchantsData).not.toBe(undefined)
+    expect(merchantsData).toBeDefined()
 })

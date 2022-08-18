@@ -16,7 +16,7 @@ test("HitData type validation", async () => {
         "damage": 2323,
         "kill": true
     }
-    expect(killMonster).not.toBe(undefined)
+    expect(killMonster).toBeDefined()
 
     const killPlayer: HitData = {
         "hid": "2884433",
@@ -28,7 +28,7 @@ test("HitData type validation", async () => {
         "damage": 51,
         "kill": true
     }
-    expect(killPlayer).not.toBe(undefined)
+    expect(killPlayer).toBeDefined()
 
     const burn: HitData = {
         "source": "burn",
@@ -37,7 +37,7 @@ test("HitData type validation", async () => {
         "damage": 538,
         "kill": false
     }
-    expect(burn).not.toBe(undefined)
+    expect(burn).toBeDefined()
 
     const burn2: HitData = {
         "anim": "explode_c",
@@ -50,7 +50,7 @@ test("HitData type validation", async () => {
         "projectile": "mmagic",
         "source": "attack"
     }
-    expect(burn2).not.toBe(undefined)
+    expect(burn2).toBeDefined()
 
     const cleave: HitData = {
         "anim": "slash1",
@@ -65,7 +65,7 @@ test("HitData type validation", async () => {
         "projectile": "momentum",
         "source": "cleave"
     }
-    expect(cleave).not.toBe(undefined)
+    expect(cleave).toBeDefined()
 
     const curse: HitData = {
         "hid": "Tsumiki",
@@ -76,7 +76,7 @@ test("HitData type validation", async () => {
         "anim": "curse",
         "damage": 0
     }
-    expect(curse).not.toBe(undefined)
+    expect(curse).toBeDefined()
 
     const evaded: HitData = {
         "pid": "k8tW8A",
@@ -86,7 +86,7 @@ test("HitData type validation", async () => {
         "damage": 0,
         "evade": true
     }
-    expect(evaded).not.toBe(undefined)
+    expect(evaded).toBeDefined()
 
     const heal: HitData = {
         "hid": "earthPri",
@@ -97,7 +97,7 @@ test("HitData type validation", async () => {
         "anim": "heal",
         "heal": 768
     }
-    expect(heal).not.toBe(undefined)
+    expect(heal).toBeDefined()
 
     const manaSteal: HitData = {
         "hid": "Trexnamedtut",
@@ -111,7 +111,7 @@ test("HitData type validation", async () => {
         "manasteal": 3,
         "kill": true
     }
-    expect(manaSteal).not.toBe(undefined)
+    expect(manaSteal).toBeDefined()
 
     const missData: HitData = {
         "pid": "JGgAkq",
@@ -121,7 +121,7 @@ test("HitData type validation", async () => {
         "damage": 0,
         "miss": true
     }
-    expect(missData).not.toBe(undefined)
+    expect(missData).toBeDefined()
 
     const reflected: HitData = {
         "pid": "LPT7be",
@@ -131,5 +131,5 @@ test("HitData type validation", async () => {
         "damage": 0,
         "reflect": 154
     }
-    expect(reflected).not.toBe(undefined)
+    expect(reflected).toBeDefined()
 })

@@ -18,5 +18,5 @@ test("G.emotions type validation", async () => {
             }
         }
     }
-    expect(G_emotions).not.toBe(undefined)
+    expect(G_emotions).toBeDefined()
 })

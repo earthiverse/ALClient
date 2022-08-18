@@ -104,5 +104,5 @@ test("ServerInfoData type validation", async () => {
             }
         }
     ]
-    for (const serverInfo of serverInfos) expect(serverInfo).not.toBe(undefined)
+    for (const serverInfo of serverInfos) expect(serverInfo).toBeDefined()
 })

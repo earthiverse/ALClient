@@ -86,5 +86,5 @@ test("G.tilesets type validation", async () => {
             }
         }
     }
-    expect(G_tilesets).not.toBe(undefined)
+    expect(G_tilesets).toBeDefined()
 })

@@ -1,6 +1,6 @@
 import { TrackerData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-05-08
  * It is used to confirm type correctness
  */
@@ -6824,5 +6824,5 @@ test("TrackerData type validation", async () => {
             "global_static": []
         }
     ]
-    for (const report of reports) expect(report).not.toBe(undefined)
+    for (const report of reports) expect(report).toBeDefined()
 })

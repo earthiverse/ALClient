@@ -186,5 +186,5 @@ test("G.dismantle type validation", async () => {
             }
         }
     }
-    expect(G_dismantle).not.toBe(undefined)
+    expect(G_dismantle).toBeDefined()
 })

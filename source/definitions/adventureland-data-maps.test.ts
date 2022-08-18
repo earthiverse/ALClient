@@ -6365,5 +6365,5 @@ test("G.maps type validation", async () => {
             }
         }
     }
-    expect(G_maps).not.toBe(undefined)
+    expect(G_maps).toBeDefined()
 })

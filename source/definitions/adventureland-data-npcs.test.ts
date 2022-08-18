@@ -1951,5 +1951,5 @@ test("G.npcs type validation", async () => {
             }
         }
     }
-    expect(G_npcs).not.toBe(undefined)
+    expect(G_npcs).toBeDefined()
 })

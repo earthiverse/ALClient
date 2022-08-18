@@ -217,5 +217,5 @@ test("G.projectiles type validation", async () => {
             }
         }
     }
-    expect(G_projectiles).not.toBe(undefined)
+    expect(G_projectiles).toBeDefined()
 })

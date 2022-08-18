@@ -9,7 +9,7 @@ test("DiceData type validation", async () => {
     const rolling: DiceData = {
         "state": "roll"
     }
-    expect(rolling).not.toBe(undefined)
+    expect(rolling).toBeDefined()
 
     const locks: DiceData[] = [
         {
@@ -25,7 +25,7 @@ test("DiceData type validation", async () => {
             "text": "Num: 88.81 Initials: a Random: TxxtXyoRLB9rxnPlZ"
         }
     ]
-    for (const lock of locks) expect(lock).not.toBe(undefined)
+    for (const lock of locks) expect(lock).toBeDefined()
 
     const bets: DiceData[] = [
         {
@@ -39,5 +39,5 @@ test("DiceData type validation", async () => {
             "state": "bets"
         }
     ]
-    for (const bet of bets) expect(bet).not.toBe(undefined)
+    for (const bet of bets) expect(bet).toBeDefined()
 })

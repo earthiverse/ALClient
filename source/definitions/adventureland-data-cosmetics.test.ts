@@ -959,5 +959,5 @@ test("G.cosmetics type validation", async () => {
             }
         }
     }
-    expect(G_cosmetics).not.toBe(undefined)
+    expect(G_cosmetics).toBeDefined()
 })

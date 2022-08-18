@@ -453,7 +453,7 @@ test("EntitiesData type validation", async () => {
         "in": "level3",
         "map": "level3"
     }
-    expect(players).not.toBe(undefined)
+    expect(players).toBeDefined()
 
     const players2: EntitiesData = {
         "in": "desertland",
@@ -901,5 +901,5 @@ test("EntitiesData type validation", async () => {
         ],
         "type": "xy"
     }
-    expect(players2).not.toBe(undefined)
+    expect(players2).toBeDefined()
 })

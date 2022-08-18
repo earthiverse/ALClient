@@ -1388,5 +1388,5 @@ test("G.skills type validation", async () => {
             }
         }
     }
-    expect(G_skills).not.toBe(undefined)
+    expect(G_skills).toBeDefined()
 })

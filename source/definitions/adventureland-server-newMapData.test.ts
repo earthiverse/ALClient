@@ -594,7 +594,7 @@ test("NewMapData type validation", async () => {
         "x": 526,
         "y": 2026
     }
-    expect(comm).not.toBe(undefined)
+    expect(comm).toBeDefined()
 
     const comm2: NewMapData = {
         "direction": 0,
@@ -1702,7 +1702,7 @@ test("NewMapData type validation", async () => {
         "x": 0,
         "y": 0
     }
-    expect(comm2).not.toBe(undefined)
+    expect(comm2).toBeDefined()
 
     const townTeleport: NewMapData = {
         "direction": 3,
@@ -2029,7 +2029,7 @@ test("NewMapData type validation", async () => {
         "x": 0,
         "y": -16
     }
-    expect(townTeleport).not.toBe(undefined)
+    expect(townTeleport).toBeDefined()
 
     const tavern: NewMapData = {
         "direction": 3,
@@ -2159,5 +2159,5 @@ test("NewMapData type validation", async () => {
         "x": 0,
         "y": -8
     }
-    expect(tavern).not.toBe(undefined)
+    expect(tavern).toBeDefined()
 })

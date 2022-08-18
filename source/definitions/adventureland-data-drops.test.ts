@@ -6699,5 +6699,5 @@ test("G.drops type validation", async () => {
             ]
         }
     }
-    expect(G_drops).not.toBe(undefined)
+    expect(G_drops).toBeDefined()
 })

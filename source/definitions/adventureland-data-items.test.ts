@@ -9044,5 +9044,5 @@ test("G.items type validation", async () => {
             }
         }
     }
-    expect(G_items).not.toBe(undefined)
+    expect(G_items).toBeDefined()
 })

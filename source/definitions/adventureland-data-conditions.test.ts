@@ -562,5 +562,5 @@ test("G.conditions type validation", async () => {
             }
         }
     }
-    expect(G_conditions).not.toBe(undefined)
+    expect(G_conditions).toBeDefined()
 })

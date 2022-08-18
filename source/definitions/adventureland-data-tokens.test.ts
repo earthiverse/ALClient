@@ -65,5 +65,5 @@ test("G.tokens type validation", async () => {
             }
         }
     }
-    expect(G_tokens).not.toBe(undefined)
+    expect(G_tokens).toBeDefined()
 })

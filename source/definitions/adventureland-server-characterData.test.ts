@@ -249,5 +249,5 @@ test("CharacterData type validation", async () => {
         "cc": 1,
         "reopen": true
     }
-    expect(iMoveData).not.toBe(undefined)
+    expect(iMoveData).toBeDefined()
 })

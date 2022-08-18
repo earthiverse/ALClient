@@ -311,5 +311,5 @@ test("G.dimensions type validation", async () => {
             ]
         }
     }
-    expect(G_dimensions).not.toBe(undefined)
+    expect(G_dimensions).toBeDefined()
 })

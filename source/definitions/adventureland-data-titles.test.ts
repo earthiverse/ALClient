@@ -83,5 +83,5 @@ test("G.titles type validation", async () => {
             }
         }
     }
-    expect(G_titles).not.toBe(undefined)
+    expect(G_titles).toBeDefined()
 })

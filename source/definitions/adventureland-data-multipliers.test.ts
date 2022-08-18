@@ -16,5 +16,5 @@ test("G.multipliers type validation", async () => {
             "shells_to_gold": 32000
         }
     }
-    expect(G_multipliers).not.toBe(undefined)
+    expect(G_multipliers).toBeDefined()
 })

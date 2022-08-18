@@ -211,5 +211,5 @@ test("G.levels type validation", async () => {
             "200": 940000000000000
         }
     }
-    expect(G_levels).not.toBe(undefined)
+    expect(G_levels).toBeDefined()
 })

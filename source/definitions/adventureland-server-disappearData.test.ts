@@ -57,5 +57,5 @@ test("DisappearData type validation", async () => {
             to: "jail"
         }
     ]
-    for (const report of reports) expect(report).not.toBe(undefined)
+    for (const report of reports) expect(report).toBeDefined()
 })

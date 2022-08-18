@@ -502,5 +502,5 @@ test("G.animations type validation", async () => {
             }
         }
     }
-    expect(G_animations).not.toBe(undefined)
+    expect(G_animations).toBeDefined()
 })

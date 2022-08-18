@@ -18,7 +18,7 @@ test("ActionData type validation", async () => {
         "x": -486.02278423668105,
         "y": 675.491341680662
     }
-    expect(curse).not.toBe(undefined)
+    expect(curse).toBeDefined()
 
     const heal: ActionData = {
         "attacker": "Nindr",
@@ -33,7 +33,7 @@ test("ActionData type validation", async () => {
         "x": -405,
         "y": -2105
     }
-    expect(heal).not.toBe(undefined)
+    expect(heal).toBeDefined()
 
     const taunt: ActionData = {
         "attacker": "Punda",
@@ -48,7 +48,7 @@ test("ActionData type validation", async () => {
         "x": -486.02278423668105,
         "y": 675.491341680662
     }
-    expect(taunt).not.toBe(undefined)
+    expect(taunt).toBeDefined()
 
     const momentum: ActionData = {
         "attacker": "Wolfff",
@@ -63,7 +63,7 @@ test("ActionData type validation", async () => {
         "x": -486.02278423668105,
         "y": 675.491341680662
     }
-    expect(momentum).not.toBe(undefined)
+    expect(momentum).toBeDefined()
 
     const magicAttack: ActionData = {
         "attacker": "Logus",
@@ -78,7 +78,7 @@ test("ActionData type validation", async () => {
         "x": -486.02278423668105,
         "y": 675.491341680662
     }
-    expect(magicAttack).not.toBe(undefined)
+    expect(magicAttack).toBeDefined()
 
     const fireball: ActionData = {
         "attacker": "Riano",
@@ -93,7 +93,7 @@ test("ActionData type validation", async () => {
         "x": -1299.5785271749164,
         "y": -6.7909283252051145
     }
-    expect(fireball).not.toBe(undefined)
+    expect(fireball).toBeDefined()
 
     const fiveShot: ActionData = {
         "attacker": "Persephone",
@@ -108,7 +108,7 @@ test("ActionData type validation", async () => {
         "x": 392,
         "y": -2840
     }
-    expect(fiveShot).not.toBe(undefined)
+    expect(fiveShot).toBeDefined()
 
     const cburst: ActionData = {
         "attacker": "facilitating",
@@ -124,7 +124,7 @@ test("ActionData type validation", async () => {
         "x": -1258.7406861256309,
         "y": 659.3266795166778
     }
-    expect(cburst).not.toBe(undefined)
+    expect(cburst).toBeDefined()
 
     const zapperZap: ActionData = {
         "attacker": "earthiverse",
@@ -140,5 +140,5 @@ test("ActionData type validation", async () => {
         "x": 271.10034441380475,
         "y": -239.95362827974216
     }
-    expect(zapperZap).not.toBe(undefined)
+    expect(zapperZap).toBeDefined()
 })

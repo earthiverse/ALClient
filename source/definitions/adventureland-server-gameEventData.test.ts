@@ -12,5 +12,5 @@ test("GameEventData type validation", async () => {
         "x": 900,
         "y": -800
     }
-    expect(snowman).not.toBe(undefined)
+    expect(snowman).toBeDefined()
 })

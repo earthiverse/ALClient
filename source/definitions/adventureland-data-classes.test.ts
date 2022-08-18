@@ -739,5 +739,5 @@ test("G.classes type validation", async () => {
             }
         }
     }
-    expect(G_classes).not.toBe(undefined)
+    expect(G_classes).toBeDefined()
 })

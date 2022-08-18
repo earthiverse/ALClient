@@ -9,5 +9,5 @@ test("CMData type validation", async () => {
     const cms: CMData[] = [
         { "name": "earthPal", "message": "{\"message\":\"hi\"}" }
     ]
-    for (const cm of cms) expect(cm).not.toBe(undefined)
+    for (const cm of cms) expect(cm).toBeDefined()
 })

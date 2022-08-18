@@ -1,6 +1,6 @@
 import { LimitDCReportData } from "./adventureland-server"
 
-/** 
+/**
  * The following is from socket events received 2021-04-24
  * It is used to confirm type correctness
  */
@@ -17,5 +17,5 @@ test("LimitDCReportData type validation", async () => {
             "total": 5
         }
     ]
-    for (const report of reports) expect(report).not.toBe(undefined)
+    for (const report of reports) expect(report).toBeDefined()
 })

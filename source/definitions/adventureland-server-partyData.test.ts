@@ -157,5 +157,5 @@ test("PartyData type validation", async () => {
         },
         message: "ytmnd joined the party"
     }
-    expect(join).not.toBe(undefined)
+    expect(join).toBeDefined()
 })

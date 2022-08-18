@@ -953,5 +953,5 @@ test("G.craft type validation", async () => {
             }
         }
     }
-    expect(G_craft).not.toBe(undefined)
+    expect(G_craft).toBeDefined()
 })

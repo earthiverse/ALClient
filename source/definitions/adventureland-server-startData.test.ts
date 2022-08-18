@@ -1656,5 +1656,5 @@ test("StartData type validation", async () => {
             "map": "main"
         }
     }
-    expect(start).not.toBe(undefined)
+    expect(start).toBeDefined()
 })

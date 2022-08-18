@@ -14,7 +14,7 @@ test("EvalData type validation", async () => {
         { code: "skill_timeout('attack',3200)" },
         { code: "ui_move(-100,-40)" }
     ]
-    for (const evalData of evalDatas) expect(evalData).not.toBe(undefined)
+    for (const evalData of evalDatas) expect(evalData).toBeDefined()
 
     const mock = jest.fn()
     console.error = mock

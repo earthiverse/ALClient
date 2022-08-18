@@ -85,5 +85,5 @@ test("G.achivements type validation", async () => {
             }
         }
     }
-    expect(G_achievements).not.toBe(undefined)
+    expect(G_achievements).toBeDefined()
 })

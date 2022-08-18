@@ -19,5 +19,5 @@ test("PlayersData type validation", async () => {
         { "name": "SophiaxI", "map": "desertland", "age": 323, "level": 77, "type": "merchant", "afk": 1, "party": "Casmer" },
         { "name": "Nindr", "map": "desertland", "age": 324, "level": 89, "type": "priest", "afk": 1, "party": "Casmer" },
         { "name": "earthMer2", "map": "cave", "age": 444, "level": 53, "type": "merchant", "afk": 0, "party": "" }]
-    expect(playersData).not.toBe(undefined)
+    expect(playersData).toBeDefined()
 })

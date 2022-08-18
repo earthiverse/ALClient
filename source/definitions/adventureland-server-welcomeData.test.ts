@@ -17,7 +17,7 @@ test("WelcomeData type validation", async () => {
         "map": "halloween",
         "in": "halloween"
     }
-    expect(normalWelcomeData).not.toBe(undefined)
+    expect(normalWelcomeData).toBeDefined()
 
     const commWelcomeData: WelcomeData = {
         "region": "US",
@@ -321,5 +321,5 @@ test("WelcomeData type validation", async () => {
         "map": "desertland",
         "in": "desertland"
     }
-    expect(commWelcomeData).not.toBe(undefined)
+    expect(commWelcomeData).toBeDefined()
 })

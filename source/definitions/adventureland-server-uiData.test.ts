@@ -16,14 +16,14 @@ test("UIData type validation", async () => {
             "q": 1
         }
     }
-    expect(buy).not.toBe(undefined)
+    expect(buy).toBeDefined()
 
     const mluck: UIData = {
         "type": "mluck",
         "from": "earthMer",
         "to": "earthMer"
     }
-    expect(mluck).not.toBe(undefined)
+    expect(mluck).toBeDefined()
 
     const trade_sell: UIData = {
         "type": "+$$",
@@ -39,5 +39,5 @@ test("UIData type validation", async () => {
         "num": 23,
         "snum": 6
     }
-    expect(trade_sell).not.toBe(undefined)
+    expect(trade_sell).toBeDefined()
 })

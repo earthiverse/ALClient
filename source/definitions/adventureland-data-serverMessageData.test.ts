@@ -11,12 +11,12 @@ test("ServerMessageData type validation", async () => {
         "event": true,
         "message": "Join the fight against Snowman!"
     }
-    expect(snowman1).not.toBe(undefined)
+    expect(snowman1).toBeDefined()
 
     const snowman2: ServerMessageData = {
         "color": "#B1DCEF",
         "discord": "orange",
         "message": "Snowman spawned in Winterland!"
     }
-    expect(snowman2).not.toBe(undefined)
+    expect(snowman2).toBeDefined()
 })

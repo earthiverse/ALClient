@@ -11,34 +11,34 @@ test("GameEventData type validation", async () => {
         "response": "donate_low",
         "xprate": 3.2
     }
-    expect(donate).not.toBe(undefined)
+    expect(donate).toBeDefined()
 
     const donateGum: GameResponseData = {
         "gold": 123456,
         "response": "donate_gum",
         "xprate": 3.2
     }
-    expect(donateGum).not.toBe(undefined)
+    expect(donateGum).toBeDefined()
 
     const donateThanks: GameResponseData = {
         "gold": 1000000,
         "response": "donate_thx",
         "xprate": 3.2
     }
-    expect(donateThanks).not.toBe(undefined)
+    expect(donateThanks).toBeDefined()
 
     const lostAndFoundInfo: GameResponseData = {
         "gold": 32279215800.782036,
         "response": "lostandfound_info"
     }
-    expect(lostAndFoundInfo).not.toBe(undefined)
+    expect(lostAndFoundInfo).toBeDefined()
 
     const threeShotFailNoMP: GameResponseData = {
         "failed": true,
         "place": "3shot",
         "response": "no_mp"
     }
-    expect(threeShotFailNoMP).not.toBe(undefined)
+    expect(threeShotFailNoMP).toBeDefined()
 
     const threeShotFailCooldown: GameResponseData = {
         "failed": true,
@@ -47,14 +47,14 @@ test("GameEventData type validation", async () => {
         "response": "cooldown",
         "skill": "3shot"
     }
-    expect(threeShotFailCooldown).not.toBe(undefined)
+    expect(threeShotFailCooldown).toBeDefined()
 
     const threeShotSuccess: GameResponseData = {
         "place": "3shot",
         "response": "data",
         "success": true
     }
-    expect(threeShotSuccess).not.toBe(undefined)
+    expect(threeShotSuccess).toBeDefined()
 
     const attackFailCooldown: GameResponseData = {
         "failed": true,
@@ -64,6 +64,7 @@ test("GameEventData type validation", async () => {
         "response": "cooldown",
         "skill": "attack"
     }
+    expect(attackFailCooldown).toBeDefined()
 
     const attackFailNoMP: GameResponseData = {
         "failed": true,
@@ -72,7 +73,7 @@ test("GameEventData type validation", async () => {
         "reason": "no_mp",
         "response": "data"
     }
-    expect(attackFailNoMP).not.toBe(undefined)
+    expect(attackFailNoMP).toBeDefined()
 
     const attackSuccess: GameResponseData = {
         "attacker": "attacking",
@@ -89,5 +90,5 @@ test("GameEventData type validation", async () => {
         "x": -277.6960744236569,
         "y": 850.4417119785537
     }
-    expect(attackSuccess).not.toBe(undefined)
+    expect(attackSuccess).toBeDefined()
 })

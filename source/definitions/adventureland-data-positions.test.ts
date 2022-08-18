@@ -3451,5 +3451,5 @@ test("G.positions type validation", async () => {
             ]
         }
     }
-    expect(G_positions).not.toBe(undefined)
+    expect(G_positions).toBeDefined()
 })

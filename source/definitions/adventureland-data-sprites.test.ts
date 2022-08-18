@@ -3244,5 +3244,5 @@ test("G.sprites type validation", async () => {
             }
         }
     }
-    expect(G_sprites).not.toBe(undefined)
+    expect(G_sprites).toBeDefined()
 })

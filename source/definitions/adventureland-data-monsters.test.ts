@@ -5483,5 +5483,5 @@ test("G.monsters type validation", async () => {
             }
         }
     }
-    expect(G_monsters).not.toBe(undefined)
+    expect(G_monsters).toBeDefined()
 })

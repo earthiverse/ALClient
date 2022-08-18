@@ -417,5 +417,5 @@ test("G.sets type validation", async () => {
             }
         }
     }
-    expect(G_sets).not.toBe(undefined)
+    expect(G_sets).toBeDefined()
 })
