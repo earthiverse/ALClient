@@ -2923,7 +2923,7 @@ export class Character extends Observer implements CharacterData {
                 if ((data as any).success) {
                     this.socket.off("game_response", check)
                     resolve(data)
-                } else if ((data as any).failure) {
+                } else if ((data as any).failed) {
                     this.socket.off("game_response", check)
                     reject(`Failed to use skill '${skill}'${(data as any).reason ? ` (${(data as any).reason})` : ""}.`)
                 }
