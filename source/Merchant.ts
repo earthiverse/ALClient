@@ -1,4 +1,4 @@
-import { CharacterData, DisappearingTextData, EntitiesData, EvalData, GameResponseData, PlayerData, UIData } from "./definitions/adventureland-server.js"
+import { CharacterData, DisappearingTextData, EvalData, GameResponseData, UIData } from "./definitions/adventureland-server.js"
 import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -400,7 +400,6 @@ export class Merchant extends PingCompensatedCharacter {
 
     public async mluck(target: string): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [mluck].")
-        let previousMs = 0
         if (target !== this.id) {
             const player = this.players.get(target)
             if (!player) throw new Error(`Could not find ${target} to mluck.`)
@@ -410,86 +409,11 @@ export class Merchant extends PingCompensatedCharacter {
                     || (player.s.mluck.f !== this.id))) { // Else, rely on the character id
                 throw new Error(`${target} has a strong mluck from ${player.s.mluck.f}.`)
             }
-            previousMs = player.s?.mluck?.ms ?? 0
-        } else {
-            previousMs = this.s?.mluck?.ms ?? 0
         }
 
-        const mlucked = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]mluck['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("entities", mluckCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("player", selfMluckCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
-
-            const mluckCheck = (data: EntitiesData) => {
-                for (const player of data.players) {
-                    if (player.id == target
-                        && player.s?.mluck?.f == this.id
-                        && player.s?.mluck?.ms >= previousMs) {
-                        this.socket.off("entities", mluckCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("player", selfMluckCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        resolve()
-                        return
-                    }
-                }
-            }
-
-            const selfMluckCheck = (data: PlayerData) => {
-                if (this.id == target
-                    && data.s?.mluck?.f == this.id
-                    && data.s?.mluck?.ms >= previousMs) {
-                    this.socket.off("entities", mluckCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("player", selfMluckCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
-
-            const failCheck = async (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "skill_too_far") {
-                        this.socket.off("entities", mluckCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("player", selfMluckCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        await this.requestPlayerData().catch((e) => { console.error(e) })
-                        reject(`We are too far from ${target} to mluck.`)
-                    } else if (data == "no_level") {
-                        this.socket.off("entities", mluckCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("player", selfMluckCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        reject("We aren't a high enough level to use mluck.")
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("entities", mluckCheck)
-                this.socket.off("game_response", failCheck)
-                this.socket.off("player", selfMluckCheck)
-                this.socket.off("eval", cooldownCheck)
-                reject(`mluck timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("game_response", failCheck)
-            this.socket.on("player", selfMluckCheck)
-            this.socket.on("entities", mluckCheck)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getSkillPromise("mluck")
         this.socket.emit("skill", { id: target, name: "mluck" })
-
-        // TODO: Short cooldowns don't get set correctly, so this is needed!?
-        this.nextSkill.set("mluck", new Date(Date.now() + this.G.skills.mluck.cooldown))
-
-        return mlucked
+        return response
     }
 
     public async massProduction(): Promise<void> {

@@ -2856,28 +2856,6 @@ export class Character extends Observer implements CharacterData {
         return playersData
     }
 
-    public async getServerReserveGold(): Promise<number> {
-        if (!this.ready) throw new Error("We aren't ready yet [getServerReserveGold].")
-        const reserveGold = new Promise<number>((resolve, reject) => {
-            const reserveCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "lostandfound_info") {
-                        this.socket.off("game_response", reserveCheck)
-                        resolve(data.gold)
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("game_response", reserveCheck)
-                reject(`getServerReserveGold timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("game_response", reserveCheck)
-        })
-        this.socket.emit("lostandfound", "info")
-        return reserveGold
-    }
-
     public async getPontyItems(): Promise<ItemDataTrade[]> {
         if (!this.ready) throw new Error("We aren't ready yet [getPontyItems].")
         const pontyItems = new Promise<ItemDataTrade[]>((resolve, reject) => {
@@ -2906,6 +2884,58 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("secondhands")
         return pontyItems
+    }
+
+    public async getServerReserveGold(): Promise<number> {
+        if (!this.ready) throw new Error("We aren't ready yet [getServerReserveGold].")
+        const reserveGold = new Promise<number>((resolve, reject) => {
+            const reserveCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "lostandfound_info") {
+                        this.socket.off("game_response", reserveCheck)
+                        resolve(data.gold)
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", reserveCheck)
+                reject(`getServerReserveGold timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+            this.socket.on("game_response", reserveCheck)
+        })
+        this.socket.emit("lostandfound", "info")
+        return reserveGold
+    }
+
+    /**
+     * A helper function for creating promises for skills
+     * @param skill The skill we're checking the success or failure for
+     * @param timeoutMs How long to wait for a response before timing out
+     * @returns A promise that will resolve or reject according to the server response
+     */
+    protected getSkillPromise(skill: SkillName, timeoutMs = Constants.TIMEOUT) {
+        return new Promise<unknown>((resolve, reject) => {
+            const check = (data: GameResponseData) => {
+                if (typeof data !== "object") return
+                if ((data as any).place !== skill) return // The response is for a different skill
+
+                if ((data as any).success) {
+                    this.socket.off("game_response", check)
+                    resolve(data)
+                } else if ((data as any).failure) {
+                    this.socket.off("game_response", check)
+                    reject(`Failed to use skill '${skill}'${(data as any).reason ? ` (${(data as any).reason})` : ""}.`)
+                }
+            }
+
+            setTimeout(() => {
+                this.socket.off("game_response", check)
+                reject(`Failed to use skill '${skill}' (Timeout (${timeoutMs}ms))`)
+            }, timeoutMs)
+
+            this.socket.on("game_response", check)
+        })
     }
 
     /**
@@ -3372,37 +3402,32 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [scare].")
 
         const equipped = this.isEquipped("jacko")
+        // NOTE: You still need to equip the jacko before you can use scare,
+        // this is just a basic sanity check
         const inInventory = this.hasItem("jacko")
         if (!equipped && !inInventory) throw new Error("You need a jacko to use scare.")
 
-        const scared = new Promise<string[]>((resolve, reject) => {
-            let ids: string[]
-            const idsCheck = (data: UIData) => {
-                if (data.type == "scare") {
-                    ids = data.ids
-                    this.socket.off("ui", idsCheck)
-                }
+        // Set up to return the IDs of the entities that we scared
+        let ids: string[]
+        const getIDs = (data: UIData) => {
+            if (data.type == "scare") {
+                ids = data.ids
+                this.socket.off("ui", getIDs)
             }
+        }
+        this.socket.on("ui", getIDs)
 
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]scare['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("ui", idsCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve(ids)
-                }
-            }
+        try {
+            const response = this.getSkillPromise("scare")
+            this.socket.emit("skill", { name: "scare" })
+            await response
+        } catch (e) {
+            this.socket.off("ui", getIDs)
+            throw e
+        }
 
-            setTimeout(() => {
-                this.socket.off("ui", idsCheck)
-                this.socket.off("eval", cooldownCheck)
-                reject(`scare timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("ui", idsCheck)
-            this.socket.on("eval", cooldownCheck)
-        })
-
-        this.socket.emit("skill", { name: "scare" })
-        return scared
+        this.socket.off("ui", getIDs)
+        return ids
     }
 
     public async sell(itemPos: number, quantity = 1): Promise<boolean> {
