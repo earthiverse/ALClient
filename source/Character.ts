@@ -2903,7 +2903,9 @@ export class Character extends Observer implements CharacterData {
                     resolve(data)
                 } else if ((data as any).failed) {
                     clear()
-                    reject(`Failed to use skill '${skill}'${(data as any).reason ? ` (${(data as any).reason})` : ""}.`)
+                    const reason = (data as any).reason ? ` (${(data as any).reason})` : ""
+                    const response = (data as any).response ? ` (${(data as any).response})` : ""
+                    reject(`Failed to use skill '${skill}'${response}${reason}.`)
                 }
             }
 
