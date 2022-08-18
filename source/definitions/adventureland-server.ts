@@ -475,6 +475,7 @@ export type GameResponseDataObject = {
     response: "bank_restrictions"
     place: string | "compound"
 } | {
+    cevent: "buy"
     response: "buy_success"
     cost: number
     // Inventory slot that the item is now in

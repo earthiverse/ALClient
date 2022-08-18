@@ -411,7 +411,7 @@ export class Merchant extends PingCompensatedCharacter {
             }
         }
 
-        const response = this.getSkillPromise("mluck")
+        const response = this.getResponsePromise("mluck")
         this.socket.emit("skill", { id: target, name: "mluck" })
         return response
     }

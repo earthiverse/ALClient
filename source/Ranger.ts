@@ -19,7 +19,7 @@ export class Ranger extends PingCompensatedCharacter {
         this.socket.on("action", getProjectiles)
 
         try {
-            const response = this.getSkillPromise("5shot")
+            const response = this.getResponsePromise("5shot")
             this.socket.emit("skill", {
                 ids: [target1, target2, target3, target4, target5],
                 name: "5shot"
@@ -177,7 +177,7 @@ export class Ranger extends PingCompensatedCharacter {
         this.socket.on("action", getProjectile)
 
         try {
-            const response = this.getSkillPromise("supershot")
+            const response = this.getResponsePromise("supershot")
             this.socket.emit("skill", { id: target, name: "supershot" })
             await response
         } catch (e) {
@@ -202,7 +202,7 @@ export class Ranger extends PingCompensatedCharacter {
         this.socket.on("action", getProjectiles)
 
         try {
-            const response = this.getSkillPromise("3shot")
+            const response = this.getResponsePromise("3shot")
             this.socket.emit("skill", {
                 ids: [target1, target2, target3],
                 name: "3shot"

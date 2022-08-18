@@ -946,60 +946,27 @@ export class Character extends Observer implements CharacterData {
         return attackStarted
     }
 
-    // TODO: Return buy info
-    public async buy(itemName: ItemName, quantity = 1): Promise<number> {
+    public async buy(itemName: ItemName, quantity = 1): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [buy].")
-        if (this.gold < this.G.items[itemName].g) throw new Error(`Insufficient gold. We only have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
-
-        const itemReceived = new Promise<number>((resolve, reject) => {
-            const buyCheck1 = (data: CharacterData) => {
-                if (!data.hitchhikers) return
-                for (const hitchhiker of data.hitchhikers) {
-                    if (hitchhiker[0] == "game_response") {
-                        const data: GameResponseData = hitchhiker[1]
-                        if (typeof data == "object"
-                            && data.response == "buy_success"
-                            && data.name == itemName
-                            && data.q == quantity) {
-                            this.socket.off("player", buyCheck1)
-                            this.socket.off("game_response", buyCheck2)
-                            resolve(data.num)
-                        }
-                    }
-                }
-            }
-            const buyCheck2 = (data: GameResponseData) => {
-                if (data == "buy_cant_npc") {
-                    this.socket.off("player", buyCheck1)
-                    this.socket.off("game_response", buyCheck2)
-                    reject(`Cannot buy ${quantity} ${itemName}(s) from an NPC`)
-                } else if (data == "buy_cant_space") {
-                    this.socket.off("player", buyCheck1)
-                    this.socket.off("game_response", buyCheck2)
-                    reject(`Not enough inventory space to buy ${quantity} ${itemName}(s)`)
-                } else if (data == "buy_cost") {
-                    this.socket.off("player", buyCheck1)
-                    this.socket.off("game_response", buyCheck2)
-                    reject(`Not enough gold to buy ${quantity} ${itemName}(s)`)
-                }
-            }
-            setTimeout(() => {
-                this.socket.off("player", buyCheck1)
-                this.socket.off("game_response", buyCheck2)
-                reject(`buy timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("player", buyCheck1)
-            this.socket.on("game_response", buyCheck2)
-        })
-
-        if (this.G.items[itemName].s) {
-            // Item is stackable
-            this.socket.emit("buy", { name: itemName, quantity: quantity })
-        } else {
-            // Item is not stackable.
-            this.socket.emit("buy", { name: itemName })
+        const gData = this.G.items[itemName]
+        if (!gData.s && quantity !== 1) {
+            console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
+            quantity = 1
         }
-        return itemReceived
+        if (this.gold < (gData.g * quantity)) throw new Error(`Insufficient gold. We only have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
+
+        const response = this.getResponsePromise(
+            "buy",
+            {
+                extraChecks(data: any) {
+                    if (data.name !== itemName) return false
+                    if (data.q !== quantity) return false
+                    return true
+                },
+            }
+        )
+        this.socket.emit("buy", { name: itemName, quantity: quantity })
+        return response
     }
 
     /**
@@ -2911,14 +2878,19 @@ export class Character extends Observer implements CharacterData {
     /**
      * A helper function for creating promises for skills
      * @param skill The skill we're checking the success or failure for
-     * @param timeoutMs How long to wait for a response before timing out
+     * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getSkillPromise(skill: SkillName, timeoutMs = Constants.TIMEOUT) {
+    protected getResponsePromise(skill: SkillName | "buy", options?: { extraChecks?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+        if (!options) options = {}
+        if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
+
         return new Promise<unknown>((resolve, reject) => {
             const check = (data: GameResponseData) => {
                 if (typeof data !== "object") return
                 if ((data as any).place !== skill) return // The response is for a different skill
+
+                if (options.extraChecks && !options.extraChecks(data)) return // Didn't pass extra checks
 
                 if ((data as any).success) {
                     this.socket.off("game_response", check)
@@ -2931,8 +2903,8 @@ export class Character extends Observer implements CharacterData {
 
             setTimeout(() => {
                 this.socket.off("game_response", check)
-                reject(`Failed to use skill '${skill}' (Timeout (${timeoutMs}ms))`)
-            }, timeoutMs)
+                reject(`Failed to use skill '${skill}' (Timeout (${options.timeoutMs}ms))`)
+            }, options.timeoutMs)
 
             this.socket.on("game_response", check)
         })
@@ -3418,7 +3390,7 @@ export class Character extends Observer implements CharacterData {
         this.socket.on("ui", getIDs)
 
         try {
-            const response = this.getSkillPromise("scare")
+            const response = this.getResponsePromise("scare")
             this.socket.emit("skill", { name: "scare" })
             await response
         } catch (e) {
