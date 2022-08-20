@@ -2898,14 +2898,18 @@ export class Character extends Observer implements CharacterData {
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if ((data as any).success) {
-                    clear()
-                    resolve(data)
-                } else if ((data as any).failed) {
+                if ((data as any).failed) {
                     clear()
                     const reason = (data as any).reason ? ` (${(data as any).reason})` : ""
                     const response = (data as any).response ? ` (${(data as any).response})` : ""
                     reject(`Failed to use skill '${skill}'${response}${reason}.`)
+                    return
+                }
+
+                if ((data as any).success != false) {
+                    clear()
+                    resolve(data)
+                    return
                 }
             }
 
