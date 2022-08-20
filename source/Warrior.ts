@@ -79,39 +79,16 @@ export class Warrior extends PingCompensatedCharacter {
         return charged
     }
 
-    public async cleave(): Promise<void> {
+    public async cleave(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [cleave].")
+        // TODO: Add item checks
 
-        const cleaved = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]cleave['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
-            }
-
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "cooldown" && data.skill == "cleave") {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    reject(`Cleave failed due to cooldown (ms: ${data.ms}).`)
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`cleave timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
+        // TODO: Get IDs of cleaved monsters
+        const response = this.getResponsePromise("cleave")
         this.socket.emit("skill", {
             name: "cleave"
         })
-        return cleaved
+        return response
     }
 
     /**
@@ -124,201 +101,82 @@ export class Warrior extends PingCompensatedCharacter {
      * @return {*}
      * @memberof Warrior
      */
-    public async dash(to: IPosition): Promise<void> {
+    public async dash(to: IPosition): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [dash].")
         if (to.map && to.map !== this.map) throw new Error("We cannot dash across maps.")
+        // TODO: Add destination checks
 
-        const dashed = new Promise<void>((resolve, reject) => {
-            const dashedCheck = (data: EvalData) => {
-                if (/^ui_move/.test(data.code)) {
-                    this.socket.off("eval", dashedCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
-            }
-
-            const failCheck = (data: GameResponseData) => {
-                if (typeof (data) == "string") {
-                    if (data == "dash_failed") {
-                        this.socket.off("eval", dashedCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject("Dash failed")
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", dashedCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`dash timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", dashedCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
+        const response = this.getResponsePromise("dash")
         this.socket.emit("skill", {
             name: "dash",
             x: to.x,
             y: to.y
         })
-        return dashed
+        return response
     }
 
-    public async hardshell(): Promise<void> {
+    public async hardshell(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [hardshell].")
-        const hardshelled = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]hardshell['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("player", successCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", responseCheck)
-                    resolve()
-                }
-            }
 
-            const successCheck = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
-                for (const [event, datum] of data.hitchhikers) {
-                    if (event == "game_response" && datum.response == "skill_success" && datum.name == "hardshell") {
-                        this.socket.off("player", successCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        this.socket.off("game_response", responseCheck)
-                        resolve()
-                        return
-                    }
-                }
-            }
-
-            const responseCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.skill == "hardshell") {
-                        this.socket.off("player", successCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        this.socket.off("game_response", responseCheck)
-                        reject(`Hardshell failed due to cooldown (ms: ${data.ms}).`)
-                    } else if (data.response == "skill_success" && data.name == "hardshell") {
-                        this.socket.off("player", successCheck)
-                        this.socket.off("eval", cooldownCheck)
-                        this.socket.off("game_response", responseCheck)
-                        resolve()
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("player", successCheck)
-                this.socket.off("eval", cooldownCheck)
-                this.socket.off("game_response", responseCheck)
-                reject(`hardshell timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("player", successCheck)
-            this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", responseCheck)
-        })
-
+        const response = this.getResponsePromise("hardshell")
         this.socket.emit("skill", {
             name: "hardshell"
         })
-        return hardshelled
+        return response
     }
 
-    // TODO: Return ids of those monsters & players that are now stomped
-    public async stomp(): Promise<void> {
+    /**
+     * Stomps and stuns nearby hostiles for a few seconds
+     * @returns
+     */
+    public async stomp(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [stomp].")
-        const stomped = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]stomp['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
-            }
+        // TODO: Add item checks
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "cooldown" && data.skill == "stomp") {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    reject(`Stomp failed due to cooldown (ms: ${data.ms}).`)
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`stomp timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
+        // TODO: Return ids of those monsters & players that are now stomped
+        const response = this.getResponsePromise("stomp")
         this.socket.emit("skill", {
             name: "stomp"
         })
-        return stomped
+        return response
     }
 
+    /**
+     * Makes a monster to target you instead of its original target
+     * @param target The monster ID to taunt
+     * @returns The ID of the taunt projectile
+     */
     public async taunt(target: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [taunt].")
-        const tauntStarted = new Promise<string>((resolve, reject) => {
-            const tauntCheck = (data: ActionData) => {
-                if (data.attacker == this.id
-                    && data.type == "taunt"
-                    && data.target == target) {
-                    this.socket.off("action", tauntCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve(data.pid)
-                }
+
+        let projectile: string
+        const getProjectile = (data: ActionData) => {
+            if (data.attacker == this.id
+                && data.type == "taunt"
+                && data.target == target) {
+                this.socket.off("action", getProjectile)
+                projectile = data.pid
             }
+        }
+        this.socket.on("action", getProjectile)
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "no_target") {
-                        this.socket.off("action", tauntCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject(`Taunt on ${target} failed (no target).`)
-                    } else if (data.response == "too_far" && data.id == target) {
-                        this.socket.off("action", tauntCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject(`${target} is too far away to taunt (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.id == target && data.skill == "taunt") {
-                        this.socket.off("action", tauntCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject(`Taunt on ${target} failed due to cooldown (ms: ${data.ms}).`)
-                    }
-                }
-            }
+        try {
+            const response = this.getResponsePromise("taunt")
+            this.socket.emit("skill", { name: "taunt", id: target })
+            await response
+        } finally {
+            this.socket.off("action", getProjectile)
+        }
 
-            setTimeout(() => {
-                this.socket.off("action", tauntCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`taunt timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("action", tauntCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
-        this.socket.emit("skill", { name: "taunt", id: target })
-        return tauntStarted
+        return projectile
     }
 
-    public async warcry(): Promise<void> {
+    public async warcry(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [warcry].")
-        const warCried = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]warcry['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`warcry timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        // TODO: Return ids affected
+        const response = this.getResponsePromise("warcry")
         this.socket.emit("skill", { name: "warcry" })
-        return warCried
+        return response
     }
 }

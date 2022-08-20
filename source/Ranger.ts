@@ -58,64 +58,40 @@ export class Ranger extends PingCompensatedCharacter {
         return marked
     }
 
-    public async huntersMark(target: string): Promise<void> {
+    public async huntersMark(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [huntersMark].")
-        const marked = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]huntersmark['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`huntersmark timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getResponsePromise("huntersmark")
         this.socket.emit("skill", {
             id: target,
             name: "huntersmark"
         })
-        return marked
+        return response
     }
 
     public async piercingShot(target: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [piercingShot].")
-        if (this.G.skills.piercingshot.mp > this.mp) throw new Error("Not enough MP to use piercingShot")
 
-        const piercingShotStarted = new Promise<string>((resolve, reject) => {
-            let projectile: string
-
-            const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.id
-                    && data.type == "piercingshot"
-                    && data.target == target) {
-                    projectile = data.pid
-                }
+        let projectile: string
+        const getProjectile = (data: ActionData) => {
+            if (data.attacker == this.id
+                && data.target == target
+                && data.type == "piercingshot") {
+                this.socket.off("action", getProjectile)
+                projectile = data.pid
             }
+        }
+        this.socket.on("action", getProjectile)
 
-            const cooldownCheck = (data: EvalData) => {
-                // NOTE: This is `attack`, not `piercingshot`, because they share a cooldown.
-                if (/skill_timeout\s*\(\s*['"]attack['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve(projectile)
-                }
-            }
+        try {
+            const response = this.getResponsePromise("piercingshot")
+            this.socket.emit("skill", { id: target, name: "piercingshot" })
+            await response
+        } finally {
+            this.socket.off("action", getProjectile)
+        }
 
-            setTimeout(() => {
-                this.socket.off("action", attackCheck)
-                this.socket.off("eval", cooldownCheck)
-                reject(`piercingshot timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("action", attackCheck)
-            this.socket.on("eval", cooldownCheck)
-        })
-
-        this.socket.emit("skill", { id: target, name: "piercingshot" })
-        return piercingShotStarted
+        return projectile
     }
 
     // NOTE: UNTESTED
@@ -123,36 +99,26 @@ export class Ranger extends PingCompensatedCharacter {
         if (!this.ready) throw new Error("We aren't ready yet [poisonArrow].")
         if (poison === undefined) throw new Error("We need poison to use this skill.")
 
-        const poisonArrowed = new Promise<string>((resolve, reject) => {
-            let projectile: string
-
-            const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.id
-                    && data.type == "poisonarrow"
-                    && data.target == target) {
-                    projectile = data.pid
-                }
+        let projectile: string
+        const getProjectile = (data: ActionData) => {
+            if (data.attacker == this.id
+                && data.target == target
+                && data.type == "poisonarrow") {
+                this.socket.off("action", getProjectile)
+                projectile = data.pid
             }
+        }
+        this.socket.on("action", getProjectile)
 
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]poisonarrow['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("eval", cooldownCheck)
-                    resolve(projectile)
-                }
-            }
+        try {
+            const response = this.getResponsePromise("poisonarrow")
+            this.socket.emit("skill", { id: target, name: "poisonarrow", num: poison })
+            await response
+        } finally {
+            this.socket.off("action", getProjectile)
+        }
 
-            setTimeout(() => {
-                this.socket.off("action", attackCheck)
-                this.socket.off("eval", cooldownCheck)
-                reject(`poisonarrow timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("action", attackCheck)
-            this.socket.on("eval", cooldownCheck)
-        })
-
-        this.socket.emit("skill", { id: target, name: "poisonarrow", num: poison })
-        return poisonArrowed
+        return projectile
     }
 
     /**

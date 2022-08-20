@@ -26,25 +26,12 @@ export class Priest extends PingCompensatedCharacter {
         return absorbed
     }
 
-    public async curse(target: string): Promise<void> {
+    public async curse(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [curse].")
-        const curseStarted = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]curse['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`curse timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("curse")
         this.socket.emit("skill", { id: target, name: "curse" })
-        return curseStarted
+        return response
     }
 
     public async darkBlessing(): Promise<void> {
@@ -70,79 +57,26 @@ export class Priest extends PingCompensatedCharacter {
 
     public async heal(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [heal].")
-        // if (!this.game.entities.has(id) && !this.game.players.has(id)) throw new Error(`No Entity with ID '${id}'`)
-        const healStarted = new Promise<string>((resolve, reject) => {
-            const deathCheck = (data: DeathData) => {
-                if (data.id == id) {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    reject(`Entity ${id} not found`)
-                }
-            }
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "disabled") {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Heal on ${id} failed (disabled).`)
-                    } else if (data.response == "attack_failed" && data.id == id) {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Heal on ${id} failed.`)
-                    } else if (data.response == "too_far" && data.id == id) {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`${id} is too far away to heal (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.id == id) {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Heal on ${id} failed due to cooldown (ms: ${data.ms}).`)
-                    }
-                }
-            }
-            const failCheck2 = (data: NotThereData) => {
-                if (data.place == "attack") {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    reject(`${id} could not be found to attack.`)
-                }
-            }
-            const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.id && data.target == id && data.type == "heal") {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    resolve(data.pid)
-                }
-            }
-            setTimeout(() => {
-                this.socket.off("action", attackCheck)
-                this.socket.off("game_response", failCheck)
-                this.socket.off("notthere", failCheck2)
-                this.socket.off("death", deathCheck)
-                reject(`heal timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("action", attackCheck)
-            this.socket.on("game_response", failCheck)
-            this.socket.on("notthere", failCheck2)
-            this.socket.on("death", deathCheck)
-        })
 
-        this.socket.emit("heal", { id: id })
-        return healStarted
+        let projectile: string
+        const getProjectile = (data: ActionData) => {
+            if (data.attacker == this.id
+                && data.type == "heal"
+                && data.target == id) {
+                projectile = data.pid
+            }
+        }
+        this.socket.on("action", getProjectile)
+
+        try {
+            const response = this.getResponsePromise("heal")
+            this.socket.emit("heal", { id: id })
+            await response
+        } finally {
+            this.socket.off("action", getProjectile)
+        }
+
+        return projectile
     }
 
     public async partyHeal(): Promise<void> {
