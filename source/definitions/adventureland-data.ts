@@ -199,7 +199,7 @@ export type GData = {
         }
     }
     // TODO: Add Type Information
-    docs: any
+    docs: DocsData
     drops: {
         [T in DropName]: GDropItem[]
     } | {
@@ -585,6 +585,35 @@ export type GData = {
     /** Version number for this data. */
     version: number
 }
+
+export type DocsData = {
+    documented: string[]
+    functions: string[]
+    guide: string[][]
+    images: {
+        [T in DocsImage]: {
+            height: number
+            url: string
+            width: number
+        }
+    }
+    javascript: string[][]
+    references: string[][]
+    rewards: {
+        c0: [number, string, string][]
+    }
+    tasks: {
+        [T in DocsTask]: string
+    }
+    tutorial: {
+        key: string
+        tasks: DocsTask[]
+        title: string
+    }
+}
+
+export type DocsImage = "bank" | "character_button" | "cue" | "newyear_tree" | "topleft_character" | "topleft_monster" | "upgrade"
+export type DocsTask = "addstats" | "bank" | "buycscroll0" | "buyscrolls" | "character" | "code" | "com" | "compound" | "deposit" | "engage" | "firstloot" | "guide" | "inventory" | "killagoo" | "settings" | "skills" | "stats" | "store" | "travel" | "upgrade" | "x"
 
 export type CXData = {
     chin?: string
