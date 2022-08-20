@@ -396,10 +396,10 @@ export type GData = {
     }
     /** TODO: ??? What is this? GUI related sprite positions in some sort of image map? */
     positions: {
-        "textures": string[]
-    } | {
-        [T in string]:
-        [string, number, number, number, number][] | [string, number, number, number, number] | [string, number, number]
+        [T in string]: string[] |
+        [string, number, number, number, number][] |
+        [string, number, number, number, number] |
+        [string, number, number]
     }
     projectiles: {
         [T in ProjectileName]: {
