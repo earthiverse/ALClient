@@ -866,84 +866,26 @@ export class Character extends Observer implements CharacterData {
     public async basicAttack(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [basicAttack].")
 
-        const attackStarted = new Promise<string>((resolve, reject) => {
-            const deathCheck = (data: DeathData) => {
-                if (data.id == id && data.place == "attack") {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    reject(`Entity ${id} not found`)
-                }
+        let projectile: string
+        const getProjectile = (data: ActionData) => {
+            if (data.attacker == this.id
+                && data.target == id
+                && data.type == "attack") {
+                this.socket.off("action", getProjectile)
+                projectile = data.pid
             }
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "disabled") {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Attack on ${id} failed (disabled).`)
-                    } else if (data.response == "attack_failed" && data.id == id) {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Attack on ${id} failed.`)
-                    } else if (data.response == "too_far" && data.place == "attack" && data.id == id) {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`${id} is too far away to attack (dist: ${data.dist}).`)
-                    } else if (data.response == "cooldown" && data.place == "attack") {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Attack on ${id} failed due to cooldown (ms: ${data.ms}).`)
-                    } else if (data.response == "no_mp" && data.place == "attack") {
-                        this.socket.off("action", attackCheck)
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("notthere", failCheck2)
-                        this.socket.off("death", deathCheck)
-                        reject(`Attack on ${id} failed due to insufficient MP.`)
-                    }
-                }
-            }
-            const failCheck2 = (data: NotThereData) => {
-                if (data.place == "attack") {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    reject(`${id} could not be found to attack.`)
-                }
-            }
-            const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.id && data.target == id && data.type == "attack") {
-                    this.socket.off("action", attackCheck)
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("notthere", failCheck2)
-                    this.socket.off("death", deathCheck)
-                    resolve(data.pid)
-                }
-            }
-            setTimeout(() => {
-                this.socket.off("action", attackCheck)
-                this.socket.off("game_response", failCheck)
-                this.socket.off("notthere", failCheck2)
-                this.socket.off("death", deathCheck)
-                reject(`attack timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("action", attackCheck)
-            this.socket.on("game_response", failCheck)
-            this.socket.on("notthere", failCheck2)
-            this.socket.on("death", deathCheck)
-        })
+        }
+        this.socket.on("action", getProjectile)
 
-        this.socket.emit("attack", { id: id })
-        return attackStarted
+        try {
+            const response = this.getResponsePromise("attack")
+            this.socket.emit("attack", { id: id })
+            await response
+        } finally {
+            this.socket.off("action", getProjectile)
+        }
+
+        return projectile
     }
 
     public async buy(itemName: ItemName, quantity = 1): Promise<unknown> {
@@ -2900,9 +2842,15 @@ export class Character extends Observer implements CharacterData {
 
                 if ((data as any).failed) {
                     clear()
-                    const reason = (data as any).reason ? ` (${(data as any).reason})` : ""
-                    const response = (data as any).response ? ` (${(data as any).response})` : ""
-                    reject(`Failed to use skill '${skill}'${response}${reason}.`)
+                    const reason = (data as any).reason
+                    const reasonS = reason ? ` (${reason})` : ""
+                    const response = (data as any).response
+                    const responseS = response ? ` (${response})` : ""
+
+                    // TODO: Based on the reason, we should format the failure, for example
+                    //       cooldown should show how many ms remaining.
+
+                    reject(`Failed to use skill '${skill}'${responseS}${reasonS}.`)
                     return
                 }
 

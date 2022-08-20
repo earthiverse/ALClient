@@ -158,6 +158,7 @@ export class Warrior extends PingCompensatedCharacter {
                 projectile = data.pid
             }
         }
+        this.socket.on("action", getProjectile)
 
         try {
             const response = this.getResponsePromise("taunt")
