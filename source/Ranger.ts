@@ -33,29 +33,16 @@ export class Ranger extends PingCompensatedCharacter {
     }
 
     // NOTE: UNTESTED
-    public async fourFinger(target: string): Promise<void> {
+    public async fourFinger(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [fourFinger].")
         // TODO: Check that the target is not a monster.
 
-        const marked = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]4fingers['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`fourfinger timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getResponsePromise("4fingers")
         this.socket.emit("skill", {
             id: target,
             name: "4fingers"
         })
-        return marked
+        return response
     }
 
     public async huntersMark(target: string): Promise<unknown> {

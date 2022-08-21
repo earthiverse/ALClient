@@ -1,4 +1,4 @@
-import { DisappearingTextData, EvalData, GameResponseData, NewMapData } from "./definitions/adventureland-server.js"
+import { DisappearingTextData, EvalData, GameResponseData, MagiportGRDataObject, NewMapData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -7,29 +7,15 @@ export class Mage extends PingCompensatedCharacter {
     ctype: "mage" = "mage"
 
     // NOTE: UNTESTED
-    public async alchemy(): Promise<void> {
+    public async alchemy(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [alchemy].")
-        const performedAlchemy = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]alchemy['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`alchemy timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-        this.socket.emit("skill", {
-            name: "alchemy"
-        })
-        return performedAlchemy
+        const response = this.getResponsePromise("alchemy")
+        this.socket.emit("skill", { name: "alchemy" })
+        return response
     }
 
-    public async blink(x: number, y: number): Promise<void> {
+    public async blink(x: number, y: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [blink].")
 
         // Blink rounds to the nearest 10 on the server, so we're going to preemptively
@@ -45,58 +31,18 @@ export class Mage extends PingCompensatedCharacter {
 
         if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) throw new Error(`We cannot blink to ${this.map},${x},${y}`)
 
-        const blinked = new Promise<void>((resolve, reject) => {
-            const successCheck = (data: NewMapData) => {
-                if (data.effect == "blink" && x == data.x && y == data.y) {
-                    this.socket.off("new_map", successCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
-            }
-
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "blink_failed") {
-                        this.socket.off("new_map", successCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject(`Blink from ${this.map}:${this.x},${this.y} to ${this.map}:${x},${y} failed.`)
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("new_map", successCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`blink timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("new_map", successCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
+        const response = this.getResponsePromise("blink")
         this.socket.emit("skill", { name: "blink", x: x, y: y })
-        return blinked
+        return response
     }
 
     // NOTE: UNTESTED
-    public async burst(target: string): Promise<void> {
+    public async burst(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [burst].")
-        const bursted = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]burst['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`burst timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("burst")
         this.socket.emit("skill", { name: "burst", id: target })
-        return bursted
+        return response
     }
 
     /**
@@ -157,7 +103,7 @@ export class Mage extends PingCompensatedCharacter {
         if (!this.ready) throw new Error("We aren't ready yet [magiport].")
 
         let status: boolean
-        const getMagiportStatus = (data: GameResponseData) => {
+        const getMagiportStatus = (data: MagiportGRDataObject) => {
             if (typeof data !== "object") return
             if (data.response == "magiport_failed" && data.id == target) {
                 status = false
@@ -188,26 +134,14 @@ export class Mage extends PingCompensatedCharacter {
      * @return {*}  {Promise<void>}
      * @memberof Mage
      */
-    public async applyReflection(target: string): Promise<void> {
+    public async applyReflection(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [applyReflection].")
-        const relectioned = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]reflection['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`reflection timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
+        const response = this.getResponsePromise("reflection")
         this.socket.emit("skill", {
             name: "reflection",
             id: target,
         })
-        return relectioned
+        return response
     }
 }
