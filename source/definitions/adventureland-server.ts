@@ -483,7 +483,7 @@ export type BuySuccessGRDataObject = {
     /** Inventory slot that the item is now in */
     num: number
     name: ItemName
-    // TODO: Confirm whether 'q' needs to be required or not
+    /** Note, if you don't specify the quantity in the `buy` socket emit, it will be set to 1 by the server */
     q: number
 }
 export type CooldownGRDataObject = {
@@ -491,7 +491,7 @@ export type CooldownGRDataObject = {
     failed: true
     skill?: SkillName
     id?: string
-    palce: SkillName
+    place: SkillName
     ms: number
 }
 export type CraftGRDataObject = {
@@ -1330,7 +1330,7 @@ export type ServerToClientEvents = {
 
 export type ClientToServerSkillData =
 /** Skills that don't take any parameters */
-| { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
+| { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
 /** Skills that target an entity */
 | { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "supershot" | "taunt" | "zapperzap">, id: string }
 /** Skills that use an item */
