@@ -20,7 +20,7 @@ export class Merchant extends PingCompensatedCharacter {
         // TODO: Add area check if we can fish here
 
         const finishedFishing = new Promise<string>((resolve, reject) => {
-            function clear() {
+            const clear = () => {
                 this.socket.off("ui", noneCheck)
                 this.socket.off("game_log", logCheck)
                 this.socket.off("skill_timeout", cooldownCheck)
@@ -291,7 +291,7 @@ export class Merchant extends PingCompensatedCharacter {
         // TODO: Add area check if we can mine here
 
         const finishedMining = new Promise<string>((resolve, reject) => {
-            function clear() {
+            const clear = () => {
                 this.socket.off("ui", noneCheck)
                 this.socket.off("game_log", logCheck)
                 this.socket.off("skill_timeout", cooldownCheck)
