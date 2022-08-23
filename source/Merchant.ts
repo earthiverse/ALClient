@@ -1,4 +1,4 @@
-import { CharacterData, DisappearingTextData, EvalData, GameResponseData, UIData } from "./definitions/adventureland-server.js"
+import { CharacterData, DisappearingTextData, GameLogData, GameResponseData, SkillTimeoutData, UIData } from "./definitions/adventureland-server.js"
 import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -14,15 +14,57 @@ export class Merchant extends PingCompensatedCharacter {
      * @return {*}  {Promise<void>}
      * @memberof Merchant
      */
-    public async fish(): Promise<unknown> {
+    public async fish(): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [fish].")
         if (this.c.fishing) return // We're already fishing
         // TODO: Add area check if we can fish here
 
-        // TODO: Return another promise with the result from fishing
-        const started = this.getResponsePromise("fishing", { timeoutMs: 20_000 })
+        const finishedFishing = new Promise<string>((resolve, reject) => {
+            function clear() {
+                this.socket.off("ui", noneCheck)
+                this.socket.off("game_log", logCheck)
+                this.socket.off("skill_timeout", cooldownCheck)
+                clearTimeout(timeout)
+            }
+
+            const noneCheck = (data: UIData) => {
+                if (data.type == "fishing_none") {
+                    clear()
+                    resolve("We didn't fish anything.")
+                }
+            }
+
+            let log: string
+            const logCheck = (data: GameLogData) => {
+                if (typeof data !== "object") return
+                const fishRegex = /^Fished a/.exec(data.message)
+                if (fishRegex) log = fishRegex[0]
+            }
+
+            const cooldownCheck = (data: SkillTimeoutData) => {
+                if (data.name == "fishing") {
+                    clear()
+                    resolve(log)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                clear()
+                reject("fish timeout (20000ms)")
+            }, 20000)
+
+            this.socket.on("ui", noneCheck)
+            this.socket.on("game_log", logCheck)
+            this.socket.on("skill_timeout", cooldownCheck)
+        })
+
+        // Start fishing
+        const started = this.getResponsePromise("fishing")
         this.socket.emit("skill", { name: "fishing" })
-        return started
+        await started
+
+        // If we got here, we're now fishing, so return the next promise with what (if anything) we catch
+        return finishedFishing
     }
 
     // TODO: Add promises
@@ -243,15 +285,57 @@ export class Merchant extends PingCompensatedCharacter {
         return response
     }
 
-    public async mine(): Promise<unknown> {
+    public async mine(): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [mine].")
         if (this.c.mining) return // We're already mining
         // TODO: Add area check if we can mine here
 
-        // TODO: Return another promise with the result from mining
-        const started = this.getResponsePromise("mining", { timeoutMs: 20_000 })
+        const finishedMining = new Promise<string>((resolve, reject) => {
+            function clear() {
+                this.socket.off("ui", noneCheck)
+                this.socket.off("game_log", logCheck)
+                this.socket.off("skill_timeout", cooldownCheck)
+                clearTimeout(timeout)
+            }
+
+            const noneCheck = (data: UIData) => {
+                if (data.type == "mining_none") {
+                    clear()
+                    resolve("We didn't mine anything.")
+                }
+            }
+
+            let log: string
+            const logCheck = (data: GameLogData) => {
+                if (typeof data !== "object") return
+                const mineRegex = /^Mined a/.exec(data.message)
+                if (mineRegex) log = mineRegex[0]
+            }
+
+            const cooldownCheck = (data: SkillTimeoutData) => {
+                if (data.name == "mining") {
+                    clear()
+                    resolve(log)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                clear()
+                reject("mine timeout (20000ms)")
+            }, 20000)
+
+            this.socket.on("ui", noneCheck)
+            this.socket.on("game_log", logCheck)
+            this.socket.on("skill_timeout", cooldownCheck)
+        })
+
+        // Start mining
+        const started = this.getResponsePromise("mining")
         this.socket.emit("skill", { name: "mining" })
-        return started
+        await started
+
+        // If we got here, we're now mining, so return the next promise with what (if anything) we get
+        return finishedMining
     }
 
     public async mluck(target: string): Promise<unknown> {
