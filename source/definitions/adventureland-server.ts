@@ -491,7 +491,7 @@ export type CooldownGRDataObject = {
     failed: true
     skill?: SkillName
     id?: string
-    palce: SkillName
+    place: SkillName
     ms: number
 }
 export type CraftGRDataObject = {
