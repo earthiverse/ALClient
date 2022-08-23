@@ -1,89 +1,32 @@
-import { CharacterData, ActionData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
-import { Constants } from "./Constants.js"
+import { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 import { IPosition } from "./index.js"
 
 export class Warrior extends PingCompensatedCharacter {
     ctype: "warrior" = "warrior"
 
-    // TODO: Investigate why the cooldown check doesn't work.
-    public async agitate(): Promise<void> {
+    public async agitate(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [agitate].")
-        const agitated = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]agitate['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    resolve()
-                }
-            }
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "cooldown" && data.skill == "agitate") {
-                    this.socket.off("eval", cooldownCheck)
-                    this.socket.off("game_response", failCheck)
-                    reject(`Agitate failed due to cooldown (ms: ${data.ms}).`)
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`agitate timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
-        this.socket.emit("skill", {
-            name: "agitate"
-        })
-        return agitated
+        // TODO: Get IDs of agitated monsters
+        const response = this.getResponsePromise("agitate")
+        this.socket.emit("skill", { name: "agitate" })
+        return response
     }
 
-    public async charge(): Promise<void> {
+    public async charge(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [charge].")
-        const charged = new Promise<void>((resolve, reject) => {
-            const successCheck = (data: CharacterData) => {
-                if (!data.hitchhikers) return
-                for (const [event, datum] of data.hitchhikers) {
-                    if (event == "game_response" && datum.response == "skill_success" && datum.name == "charge") {
-                        this.socket.off("player", successCheck)
-                        this.socket.off("game_response", failCheck)
-                        resolve()
-                        return
-                    }
-                }
-            }
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.skill == "charge") {
-                        this.socket.off("player", successCheck)
-                        this.socket.off("game_response", failCheck)
-                        reject(`Charge failed due to cooldown (ms: ${data.ms}).`)
-                    }
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("player", successCheck)
-                this.socket.off("game_response", failCheck)
-                reject(`charge timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("player", successCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
+        const response = this.getResponsePromise("charge")
         this.socket.emit("skill", { name: "charge" })
-        return charged
+        return response
     }
 
     public async cleave(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [cleave].")
         // TODO: Add item checks
 
-        // TODO: Get IDs of cleaved monsters
+        // TODO: Get IDs of cleaved monsters, or the projectiles
         const response = this.getResponsePromise("cleave")
         this.socket.emit("skill", {
             name: "cleave"

@@ -1,29 +1,15 @@
-import { ActionData, DeathData, EvalData, GameResponseData, NotThereData } from "./definitions/adventureland-server.js"
-import { Constants } from "./Constants.js"
+import { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {
     ctype: "priest" = "priest"
 
-    public async absorbSins(target: string): Promise<void> {
+    public async absorbSins(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [absorbSins].")
-        const absorbed = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]absorb['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`curse timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("absorb")
         this.socket.emit("skill", { id: target, name: "absorb" })
-        return absorbed
+        return response
     }
 
     public async curse(target: string): Promise<unknown> {
@@ -34,25 +20,12 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
-    public async darkBlessing(): Promise<void> {
+    public async darkBlessing(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [darkBlessing].")
-        const darkBlessed = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]darkblessing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`darkblessing timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("darkblessing")
         this.socket.emit("skill", { name: "darkblessing" })
-        return darkBlessed
+        return response
     }
 
     public async heal(id: string): Promise<string> {
@@ -79,48 +52,21 @@ export class Priest extends PingCompensatedCharacter {
         return projectile
     }
 
-    public async partyHeal(): Promise<void> {
+    public async partyHeal(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [partyHeal].")
-        const healStarted = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]partyheal['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
 
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`partyHeal timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("partyheal")
         this.socket.emit("skill", { name: "partyheal" })
-        return healStarted
+        return response
     }
 
     // NOTE: Untested. We might need to increase the timeout?
-    public async revive(target: string, essenceOfLife = this.locateItem("essenceoflife")): Promise<void> {
+    public async revive(target: string, essenceOfLife = this.locateItem("essenceoflife")): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [revive].")
         if (essenceOfLife === undefined) throw new Error("We don't have any essenceoflife in our inventory.")
 
-        const revived = new Promise<void>((resolve, reject) => {
-            const cooldownCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]revive['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("eval", cooldownCheck)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("eval", cooldownCheck)
-                reject(`revive timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("eval", cooldownCheck)
-        })
-
+        const response = this.getResponsePromise("revive")
         this.socket.emit("skill", { id: target, name: "revive", num: essenceOfLife })
-        return revived
+        return response
     }
 }

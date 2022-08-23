@@ -9,93 +9,20 @@ export class Merchant extends PingCompensatedCharacter {
     ctype: "merchant" = "merchant"
 
     /**
-     * Fish for items
+     * Fish for items.
      *
      * @return {*}  {Promise<void>}
      * @memberof Merchant
      */
-    public async fish(): Promise<void> {
+    public async fish(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [fish].")
-        let startedFishing = false
-        if (this.c.fishing) startedFishing = true // We're already fishing!?
-        const fished = new Promise<void>((resolve, reject) => {
-            const caughtCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]fishing['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    resolve()
-                }
-            }
+        if (this.c.fishing) return // We're already fishing
+        // TODO: Add area check if we can fish here
 
-            const failCheck1 = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "skill_cant_wtype") {
-                        this.socket.off("game_response", failCheck1)
-                        this.socket.off("ui", failCheck2)
-                        this.socket.off("eval", caughtCheck)
-                        this.socket.off("player", failCheck3)
-                        reject("We don't have a fishing rod equipped")
-                    }
-                } else if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.place == "fishing" && data.skill == "fishing") {
-                        this.socket.off("game_response", failCheck1)
-                        this.socket.off("ui", failCheck2)
-                        this.socket.off("eval", caughtCheck)
-                        this.socket.off("player", failCheck3)
-                        reject(`Fishing is on cooldown (${data.ms}ms remaining)`)
-                    }
-                }
-            }
-
-            const failCheck2 = (data: UIData) => {
-                if (data.type == "fishing_fail" && data.name == this.id) {
-                    // NOTE: We might not be in a fishing area?
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    reject("We failed to fish.")
-                } else if (data.type == "fishing_none") {
-                    // We fished, but we didn't catch anything
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    resolve()
-                }
-            }
-
-            const failCheck3 = (data: CharacterData) => {
-                if (!startedFishing && data.c.fishing) {
-                    startedFishing = true
-                } else if (startedFishing && !data.c.fishing) {
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    // TODO: Is there a reliable way to figure out if we got interrupted?
-                    // TODO: Maybe the eval cooldown?
-                    resolve() // We fished and caught nothing, or got interrupted.
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("game_response", failCheck1)
-                this.socket.off("ui", failCheck2)
-                this.socket.off("eval", caughtCheck)
-                this.socket.off("player", failCheck3)
-                reject("fish timeout (20000ms)")
-            }, 20000)
-            this.socket.on("game_response", failCheck1)
-            this.socket.on("eval", caughtCheck)
-            this.socket.on("ui", failCheck2)
-            this.socket.on("player", failCheck3)
-        })
-
+        // TODO: Return another promise with the result from fishing
+        const started = this.getResponsePromise("fishing", { timeoutMs: 20_000 })
         this.socket.emit("skill", { name: "fishing" })
-        return fished
+        return started
     }
 
     // TODO: Add promises
@@ -308,94 +235,23 @@ export class Merchant extends PingCompensatedCharacter {
         return wishListed
     }
 
-    // TODO: Add promises
-    public async merchantCourage(): Promise<void> {
+    public async merchantCourage(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [merchantCourage].")
+
+        const response = this.getResponsePromise("mcourage")
         this.socket.emit("skill", { name: "mcourage" })
+        return response
     }
 
-    public async mine(): Promise<void> {
+    public async mine(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [mine].")
-        let startedMining = false
-        if (this.c.mining) startedMining = true // We're already mining!?
-        const mined = new Promise<void>((resolve, reject) => {
-            const caughtCheck = (data: EvalData) => {
-                if (/skill_timeout\s*\(\s*['"]mining['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    resolve()
-                }
-            }
+        if (this.c.mining) return // We're already mining
+        // TODO: Add area check if we can mine here
 
-            const failCheck1 = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "skill_cant_wtype") {
-                        this.socket.off("game_response", failCheck1)
-                        this.socket.off("ui", failCheck2)
-                        this.socket.off("eval", caughtCheck)
-                        this.socket.off("player", failCheck3)
-                        reject("We don't have a pickaxe equipped")
-                    }
-                } else if (typeof data == "object") {
-                    if (data.response == "cooldown" && data.place == "mining" && data.skill == "mining") {
-                        this.socket.off("game_response", failCheck1)
-                        this.socket.off("ui", failCheck2)
-                        this.socket.off("eval", caughtCheck)
-                        this.socket.off("player", failCheck3)
-                        reject(`Mining is on cooldown (${data.ms}ms remaining)`)
-                    }
-                }
-            }
-
-            const failCheck2 = (data: UIData) => {
-                if (data.type == "mining_fail" && data.name == this.id) {
-                    // NOTE: We might not be in a mining area?
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    reject("We failed to mine.")
-                } else if (data.type == "mining_none") {
-                    // We mined, but we didn't get anything
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    resolve()
-                }
-            }
-
-            const failCheck3 = (data: CharacterData) => {
-                if (!startedMining && data.c.mining) {
-                    startedMining = true
-                } else if (startedMining && !data.c.mining) {
-                    this.socket.off("game_response", failCheck1)
-                    this.socket.off("ui", failCheck2)
-                    this.socket.off("eval", caughtCheck)
-                    this.socket.off("player", failCheck3)
-                    // TODO: Is there a reliable way to figure out if we got interrupted?
-                    // TODO: Maybe the eval cooldown?
-                    resolve() // We mined and caught nothing, or got interrupted.
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("game_response", failCheck1)
-                this.socket.off("ui", failCheck2)
-                this.socket.off("eval", caughtCheck)
-                this.socket.off("player", failCheck3)
-                reject("mine timeout (20000ms)")
-            }, 20000)
-            this.socket.on("game_response", failCheck1)
-            this.socket.on("eval", caughtCheck)
-            this.socket.on("ui", failCheck2)
-            this.socket.on("player", failCheck3)
-        })
-
+        // TODO: Return another promise with the result from mining
+        const started = this.getResponsePromise("mining", { timeoutMs: 20_000 })
         this.socket.emit("skill", { name: "mining" })
-        return mined
+        return started
     }
 
     public async mluck(target: string): Promise<unknown> {
@@ -416,44 +272,21 @@ export class Merchant extends PingCompensatedCharacter {
         return response
     }
 
-    public async massProduction(): Promise<void> {
+    public async massProduction(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [massProduction].")
-        const massProductioned = new Promise<void>((resolve, reject) => {
-            const productedCheck = (data: UIData) => {
-                if (data.type == "massproduction" && data.name == this.id) {
-                    this.socket.off("ui", productedCheck)
-                    resolve()
-                }
-            }
+        if (this.s.massproduction) return // We already have it active
 
-            setTimeout(() => {
-                this.socket.off("ui", productedCheck)
-                reject(`massProduction timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-            this.socket.on("ui", productedCheck)
-        })
-
+        const response = this.getResponsePromise("massproduction")
         this.socket.emit("skill", { name: "massproduction" })
-        return massProductioned
+        return response
     }
 
-    // public massProductionPP(): Promise<void> {
-    //     const massProductioned = new Promise<void>((resolve, reject) => {
-    //         const productedCheck = (data: UIData) => {
-    //             if (data.type == "massproductionpp" && data.name == this.id) {
-    //                 this.socket.off("ui", productedCheck)
-    //                 resolve()
-    //             }
-    //         }
+    public massProductionPP(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [massProductionPP].")
+        if (this.s.massproductionpp) return // We already have it active
 
-    //         setTimeout(() => {
-    //             this.socket.off("ui", productedCheck)
-    //             reject(`massProductionPP timeout (${Constants.TIMEOUT}ms)`)
-    //         }, Constants.TIMEOUT)
-    //         this.socket.on("ui", productedCheck)
-    //     })
-
-    //     this.socket.emit("skill", { name: "massproductionpp" })
-    //     return massProductioned
-    // }
+        const response = this.getResponsePromise("massproductionpp")
+        this.socket.emit("skill", { name: "massproductionpp" })
+        return response
+    }
 }
