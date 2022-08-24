@@ -2666,6 +2666,11 @@ export class Character extends Observer implements CharacterData {
                 if (filters.isNPC && !npc) continue
                 if (!filters.isNPC && npc) continue
             }
+            if (filters.isPartyMember !== undefined && this.party !== undefined) {
+                const partyMember = player.party == this.party
+                if (filters.isPartyMember && !partyMember) continue
+                if (!filters.isPartyMember && partyMember) continue
+            }
             if (filters.ignoreIDs !== undefined) {
                 for (const id in filters.ignoreIDs) {
                     if (id == player.id) continue

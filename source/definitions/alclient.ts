@@ -41,6 +41,7 @@ export type GetPlayersFilters = {
     ignoreIDs?: Iterable<string>
     isFriendly?: boolean
     isNPC?: boolean
+    isPartyMember?: boolean
     withinRange?: number | SkillName
     targetingMe?: boolean
     targetingPartyMember?: boolean
