@@ -76,7 +76,9 @@ export type LocateItemsFilters = {
 /** Filters for returning a single item */
 export type LocateItemFilters = LocateItemsFilters & {
     returnHighestLevel?: boolean;
+    returnHighestQuantity?: boolean;
     returnLowestLevel?: boolean;
+    returnLowestQuantity?: boolean;
 }
 
 export type SmartMoveOptions = PathfinderOptions & {

@@ -4856,13 +4856,21 @@ export class Character extends Observer implements CharacterData {
 
         if (located.length == 0) return undefined // No items found
 
+        // Warn if using more than one option
+        let numReturnOptions = 0
+        if (filters?.returnHighestLevel) numReturnOptions++
+        if (filters?.returnHighestQuantity) numReturnOptions++
+        if (filters?.returnLowestLevel) numReturnOptions++
+        if (filters?.returnLowestQuantity) numReturnOptions++
+        if (numReturnOptions > 1) console.warn("You supplied locateItem with more than one returnX option. This function may not return the item you want.")
+
         if (filters?.returnHighestLevel) {
-            if (filters.returnLowestLevel) throw new Error("Set either returnHighestLevel or returnLowestLevel, not both.")
             let highestLevel: number = Number.MIN_SAFE_INTEGER
             let highestLevelIndex
             for (let i = 0; i < located.length; i++) {
                 const j = located[i]
                 const item = inv[j]
+                if (item.level == undefined) continue // No level
                 if (item.level > highestLevel) {
                     highestLevel = item.level
                     highestLevelIndex = i
@@ -4877,12 +4885,43 @@ export class Character extends Observer implements CharacterData {
             for (let i = 0; i < located.length; i++) {
                 const j = located[i]
                 const item = inv[j]
+                if (item.level == undefined) continue // No level
                 if (item.level < lowestLevel) {
                     lowestLevel = item.level
                     lowestLevelIndex = i
                 }
             }
             return located[lowestLevelIndex]
+        }
+
+        if (filters?.returnHighestQuantity) {
+            let highestQuantity: number = Number.MIN_SAFE_INTEGER
+            let highestQuantityIndex
+            for (let i = 0; i < located.length; i++) {
+                const j = located[i]
+                const item = inv[j]
+                if (item.q == undefined) continue // No quantity
+                if (item.q > highestQuantity) {
+                    highestQuantity = item.q
+                    highestQuantityIndex = i
+                }
+            }
+            return located[highestQuantityIndex]
+        }
+
+        if (filters?.returnLowestQuantity) {
+            let lowestQuantity: number = Number.MAX_SAFE_INTEGER
+            let lowestQuantityIndex
+            for (let i = 0; i < located.length; i++) {
+                const j = located[i]
+                const item = inv[j]
+                if (item.q == undefined) continue // No quantity
+                if (item.q < lowestQuantity) {
+                    lowestQuantity = item.q
+                    lowestQuantityIndex = i
+                }
+            }
+            return located[lowestQuantityIndex]
         }
 
         return located[0]
