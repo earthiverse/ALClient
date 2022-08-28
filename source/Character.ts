@@ -925,6 +925,10 @@ export class Character extends Observer implements CharacterData {
                 npcLocs: IPosition[]
             }
         } = {
+            friendtoken: {
+                error: null,
+                npcLocs: Pathfinder.locateNPC("friendtokens")
+            },
             funtoken: {
                 error: null,
                 npcLocs: Pathfinder.locateNPC("funtokens")

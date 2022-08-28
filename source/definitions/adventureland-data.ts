@@ -336,7 +336,7 @@ export type GData = {
             /** TODO: ??? What is this? GUI related? */
             interval?: number
             /** A list of items that you can buy from this NPC. */
-            items?: ItemName[]
+            items?: (ItemName | null)[]
             /** NPC level? */
             level?: number
             /** NOTE: Not sure why this exists. Some NPCs which don't have this still move */
@@ -344,7 +344,7 @@ export type GData = {
             /** Their human readable name */
             name?: string
             /** TODO: ??? What is this? Items they used to sell, but no longer sell? */
-            old_items?: ItemName[]
+            old_items?: (ItemName | null)[]
             /** TODO: ??? What is this? Their old role? */
             old_role?: "merchant" | "premium"
             /** TODO: ??? What is this? Their old interaction? */
@@ -364,6 +364,8 @@ export type GData = {
             role: "announcer" | "blocker" | "bouncer" | "citizen" | "companion" | "compound" | "craftsman" | "cx" | "daily_events" | "exchange" | "funtokens" | "gold" | "guard" | "items" | "jailer" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "merchant" | "monstertokens" | "newupgrade" | "newyear_tree" | "petkeeper" | "premium" | "pvp_announcer" | "pvptokens" | "quest" | "repeater" | "resort" | "rewards" | "secondhands" | "shells" | "ship" | "shrine" | "standmerchant" | "tavern" | "tease" | "thesearch" | "transport" | "witch" | string
             /** (GUI) Lines the NPC can say */
             says?: string[] | string
+            /** (TODO: Confirm) If you have a lot of this stat, the NPC might follow you around? */
+            seek?: Attribute
             /** (GUI) More interactions. TODO: How is this different than interaction? */
             side_interaction?: {
                 auto: boolean
@@ -383,7 +385,7 @@ export type GData = {
             /** If set, you can exchange tokens of this type at this NPC */
             token?: ItemName
             /** TODO: ??? GUI related? */
-            type?: "full" | "fullstatic" | "static"
+            type?: "full" | "fullstatic" | "static" | CharacterType
         }
     } & {
         "transporter": {
@@ -577,7 +579,7 @@ export type GData = {
             manual?: boolean
         } }
     tokens: {
-        [T in "funtoken" | "monstertoken" | "pvptoken"]: {
+        [T in "friendtoken" | "funtoken" | "monstertoken" | "pvptoken"]: {
             /** For the ItemName, it costs this many tokens */
             [T in ItemName]?: number
         }
@@ -1302,7 +1304,7 @@ export type MonsterName =
     "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
 
 export type NPCName =
-    "antip2w" | "appearance" | "armors" | "basics" | "bean" | "beans" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
+    "antip2w" | "appearance" | "armors" | "basics" | "bean" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "friendtokens" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
 
 /**
  * Generate with:
