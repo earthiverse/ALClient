@@ -2349,6 +2349,8 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             if (filters.targetingPlayer !== undefined && entity.target !== filters.targetingPlayer) continue
+            if (filters.hpGreaterThan !== undefined && filters.hpGreaterThan <= entity.hp) continue
+            if (filters.hpLessThan !== undefined && filters.hpLessThan >= entity.hp) continue
             if (filters.level !== undefined && filters.level !== entity.level) continue
             if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= entity.level) continue
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= entity.level) continue
@@ -2692,6 +2694,8 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             if (filters.targetingPlayer !== undefined && player.target !== filters.targetingPlayer) continue
+            if (filters.hpGreaterThan !== undefined && filters.hpGreaterThan <= player.hp) continue
+            if (filters.hpLessThan !== undefined && filters.hpLessThan >= player.hp) continue
             if (filters.level !== undefined && filters.level !== player.level) continue
             if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= player.level) continue
             if (filters.levelLessThan !== undefined && filters.levelLessThan >= player.level) continue
@@ -4948,13 +4952,13 @@ export class Character extends Observer implements CharacterData {
                     continue // The item's level doesn't match
             }
             if (filters?.levelGreaterThan !== undefined) {
-                if (item.level == undefined)
+                if (item.level === undefined)
                     continue // This item doesn't have a level
                 if (item.level <= filters.levelGreaterThan)
                     continue // This item is a lower level than desired
             }
             if (filters?.levelLessThan !== undefined) {
-                if (item.level == undefined)
+                if (item.level === undefined)
                     continue // This item doesn't have a level
                 if (item.level >= filters.levelLessThan)
                     continue // This item is a higher level than desired
@@ -4972,7 +4976,7 @@ export class Character extends Observer implements CharacterData {
                     continue // The item is pvp marked
             }
             if (filters?.quantityGreaterThan !== undefined) {
-                if (item.q == undefined)
+                if (item.q === undefined)
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack

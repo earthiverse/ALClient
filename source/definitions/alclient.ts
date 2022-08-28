@@ -7,6 +7,8 @@ export type GetEntitiesFilters = {
     canKillInOneShot?: SkillName
     canWalkTo?: boolean
     couldGiveCredit?: boolean
+    hpGreaterThan?: number
+    hpLessThan?: number
     ignoreIDs?: Iterable<string>
     withinRange?: number | SkillName
     targetingMe?: boolean
@@ -38,6 +40,8 @@ export type GetPlayersFilters = {
     canDamage?: boolean | SkillName
     canWalkTo?: boolean
     ctype?: CharacterType
+    hpGreaterThan?: number
+    hpLessThan?: number
     ignoreIDs?: Iterable<string>
     isFriendly?: boolean
     isNPC?: boolean
