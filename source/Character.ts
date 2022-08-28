@@ -2856,10 +2856,12 @@ export class Character extends Observer implements CharacterData {
                     const response = (data as any).response
                     const responseS = response ? ` (${response})` : ""
 
-                    // TODO: Based on the reason, we should format the failure, for example
-                    //       cooldown should show how many ms remaining.
-
-                    reject(`Failed to use skill '${skill}'${responseS}${reasonS}.`)
+                    // TODO: Based on the reason, we should format the failure
+                    if (response == "cooldown") {
+                        reject(`Failed to use skill '${skill}'${responseS} (${(data as any).ms}ms).`)
+                    } else {
+                        reject(`Failed to use skill '${skill}'${responseS}${reasonS}.`)
+                    }
                     return
                 }
 
@@ -4371,9 +4373,10 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos The position of the offering to use to upgrade the item in your inventory
      * @returns
      */
-    public async upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
+    public async upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [upgrade].")
         if (this.G.maps[this.map].mount) throw new Error("We can't upgrade things in the bank.")
+        if (this.q.upgrade) throw new Error("We are already upgrading")
 
         const itemInfo = this.items[itemPos]
         const scrollInfo = this.items[scrollPos]
@@ -4385,75 +4388,74 @@ export class Character extends Observer implements CharacterData {
             if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
         }
 
-        const upgradeComplete = new Promise<boolean>((resolve, reject) => {
-            const playerCheck = (data: CharacterData) => {
-                if (!data.hitchhikers)
-                    return
-                for (const [event, datum] of data.hitchhikers) {
-                    if (event == "game_response" && datum.response == "upgrade_fail" && datum.num == itemPos) {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        resolve(false)
-                        return
-                    } else if (event == "game_response" && datum.response == "upgrade_success" && datum.num == itemPos) {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        resolve(true)
-                        return
-                    }
-                }
+        // Check if the upgrade started
+        const upgradeStarted = new Promise<unknown>((resolve, reject) => {
+            const clear = () => {
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("player", playerCheck)
+                clearTimeout(timeout)
             }
 
             const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "bank_restrictions" && data.place == "upgrade") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject("You can't upgrade items in the bank.")
-                    } else if (data.response == "item_locked" && data.place == "upgrade") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject("You can't upgrade locked items.")
-                    } else if (data.response == "get_closer" && data.place == "upgrade") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject("We are too far away to upgrade items.")
-                    }
-                } else if (typeof data == "string") {
-                    if (data == "bank_restrictions") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject("We can't upgrade things in the bank.")
-                    } else if (data == "upgrade_in_progress") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject("We are already upgrading something.")
-                    } else if (data == "upgrade_incompatible_scroll") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
-                    } else if (data == "upgrade_fail") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        resolve(false)
-                    } else if (data == "upgrade_success") {
-                        this.socket.off("game_response", gameResponseCheck)
-                        this.socket.off("player", playerCheck)
-                        resolve(true)
-                    }
+                if (typeof data == "string") {
+                    if (!data.startsWith("upgrade")) return
+                    clear()
+                    reject(`Failed to upgrade (${data})`)
+                } else if (typeof data == "object") {
+                    if ((data as any).place !== "upgrade") return
+                    clear()
+                    reject(`Failed to upgrade (${data.response})`)
                 }
             }
-            setTimeout(() => {
-                this.socket.off("game_response", gameResponseCheck)
-                this.socket.off("player", playerCheck)
-                reject("upgrade timeout (60000ms)")
-            }, 60000)
+
+            const playerCheck = (data: CharacterData) => {
+                if (data.q.upgrade) {
+                    clear()
+                    resolve(data.q)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                clear()
+                reject(`Failed to upgrade (Timeout (${Constants.TIMEOUT}ms))`)
+            }, Constants.TIMEOUT)
+
             this.socket.on("game_response", gameResponseCheck)
             this.socket.on("player", playerCheck)
         })
 
         this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
-        return upgradeComplete
+        await upgradeStarted
+
+        // Check for the upgrade result
+        const upgradeResult = new Promise<unknown>((resolve, reject) => {
+            const clear = () => {
+                this.socket.off("player", playerCheck)
+                clearTimeout(timeout)
+            }
+
+            const playerCheck = (data: CharacterData) => {
+                if (data.hitchhikers) {
+                    for (const [hitchHikerEvent, hitchHikerData] of data.hitchhikers) {
+                        if (hitchHikerEvent == "game_response") {
+                            if ((hitchHikerData.response as string).startsWith("upgrade")) {
+                                clear()
+                                resolve(hitchHikerData)
+                            }
+                        }
+                    }
+                }
+            }
+
+            const timeoutMS = (this.q?.upgrade?.ms ?? 59_000) + 1000
+            const timeout = setTimeout(() => {
+                clear()
+                reject(`Failed to upgrade (Timeout (${timeoutMS}ms))`)
+            }, timeoutMS)
+
+            this.socket.on("player", playerCheck)
+        })
+        return upgradeResult
     }
 
     public async useHPPot(itemPos: number): Promise<void> {
@@ -4464,30 +4466,35 @@ export class Character extends Observer implements CharacterData {
         if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an HP Potion.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
+            const clear = () => {
+                this.socket.off("eval", healCheck)
+                this.socket.off("game_response", failCheck)
+                clearTimeout(timeout)
+            }
+
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.off("eval", healCheck)
-                    this.socket.off("disappearing_text", failCheck)
+                    clear()
                     resolve()
                 }
             }
 
-            const failCheck = (data: DisappearingTextData) => {
-                if (data.id == this.id && data.message == "NOT READY") {
-                    this.socket.off("eval", healCheck)
-                    this.socket.off("disappearing_text", failCheck)
-                    reject("useHPPot is on cooldown")
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if ((data as any).place == "equip" && ((data as any).failed)) {
+                        clear()
+                        reject(`Failed to use HP Pot (${data.response})`)
+                    }
                 }
             }
 
-            setTimeout(() => {
-                this.socket.off("eval", healCheck)
-                this.socket.off("disappearing_text", failCheck)
+            const timeout = setTimeout(() => {
+                clear()
                 reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
             this.socket.on("eval", healCheck)
-            this.socket.on("disappearing_text", failCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("equip", { consume: true, num: itemPos })
@@ -4502,30 +4509,35 @@ export class Character extends Observer implements CharacterData {
         if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an MP Potion.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
+            const clear = () => {
+                this.socket.off("eval", healCheck)
+                this.socket.off("game_response", failCheck)
+                clearTimeout(timeout)
+            }
+
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    this.socket.off("eval", healCheck)
-                    this.socket.off("disappearing_text", failCheck)
+                    clear()
                     resolve()
                 }
             }
 
-            const failCheck = (data: DisappearingTextData) => {
-                if (data.id == this.id && data.message == "NOT READY") {
-                    this.socket.off("eval", healCheck)
-                    this.socket.off("disappearing_text", failCheck)
-                    reject("useMPPot is on cooldown")
+            const failCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if ((data as any).place == "equip" && ((data as any).failed)) {
+                        clear()
+                        reject(`Failed to use HP Pot (${data.response})`)
+                    }
                 }
             }
 
-            setTimeout(() => {
-                this.socket.off("eval", healCheck)
-                this.socket.off("disappearing_text", failCheck)
-                reject(`useMPPot timeout (${Constants.TIMEOUT}ms)`)
+            const timeout = setTimeout(() => {
+                clear()
+                reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
             this.socket.on("eval", healCheck)
-            this.socket.on("disappearing_text", failCheck)
+            this.socket.on("game_response", failCheck)
         })
 
         this.socket.emit("equip", { consume: true, num: itemPos })

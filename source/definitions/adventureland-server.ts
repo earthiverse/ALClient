@@ -687,14 +687,22 @@ export type GameResponseDataString =
     | "transport_cant_locked"
     /** When you're too far away from a door */
     | "transport_cant_reach"
+    /** When you try to upgrade an item that isn't upgradable */
+    | "upgrade_cant"
     /** Failed upgrading (to chance) */
     | "upgrade_fail"
     /** We are already upgrading something */
     | "upgrade_in_progress"
     /** We are trying to use a scroll to upgrade something that is a higher grade than the scroll can upgrade */
     | "upgrade_incompatible_scroll"
-    /** Successfully upgraded */
+    /** When you specify an inventory index for the item that is empty */
+    | "upgrade_no_item"
+    /** When you specify an inventory index for the scroll that is empty */
+    | "upgrade_no_scroll"
+    /** Successfully upgraded an item */
     | "upgrade_success"
+    /** Sucessfully applied a stat scroll to an item */
+    | "upgrade_success_stat"
 
 export type HitData = {
     anim?: AnimationName | "miss" | "reflect"
