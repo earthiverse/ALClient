@@ -10,6 +10,7 @@ export type GetEntitiesFilters = {
     hpGreaterThan?: number
     hpLessThan?: number
     ignoreIDs?: Iterable<string>
+    isDisabled?: boolean
     withinRange?: number | SkillName
     targetingMe?: boolean
     targetingPartyMember?: boolean
@@ -43,6 +44,8 @@ export type GetPlayersFilters = {
     hpGreaterThan?: number
     hpLessThan?: number
     ignoreIDs?: Iterable<string>
+    isDead?: boolean
+    isDisabled?: boolean
     isFriendly?: boolean
     isNPC?: boolean
     isPartyMember?: boolean

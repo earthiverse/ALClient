@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 707 (2022-01-24)
+ * The following is from http://adventure.land/data.js, version 749 (2022-08-29)
  * It is used to confirm type correctness
  */
 
@@ -230,14 +230,17 @@ test("G.conditions type validation", async () => {
             },
             "hopsickness": {
                 "debuff": true,
-                "explanation": "Feeling queasy from all the server hopping.",
-                "gold": -10,
-                "luck": -10,
+                "duration": 720000,
+                "explanation": "You are not in your home server! Go see Bean in Mainland square for a change.",
+                "gold": -80,
+                "luck": -80,
                 "name": "Hop Sickness",
+                "output": -20,
                 "persistent": true,
                 "skin": "condition_bad",
+                "special": "snakeoil",
                 "ui": true,
-                "xp": -10
+                "xp": -80
             },
             "invincible": {
                 "duration": 6000,
@@ -355,6 +358,13 @@ test("G.conditions type validation", async () => {
                 "technical": true,
                 "ui": true
             },
+            "penalty_cd": {
+                "bad": true,
+                "debuff": true,
+                "explanation": "The remaining duration of this condition is added any skill you use. Teleporting adds 3s, magiporting adds around 800ms, some item operations add 100-200ms.",
+                "name": "Penalty Cooldown",
+                "skin": "condition_bad"
+            },
             "phasedout": {
                 "buff": true,
                 "duration": 5000,
@@ -437,6 +447,12 @@ test("G.conditions type validation", async () => {
                 "name": "Shocked",
                 "skin": "essenceofthunder",
                 "ui": true
+            },
+            "sleeping": {
+                "debuff": true,
+                "duration": 8000,
+                "duration_min": 3000,
+                "name": "Sleeping"
             },
             "slowness": {
                 "bad": true,

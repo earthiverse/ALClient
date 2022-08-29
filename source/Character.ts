@@ -2352,6 +2352,11 @@ export class Character extends Observer implements CharacterData {
                     if (attackingPartyMember) continue
                 }
             }
+            if (filters.isDisabled !== undefined) {
+                const disabled = entity.isDisabled()
+                if (filters.isDisabled && !disabled) continue
+                if (!filters.isDisabled && disabled) continue
+            }
             if (filters.targetingPlayer !== undefined && entity.target !== filters.targetingPlayer) continue
             if (filters.hpGreaterThan !== undefined && entity.hp <= filters.hpGreaterThan) continue
             if (filters.hpLessThan !== undefined && entity.hp >= filters.hpLessThan) continue
@@ -2662,6 +2667,16 @@ export class Character extends Observer implements CharacterData {
 
         for (const [, player] of this.players) {
             if (filters.ctype !== undefined && player.ctype !== filters.ctype) continue
+            if (filters.isDead !== undefined) {
+                const rip = player.rip
+                if (filters.isDead && !rip) continue
+                if (!filters.isDead && rip) continue
+            }
+            if (filters.isDisabled !== undefined) {
+                const disabled = player.isDisabled()
+                if (filters.isDisabled && !disabled) continue
+                if (!filters.isDisabled && disabled) continue
+            }
             if (filters.isFriendly !== undefined) {
                 const friendly = player.isFriendly(this)
                 if (filters.isFriendly && !friendly) continue
@@ -2927,6 +2942,14 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("tracker")
         return gotTrackerData
+    }
+
+    /**
+     * If we are disabled, we cannot move or attack
+     * @returns If we are disabled
+     */
+    public isDisabled(): boolean {
+        return this.rip || ((this.s.stunned || this.s.fingered || this.s.deepfreezed) !== undefined)
     }
 
     /**

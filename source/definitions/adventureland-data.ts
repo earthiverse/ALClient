@@ -145,6 +145,8 @@ export type GData = {
             ui?: boolean
             /** Skin (image) for this condition */
             skin?: string
+            /** TODO: Confirm. Using this item can remove the condition. */
+            special?: ItemName
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
         } }
@@ -1273,7 +1275,7 @@ export type CharacterType =
  * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ConditionName =
-    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
+    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "penalty_cd" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "sleeping" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
 
 export type DamageType =
     "heal" | "magical" | "none" | "physical" | "pure"

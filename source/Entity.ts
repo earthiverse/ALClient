@@ -255,6 +255,14 @@ export class Entity implements MonsterData, Partial<GMonster> {
         return this.target == player.id
     }
 
+    /**
+     * If the entity is disabled, they cannot move or attack
+     * @returns If the entity is disabled
+     */
+    public isDisabled(): boolean {
+        return (this.s.stunned || this.s.fingered || this.s.sleeping) !== undefined
+    }
+
     // TODO: Check if we can taunt when the entity is attacking another player we control (i.e. same account), but we're not partied.
     /**
      * Returns whether or not the Warrior could taunt this monster

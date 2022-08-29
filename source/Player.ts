@@ -158,6 +158,14 @@ export class Player implements PlayerData {
     }
 
     /**
+     * If the player is disabled, they cannot move or attack
+     * @returns If the player is disabled
+     */
+    public isDisabled(): boolean {
+        return this.rip || ((this.s.stunned || this.s.fingered || this.s.deepfreezed || this.s.sleeping) !== undefined)
+    }
+
+    /**
      * Returns true if the player is "friendly", for example, if it's one of our characters, in our party, or in our friends list.
      * @param character Our character (e.g.: bot.character)
      */
