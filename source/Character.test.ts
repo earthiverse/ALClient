@@ -439,7 +439,7 @@ beforeAll(async () => {
     }, "winterland", "winterland", Game.G))
     warrior.entities.set("3522746", new Entity({
         "speed": 20.48,
-        "hp": 18000,
+        "hp": 9000,
         "mp": 60,
         "attack": 300,
         "xp": 21600,
@@ -458,7 +458,7 @@ beforeAll(async () => {
         "type": "boar",
         "cid": 2,
         "s": {},
-        "level": 2
+        "level": 1
     }, "winterland", "winterland", Game.G))
     warrior.entities.set("3523318", new Entity({
         "speed": 20.48,
@@ -752,13 +752,25 @@ test("Character.countItem", () => {
 })
 
 test("Character.getEntities", () => {
-    // NOTE: When we created the warrior, we created it in winterland with some boars around it
-    expect(warrior.getEntities().length).toBeGreaterThan(0)
-    expect(warrior.getEntities({ type: "boar" }).length).toBeGreaterThan(0)
+    // NOTE: When we created the warrior, we created it in winterland with 2 boars and 1 rudolph
+
+    expect(warrior.getEntities().length).toBe(3)
+    expect(warrior.getEntities({ type: "boar" }).length).toBe(2)
     expect(warrior.getEntities({ type: "goo" }).length).toBe(0)
-    expect(warrior.getEntities({ typeList: ["boar"] }).length).toBeGreaterThan(0)
+    expect(warrior.getEntities({ typeList: ["boar"] }).length).toBe(2)
     expect(warrior.getEntities({ typeList: ["goo"] }).length).toBe(0)
-    expect(warrior.getEntities({ typeList: ["boar", "goo"] }).length).toBeGreaterThan(0)
+    expect(warrior.getEntities({ typeList: ["boar", "goo"] }).length).toBe(2)
+
+    expect(warrior.getEntities({ hpGreaterThan: 0 }).length).toBe(3)
+    expect(warrior.getEntities({ hpGreaterThan: 10000000 }).length).toBe(1)
+    expect(warrior.getEntities({ hpLessThan: 0 }).length).toBe(0)
+    expect(warrior.getEntities({ hpLessThan: 10000000 }).length).toBe(2)
+
+    expect(warrior.getEntities({ level: 1 }).length).toBe(2)
+    expect(warrior.getEntities({ levelGreaterThan: 1 }).length).toBe(1)
+    expect(warrior.getEntities({ levelGreaterThan: 2 }).length).toBe(0)
+    expect(warrior.getEntities({ levelLessThan: 3 }).length).toBe(3)
+    expect(warrior.getEntities({ levelLessThan: 2 }).length).toBe(2)
 
     const originalLength = warrior.entities.size
     expect(warrior.getEntities({ ignoreIDs: ["3522746"] }).length).toBe(originalLength - 1)

@@ -2353,11 +2353,11 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             if (filters.targetingPlayer !== undefined && entity.target !== filters.targetingPlayer) continue
-            if (filters.hpGreaterThan !== undefined && filters.hpGreaterThan <= entity.hp) continue
-            if (filters.hpLessThan !== undefined && filters.hpLessThan >= entity.hp) continue
+            if (filters.hpGreaterThan !== undefined && entity.hp <= filters.hpGreaterThan) continue
+            if (filters.hpLessThan !== undefined && entity.hp >= filters.hpLessThan) continue
             if (filters.level !== undefined && filters.level !== entity.level) continue
-            if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= entity.level) continue
-            if (filters.levelLessThan !== undefined && filters.levelLessThan >= entity.level) continue
+            if (filters.levelGreaterThan !== undefined && entity.level <= filters.levelGreaterThan) continue
+            if (filters.levelLessThan !== undefined && entity.level >= filters.levelLessThan) continue
             if (filters.notType !== undefined && filters.type == entity.type) continue
             if (filters.notTypeList !== undefined && filters.notTypeList.includes(entity.type)) continue
             if (filters.type !== undefined && filters.type !== entity.type) continue
@@ -2698,11 +2698,11 @@ export class Character extends Observer implements CharacterData {
                 }
             }
             if (filters.targetingPlayer !== undefined && player.target !== filters.targetingPlayer) continue
-            if (filters.hpGreaterThan !== undefined && filters.hpGreaterThan <= player.hp) continue
-            if (filters.hpLessThan !== undefined && filters.hpLessThan >= player.hp) continue
+            if (filters.hpGreaterThan !== undefined && player.hp <= filters.hpGreaterThan) continue
+            if (filters.hpLessThan !== undefined && player.hp >= filters.hpLessThan) continue
             if (filters.level !== undefined && filters.level !== player.level) continue
-            if (filters.levelGreaterThan !== undefined && filters.levelGreaterThan <= player.level) continue
-            if (filters.levelLessThan !== undefined && filters.levelLessThan >= player.level) continue
+            if (filters.levelGreaterThan !== undefined && player.level <= filters.levelGreaterThan) continue
+            if (filters.levelLessThan !== undefined && player.level >= filters.levelLessThan) continue
             if (filters.withinRange !== undefined) {
                 let squaredRange: number
                 if (typeof filters.withinRange == "number") {
