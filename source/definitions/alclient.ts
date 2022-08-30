@@ -1,4 +1,4 @@
-import { Attribute, CharacterType, MonsterName, SkillName } from "./adventureland-data.js"
+import { Attribute, CharacterType, MonsterName, SkillName, TitleName } from "./adventureland-data.js"
 import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
@@ -75,7 +75,7 @@ export type LocateItemsFilters = {
     pvpMarked?: boolean;
     quantityGreaterThan?: number;
     /** Is the item special? (e.g.: shiny, firehazard, lucky, glitched, ...) */
-    special?: boolean;
+    special?: boolean | TitleName;
     /** The scroll applied to the weapon (e.g.: int, dex, str, ...) */
     statType?: Attribute;
 }

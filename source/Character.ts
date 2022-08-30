@@ -5058,10 +5058,12 @@ export class Character extends Observer implements CharacterData {
                     continue // There isn't enough items in this stack
             }
             if (filters?.special !== undefined) {
-                if (filters.special && !item.p)
+                if (filters.special == true && !item.p)
                     continue // The item isn't titled
-                if (!filters.special && item.p)
+                if (filters.special == false && item.p)
                     continue // The item is titled
+                if (filters.special !== item.p)
+                    continue // The item is special, but not the right kind of special
             }
             if (filters?.statType !== undefined) {
                 if (item.stat_type !== filters.statType)
