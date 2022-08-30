@@ -5040,9 +5040,9 @@ export class Character extends Observer implements CharacterData {
                     continue // This item is a higher level than desired
             }
             if (filters?.locked !== undefined) {
-                if (filters.locked && item.l !== "l")
+                if (filters.locked && !(item.l == "l" || item.l == "s"))
                     continue // This item isn't locked
-                if (!filters.locked && item.l == "l")
+                if (!filters.locked && (item.l == "l" || item.l == "s"))
                     continue // This item is locked
             }
             if (filters?.pvpMarked !== undefined) {
