@@ -574,6 +574,13 @@ export type NoMPGRDataObject = {
     place: SkillName
     failed: true
 }
+
+export type NoItemGRDataObject = {
+    response: "no_item"
+    place: "upgrade" | "compound"
+    failed: true
+}
+
 export type NoTargetGRDataObject = {
     response: "no_target"
     /** TODO: See what else gets returned */
@@ -596,6 +603,17 @@ export type TooFarGRDataObject = {
     id: string
     dist: number
 }
+export type TownGRDataObject = {
+    success: false
+    in_progress: true
+    response: "data"
+    place: "town"
+}
+export type TransportGRDataObject = {
+    success: true
+    response: "data"
+    place: "transport"
+}
 export type UnfriendFailedGRDataObject = {
     response: "unfriend_failed"
     reason: "bank" | "coms failure" | "nouser"
@@ -613,8 +631,9 @@ export type GameResponseDataObject =
     AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
     CraftGRDataObject | SkillSuccessGRDataObject | AttackGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
     DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
-    ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoMPGRDataObject | NoTargetGRDataObject |
-    SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject | GoldReceivedGRDataObject
+    ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
+    NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
+    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
