@@ -293,7 +293,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.abilities?.self_healing) return false // Could heal itself
         if (!this.s.burned) return false // Not burning
 
-        const burnTime = Math.max(0, (this.s.burned.ms - (this.G.conditions.burned.interval * 2))) / 1000
+        const burnTime = Math.max(0, (this.s.burned.ms - (this.G.conditions.burned.interval * 4))) / 1000
         const burnDamage = burnTime * this.s.burned.intensity
 
         return burnDamage > this.hp
