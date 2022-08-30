@@ -19,7 +19,13 @@ export class Merchant extends PingCompensatedCharacter {
         if (this.c.fishing) return // We're already fishing
         // TODO: Add area check if we can fish here
 
-        const finishedFishing = new Promise<string>((resolve, reject) => {
+        // Start fishing
+        const started = this.getResponsePromise("fishing")
+        this.socket.emit("skill", { name: "fishing" })
+        await started
+
+        // If we got here, we're now fishing, so return the next promise with what (if anything) we catch
+        return new Promise<string>((resolve, reject) => {
             const clear = () => {
                 this.socket.off("ui", noneCheck)
                 this.socket.off("game_log", logCheck)
@@ -57,14 +63,6 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("game_log", logCheck)
             this.socket.on("skill_timeout", cooldownCheck)
         })
-
-        // Start fishing
-        const started = this.getResponsePromise("fishing")
-        this.socket.emit("skill", { name: "fishing" })
-        await started
-
-        // If we got here, we're now fishing, so return the next promise with what (if anything) we catch
-        return finishedFishing
     }
 
     // TODO: Add promises
@@ -290,7 +288,13 @@ export class Merchant extends PingCompensatedCharacter {
         if (this.c.mining) return // We're already mining
         // TODO: Add area check if we can mine here
 
-        const finishedMining = new Promise<string>((resolve, reject) => {
+        // Start mining
+        const started = this.getResponsePromise("mining")
+        this.socket.emit("skill", { name: "mining" })
+        await started
+
+        // If we got here, we're now mining, so return the next promise with what (if anything) we get
+        return new Promise<string>((resolve, reject) => {
             const clear = () => {
                 this.socket.off("ui", noneCheck)
                 this.socket.off("game_log", logCheck)
@@ -328,14 +332,6 @@ export class Merchant extends PingCompensatedCharacter {
             this.socket.on("game_log", logCheck)
             this.socket.on("skill_timeout", cooldownCheck)
         })
-
-        // Start mining
-        const started = this.getResponsePromise("mining")
-        this.socket.emit("skill", { name: "mining" })
-        await started
-
-        // If we got here, we're now mining, so return the next promise with what (if anything) we get
-        return finishedMining
     }
 
     public async mluck(target: string): Promise<unknown> {
