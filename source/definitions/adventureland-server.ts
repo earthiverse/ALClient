@@ -1108,6 +1108,8 @@ export type QInfo = {
         ms: number
         num: number
         nums: number[]
+        success?: true
+        failure?: true
     }
     exchange?: {
         ms: number
@@ -1121,6 +1123,8 @@ export type QInfo = {
         len: number
         ms: number
         num: number
+        success?: true
+        failure?: true
     }
 }
 

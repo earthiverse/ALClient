@@ -1802,21 +1802,25 @@ export class Character extends Observer implements CharacterData {
             const waitTime = time + Constants.TIMEOUT
             return new Promise<boolean>((resolve, reject) => {
                 const cleanup = () => {
-                    this.socket.off("player", finishCheck)
+                    this.socket.off("q_data", finishCheck)
+                    clearTimeout(timeout)
                 }
 
-                const finishCheck = (data: PlayerData) => {
-                    if (!data.q?.compound) {
+                const finishCheck = (data: PQData) => {
+                    if (data.q?.compound?.success) {
                         cleanup()
                         resolve(true)
+                    } else if (data.q?.compound?.failure) {
+                        cleanup()
+                        resolve(false)
                     }
                 }
 
-                setTimeout(() => {
+                const timeout = setTimeout(() => {
                     cleanup()
                     reject(`compound timeout (${waitTime}ms)`)
                 }, waitTime)
-                this.socket.on("player", finishCheck)
+                this.socket.on("q_data", finishCheck)
             })
         })
     }
@@ -2219,7 +2223,7 @@ export class Character extends Observer implements CharacterData {
         return equipFinished
     }
 
-    public async exchange(inventoryPos: number): Promise<void> {
+    public async exchange(inventoryPos: number): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [exchange].")
         if (!this.items[inventoryPos]) throw new Error(`No item in inventory slot ${inventoryPos}.`)
         if (this.G.maps[this.map].mount) throw new Error("We can't exchange things in the bank.")
@@ -2261,43 +2265,30 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
         return exchanged.then((exchangeTime: number) => {
             const waitTime = exchangeTime + (this.ping * 2)
-            return new Promise<void>((resolve, reject) => {
-                const completeCheck1 = (data: CharacterData) => {
+            return new Promise<string>((resolve, reject) => {
+                const cleanup = () => {
+                    this.socket.off("player", completeCheck)
+                    this.socket.off("game_log", logCheck)
+                    clearTimeout(timeout)
+                }
+                let log: string
+                const logCheck = (data: GameLogData) => {
+                    if (typeof data !== "object") return
+                    const exchangeRegex = /^Received a/.exec(data.message)
+                    if (exchangeRegex) log = exchangeRegex[0]
+                }
+                const completeCheck = (data: CharacterData) => {
                     if (!data.q.exchange) {
-                        this.socket.off("player", completeCheck1)
-                        this.socket.off("game_response", completeCheck2)
-                        this.socket.off("upgrade", completeCheck3)
-                        resolve()
+                        cleanup()
+                        resolve(log)
                     }
                 }
-                const completeCheck2 = (data: GameResponseData) => {
-                    if (typeof data == "object") {
-                        const result = /success/.test(data.response)
-                        if (result) {
-                            this.socket.off("player", completeCheck1)
-                            this.socket.off("game_response", completeCheck2)
-                            this.socket.off("upgrade", completeCheck3)
-                            resolve()
-                        }
-                    }
-                }
-                const completeCheck3 = (data: UpgradeData) => {
-                    if (typeof data == "object" && data.type == "exchange" && data.success) {
-                        this.socket.off("player", completeCheck1)
-                        this.socket.off("game_response", completeCheck2)
-                        this.socket.off("upgrade", completeCheck3)
-                        resolve()
-                    }
-                }
-                setTimeout(() => {
-                    this.socket.off("player", completeCheck1)
-                    this.socket.off("game_response", completeCheck2)
-                    this.socket.off("upgrade", completeCheck3)
+                const timeout = setTimeout(() => {
+                    cleanup()
                     reject(`exchange_complete timeout (${waitTime}ms)`)
                 }, waitTime)
-                this.socket.on("player", completeCheck1)
-                this.socket.on("game_response", completeCheck2)
-                this.socket.on("upgrade", completeCheck3)
+                this.socket.on("player", completeCheck)
+                this.socket.on("game_log", logCheck)
             })
         })
     }
@@ -4482,14 +4473,17 @@ export class Character extends Observer implements CharacterData {
             const waitTime = upgradeTime + Constants.TIMEOUT
             return new Promise<boolean>((resolve, reject) => {
                 const cleanup = () => {
-                    this.socket.off("player", completeCheck)
+                    this.socket.off("q_data", completeCheck)
                     clearTimeout(timeout)
                 }
 
-                const completeCheck = (data: CharacterData) => {
-                    if (!data.q?.upgrade) {
+                const completeCheck = (data: PQData) => {
+                    if (data.q?.upgrade?.success) {
                         cleanup()
                         resolve(true)
+                    } else if (data.q?.upgrade?.failure) {
+                        cleanup()
+                        resolve(false)
                     }
                 }
 
@@ -4497,6 +4491,8 @@ export class Character extends Observer implements CharacterData {
                     cleanup()
                     reject(`upgrade timeout (${waitTime}ms)`)
                 }, waitTime)
+
+                this.socket.on("q_data", completeCheck)
             })
         })
     }
