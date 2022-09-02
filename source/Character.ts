@@ -1422,11 +1422,12 @@ export class Character extends Observer implements CharacterData {
 
     public canBuy(item: ItemName, options?: {
         ignoreLocation?: boolean
+        quantity?: number
     }): boolean {
         if (this.isFull()) return false // We are full
 
         const gInfo = this.G.items[item]
-        if (this.gold < gInfo.g) return false // We can't afford it
+        if (this.gold < gInfo.g * (options?.quantity ?? 1)) return false // We can't afford it
 
         const computerAvailable = this.hasItem("computer") || this.hasItem("supercomputer")
 
