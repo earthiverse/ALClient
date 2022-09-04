@@ -895,7 +895,7 @@ export class Character extends Observer implements CharacterData {
             console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
             quantity = 1
         }
-        const cost = (gData.g * quantity)
+        const cost = gData.g * (gData.markup ?? 1) * quantity
         if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
         const response = this.getResponsePromise(
@@ -1427,7 +1427,7 @@ export class Character extends Observer implements CharacterData {
         if (this.isFull()) return false // We are full
 
         const gInfo = this.G.items[item]
-        if (this.gold < gInfo.g * (options?.quantity ?? 1)) return false // We can't afford it
+        if (this.gold < gInfo.g * (gInfo.markup ?? 1) * (options?.quantity ?? 1)) return false // We can't afford it
 
         const computerAvailable = this.hasItem("computer") || this.hasItem("supercomputer")
 
