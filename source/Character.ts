@@ -212,6 +212,14 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // Update cooldowns if we have penalty_cd
+        if (data.s.penalty_cd) {
+            const penaltyCooldown = new Date(Date.now() + data.s.penalty_cd.ms)
+            for (const [skillName] of this.nextSkill) {
+                this.setNextSkill(skillName, penaltyCooldown)
+            }
+        }
+
         // Keep name updated for those that prefer to use name instead of id.
         this.name = data.id
 
