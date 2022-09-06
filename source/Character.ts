@@ -2935,7 +2935,7 @@ export class Character extends Observer implements CharacterData {
      */
     public async getTrackerData(): Promise<TrackerData> {
         if (!this.ready) throw new Error("We aren't ready yet [getTrackerData].")
-        if (!this.hasItem("tracker")) throw new Error("We need a tracker to obtain tracker data.")
+        if (!this.hasItem("tracker") && !this.hasItem("supercomputer")) throw new Error("We need a tracker to obtain tracker data.")
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
