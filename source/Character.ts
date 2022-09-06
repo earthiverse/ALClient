@@ -214,8 +214,9 @@ export class Character extends Observer implements CharacterData {
 
         // Update cooldowns if we have penalty_cd
         if (data.s.penalty_cd) {
-            const penaltyCooldown = new Date(Date.now() + data.s.penalty_cd.ms)
-            for (const [skillName] of this.nextSkill) {
+            const withPenalty = Date.now() + data.s.penalty_cd.ms
+            for (const [skillName, next] of this.nextSkill) {
+                const penaltyCooldown = new Date(Math.max(withPenalty, next.getTime()))
                 this.setNextSkill(skillName, penaltyCooldown)
             }
         }
