@@ -1,4 +1,4 @@
-import { DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
+import { CharacterData, DeathData, EvalData, GameResponseData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
@@ -12,6 +12,28 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("invis")
         this.socket.emit("skill", { name: "invis" })
         return response
+    }
+
+    public async pickpocket(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [pickpocket]")
+
+        let time: number
+        const getTime = (data: CharacterData) => {
+            if (data.c.pickpocket) {
+                time = data.c.pickpocket.ms
+            }
+        }
+        this.socket.on("player", getTime)
+
+        try {
+            const response = this.getResponsePromise("pickpocket")
+            this.socket.emit("skill", { id: target, name: "pickpocket" })
+            await response
+        } finally {
+            this.socket.off("player", getTime)
+        }
+
+        return new Promise(resolve => setTimeout(resolve, Math.ceil(time)))
     }
 
     public async mentalBurst(target: string): Promise<unknown> {

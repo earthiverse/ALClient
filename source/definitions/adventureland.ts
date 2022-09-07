@@ -13,6 +13,13 @@ export type BankInfo = {
     gold: number;
 }
 
+export type ChannelInfo = {
+    fishing?: { ms: number, drop: "f1" }
+    mining?: { ms: number, drop: "m1" | "m2" }
+    pickpocket?: { ms: number, target: string }
+    town?: { ms: number }
+}
+
 export type ChestInfo = PositionReal & {
     alpha: number;
     skin: string | "chest3";

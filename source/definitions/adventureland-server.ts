@@ -3,7 +3,7 @@
  * game uses to interact with the server.
  */
 
-import { StatusInfo, SlotInfo, ServerRegion, ServerIdentifier, BankInfo, TradeSlotType, SlotType } from "./adventureland.js"
+import { BankInfo, ChannelInfo, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
 import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
@@ -15,7 +15,6 @@ export type AchievementProgressDataFirehazard = {
     count: number
     needed: number
 }
-
 
 export type ActionDataBase = {
     attacker: string
@@ -76,8 +75,7 @@ export type CharacterData = PlayerData & {
     rip: boolean
     afk: boolean | string | "afk"
     s: StatusInfo
-    // TODO: Figure this type out
-    c: any
+    c: ChannelInfo
     q: QInfo
     /** TODO: What is this? */
     abs?: boolean
@@ -342,8 +340,7 @@ export type DisconnectCharacterResponse = {
     type: "ui_error"
 }
 
-export type DisconnectReasonData =
-    | "limitdc"
+export type DisconnectReasonData = "limitdc"
 
 export type EmotionData = {
     /** emotion name */
@@ -574,13 +571,11 @@ export type NoMPGRDataObject = {
     place: SkillName
     failed: true
 }
-
 export type NoItemGRDataObject = {
     response: "no_item"
     place: "upgrade" | "compound"
     failed: true
 }
-
 export type NoTargetGRDataObject = {
     response: "no_target"
     /** TODO: See what else gets returned */
@@ -624,7 +619,6 @@ export type GoldReceivedGRDataObject = {
     gold: number
     name: string
 }
-
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
@@ -1030,8 +1024,7 @@ export type PlayerData = {
     age?: number
     armor: number
     attack?: number
-    // TODO: Figure out what this is
-    c: any
+    c: ChannelInfo
     cid: number
     code?: boolean | string
     controller?: string
@@ -1176,7 +1169,6 @@ export type ServerInfoDataLive = {
     target?: string
     /** NOTE: Some event monsters don't have x and y (e.g.: Slenderman) */
     x?: number
-    /** NOTE: Some event monsters don't have x and y (e.g.: Slenderman) */
     y?: number
 }
 export type ServerInfoDataNotLive = {
@@ -1363,7 +1355,7 @@ export type ClientToServerSkillData =
 /** Skills that don't take any parameters */
 | { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
 /** Skills that target an entity */
-| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "supershot" | "taunt" | "zapperzap">, id: string }
+| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "supershot" | "taunt" | "zapperzap">, id: string }
 /** Skills that use an item */
 | { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
 /** Skills that target an entity and use an item */
