@@ -288,15 +288,19 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @memberof Entity
      */
     public willBurnToDeath(): boolean {
-        if (this["1hp"]) return false // TODO: Improve to check if it will die to 1hp burns
         if (this.lifesteal) return false // Could heal itself
         if (this.abilities?.self_healing) return false // Could heal itself
         if (!this.s.burned) return false // Not burning
 
-        const burnTime = Math.max(0, (this.s.burned.ms - (this.G.conditions.burned.interval * 4))) / 1000
-        const burnDamage = burnTime * this.s.burned.intensity
+        const numIntervals = Math.floor(this.s.burned.ms / this.G.conditions.burned.interval) - 1
 
-        return burnDamage > this.hp
+        // It will proc for 1 damage every interval
+        if (this["1hp"]) {
+            return numIntervals >= this.hp
+        }
+
+        const burnDamage = numIntervals * (this.s.burned.intensity / 5)
+        return burnDamage >= this.hp
     }
 
     /**

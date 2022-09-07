@@ -212,6 +212,15 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // Update cooldowns if we have penalty_cd
+        if (data.s.penalty_cd) {
+            const withPenalty = Date.now() + data.s.penalty_cd.ms
+            for (const [skillName, next] of this.nextSkill) {
+                const penaltyCooldown = new Date(Math.max(withPenalty, next.getTime()))
+                this.setNextSkill(skillName, penaltyCooldown)
+            }
+        }
+
         // Keep name updated for those that prefer to use name instead of id.
         this.name = data.id
 
@@ -895,7 +904,8 @@ export class Character extends Observer implements CharacterData {
             console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
             quantity = 1
         }
-        if (this.gold < (gData.g * quantity)) throw new Error(`Insufficient gold. We only have ${this.gold}, but the item costs ${this.G.items[itemName].g}`)
+        const cost = gData.g * (gData.markup ?? 1) * quantity
+        if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
         const response = this.getResponsePromise(
             "buy",
@@ -1421,11 +1431,12 @@ export class Character extends Observer implements CharacterData {
 
     public canBuy(item: ItemName, options?: {
         ignoreLocation?: boolean
+        quantity?: number
     }): boolean {
         if (this.isFull()) return false // We are full
 
         const gInfo = this.G.items[item]
-        if (this.gold < gInfo.g) return false // We can't afford it
+        if (this.gold < gInfo.g * (gInfo.markup ?? 1) * (options?.quantity ?? 1)) return false // We can't afford it
 
         const computerAvailable = this.hasItem("computer") || this.hasItem("supercomputer")
 
@@ -2933,7 +2944,7 @@ export class Character extends Observer implements CharacterData {
      */
     public async getTrackerData(): Promise<TrackerData> {
         if (!this.ready) throw new Error("We aren't ready yet [getTrackerData].")
-        if (!this.hasItem("tracker")) throw new Error("We need a tracker to obtain tracker data.")
+        if (!this.hasItem("tracker") && !this.hasItem("supercomputer")) throw new Error("We need a tracker to obtain tracker data.")
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
@@ -4922,11 +4933,11 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns the index of the item in the given inventory
-     * @param iN The item to look for
+     * @param iN The item(s) to look for
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItem(iN: ItemName, inv = this.items,
+    public locateItem(iN: ItemName | ItemName[], inv = this.items,
         filters?: LocateItemFilters): number {
         const located = this.locateItems(iN, inv, filters)
 
@@ -5005,19 +5016,21 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns a list of indexes of the items in the given inventory
-     * @param iN The item to look for
+     * @param iN The item(s) to look for
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItems(iN: ItemName, inv = this.items,
+    public locateItems(iN: ItemName | ItemName[], inv = this.items,
         filters?: LocateItemsFilters): number[] {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
+
+        if (typeof iN == "string") iN = [iN]
 
         const found: number[] = []
         for (let i = 0; i < inv.length; i++) {
             const item = inv[i]
             if (!item) continue
-            if (item.name !== iN) continue
+            if (!iN.includes(item.name)) continue
 
             if (filters?.level !== undefined) {
                 if (item.level !== filters.level)

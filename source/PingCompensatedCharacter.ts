@@ -78,7 +78,7 @@ export class PingCompensatedCharacter extends Character {
             const distanceTraveled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTraveled > distanceToGoal) {
+            if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
@@ -89,11 +89,10 @@ export class PingCompensatedCharacter extends Character {
 
             // Compensate conditions
             for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms !== undefined) {
-                    entity.s[condition as ConditionName].ms -= pingCompensation
-                    if (entity.s[condition as ConditionName].ms < 0) {
-                        delete entity.s[condition as ConditionName]
-                    }
+                if (entity.s[condition as ConditionName].ms === undefined) continue
+                entity.s[condition as ConditionName].ms -= pingCompensation
+                if (entity.s[condition as ConditionName].ms < 0) {
+                    delete entity.s[condition as ConditionName]
                 }
             }
         }
@@ -105,7 +104,7 @@ export class PingCompensatedCharacter extends Character {
             const distanceTraveled = entity.speed * pingCompensation / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
             const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
-            if (distanceTraveled > distanceToGoal) {
+            if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
@@ -116,11 +115,10 @@ export class PingCompensatedCharacter extends Character {
 
             // Compensate conditions
             for (const condition in entity.s) {
-                if (entity.s[condition as ConditionName].ms !== undefined) {
-                    entity.s[condition as ConditionName].ms -= pingCompensation
-                    if (entity.s[condition as ConditionName].ms < 0) {
-                        delete entity.s[condition as ConditionName]
-                    }
+                if (entity.s[condition as ConditionName].ms === undefined) continue
+                entity.s[condition as ConditionName].ms -= pingCompensation
+                if (entity.s[condition as ConditionName].ms < 0) {
+                    delete entity.s[condition as ConditionName]
                 }
             }
         }
