@@ -14,7 +14,7 @@ export class PingCompensatedCharacter extends Character {
             await super.connect()
             this.pingLoop()
         } catch (e) {
-            await this.disconnect()
+            this.disconnect()
             throw e
         }
     }

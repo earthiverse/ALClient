@@ -214,9 +214,9 @@ export class Game {
                     if (result) {
                     // Save our data to the database
                         this.user = {
+                            secure: secure,
                             userAuth: result[1].split("-")[1],
-                            userID: result[1].split("-")[0],
-                            secure: secure
+                            userID: result[1].split("-")[0]
                         }
                         break
                     }

@@ -618,8 +618,7 @@ export class Observer {
         this.lastPositionUpdate = Date.now()
     }
 
-    // TODO: Convert to async, and return a promise<number> with the ping ms time
-    public async sendPing(log = true): Promise<string> {
+    public async sendPing(log = true): Promise<number> {
         // Get the next pingID
         const pingID = this.pingNum.toString()
         this.pingNum++
@@ -627,8 +626,27 @@ export class Observer {
         // Set the pingID in the map
         this.pingMap.set(pingID, { log: log, time: Date.now() })
 
+        const promise = new Promise<number>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("ping_ack", pingListener)
+                clearTimeout(timeout)
+            }
+
+            const pingListener = (data: { id: string}) => {
+                if (data.id == pingID) {
+                    const time = Date.now() - this.pingMap.get(pingID).time
+                    resolve(time)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject("ping timeout (5000ms)")
+            }, 5000)
+        })
+
         // Get the ping
         this.socket.emit("ping_trig", { id: pingID })
-        return pingID
+        return promise
     }
 }

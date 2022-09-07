@@ -1,5 +1,4 @@
-import { DisappearingTextData, EvalData, GameResponseData, MagiportGRDataObject, NewMapData } from "./definitions/adventureland-server.js"
-import { Constants } from "./Constants.js"
+import { MagiportGRDataObject } from "./definitions/adventureland-server.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
@@ -41,7 +40,7 @@ export class Mage extends PingCompensatedCharacter {
         if (!this.ready) throw new Error("We aren't ready yet [burst].")
 
         const response = this.getResponsePromise("burst")
-        this.socket.emit("skill", { name: "burst", id: target })
+        this.socket.emit("skill", { id: target, name: "burst" })
         return response
     }
 
@@ -74,8 +73,8 @@ export class Mage extends PingCompensatedCharacter {
 
         const response = this.getResponsePromise("entangle")
         this.socket.emit("skill", {
-            name: "entangle",
             id: target,
+            name: "entangle",
             num: essenceofnature
         })
         return response
@@ -139,8 +138,8 @@ export class Mage extends PingCompensatedCharacter {
 
         const response = this.getResponsePromise("reflection")
         this.socket.emit("skill", {
-            name: "reflection",
             id: target,
+            name: "reflection"
         })
         return response
     }

@@ -1,5 +1,5 @@
 import { Character } from "./Character.js"
-import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
+import { ChannelInfo, SlotInfo, StatusInfo } from "./definitions/adventureland.js"
 import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { PlayerData, QInfo } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
@@ -39,7 +39,7 @@ export class Player implements PlayerData {
     public y: number
     public s: StatusInfo = {}
 
-    c: any = {}
+    c: ChannelInfo = {}
     cx: CXData
     focus?: string
     hp: number

@@ -105,7 +105,7 @@ export class Warrior extends PingCompensatedCharacter {
 
         try {
             const response = this.getResponsePromise("taunt")
-            this.socket.emit("skill", { name: "taunt", id: target })
+            this.socket.emit("skill", { id: target, name: "taunt" })
             await response
         } finally {
             this.socket.off("action", getProjectile)

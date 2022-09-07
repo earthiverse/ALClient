@@ -76,7 +76,7 @@ export class Merchant extends PingCompensatedCharacter {
         //     // TODO
         // })
 
-        this.socket.emit("join_giveaway", { slot: slot, id: id, rid: rid })
+        this.socket.emit("join_giveaway", { id: id, rid: rid, slot: slot })
         // return joined
     }
 

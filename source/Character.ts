@@ -3287,7 +3287,7 @@ export class Character extends Observer implements CharacterData {
         // const playedSlots = new Promise<void>((resolve, reject) => {
         // TODO
         // })
-        this.socket.emit("bet", { "type": "dice", "dir": "up", "num": 50, "gold": 100000 })
+        this.socket.emit("bet", { "dir": "up", "gold": 100000, "num": 50, "type": "dice" })
 
         // return playedSlots
     }
@@ -4151,7 +4151,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", successCheck)
         })
 
-        this.socket.emit("bank", { operation: "move", a: itemPosA, b: itemPosB, pack: pack })
+        this.socket.emit("bank", { a: itemPosA, b: itemPosB, operation: "move", pack: pack })
         return itemsSwapped
     }
 
