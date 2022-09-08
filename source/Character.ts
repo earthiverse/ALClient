@@ -5028,7 +5028,7 @@ export class Character extends Observer implements CharacterData {
     public locateItems(iN: ItemName | ItemName[], inv = this.items,
         filters?: LocateItemsFilters): number[] {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
-        if (filters?.levelGreaterThan <= 0) delete filters.levelGreaterThan
+        if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
         if (typeof iN == "string") iN = [iN]
 
