@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, BankRestrictionsGRDataObject, NoItemGRDataObject, TownGRDataObject } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, BankRestrictionsGRDataObject, NoItemGRDataObject, TownGRDataObject, GameResponseDataObject, BuySuccessGRDataObject, CooldownGRDataObject, SkillSuccessGRDataObject, AttackGRDataObject, EquipGRDataObject, EquipFailedGRDataObject, TavernEventData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -114,9 +114,9 @@ export class Character extends Observer implements CharacterData {
     cc: number
     ipass?: string
     friends?: string[]
-    acx?: any
+    acx?: object
     xcx?: string[]
-    hitchhikers?: [string, any][]
+    hitchhikers?: [string, GameResponseData | EvalData][]
     user: BankInfo = { gold: 0 }
     fear: number
     courage: number
@@ -171,7 +171,7 @@ export class Character extends Observer implements CharacterData {
                 // Game responses
                 for (const [event, datum] of (data as CharacterData).hitchhikers) {
                     if (event == "game_response") {
-                        this.parseGameResponse(datum)
+                        this.parseGameResponse(datum as GameResponseData)
                     } else if (event == "eval") {
                         this.parseEval(datum as EvalData)
                     }
@@ -910,9 +910,9 @@ export class Character extends Observer implements CharacterData {
         const response = this.getResponsePromise(
             "buy",
             {
-                extraGameResponseCheck(data: any) {
-                    if (data.name !== itemName) return false
-                    if (data.q !== quantity) return false
+                extraGameResponseCheck(data: GameResponseDataObject) {
+                    if ((data as BuySuccessGRDataObject).name !== itemName) return false
+                    if ((data as BuySuccessGRDataObject).q !== quantity) return false
                     return true
                 },
             }
@@ -1591,14 +1591,15 @@ export class Character extends Observer implements CharacterData {
         if (!gItemInfo.upgrade) return false // Item is not upgradable
         const scrollInfo = this.items[scrollPos]
         if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
-        const offeringInfo = this.items[offeringPos]
+        //const offeringInfo = this.items[offeringPos]
 
         // Distance check
         if (!this.hasItem("computer") && !this.hasItem("supercomputer")
          && Tools.squaredDistance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
 
         // Scroll compatibility check
-
+        const grade = this.calculateItemGrade(itemInfo)
+        if (scrollInfo.name !== `scroll${grade}`) return false // not the right scroll
     }
 
     /**
@@ -2883,27 +2884,27 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
-                if ((data as any).place !== skill) return // The response is for a different skill
+                if ((data as AttackGRDataObject).place !== skill) return // The response is for a different skill
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if ((data as any).failed) {
+                if ((data as AttackGRDataObject).failed) {
                     clear()
-                    const reason = (data as any).reason
+                    const reason = (data as AttackGRDataObject).reason
                     const reasonS = reason ? ` (${reason})` : ""
-                    const response = (data as any).response
+                    const response = (data as AttackGRDataObject | CooldownGRDataObject).response
                     const responseS = response ? ` (${response})` : ""
 
                     // TODO: Based on the reason, we should format the failure
                     if (response == "cooldown") {
-                        reject(`Failed to use skill '${skill}'${responseS} (${(data as any).ms}ms).`)
+                        reject(`Failed to use skill '${skill}'${responseS} (${(data as CooldownGRDataObject).ms}ms).`)
                     } else {
                         reject(`Failed to use skill '${skill}'${responseS}${reasonS}.`)
                     }
                     return
                 }
 
-                if ((data as any).success || (data as any).in_progress) {
+                if ((data as SkillSuccessGRDataObject).success || (data as SkillSuccessGRDataObject).in_progress) {
                     clear()
                     resolve(data)
                     return
@@ -3279,17 +3280,37 @@ export class Character extends Observer implements CharacterData {
         return opened
     }
 
-    public async playSlots(bet): Promise<void> {
+    public async playSlots(bet = 100_000, num = 50, dir: "up" | "down" = "up"): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [playSlots].")
         if (this.s.xshotted) throw new Error("You can't play the slots while x-shotted.")
         if (this.gold < this.G.games.slots.gold) throw new Error("You don't have enough gold to play the slots.")
 
-        // const playedSlots = new Promise<void>((resolve, reject) => {
-        // TODO
-        // })
-        this.socket.emit("bet", { "dir": "up", "gold": 100000, "num": 50, "type": "dice" })
+        const playedSlots = new Promise<boolean>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("tavern", eventCheck)
+                clearTimeout(timeout)
+            }
 
-        // return playedSlots
+            const eventCheck = (data: TavernEventData) => {
+                if (data.name != this.id) return
+                if (data.type != "dice") return
+                if (data.event == "lost") {
+                    cleanup()
+                    resolve(false)
+                } else if (data.event == "won") {
+                    cleanup()
+                    resolve(true)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject("playSlots timeout (30000ms)")
+            }, 30000)
+        })
+        this.socket.emit("bet", { "dir": dir, "gold": bet, "num": num, "type": "dice" })
+
+        return playedSlots
     }
 
     public async regenHP(): Promise<void> {
@@ -4437,22 +4458,9 @@ export class Character extends Observer implements CharacterData {
         // Check if the upgrade started
         const upgradeStarted = new Promise<number>((resolve, reject) => {
             const cleanup = () => {
-                this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("player", playerCheck)
                 this.socket.off("q_data", qDataCheck)
                 clearTimeout(timeout)
-            }
-
-            const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (!data.startsWith("upgrade")) return
-                    cleanup()
-                    reject(`Failed to upgrade (${data})`)
-                } else if (typeof data == "object") {
-                    if ((data as any).place !== "upgrade") return
-                    cleanup()
-                    reject(`Failed to upgrade (${data.response})`)
-                }
             }
 
             const playerCheck = (data: CharacterData) => {
@@ -4474,7 +4482,6 @@ export class Character extends Observer implements CharacterData {
                 reject(`Failed to start upgrade (${Constants.TIMEOUT}ms timeout)`)
             }, Constants.TIMEOUT)
 
-            this.socket.on("game_response", gameResponseCheck)
             this.socket.on("player", playerCheck)
             this.socket.on("q_data", qDataCheck)
         })
@@ -4531,7 +4538,7 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as any).place == "equip" && ((data as any).failed)) {
+                    if ((data as EquipGRDataObject).place == "equip" && ((data as EquipFailedGRDataObject).failed)) {
                         clear()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }
@@ -4574,7 +4581,7 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as any).place == "equip" && ((data as any).failed)) {
+                    if ((data as EquipGRDataObject).place == "equip" && ((data as EquipFailedGRDataObject).failed)) {
                         clear()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }

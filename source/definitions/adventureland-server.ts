@@ -152,10 +152,10 @@ export type CharacterData = PlayerData & {
     ipass?: string
     friends?: string[]
     // TODO: Figure this out
-    acx?: any
+    acx?: object
     xcx?: string[]
     /** Extra events (e.g. ["game_response", {response: "upgrade_success", level: 4, num: 8}]) */
-    hitchhikers?: [string, any][]
+    hitchhikers?: [string, GameResponseData | EvalData][]
     /** Holds bank information when the character is inside the bank */
     user?: BankInfo
     /** (GUI Related) Set if you move inventory items. Flag for reopening player's inventory. */
@@ -323,7 +323,13 @@ export type DisappearingTextData = {
     x: number
     y: number
     id: string
-    args: any
+    args: {
+        c: string
+        s: string
+    } | {
+        color: string
+        size: string
+    }
 }
 
 export type DisconnectCharacterResponse = {
@@ -498,7 +504,8 @@ export type CraftGRDataObject = {
 export type SkillSuccessGRDataObject = {
     response: "data"
     place: Exclude<SkillName, "attack">
-    success: true
+    success: boolean
+    in_progress?: true
 }
 export type AttackGRDataObject = {
     response: "data"
@@ -619,6 +626,19 @@ export type GoldReceivedGRDataObject = {
     gold: number
     name: string
 }
+export type EquipGRDataObject = EquipSuccessGRDataObject | EquipFailedGRDataObject
+export type EquipSuccessGRDataObject = {
+    response: "data"
+    place: "equip"
+    success: true
+    slot: SlotType
+    num: number
+}
+export type EquipFailedGRDataObject = {
+    response: "cant_equip"
+    place: "equip"
+    failed: true
+}
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
@@ -627,7 +647,7 @@ export type GameResponseDataObject =
     DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
     ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
     NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject
+    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -1241,6 +1261,15 @@ export type TrackerData = {
     global_static: [number, "open", string][] | [number, ItemName][]
 }
 
+export type TavernEventData = {
+    event: "lost" | "won" | "bet"
+    name: string
+    type: "dice"
+    num: number
+    gold: number
+    dir: "up" | "down"
+}
+
 export type UIDataBuySell = {
     type: "-$" | "+$"
     id: string | "basics" | "scrolls"
@@ -1297,7 +1326,7 @@ export type WelcomeData = {
     // TODO: Find out if this is "hardcore" on a hardcore server
     gameplay: string | "normal"
     // TODO: Find out what this is
-    info: any
+    info: object
     name: ServerIdentifier
     pvp: boolean
     x: number
@@ -1345,6 +1374,7 @@ export type ServerToClientEvents = {
     "server_info": (data: ServerInfoData) => void
     "skill_timeout": (data: SkillTimeoutData) => void
     "start": (data: StartData) => void
+    "tavern": (data: TavernEventData) => void
     "tracker": (data: TrackerData) => void
     "ui": (data: UIData) => void
     "upgrade": (data: UpgradeData) => void
