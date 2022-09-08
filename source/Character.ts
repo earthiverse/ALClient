@@ -4828,7 +4828,7 @@ export class Character extends Observer implements CharacterData {
     /**
      * Check if we have the given item in the given inventory
      *
-     * @param {ItemName | ItemName[]} iN The item(s) to look for
+     * @param {ItemName | ItemName[]} iN The item(s) to look for. If given an array, it will check if we have *any* item in that list, not *all* items.
      * @param {*} [inv=this.items] Where to look for the item(s)
      * @param {LocateItemsFilters} [filters]
      * @return {*}  {boolean}
@@ -5030,7 +5030,7 @@ export class Character extends Observer implements CharacterData {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
         if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
-        if (typeof iN == "string") iN = [iN]
+        if (typeof iN === "string") iN = [iN]
 
         const found: number[] = []
         for (let i = 0; i < inv.length; i++) {
