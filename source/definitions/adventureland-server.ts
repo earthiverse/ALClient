@@ -1457,6 +1457,7 @@ export type ClientToServerEvents = {
     // TODO: Create SendUpdatesData type
     "send_updates": (data: Record<string, never>) => void
     "skill": (data: ClientToServerSkillData) => void
+    "split": (data: { num: number, quantity: number }) => void
     "stop": (data: { action: "invis" | "town" }) => void
     "town": () => void
     "tracker": () => void

@@ -1597,7 +1597,7 @@ export class Character extends Observer implements CharacterData {
         if (!gItemInfo.upgrade) return false // Item is not upgradable
         const scrollInfo = this.items[scrollPos]
         if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
-        //const offeringInfo = this.items[offeringPos]
+        const offeringInfo = this.items[offeringPos]
 
         // Distance check
         if (!this.hasItem("computer") && !this.hasItem("supercomputer")
@@ -4083,6 +4083,40 @@ export class Character extends Observer implements CharacterData {
         this.smartMoving = undefined
         this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
         return { map: this.map, x: this.x, y: this.y }
+    }
+
+    public async splitItem(pos: number, q: number) {
+        if (!this.ready) throw new Error("We aren't ready yet [splitItem].")
+        const itemInfo = this.items[pos]
+        if (!itemInfo) throw new Error(`There is no item in slot ${pos}.`)
+        if (!itemInfo.q) throw new Error(`${itemInfo.name} is unstackable; and therefore can't be split.`)
+        if (!(itemInfo.q > q)) throw new Error(`There are not enough of ${itemInfo.name} in the stack to split ${q} from it.`)
+        if (this.esize < 1) throw new Error("We don't have any empty inventory slots to split this stack into.")
+        const emptySlot = this.getFirstEmptyInventorySlot(this.items)
+
+        const split = new Promise((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("player", splitCheck)
+                clearTimeout(timeout)
+            }
+
+            const splitCheck = (data: CharacterData) => {
+                if (data.items[emptySlot].name == itemInfo.name && data.items[emptySlot].q == q) {
+                    cleanup()
+                    resolve(emptySlot)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(`splitItem timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+
+            this.socket.on("player", splitCheck)
+        })
+
+        this.socket.emit("split", { num: pos, quantity: q })
+        return split
     }
 
     /**
