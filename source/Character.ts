@@ -960,7 +960,7 @@ export class Character extends Observer implements CharacterData {
 
             const gToken = this.G.tokens[tokenType]
 
-            if (!this.hasItem("computer") && !this.hasItem("supercomputer")) {
+            if (!this.hasItem(["computer", "supercomputer"])) {
                 // Check if we're nearby the token exchange NPC
                 const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
                 if (!inRange) {
@@ -1491,7 +1491,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
 
-        if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
+        if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
             const craftableLocation = Pathfinder.locateCraftNPC(itemToCraft)
             if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
@@ -1562,7 +1562,7 @@ export class Character extends Observer implements CharacterData {
      */
     public canSell(): boolean {
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't sell in the bank
-        if (this.hasItem("computer") || this.hasItem("supercomputer")) return true // We can sell almost anywhere with a computer
+        if (this.hasItem(["computer", "supercomputer"])) return true // We can sell almost anywhere with a computer
 
         // Check if we're near an NPC merchant
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
