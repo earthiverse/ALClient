@@ -847,6 +847,9 @@ test("Character.hasItem", () => {
     priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }]
     expect(priest.hasItem("firestars")).toBe(false)
     expect(priest.hasItem("throwingstars")).toBe(true)
+    expect(priest.hasItem(["firestars", "throwingstars"])).toBe(true)
+    expect(priest.hasItem(["throwingstars", "firestars"])).toBe(true)
+    expect(priest.hasItem(["wblade", "firestars"])).toBe(false)
     expect(priest.hasItem("throwingstars", priest.items, {
         level: 6
     })).toBe(false)

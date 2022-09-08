@@ -960,7 +960,7 @@ export class Character extends Observer implements CharacterData {
 
             const gToken = this.G.tokens[tokenType]
 
-            if (!this.hasItem("computer") && !this.hasItem("supercomputer")) {
+            if (!this.hasItem(["computer", "supercomputer"])) {
                 // Check if we're nearby the token exchange NPC
                 const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
                 if (!inRange) {
@@ -1433,6 +1433,7 @@ export class Character extends Observer implements CharacterData {
         ignoreLocation?: boolean
         quantity?: number
     }): boolean {
+        // TODO: If it's stackable, we could still buy it?
         if (this.isFull()) return false // We are full
 
         const gInfo = this.G.items[item]
@@ -1490,7 +1491,7 @@ export class Character extends Observer implements CharacterData {
         }
         if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
 
-        if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
+        if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
             const craftableLocation = Pathfinder.locateCraftNPC(itemToCraft)
             if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
@@ -1514,10 +1515,13 @@ export class Character extends Observer implements CharacterData {
     public canExchange(itemToExchange: ItemName, options?: {
         ignoreLocation?: boolean
     }): boolean {
-        // TODO: Add a check if we are already crafting something
+        // Check if we are already exchanging something
+        if (this.q.exchange) return false
 
-        const gItem = this.G.items[itemToExchange]
-        if (gItem.e !== undefined && this.countItem(itemToExchange) < gItem.e) return false // We don't have enough to exchange
+        // Find stacks that contain enough to exchange
+        if (!this.hasItem(itemToExchange, this.items, {
+            quantityGreaterThan: (this.G.items[itemToExchange].e ?? 1) - 1
+        })) return false // We don't have enough to exchange
 
         if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             const exchangeableLocation = Pathfinder.locateExchangeNPC(itemToExchange)
@@ -1558,7 +1562,7 @@ export class Character extends Observer implements CharacterData {
      */
     public canSell(): boolean {
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't sell in the bank
-        if (this.hasItem("computer") || this.hasItem("supercomputer")) return true // We can sell almost anywhere with a computer
+        if (this.hasItem(["computer", "supercomputer"])) return true // We can sell almost anywhere with a computer
 
         // Check if we're near an NPC merchant
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
@@ -1575,6 +1579,7 @@ export class Character extends Observer implements CharacterData {
     /**
      * UNFINISHED. DO NOT USE YET.
      * TODO: Finish
+     * TODO: Make canCompound, too
      *
      * @param {number} itemPos
      * @param {number} scrollPos
@@ -1583,6 +1588,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public canUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): boolean {
+        if (this.q.upgrade) return false // Already upgrading
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't upgrade in the bank
 
         const itemInfo = this.items[itemPos]
@@ -4829,14 +4835,13 @@ export class Character extends Observer implements CharacterData {
     /**
      * Check if we have the given item in the given inventory
      *
-     * @param {ItemName} iN The item to look for
-     * @param {*} [inv=this.items] Where to look for the item
-     * @param {LocateItemsFilters>} [filters]
+     * @param {ItemName | ItemName[]} iN The item(s) to look for. If given an array, it will check if we have *any* item in that list, not *all* items.
+     * @param {*} [inv=this.items] Where to look for the item(s)
+     * @param {LocateItemsFilters} [filters]
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public hasItem(iN: ItemName, inv = this.items,
-        filters?: LocateItemsFilters): boolean {
+    public hasItem(iN: ItemName | ItemName[], inv = this.items, filters?: LocateItemsFilters): boolean {
         return this.locateItems(iN, inv, filters).length > 0
     }
 
@@ -5030,8 +5035,9 @@ export class Character extends Observer implements CharacterData {
     public locateItems(iN: ItemName | ItemName[], inv = this.items,
         filters?: LocateItemsFilters): number[] {
         if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
+        if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
-        if (typeof iN == "string") iN = [iN]
+        if (typeof iN === "string") iN = [iN]
 
         const found: number[] = []
         for (let i = 0; i < inv.length; i++) {
