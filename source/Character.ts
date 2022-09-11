@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, BankRestrictionsGRDataObject, NoItemGRDataObject, TownGRDataObject, GameResponseDataObject, BuySuccessGRDataObject, CooldownGRDataObject, SkillSuccessGRDataObject, AttackGRDataObject, EquipGRDataObject, EquipFailedGRDataObject, TavernEventData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -307,9 +307,6 @@ export class Character extends Observer implements CharacterData {
             const next = new Date(Date.now() + Math.ceil(cooldown))
             this.setNextSkill("regen_hp", next)
             this.setNextSkill("regen_mp", next)
-            // NOTE: We don't need these, because regen_hp and regen_mp share these cooldowns in G.skills
-            // this.setNextSkill("use_hp", next)
-            // this.setNextSkill("use_mp", next)
             return
         }
 
@@ -324,6 +321,10 @@ export class Character extends Observer implements CharacterData {
         }
 
         // TODO: Handle pvp_timeout
+        const pvpTimeoutReg = /^pvp_timeout\s*\(\s*3600\s*,?\s*\d*\s*\)/.exec(data.code)
+        if (pvpTimeoutReg) {
+            return // do nothing because pvp_timeout is handled serverside
+        }
 
         console.error(`Unhandled 'eval': ${JSON.stringify(data)}`)
     }
@@ -875,26 +876,11 @@ export class Character extends Observer implements CharacterData {
     public async basicAttack(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [basicAttack].")
 
-        let projectile: string
-        const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.target == id
-                && data.type == "attack") {
-                this.socket.off("action", getProjectile)
-                projectile = data.pid
-            }
-        }
-        this.socket.on("action", getProjectile)
+        const response = this.getResponsePromise("attack") as Promise<string>
 
-        try {
-            const response = this.getResponsePromise("attack")
-            this.socket.emit("attack", { id: id })
-            await response
-        } finally {
-            this.socket.off("action", getProjectile)
-        }
+        this.socket.emit("attack", { id: id })
 
-        return projectile
+        return response
     }
 
     public async buy(itemName: ItemName, quantity = 1): Promise<unknown> {
@@ -904,19 +890,41 @@ export class Character extends Observer implements CharacterData {
             console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
             quantity = 1
         }
+        const count = this.countItem(itemName, this.items)
         const cost = gData.g * (gData.markup ?? 1) * quantity
         if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
-        const response = this.getResponsePromise(
-            "buy",
-            {
-                extraGameResponseCheck(data: GameResponseDataObject) {
-                    if ((data as BuySuccessGRDataObject).name !== itemName) return false
-                    if ((data as BuySuccessGRDataObject).q !== quantity) return false
-                    return true
-                },
+        const response = new Promise<void>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("player", playerCheck)
+                clearTimeout(timeout)
             }
-        )
+
+            const gameResponseCheck = (data: GameResponseData) => {
+                if (typeof data == "object" && data.response == "buy_success" && data.name == itemName && data.q == quantity) {
+                    cleanup()
+                    resolve()
+                }
+            }
+
+            const playerCheck = (data: CharacterData) => {
+                const newCount = this.countItem(itemName, data.items)
+                if (newCount == count + quantity) {
+                    cleanup()
+                    resolve()
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(`buy timeout (${Constants.TIMEOUT}ms)`)
+            }, Constants.TIMEOUT)
+
+            this.socket.on("game_response", gameResponseCheck)
+            this.socket.on("player", playerCheck)
+        })
+
         this.socket.emit("buy", { name: itemName, quantity: quantity })
         return response
     }
@@ -992,38 +1000,41 @@ export class Character extends Observer implements CharacterData {
             throw new AggregateError([tokenInfo.monstertoken.error, tokenInfo.funtoken.error, tokenInfo.pvptoken.error])
         }
 
-        const itemReceived = new Promise<void>((resolve, reject) => {
-            const buyCheck = (data: CharacterData) => {
+        const itemBought = new Promise<void>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("player", playerCheck)
+                this.socket.off("game_response", gameResponseCheck)
+                clearTimeout(timeout)
+            }
+            const playerCheck = (data: CharacterData) => {
                 const numNow = this.countItem(itemName, data.items)
                 if (numNow > numBefore) {
-                    this.socket.off("player", buyCheck)
-                    this.socket.off("game_response", failCheck)
+                    cleanup()
                     resolve()
                 }
             }
 
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "exchange_notenough") {
-                        this.socket.off("player", buyCheck)
-                        this.socket.off("game_response", failCheck)
+            const gameResponseCheck = (data: GameResponseData) => {
+                if (typeof data == "object") {
+                    if (data.response == "exchange_notenough") {
+                        cleanup()
                         reject(`Not enough tokens to buy ${itemName}.`)
                     }
                 }
             }
-            setTimeout(() => {
-                this.socket.off("player", buyCheck)
-                this.socket.off("game_response", failCheck)
+
+            const timeout = setTimeout(() => {
+                cleanup()
                 reject(`buyWithTokens timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
-            this.socket.on("player", buyCheck)
-            this.socket.on("game_response", failCheck)
+            this.socket.on("player", playerCheck)
+            this.socket.on("game_response", gameResponseCheck)
         })
 
         const invTokens = this.locateItem(useToken)
         this.socket.emit("exchange_buy", { name: itemName, num: invTokens, q: this.items[invTokens].q })
-        return itemReceived
+        return itemBought
     }
 
     public async buyFromMerchant(id: string, slot: TradeSlotType, rid: string, quantity = 1): Promise<ItemData> {
@@ -1057,15 +1068,20 @@ export class Character extends Observer implements CharacterData {
         }
 
         const itemBought = new Promise<ItemData>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("ui", buyCheck)
+                clearTimeout(timeout)
+            }
+
             const buyCheck = (data: UIData) => {
                 if (data.type == "+$$" && data.seller == id && data.buyer == this.id && data.slot == slot) {
-                    this.socket.off("ui", buyCheck)
+                    cleanup()
                     resolve(data.item)
                 }
             }
 
-            setTimeout(() => {
-                this.socket.off("ui", buyCheck)
+            const timeout = setTimeout(() => {
+                cleanup()
                 reject(`buy timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
             this.socket.on("ui", buyCheck)
@@ -1091,11 +1107,15 @@ export class Character extends Observer implements CharacterData {
         const numBefore = this.countItem(item.name, this.items)
 
         const bought = new Promise<void>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("game_log", failCheck)
+                this.socket.off("game_response", failCheck2)
+                this.socket.off("player", successCheck)
+                clearTimeout(timeout)
+            }
             const failCheck = (message: string) => {
                 if (message == "Item gone") {
-                    this.socket.off("game_log", failCheck)
-                    this.socket.off("game_response", failCheck2)
-                    this.socket.off("player", successCheck)
+                    cleanup()
                     reject(`${item.name} is no longer available from Ponty.`)
                 }
             }
@@ -1103,9 +1123,7 @@ export class Character extends Observer implements CharacterData {
             const failCheck2 = (message: GameResponseData) => {
                 if (typeof message == "string") {
                     if (message == "buy_cost") {
-                        this.socket.off("game_log", failCheck)
-                        this.socket.off("game_response", failCheck2)
-                        this.socket.off("player", successCheck)
+                        cleanup()
                         reject(`We don't have enough money to buy ${item.name} from Ponty.`)
                     }
                 }
@@ -1115,17 +1133,13 @@ export class Character extends Observer implements CharacterData {
                 const numNow = this.countItem(item.name, data.items)
                 if ((item.q && numNow == numBefore + item.q)
                     || (numNow == numBefore + 1)) {
-                    this.socket.off("game_log", failCheck)
-                    this.socket.off("game_response", failCheck2)
-                    this.socket.off("player", successCheck)
+                    cleanup()
                     resolve()
                 }
             }
 
-            setTimeout(() => {
-                this.socket.off("game_log", failCheck)
-                this.socket.off("game_response", failCheck2)
-                this.socket.off("player", successCheck)
+            const timeout = setTimeout(() => {
+                cleanup()
                 reject("buyFromPonty timeout (5000ms)")
             }, 5000)
             this.socket.on("game_log", failCheck)
@@ -1258,18 +1272,22 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos The position of the offering to use to upgrade the item in your inventory
      * @returns
      */
-    public async calculateUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
+    public async calculateUpgrade(itemPos: number, scrollPos?: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
         if (!this.ready) throw new Error("We aren't ready yet [upgrade].")
         if (this.G.maps[this.map].mount) throw new Error("We can't upgrade things in the bank.")
 
+        if (scrollPos == undefined && offeringPos == undefined) throw new Error("There must be either a scroll or an offering in order to calculate upgrade chance.")
+
         const itemInfo = this.items[itemPos]
-        const scrollInfo = this.items[scrollPos]
         if (!itemInfo) throw new Error(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[itemInfo.name].upgrade == undefined) throw new Error("This item is not upgradable.")
-        if (!scrollInfo) throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
-        if (offeringPos !== undefined) {
-            const offeringInfo = this.items[offeringPos]
-            if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
+        const scrollInfo = (scrollPos !== undefined) ? this.items[scrollPos] : null
+        if (scrollPos !== undefined && !scrollInfo) {
+            throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
+        }
+        const offeringInfo = (offeringPos !== undefined) ? this.items[offeringPos] : null
+        if (offeringPos !== undefined && !offeringInfo) {
+            throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
         }
 
         const upgradeChance = new Promise<GameResponseDataUpgradeChance>((resolve, reject) => {
@@ -1298,6 +1316,9 @@ export class Character extends Observer implements CharacterData {
                     } else if (data == "upgrade_incompatible_scroll") {
                         this.socket.off("game_response", gameResponseCheck)
                         reject(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`)
+                    } else if (data == "upgrade_invalid_offering") {
+                        this.socket.off("game_response", gameResponseCheck)
+                        reject(`The upgrade we're trying to use (${offeringInfo.name}) isn't enough to upgrade this item.`)
                     }
                 }
             }
@@ -1791,10 +1812,10 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as BankRestrictionsGRDataObject).response == "bank_restrictions" && (data as BankRestrictionsGRDataObject).place == "compound") {
+                    if (data.response == "bank_restrictions" && data.place == "compound") {
                         cleanup()
                         reject("You can't compound items in the bank.")
-                    } else if ((data as NoItemGRDataObject).failed && (data as NoItemGRDataObject).response == "no_item" && (data as NoItemGRDataObject).place == "compound") {
+                    } else if (data.response == "no_item" && data.failed && data.place == "compound") {
                         cleanup()
                         reject("You must have items to compound in order to compound items.")
                     }
@@ -2882,7 +2903,7 @@ export class Character extends Observer implements CharacterData {
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
         return new Promise<unknown>((resolve, reject) => {
-            const clear = () => {
+            const cleanup = () => {
                 this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("death", checkDeath)
                 clearTimeout(timeout)
@@ -2890,42 +2911,52 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
-                if ((data as AttackGRDataObject).place !== skill) return // The response is for a different skill
+                if (data.response == "cooldown") {
+                    if (data.place !== skill) return
 
-                if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
+                    cleanup()
+                    reject(`'${skill}' failed (cooldown: ${data.ms}ms).`)
+                } else if (data.response == "no_mp") {
+                    if (data.place !== skill) return
 
-                if ((data as AttackGRDataObject).failed) {
-                    clear()
-                    const reason = (data as AttackGRDataObject).reason
-                    const reasonS = reason ? ` (${reason})` : ""
-                    const response = (data as AttackGRDataObject | CooldownGRDataObject).response
-                    const responseS = response ? ` (${response})` : ""
+                    cleanup()
+                    reject(`'${skill}' failed (no_mp).`)
+                } else if (data.response == "too_far") {
+                    if (data.place !== skill) return
 
-                    // TODO: Based on the reason, we should format the failure
-                    if (response == "cooldown") {
-                        reject(`Failed to use skill '${skill}'${responseS} (${(data as CooldownGRDataObject).ms}ms).`)
+                    cleanup()
+                    reject(`'${skill}' failed (dist: ${data.dist})`)
+                } else if (data.response == "data") {
+                    if (data.place !== skill) return
+
+                    if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return
+
+                    if ((data.place == "attack" || data.place == "heal" || data.place == "taunt" || data.place == "curse")) {
+                        if (data.failed) {
+                            cleanup()
+                            reject(`'${skill}' failed (${data.reason ?? ""}`)
+                        } else {
+                            cleanup()
+                            resolve(data.pid)
+                        }
                     } else {
-                        reject(`Failed to use skill '${skill}'${responseS}${reasonS}.`)
+                        if ((data as SkillSuccessGRDataObject).success || (data as SkillSuccessGRDataObject).in_progress) {
+                            cleanup()
+                            resolve(data)
+                        }
                     }
-                    return
-                }
-
-                if ((data as SkillSuccessGRDataObject).success || (data as SkillSuccessGRDataObject).in_progress) {
-                    clear()
-                    resolve(data)
-                    return
                 }
             }
 
             const checkDeath = (data: DeathData) => {
                 if (data.place !== skill) return
-                clear()
-                reject(`Failed to use skill '${skill}' (Entity with ID '${data.id}' not found)`)
+                cleanup()
+                reject(`'${skill}' failed (target entity '${data.id}' not found)`)
             }
 
             const timeout = setTimeout(() => {
-                clear()
-                reject(`Failed to use skill '${skill}' (Timeout (${options.timeoutMs}ms))`)
+                cleanup()
+                reject(`'${skill}' failed (timeout: (${options.timeoutMs}ms))`)
             }, options.timeoutMs)
 
             this.socket.on("game_response", gameResponseCheck)
@@ -4578,7 +4609,7 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as EquipGRDataObject).place == "equip" && ((data as EquipFailedGRDataObject).failed)) {
+                    if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
                         clear()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }
@@ -4621,7 +4652,7 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as EquipGRDataObject).place == "equip" && ((data as EquipFailedGRDataObject).failed)) {
+                    if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
                         clear()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }
@@ -4661,7 +4692,7 @@ export class Character extends Observer implements CharacterData {
 
             const startedCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if ((data as TownGRDataObject).place == "town" && (data as TownGRDataObject).in_progress) {
+                    if (data.response == "data" && data.place == "town" && data.in_progress) {
                         startedWarp = true
                     }
                 }

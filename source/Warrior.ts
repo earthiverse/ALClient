@@ -1,6 +1,7 @@
-import { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
-import { IPosition } from "./index.js"
+import { UIData } from "./definitions/adventureland-server.js"
+import { IPosition } from "./definitions/adventureland.js"
+import { Tools } from "./Tools.js"
 
 export class Warrior extends PingCompensatedCharacter {
     ctype: "warrior" = "warrior"
@@ -8,10 +9,22 @@ export class Warrior extends PingCompensatedCharacter {
     public async agitate(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [agitate].")
 
-        // TODO: Get IDs of agitated monsters
-        const response = this.getResponsePromise("agitate")
-        this.socket.emit("skill", { name: "agitate" })
-        return response
+        let ids: string[]
+        const getIDs = (data: UIData) => {
+            if (data.type == "agitate" && data.name == this.id) {
+                ids = data.ids
+            }
+        }
+        this.socket.on("ui", getIDs)
+        try {
+            const response = this.getResponsePromise("agitate")
+            this.socket.emit("skill", { name: "agitate" })
+            await response
+        } finally {
+            this.socket.off("ui", getIDs)
+        }
+
+        return ids
     }
 
     public async charge(): Promise<unknown> {
@@ -24,7 +37,9 @@ export class Warrior extends PingCompensatedCharacter {
 
     public async cleave(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [cleave].")
-        // TODO: Add item checks
+        const currentWtype = this.G.items[this.slots.mainhand.name].wtype
+        if (currentWtype !== "axe" && currentWtype !== "scythe")
+            throw new Error("We need to have an 'axe' or 'scythe' type weapon equipped in order to cleave.")
 
         // TODO: Get IDs of cleaved monsters, or the projectiles
         const response = this.getResponsePromise("cleave")
@@ -47,7 +62,9 @@ export class Warrior extends PingCompensatedCharacter {
     public async dash(to: IPosition): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [dash].")
         if (to.map && to.map !== this.map) throw new Error("We cannot dash across maps.")
-        // TODO: Add destination checks
+        const dist = Tools.distance({ map: this.map, x: this.x, y: this.y }, to)
+        if (dist < 5) throw new Error("dash location is too close (min distance: 5)")
+        else if (dist > 50) throw new Error("dash location is too far (max dist: 50)")
 
         const response = this.getResponsePromise("dash")
         this.socket.emit("skill", {
@@ -74,14 +91,12 @@ export class Warrior extends PingCompensatedCharacter {
      */
     public async stomp(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [stomp].")
-        // TODO: Add item checks
+        if (this.G.items[this.slots.mainhand.name].wtype !== "basher")
+            throw new Error("We need to have a 'basher' type weapon equipped in order to stomp.")
 
-        // TODO: Return ids of those monsters & players that are now stomped
-        const response = this.getResponsePromise("stomp")
-        this.socket.emit("skill", {
-            name: "stomp"
-        })
-        return response
+        const stomped = this.getResponsePromise("stomp")
+        this.socket.emit("skill", { name: "stomp" })
+        return stomped
     }
 
     /**
@@ -92,26 +107,11 @@ export class Warrior extends PingCompensatedCharacter {
     public async taunt(target: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [taunt].")
 
-        let projectile: string
-        const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.type == "taunt"
-                && data.target == target) {
-                this.socket.off("action", getProjectile)
-                projectile = data.pid
-            }
-        }
-        this.socket.on("action", getProjectile)
+        const response = this.getResponsePromise("taunt") as Promise<string>
 
-        try {
-            const response = this.getResponsePromise("taunt")
-            this.socket.emit("skill", { id: target, name: "taunt" })
-            await response
-        } finally {
-            this.socket.off("action", getProjectile)
-        }
+        this.socket.emit("skill", { id: target, name: "taunt" })
 
-        return projectile
+        return response
     }
 
     public async warcry(): Promise<unknown> {

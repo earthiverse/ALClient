@@ -503,13 +503,14 @@ export type CraftGRDataObject = {
 }
 export type SkillSuccessGRDataObject = {
     response: "data"
-    place: Exclude<SkillName, "attack">
+    place: Exclude<SkillName, "attack" | "taunt" | "heal" | "curse">
     success: boolean
     in_progress?: true
 }
-export type AttackGRDataObject = {
+export type ProjectileSkillGRDataObject = {
     response: "data"
-    place: "attack"
+    place: "attack" | "taunt" | "heal" | "curse"
+    dist?: number
     reason?: string
     failed?: boolean
     id?: string
@@ -521,7 +522,7 @@ export type DefeatedByMonsterGRDataObject = {
 }
 export type DisabledGRDataObject = {
     response: "disabled"
-    place: "attack"
+    place: SkillName
 }
 export type DismantleGRDataObject = {
     response: "dismantle"
@@ -639,15 +640,20 @@ export type EquipFailedGRDataObject = {
     place: "equip"
     failed: true
 }
+export type ExchangeNotEnoughGRDataObject = {
+    response: "exchange_notenough"
+    place: "exchange_buy"
+    failed: true
+}
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
-    AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
-    CraftGRDataObject | SkillSuccessGRDataObject | AttackGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
-    DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
-    ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
-    NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject
+AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
+CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
+DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
+ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
+NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
+GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -736,6 +742,8 @@ export type GameResponseDataString =
     | "upgrade_success"
     /** Sucessfully applied a stat scroll to an item */
     | "upgrade_success_stat"
+    /** We are trying to use an offering that is not high enough grade to upgrade our item */
+    | "upgrade_invalid_offering"
 
 export type HitData = {
     anim?: AnimationName | "miss" | "reflect"
@@ -1303,13 +1311,13 @@ export type UIDataMLuck = {
     from: string
     to: string
 }
-export type UIDataScare = {
-    type: "scare"
+export type UIDataAOE = {
+    type: "stomp" | "agitate" | "scare"
     name: string
     ids: string[]
 }
 
-export type UIData = UIDataBuySell | UIDataTrade | UIDataFishingMining | UIDataMassProduction | UIDataMLuck | UIDataScare
+export type UIData = UIDataBuySell | UIDataTrade | UIDataFishingMining | UIDataMassProduction | UIDataMLuck | UIDataAOE
 
 export type UpgradeData = {
     type: string | "compound" | "exchange" | "upgrade"

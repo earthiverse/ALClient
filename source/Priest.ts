@@ -1,4 +1,3 @@
-import { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {
@@ -31,25 +30,9 @@ export class Priest extends PingCompensatedCharacter {
     public async heal(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [heal].")
 
-        let projectile: string
-        const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.type == "heal"
-                && data.target == id) {
-                projectile = data.pid
-            }
-        }
-        this.socket.on("action", getProjectile)
-
-        try {
-            const response = this.getResponsePromise("heal")
-            this.socket.emit("heal", { id: id })
-            await response
-        } finally {
-            this.socket.off("action", getProjectile)
-        }
-
-        return projectile
+        const response = this.getResponsePromise("heal") as Promise<string>
+        this.socket.emit("heal", { id: id })
+        return response
     }
 
     public async partyHeal(): Promise<unknown> {

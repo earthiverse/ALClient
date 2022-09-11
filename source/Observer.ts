@@ -634,7 +634,8 @@ export class Observer {
 
             const pingListener = (data: { id: string}) => {
                 if (data.id == pingID) {
-                    const time = Date.now() - this.pingMap.get(pingID).time
+                    const time = Date.now() - this.pingMap.get(pingID)?.time
+                    cleanup()
                     resolve(time)
                 }
             }
@@ -643,6 +644,8 @@ export class Observer {
                 cleanup()
                 reject("ping timeout (5000ms)")
             }, 5000)
+
+            this.socket.on("ping_ack", pingListener)
         })
 
         // Get the ping
