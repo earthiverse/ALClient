@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData, BuySuccessGRDataObject } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -883,48 +883,23 @@ export class Character extends Observer implements CharacterData {
         return response
     }
 
-    public async buy(itemName: ItemName, quantity = 1): Promise<unknown> {
+    public async buy(itemName: ItemName, quantity = 1): Promise<number> {
         if (!this.ready) throw new Error("We aren't ready yet [buy].")
         const gData = this.G.items[itemName]
         if (!gData.s && quantity !== 1) {
             console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
             quantity = 1
         }
-        const count = this.countItem(itemName, this.items)
         const cost = gData.g * (gData.markup ?? 1) * quantity
         if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
-        const response = new Promise<void>((resolve, reject) => {
-            const cleanup = () => {
-                this.socket.off("game_response", gameResponseCheck)
-                this.socket.off("player", playerCheck)
-                clearTimeout(timeout)
+        const response = this.getResponsePromise("buy", {
+            extraGameResponseCheck: (data: GameResponseData) => {
+                if ((data as BuySuccessGRDataObject).name !== itemName) return false
+                if ((data as BuySuccessGRDataObject).q !== quantity) return false
+                return true
             }
-
-            const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "object" && data.response == "buy_success" && data.name == itemName && data.q == quantity) {
-                    cleanup()
-                    resolve()
-                }
-            }
-
-            const playerCheck = (data: CharacterData) => {
-                const newCount = this.countItem(itemName, data.items)
-                if (newCount == count + quantity) {
-                    cleanup()
-                    resolve()
-                }
-            }
-
-            const timeout = setTimeout(() => {
-                cleanup()
-                reject(`buy timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
-
-            this.socket.on("game_response", gameResponseCheck)
-            this.socket.on("player", playerCheck)
-        })
-
+        }) as Promise<number>
         this.socket.emit("buy", { name: itemName, quantity: quantity })
         return response
     }
@@ -1608,7 +1583,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canUpgrade(itemPos: number, scrollPos: number, offeringPos?: number): boolean {
+    public canUpgrade(itemPos: number, scrollPos?: number, offeringPos?: number): boolean {
         if (this.q.upgrade) return false // Already upgrading
         if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't upgrade in the bank
 
@@ -1616,9 +1591,11 @@ export class Character extends Observer implements CharacterData {
         if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
         const gItemInfo = this.G.items[itemInfo.name]
         if (!gItemInfo.upgrade) return false // Item is not upgradable
+        if (!scrollPos && !offeringPos) throw new Error("Need at least a scroll or an offering in order to upgrade.")
         const scrollInfo = this.items[scrollPos]
-        if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+        if (scrollPos && !scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
         const offeringInfo = this.items[offeringPos]
+        if (offeringPos && !offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
 
         // Distance check
         if (!this.hasItem("computer") && !this.hasItem("supercomputer")
@@ -2911,7 +2888,10 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
-                if (data.response == "cooldown") {
+                if (data.response == "buy_success" && data.cevent == skill) {
+                    cleanup()
+                    resolve(data.num)
+                } else if (data.response == "cooldown") {
                     if (data.place !== skill) return
 
                     cleanup()
@@ -2934,7 +2914,8 @@ export class Character extends Observer implements CharacterData {
                     if ((data.place == "attack" || data.place == "heal" || data.place == "taunt" || data.place == "curse")) {
                         if (data.failed) {
                             cleanup()
-                            reject(`'${skill}' failed (${data.reason ?? ""}`)
+                            const reason = (data.reason == "too_far") ? `dist: ${data.dist}` : data.reason
+                            reject(`'${skill}' failed (${reason})`)
                         } else {
                             cleanup()
                             resolve(data.pid)
