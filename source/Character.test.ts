@@ -888,7 +888,7 @@ test("Character.isPVP", () => {
         in: "main",
         map: "main",
         gameplay: "test",
-        info: "test",
+        info: {},
         pvp: false,
         x: 0,
         y: 0

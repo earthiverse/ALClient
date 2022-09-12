@@ -289,13 +289,23 @@ test("G.conditions type validation", async () => {
             "mcourage": {
                 "buff": true,
                 "courage": 5,
-                "duration": 5000,
+                "duration": 10000,
                 "evasion": 40,
                 "mcourage": 5,
                 "name": "Merchant's Courage",
                 "pcourage": 5,
                 "skin": "skill_mcourage",
                 "speed": 25,
+                "ui": true
+            },
+            "mfrenzy": {
+                "buff": true,
+                "duration": 5000,
+                "frequency": 800,
+                "mp_cost": -20,
+                "name": "Merchant's Frenzy",
+                "output": 40,
+                "skin": "skill_mfrenzy",
                 "ui": true
             },
             "mining": {

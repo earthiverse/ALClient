@@ -467,8 +467,11 @@ export type GData = {
         damage_type?: DamageType
         /** How long the condition lasts */
         duration?: number
+        duration_min?: number
+        duration_max?: number
         /** An exlpanation of what this skill does */
         explanation?: string
+        global?: true
         heal?: boolean
         /** If true, we can't use this skill in a safe zone */
         hostile?: boolean;
@@ -480,6 +483,7 @@ export type GData = {
         /** If set, the skill requires a list of targets */
         list?: boolean
         max?: number
+        merchant_use?: true
         /** Can we use this skill on monsters? */
         monsters?: boolean;
         /** MP Cost for skill */
@@ -517,7 +521,7 @@ export type GData = {
         /** The item(s) required to use this skill */
         slot?: [SlotType, ItemName][];
         /** Does this skill require a single target? (Don't use an array) */
-        target?: boolean;
+        target?: true | "monster" | "player";
         /** Does this skill require multiple targets? (Use an array) */
         targets?: boolean;
         toggle?: boolean;
@@ -1275,7 +1279,7 @@ export type CharacterType =
  * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ConditionName =
-    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "penalty_cd" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "sleeping" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
+    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mfrenzy" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "penalty_cd" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "sleeping" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
 
 export type DamageType =
     "heal" | "magical" | "none" | "physical" | "pure"
@@ -1323,7 +1327,7 @@ export type SetName =
  * { const is = []; for(const i in G.skills) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type SkillName =
-    "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fireball" | "fishing" | "frostball" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "pickpocket" | "poisonarrow" | "portal" | "power" | "pure_eval" | "purify" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "smash" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
+    "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fireball" | "fishing" | "frostball" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mfrenzy" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "pickpocket" | "poisonarrow" | "portal" | "power" | "pure_eval" | "purify" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "smash" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
 
 export type TilesetName =
     "ash" | "beach" | "castle" | "custom_a" | "custom" | "custom2" | "dark" | "doors" | "dungeon" | "fort" | "house" | "inside" | "jungle" | "licht" | "new" | "outside" | "puzzle" | "ruins" | "ship" | "stands" | "tree" | "water" | "winter"

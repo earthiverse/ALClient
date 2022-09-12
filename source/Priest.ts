@@ -27,6 +27,10 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
+    /**
+     * NOTE: We can't name this function `heal` because of the property `heal` that tells us how much we heal for.
+     * @param id The ID of the entity or player to heal
+     */
     public async healSkill(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [heal].")
 
