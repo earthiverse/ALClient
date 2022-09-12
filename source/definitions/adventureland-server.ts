@@ -1311,13 +1311,18 @@ export type UIDataMLuck = {
     from: string
     to: string
 }
+export type UIDataRspeed = {
+    type: "rspeed"
+    from: string
+    to: string
+}
 export type UIDataAOE = {
     type: "stomp" | "agitate" | "scare"
     name: string
     ids: string[]
 }
 
-export type UIData = UIDataBuySell | UIDataTrade | UIDataFishingMining | UIDataMassProduction | UIDataMLuck | UIDataAOE
+export type UIData = UIDataBuySell | UIDataTrade | UIDataFishingMining | UIDataMassProduction | UIDataMLuck | UIDataAOE | UIDataRspeed
 
 export type UpgradeData = {
     type: string | "compound" | "exchange" | "upgrade"

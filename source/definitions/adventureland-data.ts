@@ -204,22 +204,22 @@ export type GData = {
     docs: DocsData
     drops: {
         [T in DropName]: GDropItem[]
-    } | {
+    } & {
         gold: {
             base: number
             random: number
             x10: number
             x50: number
         }
-    } | {
+    } & {
         maps: {
             [T in MapName | "global_static" | "global"]?: GDropItem[]
         }
-    } | {
+    } & {
         monsters: {
             [T in MonsterName]?: GDropItem[]
         }
-    } | {
+    } & {
         skins: {
             bronze: string[]
             gold: string[]
