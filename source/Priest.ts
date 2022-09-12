@@ -27,7 +27,7 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
-    public async heal(id: string): Promise<string> {
+    public async healSkill(id: string): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [heal].")
 
         const response = this.getResponsePromise("heal") as Promise<string>
