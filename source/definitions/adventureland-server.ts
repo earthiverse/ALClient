@@ -1068,6 +1068,8 @@ export type PlayerData = {
     move_num?: number
     moving?: boolean
     mp?: number
+    /** NPCs have names set, normal players do not */
+    name?: string
     npc?: NPCName
     owner: string
     party?: string
