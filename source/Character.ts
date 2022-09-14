@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData, BuySuccessGRDataObject } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -873,10 +873,10 @@ export class Character extends Observer implements CharacterData {
      * NOTE: We can't name this function `attack` because of the property `attack` that tells us how much damage we do.
      * @param id The ID of the entity or player to attack
      */
-    public async basicAttack(id: string): Promise<string> {
+    public async basicAttack(id: string): Promise<ProjectileSkillGRDataObject> {
         if (!this.ready) throw new Error("We aren't ready yet [basicAttack].")
 
-        const response = this.getResponsePromise("attack") as Promise<string>
+        const response = this.getResponsePromise("attack") as Promise<ProjectileSkillGRDataObject>
 
         this.socket.emit("attack", { id: id })
 
@@ -2872,7 +2872,7 @@ export class Character extends Observer implements CharacterData {
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
         return new Promise<unknown>((resolve, reject) => {
-            const cleanup = () => {
+            const clear = () => {
                 this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("death", checkDeath)
                 clearTimeout(timeout)
@@ -2880,55 +2880,46 @@ export class Character extends Observer implements CharacterData {
 
             const gameResponseCheck = (data: GameResponseData) => {
                 if (typeof data !== "object") return
-                if (data.response == "buy_success" && data.cevent == skill) {
-                    cleanup()
-                    resolve(data.num)
-                } else if (data.response == "cooldown") {
-                    if (data.place !== skill) return
+                if ((data as any).place !== skill) return // The response is for a different skill
 
-                    cleanup()
-                    reject(`'${skill}' failed (cooldown: ${data.ms}ms).`)
-                } else if (data.response == "no_mp") {
-                    if (data.place !== skill) return
+                if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                    cleanup()
-                    reject(`'${skill}' failed (no_mp).`)
-                } else if (data.response == "too_far") {
-                    if (data.place !== skill) return
+                if ((data as any).success || (data as any).in_progress) {
+                    clear()
+                    resolve(data)
+                    return
+                }
 
-                    cleanup()
-                    reject(`'${skill}' failed (dist: ${data.dist})`)
-                } else if (data.response == "data") {
-                    if (data.place !== skill) return
+                if ((data as any).failed) {
+                    clear()
 
-                    if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return
-
-                    if ((data.place == "attack" || data.place == "heal" || data.place == "taunt" || data.place == "curse")) {
-                        if (data.failed) {
-                            cleanup()
-                            const reason = (data.reason == "too_far") ? `dist: ${data.dist}` : data.reason
-                            reject(`'${skill}' failed (${reason})`)
-                        } else {
-                            cleanup()
-                            resolve(data.pid)
-                        }
+                    // TODO: Based on the reason, we should format the failure
+                    if (data.response == "cooldown") {
+                        reject(`'${skill}' failed (cooldown) (${data.ms}ms).`)
+                    } else if (data.response == "no_mp") {
+                        reject(`'${skill}' failed (no mp).`)
+                    } else if (data.response == "too_far") {
+                        reject(`'${skill}' failed (too far) (dist:${data.dist}).`)
                     } else {
-                        if ((data as SkillSuccessGRDataObject).success || (data as SkillSuccessGRDataObject).in_progress) {
-                            cleanup()
-                            resolve(data)
-                        }
+                        const reason = (data as any).reason
+                        const reasonS = reason ? ` (${reason})` : ""
+                        const response = data.response == "data" ? "" : data.response
+                        const responseS = response ? ` (${response})` : ""
+
+                        reject(`'${skill}' failed${responseS}${reasonS}.`)
                     }
+                    return
                 }
             }
 
             const checkDeath = (data: DeathData) => {
                 if (data.place !== skill) return
-                cleanup()
-                reject(`'${skill}' failed (target entity '${data.id}' not found)`)
+                clear()
+                reject(`'${skill}' failed (target '${data.id}' not found)`)
             }
 
             const timeout = setTimeout(() => {
-                cleanup()
+                clear()
                 reject(`'${skill}' failed (timeout: (${options.timeoutMs}ms))`)
             }, options.timeoutMs)
 
