@@ -1486,7 +1486,7 @@ export class Character extends Observer implements CharacterData {
 
             if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
         }
-        if (this.G.maps[this.map].mount) return false // Can't craft things in the bank
+        if (this.G.maps[this.map].mount && !options?.ignoreLocation) return false // Can't craft things in the bank
 
         if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
