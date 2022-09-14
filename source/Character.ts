@@ -878,9 +878,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [basicAttack].")
 
         const response = this.getResponsePromise("attack") as Promise<ProjectileSkillGRDataObject>
-
         this.socket.emit("attack", { id: id })
-
         return response
     }
 
@@ -2892,7 +2890,7 @@ export class Character extends Observer implements CharacterData {
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if ((data as any).success || (data as any).in_progress) {
+                if ((data as any).success || (data as any).in_progress || (data as any).response == "data") {
                     cleanup()
                     resolve(data)
                     return
