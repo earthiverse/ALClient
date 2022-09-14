@@ -292,7 +292,7 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "mining" })
         return started.then(() => {
             return new Promise<string>((resolve, reject) => {
-                const clear = () => {
+                const cleanup = () => {
                     this.socket.off("ui", noneCheck)
                     this.socket.off("game_log", logCheck)
                     this.socket.off("skill_timeout", cooldownCheck)
@@ -301,7 +301,7 @@ export class Merchant extends PingCompensatedCharacter {
 
                 const noneCheck = (data: UIData) => {
                     if (data.type == "mining_none") {
-                        clear()
+                        cleanup()
                         resolve("We didn't mine anything.")
                     }
                 }
@@ -315,13 +315,13 @@ export class Merchant extends PingCompensatedCharacter {
 
                 const cooldownCheck = (data: SkillTimeoutData) => {
                     if (data.name == "mining") {
-                        clear()
+                        cleanup()
                         resolve(log)
                     }
                 }
 
                 const timeout = setTimeout(() => {
-                    clear()
+                    cleanup()
                     reject("mine timeout (20000ms)")
                 }, 20000)
 

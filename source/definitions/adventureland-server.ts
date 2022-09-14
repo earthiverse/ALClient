@@ -62,6 +62,7 @@ export type CharacterData = PlayerData & {
     mp: number
     max_mp: number
     attack: number
+    heal: number
     fear: number
     courage: number
     mcourage: number
@@ -1059,6 +1060,7 @@ export type PlayerData = {
     cx: CXData
     focus?: string | null
     frequency?: number
+    heal?: number
     x: number
     y: number
     hp: number

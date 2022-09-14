@@ -7,219 +7,118 @@ import { CharacterData } from "./adventureland-server"
 
 test("CharacterData type validation", async () => {
     const iMoveData: CharacterData = {
-        "hp": 1588,
-        "max_hp": 1588,
-        "mp": 612,
-        "max_mp": 645,
-        "xp": 459442,
-        "attack": 393,
-        "frequency": 0.8802533391405343,
-        "speed": 59,
-        "range": 126,
-        "armor": 71,
-        "resistance": 155,
-        "level": 45,
-        "rip": false,
-        "afk": false,
-        "target": null,
-        "focus": "attacking",
-        "s": {
-            "holidayspirit": {
-                "ms": 83843757
-            },
-            "mluck": {
-                "ms": 3568111,
-                "f": "DealStriker"
-            }
-        },
-        "c": {},
-        "q": {},
-        "age": 130,
-        "pdps": 0,
-        "id": "attacking",
-        "x": 0,
-        "y": -9,
-        "moving": false,
-        "going_x": 171.68670615229303,
-        "going_y": -400.9999999,
         "abs": false,
-        "move_num": 13797520,
+        "afk": false,
+        "age": 130,
         "angle": -38.80098790882876,
+        "apiercing": 0,
+        "armor": 71,
+        "attack": 393,
+        "blast": 0,
+        "c": {},
+        "cash": 1760,
+        "cc": 1,
         "cid": 3,
-        "skin": "marmor5a",
+        "courage": 2,
+        "crit": 0,
+        "critdamage": 0,
+        "ctype": "ranger",
         "cx": {
             "hair": "hairdo106",
             "head": "makeup105"
         },
-        "slots": {
-            "ring1": {
-                "level": 1,
-                "name": "ringsj"
-            },
-            "ring2": {
-                "level": 1,
-                "name": "ringsj"
-            },
-            "earring1": null,
-            "earring2": null,
-            "belt": {
-                "level": 3,
-                "name": "dexbelt"
-            },
-            "mainhand": {
-                "name": "bow",
-                "level": 7
-            },
-            "offhand": null,
-            "helmet": {
-                "stat_type": "dex",
-                "name": "helmet",
-                "level": 6
-            },
-            "chest": {
-                "stat_type": "dex",
-                "name": "coat",
-                "level": 6
-            },
-            "pants": {
-                "acc": 129,
-                "name": "pants",
-                "level": 6,
-                "ach": "gooped",
-                "stat_type": "dex"
-            },
-            "shoes": {
-                "stat_type": "dex",
-                "name": "shoes",
-                "level": 6
-            },
-            "gloves": {
-                "stat_type": "dex",
-                "name": "gloves",
-                "level": 6
-            },
-            "amulet": {
-                "name": "dexamulet",
-                "level": 2
-            },
-            "orb": null,
-            "elixir": null,
-            "cape": null
-        },
-        "ctype": "ranger",
-        "owner": "6133449939746816",
-        "int": 24,
-        "str": 17,
         "dex": 122,
-        "vit": 17,
-        "for": 2,
-        "mp_cost": 11,
-        "mp_reduction": 0,
-        "max_xp": 2000000,
-        "goldm": 1.2,
-        "xpm": 1.2,
-        "luckm": 1.32,
-        "map": "hut",
-        "in": "hut",
-        "isize": 42,
-        "esize": 25,
-        "gold": 1157993,
-        "cash": 1760,
-        "targets": 0,
-        "m": 2,
-        "evasion": 0,
-        "miss": 0,
-        "reflection": 0,
-        "lifesteal": 0,
-        "manasteal": 0,
-        "rpiercing": 0,
-        "apiercing": 0,
-        "crit": 0,
-        "critdamage": 0,
         "dreturn": 0,
-        "tax": 0.04,
-        "xrange": 25,
-        "pnresistance": 0,
-        "firesistance": 0,
-        "fzresistance": 0,
-        "stun": 0,
-        "blast": 0,
+        "esize": 25,
+        "evasion": 0,
         "explosion": 0,
-        "courage": 2,
-        "mcourage": 2,
-        "pcourage": 2,
         "fear": 0,
+        "firesistance": 0,
+        "focus": "attacking",
+        "for": 2,
+        "frequency": 0.8802533391405343,
+        "fzresistance": 0,
+        "going_x": 171.68670615229303,
+        "going_y": -400.9999999,
+        "gold": 1157993,
+        "goldm": 1.2,
+        "heal": 0,
+        "hp": 1588,
+        "id": "attacking",
+        "in": "hut",
+        "int": 24,
+        "isize": 42,
         "items": [
             {
-                "q": 188,
+                "gift": 1,
                 "name": "hpot0",
-                "gift": 1
+                "q": 188
             },
             {
-                "q": 195,
+                "gift": 1,
                 "name": "mpot0",
-                "gift": 1
+                "q": 195
             },
             {
-                "name": "ringsj",
-                "level": 0
+                "level": 0,
+                "name": "ringsj"
             },
             {
-                "name": "slimestaff",
-                "level": 0
+                "level": 0,
+                "name": "slimestaff"
             },
             {
-                "name": "slimestaff",
-                "level": 0
+                "level": 0,
+                "name": "slimestaff"
             },
             {
-                "name": "slimestaff",
-                "level": 0
+                "level": 0,
+                "name": "slimestaff"
             },
             {
-                "q": 8,
-                "name": "gslime"
+                "name": "gslime",
+                "q": 8
             },
             {
-                "q": 19,
-                "name": "beewings"
+                "name": "beewings",
+                "q": 19
             },
             {
-                "name": "slimestaff",
-                "level": 0
+                "level": 0,
+                "name": "slimestaff"
             },
             {
-                "name": "hpamulet",
-                "level": 0
+                "level": 0,
+                "name": "hpamulet"
             },
             {
-                "name": "stinger",
-                "level": 0
+                "level": 0,
+                "name": "stinger"
             },
             {
-                "name": "hpbelt",
-                "level": 0
+                "level": 0,
+                "name": "hpbelt"
             },
             {
-                "name": "hpbelt",
-                "level": 0
+                "level": 0,
+                "name": "hpbelt"
             },
             null,
             {
-                "name": "hpbelt",
-                "level": 0
+                "level": 0,
+                "name": "hpbelt"
             },
             {
-                "name": "hpbelt",
-                "level": 0
+                "level": 0,
+                "name": "hpbelt"
             },
             {
-                "name": "dexamulet",
-                "level": 2
+                "level": 2,
+                "name": "dexamulet"
             },
             {
-                "name": "hpamulet",
-                "level": 0
+                "level": 0,
+                "name": "hpamulet"
             },
             null,
             null,
@@ -246,8 +145,110 @@ test("CharacterData type validation", async () => {
             null,
             null
         ],
-        "cc": 1,
-        "reopen": true
+        "level": 45,
+        "lifesteal": 0,
+        "luckm": 1.32,
+        "m": 2,
+        "manasteal": 0,
+        "map": "hut",
+        "max_hp": 1588,
+        "max_mp": 645,
+        "max_xp": 2000000,
+        "mcourage": 2,
+        "miss": 0,
+        "move_num": 13797520,
+        "moving": false,
+        "mp": 612,
+        "mp_cost": 11,
+        "mp_reduction": 0,
+        "owner": "6133449939746816",
+        "pcourage": 2,
+        "pdps": 0,
+        "pnresistance": 0,
+        "q": {},
+        "range": 126,
+        "reflection": 0,
+        "reopen": true,
+        "resistance": 155,
+        "rip": false,
+        "rpiercing": 0,
+        "s": {
+            "holidayspirit": {
+                "ms": 83843757
+            },
+            "mluck": {
+                "f": "DealStriker",
+                "ms": 3568111
+            }
+        },
+        "skin": "marmor5a",
+        "slots": {
+            "amulet": {
+                "level": 2,
+                "name": "dexamulet"
+            },
+            "belt": {
+                "level": 3,
+                "name": "dexbelt"
+            },
+            "cape": null,
+            "chest": {
+                "level": 6,
+                "name": "coat",
+                "stat_type": "dex"
+            },
+            "earring1": null,
+            "earring2": null,
+            "elixir": null,
+            "gloves": {
+                "level": 6,
+                "name": "gloves",
+                "stat_type": "dex"
+            },
+            "helmet": {
+                "level": 6,
+                "name": "helmet",
+                "stat_type": "dex"
+            },
+            "mainhand": {
+                "level": 7,
+                "name": "bow"
+            },
+            "offhand": null,
+            "orb": null,
+            "pants": {
+                "acc": 129,
+                "ach": "gooped",
+                "level": 6,
+                "name": "pants",
+                "stat_type": "dex"
+            },
+            "ring1": {
+                "level": 1,
+                "name": "ringsj"
+            },
+            "ring2": {
+                "level": 1,
+                "name": "ringsj"
+            },
+            "shoes": {
+                "level": 6,
+                "name": "shoes",
+                "stat_type": "dex"
+            }
+        },
+        "speed": 59,
+        "str": 17,
+        "stun": 0,
+        "target": null,
+        "targets": 0,
+        "tax": 0.04,
+        "vit": 17,
+        "x": 0,
+        "xp": 459442,
+        "xpm": 1.2,
+        "xrange": 25,
+        "y": -9
     }
     expect(iMoveData).toBeDefined()
 })

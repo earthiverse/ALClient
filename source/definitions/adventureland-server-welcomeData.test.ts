@@ -20,191 +20,45 @@ test("WelcomeData type validation", async () => {
     expect(normalWelcomeData).toBeDefined()
 
     const commWelcomeData: WelcomeData = {
-        "region": "US",
-        "name": "I",
-        "pvp": false,
-        "gameplay": "normal",
-        "info": {},
         "character": {
-            "hp": 17169,
-            "max_hp": 17169,
-            "mp": 1621,
-            "max_mp": 1635,
-            "xp": 1840334663,
-            "attack": 2441,
-            "frequency": 1.2154512074138597,
-            "speed": 54,
-            "range": 43,
-            "armor": 538,
-            "resistance": 369,
-            "level": 87,
-            "rip": false,
-            "afk": "code",
-            "target": "774233",
-            "s": {
-                "weakness": {
-                    "ms": 17417
-                },
-                "mluck": {
-                    "ms": 779426,
-                    "f": "earthMer",
-                    "strong": true
-                },
-                "typing": {
-                    "ms": 1581
-                }
-            },
-            "c": {},
-            "q": {},
-            "age": 578,
-            "pdps": 480061.869524055,
-            "id": "earthWar",
-            "x": -447.9364398561797,
-            "y": -1173.499347603802,
-            "moving": false,
-            "going_x": -447.9364398561797,
-            "going_y": -1173.499347603802,
             "abs": false,
-            "move_num": 8508140,
+            "afk": "code",
+            "age": 578,
             "angle": -148.39249775375345,
+            "apiercing": 9,
+            "armor": 538,
+            "attack": 2441,
+            "blast": 0,
+            "c": {},
+            "cash": 4386,
+            "cc": 10.5,
             "cid": 1234,
             "controller": "",
-            "skin": "fwarrior",
-            "cx": {},
-            "slots": {
-                "ring1": {
-                    "level": 4,
-                    "name": "strring"
-                },
-                "ring2": {
-                    "name": "strring",
-                    "level": 5
-                },
-                "earring1": {
-                    "level": 5,
-                    "name": "strearring"
-                },
-                "earring2": {
-                    "name": "strearring",
-                    "level": 5
-                },
-                "belt": {
-                    "level": 5,
-                    "name": "strbelt"
-                },
-                "mainhand": {
-                    "acc": 2,
-                    "ps": [
-                        "firehazard"
-                    ],
-                    "name": "fireblade",
-                    "level": 9,
-                    "p": "firehazard"
-                },
-                "offhand": {
-                    "ps": [
-                        "firehazard"
-                    ],
-                    "p": "firehazard",
-                    "name": "fireblade",
-                    "level": 9
-                },
-                "helmet": {
-                    "acc": 1,
-                    "level": 9,
-                    "stat_type": "str",
-                    "name": "helmet1"
-                },
-                "chest": {
-                    "stat_type": "str",
-                    "name": "coat1",
-                    "level": 9
-                },
-                "pants": {
-                    "acc": 2814568,
-                    "name": "pants1",
-                    "level": 9,
-                    "ach": "gooped",
-                    "stat_type": "str"
-                },
-                "shoes": {
-                    "level": 9,
-                    "stat_type": "str",
-                    "name": "wingedboots"
-                },
-                "gloves": {
-                    "stat_type": "str",
-                    "name": "gloves1",
-                    "level": 9
-                },
-                "amulet": {
-                    "name": "stramulet",
-                    "level": 5
-                },
-                "orb": {
-                    "name": "test_orb",
-                    "level": 1
-                },
-                "elixir": {
-                    "expires": "2021-04-22T09:55:51.565Z",
-                    "name": "pumpkinspice",
-                    "ex": true
-                },
-                "cape": {
-                    "acc": 343382,
-                    "ps": [
-                        "festive"
-                    ],
-                    "name": "cape",
-                    "level": 8,
-                    "ach": "festive",
-                    "p": "festive",
-                    "stat_type": "str"
-                }
-            },
-            "ctype": "warrior",
-            "owner": "12345",
-            "int": 62,
-            "str": 368,
-            "dex": 48.5,
-            "vit": 103,
-            "for": 42.75,
-            "mp_cost": 17,
-            "mp_reduction": 20,
-            "max_xp": 7900000000,
-            "goldm": 1.05,
-            "xpm": 1.04,
-            "luckm": 1.19,
-            "map": "desertland",
-            "in": "desertland",
-            "isize": 42,
-            "esize": 21,
-            "gold": 11044422,
-            "cash": 4386,
-            "targets": 0,
-            "m": 0,
-            "evasion": 1.25,
-            "miss": 0,
-            "reflection": 2.5,
-            "lifesteal": 0,
-            "manasteal": 0,
-            "rpiercing": 11,
-            "apiercing": 9,
+            "courage": 17,
             "crit": 5.75,
             "critdamage": 8,
+            "ctype": "warrior",
+            "cx": {},
+            "dex": 48.5,
             "dreturn": 1,
-            "tax": 0.01,
-            "xrange": 25,
-            "pnresistance": 0,
-            "firesistance": 20,
-            "fzresistance": 21,
-            "stun": 0,
-            "blast": 0,
+            "esize": 21,
+            "evasion": 1.25,
             "explosion": 0,
-            "courage": 17,
-            "mcourage": 2,
-            "pcourage": 2,
             "fear": 0,
+            "firesistance": 20,
+            "for": 42.75,
+            "frequency": 1.2154512074138597,
+            "fzresistance": 21,
+            "going_x": -447.9364398561797,
+            "going_y": -1173.499347603802,
+            "gold": 11044422,
+            "goldm": 1.05,
+            "heal": 0,
+            "hp": 17169,
+            "id": "earthWar",
+            "in": "desertland",
+            "int": 62,
+            "isize": 42,
             "items": [
                 {
                     "name": "computer"
@@ -213,12 +67,12 @@ test("WelcomeData type validation", async () => {
                     "name": "tracker"
                 },
                 {
-                    "q": 9957,
-                    "name": "mpot1"
+                    "name": "mpot1",
+                    "q": 9957
                 },
                 {
-                    "q": 9316,
-                    "name": "hpot1"
+                    "name": "hpot1",
+                    "q": 9316
                 },
                 {
                     "level": 4,
@@ -230,66 +84,66 @@ test("WelcomeData type validation", async () => {
                     "name": "bataxe"
                 },
                 {
-                    "name": "carrotsword",
-                    "level": 8
+                    "level": 8,
+                    "name": "carrotsword"
                 },
                 {
-                    "name": "shield",
-                    "level": 8
+                    "level": 8,
+                    "name": "shield"
                 },
                 {
                     "acc": 1,
-                    "name": "basher",
-                    "level": 8
+                    "level": 8,
+                    "name": "basher"
                 },
                 {
-                    "name": "swordofthedead",
-                    "level": 9
+                    "level": 9,
+                    "name": "swordofthedead"
                 },
                 {
-                    "name": "woodensword",
-                    "level": 8
+                    "level": 8,
+                    "name": "woodensword"
                 },
                 {
                     "level": 0,
                     "name": "jacko"
                 },
                 {
-                    "q": 1,
-                    "name": "offeringp"
+                    "name": "offeringp",
+                    "q": 1
                 },
                 {
-                    "name": "sshield",
-                    "level": 8
+                    "level": 8,
+                    "name": "sshield"
                 },
                 {
-                    "name": "lantern",
-                    "level": 3
-                },
-                {
-                    "name": "orbofstr",
-                    "level": 2
-                },
-                {
-                    "name": "heartwood",
                     "level": 3,
+                    "name": "lantern"
+                },
+                {
+                    "level": 2,
+                    "name": "orbofstr"
+                },
+                {
+                    "level": 3,
+                    "name": "heartwood",
                     "p": "glitched"
                 },
                 {
-                    "q": 1,
-                    "name": "gem1"
+                    "name": "gem1",
+                    "q": 1
                 },
                 {
-                    "q": 1,
-                    "name": "xptome"
+                    "name": "xptome",
+                    "q": 1
                 },
                 {
-                    "name": "candycanesword",
-                    "level": 9
+                    "level": 9,
+                    "name": "candycanesword"
                 },
                 {
-                    "q": 9993,
-                    "name": "pumpkinspice"
+                    "name": "pumpkinspice",
+                    "q": 9993
                 },
                 null,
                 null,
@@ -313,13 +167,160 @@ test("WelcomeData type validation", async () => {
                 null,
                 null
             ],
-            "cc": 10.5,
-            "name": "earthWar"
+            "level": 87,
+            "lifesteal": 0,
+            "luckm": 1.19,
+            "m": 0,
+            "manasteal": 0,
+            "map": "desertland",
+            "max_hp": 17169,
+            "max_mp": 1635,
+            "max_xp": 7900000000,
+            "mcourage": 2,
+            "miss": 0,
+            "move_num": 8508140,
+            "moving": false,
+            "mp": 1621,
+            "mp_cost": 17,
+            "mp_reduction": 20,
+            "name": "earthWar",
+            "owner": "12345",
+            "pcourage": 2,
+            "pdps": 480061.869524055,
+            "pnresistance": 0,
+            "q": {},
+            "range": 43,
+            "reflection": 2.5,
+            "resistance": 369,
+            "rip": false,
+            "rpiercing": 11,
+            "s": {
+                "mluck": {
+                    "f": "earthMer",
+                    "ms": 779426,
+                    "strong": true
+                },
+                "typing": {
+                    "ms": 1581
+                },
+                "weakness": {
+                    "ms": 17417
+                }
+            },
+            "skin": "fwarrior",
+            "slots": {
+                "amulet": {
+                    "level": 5,
+                    "name": "stramulet"
+                },
+                "belt": {
+                    "level": 5,
+                    "name": "strbelt"
+                },
+                "cape": {
+                    "acc": 343382,
+                    "ach": "festive",
+                    "level": 8,
+                    "name": "cape",
+                    "p": "festive",
+                    "ps": [
+                        "festive"
+                    ],
+                    "stat_type": "str"
+                },
+                "chest": {
+                    "level": 9,
+                    "name": "coat1",
+                    "stat_type": "str"
+                },
+                "earring1": {
+                    "level": 5,
+                    "name": "strearring"
+                },
+                "earring2": {
+                    "level": 5,
+                    "name": "strearring"
+                },
+                "elixir": {
+                    "ex": true,
+                    "expires": "2021-04-22T09:55:51.565Z",
+                    "name": "pumpkinspice"
+                },
+                "gloves": {
+                    "level": 9,
+                    "name": "gloves1",
+                    "stat_type": "str"
+                },
+                "helmet": {
+                    "acc": 1,
+                    "level": 9,
+                    "name": "helmet1",
+                    "stat_type": "str"
+                },
+                "mainhand": {
+                    "acc": 2,
+                    "level": 9,
+                    "name": "fireblade",
+                    "p": "firehazard",
+                    "ps": [
+                        "firehazard"
+                    ]
+                },
+                "offhand": {
+                    "level": 9,
+                    "name": "fireblade",
+                    "p": "firehazard",
+                    "ps": [
+                        "firehazard"
+                    ]
+                },
+                "orb": {
+                    "level": 1,
+                    "name": "test_orb"
+                },
+                "pants": {
+                    "acc": 2814568,
+                    "ach": "gooped",
+                    "level": 9,
+                    "name": "pants1",
+                    "stat_type": "str"
+                },
+                "ring1": {
+                    "level": 4,
+                    "name": "strring"
+                },
+                "ring2": {
+                    "level": 5,
+                    "name": "strring"
+                },
+                "shoes": {
+                    "level": 9,
+                    "name": "wingedboots",
+                    "stat_type": "str"
+                }
+            },
+            "speed": 54,
+            "str": 368,
+            "stun": 0,
+            "target": "774233",
+            "targets": 0,
+            "tax": 0.01,
+            "vit": 103,
+            "x": -447.9364398561797,
+            "xp": 1840334663,
+            "xpm": 1.04,
+            "xrange": 25,
+            "y": -1173.499347603802
         },
-        "x": -447.9364398561797,
-        "y": -1173.499347603802,
+        "gameplay": "normal",
+        "in": "desertland",
+        "info": {},
         "map": "desertland",
-        "in": "desertland"
+        "name": "I",
+        "pvp": false,
+        "region": "US",
+        "x": -447.9364398561797,
+        "y": -1173.499347603802
     }
     expect(commWelcomeData).toBeDefined()
 })

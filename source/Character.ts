@@ -53,6 +53,7 @@ export class Character extends Observer implements CharacterData {
     public going_x: number
     public going_y: number
     public gold = 0
+    public heal = 0
     public hp = 0
     public level = 1
     public m: number
@@ -1323,6 +1324,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         let baseDamage: number = this.attack
+        if (skill == "heal") baseDamage = this.heal
         if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
         if (gSkill?.damage) baseDamage = this.G.skills[skill].damage
 
@@ -1332,8 +1334,6 @@ export class Character extends Observer implements CharacterData {
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
         if (defender.s.marked) baseDamage *= 1.1
-
-        if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
 
         const damage_type = gSkill[skill]?.damage_type ?? this.damage_type
 
@@ -1751,7 +1751,7 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos
      * @returns
      */
-    public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
+    public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [compound].")
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
@@ -1768,34 +1768,38 @@ export class Character extends Observer implements CharacterData {
         if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) throw new Error("You can only combine 3 of the same items.")
         if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) throw new Error("You can only combine 3 items of the same level.")
 
-        const compoundStart = new Promise<number>((resolve, reject) => {
+        // Check if the upgrade started
+        const compoundStarted = new Promise<QInfo>((resolve, reject) => {
             const cleanup = () => {
                 this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("player", playerCheck)
-            }
-            const playerCheck = (data: CharacterData) => {
-                if (data.q.compound) {
-                    cleanup()
-                    resolve(data.q.compound.ms)
-                }
+                clearTimeout(timeout)
             }
 
             const gameResponseCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (data.response == "bank_restrictions" && data.place == "compound") {
-                        cleanup()
-                        reject("You can't compound items in the bank.")
-                    } else if (data.response == "no_item" && data.failed && data.place == "compound") {
-                        cleanup()
-                        reject("You must have items to compound in order to compound items.")
-                    }
+                if (typeof data == "string") {
+                    if (!data.startsWith("compound")) return
+                    cleanup()
+                    reject(`Failed to compound (${data})`)
+                } else if (typeof data == "object") {
+                    if ((data as any).place !== "compound") return
+                    cleanup()
+                    reject(`Failed to compound (${data.response})`)
                 }
             }
 
-            setTimeout(() => {
+            const playerCheck = (data: CharacterData) => {
+                if (data.q.compound) {
+                    cleanup()
+                    resolve(data.q)
+                }
+            }
+
+            const timeout = setTimeout(() => {
                 cleanup()
-                reject(`compound failed to start (timeout ${Constants.TIMEOUT}ms)`)
+                reject(`Failed to compound (Timeout (${Constants.TIMEOUT}ms))`)
             }, Constants.TIMEOUT)
+
             this.socket.on("game_response", gameResponseCheck)
             this.socket.on("player", playerCheck)
         })
@@ -1806,30 +1810,34 @@ export class Character extends Observer implements CharacterData {
             "offering_num": offeringPos,
             "scroll_num": cscrollPos
         })
-        const waitTime = (await compoundStart) + Constants.TIMEOUT
-        return new Promise<boolean>((resolve, reject) => {
+        const timeoutMS = (await compoundStarted).compound.ms + 1000
+
+        // Check for the compound result
+        return new Promise<unknown>((resolve, reject) => {
             const cleanup = () => {
-                this.socket.off("q_data", finishCheck)
+                this.socket.off("player", playerCheck)
                 clearTimeout(timeout)
             }
 
-            const finishCheck = (data: PQData) => {
-                if (!data.q.compound) return // This PQData is not about compounding
-                if (data.p.success === undefined && data.p.failure === undefined) return // Not finished compounding
-                if (data.p.success) {
-                    cleanup()
-                    resolve(true)
-                } else if (data.p.failure) {
-                    cleanup()
-                    resolve(false)
+            const playerCheck = (data: CharacterData) => {
+                if (data.hitchhikers) {
+                    for (const [hitchHikerEvent, hitchHikerData] of data.hitchhikers) {
+                        if (hitchHikerEvent == "game_response") {
+                            if (((hitchHikerData as any).response as string).startsWith("compound")) {
+                                cleanup()
+                                resolve(hitchHikerData)
+                            }
+                        }
+                    }
                 }
             }
 
             const timeout = setTimeout(() => {
                 cleanup()
-                reject(`compound timeout (${waitTime}ms)`)
-            }, waitTime)
-            this.socket.on("q_data", finishCheck)
+                reject(`Failed to compound (Timeout (${timeoutMS}ms))`)
+            }, timeoutMS)
+
+            this.socket.on("player", playerCheck)
         })
     }
 
@@ -2872,7 +2880,7 @@ export class Character extends Observer implements CharacterData {
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
         return new Promise<unknown>((resolve, reject) => {
-            const clear = () => {
+            const cleanup = () => {
                 this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("death", checkDeath)
                 clearTimeout(timeout)
@@ -2885,13 +2893,13 @@ export class Character extends Observer implements CharacterData {
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
                 if ((data as any).success || (data as any).in_progress) {
-                    clear()
+                    cleanup()
                     resolve(data)
                     return
                 }
 
                 if ((data as any).failed) {
-                    clear()
+                    cleanup()
 
                     // TODO: Based on the reason, we should format the failure
                     if (data.response == "cooldown") {
@@ -2914,12 +2922,12 @@ export class Character extends Observer implements CharacterData {
 
             const checkDeath = (data: DeathData) => {
                 if (data.place !== skill) return
-                clear()
+                cleanup()
                 reject(`'${skill}' failed (target '${data.id}' not found)`)
             }
 
             const timeout = setTimeout(() => {
-                clear()
+                cleanup()
                 reject(`'${skill}' failed (timeout: (${options.timeoutMs}ms))`)
             }, options.timeoutMs)
 
@@ -4491,53 +4499,70 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if the upgrade started
-        const upgradeStarted = new Promise<number>((resolve, reject) => {
+        const upgradeStarted = new Promise<QInfo>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("game_response", gameResponseCheck)
+                this.socket.off("player", playerCheck)
+                clearTimeout(timeout)
+            }
+
+            const gameResponseCheck = (data: GameResponseData) => {
+                if (typeof data == "string") {
+                    if (!data.startsWith("upgrade")) return
+                    cleanup()
+                    reject(`Failed to upgrade (${data})`)
+                } else if (typeof data == "object") {
+                    if ((data as any).place !== "upgrade") return
+                    cleanup()
+                    reject(`Failed to upgrade (${data.response})`)
+                }
+            }
+
+            const playerCheck = (data: CharacterData) => {
+                if (data.q.upgrade) {
+                    cleanup()
+                    resolve(data.q)
+                }
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(`Failed to upgrade (Timeout (${Constants.TIMEOUT}ms))`)
+            }, Constants.TIMEOUT)
+
+            this.socket.on("game_response", gameResponseCheck)
+            this.socket.on("player", playerCheck)
+        })
+
+        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
+        const timeoutMS = (await upgradeStarted).upgrade.ms + 1000
+
+        // Check for the upgrade result
+        return new Promise<unknown>((resolve, reject) => {
             const cleanup = () => {
                 this.socket.off("player", playerCheck)
                 clearTimeout(timeout)
             }
 
             const playerCheck = (data: CharacterData) => {
-                if (data.q.upgrade) {
-                    cleanup()
-                    resolve(data.q.upgrade.ms)
+                if (data.hitchhikers) {
+                    for (const [hitchHikerEvent, hitchHikerData] of data.hitchhikers) {
+                        if (hitchHikerEvent == "game_response") {
+                            if (((hitchHikerData as any).response as string).startsWith("upgrade")) {
+                                cleanup()
+                                resolve(hitchHikerData)
+                            }
+                        }
+                    }
                 }
             }
 
             const timeout = setTimeout(() => {
                 cleanup()
-                reject(`Failed to start upgrade (${Constants.TIMEOUT}ms timeout)`)
-            }, Constants.TIMEOUT)
+                reject(`Failed to upgrade (Timeout (${timeoutMS}ms))`)
+            }, timeoutMS)
 
             this.socket.on("player", playerCheck)
-        })
-
-        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
-        const waitTime = (await upgradeStarted) + Constants.TIMEOUT
-        return new Promise<boolean>((resolve, reject) => {
-            const cleanup = () => {
-                this.socket.off("q_data", completeCheck)
-                clearTimeout(timeout)
-            }
-
-            const completeCheck = (data: PQData) => {
-                if (!data.q.upgrade) return // This PQData is not about upgrading
-                if (data.p.success === undefined && data.p.failure === undefined) return // Not finished upgrading
-                if (data.p.success) {
-                    cleanup()
-                    resolve(true)
-                } else if (data.p.failure) {
-                    cleanup()
-                    resolve(false)
-                }
-            }
-
-            const timeout = setTimeout(() => {
-                cleanup()
-                reject(`upgrade timeout (${waitTime}ms)`)
-            }, waitTime)
-
-            this.socket.on("q_data", completeCheck)
         })
     }
 
@@ -4549,7 +4574,7 @@ export class Character extends Observer implements CharacterData {
         if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an HP Potion.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
-            const clear = () => {
+            const cleanup = () => {
                 this.socket.off("eval", healCheck)
                 this.socket.off("game_response", failCheck)
                 clearTimeout(timeout)
@@ -4557,7 +4582,7 @@ export class Character extends Observer implements CharacterData {
 
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    clear()
+                    cleanup()
                     resolve()
                 }
             }
@@ -4565,14 +4590,14 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
-                        clear()
+                        cleanup()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }
                 }
             }
 
             const timeout = setTimeout(() => {
-                clear()
+                cleanup()
                 reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
@@ -4592,7 +4617,7 @@ export class Character extends Observer implements CharacterData {
         if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an MP Potion.`)
 
         const healReceived = new Promise<void>((resolve, reject) => {
-            const clear = () => {
+            const cleanup = () => {
                 this.socket.off("eval", healCheck)
                 this.socket.off("game_response", failCheck)
                 clearTimeout(timeout)
@@ -4600,7 +4625,7 @@ export class Character extends Observer implements CharacterData {
 
             const healCheck = (data: EvalData) => {
                 if (data.code && data.code.includes("pot_timeout")) {
-                    clear()
+                    cleanup()
                     resolve()
                 }
             }
@@ -4608,14 +4633,14 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
-                        clear()
+                        cleanup()
                         reject(`Failed to use HP Pot (${data.response})`)
                     }
                 }
             }
 
             const timeout = setTimeout(() => {
-                clear()
+                cleanup()
                 reject(`useHPPot timeout (${Constants.TIMEOUT}ms)`)
             }, Constants.TIMEOUT)
 
