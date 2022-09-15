@@ -870,6 +870,10 @@ test("Character.isEquipped", () => {
     expect(priest.isEquipped("intamulet")).toBeTruthy()
     expect(priest.isEquipped("dexamulet")).toBeFalsy()
     expect(warrior.isEquipped("elixirluck")).toBeTruthy()
+
+    expect(priest.isEquipped(["intamulet"])).toBeTruthy()
+    expect(priest.isEquipped(["dexamulet", "pumpkinspice"])).toBeFalsy()
+    expect(priest.isEquipped(["dexamulet", "pumpkinspice", "intamulet"])).toBeTruthy()
 })
 
 test("Character.isListedForPurchase", () => {

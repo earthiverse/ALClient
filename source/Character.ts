@@ -4900,13 +4900,15 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns a boolean corresponding to whether or not we have a given item equipped.
-     * @param itemName The item to look for
+     * @param iN The item(s) to look for. If given an array, this will check if *one* of the items is equipped, **not all**.
      */
-    public isEquipped(itemName: ItemName): boolean {
+    public isEquipped(iN: ItemName | ItemName[]): boolean {
+        if (typeof iN === "string") iN = [iN]
+
         for (const slot in this.slots) {
             if (!this.slots[slot as SlotType]) continue // Nothing equipped in this slot
             if (this.slots[slot as TradeSlotType].price) continue // This is a merchant transaction, it's not equipped, it's in our stand
-            if (this.slots[slot as SlotType].name == itemName) return true
+            if (iN.includes(this.slots[slot as SlotType].name)) return true
         }
         return false
     }
@@ -5071,7 +5073,7 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns a list of indexes of the items in the given inventory
-     * @param iN The item(s) to look for
+     * @param iN The item(s) to look for. If given an array, this will check if *one* of the items is equipped, **not all**.
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
