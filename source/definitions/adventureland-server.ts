@@ -645,6 +645,13 @@ export type ExchangeNotEnoughGRDataObject = {
     place: "exchange_buy"
     failed: true
 }
+export type UpgradeCompoundGRDataObject = {
+    response: "upgrade_success" | "upgrade_fail" | "compound_success" | "compound_fail"
+    /** the level attempted */
+    level: number
+    /** the inventory slot used as item to upgrade */
+    num: number
+}
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
@@ -653,7 +660,7 @@ CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | Def
 DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
 ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
 NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject
+GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"

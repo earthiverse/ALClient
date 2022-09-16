@@ -1,7 +1,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData, BuySuccessGRDataObject } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, SkillSuccessGRDataObject, TavernEventData, BuySuccessGRDataObject, GameResponseDataObject } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -1767,7 +1767,7 @@ export class Character extends Observer implements CharacterData {
         if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) throw new Error("You can only combine 3 of the same items.")
         if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) throw new Error("You can only combine 3 items of the same level.")
 
-        const compoundStart = new Promise<number>((resolve, reject) => {
+        const compoundStarted = new Promise<number>((resolve, reject) => {
             const cleanup = () => {
                 this.socket.off("game_response", gameResponseCheck)
                 this.socket.off("q_data", qdataCheck)
@@ -1814,21 +1814,22 @@ export class Character extends Observer implements CharacterData {
             "offering_num": offeringPos,
             "scroll_num": cscrollPos
         })
-        return compoundStart.then(time => {
+        return compoundStarted.then(time => {
             const waitTime = time + Constants.TIMEOUT
             return new Promise<boolean>((resolve, reject) => {
                 const cleanup = () => {
-                    this.socket.off("q_data", finishCheck)
+                    this.socket.off("player", finishCheck)
                     clearTimeout(timeout)
                 }
 
-                const finishCheck = (data: PQData) => {
-                    if (data.q?.compound?.success) {
-                        cleanup()
-                        resolve(true)
-                    } else if (data.q?.compound?.failure) {
-                        cleanup()
-                        resolve(false)
+                const finishCheck = (data: CharacterData) => {
+                    if (!data.hitchhikers) return
+                    for (const [event, datum] of data.hitchhikers) {
+                        if (event !== "game_response") continue
+                        if (typeof datum !== "object") continue
+                        const grData = datum as GameResponseDataObject
+                        if (grData.response == "compound_success") resolve(true)
+                        else if (grData.response == "compound_fail") resolve(false)
                     }
                 }
 
@@ -1836,7 +1837,7 @@ export class Character extends Observer implements CharacterData {
                     cleanup()
                     reject(`compound timeout (${waitTime}ms)`)
                 }, waitTime)
-                this.socket.on("q_data", finishCheck)
+                this.socket.on("player", finishCheck)
             })
         })
     }
@@ -2030,19 +2031,19 @@ export class Character extends Observer implements CharacterData {
         return swapped
     }
 
-    public async dismantle(item: ItemName): Promise<void> {
+    public async dismantle(slot: number): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [dismantle].")
-        const gInfo = this.G.dismantle[item]
-        if (!gInfo) throw new Error(`Can not find a recipe for ${item}.`)
-        if (gInfo.cost > this.gold) throw new Error(`We don't have enough gold to dismantle ${item}.`)
+        const itemData = this.items[slot]
+        if (!itemData) throw new Error(`We don't have anything in item slot ${slot} to dismantle.`)
+        const gInfo = this.G.dismantle[itemData.name]
+        if (!gInfo) throw new Error(`Can not find a recipe for ${itemData.name}.`)
+        if (gInfo.cost > this.gold) throw new Error(`We don't have enough gold to dismantle ${itemData.name} (cost is ${gInfo.cost}).`)
 
-        const itemPos: number = this.locateItem(item)
-        if (!itemPos) throw new Error(`We don't have ${item} to dismantle.`)
 
         const dismantled = new Promise<void>((resolve, reject) => {
             const successCheck = async (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if (data.response == "dismantle" && data.name == item) {
+                    if (data.response == "dismantle" && data.name == itemData.name) {
                         this.socket.off("game_response", successCheck)
                         resolve()
                     }
@@ -2056,7 +2057,7 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", successCheck)
         })
 
-        this.socket.emit("dismantle", { num: itemPos })
+        this.socket.emit("dismantle", { num: slot })
         return dismantled
     }
 
@@ -3560,7 +3561,8 @@ export class Character extends Observer implements CharacterData {
 
     public async sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [sendCM].")
-        this.socket.emit("cm", { message: JSON.stringify(message), to: to })
+        const msg = (typeof message == "string") ? message as string : JSON.stringify(message)
+        this.socket.emit("cm", { message: msg, to: to })
     }
 
     // TODO: Add socket listeners and promises
@@ -4543,17 +4545,18 @@ export class Character extends Observer implements CharacterData {
             const waitTime = upgradeTime + Constants.TIMEOUT
             return new Promise<boolean>((resolve, reject) => {
                 const cleanup = () => {
-                    this.socket.off("q_data", completeCheck)
+                    this.socket.off("player", finishCheck)
                     clearTimeout(timeout)
                 }
 
-                const completeCheck = (data: PQData) => {
-                    if (data.q?.upgrade?.success) {
-                        cleanup()
-                        resolve(true)
-                    } else if (data.q?.upgrade?.failure) {
-                        cleanup()
-                        resolve(false)
+                const finishCheck = (data: CharacterData) => {
+                    if (!data.hitchhikers) return
+                    for (const [event, datum] of data.hitchhikers) {
+                        if (event !== "game_response") continue
+                        if (typeof datum !== "object") continue
+                        const grData = datum as GameResponseDataObject
+                        if (grData.response == "upgrade_success") resolve(true)
+                        else if (grData.response == "upgrade_fail") resolve(false)
                     }
                 }
 
@@ -4562,7 +4565,7 @@ export class Character extends Observer implements CharacterData {
                     reject(`upgrade timeout (${waitTime}ms)`)
                 }, waitTime)
 
-                this.socket.on("q_data", completeCheck)
+                this.socket.on("player", finishCheck)
             })
         })
     }
