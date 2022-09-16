@@ -436,7 +436,7 @@ export class Observer {
                     if (p.isNPC()) {
                         npcUpdates.push({
                             updateOne: {
-                                filter: { name: p.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
+                                filter: { name: p.name, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
                                 update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
                                 upsert: true
                             }
@@ -458,7 +458,7 @@ export class Observer {
                         if (p.owner) updateData.owner = p.owner
                         playerUpdates.push({
                             updateOne: {
-                                filter: { name: p.id },
+                                filter: { name: p.name },
                                 update: updateData,
                                 upsert: true
                             }
@@ -470,9 +470,9 @@ export class Observer {
         }
 
         if (Database.connection) {
-            if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch((e) => { console.error(e) })
-            if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch((e) => { console.error(e) })
-            if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
+            if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch(console.error)
+            if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch(console.error)
+            if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
 
             if (data.type == "all") {
             // Delete monsters that we should be able to see
@@ -511,11 +511,8 @@ export class Observer {
                         if (ids.length) EntityModel.deleteMany({ _id: { $in: ids }, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(console.error)
                     } catch (e) {
                         console.error(e)
-                        console.log("DEBUG -----")
-                        console.log("toDeletes:")
-                        console.log(toDeletes)
                     }
-                })).catch((e) => { console.error(e) })
+                })).catch(console.error)
             }
         }
     }

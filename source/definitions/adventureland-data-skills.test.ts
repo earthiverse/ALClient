@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 700 (2021-11-13)
+ * The following is from http://adventure.land/data.js, version 753 (2022-09-12)
  * It is used to confirm type correctness
  */
 
@@ -26,6 +26,7 @@ test("G.skills type validation", async () => {
                 "share": "attack",
                 "skin": "skill_3shot",
                 "type": "skill",
+                "use_range": true,
                 "wtype": [
                     "bow",
                     "crossbow"
@@ -46,7 +47,7 @@ test("G.skills type validation", async () => {
                 "name": "4 Finger Technique",
                 "range": 120,
                 "skin": "skill_4fingers",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "5shot": {
@@ -67,6 +68,7 @@ test("G.skills type validation", async () => {
                 "share": "attack",
                 "skin": "skill_5shot",
                 "type": "skill",
+                "use_range": true,
                 "wtype": [
                     "bow",
                     "crossbow"
@@ -83,7 +85,7 @@ test("G.skills type validation", async () => {
                 "name": "Absorb Sins",
                 "range": 240,
                 "skin": "skill_absorbsins",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "agitate": {
@@ -127,15 +129,15 @@ test("G.skills type validation", async () => {
                     ],
                     [
                         80,
-                        1.1
+                        1.06
                     ],
                     [
                         90,
-                        1.16
+                        1.1
                     ],
                     [
                         100,
-                        1.2
+                        1.12
                     ]
                 ],
                 "mp": 347,
@@ -238,7 +240,7 @@ test("G.skills type validation", async () => {
                         "charmer"
                     ]
                 ],
-                "target": true,
+                "target": "monster",
                 "type": "skill"
             },
             "cleave": {
@@ -355,7 +357,7 @@ test("G.skills type validation", async () => {
                 "name": "Energize",
                 "range": 320,
                 "skin": "skill_energize",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "entangle": {
@@ -397,13 +399,15 @@ test("G.skills type validation", async () => {
                 "class": [
                     "merchant"
                 ],
-                "cooldown": 2880000,
+                "duration_max": 15000,
+                "duration_min": 5000,
                 "explanation": "Swing your rod and catch some fish!",
                 "level": 16,
                 "mp": 120,
                 "name": "Fishing",
                 "persistent": true,
                 "range": 15,
+                "reuse_cooldown": 2880000,
                 "skin": "skill_fishing",
                 "type": "skill",
                 "wtype": [
@@ -513,9 +517,11 @@ test("G.skills type validation", async () => {
                 "complementary": "Unless the target doesn't have a T2+ helmet, high intelligence, or a low level, it can't resist being magiported. (Reverted [03/07/18])",
                 "cooldown": 0,
                 "explanation": "Pull someone to your location using the magical paths that surround our world.",
+                "global": true,
                 "mp": 900,
                 "name": "Magiport",
                 "skin": "skill_teleport",
+                "target": "player",
                 "type": "skill"
             },
             "massproduction": {
@@ -552,7 +558,7 @@ test("G.skills type validation", async () => {
                 ],
                 "condition": "mcourage",
                 "cooldown": 2000,
-                "duration": 5000,
+                "duration": 10000,
                 "explanation": "When you sense danger, you know what to do...",
                 "level": 70,
                 "mp": 2400,
@@ -582,17 +588,33 @@ test("G.skills type validation", async () => {
                 "type": "skill",
                 "warning": "Highly unbalanced skill, could get nerfed or modified"
             },
+            "mfrenzy": {
+                "class": [
+                    "merchant"
+                ],
+                "condition": "mfrenzy",
+                "cooldown": 20000,
+                "duration": 5000,
+                "explanation": "When you sense danger, you know what to do!",
+                "level": 85,
+                "mp": 400,
+                "name": "Merchant's Frenzy",
+                "skin": "skill_mfrenzy",
+                "type": "skill"
+            },
             "mining": {
                 "class": [
                     "merchant"
                 ],
-                "cooldown": 7440000,
+                "duration_max": 15000,
+                "duration_min": 5000,
                 "explanation": "Use your pickaxe to mine some mines!",
                 "level": 16,
                 "mp": 120,
                 "name": "Mining",
                 "persistent": true,
                 "range": 15,
+                "reuse_cooldown": 7440000,
                 "skin": "skill_mining",
                 "type": "skill",
                 "wtype": [
@@ -620,7 +642,7 @@ test("G.skills type validation", async () => {
                 "name": "Merchant's Luck",
                 "range": 320,
                 "skin": "buff_luck",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "move_down": {
@@ -768,6 +790,23 @@ test("G.skills type validation", async () => {
                 "skin": "skill_phaseout",
                 "type": "skill"
             },
+            "pickpocket": {
+                "class": [
+                    "rogue"
+                ],
+                "duration_max": 2000,
+                "duration_min": 200,
+                "explanation": "Try to steal a single PVP marked item from the target!",
+                "level": 16,
+                "mp": 10,
+                "name": "Pickpocket",
+                "persistent": true,
+                "range": 15,
+                "reuse_cooldown": 120000,
+                "skin": "skill_pickpocket",
+                "target": "player",
+                "type": "skill"
+            },
             "piercingshot": {
                 "apiercing": 500,
                 "class": [
@@ -787,6 +826,7 @@ test("G.skills type validation", async () => {
                 "skin": "skill_piercingshot",
                 "target": true,
                 "type": "skill",
+                "use_range": true,
                 "wtype": [
                     "bow",
                     "crossbow"
@@ -922,7 +962,7 @@ test("G.skills type validation", async () => {
                 "name": "Reflective Shield",
                 "range": 320,
                 "skin": "buff_reflection",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "regen_hp": {
@@ -952,7 +992,7 @@ test("G.skills type validation", async () => {
                 "name": "Revive!",
                 "range": 240,
                 "skin": "skill_revive",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "rspeed": {
@@ -968,7 +1008,7 @@ test("G.skills type validation", async () => {
                 "name": "Rogue Swiftness",
                 "range": 320,
                 "skin": "buff_speed",
-                "target": true,
+                "target": "player",
                 "type": "skill"
             },
             "scare": {
@@ -1082,6 +1122,7 @@ test("G.skills type validation", async () => {
                 "inventory": [
                     "snowball"
                 ],
+                "merchant_use": true,
                 "mp": 120,
                 "name": "Snowball",
                 "projectile": "snowball",
@@ -1193,7 +1234,6 @@ test("G.skills type validation", async () => {
                 "type": "skill"
             },
             "throw": {
-                "range_bonus": 120,
                 "class": [
                     "merchant"
                 ],

@@ -1,5 +1,5 @@
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
-import { UIData } from "./definitions/adventureland-server.js"
+import { ProjectileSkillGRDataObject, UIData } from "./definitions/adventureland-server.js"
 import { IPosition } from "./definitions/adventureland.js"
 import { Tools } from "./Tools.js"
 
@@ -104,10 +104,10 @@ export class Warrior extends PingCompensatedCharacter {
      * @param target The monster ID to taunt
      * @returns The ID of the taunt projectile
      */
-    public async taunt(target: string): Promise<string> {
+    public async taunt(target: string): Promise<ProjectileSkillGRDataObject> {
         if (!this.ready) throw new Error("We aren't ready yet [taunt].")
 
-        const response = this.getResponsePromise("taunt") as Promise<string>
+        const response = this.getResponsePromise("taunt") as Promise<ProjectileSkillGRDataObject>
 
         this.socket.emit("skill", { id: target, name: "taunt" })
 

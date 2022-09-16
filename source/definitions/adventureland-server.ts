@@ -62,6 +62,7 @@ export type CharacterData = PlayerData & {
     mp: number
     max_mp: number
     attack: number
+    heal: number
     fear: number
     courage: number
     mcourage: number
@@ -1066,6 +1067,7 @@ export type PlayerData = {
     cx: CXData
     focus?: string | null
     frequency?: number
+    heal?: number
     x: number
     y: number
     hp: number
@@ -1075,6 +1077,8 @@ export type PlayerData = {
     move_num?: number
     moving?: boolean
     mp?: number
+    /** NPCs have names set, normal players do not */
+    name?: string
     npc?: NPCName
     owner: string
     party?: string
@@ -1124,7 +1128,8 @@ export type PQData = {
         name: ItemName
         nums: number[]
         scroll: ItemName
-        success?: boolean
+        failure?: true
+        success?: true
     }
     q: QInfo
 }
@@ -1132,12 +1137,13 @@ export type PQData = {
 /** This is for the data of `character.q` and `player.q` */
 export type QInfo = {
     compound?: {
+        /** How long the process will take from start to finish */
         len: number
+        /** How much time is remaining */
         ms: number
+        /** The inventory slot that will contain the item if successful */
         num: number
         nums: number[]
-        success?: true
-        failure?: true
     }
     exchange?: {
         ms: number
@@ -1148,11 +1154,12 @@ export type QInfo = {
         num: number
     }
     upgrade?: {
+        /** How long the process will take from start to finish */
         len: number
+        /** How much time is remaining */
         ms: number
+        /** The inventory slot that will contain the item if successful */
         num: number
-        success?: true
-        failure?: true
     }
 }
 

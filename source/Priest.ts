@@ -1,3 +1,4 @@
+import { ProjectileSkillGRDataObject } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {
@@ -11,10 +12,10 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
-    public async curse(target: string): Promise<unknown> {
+    public async curse(target: string): Promise<ProjectileSkillGRDataObject> {
         if (!this.ready) throw new Error("We aren't ready yet [curse].")
 
-        const response = this.getResponsePromise("curse")
+        const response = this.getResponsePromise("curse") as Promise<ProjectileSkillGRDataObject>
         this.socket.emit("skill", { id: target, name: "curse" })
         return response
     }
@@ -27,10 +28,14 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
-    public async healSkill(id: string): Promise<string> {
-        if (!this.ready) throw new Error("We aren't ready yet [heal].")
+    /**
+     * NOTE: We can't name this function `heal` because of the property `heal` that tells us how much we heal for.
+     * @param id The ID of the entity or player to heal
+     */
+    public async healSkill(id: string): Promise<ProjectileSkillGRDataObject> {
+        if (!this.ready) throw new Error("We aren't ready yet [healSkill].")
 
-        const response = this.getResponsePromise("heal") as Promise<string>
+        const response = this.getResponsePromise("heal") as Promise<ProjectileSkillGRDataObject>
         this.socket.emit("heal", { id: id })
         return response
     }
