@@ -2894,7 +2894,7 @@ export class Character extends Observer implements CharacterData {
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if (data.response == "data" && ((data as any).success || (data as any).in_progress)) {
+                if ((data as any).success || (data as any).in_progress || (data as any).response == "data" || !(data as any).failed) {
                     cleanup()
                     resolve(data)
                     return
@@ -2909,7 +2909,7 @@ export class Character extends Observer implements CharacterData {
                     } else if (data.response == "no_mp") {
                         reject(`'${skill}' failed (no mp).`)
                     } else if (data.response == "too_far") {
-                        reject(`'${skill}' failed (too far) (dist:${data.dist}).`)
+                        reject(`'${skill}' failed (too far) (dist: ${data.dist}).`)
                     } else if (data.response == "disabled") {
                         reject(`'${skill}' failed (disabled)`)
                     } else {
