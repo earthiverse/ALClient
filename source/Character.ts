@@ -5135,6 +5135,12 @@ export class Character extends Observer implements CharacterData {
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
             }
+            if (filters?.quantityLessThan !== undefined) {
+                if (item.q === undefined)
+                    continue // This item doesn't have a quantity
+                if (item.q >= filters.quantityLessThan)
+                    continue // There are too many items in this stack
+            }
             if (filters?.special !== undefined) {
                 if (filters.special == true && !item.p)
                     continue // The item isn't titled

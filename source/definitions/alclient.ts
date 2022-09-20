@@ -74,6 +74,7 @@ export type LocateItemsFilters = {
     /** Is the item PvP marked? (i.e. does it have a chance to drop if we die to another player?) */
     pvpMarked?: boolean;
     quantityGreaterThan?: number;
+    quantityLessThan?: number;
     /** Is the item special? (e.g.: shiny, firehazard, lucky, glitched, ...) */
     special?: boolean | TitleName;
     /** The scroll applied to the weapon (e.g.: int, dex, str, ...) */
