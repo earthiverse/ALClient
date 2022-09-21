@@ -7,9 +7,11 @@ export type GetEntitiesFilters = {
     canKillInOneShot?: SkillName
     canWalkTo?: boolean
     couldGiveCredit?: boolean
+    hasTarget?: boolean
     hpGreaterThan?: number
     hpLessThan?: number
     ignoreIDs?: Iterable<string>
+    isCooperative?: boolean
     isDisabled?: boolean
     withinRange?: number | SkillName
     targetingMe?: boolean

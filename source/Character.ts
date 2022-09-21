@@ -2396,6 +2396,18 @@ export class Character extends Observer implements CharacterData {
                     if (attackingPartyMember) continue
                 }
             }
+            if (filters.hasTarget !== undefined) {
+                if (filters.hasTarget && !entity.target) continue
+                if (!filters.hasTarget && entity.target) continue
+            }
+            if (filters.isCooperative !== undefined) {
+                if (filters.isCooperative && !entity.cooperative) continue
+                if (!filters.isCooperative && entity.cooperative) continue
+            }
+            if (filters.isCooperative !== undefined) {
+                if (filters.isCooperative && !entity.cooperative) continue
+                if (!filters.isCooperative && entity.cooperative) continue
+            }
             if (filters.isDisabled !== undefined) {
                 const disabled = entity.isDisabled()
                 if (filters.isDisabled && !disabled) continue
