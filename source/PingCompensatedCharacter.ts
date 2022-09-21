@@ -1,8 +1,9 @@
-import { CharacterData, EntitiesData, PlayerData, PQData, ServerData } from "./definitions/adventureland-server.js"
+import { CharacterData, EntitiesData, PlayerData, PQData, QInfo, ServerData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
 import { Tools } from "./Tools.js"
 import { ConditionName, GData, SkillName } from "./definitions/adventureland-data.js"
+import { ChannelInfo } from "./definitions/adventureland.js"
 
 export class PingCompensatedCharacter extends Character {
     constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {
@@ -60,6 +61,16 @@ export class PingCompensatedCharacter extends Character {
                 this.q[process].ms -= pingCompensation
                 if (this.q[process].ms < 0) {
                     delete this.q[process]
+                }
+            }
+        }
+
+        // Compensate channels
+        for (const channel in this.c) {
+            if (this.c[channel as keyof ChannelInfo].ms !== undefined) {
+                this.c[channel as keyof ChannelInfo].ms -= pingCompensation
+                if (this.c[channel as keyof ChannelInfo].ms < 0) {
+                    delete this.c[channel as keyof ChannelInfo]
                 }
             }
         }
@@ -121,6 +132,26 @@ export class PingCompensatedCharacter extends Character {
                     delete entity.s[condition as ConditionName]
                 }
             }
+
+            // Compensate processes
+            for (const process in entity.q) {
+                if (entity.q[process as keyof QInfo].ms !== undefined) {
+                    entity.q[process as keyof QInfo].ms -= pingCompensation
+                    if (entity.q[process as keyof QInfo].ms < 0) {
+                        delete entity.q[process as keyof QInfo]
+                    }
+                }
+            }
+
+            // Compensate channels
+            for (const channel in entity.c) {
+                if (entity.c[channel as keyof ChannelInfo].ms !== undefined) {
+                    entity.c[channel as keyof ChannelInfo].ms -= pingCompensation
+                    if (entity.c[channel as keyof ChannelInfo].ms < 0) {
+                        delete entity.c[channel as keyof ChannelInfo]
+                    }
+                }
+            }
         }
     }
 
@@ -128,21 +159,13 @@ export class PingCompensatedCharacter extends Character {
         // Get ping compensation
         const pingCompensation = this.ping
 
-        if (data.q?.upgrade) {
-            data.q.upgrade.ms -= pingCompensation
-            if (data.q.upgrade.ms < 0) {
-                delete this.q.upgrade
-            } else {
-                this.q.upgrade = data.q.upgrade
-            }
-        }
-        if (data.q?.compound) {
-            data.q.compound.ms -= pingCompensation
-            if (data.q.compound.ms < 0) {
-                delete this.q.compound
-            } else {
-                this.q.compound = data.q.compound
-            }
+        // Update our `q` to match the new data
+        for (const process in data.q) {
+            const newCooldown = data.q[process as keyof QInfo].ms - pingCompensation
+            if (newCooldown <= 0)
+                delete this.q[process as keyof QInfo]
+            else
+                this.q[process] = data.q[process]
         }
     }
 

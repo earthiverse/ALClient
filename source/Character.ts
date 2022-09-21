@@ -419,6 +419,24 @@ export class Character extends Observer implements CharacterData {
                 else
                     this.s[condition as ConditionName].ms = newCooldown
             }
+
+            // Update processes
+            for (const process in this.q) {
+                const newCooldown = this.q[process as keyof QInfo].ms - msSinceLastUpdate
+                if (newCooldown <= 0)
+                    delete this.q[process as keyof QInfo]
+                else
+                    this.q[process as keyof QInfo].ms = newCooldown
+            }
+
+            // Update channels
+            for (const channel in this.c) {
+                const newCooldown = this.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
+                if (newCooldown <= 0)
+                    delete this.c[channel as keyof ChannelInfo]
+                else
+                    this.c[channel as keyof ChannelInfo].ms = newCooldown
+            }
         }
 
         super.updatePositions()
