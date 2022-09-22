@@ -583,9 +583,7 @@ export class Pathfinder {
 
         const rawPath: Node<NodeData>[] = pathfinder.find(fromNode.id, toNode.id)
 
-        if (rawPath.length == 0) {
-            throw new Error("We did not find a path...")
-        }
+        if (rawPath.length == 0) throw new Error(`We did not find a path from '${fromNode.id}' to '${toNode.id}'...`)
         path.push({ map: fromNode.data.map, type: "move", x: fromNode.data.x, y: fromNode.data.y })
         for (let i = rawPath.length - 1; i > 0; i--) {
             const currentNode = rawPath[i]
