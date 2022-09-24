@@ -4,7 +4,7 @@
  * Please help me transfer definitions to those files, too!
  */
 
-import { BankPackName, ConditionName, MapName, MonsterName } from "./adventureland-data.js"
+import { BankPackName, ConditionName, ItemName, MapName, MonsterName } from "./adventureland-data.js"
 import { ItemData, ItemDataTrade } from "./adventureland-server.js"
 
 export type BankInfo = {
@@ -133,6 +133,8 @@ export type IPosition = {
     x: number
     y: number
 }
+
+export type TokenType = Extract<ItemName, "friendtoken" | "funtoken" | "monstertoken" | "pvptoken">
 
 // TODO: Get all types
 export type ItemType =

@@ -3,7 +3,7 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { IPosition, ItemType, SlotInfo, SlotType, WeaponType } from "./adventureland.js"
+import { IPosition, ItemType, SlotInfo, SlotType, TokenType, WeaponType } from "./adventureland.js"
 
 export type GData = {
     achievements: {
@@ -585,7 +585,7 @@ export type GData = {
             manual?: boolean
         } }
     tokens: {
-        [T in "friendtoken" | "funtoken" | "monstertoken" | "pvptoken"]: {
+        [T in TokenType]: {
             /** For the ItemName, it costs this many tokens */
             [T in ItemName]?: number
         }

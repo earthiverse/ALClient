@@ -483,6 +483,8 @@ export type BankRestrictionsGRDataObject = {
 export type BuySuccessGRDataObject = {
     cevent: "buy"
     response: "buy_success"
+    success: boolean
+    place: "buy"
     cost: number
     /** Inventory slot that the item is now in */
     num: number
@@ -504,13 +506,13 @@ export type CraftGRDataObject = {
 }
 export type SkillSuccessGRDataObject = {
     response: "data"
-    place: Exclude<SkillName, "attack" | "taunt" | "heal" | "curse">
+    place: Exclude<SkillName, "attack" | "taunt" | "heal" | "curse" | "supershot">
     success: boolean
     in_progress?: true
 }
 export type ProjectileSkillGRDataObject = {
     response: "data"
-    place: "attack" | "taunt" | "heal" | "curse"
+    place: Extract<SkillName, "attack" | "taunt" | "heal" | "curse" | "supershot">
     dist?: number
     reason?: string
     failed?: boolean

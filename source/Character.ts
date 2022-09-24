@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
-import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo } from "./definitions/adventureland.js"
+import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, ChannelInfo, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
@@ -899,9 +899,10 @@ export class Character extends Observer implements CharacterData {
                 if ((data as BuySuccessGRDataObject).q !== quantity) return false
                 return true
             }
-        }) as Promise<number>
+        }) as Promise<BuySuccessGRDataObject>
         this.socket.emit("buy", { name: itemName, quantity: quantity })
-        return response
+        const data = await response
+        return data.num
     }
 
     /**
@@ -1461,6 +1462,39 @@ export class Character extends Observer implements CharacterData {
         return (computerAvailable || close || options?.ignoreLocation)
     }
 
+    public canBuyWithTokens(item: ItemName, token: TokenType, options?: {
+        ignoreLocation?: boolean
+        quantity?: number
+    }): boolean {
+        if (this.isFull()) return false // We are full
+
+        const gTokens = this.G.tokens[token]
+        if (!gTokens) throw new Error(`Could not get info for G.items.${token}`)
+        if (!gTokens[item]) return false // Can't be bought with this token type
+        if (this.countItem(token) < gTokens[item] * (options?.quantity ?? 1)) return false // We can't afford it
+
+        const computerAvailable = this.hasItem("computer") || this.hasItem("supercomputer")
+
+        if (computerAvailable || options?.ignoreLocation) return true
+
+        let pos: IPosition
+        switch (token) {
+            case "monstertoken":
+                pos = Pathfinder.locateNPC("monsterhunter")[0]
+                break
+            case "funtoken":
+                pos = Pathfinder.locateNPC("funtokens")[0]
+                break
+            case "friendtoken":
+                pos = Pathfinder.locateNPC("friendtokens")[0]
+                break
+            case "pvptoken":
+                pos = Pathfinder.locateNPC("pvptokens")[0]
+                break
+        }
+        return Tools.squaredDistance(this, pos) < Constants.NPC_INTERACTION_DISTANCE_SQUARED
+    }
+
     /**
      * Returns true if you have the required items and gold to craft the item, and you
      * are near the NPC where you can craft this item.
@@ -1491,6 +1525,40 @@ export class Character extends Observer implements CharacterData {
             // Check if we're near the NPC we need
             const craftableLocation = Pathfinder.locateCraftNPC(itemToCraft)
             if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+        }
+
+        return true
+    }
+
+    /**
+     * Returns true if you have the required gold to dismantle the item, and you
+     * are near the craftsman NPC (or have a computer/supercomputer).
+     *
+     * NOTE: We currently lack the ability to calculate the cost of dismantling
+     * compounded items; so although these items /can/ be dismantled, they will
+     * return false until we get the necessary info.
+     *
+     * @param itemToDismantle ItemName id of item to be dismantled
+     * @param options
+     * @param options.ignoreInventory whether to ignore whether we have the item or not
+     * @returns true or false
+     */
+    public canDismantle(itemToDismantle: ItemName, options?: { ignoreInventory?: boolean, ignoreLocation?: boolean }): boolean {
+        const gDismantle = this.G.dismantle[itemToDismantle]
+        const compoundable = this.G.items[itemToDismantle].compound !== undefined
+        if (!gDismantle && !compoundable) return false // Item can't be dismantled
+        if (this.G.maps[this.map].mount && !options?.ignoreLocation) return false // Can't dismantle in the bank
+        if (!gDismantle && compoundable) {
+            console.warn(`We currently don't have any way of calculating the cost of dismantling ${itemToDismantle}; but as long as the level is 1 or higher; it can be dismantled.`)
+            return false
+        }
+        if (gDismantle.cost > this.gold) return false // We don't have enough money
+        if (!options?.ignoreInventory && !this.hasItem(itemToDismantle)) return false // We don't have the item??
+
+        if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
+            // Check if we're near the NPC we need
+            const dismantleLocation = Pathfinder.locateNPC("craftsman")[0]
+            if (Tools.squaredDistance(this, dismantleLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
         }
 
         return true
@@ -2246,7 +2314,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.items[inventoryPos]) throw new Error(`No item in inventory slot ${inventoryPos}.`)
         if (this.G.maps[this.map].mount) throw new Error("We can't exchange things in the bank.")
 
-        const exchanged = new Promise<number>((resolve, reject) => {
+        const exchangeStarted = new Promise<number>((resolve, reject) => {
             const startedCheck = (data: CharacterData) => {
                 if (data.q.exchange) {
                     this.socket.off("player", startedCheck)
@@ -2281,33 +2349,32 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.emit("exchange", { item_num: inventoryPos, q: this.items[inventoryPos]?.q })
-        return exchanged.then((exchangeTime: number) => {
-            const waitTime = exchangeTime + (this.ping * 2)
-            return new Promise<string>((resolve, reject) => {
-                const cleanup = () => {
-                    this.socket.off("player", completeCheck)
-                    this.socket.off("game_log", logCheck)
-                    clearTimeout(timeout)
-                }
-                let log: string
-                const logCheck = (data: GameLogData) => {
-                    if (typeof data !== "object") return
-                    const exchangeRegex = /^Received a/.exec(data.message)
-                    if (exchangeRegex) log = exchangeRegex[0]
-                }
-                const completeCheck = (data: CharacterData) => {
-                    if (!data.q.exchange) {
-                        cleanup()
-                        resolve(log)
-                    }
-                }
-                const timeout = setTimeout(() => {
+        const timeoutMS = (await exchangeStarted) + Constants.TIMEOUT
+
+        return new Promise<string>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("player", completeCheck)
+                this.socket.off("game_log", logCheck)
+                clearTimeout(timeout)
+            }
+            let log: string
+            const logCheck = (data: GameLogData) => {
+                if (typeof data !== "object") return
+                const exchangeRegex = /^Received a/.exec(data.message)
+                if (exchangeRegex) log = exchangeRegex[0]
+            }
+            const completeCheck = (data: CharacterData) => {
+                if (!data.q.exchange) {
                     cleanup()
-                    reject(`exchange_complete timeout (${waitTime}ms)`)
-                }, waitTime)
-                this.socket.on("player", completeCheck)
-                this.socket.on("game_log", logCheck)
-            })
+                    resolve(log)
+                }
+            }
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(`exchange_complete timeout (${timeoutMS}ms)`)
+            }, timeoutMS)
+            this.socket.on("player", completeCheck)
+            this.socket.on("game_log", logCheck)
         })
     }
 
@@ -2894,7 +2961,7 @@ export class Character extends Observer implements CharacterData {
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if (data.response == "data" && ((data as any).success || (data as any).in_progress)) {
+                if ((data.response == "data" || data.response == "buy_success") && ((data as any).success || (data as any).in_progress || !(data as any).failed)) {
                     cleanup()
                     resolve(data)
                     return
