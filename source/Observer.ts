@@ -1,13 +1,14 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents, ActionDataRay, ActionDataProjectile } from "./definitions/adventureland-server.js"
+import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents, ActionDataRay, ActionDataProjectile, QInfo } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
+import { ChannelInfo } from "./definitions/adventureland.js"
 
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
@@ -55,7 +56,6 @@ export class Observer {
     public async connect(reconnect = false, start = true): Promise<void> {
         this.socket = socketio(`ws${this.serverData.secure ? "s" : ""}://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
-            forceNew: true,
             reconnection: reconnect,
             transports: ["websocket"]
         })
@@ -584,6 +584,24 @@ export class Observer {
                         delete player.s[condition as ConditionName]
                     else
                         player.s[condition as ConditionName].ms = newCooldown
+                }
+
+                // Update processes
+                for (const process in player.q) {
+                    const newCooldown = player.q[process as keyof QInfo].ms - msSinceLastUpdate
+                    if (newCooldown <= 0)
+                        delete player.q[process as keyof QInfo]
+                    else
+                        player.q[process as keyof QInfo].ms = newCooldown
+                }
+
+                // Update channels
+                for (const channel in player.c) {
+                    const newCooldown = player.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
+                    if (newCooldown <= 0)
+                        delete player.c[channel as keyof ChannelInfo]
+                    else
+                        player.c[channel as keyof ChannelInfo].ms = newCooldown
                 }
             }
         }

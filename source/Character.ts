@@ -419,6 +419,24 @@ export class Character extends Observer implements CharacterData {
                 else
                     this.s[condition as ConditionName].ms = newCooldown
             }
+
+            // Update processes
+            for (const process in this.q) {
+                const newCooldown = this.q[process as keyof QInfo].ms - msSinceLastUpdate
+                if (newCooldown <= 0)
+                    delete this.q[process as keyof QInfo]
+                else
+                    this.q[process as keyof QInfo].ms = newCooldown
+            }
+
+            // Update channels
+            for (const channel in this.c) {
+                const newCooldown = this.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
+                if (newCooldown <= 0)
+                    delete this.c[channel as keyof ChannelInfo]
+                else
+                    this.c[channel as keyof ChannelInfo].ms = newCooldown
+            }
         }
 
         super.updatePositions()
@@ -2445,6 +2463,18 @@ export class Character extends Observer implements CharacterData {
                     if (attackingPartyMember) continue
                 }
             }
+            if (filters.hasTarget !== undefined) {
+                if (filters.hasTarget && !entity.target) continue
+                if (!filters.hasTarget && entity.target) continue
+            }
+            if (filters.isCooperative !== undefined) {
+                if (filters.isCooperative && !entity.cooperative) continue
+                if (!filters.isCooperative && entity.cooperative) continue
+            }
+            if (filters.isCooperative !== undefined) {
+                if (filters.isCooperative && !entity.cooperative) continue
+                if (!filters.isCooperative && entity.cooperative) continue
+            }
             if (filters.isDisabled !== undefined) {
                 const disabled = entity.isDisabled()
                 if (filters.isDisabled && !disabled) continue
@@ -2976,7 +3006,7 @@ export class Character extends Observer implements CharacterData {
                     } else if (data.response == "no_mp") {
                         reject(`'${skill}' failed (no mp).`)
                     } else if (data.response == "too_far") {
-                        reject(`'${skill}' failed (too far) (dist:${data.dist}).`)
+                        reject(`'${skill}' failed (too far) (dist: ${data.dist}).`)
                     } else if (data.response == "disabled") {
                         reject(`'${skill}' failed (disabled)`)
                     } else {
@@ -5201,6 +5231,12 @@ export class Character extends Observer implements CharacterData {
                     continue // This item doesn't have a quantity
                 if (item.q <= filters.quantityGreaterThan)
                     continue // There isn't enough items in this stack
+            }
+            if (filters?.quantityLessThan !== undefined) {
+                if (item.q === undefined)
+                    continue // This item doesn't have a quantity
+                if (item.q >= filters.quantityLessThan)
+                    continue // There are too many items in this stack
             }
             if (filters?.special !== undefined) {
                 if (filters.special == true && !item.p)
