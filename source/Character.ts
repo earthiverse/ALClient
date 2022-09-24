@@ -3915,6 +3915,19 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        // If it's jail, and we're not currently there, warp to jail
+        if (
+            this.map !== "jail"
+            && (
+                to == "jail"
+                || to == "jrat"
+                || (typeof to == "object" && to.map == "jail")
+            )
+        ) {
+            await this.warpToJail()
+            return this.smartMove(to, options)
+        }
+
         if (options == undefined) options = {}
         if (options.costs == undefined) options.costs = {}
         if (options.costs.blink == undefined) options.costs.blink = this.speed * 3.2 + 250 // We can't attack for 3.2 seconds after a blink, + it uses a lot of mana
