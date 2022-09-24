@@ -4030,7 +4030,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        const distance = Tools.distance(this, fixedTo)
+        const distance = Tools.distance({ map: this.map, x: this.x, y: this.y }, { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })
         if (distance == 0) return fixedTo
         if (options?.getWithin >= distance) return { map: this.map, x: this.x, y: this.y }
 
