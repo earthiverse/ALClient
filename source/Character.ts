@@ -2648,6 +2648,20 @@ export class Character extends Observer implements CharacterData {
         return undefined
     }
 
+    /**
+     * Get the holidayspirit buff. NOTE: You can only get this buff if the `holidayseason` event is active.
+     *
+     * NOTE: It might be the case that you can get a fun token when getting holidayspirit, but only if you currently
+     * don't have holidayspirit (i.e. you don't top it up, and only get it again once it's completely run out).
+     *
+     * TODO: Add promises
+     */
+    public getHolidaySpirit() {
+        if (!this.ready) throw new Error("We aren't ready yet [getHolidaySpirit]")
+        if (!this.S.holidayseason) throw new Error("We can only get holiday spirit when the `holidayseason` event is active.")
+        this.socket.emit("interaction", { type: "newyear_tree" })
+    }
+
     public getLostAndFoundItems(): Promise<ItemDataTrade[]> {
         if (!this.ready) throw new Error("We aren't ready yet [getLostAndFoundItems].")
         if (this.map !== "woffice") throw new Error("Too far away from lostandfound NPC.")

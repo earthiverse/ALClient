@@ -1,7 +1,7 @@
 import { GameResponseData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2022-04-30 to 2022-08-19
+ * The following is from socket events received 2022-04-30 to 2022-09-24
  * It is used to confirm type correctness
  */
 
@@ -95,11 +95,12 @@ test("GameEventData type validation", async () => {
     const buySuccess: GameResponseData = {
         "cevent": "buy",
         "cost": 100,
-        "name": "hpot1",
-        "num": 39,
+        "name": "mpot1",
+        "num": 38,
         "place": "buy",
         "q": 1,
-        "response": "buy_success"
+        "response": "buy_success",
+        "success": true
     }
     expect(buySuccess).toBeDefined()
 })
