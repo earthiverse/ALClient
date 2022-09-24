@@ -458,7 +458,7 @@ export class Observer {
                         if (p.owner) updateData.owner = p.owner
                         playerUpdates.push({
                             updateOne: {
-                                filter: { name: p.name },
+                                filter: { name: p.id },
                                 update: updateData,
                                 upsert: true
                             }
