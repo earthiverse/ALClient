@@ -836,12 +836,17 @@ export class Pathfinder {
         }
     }
 
-    public static locateMonster(mType: MonsterName): IPosition[] {
-        const locations: IPosition[] = []
+    public static locateMonster(mTypes: MonsterName | MonsterName[]): IPosition[] {
+        if (typeof mTypes == "string") mTypes = [mTypes]
+        for (let i = 0; i < mTypes.length; i++) {
+            const mType = mTypes[i]
 
-        // Known special monster spawns
-        if (mType == "goldenbat") mType = "bat"
-        else if (mType == "snowman") mType = "arcticbee"
+            // Known special monster spawns
+            if (mType == "goldenbat") mTypes[i] = "bat"
+            else if (mType == "snowman") mTypes[i] = "arcticbee"
+        }
+
+        const locations: IPosition[] = []
 
         for (const mapName in this.G.maps) {
             const map: GMap = this.G.maps[mapName as MapName]
@@ -849,8 +854,7 @@ export class Pathfinder {
             if (map.instance || !map.monsters || map.monsters.length == 0) continue // Map is unreachable, or there are no monsters
 
             for (const monsterSpawn of map.monsters) {
-                if (monsterSpawn.type != mType) continue
-                if (monsterSpawn.count <= 0) continue // No monsters spawn here
+                if (!mTypes.includes(monsterSpawn.type)) continue
 
                 if (monsterSpawn.boundary) {
                     locations.push({ "map": mapName as MapName, "x": (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2, "y": (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2 })
