@@ -4213,7 +4213,6 @@ export class Character extends Observer implements CharacterData {
         }
 
         this.smartMoving = undefined
-        this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
         return { map: this.map, x: this.x, y: this.y }
     }
 
@@ -4304,7 +4303,7 @@ export class Character extends Observer implements CharacterData {
     // TODO: Add promises
     public async stopWarpToTown(): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [stopWarpToTown].")
-        // TODO: Check if we are warping to town, return reject promise if we are
+        if (!this.c.town) return // We're not warping to town
 
         this.socket.emit("stop", { action: "town" })
     }
