@@ -506,25 +506,6 @@ export class Character extends Observer implements CharacterData {
             }
         })
 
-        if (Database.connection) {
-            this.socket.on("game_log", async (data: GameLogData) => {
-                if (typeof data !== "object") return
-                const result = /^Slain by (.+)$/.exec(data.message)
-                if (result) {
-                    DeathModel.create({
-                        cause: result[1],
-                        map: this.map,
-                        name: this.id,
-                        serverIdentifier: this.server.name,
-                        serverRegion: this.server.region,
-                        time: Date.now(),
-                        x: this.x,
-                        y: this.y
-                    }).catch(console.error)
-                }
-            })
-        }
-
         this.socket.on("game_response", (data: GameResponseData) => {
             this.parseGameResponse(data)
         })
@@ -584,6 +565,23 @@ export class Character extends Observer implements CharacterData {
         })
 
         if (Database.connection) {
+            this.socket.on("game_log", async (data: GameLogData) => {
+                if (typeof data !== "object") return
+                const result = /^Slain by (.+)$/.exec(data.message)
+                if (result) {
+                    DeathModel.create({
+                        cause: result[1],
+                        map: this.map,
+                        name: this.id,
+                        serverIdentifier: this.server.name,
+                        serverRegion: this.server.region,
+                        time: Date.now(),
+                        x: this.x,
+                        y: this.y
+                    }).catch(console.error)
+                }
+            })
+
             this.socket.on("tracker", async (data: TrackerData) => {
                 // The maximum only gets updated when we re-login, but our characters kills are continuously updated.
                 // If we have a higher kill count than what our max says, override it.
