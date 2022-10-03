@@ -16,6 +16,7 @@ import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
 import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
+import { UpdateQuery } from "mongoose"
 
 export class Character extends Observer implements CharacterData {
     public userAuth: string
@@ -239,7 +240,7 @@ export class Character extends Observer implements CharacterData {
         if (!Database.connection) return
         const nextUpdate = Database.nextUpdate.get(`${this.server.name}${this.server.region}${this.id}`)
         if (!nextUpdate || Date.now() >= nextUpdate) {
-            const updateData: Partial<IPlayer> = {
+            const updateData: UpdateQuery<IPlayer> = {
                 items: this.items,
                 lastSeen: Date.now(),
                 map: this.map,
@@ -247,11 +248,60 @@ export class Character extends Observer implements CharacterData {
                 s: this.s,
                 serverIdentifier: this.serverData.name,
                 serverRegion: this.serverData.region,
-                slots: this.slots,
+                "slots.amulet": this.slots.amulet,
+                "slots.belt": this.slots.belt,
+                "slots.cape": this.slots.cape,
+                "slots.chest": this.slots.chest,
+                "slots.earring1": this.slots.earring1,
+                "slots.earring2": this.slots.earring2,
+                "slots.elixir": this.slots.elixir,
+                "slots.gloves": this.slots.gloves,
+                "slots.helmet": this.slots.helmet,
+                "slots.mainhand": this.slots.mainhand,
+                "slots.offhand": this.slots.offhand,
+                "slots.orb": this.slots.orb,
+                "slots.pants": this.slots.pants,
+                "slots.ring1": this.slots.ring1,
+                "slots.ring2": this.slots.ring2,
+                "slots.shoes": this.slots.shoes,
+                "slots.trade1": this.slots.trade1,
+                "slots.trade2": this.slots.trade2,
+                "slots.trade3": this.slots.trade3,
+                "slots.trade4": this.slots.trade4,
                 type: this.ctype,
                 x: this.x,
                 y: this.y
             }
+
+            if (this.stand) {
+                updateData["slots.trade5"] = this.slots.trade5
+                updateData["slots.trade6"] = this.slots.trade6
+                updateData["slots.trade7"] = this.slots.trade7
+                updateData["slots.trade8"] = this.slots.trade8
+                updateData["slots.trade9"] = this.slots.trade9
+                updateData["slots.trade10"] = this.slots.trade10
+                updateData["slots.trade11"] = this.slots.trade11
+                updateData["slots.trade12"] = this.slots.trade12
+                updateData["slots.trade13"] = this.slots.trade13
+                updateData["slots.trade14"] = this.slots.trade14
+                updateData["slots.trade15"] = this.slots.trade15
+                updateData["slots.trade16"] = this.slots.trade16
+                updateData["slots.trade17"] = this.slots.trade17
+                updateData["slots.trade18"] = this.slots.trade18
+                updateData["slots.trade19"] = this.slots.trade19
+                updateData["slots.trade20"] = this.slots.trade20
+                updateData["slots.trade21"] = this.slots.trade21
+                updateData["slots.trade22"] = this.slots.trade22
+                updateData["slots.trade23"] = this.slots.trade23
+                updateData["slots.trade24"] = this.slots.trade24
+                updateData["slots.trade25"] = this.slots.trade25
+                updateData["slots.trade26"] = this.slots.trade26
+                updateData["slots.trade27"] = this.slots.trade27
+                updateData["slots.trade28"] = this.slots.trade28
+                updateData["slots.trade29"] = this.slots.trade29
+                updateData["slots.trade30"] = this.slots.trade30
+            }
+
             if (this.owner) updateData.owner = this.owner
             PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
             Database.nextUpdate.set(`${this.server.name}${this.server.region}${this.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
@@ -3260,7 +3310,7 @@ export class Character extends Observer implements CharacterData {
         if (!options?.disableAlreadyThereCheck && this.x == to.x && this.y == to.y) return { map: this.map, x: this.x, y: this.y }
 
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
-            let timeToFinishMove = 1 + this.ping + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
+            let timeToFinishMove = 1 + this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
                 if (options?.resolveOnStart) {
@@ -3286,7 +3336,7 @@ export class Character extends Observer implements CharacterData {
                     }
                 } else {
                     // We're still moving in the right direction
-                    timeToFinishMove = 1 + this.ping + Tools.distance(this, { x: data.going_x, y: data.going_y }) / data.speed
+                    timeToFinishMove = 1 + this.ping + Tools.distance({ x: this.x, y: this.y }, { x: data.going_x, y: data.going_y }) / data.speed
                     clearTimeout(timeout)
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 }
@@ -3309,7 +3359,7 @@ export class Character extends Observer implements CharacterData {
                     resolve({ map: this.map, x: to.x, y: to.y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
-                    timeToFinishMove = this.ping + Tools.distance(this, { x: to.x, y: to.y }) / this.speed
+                    timeToFinishMove = this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
@@ -4061,7 +4111,7 @@ export class Character extends Observer implements CharacterData {
                 throw new Error("We died while smartMoving")
             }
 
-            if (options?.getWithin >= Tools.distance(this, fixedTo)) {
+            if (options?.getWithin >= Tools.distance({ map: this.map, x: this.x, y: this.y }, { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })) {
                 break // We're already close enough!
             }
 

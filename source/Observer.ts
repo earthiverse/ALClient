@@ -9,6 +9,7 @@ import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
 import { ChannelInfo } from "./definitions/adventureland.js"
+import { UpdateQuery } from "mongoose"
 
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
@@ -442,7 +443,7 @@ export class Observer {
                             }
                         })
                     } else {
-                        const updateData: Partial<IPlayer> = {
+                        const updateData: UpdateQuery<IPlayer> = {
                             in: p.in,
                             lastSeen: Date.now(),
                             map: p.map,
@@ -450,10 +451,58 @@ export class Observer {
                             s: p.s,
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
-                            slots: p.slots,
+                            "slots.amulet": p.slots.amulet,
+                            "slots.belt": p.slots.belt,
+                            "slots.cape": p.slots.cape,
+                            "slots.chest": p.slots.chest,
+                            "slots.earring1": p.slots.earring1,
+                            "slots.earring2": p.slots.earring2,
+                            "slots.elixir": p.slots.elixir,
+                            "slots.gloves": p.slots.gloves,
+                            "slots.helmet": p.slots.helmet,
+                            "slots.mainhand": p.slots.mainhand,
+                            "slots.offhand": p.slots.offhand,
+                            "slots.orb": p.slots.orb,
+                            "slots.pants": p.slots.pants,
+                            "slots.ring1": p.slots.ring1,
+                            "slots.ring2": p.slots.ring2,
+                            "slots.shoes": p.slots.shoes,
+                            "slots.trade1": p.slots.trade1,
+                            "slots.trade2": p.slots.trade2,
+                            "slots.trade3": p.slots.trade3,
+                            "slots.trade4": p.slots.trade4,
                             type: p.ctype,
                             x: p.x,
                             y: p.y,
+                        }
+
+                        if (p.stand) {
+                            updateData["slots.trade5"] = p.slots.trade5
+                            updateData["slots.trade6"] = p.slots.trade6
+                            updateData["slots.trade7"] = p.slots.trade7
+                            updateData["slots.trade8"] = p.slots.trade8
+                            updateData["slots.trade9"] = p.slots.trade9
+                            updateData["slots.trade10"] = p.slots.trade10
+                            updateData["slots.trade11"] = p.slots.trade11
+                            updateData["slots.trade12"] = p.slots.trade12
+                            updateData["slots.trade13"] = p.slots.trade13
+                            updateData["slots.trade14"] = p.slots.trade14
+                            updateData["slots.trade15"] = p.slots.trade15
+                            updateData["slots.trade16"] = p.slots.trade16
+                            updateData["slots.trade17"] = p.slots.trade17
+                            updateData["slots.trade18"] = p.slots.trade18
+                            updateData["slots.trade19"] = p.slots.trade19
+                            updateData["slots.trade20"] = p.slots.trade20
+                            updateData["slots.trade21"] = p.slots.trade21
+                            updateData["slots.trade22"] = p.slots.trade22
+                            updateData["slots.trade23"] = p.slots.trade23
+                            updateData["slots.trade24"] = p.slots.trade24
+                            updateData["slots.trade25"] = p.slots.trade25
+                            updateData["slots.trade26"] = p.slots.trade26
+                            updateData["slots.trade27"] = p.slots.trade27
+                            updateData["slots.trade28"] = p.slots.trade28
+                            updateData["slots.trade29"] = p.slots.trade29
+                            updateData["slots.trade30"] = p.slots.trade30
                         }
                         if (p.owner) updateData.owner = p.owner
                         playerUpdates.push({
@@ -475,7 +524,7 @@ export class Observer {
             if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
 
             if (data.type == "all") {
-            // Delete monsters that we should be able to see
+                // Delete monsters that we should be able to see
                 EntityModel.aggregate([
                     {
                         $match: {
