@@ -2536,7 +2536,7 @@ export class Character extends Observer implements CharacterData {
             if (filters.level !== undefined && filters.level !== entity.level) continue
             if (filters.levelGreaterThan !== undefined && entity.level <= filters.levelGreaterThan) continue
             if (filters.levelLessThan !== undefined && entity.level >= filters.levelLessThan) continue
-            if (filters.notType !== undefined && filters.type == entity.type) continue
+            if (filters.notType !== undefined && filters.notType == entity.type) continue
             if (filters.notTypeList !== undefined && filters.notTypeList.includes(entity.type)) continue
             if (filters.type !== undefined && filters.type !== entity.type) continue
             if (filters.typeList !== undefined && !filters.typeList.includes(entity.type)) continue
@@ -4539,11 +4539,14 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
+            // Leaving/entering the bank can take a while
+            const timeout = this.map.startsWith("bank") || map.startsWith("bank") ? Constants.TIMEOUT * 5 : Constants.TIMEOUT
+
             setTimeout(() => {
                 this.socket.off("game_response", failCheck)
                 this.socket.off("new_map", transportCheck)
-                reject(`transport timeout (${Constants.TIMEOUT}ms)`)
-            }, Constants.TIMEOUT)
+                reject(`transport timeout (${timeout}ms)`)
+            }, timeout)
             this.socket.on("game_response", failCheck)
             this.socket.once("new_map", transportCheck)
         })
