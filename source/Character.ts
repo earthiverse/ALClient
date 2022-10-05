@@ -137,6 +137,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected async updateLoop(): Promise<void> {
+        if (this.noReconnect) return
         if (!this.socket || this.socket.disconnected || !this.ready) {
             this.timeouts.set("updateLoop", setTimeout(() => this.updateLoop(), Constants.UPDATE_POSITIONS_EVERY_MS))
             return
