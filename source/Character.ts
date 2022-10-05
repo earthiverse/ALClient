@@ -139,13 +139,13 @@ export class Character extends Observer implements CharacterData {
     protected async updateLoop(): Promise<void> {
         if (this.noReconnect) return
         if (!this.socket || this.socket.disconnected || !this.ready) {
-            this.timeouts.set("updateLoop", setTimeout(() => this.updateLoop(), Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(() => this.updateLoop(), Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         }
 
@@ -157,11 +157,11 @@ export class Character extends Observer implements CharacterData {
         if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
             // Update now
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(() => this.updateLoop(), Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS))
             return
         } else {
             // Update in a bit
-            this.timeouts.set("updateLoop", setTimeout(() => this.updateLoop(), Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+            this.timeouts.set("updateLoop", setTimeout(this.updateLoop, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
             return
         }
     }
@@ -530,6 +530,9 @@ export class Character extends Observer implements CharacterData {
             if (data.entities) this.parseEntities(data.entities)
             this.S = data.s_info
             this.ready = true
+
+            // Start the update loop
+            this.updateLoop().catch(console.error)
         })
 
         this.socket.on("achievement_progress", (data: AchievementProgressData) => {
@@ -689,35 +692,33 @@ export class Character extends Observer implements CharacterData {
         })
 
         const connected = new Promise<void>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("start", startCheck)
+                this.socket.off("game_error", failCheck)
+                this.socket.off("disconnect_reason", failCheck2)
+                clearTimeout(timeout)
+            }
             const failCheck = (data: string | { message: string; }) => {
+                cleanup()
                 if (typeof data == "string") {
-                    this.socket.off("start", startCheck)
-                    this.socket.off("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data}`)
                 } else {
-                    this.socket.off("start", startCheck)
-                    this.socket.off("disconnect_reason", failCheck2)
                     reject(`Failed to connect: ${data.message}`)
                 }
             }
 
             const failCheck2 = (data: string) => {
-                this.socket.off("start", startCheck)
-                this.socket.off("game_error", failCheck)
+                cleanup()
                 reject(`Failed to connect: ${data}`)
             }
 
             const startCheck = () => {
-                this.socket.off("game_error", failCheck)
-                this.socket.off("disconnect_reason", failCheck2)
-                this.updateLoop().catch(console.error)
+                cleanup()
                 resolve()
             }
 
-            setTimeout(() => {
-                this.socket.off("start", startCheck)
-                this.socket.off("game_error", failCheck)
-                this.socket.off("disconnect_reason", failCheck2)
+            const timeout = setTimeout(() => {
+                cleanup()
                 reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
             }, Constants.CONNECT_TIMEOUT_MS)
 
