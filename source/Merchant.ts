@@ -41,7 +41,7 @@ export class Merchant extends PingCompensatedCharacter {
                 let log: string
                 const logCheck = (data: GameLogData) => {
                     if (typeof data !== "object") return
-                    const fishRegex = /^Fished a/.exec(data.message)
+                    const fishRegex = /^Fished an* .+/.exec(data.message)
                     if (fishRegex) log = fishRegex[0]
                 }
 
@@ -309,7 +309,7 @@ export class Merchant extends PingCompensatedCharacter {
                 let log: string
                 const logCheck = (data: GameLogData) => {
                     if (typeof data !== "object") return
-                    const mineRegex = /^Mined a/.exec(data.message)
+                    const mineRegex = /^Mined an* .+/.exec(data.message)
                     if (mineRegex) log = mineRegex[0]
                 }
 

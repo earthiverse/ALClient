@@ -469,6 +469,14 @@ export type AttackFailedGRDataObject = {
     place: "attack"
     id: string
 }
+export type BankOperationGRDataObject = {
+    response: "data" | "storage_full" | "bank_unavailable"
+    place: "bank"
+    gold?: number
+    cevent?: true
+    failed?: true
+    success?: true
+}
 /** When you try to enter the bank, but another one of your characters is already inside. */
 export type BankOPXGRDataObject = {
     response: "bank_opx"
@@ -663,7 +671,8 @@ CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | Def
 DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
 ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
 NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject
+GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
+BankOperationGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
