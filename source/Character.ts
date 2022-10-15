@@ -3174,6 +3174,8 @@ export class Character extends Observer implements CharacterData {
     public async join(eventName: MapName | MonsterName): Promise<void> {
         if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
 
+        // TODO: If you have hop sickness, you can't join?
+
         // TODO: Add promises
         this.socket.emit("join", { name: eventName })
     }
@@ -3961,8 +3963,22 @@ export class Character extends Observer implements CharacterData {
                 await this.join(to as MapName)
                 return
             } catch (e) {
-                // Suppress errors?
+                if (options.showConsole) console.log(e)
             }
+        }
+
+        // If it's goobrawl, and we're not currently there, join goobrawl
+        if (
+            this.map !== "goobrawl"
+            && (
+                to == "goobrawl"
+                || to == "rgoo"
+                || to == "bgoo"
+                || (typeof to == "object" && to.map == "goobrawl")
+            )
+        ) {
+            await this.join("goobrawl")
+            return this.smartMove(to, options)
         }
 
         // If it's jail, and we're not currently there, warp to jail
@@ -4262,6 +4278,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
+        this.stopWarpToTown()?.catch((e) => { if (options?.showConsole) console.error(e) })
         this.smartMoving = undefined
         return { map: this.map, x: this.x, y: this.y }
     }
