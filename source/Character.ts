@@ -2077,7 +2077,7 @@ export class Character extends Observer implements CharacterData {
             // Check if we can access the supplied bankPack
             const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
             if ((this.map == "bank" && bankPackNum > 7)
-            || (this.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
+            || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
             || (this.map == "bank_u" && bankPackNum < 24)) {
                 throw new Error(`We can't access ${bankPack} on ${this.map}.`)
             }
@@ -3173,8 +3173,12 @@ export class Character extends Observer implements CharacterData {
      */
     public async join(eventName: MapName | MonsterName): Promise<void> {
         if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
+        if (this.ctype == "merchant") throw new Error("Merchants can't join events.")
 
         // TODO: If you have hop sickness, you can't join?
+
+        // TODO: merchants can't join
+        // 42["game_response",{"response":"no_merchants","place":"join","failed":true}]
 
         // TODO: Add promises
         this.socket.emit("join", { name: eventName })
@@ -4939,6 +4943,8 @@ export class Character extends Observer implements CharacterData {
             console.warn(`We are only going to withdraw ${gold} gold.`)
         }
 
+        // TODO: Add promises
+
         this.socket.emit("bank", { amount: gold, operation: "withdraw" })
     }
 
@@ -4959,7 +4965,7 @@ export class Character extends Observer implements CharacterData {
 
         const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
         if ((this.map == "bank" && bankPackNum > 7)
-            || (this.map == "bank_b" && bankPackNum < 8 && bankPackNum > 23)
+            || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
             || (this.map == "bank_u" && bankPackNum < 24)) {
             throw new Error(`We can't access ${bankPack} on ${this.map}.`)
         }
@@ -5189,7 +5195,7 @@ export class Character extends Observer implements CharacterData {
     public isPVP(): boolean {
         if (this.G.maps[this.map].pvp) return true
         if (this.G.maps[this.map].safe) return false
-        return this.server.pvp
+        return this.server.pvp || this.serverData.name == "PVP"
     }
 
     /**
