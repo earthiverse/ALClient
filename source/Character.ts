@@ -3038,7 +3038,7 @@ export class Character extends Observer implements CharacterData {
      * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getResponsePromise(skill: SkillName | "buy", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+    protected getResponsePromise(skill: SkillName | "buy" | "join", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
@@ -3171,17 +3171,14 @@ export class Character extends Observer implements CharacterData {
      *
      * @param eventName
      */
-    public async join(eventName: MapName | MonsterName): Promise<void> {
-        if (!this.S[eventName]) throw new Error(`${eventName} event is not active.`)
+    public async join(eventName: MapName | MonsterName): Promise<unknown> {
+        if (!this.S[eventName]) throw new Error(`Can't join because '${eventName}' is not active.`)
         if (this.ctype == "merchant") throw new Error("Merchants can't join events.")
+        if (this.s.hopsickness) throw new Error("Can't join events with hopsickness.")
 
-        // TODO: If you have hop sickness, you can't join?
-
-        // TODO: merchants can't join
-        // 42["game_response",{"response":"no_merchants","place":"join","failed":true}]
-
-        // TODO: Add promises
+        const response = this.getResponsePromise("join")
         this.socket.emit("join", { name: eventName })
+        return await response
     }
 
     /**
