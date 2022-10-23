@@ -689,8 +689,6 @@ export type GameResponseDataString =
     | "cant_enter"
     /** When attempting to leave a map you can't use the leave command on */
     | "cant_escape"
-    /** ??? Maybe if we attempt to compound something with an inventory position that is empty ??? */
-    | "compound_no_item"
     /** When we try to dash too far */
     | "dash_failed"
     /** Too far away from monster hunt npc */
