@@ -23,7 +23,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
     public target: string
 
-    public abilities: { [T in SkillName]?: any } = {}
+    public abilities: { [T in SkillName]?: never } = {}
     public charge: number
     public cooperative = false
     public damage_type: DamageType

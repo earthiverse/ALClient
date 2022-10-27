@@ -315,7 +315,7 @@ export class Observer {
             const connected = new Promise<void>((resolve, reject) => {
                 this.socket.on("welcome", (data: WelcomeData) => {
                     if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
-                        reject(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`)
+                        reject(new Error(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`))
                     } else {
                         this.socket.emit("loaded", {
                             height: 1080,
@@ -328,7 +328,7 @@ export class Observer {
                 })
 
                 setTimeout(() => {
-                    reject(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`)
+                    reject(new Error(`Failed to start within ${Constants.CONNECT_TIMEOUT_MS / 1000}s.`))
                 }, Constants.CONNECT_TIMEOUT_MS)
             })
             this.socket.open()
@@ -705,7 +705,7 @@ export class Observer {
 
             const timeout = setTimeout(() => {
                 cleanup()
-                reject("ping timeout (5000ms)")
+                reject(new Error("ping timeout (5000ms)"))
             }, 5000)
 
             this.socket.on("ping_ack", pingListener)

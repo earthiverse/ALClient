@@ -54,7 +54,7 @@ export class Merchant extends PingCompensatedCharacter {
 
                 const timeout = setTimeout(() => {
                     cleanup()
-                    reject("fish timeout (20000ms)")
+                    reject(new Error("fish timeout (20000ms)"))
                 }, 20000)
 
                 this.socket.on("ui", noneCheck)
@@ -158,7 +158,7 @@ export class Merchant extends PingCompensatedCharacter {
                         this.socket.off("game_response", failCheck1)
                         this.socket.off("disappearing_text", failCheck2)
                         this.socket.off("player", successCheck)
-                        reject(`We are already listing something in ${tradeSlot}.`)
+                        reject(new Error(`We are already listing something in ${tradeSlot}.`))
                     }
                 }
             }
@@ -168,7 +168,7 @@ export class Merchant extends PingCompensatedCharacter {
                     this.socket.off("game_response", failCheck1)
                     this.socket.off("disappearing_text", failCheck2)
                     this.socket.off("player", successCheck)
-                    reject(`We failed listing the item in ${tradeSlot}.`)
+                    reject(new Error(`We failed listing the item in ${tradeSlot}.`))
                 }
             }
 
@@ -186,7 +186,7 @@ export class Merchant extends PingCompensatedCharacter {
                 this.socket.off("game_response", failCheck1)
                 this.socket.off("disappearing_text", failCheck2)
                 this.socket.off("player", successCheck)
-                reject("listForSale timeout (1000ms)")
+                reject(new Error("listForSale timeout (1000ms)"))
             }, 1000)
             this.socket.on("game_response", failCheck1)
             this.socket.on("disappearing_text", failCheck2)
@@ -252,14 +252,14 @@ export class Merchant extends PingCompensatedCharacter {
                     if (data == "slot_occupied") {
                         this.socket.off("player", successCheck)
                         this.socket.off("game_response", failCheck)
-                        reject(`We already have something listed in '${tradeSlot}'.`)
+                        reject(new Error(`We already have something listed in '${tradeSlot}'.`))
                     }
                 }
             }
             setTimeout(() => {
                 this.socket.off("player", successCheck)
                 this.socket.off("game_response", failCheck)
-                reject("listForPurchase timeout (1000ms)")
+                reject(new Error("listForPurchase timeout (1000ms)"))
             }, 1000)
             this.socket.on("player", successCheck)
             this.socket.on("game_response", failCheck)
@@ -322,7 +322,7 @@ export class Merchant extends PingCompensatedCharacter {
 
                 const timeout = setTimeout(() => {
                     cleanup()
-                    reject("mine timeout (20000ms)")
+                    reject(new Error("mine timeout (20000ms)"))
                 }, 20000)
 
                 this.socket.on("ui", noneCheck)
