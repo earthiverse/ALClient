@@ -1,9 +1,8 @@
-import { CharacterData, EntitiesData, PlayerData, PQData, QInfo, ServerData } from "./definitions/adventureland-server.js"
+import { ChannelInfo, CharacterData, EntitiesData, PlayerData, PQData, QInfo, ServerData } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
 import { Tools } from "./Tools.js"
 import { ConditionName, GData, SkillName } from "./definitions/adventureland-data.js"
-import { ChannelInfo } from "./definitions/adventureland.js"
 
 export class PingCompensatedCharacter extends Character {
     constructor(userID: string, userAuth: string, characterID: string, g: GData, serverData: ServerData) {

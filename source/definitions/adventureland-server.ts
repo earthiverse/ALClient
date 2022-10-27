@@ -3,7 +3,7 @@
  * game uses to interact with the server.
  */
 
-import { BankInfo, ChannelInfo, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
+import { BankInfo, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
 import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
@@ -54,6 +54,13 @@ export type AuthData = {
     no_graphics: "" | "True"
 
     code_slot?: number
+}
+
+export type ChannelInfo = {
+    fishing?: { ms: number, drop: "f1" }
+    mining?: { ms: number, drop: "m1" | "m2" }
+    pickpocket?: { ms: number, target: string }
+    town?: { ms: number }
 }
 
 export type CharacterData = PlayerData & {
