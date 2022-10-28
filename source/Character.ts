@@ -1884,7 +1884,7 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos
      * @returns
      */
-    public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<unknown> {
+    public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [compound].")
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
