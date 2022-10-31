@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.15.54",
+  "version": "0.15.55",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
   "files": [
     "build/**/*",
@@ -45,22 +45,22 @@
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.20.0",
+    "eslint": "^8.26.0",
     "jest": "^28.1.3",
     "madge": "^5.0.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.7",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@types/node": "^18.6.1",
     "axios": "^0.27.2",
     "delaunator": "^5.0.0",
     "is-number": "^7.0.0",
-    "lru-cache": "^7.13.1",
+    "lru-cache": "^7.14.0",
     "mongoose": "^6.4.7",
-    "ngraph.graph": "^20.0.0",
+    "ngraph.graph": "^20.0.1",
     "ngraph.path": "^1.4.0",
-    "socket.io-client": "^4.5.2"
+    "socket.io-client": "^4.5.3"
   }
 }

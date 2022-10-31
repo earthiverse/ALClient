@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 722 (2022-07-26)
+ * The following is from http://adventure.land/data.js, version 755 (2022-10-31)
  * It is used to confirm type correctness
  */
 
@@ -164,7 +164,7 @@ test("G.items type validation", async () => {
                     "large": true,
                     "lightborder": true
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 124000,
                 "grades": [
                     0,
@@ -200,7 +200,7 @@ test("G.items type validation", async () => {
                     "accent": "#5085B0",
                     "large": true
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     0,
@@ -240,7 +240,7 @@ test("G.items type validation", async () => {
                     "large": true,
                     "lightborder": true
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "delia": "Now you see me, now you see the floor",
                 "g": 124000,
                 "grades": [
@@ -303,6 +303,27 @@ test("G.items type validation", async () => {
                 "skin": "bfang",
                 "type": "material"
             },
+            "bfangamulet": {
+                "a": true,
+                "apiercing": 20,
+                "compound": {
+                    "apiercing": 20,
+                    "critdamage": 4,
+                    "lifesteal": 1
+                },
+                "critdamage": 4,
+                "g": 6400000,
+                "grades": [
+                    0,
+                    0,
+                    6,
+                    7
+                ],
+                "lifesteal": 2,
+                "name": "Ghastly Bat Fang",
+                "skin": "bfangamulet",
+                "type": "amulet"
+            },
             "bfur": {
                 "g": 5,
                 "name": "Bee Fur",
@@ -323,7 +344,7 @@ test("G.items type validation", async () => {
             },
             "blade": {
                 "attack": 15,
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 8400,
                 "grades": [
                     7,
@@ -372,7 +393,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 16000,
                 "grades": [
                     7,
@@ -397,7 +418,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#E4B81D"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 16000,
                 "grades": [
                     0,
@@ -425,7 +446,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "A weapon of death",
                 "g": 228000,
                 "grades": [
@@ -472,7 +493,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#7B68A5"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "evasion": 5,
                 "g": 128,
                 "grades": [
@@ -498,7 +519,7 @@ test("G.items type validation", async () => {
             "brownegg": {
                 "g": 1000,
                 "name": "Brown Egg",
-                "s": 9999,
+                "s": 100,
                 "skin": "brownegg",
                 "type": "material"
             },
@@ -543,6 +564,7 @@ test("G.items type validation", async () => {
                 "type": "helmet",
                 "upgrade": {
                     "armor": 2.5,
+                    "cuteness": 2,
                     "evasion": 0.2,
                     "resistance": 2.5,
                     "stat": 1
@@ -658,7 +680,7 @@ test("G.items type validation", async () => {
                 "a": true,
                 "ability": "sugarrush",
                 "attack": 21,
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     0,
@@ -727,7 +749,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#E9711A"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "dex": 12,
                 "g": 92000,
                 "grades": [
@@ -738,7 +760,7 @@ test("G.items type validation", async () => {
                 ],
                 "name": "Carrot Sword",
                 "range": 3,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "carrotsword",
                 "skin_c": "carrotsword_c",
                 "tier": 2,
@@ -756,7 +778,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 9600,
                 "grades": [
                     5,
@@ -830,6 +852,7 @@ test("G.items type validation", async () => {
                     "int": 2,
                     "str": 2
                 },
+                "edge": -2,
                 "g": 380000,
                 "grades": [
                     0,
@@ -879,7 +902,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 7200,
                 "grades": [
                     7,
@@ -975,9 +998,10 @@ test("G.items type validation", async () => {
                 "explanation": "To celebrate good times",
                 "g": 20,
                 "name": "Pack of Confetti's",
-                "onclick": "socket.emit('throw',{num:locate_item('confetti'),x:character.real_x,y:character.real_y})",
+                "onclick": "socket.emit('throw',{num:locate_item('confetti'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
                 "s": 9999,
                 "skin": "confetti",
+                "throw": true,
                 "type": "throw"
             },
             "cosmo0": {
@@ -1046,6 +1070,7 @@ test("G.items type validation", async () => {
                     "int": 2
                 },
                 "dex": 4,
+                "edge": -2,
                 "g": 240000,
                 "grades": [
                     0,
@@ -1070,7 +1095,7 @@ test("G.items type validation", async () => {
             },
             "crossbow": {
                 "attack": 37,
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 480000,
                 "grades": [
                     0,
@@ -1184,7 +1209,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#DB2A86"
                 },
-                "damage": "heal",
+                "damage_type": "heal",
                 "event": true,
                 "g": 90000,
                 "grades": [
@@ -1254,7 +1279,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 167000,
                 "grades": [
                     0,
@@ -1282,7 +1307,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "A deadly weapon",
                 "g": 224000,
                 "grades": [
@@ -1337,12 +1362,12 @@ test("G.items type validation", async () => {
                 "vit": 1
             },
             "dartgun": {
-                "attack": 1,
+                "attack": 10,
                 "cx": {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Don't let the looks fool you. It's a solid weapon with most components forged from gold. The barrel and trigger mechanism is a platinum alloy. Can shoot anything that fits it's barrel, like actual gold.",
                 "g": 20000000,
                 "grades": [
@@ -1358,7 +1383,7 @@ test("G.items type validation", async () => {
                 "tier": 3,
                 "type": "weapon",
                 "upgrade": {
-                    "attack": 1,
+                    "attack": 10,
                     "range": 20
                 },
                 "wtype": "dartgun"
@@ -1475,7 +1500,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Majestic",
                 "g": 2400000,
                 "grades": [
@@ -1533,7 +1558,7 @@ test("G.items type validation", async () => {
                 ],
                 "name": "Fluffy Blanket",
                 "resistance": 8,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "ecape",
                 "stat": 5,
                 "type": "cape",
@@ -1566,13 +1591,14 @@ test("G.items type validation", async () => {
                 "name": "Bunny Ears",
                 "resistance": 11,
                 "scroll": true,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "eears",
                 "stat": 1,
                 "tier": 1.5,
                 "type": "helmet",
                 "upgrade": {
                     "armor": 1.5,
+                    "cuteness": 2,
                     "evasion": 0.2,
                     "resistance": 1.5,
                     "stat": 1
@@ -1881,7 +1907,7 @@ test("G.items type validation", async () => {
                 "name": "Pyjamas",
                 "resistance": 11,
                 "scroll": true,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "epyjamas",
                 "stat": 1,
                 "tier": 1.5,
@@ -1905,7 +1931,7 @@ test("G.items type validation", async () => {
                 ],
                 "name": "Fluffy Slippers",
                 "scroll": true,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "eslippers",
                 "speed": 6,
                 "stat": 1,
@@ -2072,7 +2098,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     0,
@@ -2098,6 +2124,14 @@ test("G.items type validation", async () => {
                 "explanation": "Holding this, you understand how those huge birds can fly, it's not a normal feather!",
                 "g": 800,
                 "name": "Magical Feather",
+                "s": 9999,
+                "skin": "feather0",
+                "type": "material"
+            },
+            "feather1": {
+                "explanation": "Holding this, you understand how those huge harpies can fly, it's not a normal feather!",
+                "g": 800,
+                "name": "Harpy Feather",
                 "s": 9999,
                 "skin": "feather0",
                 "type": "material"
@@ -2155,7 +2189,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#E34C25"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 96000,
                 "grades": [
                     0,
@@ -2184,7 +2218,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#E34C25"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Rains fire upon the enemy",
                 "g": 178000,
                 "grades": [
@@ -2212,9 +2246,10 @@ test("G.items type validation", async () => {
                 "explanation": "Scary but harmless",
                 "g": 20,
                 "name": "Firecracker",
-                "onclick": "socket.emit('throw',{num:locate_item('firecrackers'),x:character.real_x,y:character.real_y})",
+                "onclick": "socket.emit('throw',{num:locate_item('firecrackers'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
                 "s": 9999,
                 "skin": "firecrackers",
+                "throw": true,
                 "type": "throw"
             },
             "firestaff": {
@@ -2225,7 +2260,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D3001E"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 189000,
                 "grades": [
                     0,
@@ -2255,7 +2290,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 290000,
                 "grades": [
                     0,
@@ -2352,7 +2387,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#2D9DE5"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Let your enemy feel the cold",
                 "g": 78000,
                 "grades": [
@@ -2380,7 +2415,7 @@ test("G.items type validation", async () => {
                 "ability": "freeze",
                 "attack": 35,
                 "attr0": 4,
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 289000,
                 "grades": [
                     0,
@@ -2427,7 +2462,7 @@ test("G.items type validation", async () => {
                 "ability": "freeze",
                 "attack": 21,
                 "attr0": 0.2,
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     0,
@@ -2526,7 +2561,7 @@ test("G.items type validation", async () => {
                     "accent": "#DF6915",
                     "border": 1
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 3200000,
                 "grades": [
                     0,
@@ -2673,7 +2708,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#64B553"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "dex": 24,
                 "explosion": 20,
                 "g": 16000,
@@ -2928,7 +2963,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "explanation": "[Warning] Highly volatile - might lose it's power suddenly!",
                 "g": 1240000,
                 "grades": [
@@ -2968,7 +3003,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#7A44A2"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 960000,
                 "grades": [
                     0,
@@ -3014,7 +3049,7 @@ test("G.items type validation", async () => {
             "harbringer": {
                 "a": true,
                 "attack": 42.5,
-                "damage": "magical",
+                "damage_type": "magical",
                 "explanation": "Pure, unfiltered power!",
                 "g": 289000,
                 "grades": [
@@ -3064,6 +3099,35 @@ test("G.items type validation", async () => {
                     "stat": 1
                 }
             },
+            "harpybow": {
+                "a": true,
+                "attack": 32,
+                "cx": {
+                    "accent": "#DE6F22"
+                },
+                "damage_type": "physical",
+                "evasion": 5,
+                "explanation": "A bow decorated with exclusive Harpy feathers!",
+                "g": 780000,
+                "grades": [
+                    0,
+                    0,
+                    9,
+                    10
+                ],
+                "name": "Harpy Bow",
+                "projectile": "arrow",
+                "range": 75,
+                "skin": "t3bow",
+                "speed": 2,
+                "tier": 3,
+                "type": "weapon",
+                "upgrade": {
+                    "attack": 5.6,
+                    "range": 9
+                },
+                "wtype": "bow"
+            },
             "hboots": {
                 "a": 2,
                 "armor": 14,
@@ -3097,7 +3161,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#8B7FD6"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 16000,
                 "grades": [
                     5,
@@ -3129,7 +3193,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "firesistance": 15,
                 "g": 2400000,
                 "grades": [
@@ -3156,7 +3220,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#155E0C"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "dex": 20,
                 "explanation": "One with nature",
                 "g": 18700000,
@@ -3634,7 +3698,7 @@ test("G.items type validation", async () => {
                 "class": [
                     "priest"
                 ],
-                "damage": "magical",
+                "damage_type": "magical",
                 "explanation": "Majestic",
                 "g": 890000,
                 "grades": [
@@ -3750,7 +3814,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 3700,
                 "grades": [
                     7,
@@ -3775,7 +3839,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 224000,
                 "grades": [
                     0,
@@ -4066,7 +4130,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#289E4D"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 124000,
                 "grades": [
                     0,
@@ -4889,7 +4953,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D34C57"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 16400,
                 "grades": [
                     5,
@@ -5131,7 +5195,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#DB763B"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explosion": 20,
                 "g": 16000,
                 "grades": [
@@ -5161,7 +5225,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#745DD6"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "explanation": "It drains the life energy of the user",
                 "g": 289000,
                 "grades": [
@@ -5323,7 +5387,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#0B5818"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 120000,
                 "grades": [
                     0,
@@ -5515,7 +5579,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 124000,
                 "grades": [
                     0,
@@ -5526,7 +5590,7 @@ test("G.items type validation", async () => {
                 "name": "Pink Wand",
                 "projectile": "pinky",
                 "range": 33.75,
-                "set": "easter",
+                "set": "bunny",
                 "skin": "pinkie",
                 "skin_r": "pinkie_r",
                 "speed": 2,
@@ -5583,7 +5647,7 @@ test("G.items type validation", async () => {
                 "class": [
                     "priest"
                 ],
-                "damage": "magical",
+                "damage_type": "magical",
                 "dex": 4,
                 "g": 89000,
                 "grades": [
@@ -5612,7 +5676,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 824000,
                 "grades": [
                     0,
@@ -5672,7 +5736,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#9D7B1B"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explosion": 10,
                 "g": 24000,
                 "grades": [
@@ -5856,7 +5920,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#5085B0"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 84000,
                 "grades": [
                     0,
@@ -6214,7 +6278,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#5AAEED"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 8600000,
                 "grades": [
                     0,
@@ -6352,7 +6416,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#48A763"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "dex": 5,
                 "g": 16400,
                 "grades": [
@@ -6379,9 +6443,10 @@ test("G.items type validation", async () => {
                 "explanation": "A pyrotechnic pouch developed for those who want to feel like Rogue's",
                 "g": 20,
                 "name": "Pouch of Poof",
-                "onclick": "socket.emit('throw',{num:locate_item('smoke'),x:character.real_x,y:character.real_y})",
+                "onclick": "socket.emit('throw',{num:locate_item('smoke'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
                 "s": 100,
                 "skin": "smoke",
+                "throw": true,
                 "type": "throw"
             },
             "smush": {
@@ -6454,7 +6519,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 92000,
                 "grades": [
                     0,
@@ -6496,9 +6561,9 @@ test("G.items type validation", async () => {
                 "type": "amulet"
             },
             "solitaire": {
-                "bling": 100,
+                "bling": 10,
                 "compound": {
-                    "bling": 200
+                    "bling": 30
                 },
                 "event": true,
                 "explanation": "The diamond is mesmerizing",
@@ -6520,7 +6585,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AE4731"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     3,
@@ -6547,7 +6612,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "A deadly weapon",
                 "for": 3,
                 "g": 724000,
@@ -6645,7 +6710,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 12400,
                 "grades": [
                     7,
@@ -6669,7 +6734,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 12400,
                 "grades": [
                     0,
@@ -6694,7 +6759,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 12400,
                 "grades": [
                     0,
@@ -6719,7 +6784,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 12400,
                 "grades": [
                     0,
@@ -6745,7 +6810,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 224000,
                 "grades": [
                     0,
@@ -6862,7 +6927,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 16000,
                 "grades": [
                     5,
@@ -7107,7 +7172,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#CC54B2"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "dex": 12,
                 "g": 48000,
                 "grades": [
@@ -7148,7 +7213,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#CC5A10"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 48000,
                 "grades": [
                     0,
@@ -7173,7 +7238,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#D87F0E"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 224000,
                 "grades": [
                     0,
@@ -7202,7 +7267,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#CD3F3B"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Crafted with the finest of materials",
                 "g": 78000,
                 "grades": [
@@ -7310,7 +7375,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#DE6F22"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explanation": "Crafted by the finest of bowmasters",
                 "g": 780000,
                 "grades": [
@@ -7389,7 +7454,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 72000,
                 "grades": [
                     7,
@@ -7882,7 +7947,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 9600000,
                 "grades": [
                     0,
@@ -7935,7 +8000,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#B91A6A"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "explosion": 10,
                 "g": 9600000,
                 "grades": [
@@ -8048,7 +8113,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#B91A6A"
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 9600000,
                 "grades": [
                     0,
@@ -8074,7 +8139,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#B91A6A"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 9600000,
                 "grades": [
                     0,
@@ -8103,7 +8168,7 @@ test("G.items type validation", async () => {
                     "extension": true,
                     "scale": 0.5
                 },
-                "damage": "magical",
+                "damage_type": "magical",
                 "g": 48600,
                 "grades": [
                     7,
@@ -8219,7 +8284,7 @@ test("G.items type validation", async () => {
                     "accent": "#AF2131",
                     "large": true
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 4900,
                 "grades": [
                     7,
@@ -8241,7 +8306,7 @@ test("G.items type validation", async () => {
             "wblade": {
                 "a": true,
                 "attack": 48,
-                "damage": "magical",
+                "damage_type": "magical",
                 "evasion": 10,
                 "exclusive": true,
                 "g": 48900000,
@@ -8404,7 +8469,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 36000,
                 "grades": [
                     4,
@@ -8462,10 +8527,13 @@ test("G.items type validation", async () => {
                 "type": "elixir"
             },
             "whiteegg": {
+                "action": "THROW!",
                 "g": 5,
                 "name": "White Egg",
-                "s": 9999,
+                "onclick": "socket.emit('throw',{num:locate_item('confetti'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
+                "s": 2000,
                 "skin": "whiteegg",
+                "throw": true,
                 "type": "material"
             },
             "wine": {
@@ -8514,7 +8582,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#155E0C"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "dex": 20,
                 "g": 224000,
                 "grades": [
@@ -8790,7 +8858,7 @@ test("G.items type validation", async () => {
                 "cx": {
                     "accent": "#AF2131"
                 },
-                "damage": "physical",
+                "damage_type": "physical",
                 "g": 37000,
                 "grades": [
                     0,
