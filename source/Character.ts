@@ -4547,6 +4547,10 @@ export class Character extends Observer implements CharacterData {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("new_map", transportCheck)
                         reject(new Error(`${data.name} is currently in the bank, we can't enter.`))
+                    } else if (data.response == "cant_escape" && data.place == "transport") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
+                        reject(new Error("We can't transport (can't escape)re"))
                     }
                 } else if (typeof data == "string") {
                     if (data == "cant_enter") {
@@ -4885,6 +4889,9 @@ export class Character extends Observer implements CharacterData {
                 if (typeof data == "object") {
                     if (data.response == "data" && data.place == "town" && data.in_progress) {
                         startedWarp = true
+                    } else if (data.response == "cant_escape" && data.place == "town") {
+                        cleanup()
+                        reject(new Error("warpToTown failed (can't escape)"))
                     }
                 }
             }
@@ -4910,7 +4917,7 @@ export class Character extends Observer implements CharacterData {
             const hitCheck = (data: HitData) => {
                 if (data.id == this.id) {
                     cleanup()
-                    reject(new Error("warpToTown interupted by attack"))
+                    reject(new Error("warpToTown interrupted by attack"))
                 }
             }
 

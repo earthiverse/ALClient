@@ -622,10 +622,18 @@ export type TownGRDataObject = {
     in_progress: true
     response: "data"
     place: "town"
+} | {
+    success: false
+    response: "cant_escape"
+    place: "town"
 }
 export type TransportGRDataObject = {
     success: true
     response: "data"
+    place: "transport"
+} | {
+    success: false
+    response: "cant_escape"
     place: "transport"
 }
 export type UnfriendFailedGRDataObject = {
@@ -687,7 +695,10 @@ export type GameResponseDataString =
     | "buy_get_closer"
     /** When you try to use `transport` on a door that needs `enter` */
     | "cant_enter"
-    /** When attempting to leave a map you can't use the leave command on */
+    /** When attempting to leave a map you can't use the leave command on
+     *
+     * When attempting to warp or change maps when you have a lot of targets
+     */
     | "cant_escape"
     /** When we try to dash too far */
     | "dash_failed"
