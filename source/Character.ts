@@ -1147,6 +1147,7 @@ export class Character extends Observer implements CharacterData {
         if (!item.rid) throw new Error("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * Constants.PONTY_MARKUP * (item.q ? item.q : 1)
         if (price > this.gold) throw new Error(`We don't have enough gold to buy ${item.name} from Ponty.`)
+        if (this.esize === 0 && !item.q) throw new Error("We have no space to buy an item from Ponty.")
 
         const numBefore = this.countItem(item.name, this.items)
 
@@ -1495,10 +1496,17 @@ export class Character extends Observer implements CharacterData {
         ignoreLocation?: boolean
         quantity?: number
     }): boolean {
-        // TODO: If it's stackable, we could still buy it?
-        if (this.isFull()) return false // We are full
+        if (!options) options = {}
+        if (options.quantity <= 0) options.quantity = 1
 
         const gInfo = this.G.items[item]
+        if (this.esize == 0) {
+            if (gInfo.s === undefined) return false // It's not stackable, and we have no space
+            // TODO: If they're not all full stacks, we could potentially stack the items on one of them
+            // TODO: Check the quantity we're buying
+            const count = this.countItem(item)
+            if (count % (gInfo.s as number) === 0) return false
+        }
         if (!gInfo) throw new Error(`Could not get info for G.items.${item}`)
         if (this.gold < gInfo.g * (gInfo.markup ?? 1) * (options?.quantity ?? 1)) return false // We can't afford it
 
@@ -1673,6 +1681,8 @@ export class Character extends Observer implements CharacterData {
         // Check if it can heal
         if (entity.lifesteal) return false
         if (entity.abilities?.self_healing) return false
+
+        if (entity.immune && !this.G.skills[skill].pierces_immunity) return false
 
         const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
 
@@ -4538,6 +4548,10 @@ export class Character extends Observer implements CharacterData {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("new_map", transportCheck)
                         reject(new Error(`${data.name} is currently in the bank, we can't enter.`))
+                    } else if (data.response == "cant_escape" && data.place == "transport") {
+                        this.socket.off("game_response", failCheck)
+                        this.socket.off("new_map", transportCheck)
+                        reject(new Error("We can't transport (can't escape)re"))
                     }
                 } else if (typeof data == "string") {
                     if (data == "cant_enter") {
@@ -4876,6 +4890,9 @@ export class Character extends Observer implements CharacterData {
                 if (typeof data == "object") {
                     if (data.response == "data" && data.place == "town" && data.in_progress) {
                         startedWarp = true
+                    } else if (data.response == "cant_escape" && data.place == "town") {
+                        cleanup()
+                        reject(new Error("warpToTown failed (can't escape)"))
                     }
                 }
             }
@@ -4901,7 +4918,7 @@ export class Character extends Observer implements CharacterData {
             const hitCheck = (data: HitData) => {
                 if (data.id == this.id) {
                     cleanup()
-                    reject(new Error("warpToTown interupted by attack"))
+                    reject(new Error("warpToTown interrupted by attack"))
                 }
             }
 
