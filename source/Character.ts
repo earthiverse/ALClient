@@ -1495,10 +1495,17 @@ export class Character extends Observer implements CharacterData {
         ignoreLocation?: boolean
         quantity?: number
     }): boolean {
-        // TODO: If it's stackable, we could still buy it?
-        if (this.isFull()) return false // We are full
+        if (!options) options = {}
+        if (options.quantity <= 0) options.quantity = 1
 
         const gInfo = this.G.items[item]
+        if (this.esize == 0) {
+            if (gInfo.s === undefined) return false // It's not stackable, and we have no space
+            // TODO: If they're not all full stacks, we could potentially stack the items on one of them
+            // TODO: Check the quantity we're buying
+            const count = this.countItem(item)
+            if (count % (gInfo.s as number) === 0) return false
+        }
         if (!gInfo) throw new Error(`Could not get info for G.items.${item}`)
         if (this.gold < gInfo.g * (gInfo.markup ?? 1) * (options?.quantity ?? 1)) return false // We can't afford it
 
