@@ -1147,6 +1147,7 @@ export class Character extends Observer implements CharacterData {
         if (!item.rid) throw new Error("This item does not have an 'rid'.")
         const price = this.G.items[item.name].g * Constants.PONTY_MARKUP * (item.q ? item.q : 1)
         if (price > this.gold) throw new Error(`We don't have enough gold to buy ${item.name} from Ponty.`)
+        if (this.esize === 0 && !item.q) throw new Error("We have no space to buy an item from Ponty.")
 
         const numBefore = this.countItem(item.name, this.items)
 
