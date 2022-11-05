@@ -1681,6 +1681,8 @@ export class Character extends Observer implements CharacterData {
         if (entity.lifesteal) return false
         if (entity.abilities?.self_healing) return false
 
+        if (entity.immune && !this.G.skills[skill].pierces_immunity) return false
+
         const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
 
         // Check if it can avoid our shot
