@@ -263,18 +263,21 @@ export class Observer {
                 data[mN] = goodData
 
                 if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
+                    const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${mN}`)
+                    if (!nextUpdate || Date.now() < nextUpdate) continue // We've updated this monster recently
                     databaseEntityUpdates.push({
                         updateOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN },
                             update: { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y },
                             upsert: true
                         }
                     })
                     databaseRespawnUpdates.push({
                         deleteOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype }
+                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN }
                         }
                     })
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${mN}`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
 
@@ -402,6 +405,7 @@ export class Observer {
                                     upsert: true
                                 }
                             })
+                            Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, Date.now() + Constants.MONGO_UPDATE_MS)
                         } else {
                             // Include the id in the filter
                             entityUpdates.push({
