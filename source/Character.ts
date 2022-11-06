@@ -747,6 +747,39 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
+    private getTime(military: boolean): string {
+        const date = new Date()
+
+        function getHours(d: Date): string {
+            const hours = d.getHours()
+            if (!military) {
+                if (hours > 12) return (hours - 12).toString().padStart(2, "0")
+                if (hours == 0) return "12"
+            }
+            return hours.toString().padStart(2, "0")
+        }
+
+        const h = getHours(date)
+        const m = date.getMinutes().toString().padStart(2, "0")
+        const s = date.getSeconds().toString().padStart(2, "0")
+        const ms = date.getMilliseconds().toString().padStart(3, "0")
+        return `${h}:${m}:${s}:${ms}`
+    }
+
+    /**
+     * Logs a debug message to the console
+     */
+    public debug(msg: string, military = true): void {
+        const message = `[${this.getTime(military)}, DEBUG, ${this.id}]: ${msg}`
+        console.debug(message)
+    }
+
+    public error(e: Error | string, trace = true, military = true): void {
+        const message = `[${this.getTime(military)}, ERROR, ${this.id}]: ${(typeof e === "string") ? e : e.message}`
+        console.error(message)
+        if (trace) console.trace(e)
+    }
+
     /**
      * This function will request all nearby entities and players from the server. You can use it to make sure we have the latest data.
      * NOTE: There is a rather high code call cost to this, don't call it too often.
