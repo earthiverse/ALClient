@@ -812,6 +812,16 @@ export class Pathfinder {
                 addCheatPath({ map: "level1", x: -271, y: 616 }, { map: "level1", x: -297, y: 557 })
             }
 
+            if (options.maps.includes("level3")) {
+                // Add path near ladder to level4
+                addCheatPath({ map: "level3", x: 73, y: -408 }, { map: "level3", x: 3, y: 45 })
+            }
+
+            if (options.maps.includes("level4")) {
+                // Add cheat path to mummies
+                addCheatPath({ map: "level4", x: 55, y: -8 }, { map: "level4", x: 89, y: -16 })
+            }
+
             if (options.maps.includes("main")) {
                 // Add a path to hop the NE corner of the target monsters fence
                 addCheatPath({ map: "main", x: -95, y: 229 }, { map: "main", x: -137, y: 248 })
