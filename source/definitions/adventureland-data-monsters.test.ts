@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 722 (2022-07-26)
+ * The following is from http://adventure.land/data.js, version 757 (2022-11-08)
  * It is used to confirm type correctness
  */
 
@@ -10,18 +10,18 @@ test("G.monsters type validation", async () => {
     const G_monsters: Pick<GData, "monsters"> = {
         "monsters": {
             "a1": {
-                "aa": 1,
                 "aggro": 1,
                 "armor": 120,
                 "attack": 4240,
                 "charge": 67,
                 "damage_type": "magical",
+                "difficulty": 8,
                 "frequency": 1.2,
                 "hp": 18700000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 374000,
                 "name": "Spike",
+                "phresistance": 10,
                 "rage": 1,
                 "range": 147,
                 "resistance": 260,
@@ -44,7 +44,6 @@ test("G.monsters type validation", async () => {
                 "xp": 32000000
             },
             "a2": {
-                "aa": 1,
                 "abilities": {
                     "anger": {
                         "cooldown": 8000,
@@ -56,12 +55,13 @@ test("G.monsters type validation", async () => {
                 "attack": 2240,
                 "charge": 96,
                 "damage_type": "physical",
+                "difficulty": 8,
                 "frequency": 1.4,
                 "hp": 420000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 8400,
                 "name": "Bill",
+                "phresistance": 15,
                 "poisonous": true,
                 "rage": 1,
                 "range": 35,
@@ -83,7 +83,6 @@ test("G.monsters type validation", async () => {
                 "xp": 1200000
             },
             "a3": {
-                "aa": 1,
                 "abilities": {
                     "anger": {
                         "cooldown": 8000,
@@ -95,13 +94,14 @@ test("G.monsters type validation", async () => {
                 "attack": 1520,
                 "charge": 80,
                 "damage_type": "physical",
+                "difficulty": 8,
                 "explosion": 20,
                 "frequency": 1.2,
                 "hp": 342000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 6840,
                 "name": "Lestat",
+                "phresistance": 20,
                 "rage": 1,
                 "range": 35,
                 "resistance": 160,
@@ -122,18 +122,18 @@ test("G.monsters type validation", async () => {
                 "xp": 9600000
             },
             "a4": {
-                "aa": 1,
                 "aggro": 1,
                 "armor": 320,
                 "attack": 720,
                 "charge": 86,
                 "damage_type": "physical",
+                "difficulty": 8,
                 "frequency": 1.5,
                 "hp": 560000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 11200,
                 "name": "Orlok",
+                "phresistance": 25,
                 "rage": 1,
                 "range": 35,
                 "resistance": 160,
@@ -156,7 +156,6 @@ test("G.monsters type validation", async () => {
                 "xp": 1600000
             },
             "a5": {
-                "aa": 1,
                 "abilities": {
                     "healing": {
                         "cooldown": 800,
@@ -168,12 +167,13 @@ test("G.monsters type validation", async () => {
                 "attack": 240,
                 "charge": 76,
                 "damage_type": "magical",
+                "difficulty": 8,
                 "frequency": 0.3,
                 "hp": 230000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 4600,
                 "name": "Elena",
+                "phresistance": 25,
                 "rage": 1,
                 "range": 135,
                 "resistance": 240,
@@ -191,7 +191,6 @@ test("G.monsters type validation", async () => {
                 "xp": 1200000
             },
             "a6": {
-                "aa": 1,
                 "abilities": {
                     "weakness_aura": {
                         "aura": true,
@@ -205,12 +204,13 @@ test("G.monsters type validation", async () => {
                 "attack": 8960,
                 "charge": 86,
                 "damage_type": "physical",
+                "difficulty": 8,
                 "frequency": 2,
                 "hp": 320000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 6400,
                 "name": "Marceline",
+                "phresistance": 30,
                 "rage": 1,
                 "range": 35,
                 "resistance": 120,
@@ -227,7 +227,6 @@ test("G.monsters type validation", async () => {
                 "xp": 880000
             },
             "a7": {
-                "aa": 1,
                 "abilities": {
                     "dampening_aura": {
                         "aura": true,
@@ -244,12 +243,13 @@ test("G.monsters type validation", async () => {
                 "attack": 910,
                 "charge": 72,
                 "damage_type": "magical",
+                "difficulty": 8,
                 "frequency": 1.2,
                 "hp": 720000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 14400,
                 "name": "Lucinda",
+                "phresistance": 30,
                 "rage": 1,
                 "range": 135,
                 "resistance": 200,
@@ -266,7 +266,6 @@ test("G.monsters type validation", async () => {
                 "xp": 1200000
             },
             "a8": {
-                "aa": 1,
                 "abilities": {
                     "curse_aura": {
                         "aura": true,
@@ -280,12 +279,13 @@ test("G.monsters type validation", async () => {
                 "attack": 2680,
                 "charge": 76,
                 "damage_type": "physical",
+                "difficulty": 8,
                 "frequency": 4,
                 "hp": 560000,
                 "humanoid": true,
-                "lucrativeness": 8,
                 "mp": 11200,
                 "name": "Angel",
+                "phresistance": 35,
                 "rage": 1,
                 "range": 35,
                 "resistance": 220,
@@ -358,6 +358,7 @@ test("G.monsters type validation", async () => {
                 "hp": 1600,
                 "mp": 32,
                 "name": "Arctic Bee",
+                "phresistance": 50,
                 "rage": 0.05,
                 "range": 20,
                 "respawn": 1,
@@ -411,19 +412,21 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0,
+                "armor": 60,
                 "attack": 20,
                 "damage_type": "physical",
+                "difficulty": 1.1,
                 "dreturn": 30,
                 "frequency": 0.5,
-                "hp": 900,
-                "mp": 18,
+                "hp": 1600,
+                "mp": 32,
                 "name": "Armadillo",
                 "rage": 0,
                 "range": 20,
                 "respawn": 3,
                 "skin": "armadillo",
                 "speed": 14,
-                "xp": 800
+                "xp": 1720
             },
             "bat": {
                 "aa": 1,
@@ -475,15 +478,17 @@ test("G.monsters type validation", async () => {
                 "attack": 50,
                 "damage_type": "physical",
                 "frequency": 0.7,
-                "hp": 2400,
-                "mp": 48,
+                "hp": 9600,
+                "mp": 192,
                 "name": "Bat",
+                "phresistance": 35,
                 "rage": 0,
                 "range": 35,
+                "resistance": 120,
                 "respawn": 12,
                 "skin": "bat",
                 "speed": 24,
-                "xp": 2000
+                "xp": 8000
             },
             "bbpompom": {
                 "achievements": [
@@ -599,6 +604,7 @@ test("G.monsters type validation", async () => {
                 "hp": 300,
                 "mp": 6,
                 "name": "Bee",
+                "phresistance": 60,
                 "rage": 0.1,
                 "range": 20,
                 "respawn": 2,
@@ -637,6 +643,7 @@ test("G.monsters type validation", async () => {
                 "xp": 100000
             },
             "bigbird": {
+                "aa": 1,
                 "achievements": [
                     [
                         10,
@@ -690,6 +697,7 @@ test("G.monsters type validation", async () => {
                 "hp": 32000,
                 "mp": 640,
                 "name": "Hawk",
+                "phresistance": 30,
                 "rage": 0.4,
                 "range": 20,
                 "respawn": 12,
@@ -715,6 +723,7 @@ test("G.monsters type validation", async () => {
                 "hp": 4000000,
                 "mp": 80000,
                 "name": "Fairy",
+                "phresistance": 70,
                 "rage": 0,
                 "range": 999999,
                 "respawn": 0,
@@ -764,7 +773,7 @@ test("G.monsters type validation", async () => {
                         10000000,
                         "stat",
                         "armor",
-                        30
+                        12
                     ]
                 ],
                 "aggro": 1,
@@ -829,7 +838,7 @@ test("G.monsters type validation", async () => {
                         2.25
                     ]
                 ],
-                "aggro": 100,
+                "aggro": 1.5,
                 "attack": 220,
                 "charge": 96,
                 "damage_type": "pure",
@@ -838,7 +847,8 @@ test("G.monsters type validation", async () => {
                 "hp": 8000,
                 "mp": 160,
                 "name": "Boo Boo",
-                "rage": 100,
+                "phresistance": 50,
+                "rage": 1.5,
                 "range": 420,
                 "respawn": 48,
                 "skin": "booboo",
@@ -881,7 +891,7 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.8,
-                "armor": 600,
+                "armor": 500,
                 "attack": 3200,
                 "crit": 10,
                 "damage_type": "physical",
@@ -892,7 +902,7 @@ test("G.monsters type validation", async () => {
                 "poisonous": true,
                 "rage": 0,
                 "range": 32,
-                "resistance": 400,
+                "resistance": 240,
                 "respawn": 6,
                 "skin": "bscorpion",
                 "speed": 24,
@@ -947,13 +957,14 @@ test("G.monsters type validation", async () => {
                 "aggro": 0.1,
                 "attack": 320,
                 "damage_type": "physical",
+                "difficulty": 6,
                 "frequency": 1.2,
-                "hp": 1200,
-                "lucrativeness": 6,
-                "mp": 24,
+                "hp": 2400,
+                "mp": 48,
                 "name": "Irradiated Goo",
                 "rage": 0,
                 "range": 64,
+                "resistance": 260,
                 "respawn": 48,
                 "skin": "cgoo",
                 "speed": 9,
@@ -978,7 +989,6 @@ test("G.monsters type validation", async () => {
                 "xp": 6000
             },
             "crab": {
-                "aa": 1,
                 "achievements": [
                     [
                         10,
@@ -1030,11 +1040,12 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.2,
+                "armor": 160,
                 "attack": 24,
                 "damage_type": "physical",
                 "frequency": 0.4,
-                "hp": 200,
-                "mp": 4,
+                "hp": 400,
+                "mp": 8,
                 "name": "Tiny Crab",
                 "rage": 0,
                 "range": 15,
@@ -1042,10 +1053,9 @@ test("G.monsters type validation", async () => {
                 "size": 0.5,
                 "skin": "crab",
                 "speed": 6,
-                "xp": 300
+                "xp": 500
             },
             "crabx": {
-                "aa": 1,
                 "achievements": [
                     [
                         10,
@@ -1091,6 +1101,7 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.5,
+                "armor": 210,
                 "attack": 240,
                 "charge": 30,
                 "damage_type": "physical",
@@ -1106,7 +1117,6 @@ test("G.monsters type validation", async () => {
                 "xp": 3600
             },
             "crabxx": {
-                "aa": 1,
                 "achievements": [
                     [
                         1,
@@ -1123,6 +1133,7 @@ test("G.monsters type validation", async () => {
                 ],
                 "aggro": 0,
                 "announce": "#B73237",
+                "armor": 320,
                 "attack": 16000,
                 "charge": 80,
                 "cooperative": true,
@@ -1132,6 +1143,7 @@ test("G.monsters type validation", async () => {
                 "hp": 960000,
                 "mp": 19200,
                 "name": "Giga Crab",
+                "phresistance": 30,
                 "rage": 0,
                 "range": 45,
                 "respawn": -1,
@@ -1194,18 +1206,19 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.2,
+                "armor": 40,
                 "attack": 48,
                 "damage_type": "physical",
                 "frequency": 0.5,
-                "hp": 1000,
-                "mp": 20,
+                "hp": 3200,
+                "mp": 64,
                 "name": "Croc",
                 "rage": 1,
                 "range": 15,
                 "respawn": 6,
                 "skin": "croc",
                 "speed": 10,
-                "xp": 900
+                "xp": 3600
             },
             "cutebee": {
                 "aa": 1,
@@ -1233,7 +1246,8 @@ test("G.monsters type validation", async () => {
                 "hp": 300,
                 "mp": 6,
                 "name": "Cute Bee",
-                "rage": 0.1,
+                "phresistance": 60,
+                "rage": 0.05,
                 "range": 20,
                 "respawn": -1,
                 "skin": "cutebee",
@@ -1333,6 +1347,7 @@ test("G.monsters type validation", async () => {
                 "hp": 12800000,
                 "mp": 256000,
                 "name": "Dragold",
+                "phresistance": 65,
                 "projectile": "fireball",
                 "rage": 0,
                 "range": 320,
@@ -1418,6 +1433,7 @@ test("G.monsters type validation", async () => {
                 "hp": 8000000,
                 "mp": 160000,
                 "name": "Ent",
+                "phresistance": 15,
                 "rage": 0,
                 "range": 64,
                 "resistance": 100,
@@ -1536,6 +1552,7 @@ test("G.monsters type validation", async () => {
                 "hp": 84000,
                 "mp": 1680,
                 "name": "Fire Spirit",
+                "phresistance": 50,
                 "rage": 0,
                 "range": 280,
                 "resistance": 320,
@@ -1546,7 +1563,6 @@ test("G.monsters type validation", async () => {
                 "xp": 64200
             },
             "franky": {
-                "aa": 1,
                 "achievements": [
                     [
                         1,
@@ -1597,6 +1613,7 @@ test("G.monsters type validation", async () => {
                 "humanoid": true,
                 "mp": 2400000,
                 "name": "Franky",
+                "phresistance": 70,
                 "rage": 0,
                 "range": 948,
                 "respawn": -1,
@@ -1659,6 +1676,7 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "attack": 24,
                 "damage_type": "physical",
+                "difficulty": 12,
                 "evasion": 99,
                 "frequency": 0.5,
                 "hp": 600,
@@ -1717,6 +1735,7 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.05,
+                "armor": 100,
                 "attack": 875,
                 "damage_type": "magical",
                 "frequency": 1.2,
@@ -1840,7 +1859,7 @@ test("G.monsters type validation", async () => {
                         10000000,
                         "stat",
                         "resistance",
-                        30
+                        10
                     ]
                 ],
                 "aggro": 0.05,
@@ -1852,6 +1871,7 @@ test("G.monsters type validation", async () => {
                 "hp": 12000,
                 "mp": 240,
                 "name": "Ghost",
+                "phresistance": 90,
                 "rage": 0,
                 "range": 120,
                 "resistance": 400,
@@ -1896,6 +1916,7 @@ test("G.monsters type validation", async () => {
                 "immune": true,
                 "mp": 1,
                 "name": "Sneaky Goblin",
+                "phresistance": 30,
                 "rage": 0,
                 "range": 2,
                 "reflection": 99.95,
@@ -1948,17 +1969,19 @@ test("G.monsters type validation", async () => {
                 "aggro": 0.3,
                 "attack": 50,
                 "damage_type": "physical",
+                "difficulty": 100,
                 "explanation": "Spawns in Cave of Darkness around every 80,000 Bat spawns",
                 "frequency": 0.7,
-                "hp": 2400,
-                "mp": 48,
+                "hp": 24000,
+                "mp": 480,
                 "name": "Golden Bat",
+                "phresistance": 70,
                 "rage": 0,
                 "range": 35,
                 "respawn": -1,
                 "skin": "goldenbat",
                 "speed": 24,
-                "xp": 2000
+                "xp": 20000
             },
             "goo": {
                 "aa": 1,
@@ -2099,6 +2122,7 @@ test("G.monsters type validation", async () => {
                 "hp": 3600000,
                 "mp": 72000,
                 "name": "Fairy",
+                "phresistance": 70,
                 "rage": 0,
                 "range": 999999,
                 "respawn": 0,
@@ -2229,6 +2253,7 @@ test("G.monsters type validation", async () => {
                 "mp": 480000,
                 "name": "Grinch",
                 "passive": true,
+                "phresistance": 90,
                 "prefix": "",
                 "rage": 0,
                 "range": 120,
@@ -2291,21 +2316,88 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.3,
+                "armor": 300,
                 "attack": 120,
                 "damage_type": "physical",
                 "frequency": 0.8,
-                "hp": 3200,
-                "mp": 64,
+                "hp": 32000,
+                "mp": 640,
                 "name": "Scorpion",
                 "rage": 0,
                 "range": 32,
                 "respawn": 6,
                 "skin": "gscorpion",
                 "speed": 24,
-                "xp": 4800
+                "xp": 48000
+            },
+            "harpy": {
+                "abilities": {
+                    "warp_on_hit": {
+                        "attr0": 0.08,
+                        "unlimited": true
+                    }
+                },
+                "achievements": [
+                    [
+                        10,
+                        "stat",
+                        "hp",
+                        10
+                    ],
+                    [
+                        1000,
+                        "stat",
+                        "fzresistance",
+                        0.5
+                    ],
+                    [
+                        10000,
+                        "stat",
+                        "fzresistance",
+                        0.5
+                    ],
+                    [
+                        100000,
+                        "stat",
+                        "fzresistance",
+                        0.5
+                    ],
+                    [
+                        200000,
+                        "stat",
+                        "speed",
+                        0.25
+                    ]
+                ],
+                "aggro": 0.01,
+                "armor": 160,
+                "attack": 1720,
+                "charge": 96,
+                "charge_skin": "harpy_fly",
+                "damage_type": "magical",
+                "difficulty": 2,
+                "frequency": 0.8,
+                "hit": "explode_p",
+                "hp": 160000,
+                "mp": 3200,
+                "name": "Harpy",
+                "phresistance": 40,
+                "rage": 0,
+                "range": 220,
+                "resistance": 600,
+                "respawn": 4,
+                "rpiercing": 160,
+                "skin": "harpy",
+                "slots": {
+                    "mainhand": {
+                        "level": 6,
+                        "name": "harbringer"
+                    }
+                },
+                "speed": 12,
+                "xp": 192000
             },
             "hen": {
-                "aa": 1,
                 "achievements": [
                     [
                         1000,
@@ -2357,11 +2449,12 @@ test("G.monsters type validation", async () => {
                 "charge": 48,
                 "cooperative": true,
                 "damage_type": "physical",
+                "difficulty": 12,
                 "frequency": 1.2,
                 "hp": 16000000,
-                "lucrativeness": 12,
                 "mp": 320000,
                 "name": "Ice Golem",
+                "phresistance": 40,
                 "rage": 0,
                 "range": 64,
                 "resistance": 800,
@@ -2425,6 +2518,7 @@ test("G.monsters type validation", async () => {
                 "hp": 3600,
                 "mp": 72,
                 "name": "Water Spirit",
+                "phresistance": 50,
                 "rage": 0,
                 "range": 100,
                 "reflection": 8,
@@ -2458,7 +2552,7 @@ test("G.monsters type validation", async () => {
                         1000,
                         "stat",
                         "armor",
-                        15
+                        8
                     ],
                     [
                         10000,
@@ -2512,7 +2606,6 @@ test("G.monsters type validation", async () => {
                 "xp": 80000
             },
             "jrat": {
-                "aa": 1,
                 "achievements": [
                     [
                         1000000,
@@ -2524,6 +2617,7 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "attack": 240,
                 "damage_type": "physical",
+                "difficulty": 0.2,
                 "frequency": 0.5,
                 "hp": 4000,
                 "mp": 80,
@@ -2536,7 +2630,7 @@ test("G.monsters type validation", async () => {
                 "xp": 100
             },
             "kitty1": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -2554,7 +2648,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "kitty2": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -2572,7 +2666,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "kitty3": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -2590,7 +2684,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "kitty4": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -2754,13 +2848,13 @@ test("G.monsters type validation", async () => {
                 "name": "Pom Pom",
                 "rage": 0,
                 "range": 120,
+                "resistance": 120,
                 "respawn": 4,
                 "skin": "minimush",
                 "speed": 12,
                 "xp": 600
             },
             "mole": {
-                "aa": 1,
                 "achievements": [
                     [
                         10,
@@ -2810,6 +2904,7 @@ test("G.monsters type validation", async () => {
                 "attack": 480,
                 "charge": 60,
                 "damage_type": "physical",
+                "difficulty": 1.2,
                 "frequency": 0.8,
                 "hp": 12400,
                 "mp": 248,
@@ -2974,6 +3069,7 @@ test("G.monsters type validation", async () => {
                 "hp": 36000000,
                 "mp": 720000,
                 "name": "Mr. Pumpkin",
+                "phresistance": 30,
                 "rage": 0,
                 "range": 520,
                 "respawn": 3240,
@@ -2988,7 +3084,6 @@ test("G.monsters type validation", async () => {
                 "xp": 48000000
             },
             "mummy": {
-                "aa": 1,
                 "achievements": [
                     [
                         1,
@@ -3033,7 +3128,7 @@ test("G.monsters type validation", async () => {
                         1
                     ]
                 ],
-                "aggro": 100,
+                "aggro": 1.5,
                 "attack": 420,
                 "charge": 96,
                 "damage_type": "physical",
@@ -3042,7 +3137,7 @@ test("G.monsters type validation", async () => {
                 "hp": 12000,
                 "mp": 240,
                 "name": "Mummy",
-                "rage": 100,
+                "rage": 1.5,
                 "range": 48,
                 "respawn": 24,
                 "skin": "mummy",
@@ -3095,6 +3190,7 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.05,
+                "armor": 90,
                 "attack": 245,
                 "damage_type": "magical",
                 "frequency": 1.2,
@@ -3130,7 +3226,6 @@ test("G.monsters type validation", async () => {
                 "xp": 10
             },
             "nerfedmummy": {
-                "aa": 1,
                 "achievements": [
                     [
                         1,
@@ -3249,6 +3344,7 @@ test("G.monsters type validation", async () => {
                 "hp": 420000,
                 "mp": 8400,
                 "name": "One Eye",
+                "phresistance": 30,
                 "rage": 0,
                 "range": 40,
                 "resistance": 160,
@@ -3305,6 +3401,7 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "attack": 24,
                 "damage_type": "physical",
+                "difficulty": 2,
                 "frequency": 0.6,
                 "hp": 720,
                 "mp": 14,
@@ -3371,9 +3468,11 @@ test("G.monsters type validation", async () => {
                 "hp": 160000,
                 "mp": 3200,
                 "name": "Phoenix",
+                "phresistance": 40,
                 "prefix": "the",
                 "rage": 0,
                 "range": 120,
+                "resistance": 160,
                 "respawn": 32,
                 "skin": "phoenix",
                 "speed": 50,
@@ -3386,6 +3485,44 @@ test("G.monsters type validation", async () => {
                         "heal": 96000
                     }
                 },
+                "achievements": [
+                    [
+                        1000,
+                        "stat",
+                        "mp",
+                        10
+                    ],
+                    [
+                        2000,
+                        "stat",
+                        "vit",
+                        1
+                    ],
+                    [
+                        10000,
+                        "stat",
+                        "for",
+                        1
+                    ],
+                    [
+                        100000,
+                        "stat",
+                        "str",
+                        2
+                    ],
+                    [
+                        1000000,
+                        "stat",
+                        "speed",
+                        0.5
+                    ],
+                    [
+                        10000000,
+                        "stat",
+                        "range",
+                        1.25
+                    ]
+                ],
                 "aggro": 0,
                 "armor": 200,
                 "attack": 2400,
@@ -3449,6 +3586,7 @@ test("G.monsters type validation", async () => {
                 "immune": true,
                 "mp": 0,
                 "name": "Love Goo",
+                "phresistance": 30,
                 "rage": 0,
                 "range": 20,
                 "respawn": 3600,
@@ -3567,18 +3705,17 @@ test("G.monsters type validation", async () => {
                 "attack": 240,
                 "damage_type": "physical",
                 "frequency": 0.6,
-                "hp": 1200,
-                "mp": 24,
+                "hp": 3600,
+                "mp": 72,
                 "name": "Poisio",
                 "rage": 0.2,
                 "range": 20,
                 "respawn": 6,
                 "skin": "poisio",
                 "speed": 24,
-                "xp": 1300
+                "xp": 4000
             },
             "porcupine": {
-                "aa": 1,
                 "achievements": [
                     [
                         10,
@@ -3624,20 +3761,22 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 1,
+                "armor": 120,
                 "attack": 16,
                 "charge": 30,
                 "damage_type": "physical",
+                "difficulty": 1.2,
                 "dreturn": 4800,
                 "frequency": 0.5,
-                "hp": 1400,
-                "mp": 28,
+                "hp": 3800,
+                "mp": 76,
                 "name": "Porcupine",
                 "rage": 0.4,
                 "range": 20,
                 "respawn": 2,
                 "skin": "porcupine",
                 "speed": 10,
-                "xp": 1200
+                "xp": 3200
             },
             "pppompom": {
                 "achievements": [
@@ -3703,7 +3842,6 @@ test("G.monsters type validation", async () => {
                 "xp": 62400
             },
             "prat": {
-                "aa": 1,
                 "achievements": [
                     [
                         1,
@@ -3766,7 +3904,7 @@ test("G.monsters type validation", async () => {
                 "xp": 7600
             },
             "puppy1": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -3818,7 +3956,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "puppy2": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -3870,7 +4008,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "puppy3": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -3922,7 +4060,7 @@ test("G.monsters type validation", async () => {
                 "xp": -500
             },
             "puppy4": {
-                "aa": 1,
+                "aa": 0,
                 "aggro": 0,
                 "attack": 5,
                 "charge": 12,
@@ -3987,6 +4125,7 @@ test("G.monsters type validation", async () => {
                 "aggro": 1,
                 "attack": 80,
                 "damage_type": "physical",
+                "difficulty": 1.4,
                 "frequency": 0.5,
                 "hp": 820,
                 "mp": 16,
@@ -4022,6 +4161,7 @@ test("G.monsters type validation", async () => {
                 "hp": 4800000,
                 "mp": 96000,
                 "name": "Fairy",
+                "phresistance": 70,
                 "rage": 0,
                 "range": 999999,
                 "respawn": 0,
@@ -4064,8 +4204,69 @@ test("G.monsters type validation", async () => {
                 "speed": 9,
                 "xp": 48000000
             },
+            "rharpy": {
+                "achievements": [
+                    [
+                        1,
+                        "stat",
+                        "mp",
+                        5
+                    ],
+                    [
+                        10,
+                        "stat",
+                        "attack",
+                        2
+                    ],
+                    [
+                        1000,
+                        "stat",
+                        "stresistance",
+                        1
+                    ],
+                    [
+                        10000,
+                        "stat",
+                        "stresistance",
+                        1
+                    ],
+                    [
+                        20000,
+                        "stat",
+                        "speed",
+                        0.25
+                    ]
+                ],
+                "aggro": 1.2,
+                "apiercing": 160,
+                "armor": 360,
+                "attack": 1420,
+                "charge": 116,
+                "charge_skin": "rharpy_fly",
+                "cooperative": true,
+                "damage_type": "magical",
+                "difficulty": 3,
+                "frequency": 0.7,
+                "hit": "momentum",
+                "hp": 320000,
+                "mp": 6400,
+                "name": "Rebel Harpy",
+                "phresistance": 60,
+                "rage": 1.2,
+                "range": 30,
+                "resistance": 240,
+                "respawn": 400,
+                "skin": "rharpy",
+                "slots": {
+                    "mainhand": {
+                        "level": 9,
+                        "name": "basher"
+                    }
+                },
+                "speed": 18,
+                "xp": 332000
+            },
             "rooster": {
-                "aa": 1,
                 "achievements": [
                     [
                         1000,
@@ -4168,18 +4369,19 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.3,
+                "armor": 200,
                 "attack": 100,
                 "damage_type": "physical",
                 "frequency": 0.8,
-                "hp": 2400,
-                "mp": 48,
+                "hp": 24000,
+                "mp": 480,
                 "name": "Scorpion",
                 "rage": 0,
                 "range": 32,
                 "respawn": 6,
                 "skin": "scorpion",
                 "speed": 24,
-                "xp": 2000
+                "xp": 20000
             },
             "skeletor": {
                 "achievements": [
@@ -4291,6 +4493,7 @@ test("G.monsters type validation", async () => {
                 "immune": true,
                 "mp": 1333,
                 "name": "Slenderman",
+                "phresistance": 95,
                 "rage": 0,
                 "range": 52,
                 "reflection": 96,
@@ -4342,7 +4545,7 @@ test("G.monsters type validation", async () => {
                         10000000,
                         "stat",
                         "resistance",
-                        15
+                        10
                     ]
                 ],
                 "aggro": 0,
@@ -4372,7 +4575,7 @@ test("G.monsters type validation", async () => {
                         100,
                         "stat",
                         "resistance",
-                        5
+                        3
                     ],
                     [
                         1000,
@@ -4471,15 +4674,15 @@ test("G.monsters type validation", async () => {
                 "attack": 80,
                 "damage_type": "physical",
                 "frequency": 1,
-                "hp": 1800,
-                "mp": 36,
+                "hp": 18000,
+                "mp": 360,
                 "name": "Spider",
                 "rage": 0,
                 "range": 32,
                 "respawn": 14,
                 "skin": "spider",
                 "speed": 24,
-                "xp": 1200
+                "xp": 12000
             },
             "squig": {
                 "aa": 1,
@@ -4589,16 +4792,17 @@ test("G.monsters type validation", async () => {
                 "aggro": 0,
                 "attack": 24,
                 "damage_type": "physical",
+                "difficulty": 3,
                 "frequency": 0.6,
-                "hp": 600,
-                "mp": 12,
+                "hp": 9600,
+                "mp": 192,
                 "name": "Squigtoad",
                 "rage": 0,
                 "range": 20,
                 "respawn": 120,
                 "skin": "squigtoad",
                 "speed": 16,
-                "xp": 2400
+                "xp": 32000
             },
             "stompy": {
                 "achievements": [
@@ -4702,7 +4906,7 @@ test("G.monsters type validation", async () => {
                         10000000,
                         "stat",
                         "resistance",
-                        25
+                        10
                     ]
                 ],
                 "aggro": 1,
@@ -4732,6 +4936,7 @@ test("G.monsters type validation", async () => {
                 "mp": 1000,
                 "name": "Target Automatron",
                 "orientation": 2,
+                "phresistance": 50,
                 "rage": 0,
                 "range": 1,
                 "respawn": 0,
@@ -4748,6 +4953,7 @@ test("G.monsters type validation", async () => {
                 "frequency": 0.1,
                 "hp": 50000,
                 "humanoid": true,
+                "immune": true,
                 "mp": 1000,
                 "name": "Target Automatron",
                 "orientation": 0,
@@ -4903,6 +5109,7 @@ test("G.monsters type validation", async () => {
                 "mp": 240,
                 "name": "Tiger",
                 "peaceful": true,
+                "phresistance": 60,
                 "rage": 0,
                 "range": 20,
                 "reflection": 100,
@@ -4945,6 +5152,7 @@ test("G.monsters type validation", async () => {
                 "immune": true,
                 "mp": 112,
                 "name": "Fairy",
+                "phresistance": 98,
                 "rage": 0,
                 "range": 35,
                 "respawn": -1,
@@ -5004,15 +5212,15 @@ test("G.monsters type validation", async () => {
                 "attack": 36,
                 "damage_type": "physical",
                 "frequency": 0.5,
-                "hp": 2000,
-                "mp": 40,
+                "hp": 7200,
+                "mp": 144,
                 "name": "Tortoise",
                 "rage": 0,
                 "range": 15,
                 "respawn": 12,
                 "skin": "tortoise",
                 "speed": 10,
-                "xp": 1600
+                "xp": 5200
             },
             "vbat": {
                 "aa": 1,
@@ -5020,11 +5228,12 @@ test("G.monsters type validation", async () => {
                 "attack": 1240,
                 "charge": 84,
                 "damage_type": "physical",
+                "difficulty": 17,
                 "frequency": 1.56,
                 "hp": 156000,
-                "lucrativeness": 17,
                 "mp": 3120,
                 "name": "Vampireling",
+                "phresistance": 70,
                 "rage": 0.1,
                 "range": 35,
                 "respawn": -1,
@@ -5083,6 +5292,7 @@ test("G.monsters type validation", async () => {
                 "mp": 640,
                 "name": "Wabbit",
                 "operator": true,
+                "phresistance": 70,
                 "rage": 0,
                 "range": 20,
                 "rbuff": "easterluck",
@@ -5165,8 +5375,8 @@ test("G.monsters type validation", async () => {
                 "charge": 152,
                 "damage_type": "physical",
                 "frequency": 0.8,
-                "hp": 24000,
-                "mp": 480,
+                "hp": 48000,
+                "mp": 960,
                 "name": "White Wolf",
                 "rage": 1,
                 "range": 20,
@@ -5174,7 +5384,7 @@ test("G.monsters type validation", async () => {
                 "respawn": 12,
                 "skin": "wolf",
                 "speed": 24,
-                "xp": 24800
+                "xp": 48800
             },
             "wolfie": {
                 "achievements": [
@@ -5239,7 +5449,6 @@ test("G.monsters type validation", async () => {
                 "xp": 16400
             },
             "xmagefi": {
-                "aa": 1,
                 "abilities": {
                     "anger": {
                         "cooldown": 8000,
@@ -5250,19 +5459,20 @@ test("G.monsters type validation", async () => {
                         "damage": 4000
                     }
                 },
-                "aggro": 10,
+                "aggro": 1.8,
                 "armor": 220,
                 "attack": 2240,
                 "charge": 84,
                 "damage_type": "magical",
+                "difficulty": 0,
                 "frequency": 1.46,
                 "hide": true,
                 "hp": 5600000,
                 "immune": true,
-                "lucrativeness": 0,
                 "mp": 112000,
                 "name": "Mage",
-                "rage": 10,
+                "phresistance": 35,
+                "rage": 1.8,
                 "range": 135,
                 "resistance": 360,
                 "respawn": 0,
@@ -5278,26 +5488,26 @@ test("G.monsters type validation", async () => {
                 "xp": 1440000
             },
             "xmagefz": {
-                "aa": 1,
                 "abilities": {
                     "deepfreeze": {
                         "cooldown": 6000,
                         "radius": 300
                     }
                 },
-                "aggro": 10,
+                "aggro": 1.8,
                 "armor": 120,
                 "attack": 1640,
                 "charge": 84,
                 "damage_type": "magical",
+                "difficulty": 0,
                 "frequency": 1.26,
                 "hide": true,
                 "hp": 4800000,
                 "immune": true,
-                "lucrativeness": 0,
                 "mp": 96000,
                 "name": "Mage",
-                "rage": 10,
+                "phresistance": 20,
+                "rage": 1.8,
                 "range": 135,
                 "resistance": 360,
                 "respawn": 0,
@@ -5313,7 +5523,6 @@ test("G.monsters type validation", async () => {
                 "xp": 7200000
             },
             "xmagen": {
-                "aa": 1,
                 "abilities": {
                     "mtangle": {
                         "cooldown": 3200
@@ -5323,20 +5532,21 @@ test("G.monsters type validation", async () => {
                         "heal": 4800
                     }
                 },
-                "aggro": 10,
+                "aggro": 1.8,
                 "armor": 320,
                 "attack": 2440,
                 "charge": 84,
                 "damage_type": "magical",
+                "difficulty": 0,
                 "frequency": 1.66,
                 "hide": true,
                 "hp": 6400000,
                 "immune": true,
-                "lucrativeness": 0,
                 "mp": 128000,
                 "name": "Mage",
+                "phresistance": 50,
                 "poisonous": true,
-                "rage": 10,
+                "rage": 1.8,
                 "range": 135,
                 "reflection": 30,
                 "resistance": 360,
@@ -5353,7 +5563,6 @@ test("G.monsters type validation", async () => {
                 "xp": 21600000
             },
             "xmagex": {
-                "aa": 1,
                 "abilities": {
                     "anger": {
                         "cooldown": 8000,
@@ -5365,18 +5574,57 @@ test("G.monsters type validation", async () => {
                         "stun": 1500
                     }
                 },
-                "aggro": 10,
+                "achievements": [
+                    [
+                        1,
+                        "stat",
+                        "fzresistance",
+                        1
+                    ],
+                    [
+                        5,
+                        "stat",
+                        "firesistance",
+                        1
+                    ],
+                    [
+                        10,
+                        "stat",
+                        "phresistance",
+                        1
+                    ],
+                    [
+                        100,
+                        "stat",
+                        "frequency",
+                        1
+                    ],
+                    [
+                        1000,
+                        "stat",
+                        "xp",
+                        2
+                    ],
+                    [
+                        10000,
+                        "stat",
+                        "gold",
+                        2
+                    ]
+                ],
+                "aggro": 1.8,
                 "armor": 360,
-                "attack": 12640,
+                "attack": 10640,
                 "charge": 84,
                 "damage_type": "magical",
+                "difficulty": 64,
                 "frequency": 1.56,
                 "hp": 7200000,
                 "immune": true,
-                "lucrativeness": 120,
                 "mp": 144000,
                 "name": "Dark Mage",
-                "rage": 10,
+                "phresistance": 65,
+                "rage": 1.8,
                 "range": 135,
                 "resistance": 420,
                 "respawn": -1,
@@ -5436,18 +5684,19 @@ test("G.monsters type validation", async () => {
                     ]
                 ],
                 "aggro": 0.3,
+                "armor": 400,
                 "attack": 720,
                 "damage_type": "physical",
                 "frequency": 0.8,
-                "hp": 24000,
-                "mp": 480,
+                "hp": 140000,
+                "mp": 2800,
                 "name": "Scorpion",
                 "rage": 0,
                 "range": 32,
-                "respawn": 6,
+                "respawn": 16,
                 "skin": "xscorpion",
                 "speed": 24,
-                "xp": 27200
+                "xp": 172000
             },
             "zapper0": {
                 "aa": 1,
