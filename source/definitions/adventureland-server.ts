@@ -4,7 +4,7 @@
  */
 
 import { BankInfo, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
-import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
+import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, ConditionName, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
     name: string
@@ -18,6 +18,7 @@ export type AchievementProgressDataFirehazard = {
 
 export type ActionDataBase = {
     attacker: string
+    conditions?: ConditionName[]
     damage?: number
     heal?: number
     eta: number

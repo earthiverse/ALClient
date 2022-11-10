@@ -141,4 +141,22 @@ test("ActionData type validation", async () => {
         "y": -239.95362827974216
     }
     expect(zapperZap).toBeDefined()
+
+    const burned: ActionData = {
+        "attacker": "Majima",
+        "conditions": [
+            "burned"
+        ],
+        "damage": 1033,
+        "eta": 400,
+        "m": 0,
+        "pid": "kiettq",
+        "projectile": "momentum",
+        "source": "attack",
+        "target": "3409546",
+        "type": "attack",
+        "x": -312,
+        "y": -1278.629999333129
+    }
+    expect(burned).toBeDefined()
 })
