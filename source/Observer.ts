@@ -39,6 +39,10 @@ export class Observer {
         return this.pings.length == 0 ? 0 : Math.min(...this.pings)
     }
 
+    public get timeout(): number {
+        return Math.min(this.ping * 2, Constants.TIMEOUT)
+    }
+
     constructor(serverData: ServerData, g: GData) {
         this.serverData = serverData
         this.G = g
