@@ -567,6 +567,8 @@ export type GData = {
             frames?: number
             /** TODO: ??? Animation? */
             frame_width?: number
+            /** TODO: ??? Light? */
+            light?: "yes"
         }
     }
     titles: {
@@ -672,7 +674,11 @@ export type GGeometry = {
     /** (GUI Related) [tile index, min_x, min_y, max_x, max_y, y_disp]. These are above the player layer.
      *
      * See: https://pixijs.download/dev/docs/PIXI.Container.html */
-    groups?: ([number, number, number, number, number, number] | [number, number, number])[][]
+    groups?: ([number, number, number, null, null, number] | [number, number, number])[][]
+    /** (GUI Related) The position of lights on the map. TODO: What do the three numbers mean? radius,x,y? */
+    lights?: [number, number, number][]
+    /** TODO: ??? What is this? */
+    nights?: [number, number, number, null, null, number, number, number][]
     /** The maximum x-coordinate limit for this map */
     max_x: number
     /** The maximum y-coordinate limit for this map */
@@ -696,7 +702,7 @@ export type GGeometry = {
         [T in string]: [number, number, number, number]
     }
     /** (GUI Related) Texture atlas for tiles, [name, x, y, height, width] */
-    tiles: ([TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
+    tiles: ([TilesetName, number, number, number, null, number] | [TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
     /* Walls along the x-axis. The wall is from ([0], [1]) to ([0], [2]) */
     x_lines?: [number, number, number][]
     /* Walls along the y-axis. The wall is from ([1], [0]) to ([2], [0]) */
@@ -1360,7 +1366,7 @@ export type SkillName =
     "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fireball" | "fishing" | "frostball" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mfrenzy" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "pickpocket" | "poisonarrow" | "portal" | "power" | "pure_eval" | "purify" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "smash" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
 
 export type TilesetName =
-    "ash" | "beach" | "castle" | "custom_a" | "custom" | "custom2" | "dark" | "doors" | "dungeon" | "fort" | "house" | "inside" | "jungle" | "licht" | "new" | "outside" | "puzzle" | "ruins" | "ship" | "stands" | "tree" | "water" | "winter"
+    "ash" | "beach" | "castle" | "custom_a" | "custom" | "custom2" | "dark" | "doors" | "dungeon" | "fort" | "house" | "inside" | "jungle" | "licht" | "lights" | "new" | "outside" | "puzzle" | "ruins" | "ship" | "stands" | "tree" | "water" | "winter"
 
 export type TitleName =
     "critmonger" | "fast" | "festive" | "firehazard" | "glitched" | "gooped" | "legacy" | "lucky" | "shiny" | "sniper" | "stomped" | "superfast"
