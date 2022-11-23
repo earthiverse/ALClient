@@ -833,6 +833,26 @@ export class Pathfinder {
                 addCheatPath({ map: "main", x: 303, y: 808 }, { map: "main", x: 433, y: 805 })
             }
 
+            if (options.maps.includes("winter_cove")) {
+                // Add paths to disconnected parts
+                addCheatPath({ map: "winter_cove", x: -607, y: -352 }, { map: "winter_cove", x: -729, y: -379 })
+                addCheatPath({ map: "winter_cove", x: -519, y: -1368 }, { map: "winter_cove", x: -585, y: -1475 })
+                addCheatPath({ map: "winter_cove", x: -423, y: -1720 }, { map: "winter_cove", x: -505, y: -1811 })
+                addCheatPath({ map: "winter_cove", x: -39, y: -1976 }, { map: "winter_cove", x: -153, y: -1955 })
+                addCheatPath({ map: "winter_cove", x: 41, y: -2040 }, { map: "winter_cove", x: 41, y: -2163 })
+                addCheatPath({ map: "winter_cove", x: 649, y: -347 }, { map: "winter_cove", x: 567, y: -256 })
+                addCheatPath({ map: "winter_cove", x: -287, y: -907 }, { map: "winter_cove", x: -337, y: -800 })
+                addCheatPath({ map: "winter_cove", x: -167, y: -896 }, { map: "winter_cove", x: -249, y: -939 })
+                addCheatPath({ map: "winter_cove", x: 7, y: -1024 }, { map: "winter_cove", x: 73, y: -1107 })
+                addCheatPath({ map: "winter_cove", x: 87, y: -1160 }, { map: "winter_cove", x: 185, y: -1203 })
+                addCheatPath({ map: "winter_cove", x: 247, y: -1203 }, { map: "winter_cove", x: 345, y: -1211 })
+                addCheatPath({ map: "winter_cove", x: 169, y: -1240 }, { map: "winter_cove", x: 71, y: -1315 })
+                addCheatPath({ map: "winter_cove", x: -23, y: -1336 }, { map: "winter_cove", x: -57, y: -1344 })
+                addCheatPath({ map: "winter_cove", x: -239, y: -1360 }, { map: "winter_cove", x: -305, y: -1379 })
+                addCheatPath({ map: "winter_cove", x: 329, y: -1744 }, { map: "winter_cove", x: 287, y: -1803 })
+                addCheatPath({ map: "winter_cove", x: 193, y: -1872 }, { map: "winter_cove", x: 119, y: -1955 })
+            }
+
             if (options.maps.includes("winterland")) {
                 // Add a path to the icegolem's place
                 addCheatPath({ map: "winterland", x: 721, y: 277 }, { map: "winterland", x: 737, y: 352 })
@@ -867,10 +887,17 @@ export class Pathfinder {
                 if (!mTypes.includes(monsterSpawn.type)) continue
 
                 if (monsterSpawn.boundary) {
+                    // The monster has a single spawn boundary on this map
                     locations.push({ "map": mapName as MapName, "x": (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2, "y": (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2 })
                 } else if (monsterSpawn.boundaries) {
+                    // The monster can spawn on multiple maps
                     for (const boundary of monsterSpawn.boundaries) {
                         locations.push({ "map": boundary[0], "x": (boundary[1] + boundary[3]) / 2, "y": (boundary[2] + boundary[4]) / 2 })
+                    }
+                } else if (monsterSpawn.random) {
+                    // The monster can spawn at any spawn point on the map
+                    for (const spawn of map.spawns) {
+                        locations.push({ map: mapName as MapName, x: spawn[0], y: spawn[1] })
                     }
                 }
             }
