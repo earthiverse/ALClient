@@ -46,15 +46,13 @@ export class Constants {
 
     /** Monsters that are worth tracking in our database */
     static MONSTER_RESPAWN_TIMES: { [T in MonsterName]?: number} = {
-        "franky": 20 * 60 * 60 * 1000, // 20 hours (This is an estimate based on #game_events in Discord)
-        "icegolem": 22 * 60 * 60 * 1000, // 22 hours (This is an estimate based on #game_events in Discord)
         "snowman": 20 * 60 * 60 * 1000 // 20 hours (This is an estimate based on #game_events in Discord) NOTE: If the winter event is happening, they respawn faster
     }
-    static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
+    static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "harpy", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
     static SERVER_INFO_MONSTERS: MonsterName[] = ["crabxx", "dragold", "franky", "grinch", "icegolem", "pinkgoo", "slenderman", "snowman", "tiger", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
-        "crabxx", "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "tinyp", "wabbit",
+        "crabxx", "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "harpy", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "tinyp", "wabbit",
         // Goo Brawl
         "rgoo",
         // Crypt monsters

@@ -48,7 +48,7 @@ beforeAll(async () => {
         fzresistance: 1,
         going_x: 671,
         going_y: -225,
-        gold: 1000793,
+        gold: 100000793,
         goldm: 1.2,
         hp: 11262,
         in: "mtunnel",
@@ -275,7 +275,7 @@ beforeAll(async () => {
         "in": "winterland",
         "isize": 42,
         "esize": 20,
-        "gold": 5046945,
+        "gold": 500046945,
         "cash": 4336,
         "targets": 0,
         "m": 48,
@@ -856,6 +856,8 @@ test("Character.hasItem", () => {
     expect(priest.hasItem("throwingstars", priest.items, {
         level: 7
     })).toBe(true)
+
+    expect(!warrior.hasItem(["computer", "supercomputer"])).toBe(true)
 
     priest.items = itemsBackup
     priest.isize = priest.items.length
