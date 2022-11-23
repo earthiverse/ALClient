@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 749 (2022-08-28)
+ * The following is from http://adventure.land/data.js, version 758 (2022-11-23)
  * It is used to confirm type correctness
  */
 
@@ -99,7 +99,7 @@ test("G.npcs type validation", async () => {
                 "role": "events",
                 "skin": "lionsuit",
                 "speed": 30,
-                "type": "full"
+                "type": "fullstatic"
             },
             "bouncer": {
                 "id": "bouncer",
@@ -142,6 +142,7 @@ test("G.npcs type validation", async () => {
                     "Nice day",
                     "I wonder why everyone's sitting on my head all of a sudden ..."
                 ],
+                "seek": "thrill",
                 "skin": "greencap",
                 "speed": 30,
                 "type": "fullstatic"
@@ -184,6 +185,7 @@ test("G.npcs type validation", async () => {
                 "type": "fullstatic"
             },
             "citizen10": {
+                "class": "priest",
                 "delay": 1200,
                 "heal": 2400,
                 "hp": 12000,
@@ -217,9 +219,11 @@ test("G.npcs type validation", async () => {
                 "seek": "cuteness",
                 "skin": "pink",
                 "speed": 28,
-                "type": "priest"
+                "type": "fullstatic"
             },
             "citizen11": {
+                "attack": 1800,
+                "class": "priest",
                 "delay": 12000,
                 "hp": 120000,
                 "id": "citizen11",
@@ -231,6 +235,7 @@ test("G.npcs type validation", async () => {
                 ],
                 "level": 120,
                 "name": "Baron",
+                "range": 320,
                 "role": "citizen",
                 "says": [
                     "Stranger",
@@ -251,6 +256,7 @@ test("G.npcs type validation", async () => {
                     "Protect",
                     "For honor"
                 ],
+                "seek": "low_hp",
                 "skin": "baron",
                 "speed": 28,
                 "type": "fullstatic"
@@ -377,6 +383,36 @@ test("G.npcs type validation", async () => {
                 "speed": 16,
                 "type": "fullstatic"
             },
+            "citizen16": {
+                "attack": 1200,
+                "class": "ranger",
+                "delay": 1000,
+                "hp": 12000,
+                "id": "citizen16",
+                "interaction": [
+                    "What? What? WHAT?!",
+                    "I don't really have much tolerance for anyone.",
+                    "I follow only the most badass!"
+                ],
+                "level": 72,
+                "name": "Cunn",
+                "range": 320,
+                "role": "citizen",
+                "says": [
+                    "Yo"
+                ],
+                "seek": "dragondagger",
+                "skin": "cunn",
+                "slots": {
+                    "mainhand": {
+                        "level": 7,
+                        "name": "crossbow"
+                    }
+                },
+                "speed": 36,
+                "transport": true,
+                "type": "fullstatic"
+            },
             "citizen2": {
                 "delay": 12000,
                 "hp": 2400,
@@ -452,6 +488,7 @@ test("G.npcs type validation", async () => {
                     "This town has grown a lot, I was around when it was just one small block of land."
                 ],
                 "level": 80,
+                "modal": "npc-angel",
                 "name": "Angel",
                 "role": "citizen",
                 "says": [
@@ -479,6 +516,7 @@ test("G.npcs type validation", async () => {
                     "Do you like my dress",
                     "Welcome to the town"
                 ],
+                "seek": "gold",
                 "skin": "angel",
                 "speed": 20,
                 "type": "fullstatic"
@@ -720,8 +758,8 @@ test("G.npcs type validation", async () => {
                 "says": "Hihihi",
                 "side_interaction": {
                     "auto": true,
-                    "message": "Once daily event festivities arrive, bring these tokens to me! We wait and wait the day to come!",
-                    "skin": "ftokener"
+                    "message": "Invite your friends to Adventure Land to win some of these goodie goodies!",
+                    "skin": "xxschar2h"
                 },
                 "skin": "xxschar2h",
                 "stand": "fstand_texture",
@@ -737,7 +775,7 @@ test("G.npcs type validation", async () => {
                 "says": "Hihihi",
                 "side_interaction": {
                     "auto": true,
-                    "message": "Once daily event festivities arrive, bring these tokens to me! We wait and wait the day to come!",
+                    "message": "Bring your fun tokens to me and I'll give you some exciting items!",
                     "skin": "ftokener"
                 },
                 "skin": "funtokens",
@@ -906,7 +944,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items10",
-                "name": "X",
+                "name": "X10",
                 "pack": "items10",
                 "role": "items",
                 "skin": "mabw",
@@ -918,7 +956,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items11",
-                "name": "X",
+                "name": "X11",
                 "pack": "items11",
                 "role": "items",
                 "skin": "mabw",
@@ -930,7 +968,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items12",
-                "name": "X",
+                "name": "X12",
                 "pack": "items12",
                 "role": "items",
                 "skin": "mabw",
@@ -942,7 +980,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items13",
-                "name": "X",
+                "name": "X13",
                 "pack": "items13",
                 "role": "items",
                 "skin": "mabw",
@@ -954,7 +992,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items14",
-                "name": "X",
+                "name": "X14",
                 "pack": "items14",
                 "role": "items",
                 "skin": "mabw",
@@ -966,7 +1004,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items15",
-                "name": "X",
+                "name": "X15",
                 "pack": "items15",
                 "role": "items",
                 "skin": "mabw",
@@ -978,7 +1016,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items16",
-                "name": "X",
+                "name": "X16",
                 "pack": "items16",
                 "role": "items",
                 "skin": "mabw",
@@ -990,7 +1028,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items17",
-                "name": "X",
+                "name": "X17",
                 "pack": "items17",
                 "role": "items",
                 "skin": "mabw",
@@ -1002,7 +1040,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items18",
-                "name": "X",
+                "name": "X18",
                 "pack": "items18",
                 "role": "items",
                 "skin": "mabw",
@@ -1014,7 +1052,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items19",
-                "name": "X",
+                "name": "X19",
                 "pack": "items19",
                 "role": "items",
                 "skin": "mabw",
@@ -1035,7 +1073,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items20",
-                "name": "X",
+                "name": "X20",
                 "pack": "items20",
                 "role": "items",
                 "skin": "mabw",
@@ -1047,7 +1085,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items21",
-                "name": "X",
+                "name": "X21",
                 "pack": "items21",
                 "role": "items",
                 "skin": "mabw",
@@ -1059,7 +1097,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items22",
-                "name": "X",
+                "name": "X22",
                 "pack": "items22",
                 "role": "items",
                 "skin": "mabw",
@@ -1071,7 +1109,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items23",
-                "name": "X",
+                "name": "X23",
                 "pack": "items23",
                 "role": "items",
                 "skin": "mabw",
@@ -1083,7 +1121,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items24",
-                "name": "X",
+                "name": "X24",
                 "pack": "items24",
                 "role": "items",
                 "skin": "mabw",
@@ -1095,7 +1133,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items25",
-                "name": "X",
+                "name": "X25",
                 "pack": "items25",
                 "role": "items",
                 "skin": "mabw",
@@ -1107,7 +1145,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items26",
-                "name": "X",
+                "name": "X26",
                 "pack": "items26",
                 "role": "items",
                 "skin": "mabw",
@@ -1119,7 +1157,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items27",
-                "name": "X",
+                "name": "X27",
                 "pack": "items27",
                 "role": "items",
                 "skin": "mabw",
@@ -1131,7 +1169,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items28",
-                "name": "X",
+                "name": "X28",
                 "pack": "items28",
                 "role": "items",
                 "skin": "mabw",
@@ -1143,7 +1181,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items29",
-                "name": "X",
+                "name": "X29",
                 "pack": "items29",
                 "role": "items",
                 "skin": "mabw",
@@ -1164,7 +1202,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items30",
-                "name": "X",
+                "name": "X30",
                 "pack": "items30",
                 "role": "items",
                 "skin": "mabw",
@@ -1176,7 +1214,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items31",
-                "name": "X",
+                "name": "X31",
                 "pack": "items31",
                 "role": "items",
                 "skin": "mabw",
@@ -1188,7 +1226,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items32",
-                "name": "X",
+                "name": "X32",
                 "pack": "items32",
                 "role": "items",
                 "skin": "mabw",
@@ -1200,7 +1238,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items33",
-                "name": "X",
+                "name": "X33",
                 "pack": "items33",
                 "role": "items",
                 "skin": "mabw",
@@ -1212,7 +1250,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items34",
-                "name": "X",
+                "name": "X34",
                 "pack": "items34",
                 "role": "items",
                 "skin": "mabw",
@@ -1224,7 +1262,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items35",
-                "name": "X",
+                "name": "X35",
                 "pack": "items35",
                 "role": "items",
                 "skin": "mabw",
@@ -1236,7 +1274,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items36",
-                "name": "X",
+                "name": "X36",
                 "pack": "items36",
                 "role": "items",
                 "skin": "mabw",
@@ -1248,7 +1286,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items37",
-                "name": "X",
+                "name": "X37",
                 "pack": "items37",
                 "role": "items",
                 "skin": "mabw",
@@ -1260,7 +1298,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items38",
-                "name": "X",
+                "name": "X38",
                 "pack": "items38",
                 "role": "items",
                 "skin": "mabw",
@@ -1272,7 +1310,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items39",
-                "name": "X",
+                "name": "X39",
                 "pack": "items39",
                 "role": "items",
                 "skin": "mabw",
@@ -1293,7 +1331,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items40",
-                "name": "X",
+                "name": "X40",
                 "pack": "items40",
                 "role": "items",
                 "skin": "mabw",
@@ -1305,7 +1343,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items41",
-                "name": "X",
+                "name": "X41",
                 "pack": "items41",
                 "role": "items",
                 "skin": "mabw",
@@ -1317,7 +1355,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items42",
-                "name": "X",
+                "name": "X42",
                 "pack": "items42",
                 "role": "items",
                 "skin": "mabw",
@@ -1329,7 +1367,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items43",
-                "name": "X",
+                "name": "X43",
                 "pack": "items43",
                 "role": "items",
                 "skin": "mabw",
@@ -1341,7 +1379,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items44",
-                "name": "X",
+                "name": "X44",
                 "pack": "items44",
                 "role": "items",
                 "skin": "mabw",
@@ -1353,7 +1391,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items45",
-                "name": "X",
+                "name": "X45",
                 "pack": "items45",
                 "role": "items",
                 "skin": "mabw",
@@ -1365,7 +1403,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items46",
-                "name": "X",
+                "name": "X46",
                 "pack": "items46",
                 "role": "items",
                 "skin": "mabw",
@@ -1377,7 +1415,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items47",
-                "name": "X",
+                "name": "X47",
                 "pack": "items47",
                 "role": "items",
                 "skin": "mabw",
@@ -1416,7 +1454,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items8",
-                "name": "X",
+                "name": "X8",
                 "pack": "items8",
                 "role": "items",
                 "skin": "mabw",
@@ -1428,7 +1466,7 @@ test("G.npcs type validation", async () => {
                     "head": "bwhead"
                 },
                 "id": "items9",
-                "name": "X",
+                "name": "X9",
                 "pack": "items9",
                 "role": "items",
                 "skin": "mabw",
@@ -1557,6 +1595,7 @@ test("G.npcs type validation", async () => {
             "pots": {
                 "atype": "once",
                 "id": "pots",
+                "ignore": true,
                 "items": [
                     "hpot0",
                     "mpot0",
@@ -1640,7 +1679,7 @@ test("G.npcs type validation", async () => {
                 "role": "pvp_announcer",
                 "skin": "thehelmet",
                 "speed": 40,
-                "type": "full"
+                "type": "fullstatic"
             },
             "pvpblocker": {
                 "id": "pvpblocker",
@@ -1658,7 +1697,7 @@ test("G.npcs type validation", async () => {
                 "says": "Grrr",
                 "side_interaction": {
                     "auto": true,
-                    "message": "These tokens of honor represent victory. They can scarcely be found in PVP Realms. When daily battles arrive, I suspect they will be in abundance! Along with new armor and new weapons! Glorious!",
+                    "message": "These tokens of honor represent victory. Make sure to join all the PVP events and spend some time in PVP realms. Glorious!",
                     "skin": "pknight"
                 },
                 "skin": "pvptokens",

@@ -48,7 +48,7 @@ export class Constants {
     static MONSTER_RESPAWN_TIMES: { [T in MonsterName]?: number} = {
         "snowman": 20 * 60 * 60 * 1000 // 20 hours (This is an estimate based on #game_events in Discord) NOTE: If the winter event is happening, they respawn faster
     }
-    static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "harpy", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
+    static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
     static SERVER_INFO_MONSTERS: MonsterName[] = ["crabxx", "dragold", "franky", "grinch", "icegolem", "pinkgoo", "slenderman", "snowman", "tiger", "wabbit"]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters

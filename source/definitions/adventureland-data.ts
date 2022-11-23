@@ -323,6 +323,8 @@ export type GData = {
             aura?: {
                 [T in Attribute]?: number
             }
+            /** The character type the NPC is based on */
+            class?: CharacterType
             /** TODO: ??? What is this? GUI related? */
             color?: string
             /** Appearance related. Look & accessories. */
@@ -341,6 +343,8 @@ export type GData = {
             items?: (ItemName | null)[]
             /** NPC level? */
             level?: number
+            /** TODO: ??? What is this? GUI related? */
+            modal?: string
             /** NOTE: Not sure why this exists. Some NPCs which don't have this still move */
             moving?: boolean
             /** Their human readable name */
@@ -367,7 +371,7 @@ export type GData = {
             /** (GUI) Lines the NPC can say */
             says?: string[] | string
             /** (TODO: Confirm) If you have a lot of this stat, the NPC might follow you around? */
-            seek?: Attribute
+            seek?: Attribute | ItemName | "low_hp" | "thrill"
             /** (GUI) More interactions. TODO: How is this different than interaction? */
             side_interaction?: {
                 auto: boolean
@@ -376,6 +380,8 @@ export type GData = {
             }
             /** (GUI) Sprite for the NPC */
             skin: string
+            /** GUI related */
+            slots?: Partial<SlotInfo>
             /** How fast the NPC moves */
             speed?: number
             /** (GUI) If set, the stand sprite for the NPC */
@@ -386,6 +392,8 @@ export type GData = {
             stopframe?: number
             /** If set, you can exchange tokens of this type at this NPC */
             token?: ItemName
+            /** TODO: ??? What is this? Will this NPC teleport to you? */
+            transport?: boolean
             /** TODO: ??? GUI related? */
             type?: "full" | "fullstatic" | "static" | CharacterType
         }
@@ -863,6 +871,10 @@ export type GDropItem =
     | [number, "open", DropName]
 
 export type GMap = {
+    /** Code to help you get to this map, if it is special. */
+    code?: string
+    /** GUI Related. */
+    day?: boolean
     /** If true, this map is PVP. */
     pvp?: boolean
     /** If true, you cannot be attacked on this map. */
@@ -871,6 +883,10 @@ export type GMap = {
     safe_pvp?: boolean
     /** TODO: ??? What is this? */
     loss?: false
+    /** GUI Related. Related to brightness */
+    lux?: number
+    /** GUI Related. Related to day-night cycle */
+    outside?: boolean
     /** If you die on this map, you will spawn at the given map and spawn. */
     on_death?: [MapName, number]
     /** TODO: Confirm. If you logout while your character is on this map, you will be at the given map and spawn next time you login */
@@ -888,11 +904,12 @@ export type GMap = {
         grow?: boolean
         type: MonsterName
         stype?: "randomrespawn"
-        /** TODO: ??? Does this mean they roam around the map? */
+        /** TODO: ??? What is this? */
+        random?: boolean
+        /** If true, the monster will roam around the map */
         roam?: boolean
         /** TODO: ??? What is this? */
         special?: boolean
-
         /** TODO: ??? Old? */
         position?: [number, number]
         /** TODO: ??? Old? */
@@ -1313,7 +1330,7 @@ export type ItemName =
     "5bucks" | "ale" | "amuletofm" | "angelwings" | "apiercingscroll" | "apologybox" | "armorbox" | "armorring" | "armorscroll" | "ascale" | "axe3" | "bandages" | "basher" | "basketofeggs" | "bataxe" | "bcandle" | "bcape" | "beewings" | "bfang" | "bfangamulet" | "bfur" | "bkey" | "blade" | "blue" | "bottleofxp" | "bow" | "bow4" | "bowofthedead" | "bronzeingot" | "bronzenugget" | "broom" | "brownegg" | "btusk" | "bugbountybox" | "bunnyears" | "bunnyelixir" | "bwing" | "cake" | "candy0" | "candy0v2" | "candy0v3" | "candy1" | "candy1v2" | "candy1v3" | "candycane" | "candycanesword" | "candypop" | "cape" | "carrot" | "carrotsword" | "cclaw" | "cdarktristone" | "cdragon" | "cearring" | "charmer" | "chrysalis0" | "claw" | "coal" | "coat" | "coat1" | "cocoon" | "computer" | "confetti" | "cosmo0" | "cosmo1" | "cosmo2" | "cosmo3" | "cosmo4" | "crabclaw" | "cring" | "critscroll" | "crossbow" | "cryptkey" | "cscale" | "cscroll0" | "cscroll1" | "cscroll2" | "cscroll3" | "cshell" | "ctristone" | "cupid" | "cxjar" | "cyber" | "dagger" | "daggerofthedead" | "darktristone" | "dartgun" | "dexamulet" | "dexbelt" | "dexearring" | "dexearringx" | "dexring" | "dexscroll" | "dkey" | "dragondagger" | "drapes" | "dreturnscroll" | "dstones" | "ecape" | "ectoplasm" | "eears" | "egg0" | "egg1" | "egg2" | "egg3" | "egg4" | "egg5" | "egg6" | "egg7" | "egg8" | "eggnog" | "electronics" | "elixirdex0" | "elixirdex1" | "elixirdex2" | "elixirfires" | "elixirfzres" | "elixirint0" | "elixirint1" | "elixirint2" | "elixirluck" | "elixirpnres" | "elixirstr0" | "elixirstr1" | "elixirstr2" | "elixirvit0" | "elixirvit1" | "elixirvit2" | "emotionjar" | "emptyheart" | "emptyjar" | "epyjamas" | "eslippers" | "espresso" | "essenceofether" | "essenceoffire" | "essenceoffrost" | "essenceofgreed" | "essenceoflife" | "essenceofnature" | "evasionscroll" | "exoarm" | "fallen" | "fcape" | "fclaw" | "feather0" | "feather1" | "fieldgen0" | "fierygloves" | "figurine" | "fireblade" | "firebow" | "firecrackers" | "firestaff" | "firestars" | "flute" | "forscroll" | "frankypants" | "frequencyscroll" | "friendtoken" | "frogt" | "frostbow" | "froststaff" | "frozenkey" | "frozenstone" | "fsword" | "ftrinket" | "funtoken" | "fury" | "gbow" | "gcape" | "gem0" | "gem1" | "gem2" | "gem3" | "gemfragment" | "ghatb" | "ghatp" | "gift0" | "gift1" | "glitch" | "glolipop" | "gloves" | "gloves1" | "goldbooster" | "goldenegg" | "goldenpowerglove" | "goldingot" | "goldnugget" | "goldring" | "goldscroll" | "gphelmet" | "greenbomb" | "greenenvelope" | "gslime" | "gstaff" | "gum" | "hammer" | "handofmidas" | "harbringer" | "harmor" | "harpybow" | "hboots" | "hbow" | "hdagger" | "heartwood" | "helmet" | "helmet1" | "hgloves" | "hhelmet" | "hotchocolate" | "hpamulet" | "hpants" | "hpbelt" | "hpot0" | "hpot1" | "hpotx" | "iceskates" | "ijx" | "ink" | "intamulet" | "intbelt" | "intearring" | "intring" | "intscroll" | "jacko" | "jewellerybox" | "kitty1" | "lantern" | "lbelt" | "leather" | "ledger" | "licence" | "lifestealscroll" | "lmace" | "lostearring" | "lotusf" | "lspores" | "luckbooster" | "luckscroll" | "luckyt" | "mace" | "maceofthedead" | "mageshood" | "manastealscroll" | "mbelt" | "mbones" | "mcape" | "mcarmor" | "mcboots" | "mcgloves" | "mchat" | "mcpants" | "mearring" | "merry" | "mistletoe" | "mittens" | "mmarmor" | "mmgloves" | "mmhat" | "mmpants" | "mmshoes" | "molesteeth" | "monsterbox" | "monstertoken" | "mparmor" | "mpcostscroll" | "mpgloves" | "mphat" | "mpot0" | "mpot1" | "mpotx" | "mppants" | "mpshoes" | "mpxamulet" | "mpxbelt" | "mpxgloves" | "mrarmor" | "mrboots" | "mrgloves" | "mrhood" | "mrnarmor" | "mrnboots" | "mrngloves" | "mrnhat" | "mrnpants" | "mrpants" | "mshield" | "mushroomstaff" | "mwarmor" | "mwboots" | "mwgloves" | "mwhelmet" | "mwpants" | "mysterybox" | "networkcard" | "nheart" | "northstar" | "offering" | "offeringp" | "offeringx" | "ololipop" | "oozingterror" | "orbg" | "orbofdex" | "orbofint" | "orbofsc" | "orbofstr" | "orbofvit" | "ornament" | "ornamentstaff" | "outputscroll" | "oxhelmet" | "pants" | "pants1" | "partyhat" | "phelmet" | "pickaxe" | "pico" | "pinkie" | "placeholder" | "placeholder_m" | "platinumingot" | "platinumnugget" | "pleather" | "pmace" | "pmaceofthedead" | "poison" | "poker" | "pouchbow" | "powerglove" | "pstem" | "pumpkinspice" | "puppy1" | "puppyer" | "pvptoken" | "pyjamas" | "qubics" | "quiver" | "rabbitsfoot" | "rapier" | "rattail" | "redenvelope" | "redenvelopev2" | "redenvelopev3" | "redenvelopev4" | "rednose" | "reflectionscroll" | "resistancering" | "resistancescroll" | "rfangs" | "rfur" | "ringhs" | "ringofluck" | "ringsj" | "rod" | "rpiercingscroll" | "sanguine" | "santasbelt" | "sbelt" | "scroll0" | "scroll1" | "scroll2" | "scroll3" | "scroll4" | "scythe" | "seashell" | "shadowstone" | "shield" | "shoes" | "shoes1" | "skullamulet" | "slimestaff" | "smoke" | "smush" | "snakefang" | "snakeoil" | "snowball" | "snowboots" | "snowflakes" | "snring" | "solitaire" | "spear" | "spearofthedead" | "speedscroll" | "spidersilk" | "spookyamulet" | "spores" | "sshield" | "sstinger" | "staff" | "staff2" | "staff3" | "staff4" | "staffofthedead" | "stand0" | "stand1" | "starkillers" | "stealthcape" | "stick" | "stinger" | "stonekey" | "stoneofgold" | "stoneofluck" | "stoneofxp" | "storagebox" | "stramulet" | "strbelt" | "strearring" | "strring" | "strscroll" | "suckerpunch" | "supercomputer" | "supermittens" | "svenom" | "sweaterhs" | "swifty" | "swirlipop" | "sword" | "swordofthedead" | "t2bow" | "t2dexamulet" | "t2intamulet" | "t2quiver" | "t2stramulet" | "t3bow" | "talkingskull" | "test" | "test2" | "test_orb" | "throwingstars" | "tigercape" | "tigerhelmet" | "tigershield" | "tigerstone" | "tombkey" | "tracker" | "trigger" | "trinkets" | "tristone" | "troll" | "tshell" | "tshirt0" | "tshirt1" | "tshirt2" | "tshirt3" | "tshirt4" | "tshirt6" | "tshirt7" | "tshirt8" | "tshirt88" | "tshirt9" | "ukey" | "vattire" | "vblood" | "vboots" | "vcape" | "vdagger" | "vgloves" | "vhammer" | "vitearring" | "vitring" | "vitscroll" | "vorb" | "vring" | "vstaff" | "vsword" | "wand" | "warmscarf" | "warpvest" | "watercore" | "wattire" | "wbasher" | "wblade" | "wbook0" | "wbook1" | "wbookhs" | "wbreeches" | "wcap" | "weaponbox" | "weaver" | "wgloves" | "whiskey" | "whiteegg" | "wine" | "wingedboots" | "woodensword" | "wshield" | "wshoes" | "x0" | "x1" | "x2" | "x3" | "x4" | "x5" | "x6" | "x7" | "x8" | "xarmor" | "xboots" | "xbox" | "xgloves" | "xhelmet" | "xmace" | "xmashat" | "xmaspants" | "xmasshoes" | "xmassweater" | "xpants" | "xpbooster" | "xpscroll" | "xptome" | "xshield" | "xshot" | "zapper"
 
 export type MapName =
-    "abtesting" | "arena" | "bank_b" | "bank_u" | "bank" | "batcave" | "cave" | "cgallery" | "crypt" | "cyberland" | "d_a1" | "d_a2" | "d_b1" | "d_e" | "d_g" | "d1" | "d2" | "d3" | "desertland" | "duelland" | "dungeon0" | "frozencave" | "goobrawl" | "halloween" | "hut" | "jail" | "level1" | "level2" | "level2e" | "level2n" | "level2s" | "level2w" | "level3" | "level4" | "main" | "maintest" | "mansion" | "mtunnel" | "old_bank" | "old_main" | "original_main" | "resort_e" | "resort" | "shellsisland" | "ship0" | "spookytown" | "tavern" | "test" | "therush" | "tomb" | "tunnel" | "winter_cave" | "winter_inn_rooms" | "winter_inn" | "winter_instance" | "winterland" | "woffice"
+    "abtesting" | "arena" | "bank_b" | "bank_u" | "bank" | "batcave" | "cave" | "cgallery" | "crypt" | "cyberland" | "d_a1" | "d_a2" | "d_b1" | "d_e" | "d_g" | "d1" | "d2" | "d3" | "desertland" | "duelland" | "dungeon0" | "frozencave" | "goobrawl" | "halloween" | "hut" | "jail" | "level1" | "level2" | "level2e" | "level2n" | "level2s" | "level2w" | "level3" | "level4" | "main" | "maintest" | "mansion" | "mtunnel" | "old_bank" | "old_main" | "original_main" | "resort_e" | "resort" | "shellsisland" | "ship0" | "spookytown" | "tavern" | "test" | "therush" | "tomb" | "tunnel" | "winter_cave" | "winter_cove" | "winter_inn_rooms" | "winter_inn" | "winter_instance" | "winterland" | "woffice"
 
 /**
  * Generate with:
@@ -1323,7 +1340,7 @@ export type MonsterName =
     "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "harpy" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rharpy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
 
 export type NPCName =
-    "antip2w" | "appearance" | "armors" | "basics" | "bean" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "friendtokens" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
+    "antip2w" | "appearance" | "armors" | "basics" | "bean" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "citizen16" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "friendtokens" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
 
 /**
  * Generate with:

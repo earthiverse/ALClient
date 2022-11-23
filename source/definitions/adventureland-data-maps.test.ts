@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 722 (2022-07-26)
+ * The following is from http://adventure.land/data.js, version 758 (2022-11-23)
  * It is used to confirm type correctness
  */
 
@@ -10,9 +10,12 @@ test("G.maps type validation", async () => {
     const G_maps: Pick<GData, "maps"> = {
         "maps": {
             "abtesting": {
+                "code": "join('abtesting')",
                 "doors": [],
+                "event": "abtesting",
                 "instance": true,
                 "key": "jayson_vs_arena",
+                "lux": 0.8,
                 "monsters": [],
                 "name": "A/B Testing",
                 "npcs": [],
@@ -58,6 +61,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 2000,
                 "key": "arena3",
+                "lux": 0.45,
                 "monsters": [
                     {
                         "boundary": [
@@ -248,6 +252,7 @@ test("G.maps type validation", async () => {
                     ]
                 ],
                 "key": "jayson_bank0",
+                "lux": 0.8,
                 "monsters": [],
                 "mount": true,
                 "name": "The Bank",
@@ -374,6 +379,7 @@ test("G.maps type validation", async () => {
                     ]
                 ],
                 "key": "jayson_theBank1",
+                "lux": 0.7,
                 "monsters": [],
                 "mount": true,
                 "name": "The Bank [Basement]",
@@ -533,6 +539,7 @@ test("G.maps type validation", async () => {
                     ]
                 ],
                 "key": "jayson_theBank2",
+                "lux": 0.6,
                 "monsters": [],
                 "mount": true,
                 "name": "The Bank [Underground]",
@@ -634,6 +641,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 4500,
                 "key": "jayson_cave02",
+                "lux": 0.45,
                 "monsters": [
                     {
                         "boundary": [
@@ -747,6 +755,7 @@ test("G.maps type validation", async () => {
                 "doors": [],
                 "instance": true,
                 "key": "cgallery",
+                "lux": 1,
                 "monsters": [],
                 "name": "Cosmetics Gallery",
                 "no_bounds": true,
@@ -904,6 +913,7 @@ test("G.maps type validation", async () => {
                 "drop_norm": 1000,
                 "irregular": true,
                 "key": "cyberland",
+                "lux": 0.8,
                 "monsters": [
                     {
                         "boundary": [
@@ -1592,6 +1602,7 @@ test("G.maps type validation", async () => {
                         ]
                     }
                 ],
+                "outside": true,
                 "spawns": [
                     [
                         0,
@@ -1624,6 +1635,7 @@ test("G.maps type validation", async () => {
                 "irregular": true,
                 "key": "jayson_duel_arena",
                 "loss": false,
+                "lux": 0.8,
                 "monsters": [],
                 "name": "Duelland",
                 "npcs": [],
@@ -1653,6 +1665,7 @@ test("G.maps type validation", async () => {
                 "doors": [],
                 "instance": true,
                 "key": "dungeon0",
+                "lux": 0.7,
                 "monsters": [
                     {
                         "boundary": [
@@ -1681,7 +1694,9 @@ test("G.maps type validation", async () => {
                 ]
             },
             "goobrawl": {
+                "code": "join('goobrawl')",
                 "doors": [],
+                "event": "goobrawl",
                 "key": "jayson_GooIsland",
                 "monsters": [
                     {
@@ -1858,7 +1873,7 @@ test("G.maps type validation", async () => {
                                 168
                             ]
                         ],
-                        "type": "goo"
+                        "type": "rgoo"
                     }
                 ],
                 "name": "Goo Brawl!",
@@ -1875,6 +1890,7 @@ test("G.maps type validation", async () => {
                     "goobrawl",
                     0
                 ],
+                "outside": true,
                 "spawns": [
                     [
                         0,
@@ -1914,6 +1930,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 4000,
                 "key": "jayson_SpookyForestV2.2",
+                "lux": 0.9,
                 "monsters": [
                     {
                         "boundary": [
@@ -2107,6 +2124,7 @@ test("G.maps type validation", async () => {
                         ]
                     }
                 ],
+                "outside": true,
                 "quirks": [
                     [
                         -228,
@@ -2172,6 +2190,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_smallHut",
+                "lux": 0.6,
                 "monsters": [],
                 "name": "The Hut",
                 "npcs": [],
@@ -2189,6 +2208,7 @@ test("G.maps type validation", async () => {
                 "drop_norm": 1000,
                 "irregular": true,
                 "key": "jayson_al_jail",
+                "lux": 0.5,
                 "monsters": [
                     {
                         "boundary": [
@@ -2269,6 +2289,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level1v2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2392,6 +2413,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level2.2",
+                "lux": 0.4,
                 "monsters": [],
                 "name": "Underground [Passing]",
                 "npcs": [
@@ -2400,6 +2422,13 @@ test("G.maps type validation", async () => {
                         "position": [
                             -133,
                             -187
+                        ]
+                    },
+                    {
+                        "id": "citizen16",
+                        "position": [
+                            -46,
+                            -168
                         ]
                     }
                 ],
@@ -2463,6 +2492,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level2_eastv2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2582,6 +2612,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level2_northv2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2657,6 +2688,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level2_southv2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2721,6 +2753,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level2_westv2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2731,6 +2764,17 @@ test("G.maps type validation", async () => {
                         ],
                         "count": 5,
                         "type": "oneeye"
+                    },
+                    {
+                        "boundary": [
+                            -447,
+                            9,
+                            -208,
+                            323
+                        ],
+                        "count": 0,
+                        "special": true,
+                        "type": "franky"
                     }
                 ],
                 "name": "Underground [West]",
@@ -2776,6 +2820,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level3v2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -2828,6 +2873,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_underground_level4v2",
+                "lux": 0.4,
                 "monsters": [
                     {
                         "boundary": [
@@ -3599,6 +3645,13 @@ test("G.maps type validation", async () => {
                         ]
                     },
                     {
+                        "id": "friendtokens",
+                        "position": [
+                            120,
+                            -560
+                        ]
+                    },
+                    {
                         "id": "funtokens",
                         "position": [
                             303,
@@ -3606,21 +3659,16 @@ test("G.maps type validation", async () => {
                         ]
                     },
                     {
+                        "boundary": [
+                            -100,
+                            -100,
+                            100,
+                            100
+                        ],
                         "id": "bean",
-                        "loop": true,
-                        "positions": [
-                            [
-                                -94,
-                                -47
-                            ],
-                            [
-                                98,
-                                -50
-                            ],
-                            [
-                                5,
-                                83
-                            ]
+                        "position": [
+                            74,
+                            -34
                         ]
                     },
                     {
@@ -3661,6 +3709,7 @@ test("G.maps type validation", async () => {
                     "main",
                     0
                 ],
+                "outside": true,
                 "quirks": [
                     [
                         -236,
@@ -4097,6 +4146,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_Mansion",
+                "lux": 0.8,
                 "monsters": [
                     {
                         "boundary": [
@@ -4265,6 +4315,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 4500,
                 "key": "jayson_mainlandTunnel",
+                "lux": 0.6,
                 "monsters": [],
                 "name": "Underground [Tunnel]",
                 "npcs": [],
@@ -4788,6 +4839,7 @@ test("G.maps type validation", async () => {
                 "drop_norm": 1000,
                 "irregular": true,
                 "key": "resort",
+                "lux": 0.75,
                 "monsters": [],
                 "name": "Holo Resort",
                 "npcs": [
@@ -4871,6 +4923,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "resort_e",
+                "lux": 1,
                 "monsters": [],
                 "name": "Holo Resort",
                 "npcs": [],
@@ -4988,6 +5041,7 @@ test("G.maps type validation", async () => {
                         ]
                     }
                 ],
+                "outside": true,
                 "spawns": [
                     [
                         0,
@@ -5002,6 +5056,7 @@ test("G.maps type validation", async () => {
                 "monsters": [],
                 "name": "The Pirate Ship",
                 "npcs": [],
+                "outside": true,
                 "quirks": [],
                 "spawns": [
                     [
@@ -5033,6 +5088,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 4000,
                 "key": "jayson_holloweenmap2",
+                "lux": 0.9,
                 "monsters": [
                     {
                         "boundary": [
@@ -5137,6 +5193,7 @@ test("G.maps type validation", async () => {
                         ]
                     }
                 ],
+                "outside": true,
                 "quirks": [
                     [
                         -63,
@@ -5194,6 +5251,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_tavern02",
+                "lux": 0.8,
                 "machines": [
                     {
                         "frames": [
@@ -5408,6 +5466,7 @@ test("G.maps type validation", async () => {
                 ]
             },
             "test": {
+                "day": true,
                 "doors": [],
                 "irregular": true,
                 "key": "test",
@@ -5445,6 +5504,7 @@ test("G.maps type validation", async () => {
                 ],
                 "instance": true,
                 "key": "jayson_MansionCrypt",
+                "lux": 0.8,
                 "monsters": [
                     {
                         "boundary": [
@@ -5510,6 +5570,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 5000,
                 "key": "jayson_miningtunnel_new",
+                "lux": 0.65,
                 "monsters": [
                     {
                         "boundary": [
@@ -5779,10 +5840,20 @@ test("G.maps type validation", async () => {
                         "winterland",
                         3,
                         0
+                    ],
+                    [
+                        -170,
+                        -1157,
+                        32.5,
+                        36.5,
+                        "winter_cove",
+                        0,
+                        1
                     ]
                 ],
                 "drop_norm": 4000,
                 "key": "jayson_xmas_cave1",
+                "lux": 0.5,
                 "monsters": [
                     {
                         "boundary": [
@@ -5813,6 +5884,113 @@ test("G.maps type validation", async () => {
                         0,
                         11,
                         3
+                    ],
+                    [
+                        -169,
+                        -1144
+                    ]
+                ]
+            },
+            "winter_cove": {
+                "doors": [
+                    [
+                        -9,
+                        64,
+                        51,
+                        37.5,
+                        "winter_cave",
+                        1,
+                        0
+                    ]
+                ],
+                "drop_norm": 4000,
+                "key": "jayson_frozenCave",
+                "lux": 0.5,
+                "monsters": [
+                    {
+                        "boundary": [
+                            -3.38,
+                            -398.22,
+                            273.25,
+                            -223.83
+                        ],
+                        "count": 5,
+                        "random": true,
+                        "roam": true,
+                        "type": "harpy"
+                    },
+                    {
+                        "boundary": [
+                            -3.38,
+                            -398.22,
+                            273.25,
+                            -223.83
+                        ],
+                        "count": 1,
+                        "roam": true,
+                        "type": "rharpy"
+                    }
+                ],
+                "name": "Frozen Cove",
+                "npcs": [],
+                "quirks": [],
+                "spawns": [
+                    [
+                        -7.5,
+                        9.5,
+                        3
+                    ],
+                    [
+                        509.71,
+                        -228.7
+                    ],
+                    [
+                        253.08,
+                        -1849
+                    ],
+                    [
+                        59,
+                        -2242.92
+                    ],
+                    [
+                        -216.35,
+                        -1952.95
+                    ],
+                    [
+                        -695.12,
+                        -1935.26
+                    ],
+                    [
+                        248.55,
+                        -1487.53
+                    ],
+                    [
+                        37.21,
+                        -1338.83
+                    ],
+                    [
+                        210.45,
+                        -1225.44
+                    ],
+                    [
+                        71.03,
+                        -1143.93
+                    ],
+                    [
+                        -154.29,
+                        -1355.28
+                    ],
+                    [
+                        -285.29,
+                        -972.74
+                    ],
+                    [
+                        -894.25,
+                        -485.67
+                    ],
+                    [
+                        -590.74,
+                        -1532.24
                     ]
                 ]
             },
@@ -5839,6 +6017,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_winter_inn",
+                "lux": 0.75,
                 "monsters": [],
                 "name": "Wanderers' Inn",
                 "npcs": [
@@ -5898,6 +6077,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_winter_inn_room1",
+                "lux": 0.6,
                 "monsters": [],
                 "name": "Rooms",
                 "npcs": [],
@@ -5926,6 +6106,7 @@ test("G.maps type validation", async () => {
                 "drop_norm": 4000,
                 "instance": true,
                 "key": "jayson_winterInstance",
+                "lux": 0.75,
                 "monsters": [
                     {
                         "boundary": [
@@ -6028,6 +6209,7 @@ test("G.maps type validation", async () => {
                 "drop_norm": 3000,
                 "freeze_multiplier": 1.5,
                 "key": "jayson_WinterLandV2",
+                "lux": 0.9,
                 "monsters": [
                     {
                         "boundary": [
@@ -6174,6 +6356,7 @@ test("G.maps type validation", async () => {
                         ]
                     }
                 ],
+                "outside": true,
                 "quirks": [
                     [
                         -247,
@@ -6299,6 +6482,7 @@ test("G.maps type validation", async () => {
                 ],
                 "drop_norm": 1000,
                 "key": "jayson_smallNPCcave",
+                "lux": 0.6,
                 "monsters": [
                     {
                         "boundary": [
