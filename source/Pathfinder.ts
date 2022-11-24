@@ -851,6 +851,8 @@ export class Pathfinder {
                 addCheatPath({ map: "winter_cove", x: -239, y: -1360 }, { map: "winter_cove", x: -305, y: -1379 })
                 addCheatPath({ map: "winter_cove", x: 329, y: -1744 }, { map: "winter_cove", x: 287, y: -1803 })
                 addCheatPath({ map: "winter_cove", x: 193, y: -1872 }, { map: "winter_cove", x: 119, y: -1955 })
+                addCheatPath({ map: "winter_cove", x: 313, y: -1619 }, { map: "winter_cove", x: 247, y: -1528 })
+                addCheatPath({ map: "winter_cove", x: 217, y: -1512 }, { map: "winter_cove", x: 151, y: -1587 })
             }
 
             if (options.maps.includes("winterland")) {
@@ -886,18 +888,18 @@ export class Pathfinder {
             for (const monsterSpawn of map.monsters) {
                 if (!mTypes.includes(monsterSpawn.type)) continue
 
-                if (monsterSpawn.boundary) {
+                if (monsterSpawn.random) {
+                    // The monster can spawn at any spawn point on the map
+                    for (const spawn of map.spawns) {
+                        locations.push({ map: mapName as MapName, x: spawn[0], y: spawn[1] })
+                    }
+                } else if (monsterSpawn.boundary) {
                     // The monster has a single spawn boundary on this map
                     locations.push({ "map": mapName as MapName, "x": (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2, "y": (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2 })
                 } else if (monsterSpawn.boundaries) {
                     // The monster can spawn on multiple maps
                     for (const boundary of monsterSpawn.boundaries) {
                         locations.push({ "map": boundary[0], "x": (boundary[1] + boundary[3]) / 2, "y": (boundary[2] + boundary[4]) / 2 })
-                    }
-                } else if (monsterSpawn.random) {
-                    // The monster can spawn at any spawn point on the map
-                    for (const spawn of map.spawns) {
-                        locations.push({ map: mapName as MapName, x: spawn[0], y: spawn[1] })
                     }
                 }
             }

@@ -117,3 +117,8 @@ test("Pathfinder.locateExchangeNPC", () => {
     // not exchangeable
     expect(() => { Pathfinder.locateExchangeNPC("mpot0") }).toThrowError()
 })
+
+test("Pathfinder.locateMonster", () => {
+    // harpy should have a lot of locations since it has a random spawn
+    expect(Pathfinder.locateMonster("harpy").length).toBeGreaterThan(1)
+})
