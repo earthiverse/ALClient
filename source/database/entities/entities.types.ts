@@ -1,5 +1,5 @@
 import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
+import { ServerRegion, ServerIdentifier, StatusInfo } from "../../definitions/adventureland.js"
 import { MapName, MonsterName } from "../../definitions/adventureland-data.js"
 
 export interface IEntity {
@@ -13,6 +13,7 @@ export interface IEntity {
     name?: string
     level?: number
     hp?: number
+    s?: StatusInfo
     target?: string
     lastSeen?: number
 }

@@ -16,6 +16,7 @@ const EntitySchema = new Schema({
     serverRegion: String,
     target: { required: false, type: String },
     type: String,
+    s: { required: false, type: Object },
     x: Number,
     y: Number
 })

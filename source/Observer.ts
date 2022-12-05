@@ -404,7 +404,7 @@ export class Observer {
                             entityUpdates.push({
                                 updateOne: {
                                     filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, target: e.target, x: e.x, y: e.y },
+                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                     upsert: true
                                 }
                             })
@@ -414,7 +414,7 @@ export class Observer {
                             entityUpdates.push({
                                 updateOne: {
                                     filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, target: e.target, x: e.x, y: e.y },
+                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                     upsert: true
                                 }
                             })
