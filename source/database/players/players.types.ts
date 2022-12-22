@@ -25,4 +25,3 @@ export interface IPlayer {
 export interface IPlayerDocument extends IPlayer, Document { }
 
 export type IPlayerModel = Model<IPlayerDocument>
-// export interface IPlayerModel extends Model<IPlayerDocument> { }

@@ -11,4 +11,3 @@ export interface IAchievement {
 export interface IAchievementDocument extends IAchievement, Document { }
 
 export type IAchievementModel = Model<IAchievementDocument>
-// export interface IUserModel extends Model<IAchievementDocument> { }

@@ -12,4 +12,3 @@ export interface IRespawn {
 export interface IRespawnDocument extends IRespawn, Document { }
 
 export type IRespawnModel = Model<IRespawnDocument>
-// export interface IRespawnModel extends Model<IUserDocument> { }

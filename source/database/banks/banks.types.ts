@@ -9,4 +9,3 @@ export interface IBank extends BankInfo {
 export interface IBankDocument extends IBank, Document { }
 
 export type IBankModel = Model<IBankDocument>
-// export interface IEntityModel extends Model<IUserDocument> { }

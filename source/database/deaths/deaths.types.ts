@@ -16,4 +16,3 @@ export interface IDeath {
 export interface IDeathDocument extends IDeath, Document { }
 
 export type IDeathModel = Model<IDeathDocument>
-// export interface IUserModel extends Model<IUserDocument> { }

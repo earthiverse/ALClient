@@ -21,4 +21,3 @@ export interface IEntity {
 export interface IEntityDocument extends IEntity, Document { }
 
 export type IEntityModel = Model<IEntityDocument>
-// export interface IEntityModel extends Model<IUserDocument> { }

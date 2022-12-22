@@ -3,6 +3,7 @@ import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {
+    /** Can we damage the current entity? */
     canDamage?: boolean | SkillName
     canKillInOneShot?: SkillName
     canWalkTo?: boolean

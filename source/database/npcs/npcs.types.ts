@@ -15,4 +15,3 @@ export interface INPC {
 export interface INPCDocument extends INPC, Document { }
 
 export type INPCModel = Model<INPCDocument>
-// export interface IEntityModel extends Model<IUserDocument> { }

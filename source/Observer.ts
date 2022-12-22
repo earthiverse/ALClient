@@ -9,6 +9,7 @@ import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
 import { UpdateQuery } from "mongoose"
+import { ServerModel } from "./database/servers/servers.model.js"
 
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
@@ -306,6 +307,13 @@ export class Observer {
                     if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch(console.error)
                     if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
                     if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
+                    const updateData = {
+                        S: data,
+                        lastUpdate: now,
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region
+                    }
+                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true })
                     Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*server_info*`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
