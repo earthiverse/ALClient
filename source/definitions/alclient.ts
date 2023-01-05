@@ -1,4 +1,5 @@
 import { Attribute, CharacterType, MonsterName, SkillName, TitleName } from "./adventureland-data.js"
+import { IPosition } from "./adventureland.js"
 import { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
@@ -15,6 +16,8 @@ export type GetEntitiesFilters = {
     isCooperative?: boolean
     isDisabled?: boolean
     withinRange?: number | SkillName
+    /** Only set this if you're not checking within the range of your own character */
+    withinRangeOf?: IPosition
     targetingMe?: boolean
     targetingPartyMember?: boolean
     targetingPlayer?: string
@@ -53,6 +56,8 @@ export type GetPlayersFilters = {
     isNPC?: boolean
     isPartyMember?: boolean
     withinRange?: number | SkillName
+    /** Only set this if you're not checking within the range of your own character */
+    withinRangeOf?: IPosition
     targetingMe?: boolean
     targetingPartyMember?: boolean
     targetingPlayer?: string

@@ -2601,7 +2601,7 @@ export class Character extends Observer implements CharacterData {
                         squaredRange = range * range
                     }
                 }
-                if (Tools.squaredDistance(this, entity) > squaredRange) continue
+                if (Tools.squaredDistance(filters.withinRangeOf ?? this, entity) > squaredRange) continue
             }
             if (filters.canDamage !== undefined) {
                 // We can't damage if we avoidance is >= 100
@@ -2966,7 +2966,7 @@ export class Character extends Observer implements CharacterData {
                         squaredRange = range * range
                     }
                 }
-                if (Tools.squaredDistance(this, player) > squaredRange) continue
+                if (Tools.squaredDistance(filters.withinRangeOf ?? this, player) > squaredRange) continue
             }
             if (filters.canDamage !== undefined) {
                 // We can't damage if we're not PVP

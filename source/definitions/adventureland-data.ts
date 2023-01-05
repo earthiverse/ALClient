@@ -674,7 +674,7 @@ export type GGeometry = {
     /** (GUI Related) [tile index, min_x, min_y, max_x, max_y, y_disp]. These are above the player layer.
      *
      * See: https://pixijs.download/dev/docs/PIXI.Container.html */
-    groups?: ([number, number, number, null, null, number] | [number, number, number])[][]
+    groups?: ([number, number, number, null, null, 0] | [number, number, number])[][]
     /** (GUI Related) The position of lights on the map. TODO: What do the three numbers mean? radius,x,y? */
     lights?: [number, number, number][]
     /** TODO: ??? What is this? */

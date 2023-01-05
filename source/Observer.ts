@@ -351,6 +351,13 @@ export class Observer {
         }
     }
 
+    /**
+     * Removes an entity from the entity map, as well as potentially handling database updates
+     * for special monsters
+     * @param id The ID of the entity to remove
+     * @param death Are we deleting it because it died?
+     * @returns If the entity was successfully deleted from the entities map
+     */
     public deleteEntity(id: string, death = false): boolean {
         const entity = this.entities.get(id)
         if (entity) {
@@ -403,32 +410,30 @@ export class Observer {
             visibleIDs.push(e.id)
 
             // Update our database
-            if (Database.connection) {
-                if (Constants.SPECIAL_MONSTERS.includes(e.type)) {
-                    const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
-                    if (!nextUpdate || Date.now() > nextUpdate) {
-                        if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
-                            // Don't include the id in the filter, so it overwrites the last one
-                            entityUpdates.push({
-                                updateOne: {
-                                    filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
-                                    upsert: true
-                                }
-                            })
-                            Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, Date.now() + Constants.MONGO_UPDATE_MS)
-                        } else {
-                            // Include the id in the filter
-                            entityUpdates.push({
-                                updateOne: {
-                                    filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                    update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
-                                    upsert: true
-                                }
-                            })
-                        }
-                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+            if (Database.connection && Constants.SPECIAL_MONSTERS.includes(e.type)) {
+                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
+                if (!nextUpdate || Date.now() > nextUpdate) {
+                    if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
+                        // Don't include the id in the filter, so it overwrites the last one
+                        entityUpdates.push({
+                            updateOne: {
+                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
+                                update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                upsert: true
+                            }
+                        })
+                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    } else {
+                        // Include the id in the filter
+                        entityUpdates.push({
+                            updateOne: {
+                                filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
+                                update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                upsert: true
+                            }
+                        })
                     }
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
         }
