@@ -2083,7 +2083,7 @@ export class Character extends Observer implements CharacterData {
             const itemPos = this.locateItem(requiredName, this.items, {
                 level: fixedItemLevel,
                 quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity - 1 : undefined,
-                returnLowestQuantity: fixedItemLevel === undefined ? undefined : true,
+                returnLowestQuantity: fixedItemLevel === undefined ? true : undefined,
             })
             if (itemPos == undefined) throw new Error(`We don't have ${requiredQuantity} ${requiredName} to craft ${item}.`)
 
