@@ -1603,15 +1603,19 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns true if you have the required items and gold to craft the item, and you
-     * are near the NPC where you can craft this item.
+     * Returns true if you have the required items and gold to craft the item, you have
+     * enough space in your inventory to craft the item, and you are near the NPC where you
+     * can craft this item.
      *
      * @param {ItemName} itemToCraft
      * @return {*}  {boolean}
      * @memberof Character
      */
     public canCraft(itemToCraft: ItemName, options?: {
-        ignoreLocation?: boolean
+        /** If true, we won't check if we're near the NPC that crafts this item */
+        ignoreLocation?: boolean,
+        /** If true, we will consider it craftable if we can buy the remaining items from an NPC */
+        ignoreNpcItems?: boolean
     }): boolean {
         const gCraft = this.G.craft[itemToCraft]
         if (!gCraft) return false // Item is not craftable
@@ -1624,11 +1628,43 @@ export class Character extends Observer implements CharacterData {
                 if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
             }
 
-            if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) return false // We don't have this required item
+            if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) {
+                if (options?.ignoreNpcItems && !fixedItemLevel) {
+                    // Check if we can buy the item from an NPC
+                    if (this.canBuy(requiredItem, { ignoreLocation: options?.ignoreLocation, quantity: requiredQuantity })) continue
+                }
+
+                // We don't have this required item
+                return false
+            }
         }
         if (this.G.maps[this.map].mount && !options?.ignoreLocation) return false // Can't craft things in the bank
 
-        if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
+        // Check if crafting the item will fill up our inventory
+        if (this.esize == 0) {
+            let willFill = true
+            for (const [requiredQuantity, requiredItem, requiredItemLevel] of gCraft.items) {
+                const gInfo = this.G.items[requiredItem]
+                if (requiredItemLevel !== undefined || gInfo.upgrade || gInfo.compound) {
+                    // It will use an item taking up a slot
+                    willFill = false
+                    break
+                }
+
+                const itemIndexes = this.locateItems(requiredItem)
+                for (const itemIndex of itemIndexes) {
+                    const item = this.items[itemIndex]
+                    if (item.q === requiredQuantity) {
+                        // We can use the entire stack to free up a slot
+                        willFill = false
+                        break
+                    }
+                }
+            }
+            if (willFill) return false
+        }
+
+        if (!options?.ignoreLocation && !this.hasItem(["computer", "supercomputer"])) {
             // Check if we're near the NPC we need
             const craftableLocation = Pathfinder.locateCraftNPC(itemToCraft)
             if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
@@ -2044,12 +2080,11 @@ export class Character extends Observer implements CharacterData {
                 if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
             }
 
-            const searchArgs = {
+            const itemPos = this.locateItem(requiredName, this.items, {
                 level: fixedItemLevel,
                 quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity - 1 : undefined,
-            }
-
-            const itemPos = this.locateItem(requiredName, this.items, searchArgs)
+                returnLowestQuantity: true,
+            })
             if (itemPos == undefined) throw new Error(`We don't have ${requiredQuantity} ${requiredName} to craft ${item}.`)
 
             itemPositions.push([i, itemPos])
