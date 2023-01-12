@@ -40,7 +40,7 @@ test("Tools.distance && Tools.squaredDistance", async () => {
     expect(Tools.squaredDistance(x50_y0, zero_height)).toBe(0)
 
     // Test special case with a zero width rectangle (i.e. a line)
-    const zero_width = { height: 10, width: 0, x: 0, y: -50 }
+    const zero_width = { height: 10, width: 0, x: 0, y: 50 }
     expect(Tools.distance(x0_y0, zero_width)).toBe(40) // The top of the line should be 40 pixels below point 1
     expect(Tools.squaredDistance(x0_y0, zero_width)).toBe(40 * 40) // The top of the line should be 40 pixels below point 1
 })

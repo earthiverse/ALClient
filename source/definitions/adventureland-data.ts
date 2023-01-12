@@ -190,6 +190,7 @@ export type GData = {
         quest?: Extract<NPCName, "mcollector" | "witch">
     } }
     dimensions: {
+        /** TODO: Figure out these. [width, height, ???, base_w, base_w] */
         [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
     }
     dismantle: {

@@ -2621,7 +2621,7 @@ export class Character extends Observer implements CharacterData {
                 if (typeof filters.withinRange == "number") {
                     squaredRange = filters.withinRange * filters.withinRange
                 } else {
-                    if (filters.withinRange == "attack") {
+                    if (filters.withinRange == "attack" || this.G.skills[filters.withinRange].use_range) {
                         // Normal attack range
                         squaredRange = this.range * this.range
                     } else if (this.G.skills[filters.withinRange].range) {
