@@ -4210,7 +4210,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Stop if we meet our conditions
-            if (options.stopIfTrue !== undefined && options.stopIfTrue()) break
+            if (options.stopIfTrue !== undefined && await options.stopIfTrue()) break
 
             // Check if we can walk to a spot close to the goal if that's OK
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
