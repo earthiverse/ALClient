@@ -252,7 +252,12 @@ export type ChatLogData = {
 
 export type DeathData = {
     id: string
+    luckm?: number
     place?: string | "attack"
+    /** For cooperative monsters, this will have a list of the points per character that decided the drops */
+    points?: {
+        [T in string]: number
+    }
 }
 
 export type DiceData = {
