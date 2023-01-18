@@ -2665,6 +2665,11 @@ export class Character extends Observer implements CharacterData {
                 if (filters.canWalkTo && !canWalkTo) continue
                 if (!filters.canWalkTo && canWalkTo) continue
             }
+            if (filters.couldDieToProjectiles !== undefined) {
+                const couldDieToProjectiles = entity.couldDieToProjectiles(this, this.projectiles, this.players, this.entities)
+                if (filters.couldDieToProjectiles && !couldDieToProjectiles) continue
+                if (!filters.couldDieToProjectiles && couldDieToProjectiles) continue
+            }
             if (filters.couldGiveCredit !== undefined) {
                 const couldGiveCredit = entity.couldGiveCreditForKill(this)
                 if (filters.couldGiveCredit && !couldGiveCredit) continue

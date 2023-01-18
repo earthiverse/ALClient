@@ -173,6 +173,8 @@ export class Entity implements MonsterData, Partial<GMonster> {
     /**
      * Returns true if the entity has a >0% chance to die from projectiles already cast.
      *
+     * TODO: Consider `blast` and `explosion`
+     *
      * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
      * @param {Map<string, Player>} players (e.g.: bot.players)
      * @param {Map<string, Player>} entities (e.g.: bot.entities)
