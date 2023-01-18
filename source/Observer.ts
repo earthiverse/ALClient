@@ -544,6 +544,13 @@ export class Observer {
             if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
 
             if (data.type == "all") {
+                // Get live special monsters so we can exclude deleting them
+                const liveSpecialMonsters: MonsterName[] = []
+                for (const key in this.S) {
+                    const data = this.S[key] as ServerInfoDataLive
+                    if (data.live) liveSpecialMonsters.push(key as MonsterName)
+                }
+
                 // Delete monsters that we should be able to see
                 EntityModel.aggregate([
                     {
@@ -552,6 +559,7 @@ export class Observer {
                             name: { $nin: visibleIDs },
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
+                            type: { $nin: liveSpecialMonsters },
                         }
                     },
                     {
