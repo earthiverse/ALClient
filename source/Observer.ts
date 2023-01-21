@@ -323,6 +323,7 @@ export class Observer {
 
         this.socket.on("welcome", (data: WelcomeData) => {
             this.server = data
+            if (data.S) this.S = data.S
         })
 
         if (start) {

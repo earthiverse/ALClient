@@ -889,6 +889,23 @@ test("Character.isListedForSale", () => {
 test("Character.isPVP", () => {
     // False if the map and server are not PVP
     priest.server = {
+        S: {
+            "dragold": {
+                "live": false,
+                "spawn": "2023-01-21T05:28:15.387Z"
+            },
+            "schedule": {
+                "dailies": [
+                    13,
+                    20
+                ],
+                "night": false,
+                "nightlies": [
+                    23
+                ],
+                "time_offset": 7
+            }
+        },
         region: "ASIA",
         name: "I",
         in: "main",

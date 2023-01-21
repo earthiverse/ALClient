@@ -1,18 +1,18 @@
 import { StartData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-05-22
+ * The following is from socket events received 2023-01-21
  * It is used to confirm type correctness
  */
 
 test("StartData type validation", async () => {
-    const start: StartData = {
+    const startData: StartData = {
         "acx": {},
         "afk": true,
-        "age": 472,
-        "apiercing": 9,
-        "armor": 150,
-        "attack": 144,
+        "age": 529,
+        "apiercing": 2,
+        "armor": 316,
+        "attack": 867,
         "base_gold": {
             "a1": {
                 "crypt": 9537313
@@ -42,12 +42,12 @@ test("StartData type validation", async () => {
                 "winterland": 78
             },
             "armadillo": {
-                "main": 55
+                "main": 85
             },
             "bat": {
-                "batcave": 106,
-                "cave": 68,
-                "old_main": 106
+                "batcave": 569,
+                "cave": 270,
+                "old_main": 569
             },
             "bbpompom": {
                 "level3": 397,
@@ -69,21 +69,24 @@ test("StartData type validation", async () => {
                 "spookytown": 281
             },
             "bscorpion": {
-                "desertland": 36382
+                "desertland": 29315
             },
             "cgoo": {
-                "arena": 348,
-                "level2s": 348,
-                "level4": 348
+                "arena": 405,
+                "level2s": 405,
+                "level4": 405
             },
             "crab": {
-                "main": 17
+                "main": 28
             },
             "crabx": {
                 "main": 118
             },
+            "crabxx": {
+                "main": 269568
+            },
             "croc": {
-                "main": 61
+                "main": 90
             },
             "d_wiz": {
                 "d2": 16528
@@ -97,8 +100,11 @@ test("StartData type validation", async () => {
             "fireroamer": {
                 "desertland": 6535
             },
+            "franky": {
+                "level2w": 6955164
+            },
             "frog": {
-                "main": 41
+                "main": 487
             },
             "fvampire": {
                 "halloween": 6740
@@ -114,7 +120,6 @@ test("StartData type validation", async () => {
             },
             "goo": {
                 "dungeon0": 16,
-                "goobrawl": 9,
                 "main": 9,
                 "old_main": 9
             },
@@ -131,7 +136,10 @@ test("StartData type validation", async () => {
                 "halloween": 236
             },
             "grinch": {
-                "woffice": 1098531
+                "woffice": 673920
+            },
+            "harpy": {
+                "winter_cove": 26514
             },
             "hen": {
                 "main": 6
@@ -146,7 +154,7 @@ test("StartData type validation", async () => {
                 "spookytown": 180
             },
             "jrat": {
-                "jail": 320
+                "jail": 64
             },
             "kitty1": {
                 "main": 20,
@@ -171,12 +179,18 @@ test("StartData type validation", async () => {
                 "halloween": 34
             },
             "mole": {
-                "tunnel": 798
+                "tunnel": 958
+            },
+            "mrgreen": {
+                "spookytown": 2768812
+            },
+            "mrpumpkin": {
+                "halloween": 2102543
             },
             "mummy": {
-                "level3": 2002,
-                "level4": 2002,
-                "spookytown": 1126
+                "level3": 1995,
+                "level4": 1995,
+                "spookytown": 1119
             },
             "mvampire": {
                 "batcave": 6740,
@@ -186,7 +200,7 @@ test("StartData type validation", async () => {
                 "level2w": 35997
             },
             "osnake": {
-                "halloween": 44
+                "halloween": 87
             },
             "phoenix": {
                 "main": 4493,
@@ -196,13 +210,13 @@ test("StartData type validation", async () => {
                 "level2e": 79530
             },
             "plantoid": {
-                "desertland": 9874
+                "desertland": 9870
             },
             "poisio": {
-                "main": 58
+                "main": 102
             },
             "porcupine": {
-                "desertland": 86
+                "desertland": 287
             },
             "pppompom": {
                 "level2n": 4586
@@ -227,18 +241,24 @@ test("StartData type validation", async () => {
                 "shellsisland": 20
             },
             "rat": {
-                "mansion": 50
+                "mansion": 70
             },
             "redfairy": {
                 "main": 134784
+            },
+            "rgoo": {
+                "goobrawl": 28080
+            },
+            "rharpy": {
+                "winter_cove": 26957
             },
             "rooster": {
                 "main": 6
             },
             "scorpion": {
-                "desertland": 140,
-                "main": 68,
-                "old_main": 140
+                "desertland": 1538,
+                "main": 674,
+                "old_main": 1538
             },
             "skeletor": {
                 "arena": 2247
@@ -248,14 +268,14 @@ test("StartData type validation", async () => {
                 "main": 44
             },
             "spider": {
-                "main": 87,
-                "old_main": 121
+                "main": 506,
+                "old_main": 1212
             },
             "squig": {
                 "main": 61
             },
             "squigtoad": {
-                "main": 41
+                "main": 809
             },
             "stompy": {
                 "winterland": 36724
@@ -288,13 +308,13 @@ test("StartData type validation", async () => {
                 "halloween": 158
             },
             "tortoise": {
-                "main": 97
+                "main": 203
             },
             "vbat": {
                 "crypt": 74469
             },
             "wolf": {
-                "winterland": 2960
+                "winterland": 6013
             },
             "wolfie": {
                 "winterland": 1235
@@ -309,27 +329,30 @@ test("StartData type validation", async () => {
                 "winter_instance": 513598
             },
             "xmagex": {
-                "winter_instance": 52930167
+                "winter_instance": 24747003
             },
             "xscorpion": {
-                "halloween": 905
+                "halloween": 5382
             }
         },
         "blast": 0,
         "c": {},
-        "cash": 4586,
+        "cash": 760,
         "cc": 0,
-        "cid": 1,
-        "code": "var attack_mode=false\n\nsetInterval(function(){\n\n\tuse_hp_or_mp();\n\tloot();\n\n\tif(!attack_mode || character.rip || is_moving(character)) return;\n\n\tvar target=get_targeted_monster();\n\tif(!target)\n\t{\n\t\ttarget=get_nearest_monster({min_xp:100,max_att:120});\n\t\tif(target) change_target(target);\n\t\telse\n\t\t{\n\t\t\tset_message(\"No Monsters\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tif(!is_in_range(target))\n\t{\n\t\tmove(\n\t\t\tcharacter.x+(target.x-character.x)/2,\n\t\t\tcharacter.y+(target.y-character.y)/2\n\t\t\t);\n\t\t// Walk half the distance\n\t}\n\telse if(can_attack(target))\n\t{\n\t\tset_message(\"Attacking\");\n\t\tattack(target);\n\t}\n\n},1000/4); // Loops every 1/4 seconds.\n\n// Learn Javascript: https://www.codecademy.com/learn/learn-javascript\n// Write your own CODE: https://github.com/kaansoral/adventureland\n// NOTE: If the tab isn't focused, browsers slow down the game\n// NOTE: Use the performance_trick() function as a workaround\n",
-        "code_slot": 5139959430774784,
-        "code_version": 1,
-        "courage": 1,
+        "cid": 2,
+        "code": "/* eslint-disable no-undef */\n/**\n * This script is meant to be an example of how I construct and manage loops.\n * Each loop serves a different function, and is not relied upon by other loops.\n */\nconst attackThisType = \"osnake\"\nasync function attackLoop() {\n    try {\n        const target = get_nearest_monster({ path_check: true })\n        if (target && character.range >= distance(character, target)) {\n            // Awaiting the attack lets us setTimeout right before the next attack is ready to maximize DPS.\n            await attack(target)\n\n            // `reduce_cooldown` is used to compensate for ping between the client and server. Utilizing it increases DPS.\n            // However, if you reduce_cooldown too much, you may miss an attack.\n            reduce_cooldown(\"attack\", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { attackLoop() }, Math.max(100, parent.next_skill[\"attack\"].getTime() - Date.now()))\n}\nattackLoop()\n\nasync function moveLoop() {\n    try {\n        // NOTE: If you want to move around the map, for example to refill potions,\n        // you should modify this function.\n\n        const target = get_nearest_monster({ path_check: true, type: attackThisType })\n        if (!target) {\n            // We're not near any targets, let's move to them\n            await smart_move(attackThisType)\n        } else if (character.range < distance(character, target)) {\n            // We are out of range to attack the target, so let's move closer\n            move(character.x + (target.x - character.x) / 2, character.y + (target.y - character.y) / 2)\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { moveLoop() }, 250)\n}\nmoveLoop()\n\nasync function regenLoop() {\n    try {\n        const hp_ratio = character.hp / character.max_hp\n        const mp_ratio = character.mp / character.max_mp\n\n        // NOTE: If you want to use potions, modify this function,\n        // because potions share a cooldown with regen_hp and regen_mp\n\n        if (mp_ratio < hp_ratio && can_use(\"regen_mp\")) {\n            // We have less MP than HP, so let's regen some MP.\n            await use_skill(\"regen_mp\")\n            reduce_cooldown(\"regen_mp\", Math.min(...parent.pings))\n        } else if (can_use(\"regen_hp\")) {\n            // We have less HP than MP, so let's regen some HP.\n            await use_skill(\"regen_hp\")\n            reduce_cooldown(\"regen_hp\", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { regenLoop() }, Math.max(100, parent.next_skill[\"use_hp\"].getTime() - Date.now()))\n}\nregenLoop()\n\nasync function lootLoop() {\n    try {\n        // The built in loot() does pretty much all of the work for us!\n        loot()\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { lootLoop() }, 250)\n}\nlootLoop()\n\npause()",
+        "code_slot": 5911786786652160,
+        "code_version": 18,
+        "courage": 2,
         "crit": 0.75,
         "critdamage": 0,
-        "ctype": "merchant",
-        "cx": {},
-        "dex": 41,
-        "dreturn": 1,
+        "ctype": "ranger",
+        "cx": {
+            "hair": "hairdo106",
+            "head": "makeup105"
+        },
+        "dex": 281,
+        "dreturn": 0.5,
         "emx": {},
         "entities": {
             "in": "main",
@@ -340,9 +363,7 @@ test("StartData type validation", async () => {
                     "cid": 1,
                     "going_x": -571,
                     "going_y": 323,
-                    "hp": 49831,
                     "id": "30",
-                    "mp": 250,
                     "resistance": 0,
                     "s": {},
                     "type": "target",
@@ -350,13 +371,33 @@ test("StartData type validation", async () => {
                     "y": 323
                 },
                 {
+                    "cid": 1,
+                    "going_x": -290,
+                    "going_y": 280,
+                    "id": "31",
+                    "resistance": 0,
+                    "s": {},
+                    "type": "target_a500",
+                    "x": -290,
+                    "y": 280
+                },
+                {
+                    "cid": 1,
+                    "going_x": -270,
+                    "going_y": 280,
+                    "id": "32",
+                    "resistance": 0,
+                    "s": {},
+                    "type": "target_a750",
+                    "x": -270,
+                    "y": 280
+                },
+                {
                     "armor": 0,
                     "cid": 1,
                     "going_x": -250,
                     "going_y": 280,
-                    "hp": 49834,
                     "id": "33",
-                    "mp": 250,
                     "s": {},
                     "type": "target_r500",
                     "x": -250,
@@ -367,9 +408,7 @@ test("StartData type validation", async () => {
                     "cid": 1,
                     "going_x": -230,
                     "going_y": 280,
-                    "hp": 48265,
                     "id": "34",
-                    "mp": 250,
                     "s": {},
                     "type": "target_r750",
                     "x": -230,
@@ -377,1119 +416,1030 @@ test("StartData type validation", async () => {
                 },
                 {
                     "cid": 1,
-                    "going_x": -270,
-                    "going_y": 280,
-                    "hp": 30670,
-                    "id": "2542926",
-                    "mp": 250,
-                    "resistance": 0,
-                    "s": {},
-                    "type": "target_a750",
-                    "x": -270,
-                    "y": 280
-                },
-                {
-                    "cid": 1,
-                    "going_x": -290,
-                    "going_y": 280,
-                    "id": "2554224",
-                    "mp": 250,
-                    "resistance": 0,
-                    "s": {},
-                    "type": "target_a500",
-                    "x": -290,
-                    "y": 280
-                },
-                {
-                    "cid": 1,
                     "going_x": -210,
                     "going_y": 280,
-                    "id": "4955539",
-                    "mp": 250,
+                    "id": "35",
                     "s": {},
                     "type": "target_ar900",
                     "x": -210,
                     "y": 280
                 },
                 {
-                    "abs": false,
-                    "angle": 156.59013157795764,
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": -110.7475114743804,
-                    "going_y": -286.21627513425153,
-                    "id": "5366918",
-                    "move_num": 50938552,
-                    "moving": true,
-                    "mp": 1,
-                    "resistance": 0,
-                    "s": {},
-                    "type": "hen",
-                    "x": -82.92046044107204,
-                    "y": -298.2638061919742
+                    "cid": 103,
+                    "going_x": -150,
+                    "going_y": 400,
+                    "id": "36",
+                    "s": {
+                        "self_healing": {
+                            "ability": true,
+                            "ms": 5080
+                        }
+                    },
+                    "type": "target_ar500red",
+                    "x": -150,
+                    "y": 400
                 },
                 {
                     "abs": false,
-                    "angle": 143.66945967091306,
+                    "angle": -13.355796742225266,
                     "armor": 0,
-                    "cid": 1,
-                    "going_x": -51.08535044613559,
-                    "going_y": -265.7636183077833,
-                    "id": "5366920",
-                    "move_num": 50938494,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": 88.9616574235385,
+                    "going_y": 727.4092173731257,
+                    "hp": 250,
+                    "id": "37",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 40363,
                     "moving": true,
-                    "mp": 1,
                     "resistance": 0,
                     "s": {},
-                    "type": "hen",
-                    "x": -39.19254454220768,
-                    "y": -274.509516416441
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": 39.24816286259453,
+                    "xp": 400,
+                    "y": 739.2121194472377
                 },
                 {
                     "abs": false,
-                    "angle": 167.80404963968596,
+                    "angle": -161.1971276522608,
                     "armor": 0,
-                    "cid": 1,
-                    "going_x": -96.9836168726887,
-                    "going_y": -282.15255547631085,
-                    "id": "5366924",
-                    "move_num": 50938617,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": -236.55436941676808,
+                    "going_y": 702.096494029094,
+                    "hp": 250,
+                    "id": "38",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 40526,
                     "moving": true,
-                    "mp": 1,
                     "resistance": 0,
                     "s": {},
-                    "type": "rooster",
-                    "x": -85.17596207749833,
-                    "y": -284.7045872479213
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": -126.94402339420583,
+                    "xp": 400,
+                    "y": 739.4170314378342
+                },
+                {
+                    "abs": false,
+                    "angle": -145.79546702184857,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": -231.4755127576796,
+                    "going_y": 708.3789459126892,
+                    "hp": 250,
+                    "id": "39",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 41650,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": -200.58147295438832,
+                    "xp": 400,
+                    "y": 729.378086932357
+                },
+                {
+                    "abs": false,
+                    "angle": 160.62709948315313,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 5,
+                    "frequency": 0.44,
+                    "going_x": -174.6417270819341,
+                    "going_y": 867.0346923847221,
+                    "hp": 300,
+                    "id": "40",
+                    "level": 5,
+                    "max_hp": 300,
+                    "move_num": 40991,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.8,
+                    "type": "goo",
+                    "x": -7.783674216935139,
+                    "xp": 500,
+                    "y": 808.3633883552222
+                },
+                {
+                    "abs": false,
+                    "angle": -94.78522801442017,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": 90.94438765762129,
+                    "going_y": 744.4722415613326,
+                    "hp": 250,
+                    "id": "41",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 42073,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": 92.88518834666951,
+                    "xp": 400,
+                    "y": 767.6563028088743
+                },
+                {
+                    "abs": false,
+                    "angle": -18.44612328256978,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": 200.56767291142586,
+                    "going_y": 724.141865671726,
+                    "hp": 250,
+                    "id": "42",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 41682,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": -90.90212672385265,
+                    "xp": 400,
+                    "y": 821.3616315234228
+                },
+                {
+                    "abs": false,
+                    "angle": -4.230150074609014,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 4,
+                    "frequency": 0.43200000000000005,
+                    "going_x": 194.1375214193584,
+                    "going_y": 834.5315392853906,
+                    "hp": 250,
+                    "id": "43",
+                    "level": 4,
+                    "max_hp": 250,
+                    "move_num": 41213,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.64,
+                    "type": "goo",
+                    "x": -17.898381056657495,
+                    "xp": 400,
+                    "y": 850.2146658098246
+                },
+                {
+                    "abs": false,
+                    "angle": -50.255405551162795,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 5,
+                    "frequency": 0.44,
+                    "going_x": -133.89413787672152,
+                    "going_y": 706.4508768525724,
+                    "hp": 300,
+                    "id": "44",
+                    "level": 5,
+                    "max_hp": 300,
+                    "move_num": 41777,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.8,
+                    "type": "goo",
+                    "x": -199.85698402819546,
+                    "xp": 500,
+                    "y": 785.7778005756762
+                },
+                {
+                    "abs": false,
+                    "angle": -2.315486133766456,
+                    "armor": 0,
+                    "attack": 6,
+                    "cid": 5,
+                    "frequency": 0.44,
+                    "going_x": 172.0470543586547,
+                    "going_y": 809.803320609579,
+                    "hp": 300,
+                    "id": "45",
+                    "level": 5,
+                    "max_hp": 300,
+                    "move_num": 41023,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 6.8,
+                    "type": "goo",
+                    "x": 54.29771565373419,
+                    "xp": 500,
+                    "y": 814.564500041868
+                },
+                {
+                    "abs": false,
+                    "angle": -14.775365286067245,
+                    "armor": 0,
+                    "attack": 20,
+                    "cid": 5,
+                    "frequency": 0.54,
+                    "going_x": 566.2179850788538,
+                    "going_y": 756.1881670582069,
+                    "hp": 900,
+                    "id": "58",
+                    "level": 5,
+                    "max_hp": 900,
+                    "move_num": 42021,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 12.8,
+                    "type": "bee",
+                    "x": 479.22402822385527,
+                    "xp": 2000,
+                    "y": 779.1329517417557
+                },
+                {
+                    "abs": false,
+                    "angle": 26.01833426261002,
+                    "armor": 0,
+                    "attack": 19,
+                    "cid": 4,
+                    "frequency": 0.532,
+                    "going_x": 583.0606071860042,
+                    "going_y": 771.6651274202809,
+                    "hp": 750,
+                    "id": "59",
+                    "level": 4,
+                    "max_hp": 750,
+                    "move_num": 41789,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 12.64,
+                    "type": "bee",
+                    "x": 555.8517649770029,
+                    "xp": 1600,
+                    "y": 758.3837088855616
+                },
+                {
+                    "abs": false,
+                    "angle": 111.13544765937716,
+                    "armor": 0,
+                    "attack": 19,
+                    "cid": 4,
+                    "frequency": 0.532,
+                    "going_x": 508.73384400708807,
+                    "going_y": 759.1415704491533,
+                    "hp": 750,
+                    "id": "60",
+                    "level": 4,
+                    "max_hp": 750,
+                    "move_num": 41901,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 12.64,
+                    "type": "bee",
+                    "x": 509.7733240878247,
+                    "xp": 1600,
+                    "y": 756.452649220138
+                },
+                {
+                    "abs": false,
+                    "angle": -72.67651797214761,
+                    "armor": 0,
+                    "attack": 20,
+                    "cid": 5,
+                    "frequency": 0.54,
+                    "going_x": 698.3987139529781,
+                    "going_y": 692.4421954234372,
+                    "hp": 900,
+                    "id": "61",
+                    "level": 5,
+                    "max_hp": 900,
+                    "move_num": 41975,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "speed": 12.8,
+                    "type": "bee",
+                    "x": 692.400697257469,
+                    "xp": 2000,
+                    "y": 711.6718485568568
+                },
+                {
+                    "abs": false,
+                    "angle": -0.11666188292442714,
+                    "armor": 0,
+                    "cid": 1,
+                    "going_x": 656.7116968630587,
+                    "going_y": 1018.6406951833428,
+                    "id": "4850",
+                    "move_num": 42014,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "type": "bee",
+                    "x": 556.8967775750432,
+                    "y": 1018.8439320119418
+                },
+                {
+                    "abs": false,
+                    "angle": 42.56872953534701,
+                    "armor": 0,
+                    "cid": 1,
+                    "going_x": 537.6671954805817,
+                    "going_y": 1101.9297344616698,
+                    "id": "4855",
+                    "move_num": 42045,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {},
+                    "type": "bee",
+                    "x": 476.07039659925226,
+                    "y": 1045.3505872099236
+                },
+                {
+                    "abs": false,
+                    "angle": 76.81907941056525,
+                    "armor": 0,
+                    "cid": 1,
+                    "going_x": 514.2887588381756,
+                    "going_y": 1147.1749030601375,
+                    "id": "4857",
+                    "move_num": 42071,
+                    "moving": true,
+                    "resistance": 0,
+                    "s": {
+                        "young": {
+                            "ms": 93
+                        }
+                    },
+                    "type": "bee",
+                    "x": 485.6913997139055,
+                    "y": 1025.0665544651274
                 }
             ],
             "players": [
                 {
-                    "abs": false,
-                    "angle": -127.29066691996609,
                     "armor": 500,
+                    "attack": 100,
                     "c": {},
                     "cid": 0,
-                    "ctype": "bean",
+                    "ctype": "merchant",
                     "cx": {},
-                    "going_x": -94,
-                    "going_y": -47,
+                    "hp": 1200,
+                    "id": "$Rose",
+                    "level": 100,
+                    "max_hp": 1200,
+                    "mp": 2000,
+                    "name": "Rose",
+                    "npc": "lotterylady",
+                    "owner": "",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 40,
+                    "s": {},
+                    "skin": "llady",
+                    "speed": 20,
+                    "x": -341,
+                    "xp": 0,
+                    "y": 168
+                },
+                {
+                    "armor": 500,
+                    "attack": 100,
+                    "c": {},
+                    "cid": 0,
+                    "ctype": "merchant",
+                    "cx": {
+                        "hat": "hat221"
+                    },
+                    "hp": 1200,
+                    "id": "$Divian",
+                    "level": 100,
+                    "max_hp": 1200,
+                    "mp": 2000,
+                    "name": "Divian",
+                    "npc": "standmerchant",
+                    "owner": "",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 40,
+                    "s": {},
+                    "skin": "purplelady",
+                    "speed": 20,
+                    "x": -193,
+                    "xp": 0,
+                    "y": 680
+                },
+                {
+                    "abs": false,
+                    "allow": true,
+                    "angle": 50.042451069170916,
+                    "armor": 500,
+                    "attack": 100,
+                    "c": {},
+                    "cid": 0,
+                    "ctype": "merchant",
+                    "cx": {},
+                    "going_x": 325,
+                    "going_y": 499,
+                    "hp": 5000,
+                    "id": "$Ace",
+                    "level": 100,
+                    "max_hp": 5000,
+                    "move_num": 479,
+                    "moving": false,
+                    "mp": 2000,
+                    "name": "Ace",
+                    "npc": "pvp",
+                    "owner": "",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 40,
+                    "s": {},
+                    "skin": "thehelmet",
+                    "speed": 40,
+                    "x": 325,
+                    "xp": 0,
+                    "y": 499
+                },
+                {
+                    "armor": 500,
+                    "attack": 100,
+                    "c": {},
+                    "cid": 0,
+                    "ctype": "merchant",
+                    "cx": {},
+                    "hp": 1200,
+                    "id": "$Leo",
+                    "level": 100,
+                    "max_hp": 1200,
+                    "mp": 2000,
+                    "name": "Leo",
+                    "npc": "craftsman",
+                    "owner": "",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 40,
+                    "s": {},
+                    "skin": "npcc",
+                    "speed": 20,
+                    "x": 92,
+                    "xp": 0,
+                    "y": 670
+                },
+                {
+                    "abs": false,
+                    "angle": 45,
+                    "armor": 500,
+                    "attack": 100,
+                    "c": {},
+                    "cid": 0,
+                    "ctype": "merchant",
+                    "cx": {},
+                    "going_x": 10,
+                    "going_y": 102,
                     "hp": 3200,
-                    "id": "Bean",
+                    "id": "$Bean",
                     "level": 100,
                     "max_hp": 3200,
-                    "move_num": 50938495,
-                    "moving": true,
+                    "move_num": 41951,
+                    "moving": false,
+                    "mp": 2000,
+                    "name": "Bean",
                     "npc": "bean",
                     "owner": "",
+                    "pdps": 0,
                     "q": {},
+                    "range": 40,
                     "s": {},
                     "skin": "lionsuit",
                     "speed": 30,
-                    "x": -71.81078044519477,
+                    "x": -22,
                     "xp": 0,
-                    "y": -17.862640988639615
+                    "y": 70
                 },
                 {
-                    "abs": false,
-                    "afk": true,
-                    "age": 365,
-                    "angle": 149.7970252891833,
-                    "armor": 86,
-                    "attack": 375,
+                    "armor": 500,
+                    "attack": 100,
                     "c": {},
-                    "cid": 23179,
-                    "code": true,
+                    "cid": 0,
                     "ctype": "merchant",
-                    "cx": {
-                        "hair": "hairdo118",
-                        "hat": "hat206",
-                        "head": "makeup117"
-                    },
-                    "focus": null,
-                    "frequency": 0.9177255129694154,
-                    "going_x": -2.750955597045788,
-                    "going_y": -36.08600331769935,
-                    "hp": 8242,
-                    "id": "MoneyS",
-                    "level": 80,
-                    "max_hp": 10034,
-                    "max_mp": 3710,
-                    "move_num": 50838393,
-                    "moving": false,
-                    "mp": 3222,
-                    "owner": "5553608930623488",
+                    "cx": {},
+                    "hp": 1200,
+                    "id": "$Gn. Spence",
+                    "level": 100,
+                    "max_hp": 1200,
+                    "mp": 2000,
+                    "name": "Gn. Spence",
+                    "npc": "pvptokens",
+                    "owner": "",
                     "pdps": 0,
                     "q": {},
-                    "range": 76,
-                    "resistance": 225,
+                    "range": 40,
+                    "s": {},
+                    "skin": "pvptokens",
+                    "speed": 20,
+                    "x": 159,
+                    "xp": 0,
+                    "y": 403
+                },
+                {
+                    "afk": true,
+                    "age": 1323,
+                    "armor": 153,
+                    "attack": 301,
+                    "c": {},
+                    "cid": 76,
+                    "code": true,
+                    "ctype": "warrior",
+                    "cx": {},
+                    "frequency": 0.9313737659698026,
+                    "heal": 0,
+                    "hp": 4781,
+                    "id": "Jimmyy",
+                    "level": 52,
+                    "max_hp": 5345,
+                    "max_mp": 640,
+                    "mp": 140,
+                    "owner": "5131508925857792",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 32,
+                    "resistance": 88,
                     "rip": false,
                     "s": {},
-                    "skin": "marmor7e",
+                    "skin": "mwarrior2",
                     "slots": {
                         "amulet": {
-                            "level": 0,
-                            "name": "intamulet"
+                            "level": 2,
+                            "name": "hpamulet"
                         },
                         "belt": {
-                            "level": 4,
+                            "level": 2,
                             "name": "hpbelt"
                         },
-                        "cape": {
-                            "level": 6,
-                            "name": "angelwings"
-                        },
+                        "cape": null,
                         "chest": {
-                            "level": 7,
-                            "name": "tshirt4"
-                        },
-                        "earring1": {
                             "level": 3,
-                            "name": "vitearring"
+                            "name": "xmassweater"
                         },
-                        "earring2": {
-                            "level": 3,
-                            "name": "vitearring"
-                        },
+                        "earring1": null,
+                        "earring2": null,
                         "elixir": null,
-                        "gloves": null,
+                        "gloves": {
+                            "level": 0,
+                            "name": "gloves"
+                        },
                         "helmet": {
-                            "name": "ghatp"
+                            "level": 6,
+                            "name": "wcap"
                         },
                         "mainhand": {
-                            "level": 2,
-                            "name": "staff"
+                            "level": 6,
+                            "name": "blade"
                         },
-                        "offhand": null,
-                        "orb": {
+                        "offhand": {
                             "level": 0,
-                            "name": "test_orb"
+                            "name": "cclaw"
                         },
-                        "pants": null,
+                        "orb": null,
+                        "pants": {
+                            "acc": 1580,
+                            "ach": "gooped",
+                            "level": 0,
+                            "name": "pants"
+                        },
                         "ring1": {
                             "level": 2,
-                            "name": "vitring"
+                            "name": "ringsj"
                         },
                         "ring2": {
-                            "level": 0,
-                            "name": "ringofluck"
+                            "level": 2,
+                            "name": "ringsj"
                         },
                         "shoes": {
-                            "level": 8,
-                            "name": "eslippers"
-                        },
-                        "trade1": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "xWAf"
-                        },
-                        "trade10": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "W6xf"
-                        },
-                        "trade11": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "dPrg"
-                        },
-                        "trade12": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "fklP"
-                        },
-                        "trade13": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "TXPN"
-                        },
-                        "trade14": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "pWs3"
-                        },
-                        "trade15": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "WkM6"
-                        },
-                        "trade16": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "JuyW"
-                        },
-                        "trade17": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "Vgpq"
-                        },
-                        "trade18": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "GiJH"
-                        },
-                        "trade19": {
-                            "giveaway": 26,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "qnBI"
-                        },
-                        "trade2": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "Azad"
-                        },
-                        "trade20": {
-                            "giveaway": 26,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "zMtL"
-                        },
-                        "trade21": {
-                            "giveaway": 26,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "Ufx6"
-                        },
-                        "trade22": {
-                            "giveaway": 25,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "TTA8"
-                        },
-                        "trade23": {
-                            "giveaway": 25,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "c5HH"
-                        },
-                        "trade24": {
-                            "giveaway": 25,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "JXO3"
-                        },
-                        "trade25": {
-                            "giveaway": 53,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 500,
-                            "rid": "dbIg"
-                        },
-                        "trade26": {
-                            "giveaway": 53,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "offeringp",
-                            "price": 1,
-                            "q": 50,
-                            "rid": "L399"
-                        },
-                        "trade27": {
-                            "giveaway": 27,
-                            "level": 4,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "strearring",
-                            "price": 1,
-                            "rid": "D6ZF"
-                        },
-                        "trade28": {
-                            "giveaway": 27,
-                            "level": 4,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "strearring",
-                            "price": 1,
-                            "rid": "fuLi"
-                        },
-                        "trade29": {
-                            "giveaway": 27,
-                            "level": 4,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "dexearring",
-                            "price": 1,
-                            "rid": "IiBy"
-                        },
-                        "trade3": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "hCGy"
-                        },
-                        "trade30": {
-                            "giveaway": 14,
-                            "level": 4,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "wbook0",
-                            "price": 1,
-                            "rid": "wxVo"
-                        },
-                        "trade4": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "MAGI"
-                        },
-                        "trade5": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "OTgW"
-                        },
-                        "trade6": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "hC6s"
-                        },
-                        "trade7": {
-                            "giveaway": 12,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "QO08"
-                        },
-                        "trade8": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "ybtJ"
-                        },
-                        "trade9": {
-                            "giveaway": 13,
-                            "list": [
-                                "BadgerMerch",
-                                "earthMer2"
-                            ],
-                            "name": "cryptkey",
-                            "price": 1,
-                            "q": 10,
-                            "rid": "fgHM"
+                            "level": 3,
+                            "name": "xmasshoes"
                         }
                     },
-                    "speed": 10,
-                    "stand": "cstand",
-                    "target": null,
-                    "x": -2.750955597045788,
-                    "xp": 1116029774,
-                    "y": -36.08600331769935
+                    "speed": 70,
+                    "x": 108.1782452743793,
+                    "xp": 7593661,
+                    "y": 797.843039643556
                 },
                 {
                     "abs": false,
-                    "afk": true,
-                    "age": 346,
-                    "angle": 86.52503986459246,
-                    "armor": 55,
-                    "attack": 73,
+                    "afk": "code",
+                    "age": 833,
+                    "angle": -39.22567409733672,
+                    "armor": 214,
+                    "attack": 2,
                     "c": {},
-                    "cid": 6766,
-                    "code": true,
+                    "cid": 205,
+                    "controller": "",
                     "ctype": "merchant",
                     "cx": {
-                        "hair": "hairdo520",
+                        "hair": "hairdo521",
                         "hat": "hat404",
-                        "head": "fmakeup01"
+                        "head": "makeup117"
                     },
-                    "focus": "kouin",
-                    "frequency": 0.6775064121176926,
-                    "going_x": -124,
-                    "going_y": -1,
-                    "hp": 5468,
-                    "id": "Moneybaggers",
-                    "level": 57,
-                    "max_hp": 5468,
-                    "max_mp": 1935,
-                    "move_num": 50856591,
+                    "frequency": 0.37652281746031746,
+                    "going_x": 595,
+                    "going_y": 1019,
+                    "heal": 0,
+                    "hp": 3372,
+                    "id": "Merchantydoo",
+                    "level": 41,
+                    "max_hp": 3372,
+                    "max_mp": 1290,
+                    "move_num": 3477,
                     "moving": false,
-                    "mp": 1935,
-                    "owner": "6314512450322432",
-                    "party": "ShadowKnight",
-                    "pdps": 1.8788340662190798e-10,
+                    "mp": 1290,
+                    "owner": "5373561187860480",
+                    "party": "Merchantydoo",
+                    "pdps": 18.55447631795323,
                     "q": {},
-                    "range": 20,
-                    "resistance": 122,
+                    "range": 22,
+                    "resistance": 338,
                     "rip": false,
                     "s": {
                         "mluck": {
-                            "f": "Mekhet",
-                            "ms": 279278
+                            "f": "Merchantydoo",
+                            "ms": 2643246,
+                            "strong": true
                         }
                     },
                     "skin": "marmor12a",
                     "slots": {
                         "amulet": {
-                            "level": 4,
-                            "name": "hpamulet"
-                        },
-                        "belt": {
-                            "level": 4,
-                            "name": "hpbelt"
-                        },
-                        "cape": null,
-                        "chest": null,
-                        "earring1": {
-                            "level": 0,
-                            "name": "vitearring"
-                        },
-                        "earring2": null,
-                        "elixir": null,
-                        "gloves": null,
-                        "helmet": {
-                            "level": 0,
-                            "name": "helmet"
-                        },
-                        "mainhand": null,
-                        "offhand": null,
-                        "orb": {
-                            "level": 0,
-                            "name": "test_orb"
-                        },
-                        "pants": null,
-                        "ring1": {
-                            "level": 0,
-                            "name": "vitring"
-                        },
-                        "ring2": {
-                            "level": 3,
-                            "name": "vitring"
-                        },
-                        "shoes": {
-                            "level": 7,
-                            "name": "shoes",
-                            "stat_type": "dex"
-                        },
-                        "trade1": null,
-                        "trade10": {
-                            "level": 0,
-                            "name": "bowofthedead",
-                            "price": 750000,
-                            "rid": "oKVv"
-                        },
-                        "trade11": {
-                            "level": 0,
-                            "name": "maceofthedead",
-                            "price": 750000,
-                            "rid": "AIsB"
-                        },
-                        "trade12": null,
-                        "trade13": {
-                            "level": 0,
-                            "name": "daggerofthedead",
-                            "price": 500000,
-                            "rid": "S1Iu"
-                        },
-                        "trade14": {
-                            "level": 0,
-                            "name": "bowofthedead",
-                            "price": 750000,
-                            "rid": "Cd8v"
-                        },
-                        "trade15": {
-                            "level": 0,
-                            "name": "maceofthedead",
-                            "price": 750000,
-                            "rid": "Us40"
-                        },
-                        "trade16": {
-                            "b": true,
-                            "level": 0,
-                            "name": "mbelt",
-                            "price": 6500000,
-                            "q": 2,
-                            "rid": "XeAi"
-                        },
-                        "trade2": null,
-                        "trade3": null,
-                        "trade4": null,
-                        "trade5": null,
-                        "trade6": {
-                            "level": 0,
-                            "name": "bowofthedead",
-                            "price": 750000,
-                            "rid": "ruCd"
-                        },
-                        "trade7": {
-                            "level": 0,
-                            "name": "maceofthedead",
-                            "price": 750000,
-                            "rid": "EiHT"
-                        },
-                        "trade8": null,
-                        "trade9": {
-                            "level": 0,
-                            "name": "daggerofthedead",
-                            "price": 500000,
-                            "rid": "qbdi"
-                        }
-                    },
-                    "speed": 10,
-                    "stand": "stand0",
-                    "target": null,
-                    "x": -124,
-                    "xp": 15888347,
-                    "y": -1
-                },
-                {
-                    "abs": false,
-                    "afk": true,
-                    "age": 51,
-                    "angle": 90,
-                    "armor": 132,
-                    "attack": 165,
-                    "c": {},
-                    "cid": 13,
-                    "code": true,
-                    "ctype": "merchant",
-                    "cx": {
-                        "hair": "hairdo521",
-                        "hat": "hat404",
-                        "upper": "marmor12a"
-                    },
-                    "frequency": 0.5136431716995742,
-                    "going_x": -151,
-                    "going_y": -69,
-                    "hp": 2533,
-                    "id": "BadgerMerch",
-                    "level": 39,
-                    "max_hp": 2533,
-                    "max_mp": 1190,
-                    "move_num": 50937193,
-                    "moving": false,
-                    "mp": 920,
-                    "owner": "6668530097848320",
-                    "party": "BadgerMerch",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 82,
-                    "resistance": 158,
-                    "rip": false,
-                    "s": {
-                        "mluck": {
-                            "f": "Mekhet",
-                            "ms": 317174
-                        }
-                    },
-                    "skin": "marmor12b",
-                    "slots": {
-                        "amulet": {
-                            "level": 0,
+                            "level": 2,
                             "name": "hpamulet"
                         },
                         "belt": {
                             "level": 2,
                             "name": "hpbelt"
                         },
-                        "cape": {
-                            "level": 0,
-                            "name": "ecape"
-                        },
+                        "cape": null,
                         "chest": {
-                            "level": 0,
-                            "name": "mcarmor"
+                            "level": 3,
+                            "name": "coat1",
+                            "stat_type": "str"
                         },
                         "earring1": {
-                            "level": 0,
-                            "name": "dexearring"
+                            "level": 1,
+                            "name": "vitearring"
                         },
                         "earring2": {
                             "level": 0,
-                            "name": "dexearring"
+                            "name": "vitearring"
                         },
                         "elixir": null,
-                        "gloves": null,
+                        "gloves": {
+                            "level": 5,
+                            "name": "gloves1",
+                            "stat_type": "str"
+                        },
                         "helmet": {
-                            "level": 0,
-                            "name": "mchat"
+                            "level": 3,
+                            "name": "helmet1",
+                            "stat_type": "str"
                         },
                         "mainhand": {
-                            "gift": 1,
-                            "level": 4,
-                            "name": "staff"
+                            "level": 6,
+                            "name": "slimestaff"
                         },
-                        "offhand": null,
+                        "offhand": {
+                            "level": 1,
+                            "name": "lantern"
+                        },
                         "orb": {
-                            "level": 0,
+                            "level": 2,
                             "name": "jacko"
                         },
                         "pants": {
-                            "level": 0,
-                            "name": "mcpants"
+                            "level": 3,
+                            "name": "pants1",
+                            "stat_type": "str"
                         },
                         "ring1": {
-                            "level": 0,
+                            "level": 1,
                             "name": "ringsj"
                         },
                         "ring2": {
-                            "level": 0,
+                            "level": 1,
                             "name": "ringsj"
                         },
                         "shoes": {
-                            "level": 0,
-                            "name": "mcboots"
+                            "level": 6,
+                            "name": "shoes1",
+                            "stat_type": "str"
                         },
-                        "trade1": null,
-                        "trade10": null,
-                        "trade11": null,
-                        "trade12": null,
-                        "trade13": {
+                        "trade1": {
+                            "b": true,
                             "level": 0,
-                            "name": "epyjamas",
-                            "price": 60000,
-                            "rid": "Tm66"
+                            "name": "dexearring",
+                            "price": 50000,
+                            "q": 3,
+                            "rid": "K9P7"
                         },
-                        "trade14": null,
-                        "trade15": {
+                        "trade2": {
+                            "b": true,
                             "level": 0,
-                            "name": "carrotsword",
-                            "price": 500000,
-                            "rid": "HpXc"
+                            "name": "intearring",
+                            "price": 50000,
+                            "q": 5,
+                            "rid": "draH"
                         },
-                        "trade16": null,
-                        "trade2": null,
                         "trade3": null,
-                        "trade4": null,
-                        "trade5": null,
-                        "trade6": null,
-                        "trade7": null,
-                        "trade8": null,
-                        "trade9": null
+                        "trade4": null
                     },
-                    "speed": 10,
-                    "stand": "stand0",
-                    "x": -151,
-                    "xp": 356886,
-                    "y": -69
+                    "speed": 72,
+                    "stand": false,
+                    "x": 595,
+                    "xp": 664756,
+                    "y": 1019
                 },
                 {
                     "abs": false,
-                    "afk": true,
-                    "age": 122,
-                    "angle": -18.26811214658535,
-                    "armor": 416,
-                    "attack": 2186,
+                    "afk": "code",
+                    "age": 833,
+                    "angle": -61.53135763744086,
+                    "armor": 108,
+                    "attack": 1121,
                     "c": {},
-                    "cid": 282,
-                    "code": true,
+                    "cid": 3120,
+                    "controller": "",
                     "ctype": "mage",
                     "cx": {
-                        "head": "mmakeup00",
-                        "upper": "marmor12d"
+                        "head": "makeup117"
                     },
-                    "focus": null,
-                    "frequency": 1.4525196597948122,
-                    "going_x": 194.7265555581004,
-                    "going_y": -632.8253199835418,
-                    "hp": 15499,
-                    "id": "cclair",
-                    "level": 92,
-                    "max_hp": 15499,
-                    "max_mp": 7355,
-                    "move_num": 50938041,
+                    "frequency": 1.0540346738288813,
+                    "going_x": 528,
+                    "going_y": 1045,
+                    "heal": 0,
+                    "hp": 2693,
+                    "id": "Magiclydoo",
+                    "level": 76,
+                    "max_hp": 3001,
+                    "max_mp": 5105,
+                    "move_num": 3479,
                     "moving": false,
-                    "mp": 1682,
-                    "owner": "6484680205926400",
-                    "party": "cclair",
-                    "pdps": 92807.5,
-                    "q": {
-                        "exchange": {
-                            "id": "basketofeggs",
-                            "len": 3887,
-                            "ms": 3807,
-                            "name": "basketofeggs",
-                            "num": 6,
-                            "q": 1
-                        }
-                    },
-                    "range": 215,
-                    "resistance": 602,
-                    "rip": false,
-                    "s": {
-                        "blink": {
-                            "d": 0,
-                            "in": "main",
-                            "map": "main",
-                            "ms": 120,
-                            "x": -1180,
-                            "y": 420
-                        },
-                        "mluck": {
-                            "f": "kouin",
-                            "ms": 3550796,
-                            "strong": true
-                        },
-                        "rspeed": {
-                            "f": "kakaka",
-                            "ms": 761104
-                        }
-                    },
-                    "skin": "mbody4g",
-                    "slots": {
-                        "amulet": {
-                            "level": 5,
-                            "name": "intamulet"
-                        },
-                        "belt": {
-                            "level": 3,
-                            "name": "intbelt"
-                        },
-                        "cape": {
-                            "level": 0,
-                            "name": "stealthcape",
-                            "stat_type": "int"
-                        },
-                        "chest": {
-                            "level": 9,
-                            "name": "vattire",
-                            "stat_type": "int"
-                        },
-                        "earring1": {
-                            "level": 5,
-                            "name": "cearring"
-                        },
-                        "earring2": {
-                            "level": 5,
-                            "name": "cearring"
-                        },
-                        "elixir": {
-                            "ex": true,
-                            "expires": "2021-05-22T10:45:07.392Z",
-                            "name": "pumpkinspice"
-                        },
-                        "gloves": {
-                            "level": 7,
-                            "name": "supermittens",
-                            "stat_type": "int"
-                        },
-                        "helmet": {
-                            "acc": 1,
-                            "level": 7,
-                            "name": "cyber",
-                            "stat_type": "int"
-                        },
-                        "mainhand": {
-                            "level": 9,
-                            "name": "froststaff"
-                        },
-                        "offhand": {
-                            "l": "l",
-                            "level": 6,
-                            "name": "wbook0"
-                        },
-                        "orb": {
-                            "level": 0,
-                            "name": "test_orb"
-                        },
-                        "pants": {
-                            "acc": 98626,
-                            "ach": "gooped",
-                            "level": 5,
-                            "name": "starkillers",
-                            "stat_type": "int"
-                        },
-                        "ring1": {
-                            "level": 5,
-                            "name": "cring"
-                        },
-                        "ring2": {
-                            "level": 5,
-                            "name": "cring"
-                        },
-                        "shoes": {
-                            "level": 9,
-                            "name": "wingedboots",
-                            "stat_type": "int"
-                        }
-                    },
-                    "speed": 79,
-                    "target": "5459336",
-                    "x": 232,
-                    "xp": 4869843798,
-                    "y": 397
-                },
-                {
-                    "afk": true,
-                    "age": 472,
-                    "armor": 150,
-                    "attack": 144,
-                    "c": {},
-                    "cid": 1,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "frequency": 0.7470348190089043,
-                    "hp": 5021,
-                    "id": "earthMer2",
-                    "level": 53,
-                    "max_hp": 5021,
-                    "max_mp": 4775,
-                    "mp": 4745,
-                    "owner": "",
-                    "pdps": 0,
+                    "mp": 80,
+                    "owner": "5373561187860480",
+                    "party": "Merchantydoo",
+                    "pdps": 39759.83953208568,
                     "q": {},
-                    "range": 20,
-                    "resistance": 371,
+                    "range": 200,
+                    "resistance": 298,
                     "rip": false,
                     "s": {
-                        "mlifesteal": {
-                            "ms": 47687
+                        "mluck": {
+                            "f": "Merchantydoo",
+                            "ms": 3558705,
+                            "strong": true
                         }
                     },
-                    "skin": "mmerchant",
+                    "skin": "marmor12d",
                     "slots": {
                         "amulet": {
-                            "level": 3,
+                            "level": 2,
                             "name": "intamulet"
                         },
                         "belt": {
-                            "level": 4,
-                            "name": "intbelt"
+                            "level": 2,
+                            "name": "hpbelt"
                         },
                         "cape": {
-                            "level": 0,
-                            "name": "stealthcape"
+                            "acc": 347,
+                            "ach": "festive",
+                            "level": 5,
+                            "name": "cape",
+                            "stat_type": "int"
                         },
                         "chest": {
-                            "level": 9,
+                            "level": 6,
                             "name": "wattire",
                             "stat_type": "int"
                         },
                         "earring1": {
-                            "level": 3,
+                            "level": 1,
                             "name": "intearring"
                         },
                         "earring2": {
-                            "level": 4,
+                            "level": 2,
                             "name": "intearring"
                         },
                         "elixir": null,
                         "gloves": {
-                            "level": 9,
-                            "name": "gloves",
+                            "level": 7,
+                            "name": "wgloves",
                             "stat_type": "int"
                         },
                         "helmet": {
-                            "acc": 1,
-                            "level": 9,
+                            "level": 7,
                             "name": "wcap",
                             "stat_type": "int"
                         },
-                        "mainhand": null,
-                        "offhand": null,
+                        "mainhand": {
+                            "level": 5,
+                            "name": "oozingterror"
+                        },
+                        "offhand": {
+                            "level": 3,
+                            "name": "wbook0"
+                        },
                         "orb": {
-                            "level": 4,
-                            "name": "jacko"
+                            "level": 0,
+                            "name": "talkingskull"
                         },
                         "pants": {
-                            "level": 9,
+                            "level": 8,
                             "name": "wbreeches",
                             "stat_type": "int"
                         },
                         "ring1": {
-                            "level": 1,
-                            "name": "intring"
+                            "level": 3,
+                            "name": "ringsj"
                         },
                         "ring2": {
-                            "level": 4,
-                            "name": "intring"
+                            "level": 3,
+                            "name": "ringsj"
                         },
                         "shoes": {
-                            "level": 9,
+                            "level": 8,
                             "name": "wshoes",
                             "stat_type": "int"
+                        },
+                        "trade1": null,
+                        "trade2": null,
+                        "trade3": null,
+                        "trade4": null
+                    },
+                    "speed": 60,
+                    "target": "4852",
+                    "x": 528,
+                    "xp": 436331101,
+                    "y": 1045
+                },
+                {
+                    "afk": true,
+                    "age": 529,
+                    "armor": 316,
+                    "attack": 867,
+                    "c": {},
+                    "cid": 2,
+                    "ctype": "ranger",
+                    "cx": {
+                        "hair": "hairdo106",
+                        "head": "makeup105"
+                    },
+                    "frequency": 1.3536437569974156,
+                    "heal": 0,
+                    "hp": 5407,
+                    "id": "attacking",
+                    "level": 75,
+                    "max_hp": 5824,
+                    "max_mp": 1550,
+                    "mp": 1522,
+                    "owner": "6133449939746816",
+                    "pdps": 0,
+                    "q": {},
+                    "range": 200,
+                    "resistance": 365,
+                    "rip": false,
+                    "s": {
+                        "holidayspirit": {
+                            "ms": 78375941
+                        },
+                        "hopsickness": {
+                            "ms": 720000
+                        },
+                        "mluck": {
+                            "f": "Suarez",
+                            "ms": 3032604
+                        },
+                        "rspeed": {
+                            "f": "TeloRusk",
+                            "ms": 518702
                         }
                     },
-                    "speed": 77,
-                    "stand": false,
-                    "x": 63.30048491762997,
-                    "xp": 6969459,
-                    "y": -100.3483931085649
+                    "skin": "marmor5a",
+                    "slots": {
+                        "amulet": {
+                            "level": 4,
+                            "name": "dexamulet"
+                        },
+                        "belt": {
+                            "level": 3,
+                            "name": "dexbelt"
+                        },
+                        "cape": {
+                            "level": 0,
+                            "name": "ecape",
+                            "stat_type": "dex"
+                        },
+                        "chest": {
+                            "level": 8,
+                            "name": "coat1",
+                            "stat_type": "dex"
+                        },
+                        "earring1": {
+                            "level": 1,
+                            "name": "dexearring"
+                        },
+                        "earring2": {
+                            "level": 1,
+                            "name": "dexearring"
+                        },
+                        "elixir": null,
+                        "gloves": {
+                            "level": 8,
+                            "name": "gloves1",
+                            "stat_type": "dex"
+                        },
+                        "helmet": {
+                            "level": 8,
+                            "name": "helmet1",
+                            "stat_type": "dex"
+                        },
+                        "mainhand": {
+                            "level": 8,
+                            "name": "t2bow"
+                        },
+                        "offhand": {
+                            "level": 7,
+                            "name": "quiver"
+                        },
+                        "orb": {
+                            "level": 1,
+                            "name": "jacko"
+                        },
+                        "pants": {
+                            "acc": 333,
+                            "ach": "gooped",
+                            "level": 8,
+                            "name": "pants1",
+                            "stat_type": "dex"
+                        },
+                        "ring1": {
+                            "level": 2,
+                            "name": "ringsj"
+                        },
+                        "ring2": {
+                            "level": 2,
+                            "name": "ringsj",
+                            "p": "shiny"
+                        },
+                        "shoes": {
+                            "level": 8,
+                            "name": "shoes1",
+                            "stat_type": "dex"
+                        }
+                    },
+                    "speed": 82,
+                    "x": 34.13955603965892,
+                    "xp": 45891765,
+                    "y": 549.9999999
                 }
             ],
             "type": "all"
         },
-        "esize": 33,
-        "evasion": 1.25,
+        "esize": 39,
+        "evasion": 0,
         "explosion": 0,
         "fear": 0,
         "firesistance": 0,
-        "for": 28.75,
-        "frequency": 0.7470348190089043,
+        "for": 19,
+        "frequency": 1.3536437569974156,
         "friends": [],
-        "fzresistance": 1,
-        "gold": 99980000,
-        "goldm": 1.15,
+        "fzresistance": 0,
+        "gold": 1000009,
+        "goldm": 0.43500000000000005,
         "heal": 0,
-        "hp": 5021,
-        "id": "earthMer2",
+        "home": "ASIAI",
+        "hp": 5407,
+        "id": "attacking",
         "in": "main",
+        "incdmgamp": 0,
         "info": {},
-        "int": 232,
-        "ipass": "P8lxU853c9LT",
+        "int": 52,
+        "ipass": "EH10ZSeBwiAx",
         "isize": 42,
         "items": [
-            {
-                "name": "snowball",
-                "q": 155
-            },
-            {
-                "name": "snowball",
-                "q": 70
-            },
-            {
-                "level": 3,
-                "name": "bow"
-            },
-            {
-                "name": "scroll0",
-                "q": 1
-            },
-            null,
-            null,
-            {
-                "name": "snowball",
-                "q": 198
-            },
             null,
             null,
             null,
@@ -1520,142 +1470,184 @@ test("StartData type validation", async () => {
             null,
             null,
             null,
-            {
-                "name": "mpot1",
-                "q": 1000
-            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
             {
                 "name": "hpot1",
-                "q": 1000
+                "q": 9955
             },
             {
-                "name": "xptome",
-                "q": 1
+                "name": "mpot1",
+                "q": 8274
             },
             {
+                "l": "l",
                 "name": "tracker"
-            },
-            null
+            }
         ],
-        "level": 53,
-        "lifesteal": 2.5,
-        "luckm": 1.06,
+        "level": 75,
+        "lifesteal": 0,
+        "luckm": 0.53,
         "m": 0,
         "manasteal": 0,
         "map": "main",
-        "max_hp": 5021,
-        "max_mp": 4775,
-        "max_xp": 11000000,
-        "mcourage": 0,
+        "max_hp": 5824,
+        "max_mp": 1550,
+        "max_xp": 750000000,
+        "mcourage": 2,
         "miss": 0,
-        "mp": 4745,
-        "mp_cost": 74,
+        "mp": 1522,
+        "mp_cost": 18,
         "mp_reduction": 0,
-        "owner": "",
-        "pcourage": 0,
+        "owner": "6133449939746816",
+        "pcourage": 2,
         "pdps": 0,
-        "pnresistance": 0,
+        "phresistance": 25,
+        "pnresistance": 10,
         "q": {},
-        "range": 20,
-        "reflection": 0.5,
-        "resistance": 371,
+        "range": 200,
+        "reflection": 0,
+        "resistance": 365,
         "rip": false,
-        "rpiercing": 91,
+        "rpiercing": 43,
         "s": {
-            "mlifesteal": {
-                "ms": 47687
+            "holidayspirit": {
+                "ms": 78375941
+            },
+            "hopsickness": {
+                "ms": 720000
+            },
+            "mluck": {
+                "f": "Suarez",
+                "ms": 3032604
+            },
+            "rspeed": {
+                "f": "TeloRusk",
+                "ms": 518702
             }
         },
         "s_info": {
-            "icegolem": {
-                "hp": 16000000,
+            "dragold": {
+                "hp": 13390960,
                 "live": true,
-                "map": "winterland",
-                "max_hp": 16000000,
-                "x": 864.8843631708521,
-                "y": 371.43992549601035
+                "map": "cave",
+                "max_hp": 25600000,
+                "target": "fathergreen",
+                "x": 1056,
+                "y": -944
+            },
+            "lunarnewyear": true,
+            "schedule": {
+                "dailies": [
+                    13,
+                    20
+                ],
+                "night": false,
+                "nightlies": [
+                    23
+                ],
+                "time_offset": -5
+            },
+            "tiger": {
+                "hp": 11697,
+                "live": true,
+                "map": "main",
+                "max_hp": 12000
             }
         },
-        "skin": "mmerchant",
+        "skin": "marmor5a",
         "slots": {
             "amulet": {
-                "level": 3,
-                "name": "intamulet"
+                "level": 4,
+                "name": "dexamulet"
             },
             "belt": {
-                "level": 4,
-                "name": "intbelt"
+                "level": 3,
+                "name": "dexbelt"
             },
             "cape": {
                 "level": 0,
-                "name": "stealthcape"
+                "name": "ecape",
+                "stat_type": "dex"
             },
             "chest": {
-                "level": 9,
-                "name": "wattire",
-                "stat_type": "int"
+                "level": 8,
+                "name": "coat1",
+                "stat_type": "dex"
             },
             "earring1": {
-                "level": 3,
-                "name": "intearring"
+                "level": 1,
+                "name": "dexearring"
             },
             "earring2": {
-                "level": 4,
-                "name": "intearring"
+                "level": 1,
+                "name": "dexearring"
             },
             "elixir": null,
             "gloves": {
-                "level": 9,
-                "name": "gloves",
-                "stat_type": "int"
+                "level": 8,
+                "name": "gloves1",
+                "stat_type": "dex"
             },
             "helmet": {
-                "acc": 1,
-                "level": 9,
-                "name": "wcap",
-                "stat_type": "int"
+                "level": 8,
+                "name": "helmet1",
+                "stat_type": "dex"
             },
-            "mainhand": null,
-            "offhand": null,
+            "mainhand": {
+                "level": 8,
+                "name": "t2bow"
+            },
+            "offhand": {
+                "level": 7,
+                "name": "quiver"
+            },
             "orb": {
-                "level": 4,
+                "level": 1,
                 "name": "jacko"
             },
             "pants": {
-                "level": 9,
-                "name": "wbreeches",
-                "stat_type": "int"
+                "acc": 333,
+                "ach": "gooped",
+                "level": 8,
+                "name": "pants1",
+                "stat_type": "dex"
             },
             "ring1": {
-                "level": 1,
-                "name": "intring"
+                "level": 2,
+                "name": "ringsj"
             },
             "ring2": {
-                "level": 4,
-                "name": "intring"
+                "level": 2,
+                "name": "ringsj",
+                "p": "shiny"
             },
             "shoes": {
-                "level": 9,
-                "name": "wshoes",
-                "stat_type": "int"
+                "level": 8,
+                "name": "shoes1",
+                "stat_type": "dex"
             }
         },
-        "speed": 77,
-        "stand": false,
-        "str": 22,
+        "speed": 82,
+        "str": 45,
+        "stresistance": 20,
         "stun": 0,
         "targets": 0,
-        "tax": 0.03,
-        "vit": 44,
-        "x": 63.30048491762997,
-        "xcx": [
-            "mmerchant",
-            "fmerchant"
-        ],
-        "xp": 6969459,
-        "xpm": 1.04,
+        "tax": 0.02,
+        "vit": 53,
+        "x": 34.13955603965892,
+        "xcx": [],
+        "xp": 45891765,
+        "xpm": 0.41000000000000003,
         "xrange": 25,
-        "y": -100.3483931085649
+        "y": 549.9999999
     }
-    expect(start).toBeDefined()
+    expect(startData).toBeDefined()
 })

@@ -103,4 +103,20 @@ test("GameEventData type validation", async () => {
         "success": true
     }
     expect(buySuccess).toBeDefined()
+
+    const setHomeSuccess: GameResponseData = {
+        "home": "USII",
+        "place": "set_home",
+        "response": "home_set",
+        "success": true
+    }
+    expect(setHomeSuccess).toBeDefined()
+
+    const setHomeFail: GameResponseData = {
+        "failed": true,
+        "hours": 35.94051777777778,
+        "place": "set_home",
+        "response": "sh_time"
+    }
+    expect(setHomeFail).toBeDefined()
 })

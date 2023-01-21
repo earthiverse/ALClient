@@ -109,7 +109,10 @@ export type CharacterData = PlayerData & {
     firesistance: number
     fzresistance: number
     mp_reduction: number
+    phresistance: number
     pnresistance: number
+    stresistance: number
+    incdmgamp: number
     stun: number
     int: number
     str: number
@@ -408,6 +411,7 @@ export type MonsterData = {
     x: number
     y: number
 
+    "1hp"?: boolean
     armor?: number
     attack?: number
     // TODO: Figure out what this is
@@ -539,6 +543,17 @@ export type ProjectileSkillGRDataObject = {
     failed?: boolean
     id?: string
 } & Partial<ActionDataProjectile>
+export type SetHomeGRDataObject = {
+    home: string
+    place: "set_home"
+    response: "home_set"
+    success: true
+} | {
+    hours: number
+    place: "set_home"
+    response: "sh_time"
+    failed: true
+}
 export type DefeatedByMonsterGRDataObject = {
     response: "defeated_by_a_monster"
     xp: number
@@ -693,7 +708,7 @@ DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDa
 ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
 NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
 GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
-BankOperationGRDataObject
+BankOperationGRDataObject | SetHomeGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -1196,6 +1211,13 @@ export type QInfo = {
     }
 }
 
+export type ScheduleData = {
+    dailies: number[]
+    night: boolean
+    nightlies: number[]
+    time_offset: number
+}
+
 export type ServerData = {
     addr: string
     port: number
@@ -1210,6 +1232,8 @@ export type ServerData = {
 
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
+} & {
+    schedule?: ScheduleData
 } & {
     egghunt?: boolean
     halloween?: boolean
@@ -1272,6 +1296,8 @@ export type StartData = CharacterData & {
     info?: MapInfo
     code_slot: number
     code_version: number
+    /** The home server for this character, formatted as <REGION><IDENTIFIER> (e.g.: ASIAI) */
+    home: string
     base_gold: {
         [T in MonsterName]?: { [T in string]?: number }
     }
@@ -1391,6 +1417,7 @@ export type WelcomeData = {
     pvp: boolean
     x: number
     y: number
+    S: ServerInfoData
 }
 
 export type ServerToClientEvents = {
@@ -1517,6 +1544,7 @@ export type ClientToServerEvents = {
     "send": (data: { gold: number, name: string } | { name: string, num: number, q: number }) => void
     // TODO: Create SendUpdatesData type
     "send_updates": (data: Record<string, never>) => void
+    "set_home": () => void
     "skill": (data: ClientToServerSkillData) => void
     "split": (data: { num: number, quantity: number }) => void
     "stop": (data: { action: "invis" | "town" }) => void

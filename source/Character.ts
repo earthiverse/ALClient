@@ -56,6 +56,7 @@ export class Character extends Observer implements CharacterData {
     public going_y: number
     public gold = 0
     public heal = 0
+    public home: string
     public hp = 0
     public level = 1
     public m: number
@@ -82,10 +83,13 @@ export class Character extends Observer implements CharacterData {
     public tp = false
     public emx: { [T in EmotionName]?: number }
     explosion: number
+    incdmgamp: number
     firesistance: number
     fzresistance: number
     mp_reduction: number
+    phresistance: number
     pnresistance: number
+    stresistance: number
     stun: number
     int: number
     str: number
@@ -1415,13 +1419,7 @@ export class Character extends Observer implements CharacterData {
         // If the entity is immune, most skills won't do damage
         if ((defender as Entity).immune && skill !== "attack" && !gSkill?.pierces_immunity) return [0, 0]
 
-        if (defender["1hp"] || skill == "taunt") {
-            if (this.crit) {
-                return [1, 2]
-            } else {
-                return [1, 1]
-            }
-        }
+        if (defender["1hp"] || skill == "taunt") return this.crit ? [1, 2] : [1, 1]
 
         let baseDamage: number = this.attack
         if (skill == "heal") baseDamage = this.heal
@@ -3119,7 +3117,7 @@ export class Character extends Observer implements CharacterData {
      * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getResponsePromise(skill: SkillName | "buy" | "join", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+    protected getResponsePromise(skill: SkillName | "buy" | "join" | "set_home", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
@@ -3136,7 +3134,16 @@ export class Character extends Observer implements CharacterData {
 
                 if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
-                if ((data.response == "data" || data.response == "buy_success") && ((data as any).success || (data as any).in_progress || !(data as any).failed)) {
+                if (
+                    (
+                        data.response == "data"
+                        || data.response == "buy_success"
+                        || data.response == "home_set")
+                    && (
+                        (data as any).success
+                        || (data as any).in_progress
+                        || !(data as any).failed)
+                ) {
                     cleanup()
                     resolve(data)
                     return
@@ -4005,6 +4012,18 @@ export class Character extends Observer implements CharacterData {
     public async sendPartyRequest(id: string): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [sendPartyRequest].")
         this.socket.emit("party", { event: "request", name: id })
+    }
+
+    /**
+     * Sets the home server to the current server you're on
+     */
+    public async setHome(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [setHome].")
+        if (`${this.serverData.region}${this.serverData.name}` === this.home) return // Don't set home if it's already set here
+
+        const response = this.getResponsePromise("set_home") as Promise<ProjectileSkillGRDataObject>
+        this.socket.emit("set_home")
+        return response
     }
 
     /**

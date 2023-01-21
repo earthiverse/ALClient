@@ -53,6 +53,7 @@ export type StatusInfo = {
     }
     coop?: {
         id: string;
+        ms: number;
         p: number;
     };
     /** Set on a ghost if a priest heals it */
@@ -75,6 +76,10 @@ export type StatusInfo = {
         /** A delevel flag. If true, killing a level 1 monster will delevel another monster that is higher than level 1. */
         dl?: boolean
     };
+    newcomersblessing?: {
+        /** The ID of the player who you received the blessing from */
+        f: string;
+    }
     citizen0aura?: {
         luck: number;
     };

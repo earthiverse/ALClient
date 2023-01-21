@@ -902,4 +902,236 @@ test("EntitiesData type validation", async () => {
         "type": "xy"
     }
     expect(players2).toBeDefined()
+
+    const oneHp: EntitiesData = {
+        "in": "main",
+        "map": "main",
+        "monsters": [
+            {
+                "1hp": true,
+                "abs": false,
+                "angle": -135.07692287277675,
+                "cid": 1635,
+                "going_x": -1112.3090383558963,
+                "going_y": 1521.6049141206402,
+                "hp": 958523,
+                "id": "1387174",
+                "move_num": 6595867,
+                "moving": true,
+                "resistance": 0,
+                "s": {},
+                "target": null,
+                "type": "crabxx",
+                "x": -948.9911401121902,
+                "y": 1684.4848727545927
+            },
+            {
+                "abs": false,
+                "angle": 15.330314005385574,
+                "armor": 0,
+                "attack": 264,
+                "cid": 13,
+                "frequency": 0.616,
+                "going_x": -85.4340038159535,
+                "going_y": 1273.1411391726576,
+                "hp": 1090,
+                "id": "1400285",
+                "level": 2,
+                "max_hp": 5400,
+                "move_num": 6595868,
+                "moving": true,
+                "resistance": 0,
+                "s": {},
+                "speed": 24.32,
+                "target": null,
+                "type": "poisio",
+                "x": -118.82867015745819,
+                "xp": 8000,
+                "y": 1263.9863987780225
+            }
+        ],
+        "players": [
+            {
+                "abs": false,
+                "afk": "code",
+                "age": 1215,
+                "angle": 166.61413316354037,
+                "armor": 589,
+                "attack": 2117,
+                "c": {},
+                "cid": 585,
+                "controller": "",
+                "ctype": "warrior",
+                "cx": {
+                    "hat": "hat306",
+                    "head": "fmakeup01"
+                },
+                "frequency": 1.2292632113821136,
+                "going_x": -813.7035380632644,
+                "going_y": 1758.0635355834986,
+                "heal": 0,
+                "hp": 17528,
+                "id": "earthWar",
+                "level": 93,
+                "max_hp": 21014,
+                "max_mp": 2480,
+                "move_num": 6595840,
+                "moving": true,
+                "mp": 1848,
+                "owner": "5622711463182336",
+                "party": "earthWar",
+                "pdps": 22720.2,
+                "q": {},
+                "range": 41,
+                "resistance": 459,
+                "rip": false,
+                "s": {
+                    "coop": {
+                        "id": "1387174",
+                        "ms": 719915,
+                        "p": 805.5
+                    },
+                    "hopsickness": {
+                        "ms": 626306
+                    },
+                    "mlifesteal": {
+                        "ms": 282449
+                    },
+                    "mluck": {
+                        "f": "earthMer",
+                        "ms": 3117748,
+                        "strong": true
+                    },
+                    "monsterhunt": {
+                        "c": 5,
+                        "dl": true,
+                        "id": "wolfie",
+                        "ms": 646273,
+                        "sn": "US I"
+                    },
+                    "newcomersblessing": {
+                        "f": "MrYobs",
+                        "ms": 490225,
+                    },
+                    "rspeed": {
+                        "f": "CodeGra",
+                        "ms": 2641879
+                    },
+                    "typing": {
+                        "ms": 1588
+                    }
+                },
+                "skin": "mbody1d",
+                "slots": {
+                    "amulet": {
+                        "l": "l",
+                        "level": 2,
+                        "name": "snring"
+                    },
+                    "belt": {
+                        "l": "l",
+                        "level": 5,
+                        "name": "strbelt"
+                    },
+                    "cape": {
+                        "acc": 163592,
+                        "ach": "festive",
+                        "l": "l",
+                        "level": 7,
+                        "name": "bcape",
+                        "p": "festive",
+                        "ps": [
+                            "festive"
+                        ],
+                        "stat_type": "str"
+                    },
+                    "chest": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "coat1",
+                        "stat_type": "str"
+                    },
+                    "earring1": null,
+                    "earring2": {
+                        "l": "l",
+                        "level": 0,
+                        "name": "dexearringx"
+                    },
+                    "elixir": {
+                        "ex": true,
+                        "expires": "2023-01-20T02:16:11.533Z",
+                        "name": "elixirluck"
+                    },
+                    "gloves": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "gloves1",
+                        "stat_type": "str"
+                    },
+                    "helmet": {
+                        "acc": 1,
+                        "l": "l",
+                        "level": 9,
+                        "name": "helmet1",
+                        "stat_type": "str"
+                    },
+                    "mainhand": {
+                        "acc": 1,
+                        "l": "l",
+                        "level": 8,
+                        "name": "vhammer"
+                    },
+                    "offhand": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "ololipop"
+                    },
+                    "orb": {
+                        "l": "l",
+                        "level": 0,
+                        "name": "jacko"
+                    },
+                    "pants": {
+                        "acc": 42125297,
+                        "ach": "gooped",
+                        "l": "l",
+                        "level": 9,
+                        "name": "pants1",
+                        "p": "gooped",
+                        "ps": [
+                            "gooped"
+                        ],
+                        "stat_type": "str"
+                    },
+                    "ring1": {
+                        "l": "l",
+                        "level": 0,
+                        "name": "zapper"
+                    },
+                    "ring2": {
+                        "l": "l",
+                        "level": 5,
+                        "name": "strring"
+                    },
+                    "shoes": {
+                        "l": "l",
+                        "level": 9,
+                        "name": "wingedboots",
+                        "stat_type": "str"
+                    },
+                    "trade1": null,
+                    "trade2": null,
+                    "trade3": null,
+                    "trade4": null
+                },
+                "speed": 91,
+                "target": "1387174",
+                "x": -726.9520347495466,
+                "xp": 25473785493,
+                "y": 1636.8639972166511
+            }
+        ],
+        "type": "xy"
+    }
+    expect(oneHp).toBeDefined()
 })
