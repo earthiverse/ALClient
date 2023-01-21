@@ -14,7 +14,7 @@ export class Pathfinder {
     protected static G: GData
 
     protected static FIRST_MAP: MapName = "main"
-    protected static TRANSPORT_COST = 50
+    protected static TRANSPORT_COST = 250
     protected static TOWN_COST = 450
     protected static ENTER_COST = 1000
 
