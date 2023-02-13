@@ -2,7 +2,7 @@
 import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, DeathData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -3117,14 +3117,14 @@ export class Character extends Observer implements CharacterData {
      * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getResponsePromise(skill: SkillName | "buy" | "join" | "set_home", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+    protected getResponsePromise(skill: SkillName | "buy" | "imove" | "join" | "set_home", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
         return new Promise<unknown>((resolve, reject) => {
             const cleanup = () => {
+                this.socket.off("disappear", checkDisappear)
                 this.socket.off("game_response", gameResponseCheck)
-                this.socket.off("death", checkDeath)
                 clearTimeout(timeout)
             }
 
@@ -3173,8 +3173,8 @@ export class Character extends Observer implements CharacterData {
                 }
             }
 
-            const checkDeath = (data: DeathData) => {
-                if (data.place !== skill) return
+            const checkDisappear = (data: DisappearData) => {
+                if ((data as DisappearNotThereData).place !== skill) return
                 cleanup()
                 reject(new Error(`'${skill}' failed (target '${data.id}' not found)`))
             }
@@ -3185,7 +3185,7 @@ export class Character extends Observer implements CharacterData {
             }, options.timeoutMs)
 
             this.socket.on("game_response", gameResponseCheck)
-            this.socket.on("death", checkDeath)
+            this.socket.on("disappear", checkDisappear)
         })
     }
 
@@ -4517,41 +4517,20 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Swaps two items in your inventory
+     * Swaps or two items in your inventory
      *
      * @param {number} itemPosA
      * @param {number} itemPosB
      * @return {*}  {Promise<void>}
      * @memberof Character
      */
-    public async swapItems(itemPosA: number, itemPosB: number): Promise<void> {
+    public async swapItems(itemPosA: number, itemPosB: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [swapItems].")
         if (itemPosA == itemPosB) return // They're the same position
 
-        const itemDataA = this.items[itemPosA]
-        const itemDataB = this.items[itemPosB]
-
-        const itemsSwapped = new Promise<void>((resolve, reject) => {
-            const successCheck = (data: CharacterData) => {
-                const checkItemDataA = data.items[itemPosA]
-                const checkItemDataB = data.items[itemPosB]
-
-                if (isDeepStrictEqual(checkItemDataB, itemDataA)
-                && isDeepStrictEqual(checkItemDataA, itemDataB)) {
-                    this.socket.off("player", successCheck)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("player", successCheck)
-                reject(new Error(`swapItems timeout (${Constants.TIMEOUT}ms)`))
-            }, Constants.TIMEOUT)
-            this.socket.on("player", successCheck)
-        })
-
+        const response = this.getResponsePromise("imove")
         this.socket.emit("imove", { a: itemPosA, b: itemPosB })
-        return itemsSwapped
+        return response
     }
 
     public async takeMailItem(mailID: string): Promise<void> {

@@ -287,6 +287,8 @@ export type DisappearData =
     DisappearDisconnectData |
     /** Character used 'magiport' */
     DisappearMagiportData |
+    /** Attacking a monster that's missing */
+    DisappearNotThereData |
     /** Character went through a door */
     DisappearDoorData |
     /** Character used a 'town' teleport */
@@ -318,6 +320,14 @@ export type DisappearMagiportData = {
     reason: "transport"
     s?: [number, number]
     to?: MapName
+}
+export type DisappearNotThereData = {
+    effect?: undefined
+    id: string
+    place: SkillName
+    reason: "not_there"
+    to?: undefined
+    s?: undefined
 }
 export type DisappearDoorData = {
     effect?: undefined
@@ -1059,6 +1069,7 @@ export type NewMapData = {
     y: number
 }
 
+// TODO: Is this real? How does this happen?
 export type NotThereData = {
     place: "attack"
 }
@@ -1449,6 +1460,7 @@ export type ServerToClientEvents = {
     "lostandfound": (data: ItemDataTrade[]) => void
     "magiport": (data: { name: string }) => void
     "new_map": (data: NewMapData) => void
+    // TODO: Is this real? How does this happen?
     "notthere": (data: NotThereData) => void
     "party_update": (data: PartyData) => void
     "ping_ack": (data: {id: string}) => void

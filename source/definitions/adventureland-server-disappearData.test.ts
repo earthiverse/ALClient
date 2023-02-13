@@ -8,53 +8,66 @@ import { DisappearData } from "./adventureland-server"
 test("DisappearData type validation", async () => {
     const reports: DisappearData[] = [
         {
-            "id": "Drippy",
-            "reason": "transport"
+            id: "Drippy",
+            reason: "transport"
         },
         {
-            "id": "earthMer",
-            "reason": "transport",
-            "to": "bank",
-            "s": 0
+            id: "earthMer",
+            reason: "transport",
+            s: 0,
+            to: "bank"
         },
         {
-            "id": "Bjarna",
-            "invis": true,
-            "reason": "invis"
+            id: "Bjarna",
+            invis: true,
+            reason: "invis"
         },
         {
-            "id": "cclair",
-            "reason": "transport",
-            "effect": "blink"
-        },
-        { "id": "Theron",
-            "reason": "transport",
-            "to": "main",
-            "s": [-120, 1360, 0],
-            "effect": "blink"
+            effect: "blink",
+            id: "cclair",
+            reason: "transport"
         },
         {
-            "id": "BadgerMage",
-            "reason": "transport",
-            "to": "main",
-            "s": 5,
-            "effect": 1
+            effect: "blink",
+            id: "Theron",
+            reason: "transport",
+            s: [
+                -120,
+                1360,
+                0
+            ],
+            to: "main"
         },
         {
-            "id": "Oristus",
-            "reason": "disconnect"
+            effect: 1,
+            id: "BadgerMage",
+            reason: "transport",
+            s: 5,
+            to: "main"
         },
         {
-            "id": "Dotrawr",
-            "reason": "transport",
-            "to": "main",
-            "s": [-50, 1890],
-            "effect": "magiport"
+            id: "Oristus",
+            reason: "disconnect"
+        },
+        {
+            effect: "magiport",
+            id: "Dotrawr",
+            reason: "transport",
+            s: [
+                -50,
+                1890
+            ],
+            to: "main"
         },
         {
             id: "ScoutWarr",
             reason: "transport",
             to: "jail"
+        },
+        {
+            id: "2591176",
+            place: "mentalburst",
+            reason: "not_there"
         }
     ]
     for (const report of reports) expect(report).toBeDefined()
