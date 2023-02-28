@@ -1426,9 +1426,6 @@ export class Character extends Observer implements CharacterData {
         if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
         if (gSkill?.damage) baseDamage = this.G.skills[skill].damage
 
-        // Zapper zap does exactly 200 damage
-        if (skill == "zapperzap" && gSkill?.damage) return [gSkill.damage, gSkill.damage]
-
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
         if (defender.s.marked) baseDamage *= 1.1
@@ -1919,9 +1916,8 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Special circumstance -- merchants can't attack unless they have a dartgun
-        if (this.ctype == "merchant" && (skill == "attack" || skill == "zapperzap")) {
-            if (!this.slots.mainhand) return false // No weapon
-            if (this.slots.mainhand.name !== "dartgun") return false // Wrong weapon
+        if (this.ctype == "merchant" && skill == "attack") {
+            if (this.slots.mainhand?.name !== "dartgun") return false // Wrong weapon
             if (this.gold < 100) return false // Not enough gold to shoot
         }
 
