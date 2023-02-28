@@ -1484,7 +1484,7 @@ export type ClientToServerSkillData =
 /** Skills that don't take any parameters */
 | { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
 /** Skills that target an entity */
-| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "purify" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "supershot" | "taunt" | "zapperzap">, id: string }
+| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "purify" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "smash" | "supershot" | "taunt" | "zapperzap">, id: string }
 /** Skills that use an item */
 | { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
 /** Skills that target an entity and use an item */

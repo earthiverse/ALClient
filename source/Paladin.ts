@@ -40,4 +40,13 @@ export class Paladin extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "selfheal" })
         return response
     }
+
+    // NOTE: Untested
+    public async smash(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [smash].")
+
+        const response = this.getResponsePromise("smash")
+        this.socket.emit("skill", { id: target, name: "smash" })
+        return response
+    }
 }
