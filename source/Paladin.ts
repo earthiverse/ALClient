@@ -24,6 +24,15 @@ export class Paladin extends PingCompensatedCharacter {
     }
 
     // NOTE: Untested
+    public async purify(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [purify].")
+
+        const response = this.getResponsePromise("purify")
+        this.socket.emit("skill", { id: target, name: "purify" })
+        return response
+    }
+
+    // NOTE: Untested
     public async selfHeal(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [selfHeal].")
 

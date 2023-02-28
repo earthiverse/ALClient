@@ -1,7 +1,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 753 (2022-09-12)
+ * The following is from http://adventure.land/data.js, version 768 (2023-02-28)
  * It is used to confirm type correctness
  */
 
@@ -18,7 +18,7 @@ test("G.skills type validation", async () => {
                 "explanation": "Hits 3 targets at once! Deals 0.7X damage to each target.",
                 "hostile": true,
                 "level": 60,
-                "mp": 300,
+                "mp": 200,
                 "multi": true,
                 "name": "3-Shot",
                 "pierces_immunity": true,
@@ -60,7 +60,7 @@ test("G.skills type validation", async () => {
                 "explanation": "Hits 5 targets at once! Deals 0.5X damage to each target.",
                 "hostile": true,
                 "level": 75,
-                "mp": 420,
+                "mp": 320,
                 "multi": true,
                 "name": "5-Shot",
                 "pierces_immunity": true,

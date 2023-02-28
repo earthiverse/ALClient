@@ -212,7 +212,7 @@ export class Game {
                 for (const cookie of login.headers["set-cookie"]) {
                     const result = /^auth=(.+?);/.exec(cookie)
                     if (result) {
-                    // Save our data to the database
+                        // Save our data to the database
                         this.user = {
                             secure: secure,
                             userAuth: result[1].split("-")[1],
