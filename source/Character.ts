@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Database, DeathModel, IPlayer, PlayerModel } from "./database/Database.js"
+import { Database, DeathModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData } from "./definitions/adventureland-server.js"
@@ -1424,7 +1424,7 @@ export class Character extends Observer implements CharacterData {
         let baseDamage: number = this.attack
         if (skill == "heal") baseDamage = this.heal
         if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
-        if (gSkill?.damage) baseDamage = this.G.skills[skill].damage
+        if (gSkill?.damage) baseDamage = gSkill.damage
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
@@ -1745,13 +1745,13 @@ export class Character extends Observer implements CharacterData {
         // Check if it can heal
         if (entity.lifesteal) return false
         if (entity.abilities?.self_healing) return false
+        if (entity.avoidance) return false // It has a chance to avoid our hit
 
         if (entity.immune && !this.G.skills[skill].pierces_immunity) return false
 
         const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
 
         // Check if it can avoid our shot
-        if (entity.avoidance) return false
         if (damage_type == "magical" && entity.reflection) return false
         if (damage_type == "physical" && entity.evasion) return false
 
@@ -2802,6 +2802,24 @@ export class Character extends Observer implements CharacterData {
             const lostAndFoundItems = (data: ItemDataTrade[]) => {
                 this.socket.off("game_response", distanceCheck)
                 this.socket.off("lostandfound", lostAndFoundItems)
+
+                if (Database.connection) {
+                    // Add the item data to our database
+                    const updateKey = `${this.serverData.name}${this.serverData.region}*ron*`
+                    const nextUpdate = Database.nextUpdate.get(updateKey)
+                    if (!nextUpdate || Date.now() >= nextUpdate) {
+                        NPCModel.updateOne(
+                            {
+                                name: "Ron",
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region
+                            }, {
+                                items: data
+                            }).lean().exec().catch((e) => { console.error(e) })
+                        Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
+                    }
+                }
+
                 resolve(data)
             }
 
@@ -3069,6 +3087,24 @@ export class Character extends Observer implements CharacterData {
             const secondhandsItems = (data: ItemDataTrade[]) => {
                 this.socket.off("game_response", distanceCheck)
                 this.socket.off("secondhands", secondhandsItems)
+
+                if (Database.connection) {
+                    // Add the item data to our database
+                    const updateKey = `${this.serverData.name}${this.serverData.region}*ponty*`
+                    const nextUpdate = Database.nextUpdate.get(updateKey)
+                    if (!nextUpdate || Date.now() >= nextUpdate) {
+                        NPCModel.updateOne(
+                            {
+                                name: "Ponty",
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region
+                            }, {
+                                items: data
+                            }).lean().exec().catch((e) => { console.error(e) })
+                        Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
+                    }
+                }
+
                 resolve(data)
             }
 

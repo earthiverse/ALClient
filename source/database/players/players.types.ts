@@ -7,7 +7,7 @@ export interface IPlayer {
     aldata?: string
     discord?: string
     in: string
-    items: ItemData[]
+    items?: ItemData[]
     lastSeen?: number
     map: MapName
     name: string

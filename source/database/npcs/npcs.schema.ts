@@ -6,6 +6,7 @@ const NPCSchema = new Schema({
         select: false,
         type: Number
     },
+    items: { required: false, type: Object },
     name: String,
     map: String,
     x: Number,
