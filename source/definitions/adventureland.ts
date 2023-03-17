@@ -84,7 +84,11 @@ export type StatusInfo = {
         luck: number;
     };
     citizen4aura?: {
+        citizens: true;
         gold: number;
+        ms: number;
+        name: string;
+        skin: string;
     };
     self_healing?: {
         ability: true

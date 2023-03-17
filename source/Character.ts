@@ -2766,7 +2766,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public getFirstEmptyInventorySlot(items = this.items): number {
-        for (let i = 0; i < items.length; i++) {
+        for (let i = 0; i < this.isize; i++) {
             const item = items[i]
             if (!item) return i
         }
@@ -4419,6 +4419,7 @@ export class Character extends Observer implements CharacterData {
 
     public async splitItem(pos: number, q: number) {
         if (!this.ready) throw new Error("We aren't ready yet [splitItem].")
+        if (q <= 0) return // Nothing to split
         const itemInfo = this.items[pos]
         if (!itemInfo) throw new Error(`There is no item in slot ${pos}.`)
         if (!itemInfo.q) throw new Error(`${itemInfo.name} is unstackable; and therefore can't be split.`)
@@ -4433,10 +4434,13 @@ export class Character extends Observer implements CharacterData {
             }
 
             const splitCheck = (data: CharacterData) => {
-                if (data.items[emptySlot].name == itemInfo.name && data.items[emptySlot].q == q) {
-                    cleanup()
-                    resolve(emptySlot)
-                }
+                if (!data.items[emptySlot]) return // No item in the slot
+                if (data.items[emptySlot].name !== itemInfo.name) return // Name doesn't match
+                if (data.items[emptySlot].q !== q) return // Quantities don't match
+
+                // We successfully split the stack!
+                cleanup()
+                resolve(emptySlot)
             }
 
             const timeout = setTimeout(() => {

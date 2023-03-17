@@ -911,6 +911,8 @@ export type ItemData = {
     grace?: number
     /** If set, the item is locked. 's' == 'sealed', 'u' == 'unlocking', "l" == 'locked'. */
     l?: "l" | "s" | "x"
+    /** TODO: What is this? It's a date string like \"2022-09-18T05:43:49.053Z\" */
+    ld?: string
     /** The item level */
     level?: number
     /** The item name */
