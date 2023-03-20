@@ -2,7 +2,7 @@ import { CharacterData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Rogue extends PingCompensatedCharacter {
-    ctype: "rogue" = "rogue"
+    ctype: "rogue" = "rogue" as const
 
     // NOTE: UNTESTED
     public async invis(): Promise<unknown> {

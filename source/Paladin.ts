@@ -1,7 +1,7 @@
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Paladin extends PingCompensatedCharacter {
-    ctype: "paladin" = "paladin"
+    ctype: "paladin" = "paladin" as const
 
     // NOTE: Untested
     public async manaShieldOff(): Promise<unknown> {

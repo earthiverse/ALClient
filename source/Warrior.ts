@@ -4,7 +4,7 @@ import { IPosition } from "./definitions/adventureland.js"
 import { Tools } from "./Tools.js"
 
 export class Warrior extends PingCompensatedCharacter {
-    ctype: "warrior" = "warrior"
+    ctype: "warrior" = "warrior" as const
 
     public async agitate(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [agitate].")

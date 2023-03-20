@@ -2,7 +2,7 @@ import { ProjectileSkillGRDataObject } from "./definitions/adventureland-server.
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {
-    ctype: "priest" = "priest"
+    ctype: "priest" = "priest" as const
 
     public async absorbSins(target: string): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [absorbSins].")

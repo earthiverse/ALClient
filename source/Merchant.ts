@@ -6,7 +6,7 @@ import { Tools } from "./Tools.js"
 import { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
-    ctype: "merchant" = "merchant"
+    ctype: "merchant" = "merchant" as const
 
     /**
      * Fish for items.

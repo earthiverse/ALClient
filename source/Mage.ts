@@ -3,7 +3,7 @@ import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Mage extends PingCompensatedCharacter {
-    ctype: "mage" = "mage"
+    ctype: "mage" = "mage" as const
 
     // NOTE: UNTESTED
     public async alchemy(): Promise<unknown> {

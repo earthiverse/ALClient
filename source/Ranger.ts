@@ -2,7 +2,7 @@ import { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Ranger extends PingCompensatedCharacter {
-    ctype: "ranger" = "ranger"
+    ctype: "ranger" = "ranger" as const
 
     public async fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
         if (!this.ready) throw new Error("We aren't ready yet [fiveShot].")
