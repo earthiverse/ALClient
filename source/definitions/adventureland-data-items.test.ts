@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 755 (2022-10-31)
+ * The following is from http://adventure.land/data.js, version 771 (2023-03-20)
  * It is used to confirm type correctness
  */
 
@@ -2140,7 +2140,6 @@ test("G.items type validation", async () => {
                 "explanation": "Summon a robot generating a dampening field that prevents teleportation of any kind!",
                 "g": 2000000,
                 "name": "Dampening Field Generator",
-                "s": false,
                 "skin": "fieldgen0",
                 "spawn": "fieldgen0",
                 "type": "spawner"

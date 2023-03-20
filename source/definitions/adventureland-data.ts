@@ -816,7 +816,7 @@ export type GItem = {
     /** For tome of protection, it rewards the player who kills you with this % of the item cost (item.g) */
     reward?: number
     /** If set, you can stack this many of the item in one inventory slot */
-    s?: number | boolean
+    s?: number
     /** TODO: Confirm. If true, you can apply a scroll to this item to give it stats */
     scroll?: boolean
     set?: string
@@ -1033,6 +1033,7 @@ export type GMonster = {
         }
     } & {
         "degen"?: {
+            cooldown: number
             amount: number
         }
     } & {
@@ -1040,7 +1041,17 @@ export type GMonster = {
             heal: number
         }
     } & {
+        "healing"?: {
+            cooldown: number
+            heal: number
+        }
+    } & {
         "multi_burn"?: {
+            damage: number
+        }
+    } & {
+        "multi_freeze"?: {
+            cooldown: number
             damage: number
         }
     } & {
@@ -1058,12 +1069,21 @@ export type GMonster = {
             unlimited: boolean
         }
     } & {
+        "warpstomp"?: {
+            cooldown: number
+            radius: number
+            stun: number
+        }
+    } & {
         "weakness_aura"?: {
             condition: "weakness"
         }
     } & {
         "zap"?: {
+            cooldown: number
             amount: number
+            pure?: boolean
+            radius: number
         }
     }
     /** Tracker achievements. [points needed, "stat", stat type, improvement] */
@@ -1344,7 +1364,7 @@ export type MapName =
  * { const is = []; for(const i in G.monsters) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type MonsterName =
-    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "harpy" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rharpy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
+    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "harpy" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedbat" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rharpy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
 
 export type NPCName =
     "antip2w" | "appearance" | "armors" | "basics" | "bean" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "citizen16" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "friendtokens" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"

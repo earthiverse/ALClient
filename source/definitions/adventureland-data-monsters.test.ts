@@ -2,7 +2,7 @@
 import { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 757 (2022-11-08)
+ * The following is from http://adventure.land/data.js, version 771 (2023-03-20)
  * It is used to confirm type correctness
  */
 
@@ -37,7 +37,7 @@ test("G.monsters type validation", async () => {
                 "spawns": [
                     [
                         200,
-                        "bat"
+                        "nerfedbat"
                     ]
                 ],
                 "speed": 32,
@@ -1344,8 +1344,8 @@ test("G.monsters type validation", async () => {
                 "cooperative": true,
                 "damage_type": "magical",
                 "frequency": 1,
-                "hp": 12800000,
-                "mp": 256000,
+                "hp": 25600000,
+                "mp": 512000,
                 "name": "Dragold",
                 "phresistance": 65,
                 "projectile": "fireball",
@@ -1353,10 +1353,15 @@ test("G.monsters type validation", async () => {
                 "range": 320,
                 "resistance": 320,
                 "respawn": 10800,
+                "s": {
+                    "fullguardx": {
+                        "ms": 120000
+                    }
+                },
                 "skin": "dragold",
                 "special": true,
                 "speed": 22,
-                "xp": 12000000
+                "xp": 24000000
             },
             "eelemental": {
                 "aggro": 0.2,
@@ -3224,6 +3229,38 @@ test("G.monsters type validation", async () => {
                 "skin": "nelemental",
                 "speed": 20,
                 "xp": 10
+            },
+            "nerfedbat": {
+                "aa": 1,
+                "achievements": [
+                    [
+                        100000,
+                        "stat",
+                        "dex",
+                        1
+                    ],
+                    [
+                        1000000,
+                        "stat",
+                        "luck",
+                        0.5
+                    ]
+                ],
+                "aggro": 0.3,
+                "attack": 50,
+                "damage_type": "physical",
+                "frequency": 0.7,
+                "hp": 2400,
+                "mp": 48,
+                "name": "Bat",
+                "phresistance": 35,
+                "rage": 0,
+                "range": 35,
+                "resistance": 120,
+                "respawn": 12,
+                "skin": "bat",
+                "speed": 24,
+                "xp": 400
             },
             "nerfedmummy": {
                 "achievements": [
@@ -5099,6 +5136,7 @@ test("G.monsters type validation", async () => {
                 "armor": 540,
                 "attack": 960,
                 "avoidance": 99,
+                "cooperative": true,
                 "cute": true,
                 "damage_type": "physical",
                 "drop_on_hit": true,
