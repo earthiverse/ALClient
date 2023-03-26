@@ -3164,8 +3164,6 @@ export class Character extends Observer implements CharacterData {
                 if (typeof data !== "object") return
                 if ((data as any).place !== skill) return // The response is for a different skill
 
-                if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
-
                 if (
                     (
                         data.response == "data"
@@ -3176,6 +3174,8 @@ export class Character extends Observer implements CharacterData {
                         || (data as any).in_progress
                         || !(data as any).failed)
                 ) {
+                    if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
+
                     cleanup()
                     resolve(data)
                     return
@@ -5409,7 +5409,7 @@ export class Character extends Observer implements CharacterData {
      */
     public locateItems(iN: ItemName | ItemName[], inv = this.items,
         filters?: LocateItemsFilters): number[] {
-        if (filters?.quantityGreaterThan == 0) delete filters.quantityGreaterThan
+        if (filters?.quantityGreaterThan <= 0) delete filters.quantityGreaterThan
         if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
         if (typeof iN === "string") iN = [iN]
