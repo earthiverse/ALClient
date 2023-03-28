@@ -812,9 +812,28 @@ export class Pathfinder {
                 addCheatPath({ map: "level1", x: -271, y: 616 }, { map: "level1", x: -297, y: 557 })
             }
 
+            if (options.maps.includes("level2e")) {
+                addCheatPath({ map: "level2e", x: 295, y: 176 }, { map: "level2e", x: 329, y: 160 })
+                addCheatPath({ map: "level2e", x: 311, y: 240 }, { map: "level2e", x: 345, y: 237 })
+                addCheatPath({ map: "level2e", x: 487, y: 349 }, { map: "level2e", x: 471, y: 384 })
+            }
+
+            if (options.maps.includes("level2n")) {
+                addCheatPath({ map: "level2n", x: 97, y: -248 }, { map: "level2n", x: 71, y: -275 })
+            }
+
+            if (options.maps.includes("level2s")) {
+                // Add path near ladder
+                addCheatPath({ map: "level2s", x: -121, y: 640 }, { map: "level2s", x: -87, y: 613 })
+                // Add paths near east door
+                addCheatPath({ map: "level2s", x: 207, y: 416 }, { map: "level2s", x: 249, y: 424 })
+                addCheatPath({ map: "level2s", x: 199, y: 528 }, { map: "level2s", x: 233, y: 536 })
+                addCheatPath({ map: "level2s", x: 199, y: 581 }, { map: "level2s", x: 233, y: 573 })
+            }
+
             if (options.maps.includes("level3")) {
                 // Add path near ladder to level4
-                addCheatPath({ map: "level3", x: 73, y: -408 }, { map: "level3", x: 3, y: 45 })
+                addCheatPath({ map: "level3", x: 73, y: -387 }, { map: "level3", x: 7, y: -403 })
             }
 
             if (options.maps.includes("level4")) {
@@ -831,6 +850,10 @@ export class Pathfinder {
                 addCheatPath({ map: "main", x: -311, y: 149 }, { map: "main", x: -345, y: 160 })
                 // Add a path across wall from goos to mansion
                 addCheatPath({ map: "main", x: 303, y: 808 }, { map: "main", x: 433, y: 805 })
+            }
+
+            if (options.maps.includes("spookytown")) {
+                addCheatPath({ map: "spookytown", x: 95, y: 1264 }, { map: "spookytown", x: 161, y: 1221 })
             }
 
             if (options.maps.includes("winter_cove")) {
