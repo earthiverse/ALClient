@@ -250,6 +250,7 @@ export class Character extends Observer implements CharacterData {
                 lastSeen: Date.now(),
                 map: this.map,
                 name: this.id,
+                party: this.party,
                 s: this.s,
                 serverIdentifier: this.serverData.name,
                 serverRegion: this.serverData.region,

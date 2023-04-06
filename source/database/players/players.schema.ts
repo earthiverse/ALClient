@@ -16,6 +16,7 @@ const PlayerSchema = new Schema({
     map: String,
     name: { required: true, type: String },
     owner: String,
+    party: String,
     rip: { required: false, type: Boolean },
     s: { required: false, type: Object },
     serverIdentifier: String,

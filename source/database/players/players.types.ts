@@ -12,6 +12,7 @@ export interface IPlayer {
     map: MapName
     name: string
     owner: string
+    party?: string
     rip?: boolean
     serverIdentifier: ServerIdentifier
     serverRegion: ServerRegion
