@@ -268,7 +268,7 @@ export class Observer {
 
                 if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
                     const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${mN}`)
-                    if (!nextUpdate || Date.now() < nextUpdate) continue // We've updated this monster recently
+                    if (nextUpdate && Date.now() < nextUpdate) continue // We've updated this monster recently
                     databaseEntityUpdates.push({
                         updateOne: {
                             filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN },
