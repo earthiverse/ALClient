@@ -313,7 +313,7 @@ export class Observer {
                         serverIdentifier: this.serverData.name,
                         serverRegion: this.serverData.region
                     }
-                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true })
+                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true }).catch(console.error)
                     Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*server_info*`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
