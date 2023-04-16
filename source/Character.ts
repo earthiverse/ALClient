@@ -1511,8 +1511,9 @@ export class Character extends Observer implements CharacterData {
     }
 
     public calculateItemGrade(item: ItemData): number {
+        if (!item) return // No item to calculate grade
         const gInfo = this.G.items[item.name]
-        if (!gInfo.grades) return
+        if (!gInfo.grades) return // No information in G about this item
         let grade = 0
         for (const level of gInfo.grades) {
             if (item.level < level) break
