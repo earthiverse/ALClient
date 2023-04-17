@@ -509,8 +509,10 @@ export class Pathfinder {
             const y2 = delaunay.coords[tj * 2 + 1]
 
             if (this.canWalkPath({ map: map, x: x1, y: y1 }, { map: map, x: x2, y: y2 })) {
-                this.graph.addLink(`${map}:${x1},${y1}`, `${map}:${x2},${y2}`)
-                this.graph.addLink(`${map}:${x2},${y2}`, `${map}:${x1},${y1}`)
+                const from = `${map}:${x1},${y1}`
+                const to = `${map}:${x2},${y2}`
+                this.graph.addLink(from, to)
+                this.graph.addLink(to, from)
             }
         }
 
@@ -792,6 +794,7 @@ export class Pathfinder {
                     return
                 }
                 this.addLinkToGraph(fromNode, toNode)
+                this.addLinkToGraph(toNode, fromNode)
             }
 
             if (options.maps.includes("arena")) {
