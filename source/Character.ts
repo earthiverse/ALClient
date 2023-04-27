@@ -1809,7 +1809,7 @@ export class Character extends Observer implements CharacterData {
 
         // Distance check
         if (!this.hasItem("computer") && !this.hasItem("supercomputer")
-         && Tools.squaredDistance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+            && Tools.squaredDistance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
 
         // Scroll compatibility check
         const grade = this.calculateItemGrade(itemInfo)
@@ -2149,8 +2149,8 @@ export class Character extends Observer implements CharacterData {
             // Check if we can access the supplied bankPack
             const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
             if ((this.map == "bank" && bankPackNum > 7)
-            || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
-            || (this.map == "bank_u" && bankPackNum < 24)) {
+                || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
+                || (this.map == "bank_u" && bankPackNum < 24)) {
                 throw new Error(`We can't access ${bankPack} on ${this.map}.`)
             }
         } else {
@@ -2277,8 +2277,8 @@ export class Character extends Observer implements CharacterData {
             const checkDonate = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (data.response == "donate_gum"
-                    || data.response == "donate_low"
-                     || data.response == "donate_thx") {
+                        || data.response == "donate_low"
+                        || data.response == "donate_thx") {
                         this.socket.off("game_response", checkDonate)
                         resolve()
                     }
@@ -2815,9 +2815,11 @@ export class Character extends Observer implements CharacterData {
                                 name: "Ron",
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region
-                            }, {
+                            },
+                            {
                                 items: data
-                            }).lean().exec().catch((e) => { console.error(e) })
+                            }
+                        ).lean().exec().catch((e) => { console.error(e) })
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
@@ -3100,9 +3102,11 @@ export class Character extends Observer implements CharacterData {
                                 name: "Ponty",
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region
-                            }, {
+                            },
+                            {
                                 items: data
-                            }).lean().exec().catch((e) => { console.error(e) })
+                            }
+                        ).lean().exec().catch((e) => { console.error(e) })
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
@@ -4078,7 +4082,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected lastSmartMove: number = Date.now()
-    public smartMoving: IPosition & {map: MapName} = undefined
+    public smartMoving: IPosition & { map: MapName } = undefined
     /**
      * Used to move long distances strategically, i.e. avoiding walking through walls.
      * You can use this function to move between maps, too.
@@ -4088,7 +4092,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName, options?: SmartMoveOptions): Promise<IPosition> {
+    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName | BankPackName, options?: SmartMoveOptions): Promise<IPosition> {
         if (!this.ready) throw new Error("We aren't ready yet [smartMove].")
 
         if (this.rip) throw new Error("We can't smartMove, we are dead.")
@@ -4136,7 +4140,7 @@ export class Character extends Observer implements CharacterData {
         if (options.costs.town == undefined) options.costs.town = this.speed * (4 + (this.timeout / 500)) // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
         if (options.costs.transport == undefined) options.costs.transport = this.speed * (this.timeout / 500) // Based on how long it takes to confirm with the server
 
-        let fixedTo: IPosition & {map: MapName}
+        let fixedTo: IPosition & { map: MapName }
         let path: LinkData[]
         if (typeof to == "string") {
             // Check if our destination is a map name
@@ -4155,7 +4159,7 @@ export class Character extends Observer implements CharacterData {
                     const locations = Pathfinder.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4177,7 +4181,7 @@ export class Character extends Observer implements CharacterData {
                     // Set `to` to the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4212,7 +4216,7 @@ export class Character extends Observer implements CharacterData {
                     // Find the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & {map: MapName}, options)
+                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4220,6 +4224,21 @@ export class Character extends Observer implements CharacterData {
                             closestDistance = distance
                         }
                     }
+                }
+            }
+
+            // Check if our destination is a bank pack name. If it is, go to the map that has that bank pack.
+            if (!fixedTo) {
+                const matches = to.match(/^items(\d)+$/)
+                if (matches.length) {
+                    const bankPackNum = Number.parseInt(matches[1])
+                    let targetMap: MapName = "bank"
+                    if (bankPackNum >= 8 && bankPackNum <= 23) targetMap = "bank_b"
+                    else if (bankPackNum >= 24) targetMap = "bank_u"
+
+                    const gMap: GMap = this.G.maps[targetMap]
+                    const mainSpawn = gMap.spawns[0]
+                    fixedTo = { map: targetMap as MapName, x: mainSpawn[0], y: mainSpawn[1] }
                 }
             }
 
@@ -4537,7 +4556,7 @@ export class Character extends Observer implements CharacterData {
                 const checkItemDataB = data.user[pack][itemPosB]
 
                 if (isDeepStrictEqual(checkItemDataB, itemDataA)
-                && isDeepStrictEqual(checkItemDataA, itemDataB)) {
+                    && isDeepStrictEqual(checkItemDataA, itemDataB)) {
                     this.socket.off("player", successCheck)
                     resolve()
                 }
