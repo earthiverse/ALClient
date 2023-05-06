@@ -1,4 +1,4 @@
-import LRU from "lru-cache"
+import { LRUCache } from "lru-cache"
 import Mongoose from "mongoose"
 export * from "./achievements/achievements.model.js"
 export * from "./achievements/achievements.types.js"
@@ -16,7 +16,7 @@ export * from "./respawns/respawns.model.js"
 export * from "./respawns/respawns.types.js"
 
 export class Database {
-    public static nextUpdate = new LRU<string, number>({ max: 1000 })
+    public static nextUpdate = new LRUCache<string, number>({ max: 1000 })
     public static connection: Mongoose.Connection
 
     protected constructor() {
