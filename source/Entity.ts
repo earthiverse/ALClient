@@ -323,7 +323,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
             // NOTE: Entities can attack themselves if the projectile gets reflected
             let attacker: Character | Entity | Player
-            if (!attacker && character.id == projectile.attacker) attacker = character
+            if (character.id == projectile.attacker) attacker = character
             if (!attacker) attacker = players.get(projectile.attacker)
             if (!attacker) attacker = entities.get(projectile.attacker)
             if (!attacker) continue // Couldn't find attacker, assume it will do no damage

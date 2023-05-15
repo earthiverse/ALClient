@@ -56,7 +56,7 @@
         ],
         "linebreak-style": [
             "error",
-            "windows"
+            "unix"
         ],
         "no-multi-spaces": "error",
         "no-tabs": [

@@ -2701,6 +2701,8 @@ export class Character extends Observer implements CharacterData {
 
         // Warn if using more than one option
         let numReturnOptions = 0
+        if (filters.returnHighestLevel) numReturnOptions++
+        if (filters.returnLowestLevel) numReturnOptions++
         if (filters.returnHighestHP) numReturnOptions++
         if (filters.returnLowestHP) numReturnOptions++
         if (filters.returnFurthest) numReturnOptions++
@@ -2708,6 +2710,30 @@ export class Character extends Observer implements CharacterData {
         if (numReturnOptions > 1) console.warn("You supplied getEntity with more than one returnX option. This function may not return the entity you want.")
 
         if (entities.length <= 1 || numReturnOptions == 0) return entities[0]
+
+        if (filters.returnHighestLevel) {
+            let highest: Entity
+            let highestLevel = Number.MIN_VALUE
+            for (const entity of entities) {
+                if (entity.level > highestLevel) {
+                    highest = entity
+                    highestLevel = entity.level
+                }
+            }
+            return highest
+        }
+
+        if (filters.returnLowestLevel) {
+            let lowest: Entity
+            let lowestLevel = Number.MAX_VALUE
+            for (const entity of entities) {
+                if (entity.level < lowestLevel) {
+                    lowest = entity
+                    lowestLevel = entity.level
+                }
+            }
+            return lowest
+        }
 
         if (filters.returnHighestHP) {
             let highest: Entity

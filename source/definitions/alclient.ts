@@ -39,6 +39,8 @@ export type GetEntitiesFilters = {
 
 /** Filters for returning a single entity */
 export type GetEntityFilters = GetEntitiesFilters & {
+    returnHighestLevel?: boolean
+    returnLowestLevel?: boolean
     returnHighestHP?: boolean
     returnLowestHP?: boolean
     returnFurthest?: boolean
