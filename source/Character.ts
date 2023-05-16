@@ -2,7 +2,7 @@
 import { Database, DeathModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData, TradeHistoryData } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -3271,7 +3271,7 @@ export class Character extends Observer implements CharacterData {
      */
     public async getTrackerData(): Promise<TrackerData> {
         if (!this.ready) throw new Error("We aren't ready yet [getTrackerData].")
-        if (!this.hasItem("tracker") && !this.hasItem("supercomputer")) throw new Error("We need a tracker to obtain tracker data.")
+        if (!this.hasItem(["tracker", "supercomputer"])) throw new Error("We need a tracker to obtain tracker data.")
 
         const gotTrackerData = new Promise<TrackerData>((resolve, reject) => {
             const gotCheck = (data: TrackerData) => {
@@ -3288,6 +3288,26 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("tracker")
         return gotTrackerData
+    }
+
+    public async getTradeHistory(): Promise<TradeHistoryData> {
+        if (!this.ready) throw new Error("We aren't ready yet [getTrackerData].")
+
+        const gotTradeHistoryData = new Promise<TradeHistoryData>((resolve, reject) => {
+            const gotCheck = (data: TradeHistoryData) => {
+                this.socket.off("trade_history", gotCheck)
+                resolve(data)
+            }
+
+            setTimeout(() => {
+                this.socket.off("trade_history", gotCheck)
+                reject(new Error("getTradeHistory timeout (5000ms)"))
+            }, 5000)
+            this.socket.once("trade_history", gotCheck)
+        })
+
+        this.socket.emit("trade_history")
+        return gotTradeHistoryData
     }
 
     /**
@@ -5176,9 +5196,6 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns true if the entity has a >0% chance to die from projectiles already cast.
      *
-     * @param {Map<string, ActionData>} projectiles (e.g.: bot.projectiles)
-     * @param {Map<string, Player>} players (e.g.: bot.players)
-     * @param {Map<string, Player>} entities (e.g.: bot.entities)
      * @return {*}  {boolean}
      * @memberof Entity
      */

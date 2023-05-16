@@ -712,13 +712,13 @@ export type UpgradeCompoundGRDataObject = {
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
-AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
-CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
-DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
-ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
-NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
-BankOperationGRDataObject | SetHomeGRDataObject
+    AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
+    CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
+    DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
+    ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
+    NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
+    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
+    BankOperationGRDataObject | SetHomeGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -1318,6 +1318,15 @@ export type StartData = CharacterData & {
     entities: EntitiesData
 }
 
+export type TavernEventData = {
+    event: "lost" | "won" | "bet"
+    name: string
+    type: "dice"
+    num: number
+    gold: number
+    dir: "up" | "down"
+}
+
 export type TrackerData = {
     /** How many points you have for each monster for the given character */
     monsters: {
@@ -1355,14 +1364,8 @@ export type TrackerData = {
     global_static: [number, "open", string][] | [number, ItemName][]
 }
 
-export type TavernEventData = {
-    event: "lost" | "won" | "bet"
-    name: string
-    type: "dice"
-    num: number
-    gold: number
-    dir: "up" | "down"
-}
+/** [buy/sell, merchant name, item data, price] */
+export type TradeHistoryData = ["buy" | "sell", string, ItemDataTrade, number][]
 
 export type UIDataBuySell = {
     type: "-$" | "+$"
@@ -1465,7 +1468,7 @@ export type ServerToClientEvents = {
     // TODO: Is this real? How does this happen?
     "notthere": (data: NotThereData) => void
     "party_update": (data: PartyData) => void
-    "ping_ack": (data: {id: string}) => void
+    "ping_ack": (data: { id: string }) => void
     "player": (data: CharacterData) => void
     "players": (data: PlayersData) => void
     "pm": (data: PMData) => void
@@ -1477,39 +1480,40 @@ export type ServerToClientEvents = {
     "start": (data: StartData) => void
     "tavern": (data: TavernEventData) => void
     "tracker": (data: TrackerData) => void
+    "trade_history": (data: TradeHistoryData) => void
     "ui": (data: UIData) => void
     "upgrade": (data: UpgradeData) => void
     "welcome": (data: WelcomeData) => void
 }
 
 export type ClientToServerSkillData =
-/** Skills that don't take any parameters */
-| { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
-/** Skills that target an entity */
-| { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "purify" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "smash" | "supershot" | "taunt" | "zapperzap">, id: string }
-/** Skills that use an item */
-| { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
-/** Skills that target an entity and use an item */
-| { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">, id: string, num: number }
-/** Other special skills */
-| { name: Extract<SkillName, "3shot">, ids: [string, string, string] }
-| { name: Extract<SkillName, "5shot">, ids: [string, string, string, string, string] }
-| { name: Extract<SkillName, "blink" | "dash">, x: number, y: number }
-| { name: Extract<SkillName, "cburst">, targets: [string, number][] }
-| { name: Extract<SkillName, "energize">, id: string, mp: number }
+    /** Skills that don't take any parameters */
+    | { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
+    /** Skills that target an entity */
+    | { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "purify" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "smash" | "supershot" | "taunt" | "zapperzap">, id: string }
+    /** Skills that use an item */
+    | { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
+    /** Skills that target an entity and use an item */
+    | { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">, id: string, num: number }
+    /** Other special skills */
+    | { name: Extract<SkillName, "3shot">, ids: [string, string, string] }
+    | { name: Extract<SkillName, "5shot">, ids: [string, string, string, string, string] }
+    | { name: Extract<SkillName, "blink" | "dash">, x: number, y: number }
+    | { name: Extract<SkillName, "cburst">, targets: [string, number][] }
+    | { name: Extract<SkillName, "energize">, id: string, mp: number }
 
 export type ClientToServerEvents = {
     "attack": (data: { id: string }) => void
     "bet": (data: { type: "dice", dir: "up" | "down", num: number, gold: number }) => void
     "auth": (data: AuthData) => void
     // TODO: Create BankData type
-    "bank": (data: { amount: number, operation: "deposit" | "withdraw"} | { inv: number, operation: "swap", pack: BankPackName, str: number } | { operation: "move", a: number, b: number, pack: BankPackName }) => void
+    "bank": (data: { amount: number, operation: "deposit" | "withdraw" } | { inv: number, operation: "swap", pack: BankPackName, str: number } | { operation: "move", a: number, b: number, pack: BankPackName }) => void
     "booster": (data: { action: "shift", num: number, to: string }) => void
     // TODO: Create BuyData type
     "buy": (data: { name: ItemName, quantity?: number }) => void
     "cm": (data: { message: string, to: string[] }) => void
     // TODO: Create CompoundData type
-    "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number}) => void
+    "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number }) => void
     // TODO: Create CraftData type
     "craft": (data: { items: [number, number][] }) => void
     "dismantle": (data: { num: number }) => void
@@ -1536,9 +1540,9 @@ export type ClientToServerEvents = {
     "mail": (data: { item: boolean, message: string, subject: string, to: string }) => void
     "mail_take_item": (data: { id: string }) => void
     "magiport": (data: { name: string }) => void
-    "merchant": (data: {close: number } | { num: number }) => void
+    "merchant": (data: { close: number } | { num: number }) => void
     "monsterhunt": () => void
-    "move": (data: { going_x: number, going_y: number, m: number, x: number, y: number } | { key: "down" | "left" | "right" | "up"}) => void
+    "move": (data: { going_x: number, going_y: number, m: number, x: number, y: number } | { key: "down" | "left" | "right" | "up" }) => void
     "open_chest": (data: { id: string }) => void
     // TODO: Create PartyData type
     // NOTE: We already have PartyData for receiving `party_update` sockets.
@@ -1568,6 +1572,7 @@ export type ClientToServerEvents = {
     // TODO: Confirm that 'q' is a string
     // TODO: Create TradeBuyData type
     "trade_buy": (data: { id: string, q: string, rid: string, slot: TradeSlotType }) => void
+    "trade_history": () => void
     "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
     "trade_wishlist": (data: { level?: number, name: ItemName, price: number, q: number, slot: TradeSlotType }) => void
     "unequip": (data: { slot: SlotType | TradeSlotType }) => void
