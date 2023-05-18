@@ -12,6 +12,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public abs?: false
     public angle: number
     public cid: number
+    public focus?: string
     public going_x: number
     public going_y: number
     public in: string
