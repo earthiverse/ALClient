@@ -33,6 +33,7 @@ export class Observer {
 
     public serverData: ServerData
     public map: MapName
+    public in: string
     public x: number
     public y: number
 
@@ -558,6 +559,7 @@ export class Observer {
                     {
                         $match: {
                             map: this.map,
+                            in: this.in,
                             name: { $nin: visibleIDs },
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
@@ -602,6 +604,7 @@ export class Observer {
         this.x = data.x
         this.y = data.y
         this.map = data.name
+        this.in = data.in
 
         this.parseEntities(data.entities)
     }

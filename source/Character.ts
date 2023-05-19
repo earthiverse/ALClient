@@ -38,7 +38,6 @@ export class Character extends Observer implements CharacterData {
     public apiercing = 0
     public blast = 0
     public controller: string
-    public in: string
     public name: string
     public id: string
     public ctype: CharacterType
@@ -427,7 +426,6 @@ export class Character extends Observer implements CharacterData {
     protected parseNewMap(data: NewMapData): void {
         this.going_x = data.x
         this.going_y = data.y
-        this.in = data.in
         this.m = data.m
         this.moving = false
 
