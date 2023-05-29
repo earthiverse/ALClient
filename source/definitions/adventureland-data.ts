@@ -260,7 +260,7 @@ export type GData = {
         wheel: {
             gold: number
             /** Slice ID, Prize Type, Prize, Color */
-            slices: ([string, "gold", number, string ] | [string, "item", ItemName, string])[]
+            slices: ([string, "gold", number, string] | [string, "item", ItemName, string])[]
         }
     }
     geometry: {
@@ -851,16 +851,16 @@ export type GItem = {
     /** TODO: ??? What is this? */
     xscroll?: boolean
 } & {
-    /** Items can give bonus stats on certain maps, or for certain character types */
-    [T in CharacterType | MapName]?:
-    {
-        [T in Exclude<Attribute, "stat">]?: number
-    } & {
-        upgrade?: {
+        /** Items can give bonus stats on certain maps, or for certain character types */
+        [T in CharacterType | MapName]?:
+        {
             [T in Exclude<Attribute, "stat">]?: number
+        } & {
+            upgrade?: {
+                [T in Exclude<Attribute, "stat">]?: number
+            }
         }
     }
-}
 
 export type GDropItem =
     /** The drop is an item [chance, item name, item quantity] */
@@ -1019,73 +1019,7 @@ export type GMonster = {
     /** (GUI) If set, the sprite will continue its animation when it's standing still. (AA = Always Animate) */
     aa?: number
     /** Abilities that this monster has */
-    abilities?: {
-        [T in SkillName]?: {
-            cooldown?: number
-            radius?: number
-            aura?: boolean
-            condition?: ConditionName
-        }
-    } & {
-        "burn"?: {
-            attr0: number
-            unlimited: boolean
-        }
-    } & {
-        "degen"?: {
-            cooldown: number
-            amount: number
-        }
-    } & {
-        "heal"?: {
-            heal: number
-        }
-    } & {
-        "healing"?: {
-            cooldown: number
-            heal: number
-        }
-    } & {
-        "multi_burn"?: {
-            damage: number
-        }
-    } & {
-        "multi_freeze"?: {
-            cooldown: number
-            damage: number
-        }
-    } & {
-        "putrid"?: {
-            curse: boolean
-            poison: boolean
-        }
-    } & {
-        "self_healing"?: {
-            heal: number
-        }
-    } & {
-        "warp_on_hit"?: {
-            attr0: number
-            unlimited: boolean
-        }
-    } & {
-        "warpstomp"?: {
-            cooldown: number
-            radius: number
-            stun: number
-        }
-    } & {
-        "weakness_aura"?: {
-            condition: "weakness"
-        }
-    } & {
-        "zap"?: {
-            cooldown: number
-            amount: number
-            pure?: boolean
-            radius: number
-        }
-    }
+    abilities?: GMonsterAbilities
     /** Tracker achievements. [points needed, "stat", stat type, improvement] */
     achievements?: [number, "stat", Attribute, number][]
     /** The higher the number, the more likely the monster will attack you if you're near it */
@@ -1198,6 +1132,74 @@ export type GMonster = {
     unlist?: boolean
     /** How much XP the monster will give if you kill it. NOTE: This can be negative! Don't kill the puppies! */
     xp: number
+}
+
+export type GMonsterAbilities = {
+    [T in SkillName]?: {
+        cooldown?: number
+        radius?: number
+        aura?: boolean
+        condition?: ConditionName
+    }
+} & {
+    "burn"?: {
+        attr0: number
+        unlimited: boolean
+    }
+} & {
+    "degen"?: {
+        cooldown: number
+        amount: number
+    }
+} & {
+    "heal"?: {
+        heal: number
+    }
+} & {
+    "healing"?: {
+        cooldown: number
+        heal: number
+    }
+} & {
+    "multi_burn"?: {
+        damage: number
+    }
+} & {
+    "multi_freeze"?: {
+        cooldown: number
+        damage: number
+    }
+} & {
+    "putrid"?: {
+        curse: boolean
+        poison: boolean
+    }
+} & {
+    "self_healing"?: {
+        heal: number
+    }
+} & {
+    "warp_on_hit"?: {
+        attr0: number
+        unlimited: boolean
+    }
+} & {
+    "warpstomp"?: {
+        cooldown: number
+        radius: number
+        stun: number
+    }
+} & {
+    "weakness_aura"?: {
+        condition: "weakness"
+    }
+} & {
+    "zap"?: {
+        cooldown: number
+        amount: number
+        pure?: boolean
+        radius: number
+    }
 }
 
 export type Attribute =

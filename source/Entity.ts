@@ -1,5 +1,5 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
-import { Attribute, ConditionName, DamageType, GData, GMonster, MapName, MonsterName, SkillName } from "./definitions/adventureland-data.js"
+import { Attribute, ConditionName, DamageType, GData, GMonster, GMonsterAbilities, MapName, MonsterName, SkillName } from "./definitions/adventureland-data.js"
 import { ActionData, MonsterData } from "./definitions/adventureland-server.js"
 import { Character } from "./Character.js"
 import { Player } from "./Player.js"
@@ -24,7 +24,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
 
     public target: string
 
-    public abilities: { [T in SkillName]?: never } = {}
+    public abilities: GMonsterAbilities = {}
     public charge: number
     public cooperative = false
     public damage_type: DamageType

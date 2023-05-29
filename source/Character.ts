@@ -4599,8 +4599,20 @@ export class Character extends Observer implements CharacterData {
                 const checkItemDataA = data.user[pack][itemPosA]
                 const checkItemDataB = data.user[pack][itemPosB]
 
-                if (isDeepStrictEqual(checkItemDataB, itemDataA)
-                    && isDeepStrictEqual(checkItemDataA, itemDataB)) {
+                if (
+                    isDeepStrictEqual(checkItemDataB, itemDataA)
+                    && isDeepStrictEqual(checkItemDataA, itemDataB)
+                ) {
+                    // We swapped them
+                    this.socket.off("player", successCheck)
+                    resolve()
+                }
+
+                if (
+                    itemDataB.q !== undefined
+                    && checkItemDataB.q == itemDataA.q + itemDataB.q
+                ) {
+                    // We stacked them
                     this.socket.off("player", successCheck)
                     resolve()
                 }
@@ -5199,7 +5211,7 @@ export class Character extends Observer implements CharacterData {
      */
     public couldDieToProjectiles(): boolean {
         // if (this.avoidance >= 100) return false
-        let incomingProjectileDamage = 0
+        let damage = 0
         for (const projectile of this.projectiles.values()) {
             if (!projectile.damage) continue // Won't do any damage
             if (projectile.target !== this.id) continue // This projectile is heading towards another entity
@@ -5213,8 +5225,8 @@ export class Character extends Observer implements CharacterData {
             if (!attacker) attacker = this.entities.get(projectile.attacker)
             if (!attacker) {
                 // Couldn't find attacker, assume it will crit with maximum damage
-                incomingProjectileDamage += projectile.damage * 2.2
-                if (incomingProjectileDamage >= this.hp) return true
+                damage += projectile.damage * 2.2
+                if (damage >= this.hp) return true
                 continue
             }
 
@@ -5223,9 +5235,20 @@ export class Character extends Observer implements CharacterData {
 
             const maximumDamage = attacker.calculateDamageRange(this, projectile.type)[1]
 
-            incomingProjectileDamage += maximumDamage
-            if (incomingProjectileDamage >= this.hp) return true
+            damage += maximumDamage
+            if (damage >= this.hp) return true
         }
+
+        for (const entity of this.entities.values()) {
+            const d = Tools.distance(this, entity)
+
+            // zapper0s have the zap ability that is a `ray`, which is an instant projectile
+            if (entity.type == "zapper0" && d <= 300) {
+                damage += entity.abilities.zap.amount
+                if (damage >= this.hp) return true
+            }
+        }
+
         return false
     }
 
