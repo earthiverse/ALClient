@@ -693,7 +693,7 @@ export type EquipSuccessGRDataObject = {
     num: number
 }
 export type EquipFailedGRDataObject = {
-    response: "cant_equip"
+    response: "cant_equip" | "not_ready"
     place: "equip"
     failed: true
 }

@@ -4989,7 +4989,13 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
+                    if (
+                        (
+                            data.response == "cant_equip"
+                            || data.response == "not_ready"
+                        )
+                        && data.place == "equip"
+                        && data.failed) {
                         cleanup()
                         reject(new Error(`Failed to use HP Pot (${data.response})`))
                     }
@@ -5032,16 +5038,22 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if (data.response == "cant_equip" && data.place == "equip" && data.failed) {
+                    if (
+                        (
+                            data.response == "cant_equip"
+                            || data.response == "not_ready"
+                        )
+                        && data.place == "equip"
+                        && data.failed) {
                         cleanup()
-                        reject(new Error(`Failed to use HP Pot (${data.response})`))
+                        reject(new Error(`Failed to use MP Pot (${data.response})`))
                     }
                 }
             }
 
             const timeout = setTimeout(() => {
                 cleanup()
-                reject(new Error(`useHPPot timeout (${Constants.TIMEOUT}ms)`))
+                reject(new Error(`useMPPot timeout (${Constants.TIMEOUT}ms)`))
             }, Constants.TIMEOUT)
 
             this.socket.on("eval", healCheck)
