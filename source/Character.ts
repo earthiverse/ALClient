@@ -4289,6 +4289,12 @@ export class Character extends Observer implements CharacterData {
             if (!fixedTo) throw new Error(`Could not find a suitable destination for '${to}'`)
         } else if (to.x !== undefined && to.y !== undefined) {
             fixedTo = { in: to.in, map: to.map || this.map, x: to.x, y: to.y }
+
+            // Check if we're on the same map, but in a different instance
+            if (to.in && this.map === to.map && this.in !== to.in) {
+                // Leave our current instance
+                await this.smartMove("main", { stopIfTrue: async () => { return this.map === to.map } })
+            }
         } else {
             if (options?.showConsole) console.debug(to)
             throw new Error("'to' is unsuitable for smartMove. We need a 'map', an 'x', and a 'y'.")
