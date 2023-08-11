@@ -4293,7 +4293,7 @@ export class Character extends Observer implements CharacterData {
             // Check if we're on the same map, but in a different instance
             if (to.in && this.map === to.map && this.in !== to.in) {
                 // Leave our current instance
-                await this.smartMove("main", { stopIfTrue: async () => { return this.map === to.map } })
+                await this.smartMove("main", { stopIfTrue: async () => { return this.map !== to.map } })
             }
         } else {
             if (options?.showConsole) console.debug(to)
