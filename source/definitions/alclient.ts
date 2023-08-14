@@ -18,7 +18,11 @@ export type GetEntitiesFilters = {
     isCooperative?: boolean
     isDisabled?: boolean
     withinRange?: number | SkillName
-    /** Only set this if you're not checking within the range of your own character */
+    /** 
+     * Only set this if you're not checking within the range of your own character.
+     * 
+     * If you set this, make sure that `withinRange` is also set!
+     */
     withinRangeOf?: IPosition
     targetingMe?: boolean
     targetingPartyMember?: boolean
