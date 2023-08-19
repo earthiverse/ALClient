@@ -4469,7 +4469,7 @@ export class Character extends Observer implements CharacterData {
             } catch (e) {
                 if (options?.showConsole) console.error(e)
                 numAttempts++
-                if (numAttempts >= 3) {
+                if (numAttempts >= (options.numAttempts ?? 3)) {
                     this.smartMoving = undefined
                     throw new Error("We are having some trouble smartMoving...")
                 }

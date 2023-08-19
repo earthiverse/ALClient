@@ -107,6 +107,8 @@ export type LocateItemFilters = LocateItemsFilters & {
 }
 
 export type SmartMoveOptions = PathfinderOptions & {
+    /** Override the default number of attempts */
+    numAttempts?: number
     /** If set, this function will be called before every action. Useful if you want to stop smartMoving early. */
     stopIfTrue?: () => Promise<boolean>
     /** If set, we will resolve the promise when we start moving our final move instead of completing the final move */
