@@ -185,7 +185,7 @@ export class Pathfinder {
     public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
         if (link?.type == "leave" || link?.type == "transport") {
             // We are using the transporter
-            if (link.map.startsWith("bank")) return 999999 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
+            if (link.map === "bank" || link.map === "bank_u") return 1000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
             return options?.costs?.transport !== undefined ? options.costs.transport : Pathfinder.TRANSPORT_COST
         } else if (link?.type == "enter") {
             // We are entering a crypt
