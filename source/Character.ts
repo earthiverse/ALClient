@@ -4477,7 +4477,7 @@ export class Character extends Observer implements CharacterData {
                 // Look for the path again
                 this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
                 await this.requestPlayerData()?.catch((e) => { if (options?.showConsole) console.error(e) })
-                path = await Pathfinder.getPath(this, fixedTo, options)
+                path = Pathfinder.getPath(this, fixedTo, options)
                 i = -1
                 await new Promise(resolve => setTimeout(resolve, this.timeout))
             }

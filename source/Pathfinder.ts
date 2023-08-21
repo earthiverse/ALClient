@@ -896,12 +896,11 @@ export class Pathfinder {
 
     public static locateMonster(mTypes: MonsterName | MonsterName[]): IPosition[] {
         if (typeof mTypes == "string") mTypes = [mTypes]
-        for (let i = 0; i < mTypes.length; i++) {
-            const mType = mTypes[i]
 
-            // Known special monster spawns
-            if (mType == "goldenbat") mTypes[i] = "bat"
-            else if (mType == "snowman") mTypes[i] = "arcticbee"
+        // We know the location of some special monsters
+        const specialMonsters: Partial<Record<MonsterName, MonsterName>> = {
+            "goldenbat": "bat",
+            "snowman": "snowman"
         }
 
         const locations: IPosition[] = []
@@ -912,7 +911,7 @@ export class Pathfinder {
             if (map.instance || !map.monsters || map.monsters.length == 0) continue // Map is unreachable, or there are no monsters
 
             for (const monsterSpawn of map.monsters) {
-                if (!mTypes.includes(monsterSpawn.type)) continue
+                if (!mTypes.includes(specialMonsters[monsterSpawn.type] ?? monsterSpawn.type)) continue
 
                 if (monsterSpawn.random) {
                     // The monster can spawn at any spawn point on the map
