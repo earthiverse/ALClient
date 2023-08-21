@@ -413,29 +413,30 @@ export class Observer {
 
             // Update our database
             if (Database.connection && Constants.SPECIAL_MONSTERS.includes(e.type)) {
+                const now = Date.now()
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
-                if (!nextUpdate || Date.now() > nextUpdate) {
+                if (!nextUpdate || now > nextUpdate) {
                     if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
                         // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
                             updateOne: {
                                 filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                update: { $min: { firstSeen: now }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
-                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, now + Constants.MONGO_UPDATE_MS)
                     } else {
                         // Include the id in the filter
                         entityUpdates.push({
                             updateOne: {
                                 filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { hp: e.hp, in: e.in, lastSeen: Date.now(), level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                update: { $min: { firstSeen: now }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
                     }
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, now + Constants.MONGO_UPDATE_MS)
                 }
             }
         }
@@ -454,20 +455,22 @@ export class Observer {
 
             // Update our database
             if (Database.connection) {
+                const now = Date.now()
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${p.id}`)
-                if (!nextUpdate || Date.now() > nextUpdate) {
+                if (!nextUpdate || now > nextUpdate) {
                     if (p.isNPC()) {
                         npcUpdates.push({
                             updateOne: {
                                 filter: { name: p.name, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
-                                update: { lastSeen: Date.now(), map: p.map, x: p.x, y: p.y },
+                                update: { $min: { firstSeen: now }, lastSeen: now, map: p.map, x: p.x, y: p.y },
                                 upsert: true
                             }
                         })
                     } else {
                         const updateData: UpdateQuery<IPlayer> = {
+                            $min: { firstSeen: now },
                             in: p.in,
-                            lastSeen: Date.now(),
+                            lastSeen: now,
                             map: p.map,
                             party: p.party,
                             rip: p.rip,
@@ -729,7 +732,7 @@ export class Observer {
                 clearTimeout(timeout)
             }
 
-            const pingListener = (data: { id: string}) => {
+            const pingListener = (data: { id: string }) => {
                 if (data.id == pingID) {
                     const time = Date.now() - this.pingMap.get(pingID)?.time
                     cleanup()
