@@ -15,6 +15,7 @@ export interface IEntity {
     hp?: number
     s?: StatusInfo
     target?: string
+    firstSeen?: number
     lastSeen?: number
 }
 
