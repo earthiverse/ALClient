@@ -23,7 +23,7 @@ const EntitySchema = new Schema({
 })
 
 EntitySchema.index({ type: 1 })
-EntitySchema.index({ name: 1, serverIdentifier: 1, serverRegion: 1, type: 1 }, { unique: true })
+EntitySchema.index({ name: 1, serverIdentifier: 1, serverRegion: 1, type: 1 }, { unique: true, partialFilterExpression: { name: { $type: "string" } } })
 EntitySchema.index({ lastSeen: 1 })
 
 export default EntitySchema
