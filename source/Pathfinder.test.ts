@@ -18,9 +18,6 @@ test("Pathfinder.prepare", async () => {
     console.debug = debugMock
 
     await expect(async () => { await Pathfinder.prepare(Game.G, {
-        include_bank_b: true,
-        include_bank_u: true,
-        include_test: true,
         showConsole: false
     }) }).not.toThrowError()
     expect(Pathfinder.getGrid("main")).toBeDefined()
@@ -30,9 +27,6 @@ test("Pathfinder.prepare", async () => {
     // Cheat
     await expect(async () => { await Pathfinder.prepare(Game.G, {
         cheat: true,
-        include_bank_b: true,
-        include_bank_u: true,
-        include_test: true,
         showConsole: true
     }) }).not.toThrowError()
     expect(logMock).not.toHaveBeenCalled()
