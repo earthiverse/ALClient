@@ -183,7 +183,7 @@ export class Pathfinder {
     }
 
     public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
-        if (options?.avoidMaps?.[link.map]) {
+        if (options?.avoidMaps?.[link?.map]) {
             // We want to avoid this map
             return 999999
         } else if (link?.type == "leave" || link?.type == "transport") {
