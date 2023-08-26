@@ -44,6 +44,7 @@ export type LinkData = NodeData & (
     })
 
 export type PathfinderOptions = {
+    avoidMaps?: MapName[]
     avoidTownWarps?: boolean
     getWithin?: number
     useBlink?: boolean

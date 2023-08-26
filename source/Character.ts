@@ -4305,6 +4305,15 @@ export class Character extends Observer implements CharacterData {
         if (distance == 0) return fixedTo
         if (options?.getWithin >= distance) return { map: this.map, x: this.x, y: this.y }
 
+        // Avoid banks if we're not going to a bank
+        if (!Constants.BANK_MAPS.includes(fixedTo.map)) {
+            if (options.avoidMaps) {
+                options.avoidMaps.push(...Constants.BANK_MAPS)
+            } else {
+                options.avoidMaps = Constants.BANK_MAPS
+            }
+        }
+
         // If we don't have the path yet, get it
         this.smartMoving = fixedTo
         try {

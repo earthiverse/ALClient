@@ -183,7 +183,10 @@ export class Pathfinder {
     }
 
     public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
-        if (link?.type == "leave" || link?.type == "transport") {
+        if (options.avoidMaps && options.avoidMaps[link.map]) {
+            // We want to avoid this map
+            return 999999
+        } else if (link?.type == "leave" || link?.type == "transport") {
             // We are using the transporter
             if (link.map === "bank" || link.map === "bank_u") return 1000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
             return options?.costs?.transport !== undefined ? options.costs.transport : Pathfinder.TRANSPORT_COST
@@ -728,9 +731,10 @@ export class Pathfinder {
             vn: number
         },
         cheat?: boolean,
-        include_bank_b?: boolean,
-        include_bank_u?: boolean,
-        include_test?: boolean,
+        remove_abtesting?: boolean,
+        remove_bank_b?: boolean,
+        remove_bank_u?: boolean,
+        remove_test?: boolean,
         maps?: MapName[],
         showConsole?: boolean
     } = {}): Promise<void> {
@@ -751,16 +755,12 @@ export class Pathfinder {
 
                 // Add the connected maps
                 for (const door of this.G.maps[map].doors) {
-                    if (door[4] == "bank_b" && !options.include_bank_b) continue
-                    if (door[4] == "bank_u" && !options.include_bank_u) continue
-                    if (door[4] == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
                     if (!options.maps.includes(door[4])) options.maps.push(door[4])
                 }
             }
 
             // Add maps that we can reach through the teleporter
             for (const map in this.G.npcs.transporter.places) {
-                if (map == "test" && !options.include_test) continue // Skip the test map to save ourselves some processing.
                 if (!options.maps.includes(map as MapName)) options.maps.push(map as MapName)
             }
 
@@ -769,15 +769,18 @@ export class Pathfinder {
             if (hasTest >= 0) options.maps.splice(hasTest, 1)
         }
 
+        // Add disconnected maps
+        options.maps.push("goobrawl", "jail")
+
+        if (options.remove_abtesting) options.maps = options.maps.filter(m => m !== "abtesting")
+        if (options.remove_bank_b) options.maps = options.maps.filter(m => m !== "bank_b")
+        if (options.remove_bank_u) options.maps = options.maps.filter(m => m !== "bank_u")
+        if (options.remove_test) options.maps = options.maps.filter(m => m !== "test")
+
         // Prepare each map
         for (const map of options.maps) {
             this.getGrid(map, options.base)
         }
-
-        // Prepare disconnected maps
-        this.getGrid("abtesting", options.base)
-        this.getGrid("goobrawl", options.base)
-        this.getGrid("jail", options.base)
 
         if (options.cheat) {
             const addCheatPath = (from: IPosition & { map: MapName }, to: IPosition & { map: MapName }) => {

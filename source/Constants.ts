@@ -44,8 +44,10 @@ export class Constants {
     /** Mongo related things */
     static MONGO_UPDATE_MS = 5000
 
+    static BANK_MAPS: MapName[] = ["bank", "bank_b", "bank_u"]
+
     /** Monsters that are worth tracking in our database */
-    static MONSTER_RESPAWN_TIMES: { [T in MonsterName]?: number} = {
+    static MONSTER_RESPAWN_TIMES: { [T in MonsterName]?: number } = {
         "snowman": 20 * 60 * 60 * 1000 // 20 hours (This is an estimate based on #game_events in Discord) NOTE: If the winter event is happening, they respawn faster
     }
     static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
