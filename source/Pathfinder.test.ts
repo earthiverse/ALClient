@@ -17,18 +17,22 @@ test("Pathfinder.prepare", async () => {
     console.log = logMock
     console.debug = debugMock
 
-    await expect(async () => { await Pathfinder.prepare(Game.G, {
-        showConsole: false
-    }) }).not.toThrowError()
+    await expect(async () => {
+        await Pathfinder.prepare(Game.G, {
+            showConsole: false
+        })
+    }).not.toThrowError()
     expect(Pathfinder.getGrid("main")).toBeDefined()
     expect(logMock).not.toHaveBeenCalled()
     expect(debugMock).not.toHaveBeenCalled()
 
     // Cheat
-    await expect(async () => { await Pathfinder.prepare(Game.G, {
-        cheat: true,
-        showConsole: true
-    }) }).not.toThrowError()
+    await expect(async () => {
+        await Pathfinder.prepare(Game.G, {
+            cheat: true,
+            showConsole: true
+        })
+    }).not.toThrowError()
     expect(logMock).not.toHaveBeenCalled()
     expect(debugMock).toHaveBeenCalled()
 
@@ -58,7 +62,7 @@ test("Pathfinder.doorDistance", async () => {
 
     // Test outside the door
     const doorOutside_1 = { x: mainBankDoor[0] + mainBankDoor[2], y: mainBankDoor[1] - mainBankDoor[3] }
-    expect(Pathfinder.doorDistanceSquared(doorOutside_1, mainBankDoor)).toBe((mainBankDoor [2] / 2) * (mainBankDoor [2] / 2))
+    expect(Pathfinder.doorDistanceSquared(doorOutside_1, mainBankDoor)).toBe((mainBankDoor[2] / 2) * (mainBankDoor[2] / 2))
 })
 
 test("Pathfinder.getPath", async () => {
@@ -84,10 +88,36 @@ test("Pathfinder.getPath", async () => {
 
     // Don't use town warps
     expect(() => {
-        path = Pathfinder.getPath({ map: "main", x: 17, y: -152 }, { map: "main", x: 383, y: 1480 }, { avoidTownWarps: true })
+        path = Pathfinder.getPath({ map: "main", x: 383, y: 1480 }, { map: "main", x: 17, y: -152 }, { avoidTownWarps: true })
     }).not.toThrowError()
     expect(path).not.toBeUndefined()
     for (const link of (path as unknown as LinkData[])) expect(link.type).not.toEqual("town")
+    path = undefined
+
+    // Takes bank
+    expect(() => {
+        path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
+    }).not.toThrowError()
+    expect(path).not.toBeUndefined()
+    let hasBankLink = false
+    for (const link of (path as unknown as LinkData[])) {
+        if (link && link.map.startsWith("bank")) {
+            hasBankLink = true
+            break
+        }
+    }
+    expect(hasBankLink).toBeTruthy()
+    path = undefined
+
+    // Avoids bank
+    expect(() => {
+        path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+    }).not.toThrowError()
+    expect(path).not.toBeUndefined()
+    for (const link of (path as unknown as LinkData[])) {
+        if (link) expect(link.map).not.toMatch(/^bank/)
+    }
+    path = undefined
 })
 
 test("Pathfinder.locateCraftNPC", () => {
