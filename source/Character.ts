@@ -4307,10 +4307,9 @@ export class Character extends Observer implements CharacterData {
 
         // Avoid banks if we're not going to a bank
         if (!Constants.BANK_MAPS.includes(fixedTo.map)) {
-            if (options.avoidMaps) {
-                options.avoidMaps.push(...Constants.BANK_MAPS)
-            } else {
-                options.avoidMaps = Constants.BANK_MAPS
+            if (!options.avoidMaps) options.avoidMaps = []
+            for (const map of Constants.BANK_MAPS) {
+                if (!options.avoidMaps.includes(map)) options.avoidMaps.push(map)
             }
         }
 
