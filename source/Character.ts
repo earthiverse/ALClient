@@ -2920,7 +2920,7 @@ export class Character extends Observer implements CharacterData {
         return questGot
     }
 
-    public getPlayer(filters: GetPlayerFilters): Player {
+    public getPlayer(filters: GetPlayerFilters = {}): Player {
         const players = this.getPlayers(filters)
 
         // Warn if using more than one option
@@ -2970,7 +2970,7 @@ export class Character extends Observer implements CharacterData {
         }
     }
 
-    public getPlayers(filters: GetPlayersFilters): Player[] {
+    public getPlayers(filters: GetPlayersFilters = {}): Player[] {
         const players: Player[] = []
 
         for (const [, player] of this.players) {

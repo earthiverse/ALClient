@@ -764,10 +764,6 @@ export class Pathfinder {
             for (const map in this.G.npcs.transporter.places) {
                 if (!options.maps.includes(map as MapName)) options.maps.push(map as MapName)
             }
-
-            // Remove the test map if it snuck in
-            const hasTest = options.maps.indexOf("test")
-            if (hasTest >= 0) options.maps.splice(hasTest, 1)
         }
 
         // Add disconnected maps
