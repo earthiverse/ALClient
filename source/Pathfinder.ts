@@ -734,6 +734,7 @@ export class Pathfinder {
         remove_abtesting?: boolean,
         remove_bank_b?: boolean,
         remove_bank_u?: boolean,
+        remove_goobrawl?: boolean,
         remove_test?: boolean,
         maps?: MapName[],
         showConsole?: boolean
@@ -770,11 +771,12 @@ export class Pathfinder {
         }
 
         // Add disconnected maps
-        options.maps.push("goobrawl", "jail")
+        options.maps.push("abtesting", "goobrawl", "jail")
 
         if (options.remove_abtesting) options.maps = options.maps.filter(m => m !== "abtesting")
         if (options.remove_bank_b) options.maps = options.maps.filter(m => m !== "bank_b")
         if (options.remove_bank_u) options.maps = options.maps.filter(m => m !== "bank_u")
+        if (options.remove_goobrawl) options.maps = options.maps.filter(m => m !== "goobrawl")
         if (options.remove_test) options.maps = options.maps.filter(m => m !== "test")
 
         // Prepare each map
