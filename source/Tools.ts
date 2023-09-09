@@ -96,4 +96,21 @@ export class Tools {
         }
         return min
     }
+
+    /**
+     * Calculates the latest the monster could have spawned
+     * NOTE: A lot of analysis went in to this, when the game is open source, we should be able to do a better fit
+     *
+     * @param level
+     * @param base_hp
+     * @returns
+     */
+    public static estimateSpawnedDate(level: number, base_hp: number) {
+        let firstSeen = Date.now()
+        for (let level_from = level - 1; level_from > 0; level_from--) {
+            const hp_from = base_hp + (base_hp * 0.5 * level_from)
+            firstSeen -= 1.23 ** level_from * Math.max(145000, hp_from * 24)
+        }
+        return firstSeen
+    }
 }

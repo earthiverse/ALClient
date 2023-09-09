@@ -416,12 +416,14 @@ export class Observer {
                 const now = Date.now()
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
                 if (!nextUpdate || now > nextUpdate) {
+                    const firstSeen = Tools.estimateSpawnedDate(e.level, this.G.monsters[e.type].hp)
+
                     if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
                         // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
                             updateOne: {
                                 filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { $min: { firstSeen: now }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                update: { $min: { firstSeen: firstSeen }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
@@ -431,7 +433,7 @@ export class Observer {
                         entityUpdates.push({
                             updateOne: {
                                 filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { $min: { firstSeen: now }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
+                                update: { $min: { firstSeen: firstSeen }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
                                 upsert: true
                             }
                         })
@@ -561,8 +563,8 @@ export class Observer {
                 EntityModel.aggregate([
                     {
                         $match: {
-                            map: this.map,
                             in: this.in,
+                            map: this.map,
                             name: { $nin: visibleIDs },
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,

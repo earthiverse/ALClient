@@ -71,53 +71,66 @@ test("Pathfinder.getPath", async () => {
     const halloweenSpawn: NodeData = { map: "halloween", x: Game.G.maps.halloween.spawns[0][0], y: Game.G.maps.halloween.spawns[0][1] }
 
     // Simple line of sight path
-    let path: LinkData[] | undefined
     expect(() => {
-        path = Pathfinder.getPath(mainSpawn, mainOffset)
+        const path = Pathfinder.getPath(mainSpawn, mainOffset)
+        expect(path).toHaveLength(2)
     }).not.toThrowError()
-    expect(path).not.toBeUndefined()
-    expect((path as LinkData[]).length).toBe(2)
-    path = undefined
 
     // Complicated cross-map path
     expect(() => {
-        path = Pathfinder.getPath(mainSpawn, halloweenSpawn)
+        const path = Pathfinder.getPath(mainSpawn, halloweenSpawn)
+        expect(path.length).toBeTruthy()
     }).not.toThrowError()
-    expect(path).not.toBeUndefined()
-    path = undefined
 
     // Don't use town warps
     expect(() => {
-        path = Pathfinder.getPath({ map: "main", x: 383, y: 1480 }, { map: "main", x: 17, y: -152 }, { avoidTownWarps: true })
+        const path = Pathfinder.getPath({ map: "main", x: 383, y: 1480 }, { map: "main", x: 17, y: -152 }, { avoidTownWarps: true })
+        expect(path.length).toBeTruthy
+        for (const link of (path as unknown as LinkData[])) expect(link.type).not.toEqual("town")
     }).not.toThrowError()
-    expect(path).not.toBeUndefined()
-    for (const link of (path as unknown as LinkData[])) expect(link.type).not.toEqual("town")
-    path = undefined
 
     // Takes bank
     expect(() => {
-        path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
-    }).not.toThrowError()
-    expect(path).not.toBeUndefined()
-    let hasBankLink = false
-    for (const link of (path as unknown as LinkData[])) {
-        if (link && link.map.startsWith("bank")) {
-            hasBankLink = true
-            break
+        const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
+        expect(path.length).toBeTruthy()
+        let hasBankLink = false
+        for (const link of (path as unknown as LinkData[])) {
+            if (link && link.map.startsWith("bank")) {
+                hasBankLink = true
+                break
+            }
         }
-    }
-    expect(hasBankLink).toBeTruthy()
-    path = undefined
+        expect(hasBankLink).toBeTruthy()
+    }).not.toThrowError()
 
     // Avoids bank
     expect(() => {
-        path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        expect(path.length).toBeTruthy()
+        for (const link of (path as unknown as LinkData[])) {
+            if (link) expect(link.map).not.toMatch(/^bank/)
+        }
     }).not.toThrowError()
-    expect(path).not.toBeUndefined()
-    for (const link of (path as unknown as LinkData[])) {
-        if (link) expect(link.map).not.toMatch(/^bank/)
-    }
-    path = undefined
+
+    // Still goes to bank
+    expect(() => {
+        const path = Pathfinder.getPath({ map: "main", x: 2, y: 3 }, { map: "bank_u", x: 4, y: 5 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        expect(path.length).toBeTruthy()
+        const end = path[path.length - 1]
+        expect(end.map).toEqual("bank_u")
+        expect(end.x).toEqual(4)
+        expect(end.y).toEqual(5)
+    }).not.toThrowError()
+
+    // Still exits bank
+    expect(() => {
+        const path = Pathfinder.getPath({ map: "bank_u", x: 2, y: 3 }, { map: "main", x: 4, y: 5 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        expect(path.length).toBeTruthy()
+        const end = path[path.length - 1]
+        expect(end.map).toEqual("main")
+        expect(end.x).toEqual(4)
+        expect(end.y).toEqual(5)
+    }).not.toThrowError()
 })
 
 test("Pathfinder.locateCraftNPC", () => {
