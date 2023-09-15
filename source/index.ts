@@ -6,6 +6,8 @@ import { Entity } from "./Entity.js"
 export * from "./Entity.js"
 import { Game } from "./Game.js"
 export * from "./Game.js"
+import { Item } from "./Item.js"
+export * from "./Item.js"
 import { Mage } from "./Mage.js"
 export * from "./Mage.js"
 import { Merchant } from "./Merchant.js"
@@ -60,6 +62,7 @@ export default {
     Entity,
     EntityModel,
     Game,
+    Item,
     Mage,
     Merchant,
     NPCModel,

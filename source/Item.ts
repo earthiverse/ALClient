@@ -25,6 +25,7 @@ export class Item implements ItemData, GItem {
     public gift = 0
     public int = 0
     public p?: TitleName
+    public range = 0
     public resistance = 0
     public stat = 0
     public str = 0
@@ -42,7 +43,7 @@ export class Item implements ItemData, GItem {
         for (const key in data) this[key] = data[key]
 
         // Calculate additional stats from item level
-        for (let i = 0; i < this.level; i++) {
+        for (let i = 1; i <= this.level; i++) {
             if (gData.upgrade) {
                 for (const s in gData.upgrade) {
                     const add = gData.upgrade[s]
@@ -54,8 +55,8 @@ export class Item implements ItemData, GItem {
                     if (i == 11) multiplier = 1.25
                     if (i == 12) multiplier = 1.25
                     if (s == "stat") {
-                        this.stat += Math.round(add * multiplier)
-                        if (i >= 7) this.stat += 1
+                        this[s] += Math.round(add * multiplier)
+                        if (i >= 7) this[s] += 1
                     } else {
                         this[s] += add * multiplier
                     }
