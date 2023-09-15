@@ -109,7 +109,7 @@ export class Game {
         }
 
         if (Database.connection) {
-            const informationDate = Date.now() - 300000 /** Assume the information is 5 minutes old */
+            const informationDate = Date.now() - 120000 /** Assume the information is 2 minutes old */
 
             // Update the database with the merchant's information
             const promises: Promise<unknown>[] = []
