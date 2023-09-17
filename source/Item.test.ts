@@ -6,6 +6,7 @@ beforeAll(async () => {
 }, 60000)
 
 test("Item stats", async () => {
+    // Compare stats to those grabbed from https://adventure.land/docs
     const level0Staff = new Item({ level: 0, name: "staff" })
     expect(level0Staff.attack).toEqual(25)
     expect(level0Staff.range).toEqual(50)

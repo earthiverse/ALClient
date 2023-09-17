@@ -121,36 +121,36 @@ export class Game {
                     serverIdentifier: server[1] as ServerIdentifier,
                     serverRegion: server[0] as ServerRegion,
                     // We have to update all of the trade slots individually so we don't overwrite what they have equipped
-                    "slots.trade1": merchant.slots.trade1,
-                    "slots.trade2": merchant.slots.trade2,
-                    "slots.trade3": merchant.slots.trade3,
-                    "slots.trade4": merchant.slots.trade4,
-                    "slots.trade5": merchant.slots.trade5,
-                    "slots.trade6": merchant.slots.trade6,
-                    "slots.trade7": merchant.slots.trade7,
-                    "slots.trade8": merchant.slots.trade8,
-                    "slots.trade9": merchant.slots.trade9,
-                    "slots.trade10": merchant.slots.trade10,
-                    "slots.trade11": merchant.slots.trade11,
-                    "slots.trade12": merchant.slots.trade12,
-                    "slots.trade13": merchant.slots.trade13,
-                    "slots.trade14": merchant.slots.trade14,
-                    "slots.trade15": merchant.slots.trade15,
-                    "slots.trade16": merchant.slots.trade16,
-                    "slots.trade17": merchant.slots.trade17,
-                    "slots.trade18": merchant.slots.trade18,
-                    "slots.trade19": merchant.slots.trade19,
-                    "slots.trade20": merchant.slots.trade20,
-                    "slots.trade21": merchant.slots.trade21,
-                    "slots.trade22": merchant.slots.trade22,
-                    "slots.trade23": merchant.slots.trade23,
-                    "slots.trade24": merchant.slots.trade24,
-                    "slots.trade25": merchant.slots.trade25,
-                    "slots.trade26": merchant.slots.trade26,
-                    "slots.trade27": merchant.slots.trade27,
-                    "slots.trade28": merchant.slots.trade28,
-                    "slots.trade29": merchant.slots.trade29,
-                    "slots.trade30": merchant.slots.trade30,
+                    "slots.trade1": merchant.slots.trade1 ?? null,
+                    "slots.trade2": merchant.slots.trade2 ?? null,
+                    "slots.trade3": merchant.slots.trade3 ?? null,
+                    "slots.trade4": merchant.slots.trade4 ?? null,
+                    "slots.trade5": merchant.slots.trade5 ?? null,
+                    "slots.trade6": merchant.slots.trade6 ?? null,
+                    "slots.trade7": merchant.slots.trade7 ?? null,
+                    "slots.trade8": merchant.slots.trade8 ?? null,
+                    "slots.trade9": merchant.slots.trade9 ?? null,
+                    "slots.trade10": merchant.slots.trade10 ?? null,
+                    "slots.trade11": merchant.slots.trade11 ?? null,
+                    "slots.trade12": merchant.slots.trade12 ?? null,
+                    "slots.trade13": merchant.slots.trade13 ?? null,
+                    "slots.trade14": merchant.slots.trade14 ?? null,
+                    "slots.trade15": merchant.slots.trade15 ?? null,
+                    "slots.trade16": merchant.slots.trade16 ?? null,
+                    "slots.trade17": merchant.slots.trade17 ?? null,
+                    "slots.trade18": merchant.slots.trade18 ?? null,
+                    "slots.trade19": merchant.slots.trade19 ?? null,
+                    "slots.trade20": merchant.slots.trade20 ?? null,
+                    "slots.trade21": merchant.slots.trade21 ?? null,
+                    "slots.trade22": merchant.slots.trade22 ?? null,
+                    "slots.trade23": merchant.slots.trade23 ?? null,
+                    "slots.trade24": merchant.slots.trade24 ?? null,
+                    "slots.trade25": merchant.slots.trade25 ?? null,
+                    "slots.trade26": merchant.slots.trade26 ?? null,
+                    "slots.trade27": merchant.slots.trade27 ?? null,
+                    "slots.trade28": merchant.slots.trade28 ?? null,
+                    "slots.trade29": merchant.slots.trade29 ?? null,
+                    "slots.trade30": merchant.slots.trade30 ?? null,
                     x: merchant.x,
                     y: merchant.y
                 }).lean().exec())
@@ -222,11 +222,11 @@ export class Game {
                     }
                 }
             } else if (loginResult && loginResult.message) {
-            // We failed logging in, and we have a reason from the server
+                // We failed logging in, and we have a reason from the server
                 console.error(loginResult.message)
                 throw new Error(loginResult.message)
             } else {
-            // We failed logging in, but we don't know what went wrong
+                // We failed logging in, but we don't know what went wrong
                 console.error(login.data)
                 throw new Error("Failed logging in.")
             }
