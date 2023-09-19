@@ -1,5 +1,6 @@
 import { Game } from "./Game"
 import { Item } from "./Item"
+import { ItemData } from "./definitions/adventureland-server"
 
 beforeAll(async () => {
     await Game.getGData(true, false)
@@ -58,4 +59,12 @@ test("Item stats", async () => {
     const level12Staff = new Item({ level: 12, name: "staff" })
     expect(Math.round(level12Staff.attack)).toEqual(106)
     expect(Math.round(level12Staff.range)).toEqual(99)
+}, 60_000)
+
+test("Item with stat type", async () => {
+    const coat = new Item({ level: 8, stat_type: "dex", name: "coat" })
+    expect(coat.stat_type).toEqual("dex")
+    expect(coat.dex).toEqual(12)
+    expect(coat.int).toEqual(0)
+    expect(coat.str).toEqual(0)
 }, 60_000)

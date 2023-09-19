@@ -63,7 +63,7 @@ export class Item implements ItemData, GItem {
                 }
             } else if (gData.compound) {
                 for (const s in gData.compound) {
-                    const add = gData.upgrade[s]
+                    const add = gData.compound[s]
                     let multiplier = 1
                     if (i == 5) multiplier = 1.25
                     if (i == 6) multiplier = 1.5
@@ -88,8 +88,7 @@ export class Item implements ItemData, GItem {
                 this.stat += 2
             } else if (this.armor) {
                 this.armor += 12
-                if (!this.resistance) this.resistance = 0
-                this.resistance = (this.resistance ?? 0) + 10
+                this.resistance += 10
             } else {
                 this.dex += 1
                 this.int += 1
@@ -103,6 +102,10 @@ export class Item implements ItemData, GItem {
                 this[prop] += gTitle[prop]
             }
         }
+
+        // Set stats based on attributes
+        // TODO: Improve this for different stat scroll items
+        if (this.stat_type && this.stat) this[this.stat_type] = (this[this.stat_type] ?? 0) + this.stat
     }
 
     public calculateMinimumCost(): number {
