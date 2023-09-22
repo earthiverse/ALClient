@@ -1528,7 +1528,7 @@ export class Character extends Observer implements CharacterData {
         if (options.quantity <= 0) options.quantity = 1
 
         const gInfo = this.G.items[item]
-        if (this.esize == 0) {
+        if (this.esize === 0) {
             if (gInfo.s === undefined) return false // It's not stackable, and we have no space
             // TODO: If they're not all full stacks, we could potentially stack the items on one of them
             // TODO: Check the quantity we're buying
@@ -5576,7 +5576,7 @@ export class Character extends Observer implements CharacterData {
                     continue // The item isn't titled
                 if (filters.special === false && item.p)
                     continue // The item is titled
-                if (filters.special !== item.p)
+                if (typeof filters.special === 'string' && filters.special !== item.p)
                     continue // The item is special, but not the right kind of special
             }
             if (filters?.statType !== undefined) {
