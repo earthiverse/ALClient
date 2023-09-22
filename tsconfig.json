@@ -22,8 +22,7 @@
         "types": [
             "jest",
             "mongoose"
-        ],
-        "watch": false
+        ]
     },
     "include": [
         "source"
