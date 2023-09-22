@@ -5576,7 +5576,7 @@ export class Character extends Observer implements CharacterData {
                     continue // The item isn't titled
                 if (filters.special === false && item.p)
                     continue // The item is titled
-                if (typeof filters.special === 'string' && filters.special !== item.p)
+                if (typeof filters.special === "string" && filters.special !== item.p)
                     continue // The item is special, but not the right kind of special
             }
             if (filters?.statType !== undefined) {
