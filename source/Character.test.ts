@@ -54,7 +54,7 @@ beforeAll(async () => {
         in: "mtunnel",
         int: 399,
         isize: 42,
-        items: [{ name: "computer" }, { name: "tracker" }, { q: 999, name: "mpot1" }, { q: 1000, name: "hpot1" }],
+        items: [{ name: "computer" }, { name: "tracker" }, { q: 999, name: "mpot1" }, { q: 1000, name: "hpot1" }, { q: 9999, name: "beewings" }, { q: 1000, name: "beewings" }],
         level: 86,
         lifesteal: 2.5,
         luckm: 1.4849999999999999,
@@ -749,6 +749,9 @@ test("Character.countItem", () => {
     expect(priest.countItem("mpot0")).toBe(0)
     expect(priest.countItem("hpot1")).toBe(1000)
     expect(priest.countItem("mpot1")).toBe(999)
+
+    // Multiple stacks of items
+    expect(priest.countItem("beewings")).toBe(10999)
 })
 
 test("Character.getEntities", () => {

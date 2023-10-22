@@ -768,7 +768,9 @@ export type GItem = {
     extra_stat?: number
     /** Item worth */
     g: number
+    /** For boosters, it specifies what attribute the player will gain */
     gain?: Attribute
+    /** For potions, it specifies what will be recovered when used */
     gives?: [[Attribute, number]]
     /** TODO: Confirm. Upgrade/compound scroll grade */
     grade?: number
@@ -789,6 +791,7 @@ export type GItem = {
     markup?: number
     /** TODO: ??? Pets? */
     monster?: MonsterName
+    /** For scrolls, it specifies the multiplier for `stat`. */
     multiplier?: number
     /** Human readable name for the item */
     name: string
