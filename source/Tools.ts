@@ -32,20 +32,20 @@ export class Tools {
 
         // Check overlap
         if ((a.x - a_w2) <= (b.x + b_w2)
-        && (a.x + a_w2) >= (b.x - b_w2)
-        && (a.y) >= (b.y - b_h)
-        && (a.y - a_h) <= (b.y)) return 0
+            && (a.x + a_w2) >= (b.x - b_w2)
+            && (a.y) >= (b.y - b_h)
+            && (a.y - a_h) <= (b.y)) return 0
 
         // Compare the 4 corners + base point to each other
         let min = Number.MAX_VALUE
         for (const a_c of [{ x: a.x + a_w2, y: a.y - a_h },
-            { x: a.x + a_w2, y: a.y },
-            { x: a.x - a_w2, y: a.y - a_h },
-            { x: a.x - a_w2, y: a.y }]) {
+        { x: a.x + a_w2, y: a.y },
+        { x: a.x - a_w2, y: a.y - a_h },
+        { x: a.x - a_w2, y: a.y }]) {
             for (const b_c of [{ x: b.x + b_w2, y: b.y - b_h },
-                { x: b.x + b_w2, y: b.y },
-                { x: b.x - b_w2, y: b.y - b_h },
-                { x: b.x - b_w2, y: b.y }]) {
+            { x: b.x + b_w2, y: b.y },
+            { x: b.x - b_w2, y: b.y - b_h },
+            { x: b.x - b_w2, y: b.y }]) {
                 const d = Math.hypot(a_c.x - b_c.x, a_c.y - b_c.y)
                 if (d < min) min = d
             }
@@ -76,20 +76,20 @@ export class Tools {
 
         // Check overlap
         if ((a.x - a_w2) <= (b.x + b_w2)
-        && (a.x + a_w2) >= (b.x - b_w2)
-        && (a.y) >= (b.y - b_h)
-        && (a.y - a_h) <= (b.y)) return 0
+            && (a.x + a_w2) >= (b.x - b_w2)
+            && (a.y) >= (b.y - b_h)
+            && (a.y - a_h) <= (b.y)) return 0
 
         // Compare the 4 corners + base point to each other
         let min = Number.MAX_VALUE
         for (const a_c of [{ x: a.x + a_w2, y: a.y - a_h },
-            { x: a.x + a_w2, y: a.y },
-            { x: a.x - a_w2, y: a.y - a_h },
-            { x: a.x - a_w2, y: a.y }]) {
+        { x: a.x + a_w2, y: a.y },
+        { x: a.x - a_w2, y: a.y - a_h },
+        { x: a.x - a_w2, y: a.y }]) {
             for (const b_c of [{ x: b.x + b_w2, y: b.y - b_h },
-                { x: b.x + b_w2, y: b.y },
-                { x: b.x - b_w2, y: b.y - b_h },
-                { x: b.x - b_w2, y: b.y }]) {
+            { x: b.x + b_w2, y: b.y },
+            { x: b.x - b_w2, y: b.y - b_h },
+            { x: b.x - b_w2, y: b.y }]) {
                 const d = ((a_c.x - b_c.x) * (a_c.x - b_c.x)) + ((a_c.y - b_c.y) * (a_c.y - b_c.y))
                 if (d < min) min = d
             }
@@ -99,7 +99,6 @@ export class Tools {
 
     /**
      * Calculates the latest the monster could have spawned
-     * NOTE: A lot of analysis went in to this, when the game is open source, we should be able to do a better fit
      *
      * @param level
      * @param base_hp
@@ -109,7 +108,7 @@ export class Tools {
         let firstSeen = Date.now()
         for (let level_from = level - 1; level_from > 0; level_from--) {
             const hp_from = base_hp + (base_hp * 0.5 * level_from)
-            firstSeen -= 1.23 ** level_from * Math.max(145000, hp_from * 24)
+            firstSeen -= Math.pow(2, (level_from - 1) * 0.3) * Math.max(180_000, 30 * hp_from)
         }
         return firstSeen
     }
