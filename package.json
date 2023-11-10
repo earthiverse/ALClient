@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.16.13",
+  "version": "0.16.14",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
   "files": [
     "build/**/*",
@@ -41,26 +41,26 @@
   },
   "homepage": "https://github.com/earthiverse/ALClient#readme",
   "devDependencies": {
-    "@types/jest": "^29.5.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.7",
-    "@typescript-eslint/parser": "^5.59.7",
+    "@types/jest": "^29.5.8",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.41.0",
-    "jest": "^29.5.0",
-    "madge": "^6.0.0",
-    "rimraf": "^5.0.1",
-    "ts-jest": "^29.1.0",
-    "typescript": "^5.0.4"
+    "eslint": "^8.53.0",
+    "jest": "^29.7.0",
+    "madge": "^6.1.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@types/node": "^20.2.5",
-    "axios": "^1.4.0",
+    "@types/node": "^20.9.0",
+    "axios": "^1.6.1",
     "delaunator": "^5.0.0",
     "is-number": "^7.0.0",
-    "lru-cache": "^9.1.1",
+    "lru-cache": "^10.0.1",
     "mongoose": "^7.2.1",
     "ngraph.graph": "^20.0.1",
-    "ngraph.path": "^1.4.0",
-    "socket.io-client": "^4.6.1"
+    "ngraph.path": "^1.5.0",
+    "socket.io-client": "^4.7.2"
   }
 }
