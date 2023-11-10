@@ -38,14 +38,18 @@ export class Tools {
 
         // Compare the 4 corners + base point to each other
         let min = Number.MAX_VALUE
-        for (const a_c of [{ x: a.x + a_w2, y: a.y - a_h },
-        { x: a.x + a_w2, y: a.y },
-        { x: a.x - a_w2, y: a.y - a_h },
-        { x: a.x - a_w2, y: a.y }]) {
-            for (const b_c of [{ x: b.x + b_w2, y: b.y - b_h },
-            { x: b.x + b_w2, y: b.y },
-            { x: b.x - b_w2, y: b.y - b_h },
-            { x: b.x - b_w2, y: b.y }]) {
+        for (const a_c of [
+            { x: a.x + a_w2, y: a.y - a_h },
+            { x: a.x + a_w2, y: a.y },
+            { x: a.x - a_w2, y: a.y - a_h },
+            { x: a.x - a_w2, y: a.y }
+        ]) {
+            for (const b_c of [
+                { x: b.x + b_w2, y: b.y - b_h },
+                { x: b.x + b_w2, y: b.y },
+                { x: b.x - b_w2, y: b.y - b_h },
+                { x: b.x - b_w2, y: b.y }
+            ]) {
                 const d = Math.hypot(a_c.x - b_c.x, a_c.y - b_c.y)
                 if (d < min) min = d
             }
@@ -82,14 +86,18 @@ export class Tools {
 
         // Compare the 4 corners + base point to each other
         let min = Number.MAX_VALUE
-        for (const a_c of [{ x: a.x + a_w2, y: a.y - a_h },
-        { x: a.x + a_w2, y: a.y },
-        { x: a.x - a_w2, y: a.y - a_h },
-        { x: a.x - a_w2, y: a.y }]) {
-            for (const b_c of [{ x: b.x + b_w2, y: b.y - b_h },
-            { x: b.x + b_w2, y: b.y },
-            { x: b.x - b_w2, y: b.y - b_h },
-            { x: b.x - b_w2, y: b.y }]) {
+        for (const a_c of [
+            { x: a.x + a_w2, y: a.y - a_h },
+            { x: a.x + a_w2, y: a.y },
+            { x: a.x - a_w2, y: a.y - a_h },
+            { x: a.x - a_w2, y: a.y }
+        ]) {
+            for (const b_c of [
+                { x: b.x + b_w2, y: b.y - b_h },
+                { x: b.x + b_w2, y: b.y },
+                { x: b.x - b_w2, y: b.y - b_h },
+                { x: b.x - b_w2, y: b.y }
+            ]) {
                 const d = ((a_c.x - b_c.x) * (a_c.x - b_c.x)) + ((a_c.y - b_c.y) * (a_c.y - b_c.y))
                 if (d < min) min = d
             }
