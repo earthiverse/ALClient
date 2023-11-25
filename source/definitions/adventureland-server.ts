@@ -539,6 +539,12 @@ export type CraftGRDataObject = {
     response: "craft"
     name: ItemName
 }
+export type DestroyGRDataObject = {
+    response: "destroyed"
+    place: "destroy"
+    success?: true
+    failed?: true
+}
 export type SkillSuccessGRDataObject = {
     response: "data"
     place: Exclude<SkillName, "attack" | "taunt" | "heal" | "curse" | "supershot">
@@ -713,7 +719,7 @@ export type UpgradeCompoundGRDataObject = {
 // TODO: split these in to other objects
 export type GameResponseDataObject =
     AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
-    CraftGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
+    CraftGRDataObject | DestroyGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
     DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
     ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
     NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |

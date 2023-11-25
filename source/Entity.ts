@@ -1,5 +1,5 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
-import { Attribute, ConditionName, DamageType, GData, GMonster, GMonsterAbilities, MapName, MonsterName } from "./definitions/adventureland-data.js"
+import { Attribute, ConditionName, DamageType, GData, GMonster, GMonsterAbilities, MapName, MonsterName, SkillName } from "./definitions/adventureland-data.js"
 import { ActionData, MonsterData } from "./definitions/adventureland-server.js"
 import { Character } from "./Character.js"
 import { Player } from "./Player.js"
@@ -113,7 +113,12 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public level = 1
     public max_hp: number
     public max_mp: number
-    public s: StatusInfo = {}
+    public s: StatusInfo & {
+        [T in SkillName]?: {
+            ms: number
+            ability: true
+        }
+    } = {}
     public type: MonsterName
     public xp: number
     public width: number
