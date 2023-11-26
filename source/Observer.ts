@@ -21,6 +21,7 @@ export class Observer {
 
     public entities = new Map<string, Entity>()
 
+    protected secret?: string
     protected pingIndex = 0
     protected pingMap = new Map<string, { log: boolean, time: number }>()
     protected pingNum = 1
@@ -45,9 +46,10 @@ export class Observer {
         return Math.min(this.ping * 2, Constants.TIMEOUT)
     }
 
-    constructor(serverData: ServerData, g: GData) {
+    constructor(serverData: ServerData, g: GData, secret?: string) {
         this.serverData = serverData
         this.G = g
+        this.secret = secret
 
         if (serverData) {
             // Retrieve the cached pings data
@@ -62,8 +64,9 @@ export class Observer {
     public async connect(reconnect = false, start = true): Promise<void> {
         this.socket = socketio(`ws${this.serverData.secure ? "s" : ""}://${this.serverData.addr}:${this.serverData.port}`, {
             autoConnect: false,
+            query: this.secret ? { secret: this.secret } : {},
             reconnection: reconnect,
-            transports: ["websocket"]
+            transports: ["websocket"],
         })
 
         this.socket.on("action", (data: ActionData) => {

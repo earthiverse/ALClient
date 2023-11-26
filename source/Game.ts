@@ -363,11 +363,11 @@ export class Game {
     static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<PingCompensatedCharacter> {
         if (!this.user) throw new Error("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
+        if (!this.characters[cName]) throw new Error(`You don't have a character with the name '${cName}'`)
         if (!this.G) await this.getGData()
 
         const userID = this.user.userID
         const userAuth = this.user.userAuth
-        if (!this.characters[cName]) throw new Error(`You don't have a character with the name '${cName}'`)
         const characterID = this.characters[cName].id
 
         // Create the player and connect
@@ -437,6 +437,23 @@ export class Game {
         if (!this.G) await this.getGData()
 
         const observer = new Observer(this.servers[region][id], this.G)
+        await observer.connect(true)
+        return observer
+    }
+
+    static async startCharacterObserver(cName: string): Promise<Observer> {
+        if (!this.user) throw new Error("You must login first.")
+        if (!this.characters) await this.updateServersAndCharacters()
+        const cData = this.characters[cName]
+        if (!cData) throw new Error(`You don't have a character with the name '${cName}'`)
+        if (!cData.online) throw new Error(`The character '${cName}' is not online`)
+        if (!this.G) await this.getGData()
+
+        const server = /(US|EU|ASIA)([MDCLXVI]+|PVP)/.exec(cData.server)
+        const serverRegion: ServerRegion = server[1] as ServerRegion
+        const serverIdentifier: ServerIdentifier = server[2] as ServerIdentifier
+
+        const observer = new Observer(this.servers[serverRegion][serverIdentifier], this.G, cData.secret)
         await observer.connect(true)
         return observer
     }
