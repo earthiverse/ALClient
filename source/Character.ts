@@ -3566,6 +3566,7 @@ export class Character extends Observer implements CharacterData {
 
     public async openChest(id: string): Promise<ChestOpenedData> {
         if (!this.ready) throw new Error("We aren't ready yet [openChest].")
+        if (this.s.invis) throw new Error("You can't loot chests while invisible")
         const chestOpened = new Promise<ChestOpenedData>((resolve, reject) => {
             const openCheck = (data: ChestOpenedData) => {
                 if (data.id == id) {
