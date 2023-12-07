@@ -26,10 +26,10 @@ export class Game {
     public static server: string = "https://adventure.land"
 
     public static get url(): string {
-        if (this.user?.secure) {
-            return this.server.replace("http:", "https:")
-        } else {
+        if (this.user?.secure === false) {
             return this.server.replace("https:", "http:")
+        } else {
+            return this.server.replace("http:", "https:")
         }
     }
 
