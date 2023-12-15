@@ -43,6 +43,7 @@ import { EntityModel } from "./database/entities/entities.model.js"
 import { NPCModel } from "./database/npcs/npcs.model.js"
 import { PlayerModel } from "./database/players/players.model.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
+import { ServerModel } from "./database/servers/servers.model.js"
 
 // Export AL definitions
 export * from "./definitions/adventureland.js"
@@ -76,6 +77,7 @@ export default {
     Ranger,
     RespawnModel,
     Rogue,
+    ServerModel,
     Tools,
     Warrior
 }
