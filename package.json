@@ -1,6 +1,6 @@
 {
   "name": "alclient",
-  "version": "0.18.3",
+  "version": "0.18.4",
   "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
   "files": [
     "build/**/*",
@@ -20,7 +20,6 @@
     "prepublishOnly": "npm run lint && npm test",
     "postpublish": "cross-var git tag v$npm_package_version",
     "preversion": "npm run lint",
-    "postversion": "git push && git push --tags",
     "version": "git add -A source"
   },
   "repository": {
