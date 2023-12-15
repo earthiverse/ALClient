@@ -48,14 +48,15 @@ export type StatusInfo = {
         /** TODO: Is this the last date that burn was inflicted, or the last date that the burn did damage? */
         last: string
     }
-    cursed?: {
-        ms: number
-    }
     coop?: {
         id: string;
         ms: number;
         p: number;
-    };
+    }
+    darkblessing?: {
+        /** The priest that provided the darkblessing */
+        f: string
+    }
     /** Set on a ghost if a priest heals it */
     healed?: {
         ms: number
