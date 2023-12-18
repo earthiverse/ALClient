@@ -379,6 +379,7 @@ export class Observer {
                         const now = Date.now()
                         InstanceModel.updateOne({
                             in: entity.in,
+                            map: entity.map,
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
                         }, {

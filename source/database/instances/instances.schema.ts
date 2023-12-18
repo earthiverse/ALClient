@@ -10,6 +10,7 @@ const InstanceSchema = new Schema({
     in: String,
     killed: { required: false, type: Object },
     lastEntered: Number,
+    map: String,
     serverIdentifier: String,
     serverRegion: String,
 })
