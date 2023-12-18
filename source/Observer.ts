@@ -10,6 +10,7 @@ import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
 import { UpdateQuery } from "mongoose"
 import { ServerModel } from "./database/servers/servers.model.js"
+import { InstanceModel } from "./database/instances/instances.model.js"
 
 export class Observer {
     public socket: Socket<ServerToClientEvents, ClientToServerEvents>
@@ -373,6 +374,25 @@ export class Observer {
             if (Database.connection && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${entity.id}`)
                 if (death && nextUpdate !== Number.MAX_VALUE) {
+                    if (entity.in !== entity.map) {
+                        // It's an instanced monster
+                        const now = Date.now()
+                        InstanceModel.updateOne({
+                            in: entity.in,
+                            serverIdentifier: this.serverData.name,
+                            serverRegion: this.serverData.region,
+                        }, {
+                            $inc: {
+                                [`killed.${entity.type}`]: 1
+                            },
+                            $max: {
+                                lastEntered: now
+                            },
+                            $min: {
+                                firstEntered: now
+                            }
+                        }, { upsert: true }).lean().exec().catch(() => { /* Suppress errors */ })
+                    }
                     EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(() => { /* Suppress errors */ })
                     Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${entity.id}`, Number.MAX_VALUE)
                 }
