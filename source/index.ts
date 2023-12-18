@@ -40,6 +40,7 @@ import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { DeathModel } from "./database/deaths/deaths.model.js"
 import { EntityModel } from "./database/entities/entities.model.js"
+import { InstanceModel } from "./database/instances/instances.model.js"
 import { NPCModel } from "./database/npcs/npcs.model.js"
 import { PlayerModel } from "./database/players/players.model.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
@@ -63,6 +64,7 @@ export default {
     Entity,
     EntityModel,
     Game,
+    InstanceModel,
     Item,
     Mage,
     Merchant,
