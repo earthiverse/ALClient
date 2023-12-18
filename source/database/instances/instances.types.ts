@@ -1,14 +1,21 @@
 import { Document, Model } from "mongoose"
 import { ServerInfoData } from "../../definitions/adventureland-server.js"
 import { ServerIdentifier, ServerRegion } from "../../definitions/adventureland.js"
+import { MonsterName } from "../../definitions/adventureland-data.js"
 
-export interface IServer {
+export interface IInstance {
     S: ServerInfoData
-    lastUpdated: number
     serverIdentifier: ServerIdentifier
     serverRegion: ServerRegion
+    /** Instance name */
+    in: string,
+    firstEntered: number,
+    lastEntered: number,
+    killed?: {
+        [T in MonsterName]?: number
+    }
 }
 
-export interface IServerDocument extends IServer, Document { }
+export interface IInstanceDocument extends IInstance, Document { }
 
-export type IServerModel = Model<IServerDocument>
+export type IInstanceModel = Model<IInstanceDocument>
