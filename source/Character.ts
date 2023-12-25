@@ -4326,6 +4326,22 @@ export class Character extends Observer implements CharacterData {
         const started = Date.now()
         this.lastSmartMove = started
         let numAttempts = 0
+
+        if (options.stopIfTrue) {
+            const checkStopIfTrueLoop = async () => {
+                if (started < this.lastSmartMove) return // We started a new smartMove
+                if (!this.smartMoving) return // We finished smartMoving
+                if (await options.stopIfTrue()) {
+                    // Stop smart moving
+                    await this.stopSmartMove()
+                } else {
+                    // Check again later
+                    this.timeouts.set("checkStopIfTrueLoop", setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS))
+                }
+            }
+            this.timeouts.set("checkStopIfTrueLoop", setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS))
+        }
+
         for (let i = 0; i < path.length; i++) {
             let currentMove = path[i]
 
@@ -4346,7 +4362,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Stop if we meet our conditions
-            if (options.stopIfTrue !== undefined && await options.stopIfTrue()) break
+            if (options.stopIfTrue && await options.stopIfTrue()) break
 
             // Check if we can walk to a spot close to the goal if that's OK
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {

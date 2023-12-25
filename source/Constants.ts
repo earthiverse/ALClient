@@ -9,6 +9,8 @@ export class Constants {
     static RECONNECT_TIMEOUT_MS = 40000
     static STALE_MONSTER_MS = 60000
     static STALE_PROJECTILE_MS = 10000
+    /** How often to check smart move's `stopIfTrue` option */
+    static SMART_MOVE_STOP_CHECK_MS = 1000
     /** How long we wait for a response from the server before rejecting the promise */
     static TIMEOUT = 1000
     static UPDATE_POSITIONS_EVERY_MS = 25 // Equivalent to 40 FPS
