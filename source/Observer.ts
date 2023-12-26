@@ -272,21 +272,28 @@ export class Observer {
                 data[mN] = goodData
 
                 if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
-                    const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${mN}`)
+                    const updateKey = `${this.serverData.name}${this.serverData.region}${mN}`
+                    const nextUpdate = Database.nextUpdate.get(updateKey)
                     if (nextUpdate && Date.now() < nextUpdate) continue // We've updated this monster recently
+                    const filter = { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN }
+                    const update = { hp: goodData.hp, lastSeen: now, map: goodData.map, s: this.G.monsters[mN]?.s, target: goodData.target, x: goodData.x, y: goodData.y }
+                    if ((this.S?.[mN] as ServerInfoDataNotLive)?.live === false) {
+                        // This monster just spawned, add `s` to account for fullguard if needed
+                        if (this.G.monsters[mN]?.s) update.s = this.G.monsters[mN].s
+                    }
                     databaseEntityUpdates.push({
                         updateOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN },
-                            update: { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y },
+                            filter: filter,
+                            update: update,
                             upsert: true
                         }
                     })
                     databaseRespawnUpdates.push({
                         deleteOne: {
-                            filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN }
+                            filter: filter
                         }
                     })
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${mN}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
 
