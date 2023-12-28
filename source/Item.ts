@@ -1,4 +1,4 @@
-import { ItemType } from "./definitions/adventureland.js"
+import { ItemType, WeaponType } from "./definitions/adventureland.js"
 import { Attribute, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
 import { ItemData } from "./definitions/adventureland-server.js"
 import { Game } from "./Game.js"
@@ -30,6 +30,8 @@ export class Item implements ItemData, GItem {
     public stat = 0
     public str = 0
     public v?: string
+    /** Set if `type` is `weapon` */
+    public wtype?: WeaponType
 
     public constructor(data: ItemData | ItemData) {
         // Set soft properties
