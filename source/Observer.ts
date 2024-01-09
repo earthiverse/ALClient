@@ -158,6 +158,7 @@ export class Observer {
                     lastSeen: Date.now(),
                     level: 1,
                     map: data.map,
+                    s: this.G.monsters[data.name].s,
                     x: data.x,
                     y: data.y
                 }
@@ -276,11 +277,7 @@ export class Observer {
                     const nextUpdate = Database.nextUpdate.get(updateKey)
                     if (nextUpdate && Date.now() < nextUpdate) continue // We've updated this monster recently
                     const filter = { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN }
-                    const update = { hp: goodData.hp, lastSeen: now, map: goodData.map, s: this.G.monsters[mN]?.s, target: goodData.target, x: goodData.x, y: goodData.y }
-                    if ((this.S?.[mN] as ServerInfoDataNotLive)?.live === false) {
-                        // This monster just spawned, add `s` to account for fullguard if needed
-                        if (this.G.monsters[mN]?.s) update.s = this.G.monsters[mN].s
-                    }
+                    const update = { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y }
                     databaseEntityUpdates.push({
                         updateOne: {
                             filter: filter,
@@ -316,7 +313,7 @@ export class Observer {
                             }
                         })
                     }
-                    if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).catch(console.error)
+                    if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).lean().exec().catch(console.error)
                     if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
                     if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
                     const updateData = {
@@ -325,7 +322,7 @@ export class Observer {
                         serverIdentifier: this.serverData.name,
                         serverRegion: this.serverData.region
                     }
-                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true }).catch(console.error)
+                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true }).lean().exec().catch(console.error)
                     Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*server_info*`, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
