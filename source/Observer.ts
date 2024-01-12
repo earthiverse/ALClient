@@ -639,6 +639,23 @@ export class Observer {
         this.map = data.name
         this.in = data.in
 
+        if (data.in !== data.name) {
+            const now = Date.now()
+            InstanceModel.updateOne({
+                in: data.in,
+                map: data.name,
+                serverIdentifier: this.serverData.name,
+                serverRegion: this.serverData.region,
+            }, {
+                $max: {
+                    lastEntered: now
+                },
+                $min: {
+                    firstEntered: now
+                }
+            }, { upsert: true }).lean().exec().catch(() => { /* Suppress errors */ })
+        }
+
         this.parseEntities(data.entities)
     }
 
