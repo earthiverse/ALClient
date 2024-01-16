@@ -131,8 +131,9 @@ export class Merchant extends PingCompensatedCharacter {
         if (slotInfo) {
             if (itemInfo.name == slotInfo.name // Same item
                 && price >= slotInfo.price // Same, or higher price
-                && gInfo.s && (quantity + slotInfo.q) <= gInfo.s) // Stackable
-            {
+                && gInfo.s && (quantity + slotInfo.q) <= gInfo.s // Stackable
+                && this.esize > 0 // NOTE: Unequipping trade items only works if we have an empty slot, even if we can stack the items
+            ) {
                 if (itemPos !== 0) {
                     // Swap items so when it gets stacked, it gets stacked in the correct position
                     await this.swapItems(0, itemPos)
