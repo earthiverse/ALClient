@@ -245,6 +245,7 @@ export class Character extends Observer implements CharacterData {
         const nextUpdate = Database.nextUpdate.get(`${this.server.name}${this.server.region}${this.id}`)
         if (!nextUpdate || Date.now() >= nextUpdate) {
             const updateData: UpdateQuery<IPlayer> = {
+                in: this.in,
                 items: this.items,
                 lastSeen: Date.now(),
                 map: this.map,
