@@ -2375,8 +2375,8 @@ export class Character extends Observer implements CharacterData {
             }
 
             const failCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "transport_cant_item") {
+                if (typeof data == "object") {
+                    if (data.response == "transport_cant_item") {
                         this.socket.off("new_map", enterCheck)
                         this.socket.off("game_response", failCheck)
                         reject(new Error(`We don't have the required item to enter ${map}.`))
@@ -3032,7 +3032,7 @@ export class Character extends Observer implements CharacterData {
                 if (typeof filters.withinRange == "number") {
                     squaredRange = filters.withinRange * filters.withinRange
                 } else {
-                    if (filters.withinRange == "attack") {
+                    if (filters.withinRange == "attack" || this.G.skills[filters.withinRange].use_range) {
                         // Normal attack range
                         squaredRange = this.range * this.range
                     } else if (this.G.skills[filters.withinRange].range) {

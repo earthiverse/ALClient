@@ -598,6 +598,11 @@ export type CondExpGRDataObject = {
     response: "ex_condition"
     name: SkillName
 }
+export type EnterGRDataObject = {
+    success: false
+    response: "transport_cant_item"
+    place: "enter"
+}
 export type GetCloserGRDataObject = {
     response: "get_closer"
     place: "upgrade"
@@ -720,7 +725,7 @@ export type UpgradeCompoundGRDataObject = {
 export type GameResponseDataObject =
     AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
     CraftGRDataObject | DestroyGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
-    DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
+    DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | EnterGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
     ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
     NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
     GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
@@ -792,8 +797,6 @@ export type GameResponseDataString =
     /** When you try to sell an item to another merchant, but there's no space on that merchant */
     | "trade_bspace"
     | "trade_get_closer"
-    /** When you try to enter a dungeon, but you don't have a key */
-    | "transport_cant_item"
     /** When you try to go through a door you haven't unlocked yet (e.g. lower bank) */
     | "transport_cant_locked"
     /** When you're too far away from a door */
