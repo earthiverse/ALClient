@@ -65,6 +65,8 @@ export class Game {
         if (!this.version) await this.getVersion()
         const gFile = `G_${this.version}.json`
         try {
+            if (!cache) throw new Error("Skipping Cache...")
+
             // Check if there's cached data
             this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData
             return this.G
