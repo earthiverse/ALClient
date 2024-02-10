@@ -137,8 +137,8 @@ export class Player implements PlayerData {
      *
      * @see getWantedItems for items the player is buying
      */
-    public getItemsForSale(): Partial<Record<TradeSlotType, ItemDataTrade>> {
-        const slots: Partial<Record<TradeSlotType, ItemDataTrade>> = {}
+    public getItemsForSale(): Map<TradeSlotType, ItemDataTrade> {
+        const slots = new Map<TradeSlotType, ItemDataTrade>()
         for (const s in this.slots) {
             const slot = s as TradeSlotType
             const item = this.slots[slot]
@@ -147,7 +147,7 @@ export class Player implements PlayerData {
             if (!item.rid) continue // Not a trade item
             if (item.b) continue // They are buying, not selling
 
-            slots[slot] = item
+            slots.set(slot, item)
         }
         return slots
     }
@@ -157,8 +157,8 @@ export class Player implements PlayerData {
      *
      * @see getItemsForSale for items the player is selling
      */
-    public getWantedItems(): Partial<Record<TradeSlotType, ItemDataTrade>> {
-        const slots: Partial<Record<TradeSlotType, ItemDataTrade>> = {}
+    public getWantedItems(): Map<TradeSlotType, ItemDataTrade> {
+        const slots = new Map<TradeSlotType, ItemDataTrade>()
         for (const s in this.slots) {
             const slot = s as TradeSlotType
             const item = this.slots[slot]
@@ -167,7 +167,7 @@ export class Player implements PlayerData {
             if (!item.rid) continue // Not a trade item
             if (!item.b) continue // They are selling, not buying
 
-            slots[slot] = item
+            slots.set(slot, item)
         }
         return slots
     }
