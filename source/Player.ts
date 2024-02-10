@@ -1,7 +1,7 @@
 import { Character } from "./Character.js"
-import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
+import { SlotInfo, StatusInfo, TradeSlotType } from "./definitions/adventureland.js"
 import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { ChannelInfo, PlayerData, QInfo } from "./definitions/adventureland-server.js"
+import { ChannelInfo, ItemDataTrade, PlayerData, QInfo } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
 import { Constants } from "./Constants.js"
@@ -130,6 +130,46 @@ export class Player implements PlayerData {
         }
 
         return [lowerLimit, upperLimit]
+    }
+
+    /**
+     * Returns the items that the player is selling in their trade slots.
+     *
+     * @see getWantedItems for items the player is buying
+     */
+    public getItemsForSale(): Partial<Record<TradeSlotType, ItemDataTrade>> {
+        const slots: Partial<Record<TradeSlotType, ItemDataTrade>> = {}
+        for (const s in this.slots) {
+            const slot = s as TradeSlotType
+            const item = this.slots[slot]
+
+            if (!item) continue // Nothing in the slot
+            if (!item.rid) continue // Not a trade item
+            if (item.b) continue // They are buying, not selling
+
+            slots[slot] = item
+        }
+        return slots
+    }
+
+    /**
+     * Returns the items that the player is purchasing in their trade slots
+     *
+     * @see getItemsForSale for items the player is selling
+     */
+    public getWantedItems(): Partial<Record<TradeSlotType, ItemDataTrade>> {
+        const slots: Partial<Record<TradeSlotType, ItemDataTrade>> = {}
+        for (const s in this.slots) {
+            const slot = s as TradeSlotType
+            const item = this.slots[slot]
+
+            if (!item) continue // Nothing in the slot
+            if (!item.rid) continue // Not a trade item
+            if (!item.b) continue // They are selling, not buying
+
+            slots[slot] = item
+        }
+        return slots
     }
 
     /**
