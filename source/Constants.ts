@@ -40,7 +40,11 @@ export class Constants {
     static MAX_PARTY_SIZE = 9 // TODO: It might actually be 9 + 1 merchant?
     /** Ponty sells items for more than `G.items[itemName].g`. */
     static PONTY_MARKUP = 1.2
-    /** NPCs buy items for less than `G.items[itemName].g`. */
+    /**
+     * @deprecated use `G.multipliers.buy_to_sell` instead
+     *
+     * NPCs buy items for less than `G.items[itemName].g`. They pay 0.6x that `g` value.
+     */
     static NPC_SELL_TAX = 0.6
 
     /** Mongo related things */

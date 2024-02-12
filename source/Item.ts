@@ -7,6 +7,7 @@ export class Item implements ItemData, GItem {
     // ItemData (required)
     public name: ItemName
     // ItemData (optional)
+    public expires?: string
     public l?: "l" | "s" | "x"
     public level?: number
     public stat_type?: Attribute
@@ -148,6 +149,59 @@ export class Item implements ItemData, GItem {
         if (this.gift) cost -= (gInfo.g - 1)
 
         return cost
+    }
+
+    /**
+     * This returns the same value as the game's `calculate_item_value`
+     */
+    public calculateNpcValue(): number {
+        if (this.gift) return 1
+
+        const gInfo = Game.G.items[this.name]
+        let value = gInfo.cash ? gInfo.g : gInfo.g * Game.G.multipliers.buy_to_sell
+        if (gInfo.markup) value /= gInfo.markup
+        if (this.level) {
+            let grade = 0
+            const grades = gInfo.grades || [11, 12]
+            if (gInfo.compound) {
+                for (let level = 1; level <= this.level; level++) {
+                    value *= gInfo.cash ? 1.5 : 3.2
+                    if (level > grades[1]) grade = 2
+                    else if (level > grades[0]) grade = 1
+                    if (gInfo.type === "booster") value *= 0.75
+                    else value += Game.G.items[`cscroll${grade}`].g / 2.4
+                }
+            } else {
+                let sValue = 0
+                for (let level = 1; level <= this.level; level++) {
+                    if (level > grades[1]) grade = 2
+                    else if (level > grades[0]) grade = 1
+                    sValue += Game.G.items[`scroll${grade}`].g / 2
+                    if (level >= 7) {
+                        value *= 3
+                        sValue *= 1.32
+                    } else if (level >= 6) {
+                        value *= 2.4
+                    } else if (level >= 4) {
+                        value *= 2
+                    }
+                    if (level === 9) {
+                        value *= 2.64
+                        value += 400_000
+                    }
+                    if (level === 10) {
+                        value *= 5
+                    }
+                    if (level === 12) {
+                        value *= 0.8
+                    }
+                }
+                value += sValue
+            }
+        }
+        if (this.expires) value /= 8
+
+        return Math.round(value)
     }
 
     /**

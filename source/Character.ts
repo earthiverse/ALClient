@@ -2786,6 +2786,20 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Returns a list of empty inventory slot indexes
+     *
+     * @param items The inventory to look in
+     */
+    public getEmptyInventorySlots(items = this.items): number[] {
+        const slots: number[] = []
+        for (let i = 0; i < this.isize; i++) {
+            const item = items[i]
+            if (!item) slots.push(i)
+        }
+        return slots
+    }
+
+    /**
      * Returns the index of the first empty slot in the given inventory
      *
      * @param {*} [items=this.items] The inventory to look in
@@ -2812,6 +2826,21 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [getHolidaySpirit]")
         if (!this.S.holidayseason) throw new Error("We can only get holiday spirit when the `holidayseason` event is active.")
         this.socket.emit("interaction", { type: "newyear_tree" })
+    }
+
+    /**
+     * Returns a map of items that the player has in their inventory.
+     *
+     * The key is the slot that the item is located, the value is the item data
+     */
+    public getItems(): Map<number, ItemData> {
+        const items = new Map<number, ItemData>()
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i]
+            if (!item) continue // Empty slot
+            items.set(i, item)
+        }
+        return items
     }
 
     public getLostAndFoundItems(): Promise<ItemDataTrade[]> {
