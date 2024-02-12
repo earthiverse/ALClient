@@ -6,6 +6,7 @@ import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOp
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
+import { Item } from "./Item.js"
 import { Mage } from "./Mage.js"
 import { Observer } from "./Observer.js"
 import { Player } from "./Player.js"
@@ -17,6 +18,7 @@ import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
 import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
 import { UpdateQuery } from "mongoose"
+import { TradeItem } from "./TradeItem.js"
 
 export class Character extends Observer implements CharacterData {
     public userAuth: string
@@ -2831,16 +2833,57 @@ export class Character extends Observer implements CharacterData {
     /**
      * Returns a map of items that the player has in their inventory.
      *
-     * The key is the slot that the item is located, the value is the item data
+     * The key is the slot that the item is located, the value is an Item object with the
+     * item data
      */
-    public getItems(): Map<number, ItemData> {
-        const items = new Map<number, ItemData>()
+    public getItems(): Map<number, Item> {
+        const items = new Map<number, Item>()
         for (let i = 0; i < this.items.length; i++) {
             const item = this.items[i]
             if (!item) continue // Empty slot
-            items.set(i, item)
+            items.set(i, new Item(item, this.G))
         }
         return items
+    }
+
+    /**
+     * Returns the items that we are selling in our trade slots.
+     *
+     * @see getWantedItems for items the player is buying
+     */
+    public getItemsForSale(): Map<TradeSlotType, TradeItem> {
+        const slots = new Map<TradeSlotType, TradeItem>()
+        for (const s in this.slots) {
+            const slot = s as TradeSlotType
+            const item = this.slots[slot]
+
+            if (!item) continue // Nothing in the slot
+            if (!item.rid) continue // Not a trade item
+            if (item.b) continue // They are buying, not selling
+
+            slots.set(slot, new TradeItem(item, this.G))
+        }
+        return slots
+    }
+
+    /**
+     * Returns the items that we are purchasing in our trade slots
+     *
+     * @see getItemsForSale for items the player is selling
+     */
+    public getWantedItems(): Map<TradeSlotType, TradeItem> {
+        const slots = new Map<TradeSlotType, TradeItem>()
+        for (const s in this.slots) {
+            const slot = s as TradeSlotType
+            const item = this.slots[slot]
+
+            if (!item) continue // Nothing in the slot
+            if (!item.rid) continue // Not a trade item
+            if (!item.b) continue // They are selling, not buying
+
+            slots.set(slot, new TradeItem(item, this.G))
+        }
+        return slots
     }
 
     public getLostAndFoundItems(): Promise<ItemDataTrade[]> {

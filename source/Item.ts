@@ -1,11 +1,11 @@
 import { ItemType, WeaponType } from "./definitions/adventureland.js"
-import { Attribute, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
+import { Attribute, GData, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
 import { ItemData } from "./definitions/adventureland-server.js"
-import { Game } from "./Game.js"
 
 export class Item implements ItemData, GItem {
     // ItemData (required)
     public name: ItemName
+
     // ItemData (optional)
     public expires?: string
     public l?: "l" | "s" | "x"
@@ -34,12 +34,15 @@ export class Item implements ItemData, GItem {
     /** Set if `type` is `weapon` */
     public wtype?: WeaponType
 
-    public constructor(data: ItemData | ItemData) {
+    public G: GData
+
+    public constructor(data: ItemData | ItemData, g: GData) {
+        this.G = g
         // Set soft properties
         // NOTE: If `data` contains different values, we will overwrite these later
-        const gData = Game.G.items[data.name]
+        const gData = g.items[data.name]
         for (const gKey in gData) {
-            this[gKey] = Game.G.items[data.name][gKey]
+            this[gKey] = g.items[data.name][gKey]
         }
 
         // Set everything else
@@ -97,9 +100,9 @@ export class Item implements ItemData, GItem {
                 this.int += 1
                 this.str += 1
             }
-        } else if (this.p && Game.G.titles[this.p]) {
+        } else if (this.p && g.titles[this.p]) {
             // This item has a title, add the extra stats the title gives
-            const gTitle = Game.G.titles[this.p]
+            const gTitle = g.titles[this.p]
             for (const prop in gTitle) {
                 if (prop == "achievement" || prop == "consecutive_200p_range_last_hits" || prop == "manual" || prop == "misc" || prop == "source" || prop == "title" || prop == "type") continue
                 this[prop] += gTitle[prop]
@@ -112,7 +115,7 @@ export class Item implements ItemData, GItem {
     }
 
     public calculateMinimumCost(): number {
-        const gInfo = Game.G.items[this.name]
+        const gInfo = this.G.items[this.name]
 
         // Base cost
         let cost = this.g
@@ -124,7 +127,7 @@ export class Item implements ItemData, GItem {
                 let scrollLevel = 0
                 for (const grade of gInfo.grades) {
                     if (i + 1 < grade) {
-                        const scrollInfo = Game.G.items[`cscroll${scrollLevel}` as ItemName]
+                        const scrollInfo = this.G.items[`cscroll${scrollLevel}` as ItemName]
                         cost += scrollInfo.g
                         break
                     }
@@ -136,7 +139,7 @@ export class Item implements ItemData, GItem {
                 let scrollLevel = 0
                 for (const grade of gInfo.grades) {
                     if (i + 1 < grade) {
-                        const scrollInfo = Game.G.items[`scroll${scrollLevel}` as ItemName]
+                        const scrollInfo = this.G.items[`scroll${scrollLevel}` as ItemName]
                         cost += scrollInfo.g
                         break
                     }
@@ -157,8 +160,8 @@ export class Item implements ItemData, GItem {
     public calculateNpcValue(): number {
         if (this.gift) return 1
 
-        const gInfo = Game.G.items[this.name]
-        let value = gInfo.cash ? gInfo.g : gInfo.g * Game.G.multipliers.buy_to_sell
+        const gInfo = this.G.items[this.name]
+        let value = gInfo.cash ? gInfo.g : gInfo.g * this.G.multipliers.buy_to_sell
         if (gInfo.markup) value /= gInfo.markup
         if (this.level) {
             let grade = 0
@@ -169,14 +172,14 @@ export class Item implements ItemData, GItem {
                     if (level > grades[1]) grade = 2
                     else if (level > grades[0]) grade = 1
                     if (gInfo.type === "booster") value *= 0.75
-                    else value += Game.G.items[`cscroll${grade}`].g / 2.4
+                    else value += this.G.items[`cscroll${grade}`].g / 2.4
                 }
             } else {
                 let sValue = 0
                 for (let level = 1; level <= this.level; level++) {
                     if (level > grades[1]) grade = 2
                     else if (level > grades[0]) grade = 1
-                    sValue += Game.G.items[`scroll${grade}`].g / 2
+                    sValue += this.G.items[`scroll${grade}`].g / 2
                     if (level >= 7) {
                         value *= 3
                         sValue *= 1.32

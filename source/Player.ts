@@ -1,10 +1,11 @@
 import { Character } from "./Character.js"
 import { SlotInfo, StatusInfo, TradeSlotType } from "./definitions/adventureland.js"
 import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { ChannelInfo, ItemDataTrade, PlayerData, QInfo } from "./definitions/adventureland-server.js"
+import { ChannelInfo, PlayerData, QInfo } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
 import { Constants } from "./Constants.js"
+import { TradeItem } from "./TradeItem.js"
 
 export class Player implements PlayerData {
     protected G: GData
@@ -137,8 +138,8 @@ export class Player implements PlayerData {
      *
      * @see getWantedItems for items the player is buying
      */
-    public getItemsForSale(): Map<TradeSlotType, ItemDataTrade> {
-        const slots = new Map<TradeSlotType, ItemDataTrade>()
+    public getItemsForSale(): Map<TradeSlotType, TradeItem> {
+        const slots = new Map<TradeSlotType, TradeItem>()
         for (const s in this.slots) {
             const slot = s as TradeSlotType
             const item = this.slots[slot]
@@ -147,7 +148,7 @@ export class Player implements PlayerData {
             if (!item.rid) continue // Not a trade item
             if (item.b) continue // They are buying, not selling
 
-            slots.set(slot, item)
+            slots.set(slot, new TradeItem(item, this.G))
         }
         return slots
     }
@@ -157,8 +158,8 @@ export class Player implements PlayerData {
      *
      * @see getItemsForSale for items the player is selling
      */
-    public getWantedItems(): Map<TradeSlotType, ItemDataTrade> {
-        const slots = new Map<TradeSlotType, ItemDataTrade>()
+    public getWantedItems(): Map<TradeSlotType, TradeItem> {
+        const slots = new Map<TradeSlotType, TradeItem>()
         for (const s in this.slots) {
             const slot = s as TradeSlotType
             const item = this.slots[slot]
@@ -167,7 +168,7 @@ export class Player implements PlayerData {
             if (!item.rid) continue // Not a trade item
             if (!item.b) continue // They are selling, not buying
 
-            slots.set(slot, item)
+            slots.set(slot, new TradeItem(item, this.G))
         }
         return slots
     }
