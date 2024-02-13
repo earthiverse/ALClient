@@ -26,6 +26,7 @@ export class Item implements ItemData, GItem {
     public gift = 0
     public int = 0
     public p?: TitleName
+    public q?: number
     public range = 0
     public resistance = 0
     public stat = 0
