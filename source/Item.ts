@@ -155,13 +155,20 @@ export class Item implements ItemData, GItem {
     }
 
     /**
-     * This returns the same value as the game's `calculate_item_value`
+     * How much the player could get for selling this item to an NPC
      */
     public calculateNpcValue(): number {
+        return Math.round(this.calculateValue() * this.G.multipliers.buy_to_sell)
+    }
+
+    /**
+     * Returns the same value as the game's `calculate_item_value`
+     */
+    public calculateValue(): number {
         if (this.gift) return 1
 
         const gInfo = this.G.items[this.name]
-        let value = gInfo.cash ? gInfo.g : gInfo.g * this.G.multipliers.buy_to_sell
+        let value = gInfo.cash ? gInfo.g : gInfo.g
         if (gInfo.markup) value /= gInfo.markup
         if (this.level) {
             let grade = 0
