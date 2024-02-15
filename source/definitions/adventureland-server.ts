@@ -544,6 +544,8 @@ export type DestroyGRDataObject = {
     place: "destroy"
     success?: true
     failed?: true
+    name?: ItemName
+    num: number
 }
 export type SkillSuccessGRDataObject = {
     response: "data"
@@ -1525,6 +1527,7 @@ export type ClientToServerEvents = {
     "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number }) => void
     // TODO: Create CraftData type
     "craft": (data: { items: [number, number][] }) => void
+    "destroy": (data: { num: number, q: number, statue: true }) => void
     "dismantle": (data: { num: number }) => void
     "donate": (donation: { gold: number }) => void
     "emotion": (data: { name: EmotionName }) => void

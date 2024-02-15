@@ -2,7 +2,7 @@
 import { Database, DeathModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData, TradeHistoryData } from "./definitions/adventureland-server.js"
+import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData, TradeHistoryData, DestroyGRDataObject } from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -1000,7 +1000,7 @@ export class Character extends Observer implements CharacterData {
         const cost = gData.g * (gData.markup ?? 1) * quantity
         if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
-        const response = this.getResponsePromise("buy", {
+        const response = this.getResponsePromise("buy", "buy_success", {
             extraGameResponseCheck: (data: GameResponseData) => {
                 if ((data as BuySuccessGRDataObject).name !== itemName) return false
                 if ((data as BuySuccessGRDataObject).q !== quantity) return false
@@ -2241,6 +2241,26 @@ export class Character extends Observer implements CharacterData {
         return swapped
     }
 
+    /**
+     * Destroys an item
+     *
+     * NOTE: Currently (as of 2024-02-15) gives a 1/1,000,000 chance to get a level 13 item
+     *       if the item is upgradable
+     *
+     * @param num The inventory slot for the item we should destroy
+     */
+    public async destroy(num: number, quantity = 1): Promise<unknown> {
+        const response = this.getResponsePromise(
+            "destroy",
+            "destroyed",
+            {
+                extraGameResponseCheck: (data: GameResponseData) => (data as DestroyGRDataObject).num === num
+            }
+        )
+        this.socket.emit("destroy", { num: num, q: quantity, statue: true })
+        return response
+    }
+
     public async dismantle(slot: number): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [dismantle].")
         const itemData = this.items[slot]
@@ -3252,7 +3272,14 @@ export class Character extends Observer implements CharacterData {
      * @param options Overrides
      * @returns A promise that will resolve or reject according to the server response
      */
-    protected getResponsePromise(skill: SkillName | "buy" | "imove" | "join" | "set_home", options?: { extraGameResponseCheck?: (data: GameResponseData) => boolean, timeoutMs?: number }) {
+    protected getResponsePromise(
+        skill: SkillName | "buy" | "destroy" | "imove" | "join" | "set_home",
+        response: string = "data",
+        options?: {
+            extraGameResponseCheck?: (data: GameResponseData) => boolean,
+            timeoutMs?: number
+        }
+    ) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
 
@@ -3268,14 +3295,12 @@ export class Character extends Observer implements CharacterData {
                 if ((data as any).place !== skill) return // The response is for a different skill
 
                 if (
-                    (
-                        data.response == "data"
-                        || data.response == "buy_success"
-                        || data.response == "home_set")
+                    data.response == response
                     && (
                         (data as any).success
                         || (data as any).in_progress
-                        || !(data as any).failed)
+                        || !(data as any).failed
+                    )
                 ) {
                     if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
@@ -4177,7 +4202,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [setHome].")
         if (`${this.serverData.region}${this.serverData.name}` === this.home) return // Don't set home if it's already set here
 
-        const response = this.getResponsePromise("set_home") as Promise<ProjectileSkillGRDataObject>
+        const response = this.getResponsePromise("set_home", "home_set") as Promise<ProjectileSkillGRDataObject>
         this.socket.emit("set_home")
         return response
     }
