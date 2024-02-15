@@ -21,7 +21,7 @@ test("Pathfinder.prepare", async () => {
         await Pathfinder.prepare(Game.G, {
             showConsole: false
         })
-    }).not.toThrowError()
+    }).not.toThrow()
     expect(Pathfinder.getGrid("main")).toBeDefined()
     expect(logMock).not.toHaveBeenCalled()
     expect(debugMock).not.toHaveBeenCalled()

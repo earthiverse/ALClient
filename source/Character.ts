@@ -4586,17 +4586,24 @@ export class Character extends Observer implements CharacterData {
         return { map: this.map, x: this.x, y: this.y }
     }
 
-    public async splitItem(pos: number, q: number) {
+    /**
+     * Splits a stack of items in to two stacks
+     *
+     * @param pos The stack to split items from
+     * @param q The number of items to split in to the new stack
+     * @returns The slot number of the new stack
+     */
+    public async splitItem(pos: number, q: number): Promise<number> {
         if (!this.ready) throw new Error("We aren't ready yet [splitItem].")
-        if (q <= 0) return // Nothing to split
+        if (q <= 0) return undefined // Nothing to split
         const itemInfo = this.items[pos]
         if (!itemInfo) throw new Error(`There is no item in slot ${pos}.`)
         if (!itemInfo.q) throw new Error(`${itemInfo.name} is unstackable; and therefore can't be split.`)
-        if (!(itemInfo.q > q)) throw new Error(`There are not enough of ${itemInfo.name} in the stack to split ${q} from it.`)
+        if (q >= itemInfo.q) return pos // Nothing to split
         if (this.esize < 1) throw new Error("We don't have any empty inventory slots to split this stack into.")
         const emptySlot = this.getFirstEmptyInventorySlot(this.items)
 
-        const split = new Promise((resolve, reject) => {
+        const split = new Promise<number>((resolve, reject) => {
             const cleanup = () => {
                 this.socket.off("player", splitCheck)
                 clearTimeout(timeout)
