@@ -2414,13 +2414,13 @@ export class Character extends Observer implements CharacterData {
                                 map: map,
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region
-                            })
+                            }).lean().exec()
                             EntityModel.deleteMany({
                                 in: instance,
                                 map: map,
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region
-                            })
+                            }).lean().exec()
                         }
 
                         reject(new Error(`The instance '${instance}' for ${map} is no longer valid .`))
