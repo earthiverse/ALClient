@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Database, DeathModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
+import { Database, DeathModel, EntityModel, InstanceModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
 import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
 import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData, TradeHistoryData, DestroyGRDataObject } from "./definitions/adventureland-server.js"
@@ -2402,6 +2402,28 @@ export class Character extends Observer implements CharacterData {
                         this.socket.off("new_map", enterCheck)
                         this.socket.off("game_response", failCheck)
                         reject(new Error(`We don't have the required item to enter ${map}.`))
+                    } else if (data.response == "transport_cant_invalid") {
+                        this.socket.off("new_map", enterCheck)
+                        this.socket.off("game_response", failCheck)
+
+                        if (Database.connection) {
+                            // The instance expired,
+                            // remove the instance and all entities in it
+                            InstanceModel.deleteOne({
+                                in: instance,
+                                map: map,
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region
+                            })
+                            EntityModel.deleteMany({
+                                in: instance,
+                                map: map,
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region
+                            })
+                        }
+
+                        reject(new Error(`The instance '${instance}' for ${map} is no longer valid .`))
                     }
                 }
             }

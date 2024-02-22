@@ -602,7 +602,7 @@ export type CondExpGRDataObject = {
 }
 export type EnterGRDataObject = {
     success: false
-    response: "transport_cant_item"
+    response: "transport_cant_item" | "transport_cant_invalid"
     place: "enter"
 }
 export type GetCloserGRDataObject = {
