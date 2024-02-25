@@ -1466,6 +1466,7 @@ export class Character extends Observer implements CharacterData {
 
     /**
      * Returns the *minimum* gold required to obtain the given item.
+     * @deprecated use `Item.calculateMinimumCost()`
      *
      * @param {ItemData} item - The item to calculate the minimum cost for
      * @return {*}  {number} - The cost of the item
@@ -1511,6 +1512,9 @@ export class Character extends Observer implements CharacterData {
         return cost
     }
 
+    /**
+     * @deprecated use `Item.calculateGrade()`
+     */
     public calculateItemGrade(item: ItemData): number {
         if (!item) return // No item to calculate grade
         const gInfo = this.G.items[item.name]

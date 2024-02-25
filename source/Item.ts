@@ -31,6 +31,8 @@ export class Item implements ItemData, GItem {
     public resistance = 0
     public stat = 0
     public str = 0
+    public compound?: { [T in Attribute]?: number }
+    public upgrade?: { [T in Attribute]?: number }
     public v?: string
     /** Set if `type` is `weapon` */
     public wtype?: WeaponType
@@ -113,6 +115,17 @@ export class Item implements ItemData, GItem {
         // Set stats based on attributes
         // TODO: Improve this for different stat scroll items
         if (this.stat_type && this.stat) this[this.stat_type] = (this[this.stat_type] ?? 0) + this.stat
+    }
+
+    public calculateGrade(): number {
+        const gInfo = this.G.items[this.name]
+        if (!gInfo.grades) return undefined // No information in G about this item
+        let grade = 0
+        for (const level of gInfo.grades) {
+            if (this.level < level) break
+            grade++
+        }
+        return grade
     }
 
     public calculateMinimumCost(): number {
