@@ -2877,6 +2877,28 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
+     * Returns a nested map of items that the player has in their bank.
+     */
+    public getBankItems(): Map<BankPackName, Map<number, Item>> {
+        if (!this.map.startsWith("bank")) return new Map() // Not in the bank, return an empty map
+
+        const bankItems = new Map<BankPackName, Map<number, Item>>()
+        for (const key in this.bank) {
+            if (key === "gold") continue
+            const packName = key as BankPackName
+            const pack = this.bank[packName]
+            const packItems = new Map<number, Item>()
+            for (let packSlot = 0; packSlot < pack.length; packSlot++) {
+                const packItem = pack[packSlot]
+                if (!packItem) continue // No item in this slot
+                packItems.set(packSlot, new Item(packItem, this.G))
+            }
+            bankItems.set(packName, packItems)
+        }
+        return bankItems
+    }
+
+    /**
      * Returns a map of items that the player has in their inventory.
      *
      * The key is the slot that the item is located, the value is an Item object with the

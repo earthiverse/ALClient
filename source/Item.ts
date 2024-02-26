@@ -1,5 +1,5 @@
 import { ItemType, WeaponType } from "./definitions/adventureland.js"
-import { Attribute, GData, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
+import { Attribute, CharacterType, GData, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
 import { ItemData } from "./definitions/adventureland-server.js"
 
 export class Item implements ItemData, GItem {
@@ -31,6 +31,7 @@ export class Item implements ItemData, GItem {
     public resistance = 0
     public stat = 0
     public str = 0
+    public class?: CharacterType[]
     public compound?: { [T in Attribute]?: number }
     public upgrade?: { [T in Attribute]?: number }
     public v?: string
