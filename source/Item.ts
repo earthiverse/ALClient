@@ -33,6 +33,7 @@ export class Item implements ItemData, GItem {
     public str = 0
     public class?: CharacterType[]
     public compound?: { [T in Attribute]?: number }
+    public e?: number
     public upgrade?: { [T in Attribute]?: number }
     public v?: string
     /** Set if `type` is `weapon` */
