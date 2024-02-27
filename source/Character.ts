@@ -1729,6 +1729,7 @@ export class Character extends Observer implements CharacterData {
 
         // Find stacks that contain enough to exchange
         if (!this.hasItem(itemToExchange, this.items, {
+            locked: false,
             quantityGreaterThan: (this.G.items[itemToExchange].e ?? 1) - 1
         })) return false // We don't have enough to exchange
 
@@ -1788,9 +1789,75 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * UNFINISHED. DO NOT USE YET.
-     * TODO: Finish
-     * TODO: Make canCompound, too
+     * Returns true if you can compound the given combination of items from where you're standing
+     *
+     * @param {number} itemPos1
+     * @param {number} itemPos2
+     * @param {number} itemPos3
+     * @param {number} scrollPos
+     * @param {number} [offeringPos]
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public canCompound(itemPos1: number, itemPos2: number, itemPos3: number, scrollPos?: number, offeringPos?: number): boolean {
+        if (this.q.compound) return false // Already compounding
+        if (this.map.startsWith("bank")) return false // Can't compound in the bank
+
+        const itemInfo1 = this.items[itemPos1]
+        if (!itemInfo1) throw new Error(`No item in inventory position '${itemPos1}'.`)
+        if (itemInfo1.l) throw new Error(`Item in position '${itemPos1}' is locked`)
+
+        const itemInfo2 = this.items[itemPos2]
+        if (!itemInfo2) throw new Error(`No item in inventory position '${itemPos2}'.`)
+        if (itemInfo2.l) throw new Error(`Item in position '${itemPos2}' is locked`)
+
+        const itemInfo3 = this.items[itemPos3]
+        if (!itemInfo3) throw new Error(`No item in inventory position '${itemPos3}'.`)
+        if (itemInfo3.l) throw new Error(`Item in position '${itemPos3}' is locked`)
+
+        if (itemInfo1.name !== itemInfo2.name) throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different`)
+        if (itemInfo1.level !== itemInfo2.level) throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different levels`)
+        if (itemInfo1.name !== itemInfo3.name) throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different`)
+        if (itemInfo1.level !== itemInfo3.level) throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different levels`)
+
+        const gItemInfo = this.G.items[itemInfo1.name]
+        if (!gItemInfo.upgrade) return false // Item is not compoundable
+
+        if (scrollPos === undefined && offeringPos === undefined) throw new Error("Need at least a scroll or an offering in order to compound.")
+
+        // Scroll check
+        if (scrollPos !== undefined) {
+            const scrollInfo = this.items[scrollPos]
+            if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+            if (scrollInfo.l) throw new Error(`Scroll in position '${scrollPos}' is locked`)
+
+            const itemInfo4 = new Item(itemInfo1, this.G)
+            const grade = itemInfo4.calculateGrade()
+            if (scrollInfo.name !== `cscroll${grade}`) return false // not the right scroll
+        }
+
+        // Offering check
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
+            if (offeringInfo.l) throw new Error(`Offering in position '${offeringPos}' is locked`)
+            if (this.G.items[offeringInfo.name].type !== "offering") throw new Error(`${offeringInfo.name} is not suitable as an offering`)
+        }
+
+        // Distance check
+        if (
+            !this.hasItem("computer")
+            && !this.hasItem("supercomputer")
+            && Tools.squaredDistance(
+                this,
+                { map: "main", x: this.G.maps.main.ref.c_mid[0], y: this.G.maps.main.ref.c_mid[1] }
+            ) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+
+        return true
+    }
+
+    /**
+     * Returns true if you can upgrade the given combination of items from where you're standing
      *
      * @param {number} itemPos
      * @param {number} scrollPos
@@ -1800,25 +1867,52 @@ export class Character extends Observer implements CharacterData {
      */
     public canUpgrade(itemPos: number, scrollPos?: number, offeringPos?: number): boolean {
         if (this.q.upgrade) return false // Already upgrading
-        if (this.map == "bank" || this.map == "bank_b" || this.map == "bank_u") return false // Can't upgrade in the bank
+        if (this.map.startsWith("bank")) return false // Can't upgrade in the bank
 
         const itemInfo = this.items[itemPos]
         if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
+        if (itemInfo.l) throw new Error(`Item in position '${itemPos}' is locked`)
+
         const gItemInfo = this.G.items[itemInfo.name]
         if (!gItemInfo.upgrade) return false // Item is not upgradable
-        if (scrollPos === undefined && !offeringPos) throw new Error("Need at least a scroll or an offering in order to upgrade.")
-        const scrollInfo = this.items[scrollPos]
-        if (scrollPos !== undefined && !scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
-        const offeringInfo = this.items[offeringPos]
-        if (offeringPos && !offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
+
+        if (scrollPos === undefined && offeringPos === undefined) throw new Error("Need at least a scroll or an offering in order to upgrade.")
+
+        // Scroll check
+        if (scrollPos !== undefined) {
+            const scrollInfo = this.items[scrollPos]
+            if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+            if (scrollInfo.l) throw new Error(`Scroll in position '${scrollPos}' is locked`)
+
+            const itemInfo2 = new Item(itemInfo, this.G)
+            const grade = itemInfo2.calculateGrade()
+            if (itemInfo2.type === "pscroll") {
+                // Attribute scroll
+                if (scrollInfo.q < (10 ** grade)) return false // not enough to apply the scroll
+            } else if (itemInfo2.type === "uscroll") {
+                // Upgrade scroll
+                if (scrollInfo.name !== `scroll${grade}`) return false // not the right scroll
+            }
+        }
+
+        // Offering check
+        if (offeringPos !== undefined) {
+            const offeringInfo = this.items[offeringPos]
+            if (!offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
+            if (offeringInfo.l) throw new Error(`Offering in position '${offeringPos}' is locked`)
+            if (this.G.items[offeringInfo.name].type !== "offering") throw new Error(`${offeringInfo.name} is not suitable as an offering`)
+        }
 
         // Distance check
-        if (!this.hasItem("computer") && !this.hasItem("supercomputer")
-            && Tools.squaredDistance(this, { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+        if (
+            !this.hasItem("computer")
+            && !this.hasItem("supercomputer")
+            && Tools.squaredDistance(
+                this,
+                { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }
+            ) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
 
-        // Scroll compatibility check
-        const grade = this.calculateItemGrade(itemInfo)
-        if (scrollInfo.name !== `scroll${grade}`) return false // not the right scroll
+        return true
     }
 
     /**
