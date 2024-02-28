@@ -5,6 +5,7 @@ import { ServerData } from "./definitions/adventureland-server"
 import { Entity } from "./Entity"
 import { Pathfinder } from "./Pathfinder"
 import { MapName } from "./definitions/adventureland-data"
+import { IPosition } from "./definitions/adventureland"
 
 let priest: Character
 let warrior: Character
@@ -628,6 +629,122 @@ test("Character.canExchange", async () => {
     priest.x = shellLocation.x
     priest.y = shellLocation.y
     expect(priest.canExchange("seashell")).toBe(true)
+
+    // Restore
+    priest.items = itemsBackup
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+})
+
+
+test("Character.canCompound", async () => {
+    // Backup so we can change things
+    const itemsBackup = [...priest.items]
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+
+    // Set up the compound location
+    expect(Game.G.maps.main.ref?.c_mid?.[0]).toBeDefined()
+    expect(Game.G.maps.main.ref?.c_mid?.[1]).toBeDefined()
+    const compoundLocation: IPosition = { map: "main", x: Game.G.maps.main.ref?.c_mid?.[0], y: Game.G.maps.main.ref?.c_mid?.[1] }
+
+    // Compoundable
+    priest.items = [{ name: "computer" }, { name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    expect(priest.canCompound(2, 3, 4, 1)).toBe(true)
+
+    // Compoundable with higher level scroll
+    priest.items = [{ name: "computer" }, { name: "cscroll3", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    expect(priest.canCompound(2, 3, 4, 1)).toBe(true)
+
+    // Upgradable (not Compoundable)
+    priest.items = [{ name: "computer" }, { name: "cscroll0", q: 1 }, { name: "coat", level: 0 }, { name: "coat", level: 0 }, { name: "coat", level: 0 }]
+    expect(priest.canCompound(2, 3, 4, 1)).toBe(false)
+
+    // Wrong location
+    priest.items = [{ name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.map = "winterland"
+    priest.x = 0
+    priest.y = 0
+    expect(priest.canCompound(1, 2, 3, 0)).toBe(false)
+
+    // Correct Location
+    priest.items = [{ name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.map = compoundLocation.map as MapName
+    priest.x = compoundLocation.x
+    priest.y = compoundLocation.y
+    expect(priest.canCompound(1, 2, 3, 0)).toBe(true)
+
+    // Restore
+    priest.items = itemsBackup
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+})
+
+test("Character.canUpgrade", async () => {
+    // Backup so we can change things
+    const itemsBackup = [...priest.items]
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+
+    // Set up the upgrade location
+    expect(Game.G.maps.main.ref?.u_mid?.[0]).toBeDefined()
+    expect(Game.G.maps.main.ref?.u_mid?.[1]).toBeDefined()
+    const upgradeLocation: IPosition = { map: "main", x: Game.G.maps.main.ref?.u_mid?.[0], y: Game.G.maps.main.ref?.u_mid?.[1] }
+
+    // Upgradable
+    priest.items = [{ name: "computer" }, { name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
+    expect(priest.canUpgrade(2, 1)).toBe(true)
+
+    // Upgradable with higher level scroll
+    priest.items = [{ name: "computer" }, { name: "scroll4", q: 1 }, { name: "coat", level: 0 }]
+    expect(priest.canUpgrade(2, 1)).toBe(true)
+
+    // Stat scroll - Grade 0 - Sufficient
+    priest.items = [{ name: "computer" }, { name: "dexscroll", q: 1 }, { name: "coat", level: 0 }]
+    expect(priest.canUpgrade(2, 1)).toBe(true)
+
+    // Stat scroll - Grade 1 - Insufficient
+    priest.items = [{ name: "computer" }, { name: "dexscroll", q: 9 }, { name: "coat", level: 7 }]
+    expect(priest.canUpgrade(2, 1)).toBe(false)
+
+    // Stat scroll - Grade 1 - Sufficient
+    priest.items = [{ name: "computer" }, { name: "dexscroll", q: 10 }, { name: "coat", level: 7 }]
+    expect(priest.canUpgrade(2, 1)).toBe(true)
+
+    // Stat scroll - Grade 2 - Insufficient
+    priest.items = [{ name: "computer" }, { name: "dexscroll", q: 99 }, { name: "coat", level: 9 }]
+    expect(priest.canUpgrade(2, 1)).toBe(false)
+
+    // Stat scroll - Grade 2 - Sufficient
+    priest.items = [{ name: "computer" }, { name: "dexscroll", q: 100 }, { name: "coat", level: 9 }]
+    expect(priest.canUpgrade(2, 1)).toBe(true)
+
+    // Ore doable
+    priest.items = [{ name: "computer" }, { name: "platinumnugget", q: 1 }, { name: "coat", level: 0 }]
+    expect(priest.canUpgrade(2, 1)).toBe(false) // Doable, but put in scroll slot
+    expect(priest.canUpgrade(2, undefined, 1)).toBe(true)
+
+    // Ores are only doable with level 0 items
+    priest.items = [{ name: "computer" }, { name: "platinumnugget", q: 1 }, { name: "coat", level: 1 }]
+    expect(priest.canUpgrade(2, undefined, 1)).toBe(false)
+
+    // Compoundable (not Upgradable)
+    priest.items = [{ name: "computer" }, { name: "scroll0", q: 1 }, { name: "dexearring", level: 0 }]
+    expect(priest.canUpgrade(2, 1)).toBe(false)
+
+    // Wrong location
+    priest.items = [{ name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
+    priest.map = "winterland"
+    priest.x = 0
+    priest.y = 0
+    expect(priest.canUpgrade(1, 0)).toBe(false)
+
+    // Correct Location
+    priest.items = [{ name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
+    priest.map = upgradeLocation.map as MapName
+    priest.x = upgradeLocation.x
+    priest.y = upgradeLocation.y
+    expect(priest.canUpgrade(1, 0)).toBe(true)
 
     // Restore
     priest.items = itemsBackup

@@ -1804,36 +1804,37 @@ export class Character extends Observer implements CharacterData {
         if (this.map.startsWith("bank")) return false // Can't compound in the bank
 
         const itemInfo1 = this.items[itemPos1]
-        if (!itemInfo1) throw new Error(`No item in inventory position '${itemPos1}'.`)
-        if (itemInfo1.l) throw new Error(`Item in position '${itemPos1}' is locked`)
+        if (!itemInfo1) return false // throw new Error(`No item in inventory position '${itemPos1}'.`)
+        if (itemInfo1.l) return false // throw new Error(`Item in position '${itemPos1}' is locked`)
 
         const itemInfo2 = this.items[itemPos2]
-        if (!itemInfo2) throw new Error(`No item in inventory position '${itemPos2}'.`)
-        if (itemInfo2.l) throw new Error(`Item in position '${itemPos2}' is locked`)
+        if (!itemInfo2) return false // throw new Error(`No item in inventory position '${itemPos2}'.`)
+        if (itemInfo2.l) return false // throw new Error(`Item in position '${itemPos2}' is locked`)
 
         const itemInfo3 = this.items[itemPos3]
-        if (!itemInfo3) throw new Error(`No item in inventory position '${itemPos3}'.`)
-        if (itemInfo3.l) throw new Error(`Item in position '${itemPos3}' is locked`)
+        if (!itemInfo3) return false // throw new Error(`No item in inventory position '${itemPos3}'.`)
+        if (itemInfo3.l) return false // throw new Error(`Item in position '${itemPos3}' is locked`)
 
-        if (itemInfo1.name !== itemInfo2.name) throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different`)
-        if (itemInfo1.level !== itemInfo2.level) throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different levels`)
-        if (itemInfo1.name !== itemInfo3.name) throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different`)
-        if (itemInfo1.level !== itemInfo3.level) throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different levels`)
+        if (itemInfo1.name !== itemInfo2.name) return false // throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different`)
+        if (itemInfo1.level !== itemInfo2.level) return false // throw new Error(`Items in positions '${itemPos1}' and '${itemPos2}' are different levels`)
+        if (itemInfo1.name !== itemInfo3.name) return false // throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different`)
+        if (itemInfo1.level !== itemInfo3.level) return false // throw new Error(`Items in positions '${itemPos1}' and '${itemPos3}' are different levels`)
 
         const gItemInfo = this.G.items[itemInfo1.name]
-        if (!gItemInfo.upgrade) return false // Item is not compoundable
+        if (!gItemInfo.compound) return false // throw new Error(`Items in positions '${itemPos1}', '${itemPos2}', and '${itemPos3}' are not compoundable`)
 
-        if (scrollPos === undefined && offeringPos === undefined) throw new Error("Need at least a scroll or an offering in order to compound.")
+        if (scrollPos === undefined && offeringPos === undefined) return false // throw new Error("Need at least a scroll or an offering in order to compound.")
 
         // Scroll check
         if (scrollPos !== undefined) {
             const scrollInfo = this.items[scrollPos]
-            if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
-            if (scrollInfo.l) throw new Error(`Scroll in position '${scrollPos}' is locked`)
-
-            const itemInfo4 = new Item(itemInfo1, this.G)
-            const grade = itemInfo4.calculateGrade()
-            if (scrollInfo.name !== `cscroll${grade}`) return false // not the right scroll
+            if (!scrollInfo) return false // throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+            if (scrollInfo.l) return false // throw new Error(`Scroll in position '${scrollPos}' is locked`)
+            const gScroll = this.G.items[scrollInfo.name]
+            if (gScroll.type !== "cscroll") return false // Not the right scroll
+            const itemItem = new Item(itemInfo1, this.G)
+            const grade = itemItem.calculateGrade()
+            if (gScroll.grade === undefined || gScroll.grade < grade) return false // Too low of grade
         }
 
         // Offering check
@@ -1870,37 +1871,43 @@ export class Character extends Observer implements CharacterData {
         if (this.map.startsWith("bank")) return false // Can't upgrade in the bank
 
         const itemInfo = this.items[itemPos]
-        if (!itemInfo) throw new Error(`No item in inventory position '${itemPos}'.`)
-        if (itemInfo.l) throw new Error(`Item in position '${itemPos}' is locked`)
+        if (!itemInfo) return false // throw new Error(`No item in inventory position '${itemPos}'.`)
+        if (itemInfo.l) return false // throw new Error(`Item in position '${itemPos}' is locked`)
 
         const gItemInfo = this.G.items[itemInfo.name]
         if (!gItemInfo.upgrade) return false // Item is not upgradable
 
-        if (scrollPos === undefined && offeringPos === undefined) throw new Error("Need at least a scroll or an offering in order to upgrade.")
+        if (scrollPos === undefined && offeringPos === undefined) return false // throw new Error("Need at least a scroll or an offering in order to upgrade.")
 
         // Scroll check
         if (scrollPos !== undefined) {
             const scrollInfo = this.items[scrollPos]
-            if (!scrollInfo) throw new Error(`No scroll in inventory position '${scrollPos}'.`)
-            if (scrollInfo.l) throw new Error(`Scroll in position '${scrollPos}' is locked`)
-
-            const itemInfo2 = new Item(itemInfo, this.G)
-            const grade = itemInfo2.calculateGrade()
-            if (itemInfo2.type === "pscroll") {
+            if (!scrollInfo) return false // throw new Error(`No scroll in inventory position '${scrollPos}'.`)
+            if (scrollInfo.l) return false // throw new Error(`Scroll in position '${scrollPos}' is locked`)
+            const gScroll = this.G.items[scrollInfo.name]
+            const itemItem = new Item(itemInfo, this.G)
+            const grade = itemItem.calculateGrade()
+            if (gScroll.type === "pscroll") {
                 // Attribute scroll
-                if (scrollInfo.q < (10 ** grade)) return false // not enough to apply the scroll
-            } else if (itemInfo2.type === "uscroll") {
+                if (scrollInfo.q < (10 ** grade)) return false // throw new Error("Not enough scrolls to apply")
+            } else if (gScroll.type === "uscroll") {
                 // Upgrade scroll
-                if (scrollInfo.name !== `scroll${grade}`) return false // not the right scroll
+                console.debug(scrollInfo.name)
+                console.debug(`scroll${grade}`)
+                if (gScroll.grade === undefined || gScroll.grade < grade) return false // throw new Error("Too low grade")
+            } else {
+                return false // Not the right scroll
             }
         }
 
         // Offering check
         if (offeringPos !== undefined) {
             const offeringInfo = this.items[offeringPos]
-            if (!offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
-            if (offeringInfo.l) throw new Error(`Offering in position '${offeringPos}' is locked`)
-            if (this.G.items[offeringInfo.name].type !== "offering") throw new Error(`${offeringInfo.name} is not suitable as an offering`)
+            if (!offeringInfo) return false // throw new Error(`No offering in inventory position '${offeringPos}'.`)
+            if (offeringInfo.l) return false // throw new Error(`Offering in position '${offeringPos}' is locked`)
+            const gOffering = this.G.items[offeringInfo.name]
+            if (gOffering.type !== "offering" && !gOffering.offering) return false // throw new Error(`${offeringInfo.name} is not suitable as an offering`)
+            if (gOffering.offering && itemInfo.level !== 0) return false
         }
 
         // Distance check
