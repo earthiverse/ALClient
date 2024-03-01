@@ -1892,8 +1892,6 @@ export class Character extends Observer implements CharacterData {
                 if (scrollInfo.q < (10 ** grade)) return false // throw new Error("Not enough scrolls to apply")
             } else if (gScroll.type === "uscroll") {
                 // Upgrade scroll
-                console.debug(scrollInfo.name)
-                console.debug(`scroll${grade}`)
                 if (gScroll.grade === undefined || gScroll.grade < grade) return false // throw new Error("Too low grade")
             } else {
                 return false // Not the right scroll
