@@ -639,7 +639,12 @@ export class Observer {
         this.map = data.name
         this.in = data.in
 
-        if (data.in !== data.name) {
+        if (
+            data.in !== data.name // We're in an instance
+            && data.effect !== "magiport" // Don't update for magiports
+            && data.effect !== "blink" // Don't update for blinks
+            && data.effect !== 1 // Don't update for town warps
+        ) {
             const now = Date.now()
             InstanceModel.updateOne({
                 in: data.in,
