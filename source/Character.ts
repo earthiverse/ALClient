@@ -4588,7 +4588,12 @@ export class Character extends Observer implements CharacterData {
         }
 
         for (let i = 0; i < path.length; i++) {
-            let currentMove = path[i]
+            if (options?.getWithin >= Tools.distance({ map: this.map, x: this.x, y: this.y }, { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })) {
+                break // We're already close enough!
+            }
+
+            // Stop if we meet our conditions
+            if (options.stopIfTrue && await options.stopIfTrue()) break
 
             if (started < this.lastSmartMove) {
                 if (typeof to == "string")
@@ -4602,12 +4607,7 @@ export class Character extends Observer implements CharacterData {
                 throw new Error("We died while smartMoving")
             }
 
-            if (options?.getWithin >= Tools.distance({ map: this.map, x: this.x, y: this.y }, { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })) {
-                break // We're already close enough!
-            }
-
-            // Stop if we meet our conditions
-            if (options.stopIfTrue && await options.stopIfTrue()) break
+            let currentMove = path[i]
 
             // Check if we can walk to a spot close to the goal if that's OK
             if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
