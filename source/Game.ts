@@ -37,7 +37,7 @@ export class Game {
         // Private to force static methods
     }
 
-    static async setServer(server: string) {
+    static setServer(server: string) {
         if (!server.startsWith("http")) {
             throw new Error("Please specify the server with http(s)://")
         }
