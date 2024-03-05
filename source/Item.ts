@@ -38,6 +38,7 @@ export class Item implements ItemData, GItem {
     public v?: string
     /** Set if `type` is `weapon` */
     public wtype?: WeaponType
+    public data?: string
 
     public G: GData
 
