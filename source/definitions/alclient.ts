@@ -96,6 +96,8 @@ export type LocateItemsFilters = {
     special?: boolean | TitleName;
     /** The scroll applied to the weapon (e.g.: int, dex, str, ...) */
     statType?: Attribute;
+    /** Some items, like cosmetics, have a data property */
+    data?: string;
 }
 
 /** Filters for returning a single item */

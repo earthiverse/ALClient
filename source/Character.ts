@@ -5853,6 +5853,10 @@ export class Character extends Observer implements CharacterData {
                 if (item.stat_type !== filters.statType)
                     continue // This item doesn't match the stat scroll
             }
+            if (filters?.data !== undefined) {
+                if (item.data !== filters.data)
+                    continue
+            }
 
             found.push(i)
         }
