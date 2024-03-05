@@ -42,17 +42,17 @@ export class Item implements ItemData, GItem {
 
     public G: GData
 
-    public constructor(data: ItemData | ItemData, g: GData) {
+    public constructor(itemData: ItemData | ItemData, g: GData) {
         this.G = g
         // Set soft properties
         // NOTE: If `data` contains different values, we will overwrite these later
-        const gData = g.items[data.name]
+        const gData = g.items[itemData.name]
         for (const gKey in gData) {
-            this[gKey] = g.items[data.name][gKey]
+            this[gKey] = g.items[itemData.name][gKey]
         }
 
         // Set everything else
-        for (const key in data) this[key] = data[key]
+        for (const key in itemData) this[key] = itemData[key]
 
         // Calculate additional stats from item level
         for (let i = 1; i <= this.level; i++) {

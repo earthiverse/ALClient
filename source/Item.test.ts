@@ -5,6 +5,13 @@ beforeAll(async () => {
     await Game.getGData(true, false)
 }, 60000)
 
+test("Item attributes", async () => {
+    const cxJar = new Item({ data: "hairdo607", name: "cxjar", q: 4 }, Game.G)
+    expect(cxJar.data).toEqual("hairdo607")
+    expect(cxJar.name).toEqual("cxjar")
+    expect(cxJar.q).toEqual(4)
+})
+
 test("Item stats", async () => {
     // Compare stats to those grabbed from https://adventure.land/docs
     const level0Staff = new Item({ level: 0, name: "staff" }, Game.G)
