@@ -2543,6 +2543,15 @@ export class Character extends Observer implements CharacterData {
         return enterComplete
     }
 
+    /**
+     * Equip a single item.
+     *
+     * @see equip_batch Optimized for equipping multiple items (i.e. a loadout) at once
+     *
+     * @param inventoryPos
+     * @param equipSlot
+     * @returns
+     */
     public async equip(inventoryPos: number, equipSlot?: SlotType): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [equip].")
         if (!this.items[inventoryPos]) throw new Error(`No item in inventory slot ${inventoryPos}.`)
@@ -2593,6 +2602,22 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.emit("equip", { num: inventoryPos, slot: equipSlot })
         return equipFinished
+    }
+
+    /**
+     * Equip a defined set of items
+     *
+     * @see equip Equipping a single item
+     */
+    public async equipBatch(toEquip: { num: number, slot: SlotType }[]): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [equipBath].")
+
+        if (toEquip.length > 15) throw new Error("We can only equip_batch at most 15 items")
+        if (toEquip.some((a) => a.num < 0)) throw new Error("`num` cannot be negative")
+
+        const response = this.getResponsePromise("equip_batch")
+        this.socket.emit("equip_batch", toEquip)
+        return response
     }
 
     public async exchange(inventoryPos: number): Promise<string> {
@@ -3420,7 +3445,7 @@ export class Character extends Observer implements CharacterData {
      * @returns A promise that will resolve or reject according to the server response
      */
     protected getResponsePromise(
-        skill: SkillName | "buy" | "destroy" | "imove" | "join" | "set_home",
+        skill: SkillName | "buy" | "destroy" | "equip_batch" | "imove" | "join" | "set_home",
         response: string = "data",
         options?: {
             extraGameResponseCheck?: (data: GameResponseData) => boolean,
@@ -5464,7 +5489,7 @@ export class Character extends Observer implements CharacterData {
 
         const itemCount = this.countItem(item.name)
 
-        const swapped = new Promise<void>((resolve, reject) => {
+        const withdrawn = new Promise<void>((resolve, reject) => {
             const checkWithdrawal = (data: CharacterData) => {
                 const newCount = this.countItem(item.name, data.items)
                 if ((item.q && newCount == (itemCount + item.q))
@@ -5482,7 +5507,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.emit("bank", { inv: inventoryPos, operation: "swap", pack: bankPack, str: bankPos })
-        return swapped
+        return withdrawn
     }
 
     /**

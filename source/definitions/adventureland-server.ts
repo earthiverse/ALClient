@@ -1533,6 +1533,7 @@ export type ClientToServerEvents = {
     "emotion": (data: { name: EmotionName }) => void
     "enter": (data: { name: string, place: MapName }) => void
     "equip": (data: { num: number, slot: SlotType } | { consume: true, num: number } | { num: number, price: number, q: number, slot: TradeSlotType }) => void
+    "equip_batch": (data: { num: number, slot: SlotType }[]) => void
     "eval": (data: { command: string }) => void
     "exchange": (data: { item_num: number, q?: number }) => void
     // TODO: Create ExchangeBuyData type

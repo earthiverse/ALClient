@@ -106,6 +106,7 @@ export class Merchant extends PingCompensatedCharacter {
 
                 if (slotInfo.name !== itemInfo.name) continue // Check if it's the same item
                 if (slotInfo.p !== itemInfo.p) continue
+                if (slotInfo.data !== itemInfo.data) continue
 
                 if (quantity + slotInfo.q > gInfo.s) continue // Check if it's stackable
 
@@ -130,6 +131,8 @@ export class Merchant extends PingCompensatedCharacter {
         const slotInfo = this.slots[tradeSlot]
         if (slotInfo) {
             if (itemInfo.name == slotInfo.name // Same item
+                && itemInfo.p == slotInfo.p
+                && itemInfo.data == slotInfo.data
                 && price >= slotInfo.price // Same, or higher price
                 && gInfo.s && (quantity + slotInfo.q) <= gInfo.s // Stackable
                 && this.esize > 0 // NOTE: Unequipping trade items only works if we have an empty slot, even if we can stack the items
