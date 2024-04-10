@@ -1,5 +1,6 @@
 import { Item } from "./Item.js"
-import { GData, ItemDataTrade } from "./index.js"
+import { GData } from "./definitions/adventureland-data.js"
+import { ItemDataTrade } from "./definitions/adventureland-server.js"
 
 export class TradeItem extends Item implements ItemDataTrade {
     public b: boolean = false
@@ -10,5 +11,8 @@ export class TradeItem extends Item implements ItemDataTrade {
 
     public constructor(itemData: ItemDataTrade, g: GData) {
         super(itemData, g)
+
+        // Set everything else
+        for (const key in itemData) this[key] = itemData[key]
     }
 }

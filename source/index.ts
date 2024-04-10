@@ -30,6 +30,8 @@ import { Rogue } from "./Rogue.js"
 export * from "./Rogue.js"
 import { Tools } from "./Tools.js"
 export * from "./Tools.js"
+import { TradeItem } from "./TradeItem.js"
+export * from "./TradeItem.js"
 import { Warrior } from "./Warrior.js"
 export * from "./Warrior.js"
 
@@ -81,5 +83,6 @@ export default {
     Rogue,
     ServerModel,
     Tools,
+    TradeItem,
     Warrior
 }
