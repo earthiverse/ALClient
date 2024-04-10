@@ -996,6 +996,9 @@ export class Character extends Observer implements CharacterData {
         if (!gData.s && quantity !== 1) {
             console.warn(`${itemName} is not stackable, we will only buy 1, (${quantity} requested).`)
             quantity = 1
+        } else if (quantity < 1) {
+            console.warn(`Non-positive quantity (${quantity}) specified, not buying ${itemName}.`)
+            return // We aren't buying any
         }
         const cost = gData.g * (gData.markup ?? 1) * quantity
         if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
