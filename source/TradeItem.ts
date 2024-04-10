@@ -1,12 +1,14 @@
 import { Item } from "./Item.js"
-import { TradeItemInfo } from "./definitions/adventureland.js"
-import { GData } from "./index.js"
+import { GData, ItemDataTrade } from "./index.js"
 
-export class TradeItem extends Item implements TradeItemInfo {
+export class TradeItem extends Item implements ItemDataTrade {
+    b: boolean = false
+    giveaway?: number
+    list?: string[]
     price: number
     rid: string
 
-    public constructor(itemData: TradeItemInfo, g: GData) {
+    public constructor(itemData: ItemDataTrade, g: GData) {
         super(itemData, g)
     }
 }
