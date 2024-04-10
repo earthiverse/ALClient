@@ -42,7 +42,7 @@ export class Item implements ItemData, GItem {
 
     public G: GData
 
-    public constructor(itemData: ItemData | ItemData, g: GData) {
+    public constructor(itemData: ItemData, g: GData) {
         this.G = g
         // Set soft properties
         // NOTE: If `data` contains different values, we will overwrite these later
