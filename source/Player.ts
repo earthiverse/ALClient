@@ -27,6 +27,7 @@ export class Player implements PlayerData {
     public frequency: number
     public going_x?: number
     public going_y?: number
+    public heal: number
     public level = 1
     public move_num: number
     public moving: boolean
@@ -87,31 +88,33 @@ export class Player implements PlayerData {
     }
 
     public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
-        // If the entity is immune, most skills won't do damage
-        if ((defender as Entity).immune && ["3shot", "5shot", "burst", "cburst", "supershot", "taunt"].includes(skill)) return [0, 0]
+        const gSkill = this.G.skills[skill]
 
-        if (defender["1hp"] || skill == "taunt") return [1, 1]
+        // If the entity is immune, most skills won't do damage
+        if ((defender as Entity).immune && skill !== "attack" && !gSkill?.pierces_immunity) return [0, 0]
+
+        if (defender["1hp"] || skill == "taunt") return this.crit ? [1, 2] : [1, 1]
 
         let baseDamage: number = this.attack
-        if (!this.G.skills[skill]) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
-        if (this.G.skills[skill]?.damage) baseDamage = this.G.skills[skill].damage
-
+        if (skill == "heal") baseDamage = this.heal
+        if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
+        if (gSkill?.damage) baseDamage = gSkill.damage
 
         // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
         if (defender.s.cursed) baseDamage *= 1.2
         if (defender.s.marked) baseDamage *= 1.1
 
-        if (this.ctype == "priest") baseDamage *= 0.4 // Priests only do 40% damage
+        const damage_type = gSkill[skill]?.damage_type ?? this.damage_type
 
         let additionalApiercing = 0
-        if (this.G.skills[skill]?.apiercing) additionalApiercing = this.G.skills[skill].apiercing
+        if (gSkill?.apiercing) additionalApiercing = gSkill.apiercing
         // NOTE: currently no skills with rpiercing
         // let additionalRpiercing = 0
-        // if (this.G.skills[skill].rpiercing) additionalRpiercing = this.G.skills[skill].rpiercing
-        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
-        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+        // if (gSkill?.rpiercing) additionalRpiercing = gSkill.rpiercing
+        if (damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
+        else if (damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
-        if (this.G.skills[skill]?.damage_multiplier) baseDamage *= this.G.skills[skill].damage_multiplier
+        if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
 
         let lowerLimit = baseDamage * 0.9
         let upperLimit = baseDamage * 1.1
