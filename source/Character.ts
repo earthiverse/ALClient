@@ -5277,14 +5277,14 @@ export class Character extends Observer implements CharacterData {
         })
     }
 
-    public async useHPPot(itemPos: number): Promise<void> {
-        if (!this.ready) throw new Error("We aren't ready yet [useHPPot].")
-        if (!this.items[itemPos]) throw new Error(`There is no item in inventory slot ${itemPos}.`)
-        if (this.G.items[this.items[itemPos].name].type !== "pot") throw new Error(`The item provided (${itemPos}) is not a potion.`)
-        if (this.G.items[this.items[itemPos].name].gives[0][0] !== "hp") throw new Error(`The item provided(${itemPos}) is not an HP Potion.`)
-        if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an HP Potion.`)
+    public async usePotion(itemPos: number): Promise<void> {
+        if (!this.ready) throw new Error("We aren't ready yet [usePotion].")
+        const item = this.items[itemPos]
+        if (!item) throw new Error(`There is no item in inventory slot ${itemPos}.`)
+        const gItem = this.G.items[item.name]
+        if (gItem.type !== "pot") throw new Error(`The item provided (${itemPos}) is not a potion.`)
 
-        const healReceived = new Promise<void>((resolve, reject) => {
+        const usedPotion = new Promise<void>((resolve, reject) => {
             const cleanup = () => {
                 this.socket.off("eval", healCheck)
                 this.socket.off("game_response", failCheck)
@@ -5308,14 +5308,14 @@ export class Character extends Observer implements CharacterData {
                         && data.place == "equip"
                         && data.failed) {
                         cleanup()
-                        reject(new Error(`Failed to use HP Pot (${data.response})`))
+                        reject(new Error(`Failed to use Potion (${data.response})`))
                     }
                 }
             }
 
             const timeout = setTimeout(() => {
                 cleanup()
-                reject(new Error(`useHPPot timeout (${Constants.TIMEOUT}ms)`))
+                reject(new Error(`usePotion timeout (${Constants.TIMEOUT}ms)`))
             }, Constants.TIMEOUT)
 
             this.socket.on("eval", healCheck)
@@ -5323,56 +5323,7 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.emit("equip", { consume: true, num: itemPos })
-        return healReceived
-    }
-
-    public async useMPPot(itemPos: number): Promise<void> {
-        if (!this.ready) throw new Error("We aren't ready yet [useMPPot].")
-        if (!this.items[itemPos]) throw new Error(`There is no item in inventory slot ${itemPos}.`)
-        if (this.G.items[this.items[itemPos].name].type !== "pot") throw new Error(`The item provided (${itemPos}) is not a potion.`)
-        if (this.G.items[this.items[itemPos].name].gives[0][0] !== "mp") throw new Error(`The item provided(${itemPos}) is not an MP Potion.`)
-        if (this.G.items[this.items[itemPos].name].gives[0][1] < 0) throw new Error(`The item provided(${itemPos}) is not an MP Potion.`)
-
-        const healReceived = new Promise<void>((resolve, reject) => {
-            const cleanup = () => {
-                this.socket.off("eval", healCheck)
-                this.socket.off("game_response", failCheck)
-                clearTimeout(timeout)
-            }
-
-            const healCheck = (data: EvalData) => {
-                if (data.code && data.code.includes("pot_timeout")) {
-                    cleanup()
-                    resolve()
-                }
-            }
-
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "object") {
-                    if (
-                        (
-                            data.response == "cant_equip"
-                            || data.response == "not_ready"
-                        )
-                        && data.place == "equip"
-                        && data.failed) {
-                        cleanup()
-                        reject(new Error(`Failed to use MP Pot (${data.response})`))
-                    }
-                }
-            }
-
-            const timeout = setTimeout(() => {
-                cleanup()
-                reject(new Error(`useMPPot timeout (${Constants.TIMEOUT}ms)`))
-            }, Constants.TIMEOUT)
-
-            this.socket.on("eval", healCheck)
-            this.socket.on("game_response", failCheck)
-        })
-
-        this.socket.emit("equip", { consume: true, num: itemPos })
-        return healReceived
+        return usedPotion
     }
 
     // TODO: This will probably reject because the move doesn't match with the destination
