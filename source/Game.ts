@@ -26,10 +26,11 @@ export class Game {
     public static server: string = "https://adventure.land"
 
     public static get url(): string {
-        if (this.user?.secure === false) {
-            return this.server.replace("https:", "http:")
-        } else {
+        if (!this.user) return this.server
+        if (this.user.secure) {
             return this.server.replace("http:", "https:")
+        } else {
+            return this.server.replace("https:", "http:")
         }
     }
 
@@ -299,7 +300,7 @@ export class Game {
         if (!this.user) throw new Error("You must login first.")
 
         const response = await axios.post<unknown>(`${this.url}/api/logout_everywhere`, "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
-        this.user = undefined
+        delete this.user
 
         return response.data
     }
