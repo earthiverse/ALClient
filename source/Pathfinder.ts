@@ -295,7 +295,7 @@ export class Pathfinder {
         // console.debug("  Adding corners...")
         // console.debug(`  # nodes: ${walkableNodes.length}`)
         for (let y = 1; y < height - 1; y++) {
-            for (let x = 1; x < width; x++) {
+            for (let x = 1; x < width - 1; x++) {
                 const mC = grid[y * width + x]
                 if (mC !== WALKABLE) continue
 
