@@ -74,8 +74,9 @@ export class Observer {
             if ((data as ActionDataRay).instant) return // It's instant, don't add a projectile
 
             // Fix the ETA
+            // TODO: We should fix this in Adventureland itself
             const attacker = this.players.get(data.attacker) ?? this.entities.get(data.attacker)
-            const target = this.entities.get(data.attacker) ?? this.players.get(data.attacker)
+            const target = this.entities.get(data.target) ?? this.players.get(data.target)
             const projectileSpeed = this.G.projectiles[(data as ActionDataProjectile).projectile]?.speed
             if (attacker && target && projectileSpeed) {
                 const distance = Tools.distance(attacker, target)
