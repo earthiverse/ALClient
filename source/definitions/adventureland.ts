@@ -132,6 +132,7 @@ export type PositionSmart = IPosition & {
 
 export type IPosition = {
     map?: MapName
+    /** Instance ID */
     in?: string
     x: number
     y: number

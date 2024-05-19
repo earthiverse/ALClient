@@ -3,7 +3,7 @@
  * game uses to interact with the server.
  */
 
-import { BankInfo, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
+import { BankInfo, IPosition, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
 import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, ConditionName, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
 
 export type AchievementProgressData = AchievementProgressDataFirehazard | {
@@ -174,20 +174,20 @@ export type CharacterData = PlayerData & {
     reopen?: boolean
 }
 
-export type CharacterListData = {
-    map: MapName
-    in: string
+export type CharacterListData = IPosition & {
     name: string
     level: number
     skin: string
     cx: CXData
     online: number
-    y: number
-    x: number
     type: CharacterType
     id: string
+    /** The character's home server (related to `hopsickness`) (e.g.: "EUI") */
+    home: string
 
+    /** If the character is online, this is used to help send commands through `https://adventure.land/comm` */
     secret?: string
+    /** If the character is online, this is the server they are on (e.g.: "EUI") */
     server?: string
 }
 
