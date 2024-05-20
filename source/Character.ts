@@ -2855,6 +2855,17 @@ export class Character extends Observer implements CharacterData {
                 if (filters.willDieToProjectiles && !willDieToProjectiles) continue
                 if (!filters.willDieToProjectiles && willDieToProjectiles) continue
             }
+            if (filters.hasIncomingProjectile !== undefined) {
+                let hasIncomingProjectile = false
+                for (const [, projectileData] of this.projectiles) {
+                    if (projectileData.target !== entity.id) continue // Projectile is not targeting the entity
+                    if (typeof filters.hasIncomingProjectile === "string" && projectileData.attacker !== filters.hasIncomingProjectile) continue // Attacker is different
+                    hasIncomingProjectile = true
+                    break
+                }
+                if (filters.hasIncomingProjectile && !hasIncomingProjectile) continue
+                if (!filters.hasIncomingProjectile && hasIncomingProjectile) continue
+            }
 
             entities.push(entity)
         }
