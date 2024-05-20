@@ -11,9 +11,9 @@ export type GetEntitiesFilters = {
     /** NOTE: Don't confuse this with `willDieToProjectiles`! */
     couldDieToProjectiles?: boolean
     couldGiveCredit?: boolean
+    hasTarget?: boolean
     /** If set to a string, we will check that it came from that attacker */
-    hasTarget?: boolean | string
-    hasIncomingProjectile?: boolean
+    hasIncomingProjectile?: boolean | string
     hpGreaterThan?: number
     hpLessThan?: number
     ignoreIDs?: Iterable<string>
