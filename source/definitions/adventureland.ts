@@ -10,34 +10,35 @@ import { ItemData, ItemDataTrade } from "./adventureland-server.js"
 export type BankInfo = {
     [T in Exclude<BankPackName, "gold">]?: ItemData[]
 } & {
-    gold: number;
+    gold: number
 }
 
 export type ChestInfo = PositionReal & {
-    alpha: number;
-    skin: string | "chest3";
+    alpha: number
+    skin: string | "chest3"
 }
 
 export type TradeItemInfo = ItemData & {
     /** Number of minutes remaining for giveaway items */
-    giveaway?: number;
+    giveaway?: number
     /** List of character IDs that are in the giveaway */
-    list?: string[];
-    price: number;
-    rid: string;
+    list?: string[]
+    price: number
+    rid: string
 }
 
 export type SlotInfo = {
-    [T in SlotType]: (ItemData | null)
+    [T in SlotType]: ItemData | null
 } & {
-    [T in TradeSlotType]?: (ItemDataTrade | null)
+    [T in TradeSlotType]?: ItemDataTrade | null
 }
 
 export type StatusInfo = {
     [T in ConditionName | "typing"]?: {
         /** How many ms left before this condition expires */
-        ms: number;
-    } } & {
+        ms: number
+    }
+} & {
     burned?: {
         /** Damage that the burn will do per second. Damage is currently split between an attack about every 200ms (about 5 attacks/second). */
         intensity: number
@@ -49,9 +50,9 @@ export type StatusInfo = {
         last: string
     }
     coop?: {
-        id: string;
-        ms: number;
-        p: number;
+        id: string
+        ms: number
+        p: number
     }
     darkblessing?: {
         /** The priest that provided the darkblessing */
@@ -63,34 +64,34 @@ export type StatusInfo = {
     }
     mluck?: {
         /** The ID of the merchant who cast mluck */
-        f: string;
+        f: string
         /** A flag to show if the mluck was cast by the user's merchant. If unset, the character can be mlucked by any merchant. */
-        strong?: boolean;
-    };
+        strong?: boolean
+    }
     monsterhunt?: {
         /** The server ID where the monster hunt is valid */
-        sn: string;
+        sn: string
         /** Number of monsters remaining to kill */
-        c: number;
+        c: number
         /** What monster we have to kill */
-        id: MonsterName;
+        id: MonsterName
         /** A delevel flag. If true, killing a level 1 monster will delevel another monster that is higher than level 1. */
         dl?: boolean
-    };
+    }
     newcomersblessing?: {
         /** The ID of the player who you received the blessing from */
-        f: string;
+        f: string
     }
     citizen0aura?: {
-        luck: number;
-    };
+        luck: number
+    }
     citizen4aura?: {
-        citizens: true;
-        gold: number;
-        ms: number;
-        name: string;
-        skin: string;
-    };
+        citizens: true
+        gold: number
+        ms: number
+        name: string
+        skin: string
+    }
     self_healing?: {
         ability: true
         ms: number
@@ -111,23 +112,23 @@ export type StatusInfo = {
 }
 
 export type PositionReal = IPosition & {
-    map: MapName;
-    real_x?: number;
-    real_y?: number;
+    map: MapName
+    real_x?: number
+    real_y?: number
 }
 
 export type PositionMovable = PositionReal & {
-    from_x?: number;
-    from_y?: number;
-    going_x: number;
-    going_y: number;
+    from_x?: number
+    from_y?: number
+    going_x: number
+    going_y: number
 }
 
 export type PositionSmart = IPosition & {
-    map: MapName;
-    transport?: boolean;
-    i?: number;
-    s?: number;
+    map: MapName
+    transport?: boolean
+    i?: number
+    s?: number
 }
 
 export type IPosition = {
@@ -317,12 +318,6 @@ export type NPCRole =
     | "witch"
 
 // TODO: Confirm that PVP is actually the identifier for PVP servers
-export type ServerIdentifier =
-    | "HARDCORE"
-    | "I"
-    | "II"
-    | "III"
-    | "PVP"
+export type ServerIdentifier = "HARDCORE" | "I" | "II" | "III" | "PVP"
 
-export type ServerRegion =
-    "ASIA" | "EU" | "US"
+export type ServerRegion = "ASIA" | "EU" | "US"

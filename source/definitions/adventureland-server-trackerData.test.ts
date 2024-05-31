@@ -8,6821 +8,1811 @@ import { TrackerData } from "./adventureland-server"
 test("TrackerData type validation", async () => {
     const reports: TrackerData[] = [
         {
-            "monsters": {
-                "porcupine": 386174,
-                "bat": 5605,
-                "crabx": 107,
-                "squigtoad": 1856,
-                "tortoise": 7175,
-                "squig": 16536,
-                "scorpion": 3195,
-                "spider": 4836,
-                "frog": 285,
-                "bee": 25408,
-                "rat": 18,
-                "armadillo": 10119,
-                "crab": 932,
-                "goo": 8007,
-                "hen": 1,
-                "croc": 2158,
-                "minimush": 6447,
-                "poisio": 3877
+            monsters: {
+                porcupine: 386174,
+                bat: 5605,
+                crabx: 107,
+                squigtoad: 1856,
+                tortoise: 7175,
+                squig: 16536,
+                scorpion: 3195,
+                spider: 4836,
+                frog: 285,
+                bee: 25408,
+                rat: 18,
+                armadillo: 10119,
+                crab: 932,
+                goo: 8007,
+                hen: 1,
+                croc: 2158,
+                minimush: 6447,
+                poisio: 3877,
             },
-            "monsters_diff": {
-                "porcupine": -75895.14999947633,
-                "bat": -1118.60000000011,
-                "crabx": -20.94999999999996,
-                "squigtoad": -366.6999999999885,
-                "tortoise": -1394.3500000001657,
-                "squig": -3241.499999999328,
-                "scorpion": -642.3000000000097,
-                "spider": -971.2500000000798,
-                "frog": -55.65000000000023,
-                "bee": -4785.799999998169,
-                "rat": -1.1999999999999988,
-                "armadillo": -1996.3500000002912,
-                "crab": -186.0999999999981,
-                "goo": -1572.3000000001953,
-                "hen": -0.19999999999999996,
-                "croc": -426.9499999999854,
-                "minimush": -1298.7000000001506,
-                "poisio": -726.5000000000226
+            monsters_diff: {
+                porcupine: -75895.14999947633,
+                bat: -1118.60000000011,
+                crabx: -20.94999999999996,
+                squigtoad: -366.6999999999885,
+                tortoise: -1394.3500000001657,
+                squig: -3241.499999999328,
+                scorpion: -642.3000000000097,
+                spider: -971.2500000000798,
+                frog: -55.65000000000023,
+                bee: -4785.799999998169,
+                rat: -1.1999999999999988,
+                armadillo: -1996.3500000002912,
+                crab: -186.0999999999981,
+                goo: -1572.3000000001953,
+                hen: -0.19999999999999996,
+                croc: -426.9499999999854,
+                minimush: -1298.7000000001506,
+                poisio: -726.5000000000226,
             },
-            "exchanges": {},
-            "maps": {
-                "winterland": [
-                    [
-                        0.0001,
-                        "wattire"
-                    ],
-                    [
-                        0.0005,
-                        "open",
-                        "statring"
-                    ]
+            exchanges: {},
+            maps: {
+                winterland: [
+                    [0.0001, "wattire"],
+                    [0.0005, "open", "statring"],
                 ],
-                "global": [],
-                "halloween": [
-                    [
-                        0.0001,
-                        "wgloves"
-                    ],
-                    [
-                        0.0001,
-                        "wbreeches"
-                    ],
-                    [
-                        0.0007,
-                        "open",
-                        "statamulet"
-                    ]
+                global: [],
+                halloween: [
+                    [0.0001, "wgloves"],
+                    [0.0001, "wbreeches"],
+                    [0.0007, "open", "statamulet"],
                 ],
-                "mansion": [
-                    [
-                        0.0001,
-                        "wbreeches"
-                    ],
-                    [
-                        0.00012,
-                        "lostearring"
-                    ]
+                mansion: [
+                    [0.0001, "wbreeches"],
+                    [0.00012, "lostearring"],
                 ],
-                "winter_cave": [
-                    [
-                        0.0005,
-                        "open",
-                        "statring"
-                    ],
-                    [
-                        0.000001,
-                        "angelwings"
-                    ]
+                winter_cave: [
+                    [0.0005, "open", "statring"],
+                    [0.000001, "angelwings"],
                 ],
-                "arena": [
-                    [
-                        0.00008,
-                        "gem0"
-                    ]
+                arena: [[0.00008, "gem0"]],
+                maintest: [
+                    [0.001, "ringsj"],
+                    [0.0007, "hpamulet"],
+                    [0.0007, "hpbelt"],
                 ],
-                "maintest": [
-                    [
-                        0.001,
-                        "ringsj"
-                    ],
-                    [
-                        0.0007,
-                        "hpamulet"
-                    ],
-                    [
-                        0.0007,
-                        "hpbelt"
-                    ]
+                cave: [
+                    [0.0001, "wattire"],
+                    [0.0001, "wgloves"],
+                    [0.0004, "ringsj"],
+                    [0.0006, "hpamulet"],
+                    [0.0006, "hpbelt"],
+                    [0.00008, "gem0"],
+                    [0.0000016666666666666667, "cryptkey"],
                 ],
-                "cave": [
-                    [
-                        0.0001,
-                        "wattire"
-                    ],
-                    [
-                        0.0001,
-                        "wgloves"
-                    ],
-                    [
-                        0.0004,
-                        "ringsj"
-                    ],
-                    [
-                        0.0006,
-                        "hpamulet"
-                    ],
-                    [
-                        0.0006,
-                        "hpbelt"
-                    ],
-                    [
-                        0.00008,
-                        "gem0"
-                    ],
-                    [
-                        0.0000016666666666666667,
-                        "cryptkey"
-                    ]
+                spookytown: [
+                    [0.0001, "wbreeches"],
+                    [0.0007, "open", "statbelt"],
                 ],
-                "spookytown": [
-                    [
-                        0.0001,
-                        "wbreeches"
-                    ],
-                    [
-                        0.0007,
-                        "open",
-                        "statbelt"
-                    ]
+                global_static: [],
+                main: [
+                    [0.0007, "ringsj"],
+                    [0.0006, "hpamulet"],
+                    [0.0006, "hpbelt"],
+                    [0.00007, "gem0"],
+                    [0.0001, "wcap"],
+                    [0.0001, "wshoes"],
                 ],
-                "global_static": [],
-                "main": [
-                    [
-                        0.0007,
-                        "ringsj"
-                    ],
-                    [
-                        0.0006,
-                        "hpamulet"
-                    ],
-                    [
-                        0.0006,
-                        "hpbelt"
-                    ],
-                    [
-                        0.00007,
-                        "gem0"
-                    ],
-                    [
-                        0.0001,
-                        "wcap"
-                    ],
-                    [
-                        0.0001,
-                        "wshoes"
-                    ]
-                ]
             },
-            "tables": {
-                "glitch": [
-                    [
-                        1,
-                        "harbringer"
-                    ],
-                    [
-                        1,
-                        "dexamulet"
-                    ],
-                    [
-                        1,
-                        "armorring"
-                    ],
-                    [
-                        1,
-                        "ale"
-                    ],
-                    [
-                        1,
-                        "rod"
-                    ],
-                    [
-                        1,
-                        "snowboots"
-                    ],
-                    [
-                        1,
-                        "tshirt1"
-                    ],
-                    [
-                        1,
-                        "vblood"
-                    ],
-                    [
-                        1,
-                        "x2"
-                    ],
-                    [
-                        0.25,
-                        "vboots"
-                    ],
-                    [
-                        1,
-                        "poison"
-                    ],
-                    [
-                        1,
-                        "jacko"
-                    ],
-                    [
-                        1,
-                        "rfur"
-                    ],
-                    [
-                        1,
-                        "x0"
-                    ],
-                    [
-                        1,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.25,
-                        "hboots"
-                    ],
-                    [
-                        1,
-                        "mphat"
-                    ],
-                    [
-                        1,
-                        "mbelt"
-                    ],
-                    [
-                        1,
-                        "x7"
-                    ],
-                    [
-                        1,
-                        "emptyjar"
-                    ],
-                    [
-                        1,
-                        "networkcard"
-                    ],
-                    [
-                        1,
-                        "cupid"
-                    ],
-                    [
-                        1,
-                        "mmshoes"
-                    ],
-                    [
-                        1,
-                        "armorbox"
-                    ],
-                    [
-                        1,
-                        "evasionscroll"
-                    ],
-                    [
-                        1,
-                        "candy1"
-                    ],
-                    [
-                        1,
-                        "candy0"
-                    ],
-                    [
-                        1,
-                        "goldbooster"
-                    ],
-                    [
-                        1,
-                        "x5"
-                    ],
-                    [
-                        0.25,
-                        "gstaff"
-                    ],
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        1,
-                        "rednose"
-                    ],
-                    [
-                        0.25,
-                        "test_orb"
-                    ],
-                    [
-                        0.1,
-                        "zapper"
-                    ],
-                    [
-                        1,
-                        "wingedboots"
-                    ],
-                    [
-                        1,
-                        "t2dexamulet"
-                    ],
-                    [
-                        1,
-                        "bcape"
-                    ],
-                    [
-                        1,
-                        "outputscroll"
-                    ],
-                    [
-                        1,
-                        "dexbelt"
-                    ],
-                    [
-                        1,
-                        "hpbelt"
-                    ],
-                    [
-                        1,
-                        "confetti"
-                    ],
-                    [
-                        1,
-                        "t2stramulet"
-                    ],
-                    [
-                        1,
-                        "orbofdex"
-                    ],
-                    [
-                        1,
-                        "molesteeth"
-                    ],
-                    [
-                        1,
-                        "strscroll"
-                    ],
-                    [
-                        1,
-                        "snowflakes"
-                    ],
-                    [
-                        1,
-                        "leather"
-                    ],
-                    [
-                        1,
-                        "nheart"
-                    ],
-                    [
-                        0.25,
-                        "hdagger"
-                    ],
-                    [
-                        1,
-                        "gum"
-                    ],
-                    [
-                        0.25,
-                        "fcape"
-                    ],
-                    [
-                        0.25,
-                        "vsword"
-                    ],
-                    [
-                        1,
-                        "gloves"
-                    ],
-                    [
-                        1,
-                        "mcgloves"
-                    ],
-                    [
-                        1,
-                        "stinger"
-                    ],
-                    [
-                        1,
-                        "weaver"
-                    ],
-                    [
-                        1,
-                        "carrotsword"
-                    ],
-                    [
-                        1,
-                        "mmpants"
-                    ],
-                    [
-                        1,
-                        "mcpants"
-                    ],
-                    [
-                        1,
-                        "helmet1"
-                    ],
-                    [
-                        1,
-                        "scroll2"
-                    ],
-                    [
-                        1,
-                        "scroll3"
-                    ],
-                    [
-                        1,
-                        "scroll0"
-                    ],
-                    [
-                        1,
-                        "scroll1"
-                    ],
-                    [
-                        1,
-                        "greenbomb"
-                    ],
-                    [
-                        1,
-                        "lbelt"
-                    ],
-                    [
-                        1,
-                        "cclaw"
-                    ],
-                    [
-                        1,
-                        "mppants"
-                    ],
-                    [
-                        0.25,
-                        "cyber"
-                    ],
-                    [
-                        1,
-                        "hbow"
-                    ],
-                    [
-                        1,
-                        "computer"
-                    ],
-                    [
-                        1,
-                        "critscroll"
-                    ],
-                    [
-                        1,
-                        "pants1"
-                    ],
-                    [
-                        1,
-                        "flute"
-                    ],
-                    [
-                        0.25,
-                        "hammer"
-                    ],
-                    [
-                        1,
-                        "basketofeggs"
-                    ],
-                    [
-                        1,
-                        "blue"
-                    ],
-                    [
-                        1,
-                        "elixirstr0"
-                    ],
-                    [
-                        0.25,
-                        "vdagger"
-                    ],
-                    [
-                        1,
-                        "fclaw"
-                    ],
-                    [
-                        0.25,
-                        "oxhelmet"
-                    ],
-                    [
-                        1,
-                        "whiskey"
-                    ],
-                    [
-                        0.25,
-                        "ringofluck"
-                    ],
-                    [
-                        1,
-                        "ctristone"
-                    ],
-                    [
-                        1,
-                        "lostearring"
-                    ],
-                    [
-                        1,
-                        "ornament"
-                    ],
-                    [
-                        1,
-                        "dexring"
-                    ],
-                    [
-                        1,
-                        "fireblade"
-                    ],
-                    [
-                        0.25,
-                        "rabbitsfoot"
-                    ],
-                    [
-                        1,
-                        "goldscroll"
-                    ],
-                    [
-                        1,
-                        "mbones"
-                    ],
-                    [
-                        1,
-                        "staff"
-                    ],
-                    [
-                        1,
-                        "goldring"
-                    ],
-                    [
-                        1,
-                        "strbelt"
-                    ],
-                    [
-                        1,
-                        "pants"
-                    ],
-                    [
-                        1,
-                        "lifestealscroll"
-                    ],
-                    [
-                        1,
-                        "essenceofnature"
-                    ],
-                    [
-                        1,
-                        "charmer"
-                    ],
-                    [
-                        1,
-                        "qubics"
-                    ],
-                    [
-                        1,
-                        "egg3"
-                    ],
-                    [
-                        1,
-                        "feather0"
-                    ],
-                    [
-                        0.25,
-                        "scythe"
-                    ],
-                    [
-                        1,
-                        "sshield"
-                    ],
-                    [
-                        1,
-                        "merry"
-                    ],
-                    [
-                        1,
-                        "xptome"
-                    ],
-                    [
-                        1,
-                        "bronzenugget"
-                    ],
-                    [
-                        0.25,
-                        "hgloves"
-                    ],
-                    [
-                        1,
-                        "partyhat"
-                    ],
-                    [
-                        1,
-                        "stand0"
-                    ],
-                    [
-                        1,
-                        "elixirpnres"
-                    ],
-                    [
-                        0.25,
-                        "xshield"
-                    ],
-                    [
-                        1,
-                        "gcape"
-                    ],
-                    [
-                        1,
-                        "bow"
-                    ],
-                    [
-                        1,
-                        "essenceoffire"
-                    ],
-                    [
-                        0.25,
-                        "heartwood"
-                    ],
-                    [
-                        1,
-                        "forscroll"
-                    ],
-                    [
-                        1,
-                        "pstem"
-                    ],
-                    [
-                        1,
-                        "smoke"
-                    ],
-                    [
-                        1,
-                        "intscroll"
-                    ],
-                    [
-                        1,
-                        "spearofthedead"
-                    ],
-                    [
-                        0.25,
-                        "frankypants"
-                    ],
-                    [
-                        1,
-                        "orbofint"
-                    ],
-                    [
-                        0.25,
-                        "hpants"
-                    ],
-                    [
-                        1,
-                        "licence"
-                    ],
-                    [
-                        1,
-                        "spear"
-                    ],
-                    [
-                        1,
-                        "lotusf"
-                    ],
-                    [
-                        1,
-                        "egg5"
-                    ],
-                    [
-                        1,
-                        "offeringp"
-                    ],
-                    [
-                        1,
-                        "bataxe"
-                    ],
-                    [
-                        1,
-                        "bunnyears"
-                    ],
-                    [
-                        1,
-                        "xmace"
-                    ],
-                    [
-                        0.25,
-                        "northstar"
-                    ],
-                    [
-                        1,
-                        "frozenkey"
-                    ],
-                    [
-                        1,
-                        "wand"
-                    ],
-                    [
-                        1,
-                        "elixirint0"
-                    ],
-                    [
-                        1,
-                        "crossbow"
-                    ],
-                    [
-                        1,
-                        "funtoken"
-                    ],
-                    [
-                        1,
-                        "swordofthedead"
-                    ],
-                    [
-                        1,
-                        "iceskates"
-                    ],
-                    [
-                        1,
-                        "orbofvit"
-                    ],
-                    [
-                        0.25,
-                        "fury"
-                    ],
-                    [
-                        0.1,
-                        "trigger"
-                    ],
-                    [
-                        1,
-                        "egg0"
-                    ],
-                    [
-                        1,
-                        "apiercingscroll"
-                    ],
-                    [
-                        1,
-                        "mwarmor"
-                    ],
-                    [
-                        1,
-                        "mushroomstaff"
-                    ],
-                    [
-                        1,
-                        "egg2"
-                    ],
-                    [
-                        1,
-                        "mcboots"
-                    ],
-                    [
-                        1,
-                        "xpbooster"
-                    ],
-                    [
-                        0.25,
-                        "mpxgloves"
-                    ],
-                    [
-                        1,
-                        "intbelt"
-                    ],
-                    [
-                        0.25,
-                        "orbofsc"
-                    ],
-                    [
-                        1,
-                        "egg4"
-                    ],
-                    [
-                        1,
-                        "eggnog"
-                    ],
-                    [
-                        1,
-                        "stick"
-                    ],
-                    [
-                        1,
-                        "ftrinket"
-                    ],
-                    [
-                        1,
-                        "egg6"
-                    ],
-                    [
-                        1,
-                        "candycane"
-                    ],
-                    [
-                        1,
-                        "sstinger"
-                    ],
-                    [
-                        0.25,
-                        "mearring"
-                    ],
-                    [
-                        0.25,
-                        "mshield"
-                    ],
-                    [
-                        1,
-                        "elixirvit0"
-                    ],
-                    [
-                        1,
-                        "elixirvit1"
-                    ],
-                    [
-                        1,
-                        "elixirvit2"
-                    ],
-                    [
-                        1,
-                        "blade"
-                    ],
-                    [
-                        1,
-                        "xshot"
-                    ],
-                    [
-                        1,
-                        "elixirluck"
-                    ],
-                    [
-                        1,
-                        "elixirstr1"
-                    ],
-                    [
-                        1,
-                        "elixirstr2"
-                    ],
-                    [
-                        0.25,
-                        "solitaire"
-                    ],
-                    [
-                        1,
-                        "elixirdex0"
-                    ],
-                    [
-                        1,
-                        "cearring"
-                    ],
-                    [
-                        1,
-                        "mrnarmor"
-                    ],
-                    [
-                        0.25,
-                        "dragondagger"
-                    ],
-                    [
-                        1,
-                        "quiver"
-                    ],
-                    [
-                        1,
-                        "candycanesword"
-                    ],
-                    [
-                        1,
-                        "wbreeches"
-                    ],
-                    [
-                        1,
-                        "crabclaw"
-                    ],
-                    [
-                        0.25,
-                        "powerglove"
-                    ],
-                    [
-                        1,
-                        "hpotx"
-                    ],
-                    [
-                        1,
-                        "frogt"
-                    ],
-                    [
-                        1,
-                        "firecrackers"
-                    ],
-                    [
-                        1,
-                        "mmarmor"
-                    ],
-                    [
-                        1,
-                        "carrot"
-                    ],
-                    [
-                        1,
-                        "ukey"
-                    ],
-                    [
-                        1,
-                        "mmhat"
-                    ],
-                    [
-                        1,
-                        "armorscroll"
-                    ],
-                    [
-                        0.25,
-                        "starkillers"
-                    ],
-                    [
-                        1,
-                        "cdarktristone"
-                    ],
-                    [
-                        1,
-                        "helmet"
-                    ],
-                    [
-                        1,
-                        "xmasshoes"
-                    ],
-                    [
-                        1,
-                        "pyjamas"
-                    ],
-                    [
-                        1,
-                        "mrarmor"
-                    ],
-                    [
-                        1,
-                        "mwgloves"
-                    ],
-                    [
-                        1,
-                        "strearring"
-                    ],
-                    [
-                        1,
-                        "mpgloves"
-                    ],
-                    [
-                        1,
-                        "mwpants"
-                    ],
-                    [
-                        0.25,
-                        "vgloves"
-                    ],
-                    [
-                        1,
-                        "phelmet"
-                    ],
-                    [
-                        0.25,
-                        "goldenpowerglove"
-                    ],
-                    [
-                        1,
-                        "sword"
-                    ],
-                    [
-                        1,
-                        "mrboots"
-                    ],
-                    [
-                        1,
-                        "bkey"
-                    ],
-                    [
-                        1,
-                        "poker"
-                    ],
-                    [
-                        0.25,
-                        "harmor"
-                    ],
-                    [
-                        1,
-                        "resistancescroll"
-                    ],
-                    [
-                        1,
-                        "bfang"
-                    ],
-                    [
-                        1,
-                        "hpot0"
-                    ],
-                    [
-                        1,
-                        "firebow"
-                    ],
-                    [
-                        1,
-                        "pico"
-                    ],
-                    [
-                        0.25,
-                        "vcape"
-                    ],
-                    [
-                        1,
-                        "wbook0"
-                    ],
-                    [
-                        1,
-                        "wbook1"
-                    ],
-                    [
-                        0.25,
-                        "t3bow"
-                    ],
-                    [
-                        1,
-                        "eears"
-                    ],
-                    [
-                        0.25,
-                        "dartgun"
-                    ],
-                    [
-                        0.25,
-                        "handofmidas"
-                    ],
-                    [
-                        1,
-                        "gslime"
-                    ],
-                    [
-                        1,
-                        "t2intamulet"
-                    ],
-                    [
-                        1,
-                        "snakefang"
-                    ],
-                    [
-                        0.25,
-                        "mpxamulet"
-                    ],
-                    [
-                        1,
-                        "goldnugget"
-                    ],
-                    [
-                        0.25,
-                        "fallen"
-                    ],
-                    [
-                        1,
-                        "beewings"
-                    ],
-                    [
-                        1,
-                        "egg1"
-                    ],
-                    [
-                        1,
-                        "coal"
-                    ],
-                    [
-                        1,
-                        "bronzeingot"
-                    ],
-                    [
-                        0.25,
-                        "xarmor"
-                    ],
-                    [
-                        1,
-                        "wine"
-                    ],
-                    [
-                        1,
-                        "shoes"
-                    ],
-                    [
-                        1,
-                        "resistancering"
-                    ],
-                    [
-                        0.25,
-                        "sanguine"
-                    ],
-                    [
-                        1,
-                        "essenceofether"
-                    ],
-                    [
-                        1,
-                        "wcap"
-                    ],
-                    [
-                        1,
-                        "elixirdex1"
-                    ],
-                    [
-                        1,
-                        "pouchbow"
-                    ],
-                    [
-                        1,
-                        "daggerofthedead"
-                    ],
-                    [
-                        1,
-                        "mmgloves"
-                    ],
-                    [
-                        1,
-                        "frostbow"
-                    ],
-                    [
-                        1,
-                        "bunnyelixir"
-                    ],
-                    [
-                        1,
-                        "puppyer"
-                    ],
-                    [
-                        1,
-                        "bowofthedead"
-                    ],
-                    [
-                        1,
-                        "mistletoe"
-                    ],
-                    [
-                        1,
-                        "hpamulet"
-                    ],
-                    [
-                        1,
-                        "shoes1"
-                    ],
-                    [
-                        1,
-                        "cscale"
-                    ],
-                    [
-                        1,
-                        "swirlipop"
-                    ],
-                    [
-                        1,
-                        "bcandle"
-                    ],
-                    [
-                        1,
-                        "trinkets"
-                    ],
-                    [
-                        1,
-                        "rapier"
-                    ],
-                    [
-                        1,
-                        "bwing"
-                    ],
-                    [
-                        1,
-                        "frozenstone"
-                    ],
-                    [
-                        1,
-                        "wshield"
-                    ],
-                    [
-                        1,
-                        "essenceofgreed"
-                    ],
-                    [
-                        1,
-                        "pleather"
-                    ],
-                    [
-                        1,
-                        "mysterybox"
-                    ],
-                    [
-                        1,
-                        "monstertoken"
-                    ],
-                    [
-                        1,
-                        "mpcostscroll"
-                    ],
-                    [
-                        1,
-                        "orbofstr"
-                    ],
-                    [
-                        1,
-                        "snowball"
-                    ],
-                    [
-                        1,
-                        "elixirfzres"
-                    ],
-                    [
-                        1,
-                        "ringsj"
-                    ],
-                    [
-                        1,
-                        "cape"
-                    ],
-                    [
-                        1,
-                        "cryptkey"
-                    ],
-                    [
-                        1,
-                        "ectoplasm"
-                    ],
-                    [
-                        1,
-                        "gem3"
-                    ],
-                    [
-                        1,
-                        "gem2"
-                    ],
-                    [
-                        1,
-                        "gem1"
-                    ],
-                    [
-                        1,
-                        "gem0"
-                    ],
-                    [
-                        1,
-                        "watercore"
-                    ],
-                    [
-                        1,
-                        "talkingskull"
-                    ],
-                    [
-                        0.25,
-                        "supermittens"
-                    ],
-                    [
-                        1,
-                        "xpscroll"
-                    ],
-                    [
-                        1,
-                        "wattire"
-                    ],
-                    [
-                        1,
-                        "oozingterror"
-                    ],
-                    [
-                        1,
-                        "xbox"
-                    ],
-                    [
-                        1,
-                        "elixirdex2"
-                    ],
-                    [
-                        1,
-                        "mrgloves"
-                    ],
-                    [
-                        1,
-                        "rattail"
-                    ],
-                    [
-                        0.25,
-                        "xboots"
-                    ],
-                    [
-                        1,
-                        "lspores"
-                    ],
-                    [
-                        1,
-                        "claw"
-                    ],
-                    [
-                        0.25,
-                        "lantern"
-                    ],
-                    [
-                        1,
-                        "bottleofxp"
-                    ],
-                    [
-                        1,
-                        "eslippers"
-                    ],
-                    [
-                        1,
-                        "ijx"
-                    ],
-                    [
-                        1,
-                        "candypop"
-                    ],
-                    [
-                        1,
-                        "warmscarf"
-                    ],
-                    [
-                        1,
-                        "luckbooster"
-                    ],
-                    [
-                        1,
-                        "reflectionscroll"
-                    ],
-                    [
-                        1,
-                        "angelwings"
-                    ],
-                    [
-                        1,
-                        "fsword"
-                    ],
-                    [
-                        1,
-                        "bandages"
-                    ],
-                    [
-                        1,
-                        "ghatb"
-                    ],
-                    [
-                        1,
-                        "woodensword"
-                    ],
-                    [
-                        0.25,
-                        "xhelmet"
-                    ],
-                    [
-                        0.1,
-                        "luckyt"
-                    ],
-                    [
-                        1,
-                        "hpot1"
-                    ],
-                    [
-                        1,
-                        "dkey"
-                    ],
-                    [
-                        1,
-                        "slimestaff"
-                    ],
-                    [
-                        1,
-                        "spidersilk"
-                    ],
-                    [
-                        1,
-                        "swifty"
-                    ],
-                    [
-                        1,
-                        "smush"
-                    ],
-                    [
-                        1,
-                        "mrngloves"
-                    ],
-                    [
-                        1,
-                        "ghatp"
-                    ],
-                    [
-                        1,
-                        "snakeoil"
-                    ],
-                    [
-                        1,
-                        "electronics"
-                    ],
-                    [
-                        1,
-                        "mittens"
-                    ],
-                    [
-                        1,
-                        "mwhelmet"
-                    ],
-                    [
-                        1,
-                        "mpot0"
-                    ],
-                    [
-                        1,
-                        "manastealscroll"
-                    ],
-                    [
-                        1,
-                        "emptyheart"
-                    ],
-                    [
-                        1,
-                        "tshirt3"
-                    ],
-                    [
-                        1,
-                        "frequencyscroll"
-                    ],
-                    [
-                        1,
-                        "epyjamas"
-                    ],
-                    [
-                        1,
-                        "dstones"
-                    ],
-                    [
-                        0.1,
-                        "warpvest"
-                    ],
-                    [
-                        1,
-                        "pickaxe"
-                    ],
-                    [
-                        0.25,
-                        "vattire"
-                    ],
-                    [
-                        0.25,
-                        "gphelmet"
-                    ],
-                    [
-                        1,
-                        "cocoon"
-                    ],
-                    [
-                        1,
-                        "intring"
-                    ],
-                    [
-                        1,
-                        "shadowstone"
-                    ],
-                    [
-                        1,
-                        "rpiercingscroll"
-                    ],
-                    [
-                        1,
-                        "weaponbox"
-                    ],
-                    [
-                        1,
-                        "mrpants"
-                    ],
-                    [
-                        1,
-                        "shield"
-                    ],
-                    [
-                        1,
-                        "espresso"
-                    ],
-                    [
-                        1,
-                        "cring"
-                    ],
-                    [
-                        1,
-                        "dreturnscroll"
-                    ],
-                    [
-                        1,
-                        "hotchocolate"
-                    ],
-                    [
-                        1,
-                        "mpshoes"
-                    ],
-                    [
-                        1,
-                        "t2bow"
-                    ],
-                    [
-                        1,
-                        "dexearring"
-                    ],
-                    [
-                        1,
-                        "seashell"
-                    ],
-                    [
-                        1,
-                        "mcarmor"
-                    ],
-                    [
-                        1,
-                        "platinumingot"
-                    ],
-                    [
-                        1,
-                        "intearring"
-                    ],
-                    [
-                        1,
-                        "vitscroll"
-                    ],
-                    [
-                        1,
-                        "dagger"
-                    ],
-                    [
-                        0.25,
-                        "amuletofm"
-                    ],
-                    [
-                        1,
-                        "pvptoken"
-                    ],
-                    [
-                        1,
-                        "mrnhat"
-                    ],
-                    [
-                        0.25,
-                        "vstaff"
-                    ],
-                    [
-                        1,
-                        "fieldgen0"
-                    ],
-                    [
-                        1,
-                        "cshell"
-                    ],
-                    [
-                        1,
-                        "ornamentstaff"
-                    ],
-                    [
-                        1,
-                        "xmassweater"
-                    ],
-                    [
-                        1,
-                        "spores"
-                    ],
-                    [
-                        1,
-                        "fierygloves"
-                    ],
-                    [
-                        0.25,
-                        "cdragon"
-                    ],
-                    [
-                        1,
-                        "whiteegg"
-                    ],
-                    [
-                        1,
-                        "santasbelt"
-                    ],
-                    [
-                        1,
-                        "mrhood"
-                    ],
-                    [
-                        1,
-                        "vitring"
-                    ],
-                    [
-                        1,
-                        "ecape"
-                    ],
-                    [
-                        1,
-                        "maceofthedead"
-                    ],
-                    [
-                        1,
-                        "coat1"
-                    ],
-                    [
-                        1,
-                        "mchat"
-                    ],
-                    [
-                        1,
-                        "cosmo1"
-                    ],
-                    [
-                        1,
-                        "cosmo0"
-                    ],
-                    [
-                        1,
-                        "froststaff"
-                    ],
-                    [
-                        1,
-                        "cosmo2"
-                    ],
-                    [
-                        1,
-                        "tshirt8"
-                    ],
-                    [
-                        1,
-                        "cosmo4"
-                    ],
-                    [
-                        1,
-                        "btusk"
-                    ],
-                    [
-                        1,
-                        "gloves1"
-                    ],
-                    [
-                        1,
-                        "mparmor"
-                    ],
-                    [
-                        1,
-                        "offering"
-                    ],
-                    [
-                        1,
-                        "drapes"
-                    ],
-                    [
-                        1,
-                        "stonekey"
-                    ],
-                    [
-                        1,
-                        "xmashat"
-                    ],
-                    [
-                        0.25,
-                        "vring"
-                    ],
-                    [
-                        0.25,
-                        "hhelmet"
-                    ],
-                    [
-                        0.25,
-                        "suckerpunch"
-                    ],
-                    [
-                        0.25,
-                        "xpants"
-                    ],
-                    [
-                        1,
-                        "offeringx"
-                    ],
-                    [
-                        1,
-                        "x3"
-                    ],
-                    [
-                        1,
-                        "ascale"
-                    ],
-                    [
-                        1,
-                        "x1"
-                    ],
-                    [
-                        1,
-                        "x6"
-                    ],
-                    [
-                        1,
-                        "cosmo3"
-                    ],
-                    [
-                        1,
-                        "x4"
-                    ],
-                    [
-                        0.25,
-                        "snring"
-                    ],
-                    [
-                        1,
-                        "essenceoffrost"
-                    ],
-                    [
-                        1,
-                        "speedscroll"
-                    ],
-                    [
-                        1,
-                        "staffofthedead"
-                    ],
-                    [
-                        1,
-                        "cscroll0"
-                    ],
-                    [
-                        1,
-                        "cscroll1"
-                    ],
-                    [
-                        1,
-                        "cscroll2"
-                    ],
-                    [
-                        1,
-                        "cscroll3"
-                    ],
-                    [
-                        1,
-                        "intamulet"
-                    ],
-                    [
-                        1,
-                        "basher"
-                    ],
-                    [
-                        1,
-                        "wshoes"
-                    ],
-                    [
-                        1,
-                        "cake"
-                    ],
-                    [
-                        1,
-                        "brownegg"
-                    ],
-                    [
-                        1,
-                        "firestaff"
-                    ],
-                    [
-                        1,
-                        "egg8"
-                    ],
-                    [
-                        1,
-                        "tshirt9"
-                    ],
-                    [
-                        1,
-                        "mpotx"
-                    ],
-                    [
-                        1,
-                        "rfangs"
-                    ],
-                    [
-                        1,
-                        "tshirt2"
-                    ],
-                    [
-                        1,
-                        "wgloves"
-                    ],
-                    [
-                        1,
-                        "tshirt0"
-                    ],
-                    [
-                        1,
-                        "tshirt7"
-                    ],
-                    [
-                        1,
-                        "tshirt6"
-                    ],
-                    [
-                        1,
-                        "egg7"
-                    ],
-                    [
-                        1,
-                        "tshirt4"
-                    ],
-                    [
-                        1,
-                        "dexscroll"
-                    ],
-                    [
-                        1,
-                        "gift1"
-                    ],
-                    [
-                        1,
-                        "gift0"
-                    ],
-                    [
-                        1,
-                        "mrnboots"
-                    ],
-                    [
-                        1,
-                        "firestars"
-                    ],
-                    [
-                        1,
-                        "ink"
-                    ],
-                    [
-                        0.25,
-                        "vorb"
-                    ],
-                    [
-                        1,
-                        "goldenegg"
-                    ],
-                    [
-                        1,
-                        "mcape"
-                    ],
-                    [
-                        0.25,
-                        "exoarm"
-                    ],
-                    [
-                        1,
-                        "elixirfires"
-                    ],
-                    [
-                        1,
-                        "greenenvelope"
-                    ],
-                    [
-                        1,
-                        "bfur"
-                    ],
-                    [
-                        1,
-                        "essenceoflife"
-                    ],
-                    [
-                        1,
-                        "wbasher"
-                    ],
-                    [
-                        1,
-                        "pinkie"
-                    ],
-                    [
-                        0.25,
-                        "xgloves"
-                    ],
-                    [
-                        1,
-                        "t2quiver"
-                    ],
-                    [
-                        0.25,
-                        "mpxbelt"
-                    ],
-                    [
-                        1,
-                        "gemfragment"
-                    ],
-                    [
-                        1,
-                        "mrnpants"
-                    ],
-                    [
-                        1,
-                        "tshirt88"
-                    ],
-                    [
-                        1,
-                        "5bucks"
-                    ],
-                    [
-                        1,
-                        "troll"
-                    ],
-                    [
-                        1,
-                        "stealthcape"
-                    ],
-                    [
-                        1,
-                        "elixirint2"
-                    ],
-                    [
-                        1,
-                        "elixirint1"
-                    ],
-                    [
-                        1,
-                        "mpot1"
-                    ],
-                    [
-                        1,
-                        "vitearring"
-                    ],
-                    [
-                        0.25,
-                        "gbow"
-                    ],
-                    [
-                        1,
-                        "stramulet"
-                    ],
-                    [
-                        1,
-                        "xmaspants"
-                    ],
-                    [
-                        1,
-                        "mace"
-                    ],
-                    [
-                        0.25,
-                        "vhammer"
-                    ],
-                    [
-                        1,
-                        "redenvelopev2"
-                    ],
-                    [
-                        1,
-                        "redenvelopev3"
-                    ],
-                    [
-                        1,
-                        "strring"
-                    ],
-                    [
-                        1,
-                        "mwboots"
-                    ],
-                    [
-                        1,
-                        "bugbountybox"
-                    ],
-                    [
-                        1,
-                        "redenvelope"
-                    ],
-                    [
-                        1,
-                        "coat"
-                    ],
-                    [
-                        0.25,
-                        "lmace"
-                    ],
-                    [
-                        1,
-                        "platinumnugget"
-                    ],
-                    [
-                        1,
-                        "dexearringx"
-                    ],
-                    [
-                        1,
-                        "tombkey"
-                    ],
-                    [
-                        1,
-                        "svenom"
-                    ],
-                    [
-                        1,
-                        "x8"
-                    ],
-                    [
-                        1,
-                        "pmace"
-                    ],
-                    [
-                        1,
-                        "goldingot"
-                    ],
-                    [
-                        1,
-                        "orbg"
-                    ],
-                    [
-                        1,
-                        "tshell"
-                    ],
-                    [
-                        1,
-                        "luckscroll"
-                    ],
-                    [
-                        5,
-                        "glitch",
-                        2
-                    ]
+            tables: {
+                glitch: [
+                    [1, "harbringer"],
+                    [1, "dexamulet"],
+                    [1, "armorring"],
+                    [1, "ale"],
+                    [1, "rod"],
+                    [1, "snowboots"],
+                    [1, "tshirt1"],
+                    [1, "vblood"],
+                    [1, "x2"],
+                    [0.25, "vboots"],
+                    [1, "poison"],
+                    [1, "jacko"],
+                    [1, "rfur"],
+                    [1, "x0"],
+                    [1, "pumpkinspice"],
+                    [0.25, "hboots"],
+                    [1, "mphat"],
+                    [1, "mbelt"],
+                    [1, "x7"],
+                    [1, "emptyjar"],
+                    [1, "networkcard"],
+                    [1, "cupid"],
+                    [1, "mmshoes"],
+                    [1, "armorbox"],
+                    [1, "evasionscroll"],
+                    [1, "candy1"],
+                    [1, "candy0"],
+                    [1, "goldbooster"],
+                    [1, "x5"],
+                    [0.25, "gstaff"],
+                    [1, "throwingstars"],
+                    [1, "rednose"],
+                    [0.25, "test_orb"],
+                    [0.1, "zapper"],
+                    [1, "wingedboots"],
+                    [1, "t2dexamulet"],
+                    [1, "bcape"],
+                    [1, "outputscroll"],
+                    [1, "dexbelt"],
+                    [1, "hpbelt"],
+                    [1, "confetti"],
+                    [1, "t2stramulet"],
+                    [1, "orbofdex"],
+                    [1, "molesteeth"],
+                    [1, "strscroll"],
+                    [1, "snowflakes"],
+                    [1, "leather"],
+                    [1, "nheart"],
+                    [0.25, "hdagger"],
+                    [1, "gum"],
+                    [0.25, "fcape"],
+                    [0.25, "vsword"],
+                    [1, "gloves"],
+                    [1, "mcgloves"],
+                    [1, "stinger"],
+                    [1, "weaver"],
+                    [1, "carrotsword"],
+                    [1, "mmpants"],
+                    [1, "mcpants"],
+                    [1, "helmet1"],
+                    [1, "scroll2"],
+                    [1, "scroll3"],
+                    [1, "scroll0"],
+                    [1, "scroll1"],
+                    [1, "greenbomb"],
+                    [1, "lbelt"],
+                    [1, "cclaw"],
+                    [1, "mppants"],
+                    [0.25, "cyber"],
+                    [1, "hbow"],
+                    [1, "computer"],
+                    [1, "critscroll"],
+                    [1, "pants1"],
+                    [1, "flute"],
+                    [0.25, "hammer"],
+                    [1, "basketofeggs"],
+                    [1, "blue"],
+                    [1, "elixirstr0"],
+                    [0.25, "vdagger"],
+                    [1, "fclaw"],
+                    [0.25, "oxhelmet"],
+                    [1, "whiskey"],
+                    [0.25, "ringofluck"],
+                    [1, "ctristone"],
+                    [1, "lostearring"],
+                    [1, "ornament"],
+                    [1, "dexring"],
+                    [1, "fireblade"],
+                    [0.25, "rabbitsfoot"],
+                    [1, "goldscroll"],
+                    [1, "mbones"],
+                    [1, "staff"],
+                    [1, "goldring"],
+                    [1, "strbelt"],
+                    [1, "pants"],
+                    [1, "lifestealscroll"],
+                    [1, "essenceofnature"],
+                    [1, "charmer"],
+                    [1, "qubics"],
+                    [1, "egg3"],
+                    [1, "feather0"],
+                    [0.25, "scythe"],
+                    [1, "sshield"],
+                    [1, "merry"],
+                    [1, "xptome"],
+                    [1, "bronzenugget"],
+                    [0.25, "hgloves"],
+                    [1, "partyhat"],
+                    [1, "stand0"],
+                    [1, "elixirpnres"],
+                    [0.25, "xshield"],
+                    [1, "gcape"],
+                    [1, "bow"],
+                    [1, "essenceoffire"],
+                    [0.25, "heartwood"],
+                    [1, "forscroll"],
+                    [1, "pstem"],
+                    [1, "smoke"],
+                    [1, "intscroll"],
+                    [1, "spearofthedead"],
+                    [0.25, "frankypants"],
+                    [1, "orbofint"],
+                    [0.25, "hpants"],
+                    [1, "licence"],
+                    [1, "spear"],
+                    [1, "lotusf"],
+                    [1, "egg5"],
+                    [1, "offeringp"],
+                    [1, "bataxe"],
+                    [1, "bunnyears"],
+                    [1, "xmace"],
+                    [0.25, "northstar"],
+                    [1, "frozenkey"],
+                    [1, "wand"],
+                    [1, "elixirint0"],
+                    [1, "crossbow"],
+                    [1, "funtoken"],
+                    [1, "swordofthedead"],
+                    [1, "iceskates"],
+                    [1, "orbofvit"],
+                    [0.25, "fury"],
+                    [0.1, "trigger"],
+                    [1, "egg0"],
+                    [1, "apiercingscroll"],
+                    [1, "mwarmor"],
+                    [1, "mushroomstaff"],
+                    [1, "egg2"],
+                    [1, "mcboots"],
+                    [1, "xpbooster"],
+                    [0.25, "mpxgloves"],
+                    [1, "intbelt"],
+                    [0.25, "orbofsc"],
+                    [1, "egg4"],
+                    [1, "eggnog"],
+                    [1, "stick"],
+                    [1, "ftrinket"],
+                    [1, "egg6"],
+                    [1, "candycane"],
+                    [1, "sstinger"],
+                    [0.25, "mearring"],
+                    [0.25, "mshield"],
+                    [1, "elixirvit0"],
+                    [1, "elixirvit1"],
+                    [1, "elixirvit2"],
+                    [1, "blade"],
+                    [1, "xshot"],
+                    [1, "elixirluck"],
+                    [1, "elixirstr1"],
+                    [1, "elixirstr2"],
+                    [0.25, "solitaire"],
+                    [1, "elixirdex0"],
+                    [1, "cearring"],
+                    [1, "mrnarmor"],
+                    [0.25, "dragondagger"],
+                    [1, "quiver"],
+                    [1, "candycanesword"],
+                    [1, "wbreeches"],
+                    [1, "crabclaw"],
+                    [0.25, "powerglove"],
+                    [1, "hpotx"],
+                    [1, "frogt"],
+                    [1, "firecrackers"],
+                    [1, "mmarmor"],
+                    [1, "carrot"],
+                    [1, "ukey"],
+                    [1, "mmhat"],
+                    [1, "armorscroll"],
+                    [0.25, "starkillers"],
+                    [1, "cdarktristone"],
+                    [1, "helmet"],
+                    [1, "xmasshoes"],
+                    [1, "pyjamas"],
+                    [1, "mrarmor"],
+                    [1, "mwgloves"],
+                    [1, "strearring"],
+                    [1, "mpgloves"],
+                    [1, "mwpants"],
+                    [0.25, "vgloves"],
+                    [1, "phelmet"],
+                    [0.25, "goldenpowerglove"],
+                    [1, "sword"],
+                    [1, "mrboots"],
+                    [1, "bkey"],
+                    [1, "poker"],
+                    [0.25, "harmor"],
+                    [1, "resistancescroll"],
+                    [1, "bfang"],
+                    [1, "hpot0"],
+                    [1, "firebow"],
+                    [1, "pico"],
+                    [0.25, "vcape"],
+                    [1, "wbook0"],
+                    [1, "wbook1"],
+                    [0.25, "t3bow"],
+                    [1, "eears"],
+                    [0.25, "dartgun"],
+                    [0.25, "handofmidas"],
+                    [1, "gslime"],
+                    [1, "t2intamulet"],
+                    [1, "snakefang"],
+                    [0.25, "mpxamulet"],
+                    [1, "goldnugget"],
+                    [0.25, "fallen"],
+                    [1, "beewings"],
+                    [1, "egg1"],
+                    [1, "coal"],
+                    [1, "bronzeingot"],
+                    [0.25, "xarmor"],
+                    [1, "wine"],
+                    [1, "shoes"],
+                    [1, "resistancering"],
+                    [0.25, "sanguine"],
+                    [1, "essenceofether"],
+                    [1, "wcap"],
+                    [1, "elixirdex1"],
+                    [1, "pouchbow"],
+                    [1, "daggerofthedead"],
+                    [1, "mmgloves"],
+                    [1, "frostbow"],
+                    [1, "bunnyelixir"],
+                    [1, "puppyer"],
+                    [1, "bowofthedead"],
+                    [1, "mistletoe"],
+                    [1, "hpamulet"],
+                    [1, "shoes1"],
+                    [1, "cscale"],
+                    [1, "swirlipop"],
+                    [1, "bcandle"],
+                    [1, "trinkets"],
+                    [1, "rapier"],
+                    [1, "bwing"],
+                    [1, "frozenstone"],
+                    [1, "wshield"],
+                    [1, "essenceofgreed"],
+                    [1, "pleather"],
+                    [1, "mysterybox"],
+                    [1, "monstertoken"],
+                    [1, "mpcostscroll"],
+                    [1, "orbofstr"],
+                    [1, "snowball"],
+                    [1, "elixirfzres"],
+                    [1, "ringsj"],
+                    [1, "cape"],
+                    [1, "cryptkey"],
+                    [1, "ectoplasm"],
+                    [1, "gem3"],
+                    [1, "gem2"],
+                    [1, "gem1"],
+                    [1, "gem0"],
+                    [1, "watercore"],
+                    [1, "talkingskull"],
+                    [0.25, "supermittens"],
+                    [1, "xpscroll"],
+                    [1, "wattire"],
+                    [1, "oozingterror"],
+                    [1, "xbox"],
+                    [1, "elixirdex2"],
+                    [1, "mrgloves"],
+                    [1, "rattail"],
+                    [0.25, "xboots"],
+                    [1, "lspores"],
+                    [1, "claw"],
+                    [0.25, "lantern"],
+                    [1, "bottleofxp"],
+                    [1, "eslippers"],
+                    [1, "ijx"],
+                    [1, "candypop"],
+                    [1, "warmscarf"],
+                    [1, "luckbooster"],
+                    [1, "reflectionscroll"],
+                    [1, "angelwings"],
+                    [1, "fsword"],
+                    [1, "bandages"],
+                    [1, "ghatb"],
+                    [1, "woodensword"],
+                    [0.25, "xhelmet"],
+                    [0.1, "luckyt"],
+                    [1, "hpot1"],
+                    [1, "dkey"],
+                    [1, "slimestaff"],
+                    [1, "spidersilk"],
+                    [1, "swifty"],
+                    [1, "smush"],
+                    [1, "mrngloves"],
+                    [1, "ghatp"],
+                    [1, "snakeoil"],
+                    [1, "electronics"],
+                    [1, "mittens"],
+                    [1, "mwhelmet"],
+                    [1, "mpot0"],
+                    [1, "manastealscroll"],
+                    [1, "emptyheart"],
+                    [1, "tshirt3"],
+                    [1, "frequencyscroll"],
+                    [1, "epyjamas"],
+                    [1, "dstones"],
+                    [0.1, "warpvest"],
+                    [1, "pickaxe"],
+                    [0.25, "vattire"],
+                    [0.25, "gphelmet"],
+                    [1, "cocoon"],
+                    [1, "intring"],
+                    [1, "shadowstone"],
+                    [1, "rpiercingscroll"],
+                    [1, "weaponbox"],
+                    [1, "mrpants"],
+                    [1, "shield"],
+                    [1, "espresso"],
+                    [1, "cring"],
+                    [1, "dreturnscroll"],
+                    [1, "hotchocolate"],
+                    [1, "mpshoes"],
+                    [1, "t2bow"],
+                    [1, "dexearring"],
+                    [1, "seashell"],
+                    [1, "mcarmor"],
+                    [1, "platinumingot"],
+                    [1, "intearring"],
+                    [1, "vitscroll"],
+                    [1, "dagger"],
+                    [0.25, "amuletofm"],
+                    [1, "pvptoken"],
+                    [1, "mrnhat"],
+                    [0.25, "vstaff"],
+                    [1, "fieldgen0"],
+                    [1, "cshell"],
+                    [1, "ornamentstaff"],
+                    [1, "xmassweater"],
+                    [1, "spores"],
+                    [1, "fierygloves"],
+                    [0.25, "cdragon"],
+                    [1, "whiteegg"],
+                    [1, "santasbelt"],
+                    [1, "mrhood"],
+                    [1, "vitring"],
+                    [1, "ecape"],
+                    [1, "maceofthedead"],
+                    [1, "coat1"],
+                    [1, "mchat"],
+                    [1, "cosmo1"],
+                    [1, "cosmo0"],
+                    [1, "froststaff"],
+                    [1, "cosmo2"],
+                    [1, "tshirt8"],
+                    [1, "cosmo4"],
+                    [1, "btusk"],
+                    [1, "gloves1"],
+                    [1, "mparmor"],
+                    [1, "offering"],
+                    [1, "drapes"],
+                    [1, "stonekey"],
+                    [1, "xmashat"],
+                    [0.25, "vring"],
+                    [0.25, "hhelmet"],
+                    [0.25, "suckerpunch"],
+                    [0.25, "xpants"],
+                    [1, "offeringx"],
+                    [1, "x3"],
+                    [1, "ascale"],
+                    [1, "x1"],
+                    [1, "x6"],
+                    [1, "cosmo3"],
+                    [1, "x4"],
+                    [0.25, "snring"],
+                    [1, "essenceoffrost"],
+                    [1, "speedscroll"],
+                    [1, "staffofthedead"],
+                    [1, "cscroll0"],
+                    [1, "cscroll1"],
+                    [1, "cscroll2"],
+                    [1, "cscroll3"],
+                    [1, "intamulet"],
+                    [1, "basher"],
+                    [1, "wshoes"],
+                    [1, "cake"],
+                    [1, "brownegg"],
+                    [1, "firestaff"],
+                    [1, "egg8"],
+                    [1, "tshirt9"],
+                    [1, "mpotx"],
+                    [1, "rfangs"],
+                    [1, "tshirt2"],
+                    [1, "wgloves"],
+                    [1, "tshirt0"],
+                    [1, "tshirt7"],
+                    [1, "tshirt6"],
+                    [1, "egg7"],
+                    [1, "tshirt4"],
+                    [1, "dexscroll"],
+                    [1, "gift1"],
+                    [1, "gift0"],
+                    [1, "mrnboots"],
+                    [1, "firestars"],
+                    [1, "ink"],
+                    [0.25, "vorb"],
+                    [1, "goldenegg"],
+                    [1, "mcape"],
+                    [0.25, "exoarm"],
+                    [1, "elixirfires"],
+                    [1, "greenenvelope"],
+                    [1, "bfur"],
+                    [1, "essenceoflife"],
+                    [1, "wbasher"],
+                    [1, "pinkie"],
+                    [0.25, "xgloves"],
+                    [1, "t2quiver"],
+                    [0.25, "mpxbelt"],
+                    [1, "gemfragment"],
+                    [1, "mrnpants"],
+                    [1, "tshirt88"],
+                    [1, "5bucks"],
+                    [1, "troll"],
+                    [1, "stealthcape"],
+                    [1, "elixirint2"],
+                    [1, "elixirint1"],
+                    [1, "mpot1"],
+                    [1, "vitearring"],
+                    [0.25, "gbow"],
+                    [1, "stramulet"],
+                    [1, "xmaspants"],
+                    [1, "mace"],
+                    [0.25, "vhammer"],
+                    [1, "redenvelopev2"],
+                    [1, "redenvelopev3"],
+                    [1, "strring"],
+                    [1, "mwboots"],
+                    [1, "bugbountybox"],
+                    [1, "redenvelope"],
+                    [1, "coat"],
+                    [0.25, "lmace"],
+                    [1, "platinumnugget"],
+                    [1, "dexearringx"],
+                    [1, "tombkey"],
+                    [1, "svenom"],
+                    [1, "x8"],
+                    [1, "pmace"],
+                    [1, "goldingot"],
+                    [1, "orbg"],
+                    [1, "tshell"],
+                    [1, "luckscroll"],
+                    [5, "glitch", 2],
                 ],
-                "weaponofthedead": [
-                    [
-                        0.85,
-                        "bowofthedead"
-                    ],
-                    [
-                        0.35,
-                        "swordofthedead"
-                    ],
-                    [
-                        1,
-                        "maceofthedead"
-                    ],
-                    [
-                        1,
-                        "staffofthedead"
-                    ],
-                    [
-                        1,
-                        "daggerofthedead"
-                    ]
+                weaponofthedead: [
+                    [0.85, "bowofthedead"],
+                    [0.35, "swordofthedead"],
+                    [1, "maceofthedead"],
+                    [1, "staffofthedead"],
+                    [1, "daggerofthedead"],
                 ],
-                "eastereggs": [
-                    [
-                        1,
-                        "egg0"
-                    ],
-                    [
-                        1,
-                        "egg1"
-                    ],
-                    [
-                        1,
-                        "egg2"
-                    ],
-                    [
-                        1,
-                        "egg3"
-                    ],
-                    [
-                        1,
-                        "egg4"
-                    ],
-                    [
-                        1,
-                        "egg5"
-                    ],
-                    [
-                        1,
-                        "egg6"
-                    ],
-                    [
-                        1,
-                        "egg7"
-                    ],
-                    [
-                        1,
-                        "egg8"
-                    ]
+                eastereggs: [
+                    [1, "egg0"],
+                    [1, "egg1"],
+                    [1, "egg2"],
+                    [1, "egg3"],
+                    [1, "egg4"],
+                    [1, "egg5"],
+                    [1, "egg6"],
+                    [1, "egg7"],
+                    [1, "egg8"],
                 ],
-                "basketofeggs": [
-                    [
-                        1,
-                        "bunnyelixir"
-                    ],
-                    [
-                        1,
-                        "eears"
-                    ],
-                    [
-                        1,
-                        "epyjamas"
-                    ],
-                    [
-                        1,
-                        "ecape"
-                    ],
-                    [
-                        1,
-                        "eslippers"
-                    ],
-                    [
-                        0.5,
-                        "carrotsword"
-                    ],
-                    [
-                        0.1,
-                        "bataxe"
-                    ],
-                    [
-                        0.04,
-                        "pinkie"
-                    ],
-                    [
-                        0.04,
-                        "oozingterror"
-                    ],
-                    [
-                        0.04,
-                        "harbringer"
-                    ],
-                    [
-                        0.001,
-                        "rabbitsfoot"
-                    ]
+                basketofeggs: [
+                    [1, "bunnyelixir"],
+                    [1, "eears"],
+                    [1, "epyjamas"],
+                    [1, "ecape"],
+                    [1, "eslippers"],
+                    [0.5, "carrotsword"],
+                    [0.1, "bataxe"],
+                    [0.04, "pinkie"],
+                    [0.04, "oozingterror"],
+                    [0.04, "harbringer"],
+                    [0.001, "rabbitsfoot"],
                 ],
-                "statamulet": [
-                    [
-                        1,
-                        "intamulet"
-                    ],
-                    [
-                        1.2,
-                        "stramulet"
-                    ],
-                    [
-                        1,
-                        "dexamulet"
-                    ]
+                statamulet: [
+                    [1, "intamulet"],
+                    [1.2, "stramulet"],
+                    [1, "dexamulet"],
                 ],
-                "statring": [
-                    [
-                        1,
-                        "intring"
-                    ],
-                    [
-                        1,
-                        "vitring"
-                    ],
-                    [
-                        1,
-                        "dexring"
-                    ],
-                    [
-                        1.2,
-                        "strring"
-                    ]
+                statring: [
+                    [1, "intring"],
+                    [1, "vitring"],
+                    [1, "dexring"],
+                    [1.2, "strring"],
                 ],
-                "statbelt": [
-                    [
-                        1,
-                        "intbelt"
-                    ],
-                    [
-                        1.05,
-                        "strbelt"
-                    ],
-                    [
-                        1,
-                        "dexbelt"
-                    ]
+                statbelt: [
+                    [1, "intbelt"],
+                    [1.05, "strbelt"],
+                    [1, "dexbelt"],
                 ],
-                "candy1v2": [
-                    [
-                        0.03,
-                        "lantern"
-                    ],
-                    [
-                        0.8,
-                        "phelmet"
-                    ],
-                    [
-                        4.5,
-                        "smoke"
-                    ],
-                    [
-                        4.5,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.4,
-                        "candy0v2"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.0012,
-                        "starkillers"
-                    ],
-                    [
-                        0.0012,
-                        "fury"
-                    ],
-                    [
-                        0.0012,
-                        "handofmidas"
-                    ],
-                    [
-                        0.004,
-                        "harbringer"
-                    ],
-                    [
-                        0.001,
-                        "open",
-                        "armorx"
-                    ]
+                candy1v2: [
+                    [0.03, "lantern"],
+                    [0.8, "phelmet"],
+                    [4.5, "smoke"],
+                    [4.5, "pumpkinspice"],
+                    [0.4, "candy0v2"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.0012, "starkillers"],
+                    [0.0012, "fury"],
+                    [0.0012, "handofmidas"],
+                    [0.004, "harbringer"],
+                    [0.001, "open", "armorx"],
                 ],
-                "armorx": [
-                    [
-                        1,
-                        "hhelmet"
-                    ],
-                    [
-                        0.8,
-                        "harmor"
-                    ],
-                    [
-                        1,
-                        "hpants"
-                    ],
-                    [
-                        1.1,
-                        "hgloves"
-                    ],
-                    [
-                        0.5,
-                        "hboots"
-                    ],
-                    [
-                        0.1,
-                        "xhelmet"
-                    ],
-                    [
-                        0.08,
-                        "xarmor"
-                    ],
-                    [
-                        0.1,
-                        "xpants"
-                    ],
-                    [
-                        0.11,
-                        "xgloves"
-                    ],
-                    [
-                        0.05,
-                        "xboots"
-                    ]
+                armorx: [
+                    [1, "hhelmet"],
+                    [0.8, "harmor"],
+                    [1, "hpants"],
+                    [1.1, "hgloves"],
+                    [0.5, "hboots"],
+                    [0.1, "xhelmet"],
+                    [0.08, "xarmor"],
+                    [0.1, "xpants"],
+                    [0.11, "xgloves"],
+                    [0.05, "xboots"],
                 ],
-                "candy1v3": [
-                    [
-                        1,
-                        "gold",
-                        80000
-                    ],
-                    [
-                        0.03,
-                        "lantern"
-                    ],
-                    [
-                        0.8,
-                        "phelmet"
-                    ],
-                    [
-                        4.5,
-                        "smoke"
-                    ],
-                    [
-                        4.5,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.4,
-                        "candy0v3"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.0012,
-                        "starkillers"
-                    ],
-                    [
-                        0.0012,
-                        "fury"
-                    ],
-                    [
-                        0.0012,
-                        "handofmidas"
-                    ],
-                    [
-                        0.004,
-                        "harbringer"
-                    ],
-                    [
-                        0.001,
-                        "open",
-                        "armorx"
-                    ]
+                candy1v3: [
+                    [1, "gold", 80000],
+                    [0.03, "lantern"],
+                    [0.8, "phelmet"],
+                    [4.5, "smoke"],
+                    [4.5, "pumpkinspice"],
+                    [0.4, "candy0v3"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.0012, "starkillers"],
+                    [0.0012, "fury"],
+                    [0.0012, "handofmidas"],
+                    [0.004, "harbringer"],
+                    [0.001, "open", "armorx"],
                 ],
-                "armorbox": [
-                    [
-                        14,
-                        "coat1"
-                    ],
-                    [
-                        22,
-                        "helmet1"
-                    ],
-                    [
-                        20,
-                        "pants1"
-                    ],
-                    [
-                        1,
-                        "hhelmet"
-                    ],
-                    [
-                        0.8,
-                        "harmor"
-                    ],
-                    [
-                        1,
-                        "hpants"
-                    ],
-                    [
-                        1.1,
-                        "hgloves"
-                    ],
-                    [
-                        0.5,
-                        "hboots"
-                    ],
-                    [
-                        22,
-                        "gloves1"
-                    ],
-                    [
-                        0.1,
-                        "xhelmet"
-                    ],
-                    [
-                        0.08,
-                        "xarmor"
-                    ],
-                    [
-                        0.1,
-                        "xpants"
-                    ],
-                    [
-                        0.11,
-                        "xgloves"
-                    ],
-                    [
-                        0.05,
-                        "xboots"
-                    ],
-                    [
-                        0.005,
-                        "fury"
-                    ],
-                    [
-                        0.005,
-                        "starkillers"
-                    ],
-                    [
-                        14,
-                        "shoes1"
-                    ]
+                armorbox: [
+                    [14, "coat1"],
+                    [22, "helmet1"],
+                    [20, "pants1"],
+                    [1, "hhelmet"],
+                    [0.8, "harmor"],
+                    [1, "hpants"],
+                    [1.1, "hgloves"],
+                    [0.5, "hboots"],
+                    [22, "gloves1"],
+                    [0.1, "xhelmet"],
+                    [0.08, "xarmor"],
+                    [0.1, "xpants"],
+                    [0.11, "xgloves"],
+                    [0.05, "xboots"],
+                    [0.005, "fury"],
+                    [0.005, "starkillers"],
+                    [14, "shoes1"],
                 ],
-                "candy1": [
-                    [
-                        1,
-                        "gold",
-                        80000
-                    ],
-                    [
-                        0.03,
-                        "lantern"
-                    ],
-                    [
-                        0.8,
-                        "phelmet"
-                    ],
-                    [
-                        4.5,
-                        "smoke"
-                    ],
-                    [
-                        4.5,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.4,
-                        "candy0"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.0001,
-                        "starkillers"
-                    ],
-                    [
-                        0.0001,
-                        "fury"
-                    ],
-                    [
-                        0.0012,
-                        "handofmidas"
-                    ],
-                    [
-                        0.007,
-                        "harbringer"
-                    ],
-                    [
-                        0.008,
-                        "oozingterror"
-                    ],
-                    [
-                        0.001,
-                        "open",
-                        "armorx"
-                    ]
+                candy1: [
+                    [1, "gold", 80000],
+                    [0.03, "lantern"],
+                    [0.8, "phelmet"],
+                    [4.5, "smoke"],
+                    [4.5, "pumpkinspice"],
+                    [0.4, "candy0"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.0001, "starkillers"],
+                    [0.0001, "fury"],
+                    [0.0012, "handofmidas"],
+                    [0.007, "harbringer"],
+                    [0.008, "oozingterror"],
+                    [0.001, "open", "armorx"],
                 ],
-                "candy0": [
-                    [
-                        1,
-                        "gold",
-                        480000
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ],
-                    [
-                        0.12,
-                        "lantern"
-                    ],
-                    [
-                        0.1,
-                        "talkingskull"
-                    ],
-                    [
-                        1,
-                        "jacko"
-                    ],
-                    [
-                        0.1,
-                        "gphelmet"
-                    ],
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        2,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.1,
-                        "candy0",
-                        5
-                    ],
-                    [
-                        1,
-                        "open",
-                        "weaponofthedead"
-                    ],
-                    [
-                        0.008,
-                        "mysterybox"
-                    ],
-                    [
-                        0.001,
-                        "gbow"
-                    ],
-                    [
-                        0.0005,
-                        "starkillers"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.0005,
-                        "fury"
-                    ],
-                    [
-                        0.1,
-                        "open",
-                        "armorx"
-                    ]
+                candy0: [
+                    [1, "gold", 480000],
+                    [0.001, "vblood"],
+                    [0.12, "lantern"],
+                    [0.1, "talkingskull"],
+                    [1, "jacko"],
+                    [0.1, "gphelmet"],
+                    [1, "throwingstars"],
+                    [2, "pumpkinspice"],
+                    [0.1, "candy0", 5],
+                    [1, "open", "weaponofthedead"],
+                    [0.008, "mysterybox"],
+                    [0.001, "gbow"],
+                    [0.0005, "starkillers"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.0005, "fury"],
+                    [0.1, "open", "armorx"],
                 ],
-                "leather": [
-                    [
-                        20,
-                        "cape"
-                    ],
-                    [
-                        1,
-                        "bcape"
-                    ],
-                    [
-                        0.5,
-                        "open",
-                        "armorbox"
-                    ]
+                leather: [
+                    [20, "cape"],
+                    [1, "bcape"],
+                    [0.5, "open", "armorbox"],
                 ],
-                "lostearring0": [
-                    [
-                        1,
-                        "open",
-                        "armorbox"
-                    ]
+                lostearring0: [[1, "open", "armorbox"]],
+                lostearring1: [[1, "open", "weaponbox"]],
+                weaponbox: [
+                    [1, "throwingstars"],
+                    [0.05, "harbringer"],
+                    [0.04, "oozingterror"],
+                    [1.4, "t2bow"],
+                    [1, "basher"],
+                    [1, "spear"],
+                    [1, "dagger"],
+                    [0.5, "pmace"],
+                    [1, "fireblade"],
+                    [0.8, "firestaff"],
+                    [0.04, "t3bow"],
+                    [0.02, "hammer"],
+                    [0.1, "rapier"],
+                    [1, "sword"],
+                    [0.2, "crossbow"],
                 ],
-                "lostearring1": [
-                    [
-                        1,
-                        "open",
-                        "weaponbox"
-                    ]
+                lostearring2: [
+                    [1, "wbook1"],
+                    [0.25, "t2quiver"],
                 ],
-                "weaponbox": [
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        0.05,
-                        "harbringer"
-                    ],
-                    [
-                        0.04,
-                        "oozingterror"
-                    ],
-                    [
-                        1.4,
-                        "t2bow"
-                    ],
-                    [
-                        1,
-                        "basher"
-                    ],
-                    [
-                        1,
-                        "spear"
-                    ],
-                    [
-                        1,
-                        "dagger"
-                    ],
-                    [
-                        0.5,
-                        "pmace"
-                    ],
-                    [
-                        1,
-                        "fireblade"
-                    ],
-                    [
-                        0.8,
-                        "firestaff"
-                    ],
-                    [
-                        0.04,
-                        "t3bow"
-                    ],
-                    [
-                        0.02,
-                        "hammer"
-                    ],
-                    [
-                        0.1,
-                        "rapier"
-                    ],
-                    [
-                        1,
-                        "sword"
-                    ],
-                    [
-                        0.2,
-                        "crossbow"
-                    ]
+                lostearring3: [
+                    [0.5, "fury"],
+                    [5, "handofmidas"],
                 ],
-                "lostearring2": [
-                    [
-                        1,
-                        "wbook1"
-                    ],
-                    [
-                        0.25,
-                        "t2quiver"
-                    ]
+                lostearring4: [
+                    [1, "hhelmet"],
+                    [0.8, "harmor"],
+                    [1, "hpants"],
+                    [1.1, "hgloves"],
+                    [0.5, "hboots"],
+                    [0.1, "xhelmet"],
+                    [0.08, "xarmor"],
+                    [0.1, "xpants"],
+                    [0.11, "xgloves"],
+                    [0.05, "xboots"],
                 ],
-                "lostearring3": [
-                    [
-                        0.5,
-                        "fury"
-                    ],
-                    [
-                        5,
-                        "handofmidas"
-                    ]
+                ornament: [
+                    [0.1, "eggnog"],
+                    [1, "hotchocolate"],
+                    [1, "warmscarf"],
+                    [1, "snowball", 10],
+                    [0.1, "santasbelt"],
+                    [1, "candycanesword"],
+                    [1, "ornamentstaff"],
+                    [0.05, "mshield"],
+                    [0.8, "merry"],
+                    [1, "rednose"],
+                    [1, "xmashat"],
+                    [1, "xmasshoes"],
+                    [0.8, "xmassweater"],
+                    [1, "xmaspants"],
+                    [0.8, "mittens"],
+                    [0.02, "angelwings"],
+                    [0.012, "supermittens"],
+                    [3.6, "open", "gem0"],
                 ],
-                "lostearring4": [
-                    [
-                        1,
-                        "hhelmet"
-                    ],
-                    [
-                        0.8,
-                        "harmor"
-                    ],
-                    [
-                        1,
-                        "hpants"
-                    ],
-                    [
-                        1.1,
-                        "hgloves"
-                    ],
-                    [
-                        0.5,
-                        "hboots"
-                    ],
-                    [
-                        0.1,
-                        "xhelmet"
-                    ],
-                    [
-                        0.08,
-                        "xarmor"
-                    ],
-                    [
-                        0.1,
-                        "xpants"
-                    ],
-                    [
-                        0.11,
-                        "xgloves"
-                    ],
-                    [
-                        0.05,
-                        "xboots"
-                    ]
+                gem0: [
+                    [0.5, "weaponbox"],
+                    [1.5, "armorbox"],
+                    [0.5, "gold", 100000],
+                    [1, "gold", 200000],
+                    [1, "gold", 200000],
+                    [1, "gold", 400000],
+                    [0.5, "gold", 800000],
+                    [0.1, "gold", 1600000],
+                    [0.1, "gold", 3200000],
+                    [0.05, "gold", 6400000],
+                    [0.05, "offering"],
+                    [1, "scroll1", 10],
+                    [0.5, "cscroll1", 4],
+                    [0.001, "shells", 200],
+                    [0.0001, "scroll3", 1],
+                    [0.0001, "cscroll3", 1],
                 ],
-                "ornament": [
-                    [
-                        0.1,
-                        "eggnog"
-                    ],
-                    [
-                        1,
-                        "hotchocolate"
-                    ],
-                    [
-                        1,
-                        "warmscarf"
-                    ],
-                    [
-                        1,
-                        "snowball",
-                        10
-                    ],
-                    [
-                        0.1,
-                        "santasbelt"
-                    ],
-                    [
-                        1,
-                        "candycanesword"
-                    ],
-                    [
-                        1,
-                        "ornamentstaff"
-                    ],
-                    [
-                        0.05,
-                        "mshield"
-                    ],
-                    [
-                        0.8,
-                        "merry"
-                    ],
-                    [
-                        1,
-                        "rednose"
-                    ],
-                    [
-                        1,
-                        "xmashat"
-                    ],
-                    [
-                        1,
-                        "xmasshoes"
-                    ],
-                    [
-                        0.8,
-                        "xmassweater"
-                    ],
-                    [
-                        1,
-                        "xmaspants"
-                    ],
-                    [
-                        0.8,
-                        "mittens"
-                    ],
-                    [
-                        0.02,
-                        "angelwings"
-                    ],
-                    [
-                        0.012,
-                        "supermittens"
-                    ],
-                    [
-                        3.6,
-                        "open",
-                        "gem0"
-                    ]
+                candycane: [
+                    [0.05, "open", "xN"],
+                    [0.1, "eggnog"],
+                    [1, "hotchocolate"],
+                    [1, "warmscarf"],
+                    [1, "snowball", 10],
+                    [0.1, "snowflakes"],
+                    [0.1, "santasbelt"],
+                    [1, "candycanesword"],
+                    [1, "ornamentstaff"],
+                    [0.8, "merry"],
+                    [0.05, "mshield"],
+                    [1, "rednose"],
+                    [1, "xmashat"],
+                    [1, "xmasshoes"],
+                    [1, "xmassweater"],
+                    [1, "xmaspants"],
+                    [1, "mittens"],
+                    [0.02, "angelwings"],
+                    [0.008, "supermittens"],
+                    [3.6, "open", "gem0"],
+                    [0.00001, "northstar"],
+                    [0.01, "shells", 200],
                 ],
-                "gem0": [
-                    [
-                        0.5,
-                        "weaponbox"
-                    ],
-                    [
-                        1.5,
-                        "armorbox"
-                    ],
-                    [
-                        0.5,
-                        "gold",
-                        100000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        200000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        200000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        400000
-                    ],
-                    [
-                        0.5,
-                        "gold",
-                        800000
-                    ],
-                    [
-                        0.1,
-                        "gold",
-                        1600000
-                    ],
-                    [
-                        0.1,
-                        "gold",
-                        3200000
-                    ],
-                    [
-                        0.05,
-                        "gold",
-                        6400000
-                    ],
-                    [
-                        0.05,
-                        "offering"
-                    ],
-                    [
-                        1,
-                        "scroll1",
-                        10
-                    ],
-                    [
-                        0.5,
-                        "cscroll1",
-                        4
-                    ],
-                    [
-                        0.001,
-                        "shells",
-                        200
-                    ],
-                    [
-                        0.0001,
-                        "scroll3",
-                        1
-                    ],
-                    [
-                        0.0001,
-                        "cscroll3",
-                        1
-                    ]
+                xN: [
+                    [1, "x0"],
+                    [1, "x1"],
+                    [1, "x2"],
+                    [1, "x3"],
+                    [1, "x4"],
+                    [1, "x5"],
+                    [1, "x6"],
+                    [1, "x7"],
+                    [1, "x8"],
                 ],
-                "candycane": [
-                    [
-                        0.05,
-                        "open",
-                        "xN"
-                    ],
-                    [
-                        0.1,
-                        "eggnog"
-                    ],
-                    [
-                        1,
-                        "hotchocolate"
-                    ],
-                    [
-                        1,
-                        "warmscarf"
-                    ],
-                    [
-                        1,
-                        "snowball",
-                        10
-                    ],
-                    [
-                        0.1,
-                        "snowflakes"
-                    ],
-                    [
-                        0.1,
-                        "santasbelt"
-                    ],
-                    [
-                        1,
-                        "candycanesword"
-                    ],
-                    [
-                        1,
-                        "ornamentstaff"
-                    ],
-                    [
-                        0.8,
-                        "merry"
-                    ],
-                    [
-                        0.05,
-                        "mshield"
-                    ],
-                    [
-                        1,
-                        "rednose"
-                    ],
-                    [
-                        1,
-                        "xmashat"
-                    ],
-                    [
-                        1,
-                        "xmasshoes"
-                    ],
-                    [
-                        1,
-                        "xmassweater"
-                    ],
-                    [
-                        1,
-                        "xmaspants"
-                    ],
-                    [
-                        1,
-                        "mittens"
-                    ],
-                    [
-                        0.02,
-                        "angelwings"
-                    ],
-                    [
-                        0.008,
-                        "supermittens"
-                    ],
-                    [
-                        3.6,
-                        "open",
-                        "gem0"
-                    ],
-                    [
-                        0.00001,
-                        "northstar"
-                    ],
-                    [
-                        0.01,
-                        "shells",
-                        200
-                    ]
+                mistletoe: [
+                    [0.12, "eggnog"],
+                    [1, "hotchocolate"],
+                    [1, "warmscarf"],
+                    [1, "snowball", 10],
+                    [0.1, "santasbelt"],
+                    [1, "candycanesword"],
+                    [1, "ornamentstaff"],
+                    [0.8, "merry"],
+                    [0.05, "mshield"],
+                    [1, "rednose"],
+                    [1, "xmashat"],
+                    [1, "xmasshoes"],
+                    [0.8, "xmassweater"],
+                    [1, "xmaspants"],
+                    [0.8, "mittens"],
+                    [0.02, "angelwings"],
+                    [0.008, "supermittens"],
+                    [0.0001, "mearring"],
+                    [3.6, "open", "gem0"],
                 ],
-                "xN": [
-                    [
-                        1,
-                        "x0"
-                    ],
-                    [
-                        1,
-                        "x1"
-                    ],
-                    [
-                        1,
-                        "x2"
-                    ],
-                    [
-                        1,
-                        "x3"
-                    ],
-                    [
-                        1,
-                        "x4"
-                    ],
-                    [
-                        1,
-                        "x5"
-                    ],
-                    [
-                        1,
-                        "x6"
-                    ],
-                    [
-                        1,
-                        "x7"
-                    ],
-                    [
-                        1,
-                        "x8"
-                    ]
+                mysterybox: [
+                    [70, "open", "armorx"],
+                    [20, "scroll3"],
+                    [4, "cscroll3"],
+                    [1, "warpvest"],
+                    [1, "scroll4"],
                 ],
-                "mistletoe": [
-                    [
-                        0.12,
-                        "eggnog"
-                    ],
-                    [
-                        1,
-                        "hotchocolate"
-                    ],
-                    [
-                        1,
-                        "warmscarf"
-                    ],
-                    [
-                        1,
-                        "snowball",
-                        10
-                    ],
-                    [
-                        0.1,
-                        "santasbelt"
-                    ],
-                    [
-                        1,
-                        "candycanesword"
-                    ],
-                    [
-                        1,
-                        "ornamentstaff"
-                    ],
-                    [
-                        0.8,
-                        "merry"
-                    ],
-                    [
-                        0.05,
-                        "mshield"
-                    ],
-                    [
-                        1,
-                        "rednose"
-                    ],
-                    [
-                        1,
-                        "xmashat"
-                    ],
-                    [
-                        1,
-                        "xmasshoes"
-                    ],
-                    [
-                        0.8,
-                        "xmassweater"
-                    ],
-                    [
-                        1,
-                        "xmaspants"
-                    ],
-                    [
-                        0.8,
-                        "mittens"
-                    ],
-                    [
-                        0.02,
-                        "angelwings"
-                    ],
-                    [
-                        0.008,
-                        "supermittens"
-                    ],
-                    [
-                        0.0001,
-                        "mearring"
-                    ],
-                    [
-                        3.6,
-                        "open",
-                        "gem0"
-                    ]
+                gem1: [
+                    [0.1, "weaponbox"],
+                    [0.3, "armorbox"],
+                    [0.001, "offering"],
+                    [0.001, "shells", 50],
+                    [1, "open", "thrash"],
+                    [0.012, "gemfragment"],
                 ],
-                "mysterybox": [
-                    [
-                        70,
-                        "open",
-                        "armorx"
-                    ],
-                    [
-                        20,
-                        "scroll3"
-                    ],
-                    [
-                        4,
-                        "cscroll3"
-                    ],
-                    [
-                        1,
-                        "warpvest"
-                    ],
-                    [
-                        1,
-                        "scroll4"
-                    ]
+                thrash: [
+                    [1, "coat"],
+                    [1, "shoes"],
+                    [1, "pants"],
+                    [1, "gloves"],
+                    [1, "helmet"],
+                    [1, "empty"],
                 ],
-                "gem1": [
-                    [
-                        0.1,
-                        "weaponbox"
-                    ],
-                    [
-                        0.3,
-                        "armorbox"
-                    ],
-                    [
-                        0.001,
-                        "offering"
-                    ],
-                    [
-                        0.001,
-                        "shells",
-                        50
-                    ],
-                    [
-                        1,
-                        "open",
-                        "thrash"
-                    ],
-                    [
-                        0.012,
-                        "gemfragment"
-                    ]
+                xbox: [
+                    [1, "open", "armorx"],
+                    [1, "harbringer"],
+                    [1, "t2quiver"],
+                    [0.1, "exoarm"],
+                    [0.06, "fury"],
+                    [0.12, "starkillers"],
+                    [0.01, "northstar"],
                 ],
-                "thrash": [
-                    [
-                        1,
-                        "coat"
-                    ],
-                    [
-                        1,
-                        "shoes"
-                    ],
-                    [
-                        1,
-                        "pants"
-                    ],
-                    [
-                        1,
-                        "gloves"
-                    ],
-                    [
-                        1,
-                        "helmet"
-                    ],
-                    [
-                        1,
-                        "empty"
-                    ]
+                jewellerybox: [
+                    [1, "hpamulet"],
+                    [1, "hpbelt"],
                 ],
-                "xbox": [
-                    [
-                        1,
-                        "open",
-                        "armorx"
-                    ],
-                    [
-                        1,
-                        "harbringer"
-                    ],
-                    [
-                        1,
-                        "t2quiver"
-                    ],
-                    [
-                        0.1,
-                        "exoarm"
-                    ],
-                    [
-                        0.06,
-                        "fury"
-                    ],
-                    [
-                        0.12,
-                        "starkillers"
-                    ],
-                    [
-                        0.01,
-                        "northstar"
-                    ]
+                candypop: [
+                    [1, "weaponbox"],
+                    [1, "armorbox"],
+                    [10, "gold", 10000],
+                    [10, "hpot1", 100],
+                    [10, "mpot1", 100],
+                    [10, "scroll0", 5],
+                    [5, "cscroll0", 2],
+                    [1, "scroll1", 1],
+                    [0.5, "cscroll1", 1],
+                    [0.0001, "shells", 50],
+                    [0.1, "emptyheart"],
+                    [1, "cupid"],
                 ],
-                "jewellerybox": [
-                    [
-                        1,
-                        "hpamulet"
-                    ],
-                    [
-                        1,
-                        "hpbelt"
-                    ]
+                seashell: [
+                    [0.000001, "vitscroll", 10],
+                    [1, "open", "basicelixir"],
+                    [0.00002, "fury"],
                 ],
-                "candypop": [
-                    [
-                        1,
-                        "weaponbox"
-                    ],
-                    [
-                        1,
-                        "armorbox"
-                    ],
-                    [
-                        10,
-                        "gold",
-                        10000
-                    ],
-                    [
-                        10,
-                        "hpot1",
-                        100
-                    ],
-                    [
-                        10,
-                        "mpot1",
-                        100
-                    ],
-                    [
-                        10,
-                        "scroll0",
-                        5
-                    ],
-                    [
-                        5,
-                        "cscroll0",
-                        2
-                    ],
-                    [
-                        1,
-                        "scroll1",
-                        1
-                    ],
-                    [
-                        0.5,
-                        "cscroll1",
-                        1
-                    ],
-                    [
-                        0.0001,
-                        "shells",
-                        50
-                    ],
-                    [
-                        0.1,
-                        "emptyheart"
-                    ],
-                    [
-                        1,
-                        "cupid"
-                    ]
+                basicelixir: [
+                    [1, "elixirvit0"],
+                    [0.1, "elixirvit1"],
+                    [0.01, "elixirvit2"],
+                    [1, "elixirstr0"],
+                    [0.1, "elixirstr1"],
+                    [0.01, "elixirstr2"],
+                    [1, "elixirdex0"],
+                    [0.1, "elixirdex1"],
+                    [0.01, "elixirdex2"],
+                    [1, "elixirint0"],
+                    [0.1, "elixirint1"],
+                    [0.01, "elixirint2"],
                 ],
-                "seashell": [
-                    [
-                        0.000001,
-                        "vitscroll",
-                        10
-                    ],
-                    [
-                        1,
-                        "open",
-                        "basicelixir"
-                    ],
-                    [
-                        0.00002,
-                        "fury"
-                    ]
+                candy0v3: [
+                    [1, "gold", 480000],
+                    [0.001, "vblood"],
+                    [0.12, "lantern"],
+                    [0.1, "talkingskull"],
+                    [1, "jacko"],
+                    [0.1, "gphelmet"],
+                    [1, "throwingstars"],
+                    [2, "pumpkinspice"],
+                    [0.1, "candy0v3", 5],
+                    [1, "open", "weaponofthedead"],
+                    [0.008, "mysterybox"],
+                    [0.002, "starkillers"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.001, "fury"],
+                    [0.1, "open", "armorx"],
                 ],
-                "basicelixir": [
-                    [
-                        1,
-                        "elixirvit0"
-                    ],
-                    [
-                        0.1,
-                        "elixirvit1"
-                    ],
-                    [
-                        0.01,
-                        "elixirvit2"
-                    ],
-                    [
-                        1,
-                        "elixirstr0"
-                    ],
-                    [
-                        0.1,
-                        "elixirstr1"
-                    ],
-                    [
-                        0.01,
-                        "elixirstr2"
-                    ],
-                    [
-                        1,
-                        "elixirdex0"
-                    ],
-                    [
-                        0.1,
-                        "elixirdex1"
-                    ],
-                    [
-                        0.01,
-                        "elixirdex2"
-                    ],
-                    [
-                        1,
-                        "elixirint0"
-                    ],
-                    [
-                        0.1,
-                        "elixirint1"
-                    ],
-                    [
-                        0.01,
-                        "elixirint2"
-                    ]
+                candy0v2: [
+                    [0.12, "lantern"],
+                    [1, "gphelmet"],
+                    [1, "throwingstars"],
+                    [2, "pumpkinspice"],
+                    [0.1, "candy0v2", 5],
+                    [1, "open", "weaponofthedead"],
+                    [0.008, "mysterybox"],
+                    [0.002, "starkillers"],
+                    [0.002, "swirlipop"],
+                    [0.002, "greenbomb"],
+                    [0.001, "fury"],
+                    [0.1, "open", "armorx"],
                 ],
-                "candy0v3": [
-                    [
-                        1,
-                        "gold",
-                        480000
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ],
-                    [
-                        0.12,
-                        "lantern"
-                    ],
-                    [
-                        0.1,
-                        "talkingskull"
-                    ],
-                    [
-                        1,
-                        "jacko"
-                    ],
-                    [
-                        0.1,
-                        "gphelmet"
-                    ],
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        2,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.1,
-                        "candy0v3",
-                        5
-                    ],
-                    [
-                        1,
-                        "open",
-                        "weaponofthedead"
-                    ],
-                    [
-                        0.008,
-                        "mysterybox"
-                    ],
-                    [
-                        0.002,
-                        "starkillers"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.001,
-                        "fury"
-                    ],
-                    [
-                        0.1,
-                        "open",
-                        "armorx"
-                    ]
+                cosmo0: [
+                    [0.5, "cx", "marmor10a"],
+                    [1, "cx", "marmor10b"],
+                    [0.8333333333333334, "cx", "marmor10c"],
+                    [1, "cx", "marmor10g"],
+                    [1, "cx", "marmor10h"],
+                    [1, "cx", "marmor11a"],
+                    [0.5, "cx", "marmor11b"],
+                    [1, "cx", "marmor11c"],
+                    [0.5, "cx", "marmor11d"],
+                    [0.5, "cx", "marmor11e"],
+                    [1, "cx", "marmor11f"],
+                    [1, "cx", "marmor11g"],
+                    [1, "cx", "marmor11h"],
+                    [0.5, "cx", "marmor1b"],
+                    [0.5, "cx", "marmor1c"],
+                    [1, "cx", "marmor2a"],
+                    [1, "cx", "marmor2b"],
+                    [0.2, "cx", "marmor2e"],
+                    [0.5, "cx", "marmor2f"],
+                    [1, "cx", "marmor2g"],
+                    [0.1, "cx", "marmor2h"],
+                    [1, "cx", "marmor3a"],
+                    [1, "cx", "marmor3b"],
+                    [1, "cx", "marmor3c"],
+                    [1, "cx", "marmor3d"],
+                    [1, "cx", "marmor3g"],
+                    [1, "cx", "marmor4c"],
+                    [1, "cx", "marmor4d"],
+                    [0.3333333333333333, "cx", "marmor4e"],
+                    [1, "cx", "marmor4g"],
+                    [0.8333333333333334, "cx", "marmor4h"],
+                    [0.1, "cx", "marmor5b"],
+                    [1, "cx", "marmor5c"],
+                    [1, "cx", "marmor5f"],
+                    [1, "cx", "marmor5g"],
+                    [1, "cx", "marmor5h"],
+                    [0.3333333333333333, "cx", "marmor5e"],
+                    [1, "cx", "marmor6g"],
+                    [1, "cx", "marmor6h"],
+                    [1, "cx", "marmor7a"],
+                    [1, "cx", "marmor7b"],
+                    [1, "cx", "marmor7c"],
+                    [1, "cx", "marmor7d"],
+                    [1, "cx", "marmor7e"],
+                    [1, "cx", "marmor7f"],
+                    [1, "cx", "marmor7g"],
+                    [1, "cx", "marmor7h"],
+                    [1, "cx", "marmor8a"],
+                    [1, "cx", "marmor8b"],
+                    [1, "cx", "marmor8c"],
+                    [1, "cx", "marmor8d"],
+                    [1, "cx", "marmor8e"],
+                    [1, "cx", "marmor8f"],
+                    [1, "cx", "marmor8g"],
+                    [1, "cx", "marmor8h"],
+                    [0.3333333333333333, "cx", "marmor9a"],
+                    [0.2, "cx", "marmor9b"],
+                    [1, "cx", "marmor9c"],
+                    [1, "cx", "marmor9d"],
+                    [0.1, "cx", "marmor9e"],
+                    [0.1111111111111111, "cx", "marmor9f"],
+                    [0.08333333333333333, "cx", "marmor9g"],
+                    [0.3333333333333333, "cx", "marmor9h"],
+                    [1, "cx", "sarmor1a"],
+                    [1, "cx", "sarmor1c"],
+                    [1, "cx", "sarmor1d"],
+                    [1, "cx", "sarmor1e"],
+                    [1, "cx", "sarmor1f"],
+                    [1, "cx", "sarmor1g"],
+                    [1, "cx", "sarmor2a"],
+                    [1, "cx", "sarmor2b"],
+                    [1, "cx", "sarmor2c"],
+                    [0.03125, "cx", "mbody1a"],
+                    [0.25, "cx", "mbody1b"],
+                    [0.125, "cx", "mbody1c"],
+                    [1, "cx", "mbody1d"],
+                    [0.2, "cx", "mbody1e"],
+                    [1, "cx", "mbody1f"],
+                    [0.3333333333333333, "cx", "mbody1g"],
+                    [1, "cx", "mbody1h"],
+                    [1, "cx", "mbody2a"],
+                    [1, "cx", "mbody2d"],
+                    [1, "cx", "mbody2e"],
+                    [0.05, "cx", "mbody2f"],
+                    [0.08333333333333333, "cx", "mbody3a"],
+                    [0.0625, "cx", "mbody3b"],
+                    [0.020833333333333332, "cx", "mbody3d"],
+                    [0.013888888888888888, "cx", "mbody3e"],
+                    [0.8333333333333334, "cx", "mbody4a"],
+                    [0.2, "cx", "mbody4e"],
+                    [1, "cx", "mbody4g"],
+                    [1, "cx", "mbody4d"],
+                    [0.1, "cx", "mbody4h"],
+                    [0.1, "cx", "mbody5a"],
+                    [0.1, "cx", "mbody5c"],
+                    [0.16666666666666666, "cx", "mbody5d"],
+                    [0.1, "cx", "mbody6a"],
+                    [1, "cx", "sbody1d"],
+                    [1, "cx", "sbody1e"],
+                    [0.08333333333333333, "cxbundle", "pinkb"],
+                    [0.025, "cxbundle", "blackw"],
                 ],
-                "candy0v2": [
-                    [
-                        0.12,
-                        "lantern"
-                    ],
-                    [
-                        1,
-                        "gphelmet"
-                    ],
-                    [
-                        1,
-                        "throwingstars"
-                    ],
-                    [
-                        2,
-                        "pumpkinspice"
-                    ],
-                    [
-                        0.1,
-                        "candy0v2",
-                        5
-                    ],
-                    [
-                        1,
-                        "open",
-                        "weaponofthedead"
-                    ],
-                    [
-                        0.008,
-                        "mysterybox"
-                    ],
-                    [
-                        0.002,
-                        "starkillers"
-                    ],
-                    [
-                        0.002,
-                        "swirlipop"
-                    ],
-                    [
-                        0.002,
-                        "greenbomb"
-                    ],
-                    [
-                        0.001,
-                        "fury"
-                    ],
-                    [
-                        0.1,
-                        "open",
-                        "armorx"
-                    ]
+                cosmo2: [
+                    [1, "cx", "hairdo100"],
+                    [1, "cx", "hairdo101"],
+                    [1, "cx", "hairdo102"],
+                    [1, "cx", "hairdo103"],
+                    [1, "cx", "hairdo104"],
+                    [1, "cx", "hairdo105"],
+                    [1, "cx", "hairdo106"],
+                    [1, "cx", "hairdo107"],
+                    [1, "cx", "hairdo108"],
+                    [1, "cx", "hairdo109"],
+                    [1, "cx", "hairdo110"],
+                    [1, "cx", "hairdo111"],
+                    [1, "cx", "hairdo112"],
+                    [1, "cx", "hairdo113"],
+                    [1, "cx", "hairdo114"],
+                    [1, "cx", "hairdo115"],
+                    [1, "cx", "hairdo116"],
+                    [1, "cx", "hairdo117"],
+                    [1, "cx", "hairdo118"],
+                    [1, "cx", "hairdo119"],
+                    [1, "cx", "hairdo120"],
+                    [1, "cx", "hairdo121"],
+                    [1, "cx", "hairdo123"],
+                    [1, "cx", "hairdo124"],
+                    [1, "cx", "hairdo200"],
+                    [1, "cx", "hairdo201"],
+                    [1, "cx", "hairdo202"],
+                    [1, "cx", "hairdo204"],
+                    [1, "cx", "hairdo205"],
+                    [1, "cx", "hairdo206"],
+                    [1, "cx", "hairdo207"],
+                    [1, "cx", "hairdo208"],
+                    [1, "cx", "hairdo209"],
+                    [1, "cx", "hairdo210"],
+                    [1, "cx", "hairdo211"],
+                    [1, "cx", "hairdo212"],
+                    [1, "cx", "hairdo213"],
+                    [1, "cx", "hairdo214"],
+                    [1, "cx", "hairdo215"],
+                    [1, "cx", "hairdo216"],
+                    [1, "cx", "hairdo217"],
+                    [1, "cx", "hairdo218"],
+                    [1, "cx", "hairdo219"],
+                    [1, "cx", "hairdo220"],
+                    [1, "cx", "hairdo221"],
+                    [1, "cx", "hairdo222"],
+                    [1, "cx", "hairdo223"],
+                    [1, "cx", "hairdo224"],
+                    [1, "cx", "hairdo300"],
+                    [1, "cx", "hairdo301"],
+                    [1, "cx", "hairdo302"],
+                    [1, "cx", "hairdo303"],
+                    [1, "cx", "hairdo304"],
+                    [1, "cx", "hairdo305"],
+                    [1, "cx", "hairdo306"],
+                    [1, "cx", "hairdo307"],
+                    [1, "cx", "hairdo308"],
+                    [1, "cx", "hairdo309"],
+                    [1, "cx", "hairdo310"],
+                    [1, "cx", "hairdo311"],
+                    [1, "cx", "hairdo312"],
+                    [1, "cx", "hairdo313"],
+                    [1, "cx", "hairdo314"],
+                    [1, "cx", "hairdo315"],
+                    [1, "cx", "hairdo316"],
+                    [1, "cx", "hairdo317"],
+                    [1, "cx", "hairdo318"],
+                    [1, "cx", "hairdo319"],
+                    [1, "cx", "hairdo320"],
+                    [1, "cx", "hairdo321"],
+                    [1, "cx", "hairdo322"],
+                    [1, "cx", "hairdo323"],
+                    [1, "cx", "hairdo324"],
+                    [1, "cx", "hairdo400"],
+                    [1, "cx", "hairdo401"],
+                    [1, "cx", "hairdo402"],
+                    [1, "cx", "hairdo403"],
+                    [1, "cx", "hairdo405"],
+                    [1, "cx", "hairdo406"],
+                    [1, "cx", "hairdo407"],
+                    [1, "cx", "hairdo408"],
+                    [1, "cx", "hairdo409"],
+                    [1, "cx", "hairdo410"],
+                    [1, "cx", "hairdo411"],
+                    [1, "cx", "hairdo412"],
+                    [1, "cx", "hairdo413"],
+                    [1, "cx", "hairdo414"],
+                    [1, "cx", "hairdo415"],
+                    [1, "cx", "hairdo416"],
+                    [1, "cx", "hairdo417"],
+                    [1, "cx", "hairdo418"],
+                    [1, "cx", "hairdo419"],
+                    [1, "cx", "hairdo420"],
+                    [1, "cx", "hairdo421"],
+                    [1, "cx", "hairdo422"],
+                    [1, "cx", "hairdo423"],
+                    [1, "cx", "hairdo424"],
+                    [1, "cx", "hairdo500"],
+                    [1, "cx", "hairdo501"],
+                    [1, "cx", "hairdo502"],
+                    [1, "cx", "hairdo503"],
+                    [1, "cx", "hairdo504"],
+                    [1, "cx", "hairdo505"],
+                    [1, "cx", "hairdo506"],
+                    [1, "cx", "hairdo507"],
+                    [1, "cx", "hairdo508"],
+                    [1, "cx", "hairdo509"],
+                    [1, "cx", "hairdo510"],
+                    [1, "cx", "hairdo511"],
+                    [1, "cx", "hairdo512"],
+                    [1, "cx", "hairdo513"],
+                    [1, "cx", "hairdo514"],
+                    [1, "cx", "hairdo515"],
+                    [1, "cx", "hairdo516"],
+                    [1, "cx", "hairdo517"],
+                    [1, "cx", "hairdo518"],
+                    [1, "cx", "hairdo519"],
+                    [1, "cx", "hairdo520"],
+                    [1, "cx", "hairdo521"],
+                    [0.5, "cx", "hairdo122"],
+                    [0.3333333333333333, "cx", "hairdo404"],
+                    [0.1, "cx", "hairdo203"],
                 ],
-                "cosmo0": [
-                    [
-                        0.5,
-                        "cx",
-                        "marmor10a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor10b"
-                    ],
-                    [
-                        0.8333333333333334,
-                        "cx",
-                        "marmor10c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor10g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor10h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor11a"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor11b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor11c"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor11d"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor11e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor11f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor11g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor11h"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor1b"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor1c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor2a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor2b"
-                    ],
-                    [
-                        0.2,
-                        "cx",
-                        "marmor2e"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "marmor2f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor2g"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "marmor2h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor3a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor3b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor3c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor3d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor3g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor4c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor4d"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "marmor4e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor4g"
-                    ],
-                    [
-                        0.8333333333333334,
-                        "cx",
-                        "marmor4h"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "marmor5b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor5c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor5f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor5g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor5h"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "marmor5e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor6g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor6h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor7h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor8h"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "marmor9a"
-                    ],
-                    [
-                        0.2,
-                        "cx",
-                        "marmor9b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor9c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "marmor9d"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "marmor9e"
-                    ],
-                    [
-                        0.1111111111111111,
-                        "cx",
-                        "marmor9f"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cx",
-                        "marmor9g"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "marmor9h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1f"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor1g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor2a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor2b"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sarmor2c"
-                    ],
-                    [
-                        0.03125,
-                        "cx",
-                        "mbody1a"
-                    ],
-                    [
-                        0.25,
-                        "cx",
-                        "mbody1b"
-                    ],
-                    [
-                        0.125,
-                        "cx",
-                        "mbody1c"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody1d"
-                    ],
-                    [
-                        0.2,
-                        "cx",
-                        "mbody1e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody1f"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "mbody1g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody1h"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody2a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody2d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody2e"
-                    ],
-                    [
-                        0.05,
-                        "cx",
-                        "mbody2f"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cx",
-                        "mbody3a"
-                    ],
-                    [
-                        0.0625,
-                        "cx",
-                        "mbody3b"
-                    ],
-                    [
-                        0.020833333333333332,
-                        "cx",
-                        "mbody3d"
-                    ],
-                    [
-                        0.013888888888888888,
-                        "cx",
-                        "mbody3e"
-                    ],
-                    [
-                        0.8333333333333334,
-                        "cx",
-                        "mbody4a"
-                    ],
-                    [
-                        0.2,
-                        "cx",
-                        "mbody4e"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody4g"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "mbody4d"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "mbody4h"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "mbody5a"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "mbody5c"
-                    ],
-                    [
-                        0.16666666666666666,
-                        "cx",
-                        "mbody5d"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "mbody6a"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sbody1d"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "sbody1e"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cxbundle",
-                        "pinkb"
-                    ],
-                    [
-                        0.025,
-                        "cxbundle",
-                        "blackw"
-                    ]
+                cosmo3: [
+                    [1, "cx", "hat101"],
+                    [1, "cx", "hat103"],
+                    [1, "cx", "hat104"],
+                    [1, "cx", "hat105"],
+                    [1, "cx", "hat107"],
+                    [1, "cx", "hat108"],
+                    [1, "cx", "hat109"],
+                    [1, "cx", "hat110"],
+                    [1, "cx", "hat111"],
+                    [1, "cx", "hat112"],
+                    [1, "cx", "hat200"],
+                    [1, "cx", "hat201"],
+                    [1, "cx", "hat202"],
+                    [1, "cx", "hat203"],
+                    [1, "cx", "hat204"],
+                    [1, "cx", "hat205"],
+                    [1, "cx", "hat206"],
+                    [1, "cx", "hat207"],
+                    [1, "cx", "hat208"],
+                    [1, "cx", "hat209"],
+                    [1, "cx", "hat210"],
+                    [1, "cx", "hat211"],
+                    [1, "cx", "hat212"],
+                    [1, "cx", "hat213"],
+                    [1, "cx", "hat214"],
+                    [1, "cx", "hat215"],
+                    [1, "cx", "hat216"],
+                    [1, "cx", "hat217"],
+                    [1, "cx", "hat218"],
+                    [1, "cx", "hat219"],
+                    [1, "cx", "hat220"],
+                    [1, "cx", "hat221"],
+                    [1, "cx", "hat222"],
+                    [1, "cx", "hat223"],
+                    [1, "cx", "hat224"],
+                    [1, "cx", "hat300"],
+                    [1, "cx", "hat301"],
+                    [1, "cx", "hat302"],
+                    [1, "cx", "hat303"],
+                    [1, "cx", "hat304"],
+                    [1, "cx", "hat305"],
+                    [1, "cx", "hat306"],
+                    [1, "cx", "hat307"],
+                    [1, "cx", "hat308"],
+                    [1, "cx", "hat311"],
+                    [1, "cx", "hat312"],
+                    [1, "cx", "hat313"],
+                    [1, "cx", "hat314"],
+                    [1, "cx", "hat315"],
+                    [1, "cx", "hat316"],
+                    [1, "cx", "hat317"],
+                    [1, "cx", "hat319"],
+                    [1, "cx", "hat320"],
+                    [1, "cx", "hat321"],
+                    [1, "cx", "hat322"],
+                    [1, "cx", "hat323"],
+                    [1, "cx", "hat401"],
+                    [1, "cx", "hat402"],
+                    [1, "cx", "hat403"],
+                    [1, "cx", "hat404"],
+                    [1, "cx", "hat406"],
+                    [1, "cx", "hat407"],
+                    [0.5, "cx", "hat106"],
+                    [0.3333333333333333, "cx", "hat310"],
+                    [0.2, "cx", "hat102"],
+                    [0.125, "cx", "hat318"],
+                    [0.1, "cx", "hat113"],
+                    [0.08333333333333333, "cx", "hat309"],
+                    [0.08333333333333333, "cx", "hat400"],
+                    [0.08333333333333333, "cx", "hat405"],
                 ],
-                "cosmo2": [
-                    [
-                        1,
-                        "cx",
-                        "hairdo100"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo101"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo102"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo103"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo104"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo105"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo106"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo107"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo108"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo109"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo110"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo111"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo112"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo113"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo114"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo115"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo116"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo117"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo118"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo119"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo120"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo121"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo123"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo124"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo200"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo201"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo202"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo204"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo205"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo206"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo207"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo208"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo209"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo210"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo211"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo212"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo213"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo214"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo215"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo216"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo217"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo218"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo219"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo220"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo221"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo222"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo223"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo224"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo300"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo301"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo302"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo303"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo304"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo305"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo306"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo307"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo308"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo309"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo310"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo311"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo312"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo313"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo314"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo315"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo316"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo317"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo318"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo319"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo320"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo321"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo322"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo323"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo324"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo400"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo401"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo402"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo403"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo405"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo406"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo407"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo408"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo409"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo410"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo411"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo412"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo413"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo414"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo415"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo416"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo417"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo418"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo419"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo420"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo421"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo422"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo423"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo424"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo500"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo501"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo502"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo503"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo504"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo505"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo506"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo507"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo508"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo509"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo510"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo511"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo512"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo513"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo514"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo515"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo516"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo517"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo518"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo519"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo520"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hairdo521"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "hairdo122"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "hairdo404"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "hairdo203"
-                    ]
+                apologybox: [[1, "glitch"]],
+                gift1: [
+                    [1, "open", "thrash"],
+                    [0.4, "cake"],
+                    [0.2, "poker"],
+                    [1, "confetti"],
+                    [0.8, "partyhat"],
+                    [0.1, "gift0"],
+                    [0.1, "open", "armorbox"],
+                    [0.05, "ftrinket"],
+                    [0.006, "scroll3"],
+                    [0.006, "mysterybox"],
+                    [0.002, "offering"],
+                    [0.0003, "luckbooster"],
                 ],
-                "cosmo3": [
-                    [
-                        1,
-                        "cx",
-                        "hat101"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat103"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat104"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat105"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat107"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat108"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat109"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat110"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat111"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat112"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat200"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat201"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat202"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat203"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat204"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat205"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat206"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat207"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat208"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat209"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat210"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat211"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat212"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat213"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat214"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat215"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat216"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat217"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat218"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat219"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat220"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat221"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat222"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat223"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat224"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat300"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat301"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat302"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat303"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat304"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat305"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat306"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat307"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat308"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat311"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat312"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat313"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat314"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat315"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat316"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat317"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat319"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat320"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat321"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat322"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat323"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat401"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat402"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat403"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat404"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat406"
-                    ],
-                    [
-                        1,
-                        "cx",
-                        "hat407"
-                    ],
-                    [
-                        0.5,
-                        "cx",
-                        "hat106"
-                    ],
-                    [
-                        0.3333333333333333,
-                        "cx",
-                        "hat310"
-                    ],
-                    [
-                        0.2,
-                        "cx",
-                        "hat102"
-                    ],
-                    [
-                        0.125,
-                        "cx",
-                        "hat318"
-                    ],
-                    [
-                        0.1,
-                        "cx",
-                        "hat113"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cx",
-                        "hat309"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cx",
-                        "hat400"
-                    ],
-                    [
-                        0.08333333333333333,
-                        "cx",
-                        "hat405"
-                    ]
+                gift0: [
+                    [1, "ftrinket"],
+                    [1, "poker"],
+                    [0.5, "partyhat"],
+                    [0.008, "mysterybox"],
+                    [0.1, "cake"],
+                    [0.5, "open", "armorx"],
+                    [0.18, "scroll3"],
                 ],
-                "apologybox": [
-                    [
-                        1,
-                        "glitch"
-                    ]
+                goldenegg: [
+                    [100, "gold", 1000000],
+                    [10, "gold", 10000000],
+                    [1, "gold", 100000000],
                 ],
-                "gift1": [
-                    [
-                        1,
-                        "open",
-                        "thrash"
-                    ],
-                    [
-                        0.4,
-                        "cake"
-                    ],
-                    [
-                        0.2,
-                        "poker"
-                    ],
-                    [
-                        1,
-                        "confetti"
-                    ],
-                    [
-                        0.8,
-                        "partyhat"
-                    ],
-                    [
-                        0.1,
-                        "gift0"
-                    ],
-                    [
-                        0.1,
-                        "open",
-                        "armorbox"
-                    ],
-                    [
-                        0.05,
-                        "ftrinket"
-                    ],
-                    [
-                        0.006,
-                        "scroll3"
-                    ],
-                    [
-                        0.006,
-                        "mysterybox"
-                    ],
-                    [
-                        0.002,
-                        "offering"
-                    ],
-                    [
-                        0.0003,
-                        "luckbooster"
-                    ]
+                greenenvelope: [
+                    [2000, "gold", 50000],
+                    [1, "gold", 10000000],
+                    [300, "firecrackers"],
+                    [0.1, "dragondagger"],
+                    [0.3, "lmace"],
+                    [1, "oxhelmet"],
+                    [0.1, "cdragon"],
                 ],
-                "gift0": [
-                    [
-                        1,
-                        "ftrinket"
-                    ],
-                    [
-                        1,
-                        "poker"
-                    ],
-                    [
-                        0.5,
-                        "partyhat"
-                    ],
-                    [
-                        0.008,
-                        "mysterybox"
-                    ],
-                    [
-                        0.1,
-                        "cake"
-                    ],
-                    [
-                        0.5,
-                        "open",
-                        "armorx"
-                    ],
-                    [
-                        0.18,
-                        "scroll3"
-                    ]
-                ],
-                "goldenegg": [
-                    [
-                        100,
-                        "gold",
-                        1000000
-                    ],
-                    [
-                        10,
-                        "gold",
-                        10000000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        100000000
-                    ]
-                ],
-                "greenenvelope": [
-                    [
-                        2000,
-                        "gold",
-                        50000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        10000000
-                    ],
-                    [
-                        300,
-                        "firecrackers"
-                    ],
-                    [
-                        0.1,
-                        "dragondagger"
-                    ],
-                    [
-                        0.3,
-                        "lmace"
-                    ],
-                    [
-                        1,
-                        "oxhelmet"
-                    ],
-                    [
-                        0.1,
-                        "cdragon"
-                    ]
-                ],
-                "gemfragment": [
-                    [
-                        0.5,
-                        "gem0"
-                    ],
-                    [
-                        0.00001,
-                        "fury"
-                    ],
-                    [
-                        1,
-                        "t2stramulet"
-                    ],
-                    [
-                        1,
-                        "t2intamulet"
-                    ],
-                    [
-                        1,
-                        "t2dexamulet"
-                    ]
+                gemfragment: [
+                    [0.5, "gem0"],
+                    [0.00001, "fury"],
+                    [1, "t2stramulet"],
+                    [1, "t2intamulet"],
+                    [1, "t2dexamulet"],
                 ],
                 "5bucks": [
-                    [
-                        0.02,
-                        "5bucks",
-                        2
-                    ],
-                    [
-                        1,
-                        "shells",
-                        800
-                    ]
+                    [0.02, "5bucks", 2],
+                    [1, "shells", 800],
                 ],
-                "troll": [
-                    [
-                        100,
-                        "tshirt0"
-                    ],
-                    [
-                        100,
-                        "tshirt1"
-                    ],
-                    [
-                        100,
-                        "tshirt2"
-                    ],
-                    [
-                        20,
-                        "tshirt3"
-                    ],
-                    [
-                        10,
-                        "tshirt4"
-                    ],
-                    [
-                        0.1,
-                        "tshirt88"
-                    ],
-                    [
-                        1,
-                        "tshirt6"
-                    ],
-                    [
-                        1,
-                        "tshirt7"
-                    ],
-                    [
-                        0.8,
-                        "tshirt8"
-                    ],
-                    [
-                        0.8,
-                        "tshirt9"
-                    ],
-                    [
-                        0.0001,
-                        "luckyt"
-                    ]
+                troll: [
+                    [100, "tshirt0"],
+                    [100, "tshirt1"],
+                    [100, "tshirt2"],
+                    [20, "tshirt3"],
+                    [10, "tshirt4"],
+                    [0.1, "tshirt88"],
+                    [1, "tshirt6"],
+                    [1, "tshirt7"],
+                    [0.8, "tshirt8"],
+                    [0.8, "tshirt9"],
+                    [0.0001, "luckyt"],
                 ],
-                "redenvelopev2": [
-                    [
-                        2000,
-                        "gold",
-                        500000
-                    ],
-                    [
-                        2,
-                        "gold",
-                        10000000
-                    ],
-                    [
-                        3000,
-                        "firecrackers"
-                    ],
-                    [
-                        1,
-                        "dragondagger"
-                    ],
-                    [
-                        1,
-                        "cdragon"
-                    ]
+                redenvelopev2: [
+                    [2000, "gold", 500000],
+                    [2, "gold", 10000000],
+                    [3000, "firecrackers"],
+                    [1, "dragondagger"],
+                    [1, "cdragon"],
                 ],
-                "redenvelopev3": [
-                    [
-                        2000,
-                        "gold",
-                        50000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        10000000
-                    ],
-                    [
-                        300,
-                        "firecrackers"
-                    ],
-                    [
-                        0.1,
-                        "dragondagger"
-                    ],
-                    [
-                        1,
-                        "cdragon"
-                    ]
+                redenvelopev3: [
+                    [2000, "gold", 50000],
+                    [1, "gold", 10000000],
+                    [300, "firecrackers"],
+                    [0.1, "dragondagger"],
+                    [1, "cdragon"],
                 ],
-                "bugbountybox": [
-                    [
-                        1,
-                        "glitch"
-                    ]
+                bugbountybox: [[1, "glitch"]],
+                redenvelope: [
+                    [1000, "gold", 500000],
+                    [1, "gold", 100000000],
+                    [10, "cdragon"],
+                    [40, "puppyer"],
                 ],
-                "redenvelope": [
-                    [
-                        1000,
-                        "gold",
-                        500000
-                    ],
-                    [
-                        1,
-                        "gold",
-                        100000000
-                    ],
-                    [
-                        10,
-                        "cdragon"
-                    ],
-                    [
-                        40,
-                        "puppyer"
-                    ]
-                ]
             },
-            "max": {
-                "monsters": {
-                    "snowman": [
-                        5894.25766666663,
-                        "earthiverse"
-                    ],
-                    "cutebee": [
-                        115.20000000000002,
-                        "earthiverse"
-                    ],
-                    "mrgreen": [
-                        2280.5499999999984,
-                        "earthiverse"
-                    ],
-                    "squig": [
-                        2566998.4000000027,
-                        "earthMag"
-                    ],
-                    "fvampire": [
-                        11809.599999999638,
-                        "earthWar"
-                    ],
-                    "tinyp": [
-                        131.70000000000005,
-                        "earthiverse"
-                    ],
-                    "puppy1": [
-                        258.4999999999999,
-                        "earthWar"
-                    ],
-                    "puppy2": [
-                        234.29999999999995,
-                        "earthWar"
-                    ],
-                    "rooster": [
-                        104883.32499999771,
-                        "earthMer"
-                    ],
-                    "fireroamer": [
-                        199184.24999996467,
-                        "earthWar"
-                    ],
-                    "rat": [
-                        13050920.905350275,
-                        "earthiverse"
-                    ],
-                    "kitty3": [
-                        241.09999999999994,
-                        "earthWar"
-                    ],
-                    "boar": [
-                        41431.90277943857,
-                        "earthiverse"
-                    ],
-                    "skeletor": [
-                        5421.7999999998765,
-                        "earthiverse"
-                    ],
-                    "franky": [
-                        272.6334927783331,
-                        "earthPri"
-                    ],
-                    "croc": [
-                        4200367,
-                        "earthMag"
-                    ],
-                    "nerfedmummy": [
-                        548376.4000004063,
-                        "earthiverse"
-                    ],
-                    "target_ar900": [
-                        6,
-                        "earthMag"
-                    ],
-                    "goo": [
-                        2813209.599998535,
-                        "earthiverse"
-                    ],
-                    "target_r750": [
-                        1.6,
-                        "earthiverse"
-                    ],
-                    "poisio": [
-                        10712109.86206321,
-                        "earthiverse"
-                    ],
-                    "mrpumpkin": [
-                        5037.599999999942,
-                        "earthWar"
-                    ],
-                    "mummy": [
-                        887229.2637388692,
-                        "earthiverse"
-                    ],
-                    "kitty4": [
-                        242.69999999999993,
-                        "earthWar"
-                    ],
-                    "scorpion": [
-                        7794010.782667535,
-                        "earthiverse"
-                    ],
-                    "kitty1": [
-                        252.4999999999999,
-                        "earthWar"
-                    ],
-                    "frog": [
-                        12006.74999999984,
-                        "earthiverse"
-                    ],
-                    "kitty2": [
-                        249.6999999999999,
-                        "earthWar"
-                    ],
-                    "puppy4": [
-                        262.59999999999985,
-                        "earthWar"
-                    ],
-                    "greenfairy": [
-                        14,
-                        "earthMag2"
-                    ],
-                    "ent": [
-                        4,
-                        "earthiverse"
-                    ],
-                    "crab": [
-                        3240054.599997416,
-                        "earthiverse"
-                    ],
-                    "mvampire": [
-                        12068.522245833137,
-                        "earthWar"
-                    ],
-                    "plantoid": [
-                        5085.800000000016,
-                        "earthPri"
-                    ],
-                    "hen": [
-                        210436.6000000182,
-                        "earthMer"
-                    ],
-                    "redfairy": [
-                        4,
-                        "earthMag2"
-                    ],
-                    "mechagnome": [
-                        1362,
-                        "earthMag"
-                    ],
-                    "stoneworm": [
-                        2434122.099988118,
-                        "earthiverse"
-                    ],
-                    "porcupine": [
-                        3014057.8999810955,
-                        "earthiverse"
-                    ],
-                    "wabbit": [
-                        1730.569525000003,
-                        "earthiverse"
-                    ],
-                    "pinkgoo": [
-                        248.44,
-                        "earthPri"
-                    ],
-                    "squigtoad": [
-                        73989.60000000002,
-                        "earthMag"
-                    ],
-                    "phoenix": [
-                        38783.65000000243,
-                        "earthWar"
-                    ],
-                    "pppompom": [
-                        95500.31674687489,
-                        "earthiverse"
-                    ],
-                    "arcticbee": [
-                        7556169.050168094,
-                        "earthiverse"
-                    ],
-                    "bbpompom": [
-                        309907.9665313533,
-                        "earthiverse"
-                    ],
-                    "dragold": [
-                        1463.6000000000051,
-                        "earthPri"
-                    ],
-                    "jr": [
-                        2757.1000000000204,
-                        "earthiverse"
-                    ],
-                    "spider": [
-                        4477179.250000627,
-                        "earthiverse"
-                    ],
-                    "oneeye": [
-                        1663.700000000004,
-                        "earthiverse"
-                    ],
-                    "armadillo": [
-                        4524691.500000001,
-                        "earthMag2"
-                    ],
-                    "snake": [
-                        14083584.984868996,
-                        "earthiverse"
-                    ],
-                    "booboo": [
-                        26547.90000000163,
-                        "earthiverse"
-                    ],
-                    "osnake": [
-                        354188.44999996346,
-                        "earthiverse"
-                    ],
-                    "target_a750": [
-                        1,
-                        "earthMag"
-                    ],
-                    "bluefairy": [
-                        19,
-                        "earthMag2"
-                    ],
-                    "puppy3": [
-                        259.39999999999986,
-                        "earthWar"
-                    ],
-                    "bscorpion": [
-                        24764.27433732273,
-                        "earthPri"
-                    ],
-                    "greenjr": [
-                        1974.3500000000117,
-                        "earthiverse"
-                    ],
-                    "prat": [
-                        982236.2142391196,
-                        "earthiverse"
-                    ],
-                    "ghost": [
-                        247350.5168990925,
-                        "earthiverse"
-                    ],
-                    "bat": [
-                        2314472.3009083485,
-                        "earthiverse"
-                    ],
-                    "cgoo": [
-                        2259543.699995525,
-                        "earthiverse"
-                    ],
-                    "tortoise": [
-                        1520833.4999999998,
-                        "earthMag"
-                    ],
-                    "iceroamer": [
-                        1259295.2389677728,
-                        "earthiverse"
-                    ],
-                    "grinch": [
-                        179.74999999999997,
-                        "earthiverse"
-                    ],
-                    "crabx": [
-                        2002490.7575238096,
-                        "earthMag2"
-                    ],
-                    "xscorpion": [
-                        21081.34999999989,
-                        "earthiverse"
-                    ],
-                    "bee": [
-                        8113644.948331969,
-                        "earthiverse"
-                    ],
-                    "bigbird": [
-                        15414,
-                        "earthMag"
-                    ],
-                    "goldenbat": [
-                        68.85,
-                        "earthiverse"
-                    ],
-                    "mole": [
-                        373679,
-                        "earthMag"
-                    ],
-                    "wolf": [
-                        7989.949999999848,
-                        "earthWar"
-                    ],
-                    "wolfie": [
-                        22096.300000000247,
-                        "earthiverse"
-                    ],
-                    "target": [
-                        2,
-                        "earthMag"
-                    ],
-                    "minimush": [
-                        5475204.79998657,
-                        "earthiverse"
-                    ]
-                }
+            max: {
+                monsters: {
+                    snowman: [5894.25766666663, "earthiverse"],
+                    cutebee: [115.20000000000002, "earthiverse"],
+                    mrgreen: [2280.5499999999984, "earthiverse"],
+                    squig: [2566998.4000000027, "earthMag"],
+                    fvampire: [11809.599999999638, "earthWar"],
+                    tinyp: [131.70000000000005, "earthiverse"],
+                    puppy1: [258.4999999999999, "earthWar"],
+                    puppy2: [234.29999999999995, "earthWar"],
+                    rooster: [104883.32499999771, "earthMer"],
+                    fireroamer: [199184.24999996467, "earthWar"],
+                    rat: [13050920.905350275, "earthiverse"],
+                    kitty3: [241.09999999999994, "earthWar"],
+                    boar: [41431.90277943857, "earthiverse"],
+                    skeletor: [5421.7999999998765, "earthiverse"],
+                    franky: [272.6334927783331, "earthPri"],
+                    croc: [4200367, "earthMag"],
+                    nerfedmummy: [548376.4000004063, "earthiverse"],
+                    target_ar900: [6, "earthMag"],
+                    goo: [2813209.599998535, "earthiverse"],
+                    target_r750: [1.6, "earthiverse"],
+                    poisio: [10712109.86206321, "earthiverse"],
+                    mrpumpkin: [5037.599999999942, "earthWar"],
+                    mummy: [887229.2637388692, "earthiverse"],
+                    kitty4: [242.69999999999993, "earthWar"],
+                    scorpion: [7794010.782667535, "earthiverse"],
+                    kitty1: [252.4999999999999, "earthWar"],
+                    frog: [12006.74999999984, "earthiverse"],
+                    kitty2: [249.6999999999999, "earthWar"],
+                    puppy4: [262.59999999999985, "earthWar"],
+                    greenfairy: [14, "earthMag2"],
+                    ent: [4, "earthiverse"],
+                    crab: [3240054.599997416, "earthiverse"],
+                    mvampire: [12068.522245833137, "earthWar"],
+                    plantoid: [5085.800000000016, "earthPri"],
+                    hen: [210436.6000000182, "earthMer"],
+                    redfairy: [4, "earthMag2"],
+                    mechagnome: [1362, "earthMag"],
+                    stoneworm: [2434122.099988118, "earthiverse"],
+                    porcupine: [3014057.8999810955, "earthiverse"],
+                    wabbit: [1730.569525000003, "earthiverse"],
+                    pinkgoo: [248.44, "earthPri"],
+                    squigtoad: [73989.60000000002, "earthMag"],
+                    phoenix: [38783.65000000243, "earthWar"],
+                    pppompom: [95500.31674687489, "earthiverse"],
+                    arcticbee: [7556169.050168094, "earthiverse"],
+                    bbpompom: [309907.9665313533, "earthiverse"],
+                    dragold: [1463.6000000000051, "earthPri"],
+                    jr: [2757.1000000000204, "earthiverse"],
+                    spider: [4477179.250000627, "earthiverse"],
+                    oneeye: [1663.700000000004, "earthiverse"],
+                    armadillo: [4524691.500000001, "earthMag2"],
+                    snake: [14083584.984868996, "earthiverse"],
+                    booboo: [26547.90000000163, "earthiverse"],
+                    osnake: [354188.44999996346, "earthiverse"],
+                    target_a750: [1, "earthMag"],
+                    bluefairy: [19, "earthMag2"],
+                    puppy3: [259.39999999999986, "earthWar"],
+                    bscorpion: [24764.27433732273, "earthPri"],
+                    greenjr: [1974.3500000000117, "earthiverse"],
+                    prat: [982236.2142391196, "earthiverse"],
+                    ghost: [247350.5168990925, "earthiverse"],
+                    bat: [2314472.3009083485, "earthiverse"],
+                    cgoo: [2259543.699995525, "earthiverse"],
+                    tortoise: [1520833.4999999998, "earthMag"],
+                    iceroamer: [1259295.2389677728, "earthiverse"],
+                    grinch: [179.74999999999997, "earthiverse"],
+                    crabx: [2002490.7575238096, "earthMag2"],
+                    xscorpion: [21081.34999999989, "earthiverse"],
+                    bee: [8113644.948331969, "earthiverse"],
+                    bigbird: [15414, "earthMag"],
+                    goldenbat: [68.85, "earthiverse"],
+                    mole: [373679, "earthMag"],
+                    wolf: [7989.949999999848, "earthWar"],
+                    wolfie: [22096.300000000247, "earthiverse"],
+                    target: [2, "earthMag"],
+                    minimush: [5475204.79998657, "earthiverse"],
+                },
             },
-            "drops": {
-                "snowman": [
-                    [
-                        0.01,
-                        "iceskates"
-                    ],
-                    [
-                        0.05,
-                        "xmace"
-                    ],
-                    [
-                        0.3,
-                        "candycane"
-                    ],
-                    [
-                        0.2,
-                        "candycane"
-                    ],
-                    [
-                        0.1,
-                        "candycane"
-                    ],
-                    [
-                        0.1,
-                        "candycane"
-                    ],
-                    [
-                        0.1,
-                        "candycane"
-                    ],
-                    [
-                        0.1,
-                        "mistletoe"
-                    ],
-                    [
-                        0.00075,
-                        "offering"
-                    ],
-                    [
-                        1,
-                        "carrot"
-                    ],
-                    [
-                        1,
-                        "snowball"
-                    ],
-                    [
-                        1,
-                        "snowball"
-                    ]
-                ],
-                "scorpion": [
-                    [
-                        0.0006,
-                        "quiver"
-                    ],
-                    [
-                        0.00025,
-                        "sstinger"
-                    ]
-                ],
-                "cutebee": [
-                    [
-                        1,
-                        "open",
-                        "glitch"
-                    ],
-                    [
-                        1,
-                        "funtoken"
-                    ]
-                ],
-                "mrgreen": [
-                    [
-                        80,
-                        "candy0"
-                    ],
-                    [
-                        80,
-                        "candy1"
-                    ],
-                    [
-                        80,
-                        "candy1"
-                    ],
-                    [
-                        10,
-                        "gphelmet"
-                    ],
-                    [
-                        0.00001,
-                        "cxjar",
-                        1,
-                        "bathat"
-                    ],
-                    [
-                        0.01,
-                        "hdagger"
-                    ]
-                ],
-                "squig": [
-                    [
-                        0.012,
-                        "seashell"
-                    ],
-                    [
-                        0.00005,
-                        "ink"
-                    ]
-                ],
-                "tinyp": [
-                    [
-                        1,
-                        "offeringp"
-                    ]
-                ],
-                "oneeye": [
-                    [
-                        0.000002,
-                        "amuletofm"
-                    ],
-                    [
-                        3.3333333333333335e-7,
-                        "mpxbelt"
-                    ]
-                ],
-                "rooster": [
-                    [
-                        0.0001,
-                        "brownegg"
-                    ]
-                ],
-                "fireroamer": [
-                    [
-                        0.0006934812760055479,
-                        "orbofstr"
-                    ],
-                    [
-                        0.0006934812760055479,
-                        "orbofdex"
-                    ],
-                    [
-                        0.015625,
-                        "essenceoffire"
-                    ]
-                ],
-                "rat": [
-                    [
-                        0.002,
-                        "rattail"
-                    ]
-                ],
-                "vbat": [
-                    [
-                        0.5,
-                        "cearring"
-                    ],
-                    [
-                        0.5,
-                        "cring"
-                    ]
-                ],
-                "icegolem": [
-                    [
-                        5,
-                        "frozenkey"
-                    ]
-                ],
-                "boar": [
-                    [
-                        0.01,
-                        "leather"
-                    ]
-                ],
-                "skeletor": [
-                    [
-                        0.5,
-                        "gem1"
-                    ],
-                    [
-                        0.1,
-                        "gem1"
-                    ],
-                    [
-                        0.1,
-                        "gem1"
-                    ],
-                    [
-                        0.1,
-                        "gem1"
-                    ],
-                    [
-                        0.02,
-                        "weaponbox"
-                    ],
-                    [
-                        0.05,
-                        "armorbox"
-                    ],
-                    [
-                        0.01,
-                        "shadowstone"
-                    ],
-                    [
-                        0.0002,
-                        "scythe"
-                    ]
-                ],
-                "franky": [
-                    [
-                        30,
-                        "cryptkey"
-                    ],
-                    [
-                        20,
-                        "candy0"
-                    ],
-                    [
-                        20,
-                        "candy0"
-                    ],
-                    [
-                        20,
-                        "candy0"
-                    ],
-                    [
-                        20,
-                        "candy0"
-                    ],
-                    [
-                        200,
-                        "candy1"
-                    ],
-                    [
-                        200,
-                        "candy1"
-                    ],
-                    [
-                        200,
-                        "candy1"
-                    ],
-                    [
-                        200,
-                        "candy1"
-                    ],
-                    [
-                        10,
-                        "frankypants"
-                    ],
-                    [
-                        0.0005,
-                        "mpxgloves"
-                    ],
-                    [
-                        0.0002,
-                        "ukey"
-                    ],
-                    [
-                        0.000125,
-                        "cxjar",
-                        1,
-                        "marmor3h"
-                    ]
-                ],
-                "a7": [
-                    [
-                        1,
-                        "fieldgen0"
-                    ],
-                    [
-                        1,
-                        "oozingterror"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "mole": [
-                    [
-                        0.012,
-                        "gemfragment"
-                    ],
-                    [
-                        0.00002,
-                        "molesteeth"
-                    ]
-                ],
-                "a3": [
-                    [
-                        0.1,
-                        "vgloves"
-                    ],
-                    [
-                        0.005,
-                        "vhammer"
-                    ],
-                    [
-                        0.005,
-                        "vhammer"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "gscorpion": [
-                    [
-                        0.002,
-                        "quiver"
-                    ]
-                ],
-                "goo": [
-                    [
-                        1.25e-7,
-                        "shells",
-                        50
-                    ],
-                    [
-                        0.0002,
-                        "slimestaff"
-                    ],
-                    [
-                        0.001,
-                        "gslime"
-                    ]
-                ],
-                "poisio": [
-                    [
-                        0.0032,
-                        "poison"
-                    ],
-                    [
-                        0.0003333333333333333,
-                        "smush"
-                    ]
-                ],
-                "mrpumpkin": [
-                    [
-                        80,
-                        "candy0"
-                    ],
-                    [
-                        80,
-                        "candy1"
-                    ],
-                    [
-                        80,
-                        "candy1"
-                    ],
-                    [
-                        10,
-                        "phelmet"
-                    ],
-                    [
-                        0.00001,
-                        "cxjar",
-                        1,
-                        "gcandle"
-                    ],
-                    [
-                        0.00001,
-                        "cxjar",
-                        1,
-                        "breyes"
-                    ]
-                ],
-                "mummy": [
-                    [
-                        0.00025,
-                        "open",
-                        "weaponofthedead"
-                    ],
-                    [
-                        0.002,
-                        "bandages"
-                    ]
-                ],
-                "bscorpion": [
-                    [
-                        0.05,
-                        "offeringp"
-                    ]
-                ],
-                "dknight2": [
-                    [
-                        0.01,
-                        "shield"
-                    ],
-                    [
-                        0.0008,
-                        "fireblade"
-                    ]
-                ],
-                "rudolph": [
-                    [
-                        1,
-                        "coal"
-                    ],
-                    [
-                        1,
-                        "rednose"
-                    ],
-                    [
-                        1,
-                        "iceskates"
-                    ]
-                ],
-                "frog": [
-                    [
-                        0.16,
-                        "seashell"
-                    ],
-                    [
-                        0.00001,
-                        "5bucks"
-                    ],
-                    [
-                        0.0025,
-                        "lotusf"
-                    ]
-                ],
-                "croc": [
-                    [
-                        0.0009,
-                        "cscale"
-                    ]
-                ],
-                "wolfie": [
-                    [
-                        0.02,
-                        "leather"
-                    ]
-                ],
-                "greenfairy": [
-                    [
-                        1,
-                        "stick"
-                    ]
-                ],
-                "ent": [
-                    [
-                        1,
-                        "essenceofnature"
-                    ],
-                    [
-                        0.02,
-                        "woodensword"
-                    ],
-                    [
-                        0.00001,
-                        "stick"
-                    ],
-                    [
-                        0.000005,
-                        "nheart"
-                    ]
-                ],
-                "crab": [
-                    [
-                        2e-7,
-                        "suckerpunch"
-                    ],
-                    [
-                        0.005,
-                        "seashell"
-                    ],
-                    [
-                        0.001,
-                        "crabclaw"
-                    ],
-                    [
-                        0.00005,
-                        "cclaw"
-                    ]
-                ],
-                "mvampire": [
-                    [
-                        0.1,
-                        "intearring"
-                    ],
-                    [
-                        0.1,
-                        "strearring"
-                    ],
-                    [
-                        0.1,
-                        "dexearring"
-                    ],
-                    [
-                        0.05,
-                        "firestaff"
-                    ],
-                    [
-                        0.03,
-                        "mcape"
-                    ],
-                    [
-                        0.01,
-                        "forscroll"
-                    ],
-                    [
-                        0.0000025,
-                        "cxjar",
-                        1,
-                        "coolblueg"
-                    ],
-                    [
-                        0.0000125,
-                        "sanguine"
-                    ]
-                ],
-                "plantoid": [
-                    [
-                        0.004,
-                        "essenceofnature"
-                    ],
-                    [
-                        1e-7,
-                        "ringofluck"
-                    ]
-                ],
-                "hen": [
-                    [
-                        1,
-                        "whiteegg"
-                    ],
-                    [
-                        0.1,
-                        "whiteegg"
-                    ]
-                ],
-                "redfairy": [
-                    [
-                        1,
-                        "stick"
-                    ]
-                ],
-                "mechagnome": [
-                    [
-                        0.2,
-                        "electronics"
-                    ],
-                    [
-                        0.2,
-                        "electronics"
-                    ],
-                    [
-                        0.2,
-                        "electronics"
-                    ],
-                    [
-                        0.00001,
-                        "networkcard"
-                    ],
-                    [
-                        1e-7,
-                        "mpxamulet"
-                    ]
-                ],
-                "stoneworm": [
-                    [
-                        0.00008333333333333333,
-                        "swifty"
-                    ],
-                    [
-                        0.0033333333333333335,
-                        "dstones"
-                    ]
-                ],
-                "porcupine": [
-                    [
-                        0.001,
-                        "pleather"
-                    ],
-                    [
-                        0.0002,
-                        "hbow"
-                    ]
-                ],
-                "wabbit": [
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        10,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        1,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.9,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.8,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.2,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.2,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.2,
-                        "open",
-                        "eastereggs"
-                    ],
-                    [
-                        0.01,
-                        "goldenegg"
-                    ],
-                    [
-                        0.01,
-                        "open",
-                        "basketofeggs"
-                    ],
-                    [
-                        0.001,
-                        "emotionjar",
-                        1,
-                        "drop_egg"
-                    ]
-                ],
-                "pinkgoo": [
-                    [
-                        0.3,
-                        "cupid"
-                    ],
-                    [
-                        0.001,
-                        "emptyheart"
-                    ],
-                    [
-                        0.0005,
-                        "solitaire"
-                    ]
-                ],
-                "squigtoad": [
-                    [
-                        0.05,
-                        "seashell"
-                    ],
-                    [
-                        0.0025,
-                        "frogt"
-                    ]
-                ],
-                "phoenix": [
-                    [
-                        0.7,
-                        "vitscroll"
-                    ],
-                    [
-                        0.12,
-                        "intearring"
-                    ],
-                    [
-                        0.12,
-                        "strearring"
-                    ],
-                    [
-                        0.12,
-                        "dexearring"
-                    ],
-                    [
-                        0.12,
-                        "vitearring"
-                    ],
-                    [
-                        0.04,
-                        "firestaff"
-                    ],
-                    [
-                        0.04,
-                        "fireblade"
-                    ],
-                    [
-                        0.000008333333333333334,
-                        "fcape"
-                    ],
-                    [
-                        0.0016666666666666668,
-                        "offeringp"
-                    ],
-                    [
-                        1.5625e-8,
-                        "cxjar",
-                        1,
-                        "hairdo606"
-                    ]
-                ],
-                "pppompom": [
-                    [
-                        0.001,
-                        "orbofint"
-                    ],
-                    [
-                        0.001,
-                        "orbofvit"
-                    ]
-                ],
-                "arcticbee": [
-                    [
-                        0.00005,
-                        "essenceoffrost"
-                    ],
-                    [
-                        0.001,
-                        "bfur"
-                    ]
-                ],
-                "bbpompom": [
-                    [
-                        0.0004,
-                        "essenceoffrost"
-                    ],
-                    [
-                        0.006,
-                        "lspores"
-                    ],
-                    [
-                        0.000001,
-                        "cxjar",
-                        1,
-                        "hat407"
-                    ],
-                    [
-                        5e-8,
-                        "cxjar",
-                        1,
-                        "hat406"
-                    ]
-                ],
-                "dragold": [
-                    [
-                        2,
-                        "goldenegg"
-                    ],
-                    [
-                        2,
-                        "goldenegg"
-                    ],
-                    [
-                        2,
-                        "goldenegg"
-                    ],
-                    [
-                        50,
-                        "essenceoffire"
-                    ],
-                    [
-                        40,
-                        "essenceoffire"
-                    ],
-                    [
-                        30,
-                        "essenceoffire"
-                    ],
-                    [
-                        20,
-                        "essenceoffire"
-                    ],
-                    [
-                        10,
-                        "essenceoffire"
-                    ],
-                    [
-                        10,
-                        "essenceoffire"
-                    ],
-                    [
-                        0.1,
-                        "offering"
-                    ],
-                    [
-                        0.3,
-                        "lmace"
-                    ],
-                    [
-                        2.5e-7,
-                        "cxjar",
-                        1,
-                        "hat400"
-                    ],
-                    [
-                        1.6666666666666665e-7,
-                        "chrysalis0"
-                    ]
-                ],
-                "jr": [
-                    [
-                        0.1,
-                        "candy0"
-                    ],
-                    [
-                        0.1,
-                        "candy1"
-                    ],
-                    [
-                        1,
-                        "pstem"
-                    ],
-                    [
-                        0.001,
-                        "hdagger"
-                    ]
-                ],
-                "spider": [
-                    [
-                        0.001,
-                        "spidersilk"
-                    ],
-                    [
-                        0.000002,
-                        "offeringp"
-                    ]
-                ],
-                "a1": [
-                    [
-                        0.00005,
-                        "vring"
-                    ],
-                    [
-                        0.0005,
-                        "vorb"
-                    ],
-                    [
-                        0.001,
-                        "vcape"
-                    ],
-                    [
-                        0.1,
-                        "vattire"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "stompy": [
-                    [
-                        1,
-                        "leather"
-                    ],
-                    [
-                        1,
-                        "leather"
-                    ],
-                    [
-                        1,
-                        "leather"
-                    ],
-                    [
-                        1,
-                        "leather"
-                    ],
-                    [
-                        0.002,
-                        "snring"
-                    ]
-                ],
-                "a2": [
-                    [
-                        0.00005,
-                        "vring"
-                    ],
-                    [
-                        0.0005,
-                        "cxjar",
-                        1,
-                        "hairdo607"
-                    ],
-                    [
-                        0.005,
-                        "vdagger"
-                    ],
-                    [
-                        0.005,
-                        "vdagger"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "armadillo": [
-                    [
-                        0.00005,
-                        "sshield"
-                    ],
-                    [
-                        0.0008,
-                        "ascale"
-                    ]
-                ],
-                "snake": [
-                    [
-                        0.00001,
-                        "snakeoil"
-                    ]
-                ],
-                "booboo": [
-                    [
-                        0.005,
-                        "essenceofether"
-                    ],
-                    [
-                        0.00005,
-                        "ectoplasm"
-                    ]
-                ],
-                "osnake": [
-                    [
-                        0.0001,
-                        "snakeoil"
-                    ],
-                    [
-                        0.0005,
-                        "snakefang"
-                    ]
-                ],
-                "xmagex": [
-                    [
-                        0.02,
-                        "zapper"
-                    ],
-                    [
-                        0.0002,
-                        "trigger"
-                    ],
-                    [
-                        0.002,
-                        "mpxamulet"
-                    ],
-                    [
-                        0.002,
-                        "mpxgloves"
-                    ],
-                    [
-                        0.000005,
-                        "warpvest"
-                    ],
-                    [
-                        0.002,
-                        "starkillers"
-                    ]
-                ],
-                "a8": [
-                    [
-                        0.1,
-                        "vgloves"
-                    ],
-                    [
-                        0.01,
-                        "vstaff"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "bluefairy": [
-                    [
-                        1,
-                        "stick"
-                    ]
-                ],
-                "fvampire": [
-                    [
-                        0.3,
-                        "open",
-                        "statamulet"
-                    ],
-                    [
-                        0.04,
-                        "firestaff"
-                    ],
-                    [
-                        0.01,
-                        "mcape"
-                    ],
-                    [
-                        0.01,
-                        "armorbox"
-                    ],
-                    [
-                        0.01,
-                        "forscroll"
-                    ],
-                    [
-                        0.000005,
-                        "cxjar",
-                        1,
-                        "catbatg"
-                    ],
-                    [
-                        0.025,
-                        "offeringp"
-                    ],
-                    [
-                        0.00002,
-                        "sanguine"
-                    ]
-                ],
-                "greenjr": [
-                    [
-                        0.1,
-                        "candy0"
-                    ],
-                    [
-                        0.1,
-                        "candy1"
-                    ],
-                    [
-                        0.001,
-                        "bcandle"
-                    ],
-                    [
-                        0.001,
-                        "hdagger"
-                    ]
-                ],
-                "prat": [
-                    [
-                        0.000008,
-                        "platinumnugget"
-                    ],
-                    [
-                        0.005,
-                        "rfangs"
-                    ]
-                ],
-                "ghost": [
-                    [
-                        0.0002,
-                        "pmace"
-                    ]
-                ],
-                "bat": [
-                    [
-                        0.004,
-                        "wbook0"
-                    ],
-                    [
-                        0.005,
-                        "bwing"
-                    ],
-                    [
-                        1e-8,
-                        "cxjar",
-                        1,
-                        "wings102"
-                    ]
-                ],
-                "cgoo": [
-                    [
-                        0.008,
-                        "gem1"
-                    ],
-                    [
-                        0.00008,
-                        "shadowstone"
-                    ],
-                    [
-                        0.00005,
-                        "ijx"
-                    ]
-                ],
-                "tortoise": [
-                    [
-                        0.0002,
-                        "shield"
-                    ],
-                    [
-                        0.001,
-                        "seashell"
-                    ]
-                ],
-                "iceroamer": [
-                    [
-                        0.0001,
-                        "essenceoffrost"
-                    ],
-                    [
-                        0.00001,
-                        "frozenkey"
-                    ]
-                ],
-                "a6": [
-                    [
-                        0.1,
-                        "mbelt"
-                    ],
-                    [
-                        0.005,
-                        "cyber"
-                    ],
-                    [
-                        0.00005,
-                        "cxjar",
-                        1,
-                        "mask105"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "grinch": [
-                    [
-                        0.006,
-                        "ringofluck"
-                    ],
-                    [
-                        100,
-                        "gcape"
-                    ],
-                    [
-                        0.0001,
-                        "northstar"
-                    ],
-                    [
-                        0.0001,
-                        "dkey"
-                    ],
-                    [
-                        10,
-                        "iceskates"
-                    ]
-                ],
-                "crabx": [
-                    [
-                        4e-7,
-                        "suckerpunch"
-                    ],
-                    [
-                        0.02,
-                        "seashell"
-                    ],
-                    [
-                        0.002,
-                        "cclaw"
-                    ],
-                    [
-                        0.0001,
-                        "cshell"
-                    ]
-                ],
-                "xscorpion": [
-                    [
-                        0.0024,
-                        "quiver"
-                    ],
-                    [
-                        0.00024,
-                        "vitscroll"
-                    ],
-                    [
-                        0.000002,
-                        "glitch"
-                    ],
-                    [
-                        0.00008,
-                        "svenom"
-                    ]
-                ],
-                "bee": [
-                    [
-                        0.01,
-                        "beewings"
-                    ],
-                    [
-                        0.00016666666666666666,
-                        "stinger"
-                    ]
-                ],
-                "bigbird": [
-                    [
-                        0.05,
-                        "feather0"
-                    ]
-                ],
-                "goldenbat": [
-                    [
-                        0.8,
-                        "handofmidas"
-                    ],
-                    [
-                        1,
-                        "bataxe"
-                    ],
-                    [
-                        0.01,
-                        "bfang"
-                    ]
-                ],
-                "wolf": [
-                    [
-                        0.025,
-                        "leather"
-                    ]
-                ],
-                "target_ar500red": [
-                    [
-                        1,
-                        "shadowstone"
-                    ],
-                    [
-                        0.5,
-                        "shadowstone"
-                    ],
-                    [
-                        0.25,
-                        "shadowstone"
-                    ],
-                    [
-                        0.125,
-                        "shadowstone"
-                    ],
-                    [
-                        0.0625,
-                        "shadowstone"
-                    ]
-                ],
-                "a5": [
-                    [
-                        0.1,
-                        "vboots"
-                    ],
-                    [
-                        0.0005,
-                        "cxjar",
-                        1,
-                        "hairdo608"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ],
-                "pinkgoblin": [
-                    [
-                        0.000041666666666666665,
-                        "bkey"
-                    ]
-                ],
-                "minimush": [
-                    [
-                        0.016666666666666666,
-                        "spores"
-                    ],
-                    [
-                        0.0002,
-                        "mushroomstaff"
-                    ],
-                    [
-                        1.1111111111111111e-7,
-                        "cxjar",
-                        1,
-                        "hat407"
-                    ],
-                    [
-                        1.6666666666666667e-8,
-                        "cxjar",
-                        1,
-                        "hat406"
-                    ]
-                ],
-                "a4": [
-                    [
-                        0.001,
-                        "vorb"
-                    ],
-                    [
-                        0.005,
-                        "cyber"
-                    ],
-                    [
-                        0.00005,
-                        "cxjar",
-                        1,
-                        "mask104"
-                    ],
-                    [
-                        0.001,
-                        "vblood"
-                    ]
-                ]
+            drops: {
+                snowman: [
+                    [0.01, "iceskates"],
+                    [0.05, "xmace"],
+                    [0.3, "candycane"],
+                    [0.2, "candycane"],
+                    [0.1, "candycane"],
+                    [0.1, "candycane"],
+                    [0.1, "candycane"],
+                    [0.1, "mistletoe"],
+                    [0.00075, "offering"],
+                    [1, "carrot"],
+                    [1, "snowball"],
+                    [1, "snowball"],
+                ],
+                scorpion: [
+                    [0.0006, "quiver"],
+                    [0.00025, "sstinger"],
+                ],
+                cutebee: [
+                    [1, "open", "glitch"],
+                    [1, "funtoken"],
+                ],
+                mrgreen: [
+                    [80, "candy0"],
+                    [80, "candy1"],
+                    [80, "candy1"],
+                    [10, "gphelmet"],
+                    [0.00001, "cxjar", 1, "bathat"],
+                    [0.01, "hdagger"],
+                ],
+                squig: [
+                    [0.012, "seashell"],
+                    [0.00005, "ink"],
+                ],
+                tinyp: [[1, "offeringp"]],
+                oneeye: [
+                    [0.000002, "amuletofm"],
+                    [3.3333333333333335e-7, "mpxbelt"],
+                ],
+                rooster: [[0.0001, "brownegg"]],
+                fireroamer: [
+                    [0.0006934812760055479, "orbofstr"],
+                    [0.0006934812760055479, "orbofdex"],
+                    [0.015625, "essenceoffire"],
+                ],
+                rat: [[0.002, "rattail"]],
+                vbat: [
+                    [0.5, "cearring"],
+                    [0.5, "cring"],
+                ],
+                icegolem: [[5, "frozenkey"]],
+                boar: [[0.01, "leather"]],
+                skeletor: [
+                    [0.5, "gem1"],
+                    [0.1, "gem1"],
+                    [0.1, "gem1"],
+                    [0.1, "gem1"],
+                    [0.02, "weaponbox"],
+                    [0.05, "armorbox"],
+                    [0.01, "shadowstone"],
+                    [0.0002, "scythe"],
+                ],
+                franky: [
+                    [30, "cryptkey"],
+                    [20, "candy0"],
+                    [20, "candy0"],
+                    [20, "candy0"],
+                    [20, "candy0"],
+                    [200, "candy1"],
+                    [200, "candy1"],
+                    [200, "candy1"],
+                    [200, "candy1"],
+                    [10, "frankypants"],
+                    [0.0005, "mpxgloves"],
+                    [0.0002, "ukey"],
+                    [0.000125, "cxjar", 1, "marmor3h"],
+                ],
+                a7: [
+                    [1, "fieldgen0"],
+                    [1, "oozingterror"],
+                    [0.001, "vblood"],
+                ],
+                mole: [
+                    [0.012, "gemfragment"],
+                    [0.00002, "molesteeth"],
+                ],
+                a3: [
+                    [0.1, "vgloves"],
+                    [0.005, "vhammer"],
+                    [0.005, "vhammer"],
+                    [0.001, "vblood"],
+                ],
+                gscorpion: [[0.002, "quiver"]],
+                goo: [
+                    [1.25e-7, "shells", 50],
+                    [0.0002, "slimestaff"],
+                    [0.001, "gslime"],
+                ],
+                poisio: [
+                    [0.0032, "poison"],
+                    [0.0003333333333333333, "smush"],
+                ],
+                mrpumpkin: [
+                    [80, "candy0"],
+                    [80, "candy1"],
+                    [80, "candy1"],
+                    [10, "phelmet"],
+                    [0.00001, "cxjar", 1, "gcandle"],
+                    [0.00001, "cxjar", 1, "breyes"],
+                ],
+                mummy: [
+                    [0.00025, "open", "weaponofthedead"],
+                    [0.002, "bandages"],
+                ],
+                bscorpion: [[0.05, "offeringp"]],
+                dknight2: [
+                    [0.01, "shield"],
+                    [0.0008, "fireblade"],
+                ],
+                rudolph: [
+                    [1, "coal"],
+                    [1, "rednose"],
+                    [1, "iceskates"],
+                ],
+                frog: [
+                    [0.16, "seashell"],
+                    [0.00001, "5bucks"],
+                    [0.0025, "lotusf"],
+                ],
+                croc: [[0.0009, "cscale"]],
+                wolfie: [[0.02, "leather"]],
+                greenfairy: [[1, "stick"]],
+                ent: [
+                    [1, "essenceofnature"],
+                    [0.02, "woodensword"],
+                    [0.00001, "stick"],
+                    [0.000005, "nheart"],
+                ],
+                crab: [
+                    [2e-7, "suckerpunch"],
+                    [0.005, "seashell"],
+                    [0.001, "crabclaw"],
+                    [0.00005, "cclaw"],
+                ],
+                mvampire: [
+                    [0.1, "intearring"],
+                    [0.1, "strearring"],
+                    [0.1, "dexearring"],
+                    [0.05, "firestaff"],
+                    [0.03, "mcape"],
+                    [0.01, "forscroll"],
+                    [0.0000025, "cxjar", 1, "coolblueg"],
+                    [0.0000125, "sanguine"],
+                ],
+                plantoid: [
+                    [0.004, "essenceofnature"],
+                    [1e-7, "ringofluck"],
+                ],
+                hen: [
+                    [1, "whiteegg"],
+                    [0.1, "whiteegg"],
+                ],
+                redfairy: [[1, "stick"]],
+                mechagnome: [
+                    [0.2, "electronics"],
+                    [0.2, "electronics"],
+                    [0.2, "electronics"],
+                    [0.00001, "networkcard"],
+                    [1e-7, "mpxamulet"],
+                ],
+                stoneworm: [
+                    [0.00008333333333333333, "swifty"],
+                    [0.0033333333333333335, "dstones"],
+                ],
+                porcupine: [
+                    [0.001, "pleather"],
+                    [0.0002, "hbow"],
+                ],
+                wabbit: [
+                    [10, "open", "eastereggs"],
+                    [10, "open", "eastereggs"],
+                    [10, "open", "eastereggs"],
+                    [10, "open", "eastereggs"],
+                    [10, "open", "eastereggs"],
+                    [10, "open", "eastereggs"],
+                    [1, "open", "eastereggs"],
+                    [0.9, "open", "eastereggs"],
+                    [0.8, "open", "eastereggs"],
+                    [0.2, "open", "eastereggs"],
+                    [0.2, "open", "eastereggs"],
+                    [0.2, "open", "eastereggs"],
+                    [0.01, "goldenegg"],
+                    [0.01, "open", "basketofeggs"],
+                    [0.001, "emotionjar", 1, "drop_egg"],
+                ],
+                pinkgoo: [
+                    [0.3, "cupid"],
+                    [0.001, "emptyheart"],
+                    [0.0005, "solitaire"],
+                ],
+                squigtoad: [
+                    [0.05, "seashell"],
+                    [0.0025, "frogt"],
+                ],
+                phoenix: [
+                    [0.7, "vitscroll"],
+                    [0.12, "intearring"],
+                    [0.12, "strearring"],
+                    [0.12, "dexearring"],
+                    [0.12, "vitearring"],
+                    [0.04, "firestaff"],
+                    [0.04, "fireblade"],
+                    [0.000008333333333333334, "fcape"],
+                    [0.0016666666666666668, "offeringp"],
+                    [1.5625e-8, "cxjar", 1, "hairdo606"],
+                ],
+                pppompom: [
+                    [0.001, "orbofint"],
+                    [0.001, "orbofvit"],
+                ],
+                arcticbee: [
+                    [0.00005, "essenceoffrost"],
+                    [0.001, "bfur"],
+                ],
+                bbpompom: [
+                    [0.0004, "essenceoffrost"],
+                    [0.006, "lspores"],
+                    [0.000001, "cxjar", 1, "hat407"],
+                    [5e-8, "cxjar", 1, "hat406"],
+                ],
+                dragold: [
+                    [2, "goldenegg"],
+                    [2, "goldenegg"],
+                    [2, "goldenegg"],
+                    [50, "essenceoffire"],
+                    [40, "essenceoffire"],
+                    [30, "essenceoffire"],
+                    [20, "essenceoffire"],
+                    [10, "essenceoffire"],
+                    [10, "essenceoffire"],
+                    [0.1, "offering"],
+                    [0.3, "lmace"],
+                    [2.5e-7, "cxjar", 1, "hat400"],
+                    [1.6666666666666665e-7, "chrysalis0"],
+                ],
+                jr: [
+                    [0.1, "candy0"],
+                    [0.1, "candy1"],
+                    [1, "pstem"],
+                    [0.001, "hdagger"],
+                ],
+                spider: [
+                    [0.001, "spidersilk"],
+                    [0.000002, "offeringp"],
+                ],
+                a1: [
+                    [0.00005, "vring"],
+                    [0.0005, "vorb"],
+                    [0.001, "vcape"],
+                    [0.1, "vattire"],
+                    [0.001, "vblood"],
+                ],
+                stompy: [
+                    [1, "leather"],
+                    [1, "leather"],
+                    [1, "leather"],
+                    [1, "leather"],
+                    [0.002, "snring"],
+                ],
+                a2: [
+                    [0.00005, "vring"],
+                    [0.0005, "cxjar", 1, "hairdo607"],
+                    [0.005, "vdagger"],
+                    [0.005, "vdagger"],
+                    [0.001, "vblood"],
+                ],
+                armadillo: [
+                    [0.00005, "sshield"],
+                    [0.0008, "ascale"],
+                ],
+                snake: [[0.00001, "snakeoil"]],
+                booboo: [
+                    [0.005, "essenceofether"],
+                    [0.00005, "ectoplasm"],
+                ],
+                osnake: [
+                    [0.0001, "snakeoil"],
+                    [0.0005, "snakefang"],
+                ],
+                xmagex: [
+                    [0.02, "zapper"],
+                    [0.0002, "trigger"],
+                    [0.002, "mpxamulet"],
+                    [0.002, "mpxgloves"],
+                    [0.000005, "warpvest"],
+                    [0.002, "starkillers"],
+                ],
+                a8: [
+                    [0.1, "vgloves"],
+                    [0.01, "vstaff"],
+                    [0.001, "vblood"],
+                ],
+                bluefairy: [[1, "stick"]],
+                fvampire: [
+                    [0.3, "open", "statamulet"],
+                    [0.04, "firestaff"],
+                    [0.01, "mcape"],
+                    [0.01, "armorbox"],
+                    [0.01, "forscroll"],
+                    [0.000005, "cxjar", 1, "catbatg"],
+                    [0.025, "offeringp"],
+                    [0.00002, "sanguine"],
+                ],
+                greenjr: [
+                    [0.1, "candy0"],
+                    [0.1, "candy1"],
+                    [0.001, "bcandle"],
+                    [0.001, "hdagger"],
+                ],
+                prat: [
+                    [0.000008, "platinumnugget"],
+                    [0.005, "rfangs"],
+                ],
+                ghost: [[0.0002, "pmace"]],
+                bat: [
+                    [0.004, "wbook0"],
+                    [0.005, "bwing"],
+                    [1e-8, "cxjar", 1, "wings102"],
+                ],
+                cgoo: [
+                    [0.008, "gem1"],
+                    [0.00008, "shadowstone"],
+                    [0.00005, "ijx"],
+                ],
+                tortoise: [
+                    [0.0002, "shield"],
+                    [0.001, "seashell"],
+                ],
+                iceroamer: [
+                    [0.0001, "essenceoffrost"],
+                    [0.00001, "frozenkey"],
+                ],
+                a6: [
+                    [0.1, "mbelt"],
+                    [0.005, "cyber"],
+                    [0.00005, "cxjar", 1, "mask105"],
+                    [0.001, "vblood"],
+                ],
+                grinch: [
+                    [0.006, "ringofluck"],
+                    [100, "gcape"],
+                    [0.0001, "northstar"],
+                    [0.0001, "dkey"],
+                    [10, "iceskates"],
+                ],
+                crabx: [
+                    [4e-7, "suckerpunch"],
+                    [0.02, "seashell"],
+                    [0.002, "cclaw"],
+                    [0.0001, "cshell"],
+                ],
+                xscorpion: [
+                    [0.0024, "quiver"],
+                    [0.00024, "vitscroll"],
+                    [0.000002, "glitch"],
+                    [0.00008, "svenom"],
+                ],
+                bee: [
+                    [0.01, "beewings"],
+                    [0.00016666666666666666, "stinger"],
+                ],
+                bigbird: [[0.05, "feather0"]],
+                goldenbat: [
+                    [0.8, "handofmidas"],
+                    [1, "bataxe"],
+                    [0.01, "bfang"],
+                ],
+                wolf: [[0.025, "leather"]],
+                target_ar500red: [
+                    [1, "shadowstone"],
+                    [0.5, "shadowstone"],
+                    [0.25, "shadowstone"],
+                    [0.125, "shadowstone"],
+                    [0.0625, "shadowstone"],
+                ],
+                a5: [
+                    [0.1, "vboots"],
+                    [0.0005, "cxjar", 1, "hairdo608"],
+                    [0.001, "vblood"],
+                ],
+                pinkgoblin: [[0.000041666666666666665, "bkey"]],
+                minimush: [
+                    [0.016666666666666666, "spores"],
+                    [0.0002, "mushroomstaff"],
+                    [1.1111111111111111e-7, "cxjar", 1, "hat407"],
+                    [1.6666666666666667e-8, "cxjar", 1, "hat406"],
+                ],
+                a4: [
+                    [0.001, "vorb"],
+                    [0.005, "cyber"],
+                    [0.00005, "cxjar", 1, "mask104"],
+                    [0.001, "vblood"],
+                ],
             },
-            "global": [],
-            "global_static": []
-        }
+            global: [],
+            global_static: [],
+        },
     ]
     for (const report of reports) expect(report).toBeDefined()
 })

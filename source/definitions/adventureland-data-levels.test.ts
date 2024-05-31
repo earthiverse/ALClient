@@ -8,7 +8,7 @@ import { GData } from "./adventureland-data"
 
 test("G.levels type validation", async () => {
     const G_levels: Pick<GData, "levels"> = {
-        "levels": {
+        levels: {
             "1": 200,
             "2": 250,
             "3": 310,
@@ -208,8 +208,8 @@ test("G.levels type validation", async () => {
             "197": 720000000000000,
             "198": 790000000000000,
             "199": 860000000000000,
-            "200": 940000000000000
-        }
+            "200": 940000000000000,
+        },
     }
     expect(G_levels).toBeDefined()
 })

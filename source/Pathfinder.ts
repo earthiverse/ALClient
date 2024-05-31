@@ -26,7 +26,7 @@ export class Pathfinder {
      * @param a The position to check the distance to the door
      * @param b The door's information (G.maps[mapName].doors[doorNum])
      */
-    public static doorDistanceSquared(a: { x: number, y: number, map?: MapName }, b: DoorInfo): number {
+    public static doorDistanceSquared(a: { x: number; y: number; map?: MapName }, b: DoorInfo): number {
         const b_x = b[0]
         const b_y = b[1]
         const halfWidth = b[2] / 2
@@ -38,13 +38,16 @@ export class Pathfinder {
                 if (a.x <= b_x + halfWidth && a.y <= b_y) return 0
 
                 // Check top right
-                return ((a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth))) + ((a.y - b_y) * (a.y - b_y))
+                return (a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth)) + (a.y - b_y) * (a.y - b_y)
             } else {
                 // Check inside door
                 if (a.x <= b_x + halfWidth && a.y >= b_y) return 0
 
                 // Check bottom right
-                return ((a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth))) + ((a.y - (b_y - height)) * (a.y - (b_y - height)))
+                return (
+                    (a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth)) +
+                    (a.y - (b_y - height)) * (a.y - (b_y - height))
+                )
             }
         } else {
             if (a.y >= b_y - height / 2) {
@@ -52,13 +55,16 @@ export class Pathfinder {
                 if (a.x >= b_x - halfWidth && a.y <= b_y) return 0
 
                 // Check top left
-                return ((a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth))) + ((a.y - b_y) * (a.y - b_y))
+                return (a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth)) + (a.y - b_y) * (a.y - b_y)
             } else {
                 // Check inside door
                 if (a.x >= b_x - halfWidth && a.y >= b_y) return 0
 
                 // Check bottom left
-                return ((a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth))) + ((a.y - (b_y - height)) * (a.y - (b_y - height)))
+                return (
+                    (a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth)) +
+                    (a.y - (b_y - height)) * (a.y - (b_y - height))
+                )
             }
         }
     }
@@ -114,7 +120,8 @@ export class Pathfinder {
         let xStep, yStep // the step on y and x axis
         let error // the error accumulated during the increment
         let errorPrev // *vision the previous value of the error variable
-        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x, y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
+        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x,
+            y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
@@ -135,21 +142,27 @@ export class Pathfinder {
         const ddy = 2 * dy
         const ddx = 2 * dx
 
-        if (ddx >= ddy) { // first octant (0 <= slope <= 1)
+        if (ddx >= ddy) {
+            // first octant (0 <= slope <= 1)
             // compulsory initialization (even for errorPrev, needed when dx==dy)
             errorPrev = error = dx // start in the middle of the square
-            for (let i = 0; i < dx; i++) { // do not use the first point (already done)
+            for (let i = 0; i < dx; i++) {
+                // do not use the first point (already done)
                 x += xStep
                 error += ddy
-                if (error > ddx) { // increment y if AFTER the middle ( > )
+                if (error > ddx) {
+                    // increment y if AFTER the middle ( > )
                     y += yStep
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
-                    if (error + errorPrev < ddx) { // bottom square also
+                    if (error + errorPrev < ddx) {
+                        // bottom square also
                         if (grid[(y - yStep) * width + x] !== WALKABLE) return false
-                    } else if (error + errorPrev > ddx) { // left square also
+                    } else if (error + errorPrev > ddx) {
+                        // left square also
                         if (grid[y * width + x - xStep] !== WALKABLE) return false
-                    } else { // corner: bottom and left squares also
+                    } else {
+                        // corner: bottom and left squares also
                         if (grid[(y - yStep) * width + x] !== WALKABLE) return false
                         if (grid[y * width + x - xStep] !== WALKABLE) return false
                     }
@@ -157,7 +170,8 @@ export class Pathfinder {
                 if (grid[y * width + x] !== WALKABLE) return false
                 errorPrev = error
             }
-        } else { // the same as above
+        } else {
+            // the same as above
             errorPrev = error = dy
             for (let i = 0; i < dy; i++) {
                 y += yStep
@@ -203,9 +217,12 @@ export class Pathfinder {
         if (from.map == to.map) return Math.hypot(from.x - to.x, from.y - to.y)
     }
 
-    public static computePathCost(path: LinkData[], options: PathfinderOptions = {
-        avoidTownWarps: false
-    }): number {
+    public static computePathCost(
+        path: LinkData[],
+        options: PathfinderOptions = {
+            avoidTownWarps: false,
+        },
+    ): number {
         let cost = 0
         let current: LinkData = path[0]
         for (let i = 1; i < path.length; i++) {
@@ -235,8 +252,16 @@ export class Pathfinder {
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
-            for (let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - base.vn); y <= yLine[0] - this.G.geometry[map].min_y + base.v && y < height; y++) {
-                for (let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - base.h); x <= yLine[2] - this.G.geometry[map].min_x + base.h && x < width; x++) {
+            for (
+                let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - base.vn);
+                y <= yLine[0] - this.G.geometry[map].min_y + base.v && y < height;
+                y++
+            ) {
+                for (
+                    let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - base.h);
+                    x <= yLine[2] - this.G.geometry[map].min_x + base.h && x < width;
+                    x++
+                ) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
@@ -244,8 +269,16 @@ export class Pathfinder {
 
         // Make the x_lines unwalkable
         for (const xLine of this.G.geometry[map].x_lines) {
-            for (let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - base.h); x <= xLine[0] - this.G.geometry[map].min_x + base.h && x < width; x++) {
-                for (let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - base.vn); y <= xLine[2] - this.G.geometry[map].min_y + base.v && y < height; y++) {
+            for (
+                let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - base.h);
+                x <= xLine[0] - this.G.geometry[map].min_x + base.h && x < width;
+                x++
+            ) {
+                for (
+                    let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - base.vn);
+                    y <= xLine[2] - this.G.geometry[map].min_y + base.v && y < height;
+                    y++
+                ) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
@@ -258,7 +291,7 @@ export class Pathfinder {
             if (grid[y * width + x] === WALKABLE) continue // We've already flood filled this
             const stack = [[y, x]]
             while (stack.length) {
-                [y, x] = stack.pop()
+                ;[y, x] = stack.pop()
                 while (x >= 0 && grid[y * width + x] == UNKNOWN) x--
                 x++
                 let spanAbove = 0
@@ -311,59 +344,59 @@ export class Pathfinder {
                 const mapX = x + this.G.geometry[map].min_x
                 const mapY = y + this.G.geometry[map].min_y
 
-                if (bL === UNWALKABLE
-                    && bC === UNWALKABLE
-                    && bR === UNWALKABLE
-                    && mL === UNWALKABLE
-                    && uL === UNWALKABLE) {
+                if (
+                    bL === UNWALKABLE &&
+                    bC === UNWALKABLE &&
+                    bR === UNWALKABLE &&
+                    mL === UNWALKABLE &&
+                    uL === UNWALKABLE
+                ) {
                     // Inside-1
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (bL === UNWALKABLE
-                    && bC === UNWALKABLE
-                    && bR === UNWALKABLE
-                    && mR === UNWALKABLE
-                    && uR === UNWALKABLE) {
+                } else if (
+                    bL === UNWALKABLE &&
+                    bC === UNWALKABLE &&
+                    bR === UNWALKABLE &&
+                    mR === UNWALKABLE &&
+                    uR === UNWALKABLE
+                ) {
                     // Inside-2
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (bR === UNWALKABLE
-                    && mR === UNWALKABLE
-                    && uL === UNWALKABLE
-                    && uC === UNWALKABLE
-                    && uR === UNWALKABLE) {
+                } else if (
+                    bR === UNWALKABLE &&
+                    mR === UNWALKABLE &&
+                    uL === UNWALKABLE &&
+                    uC === UNWALKABLE &&
+                    uR === UNWALKABLE
+                ) {
                     // Inside-3
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (bL === UNWALKABLE
-                    && mL === UNWALKABLE
-                    && uL === UNWALKABLE
-                    && uC === UNWALKABLE
-                    && uR === UNWALKABLE) {
+                } else if (
+                    bL === UNWALKABLE &&
+                    mL === UNWALKABLE &&
+                    uL === UNWALKABLE &&
+                    uC === UNWALKABLE &&
+                    uR === UNWALKABLE
+                ) {
                     // Inside-4
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (bL === UNWALKABLE
-                    && bC === WALKABLE
-                    && mL === WALKABLE) {
+                } else if (bL === UNWALKABLE && bC === WALKABLE && mL === WALKABLE) {
                     // Outside-1
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (bC === WALKABLE
-                    && bR === UNWALKABLE
-                    && mR === WALKABLE) {
+                } else if (bC === WALKABLE && bR === UNWALKABLE && mR === WALKABLE) {
                     // Outside-2
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (mR === WALKABLE
-                    && uC === WALKABLE
-                    && uR === UNWALKABLE) {
+                } else if (mR === WALKABLE && uC === WALKABLE && uR === UNWALKABLE) {
                     // Outside-3
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
-                } else if (mL === WALKABLE
-                    && uL === UNWALKABLE
-                    && uC === WALKABLE) {
+                } else if (mL === WALKABLE && uL === UNWALKABLE && uC === WALKABLE) {
                     // Outside-4
                     walkableNodes.push(this.addNodeToGraph(map, mapX, mapY))
                     points.push(mapX, mapY)
@@ -419,7 +452,7 @@ export class Pathfinder {
                 { x: doorX - doorWidth / 2, y: doorY - doorHeight / 2 }, // Top left
                 { x: doorX + doorWidth / 2, y: doorY - doorHeight / 2 }, // Top right
                 { x: doorX - doorWidth / 2, y: doorY + doorHeight / 2 }, // Bottom right
-                { x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 } // Bottom left
+                { x: doorX + doorWidth / 2, y: doorY + doorHeight / 2 }, // Bottom left
             ]
             for (const point of doorCorners) {
                 for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 32) {
@@ -431,7 +464,6 @@ export class Pathfinder {
                         walkableNodes.push(fromNode)
                     }
                 }
-
             }
         }
 
@@ -460,15 +492,32 @@ export class Pathfinder {
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
                 const toDoor = this.addNodeToGraph(door[4], spawn2[0], spawn2[1])
                 if (door[7] == "key") {
-                    this.addLinkToGraph(fromNode, toDoor, { key: door[8] as ItemName, map: toDoor.data.map, type: "enter", x: toDoor.data.x, y: toDoor.data.y })
+                    this.addLinkToGraph(fromNode, toDoor, {
+                        key: door[8] as ItemName,
+                        map: toDoor.data.map,
+                        type: "enter",
+                        x: toDoor.data.x,
+                        y: toDoor.data.y,
+                    })
                 } else {
-                    this.addLinkToGraph(fromNode, toDoor, { map: toDoor.data.map, spawn: door[5], type: "transport", x: toDoor.data.x, y: toDoor.data.y })
+                    this.addLinkToGraph(fromNode, toDoor, {
+                        map: toDoor.data.map,
+                        spawn: door[5],
+                        type: "transport",
+                        x: toDoor.data.x,
+                        y: toDoor.data.y,
+                    })
                 }
             }
 
             // Add destination nodes and links to maps that are reachable through the transporter
             for (const npc of transporters) {
-                if (((fromNode.data.x - npc.position[0]) * (fromNode.data.x - npc.position[0])) + ((fromNode.data.y - npc.position[1]) * (fromNode.data.y - npc.position[1])) > Constants.TRANSPORTER_REACH_DISTANCE_SQUARED) continue // Transporter is too far away
+                if (
+                    (fromNode.data.x - npc.position[0]) * (fromNode.data.x - npc.position[0]) +
+                        (fromNode.data.y - npc.position[1]) * (fromNode.data.y - npc.position[1]) >
+                    Constants.TRANSPORTER_REACH_DISTANCE_SQUARED
+                )
+                    continue // Transporter is too far away
                 for (const toMap in this.G.npcs.transporter.places) {
                     if (map == toMap) continue // Don't add links to ourself
 
@@ -481,14 +530,19 @@ export class Pathfinder {
                         spawn: spawnID,
                         type: "transport",
                         x: toNode.data.x,
-                        y: toNode.data.y
+                        y: toNode.data.y,
                     })
                 }
             }
         }
 
         const leaveLink = this.addNodeToGraph("main", this.G.maps.main.spawns[0][0], this.G.maps.main.spawns[0][1])
-        const leaveLinkData: LinkData = { map: leaveLink.data.map, type: "leave", x: leaveLink.data.x, y: leaveLink.data.y }
+        const leaveLinkData: LinkData = {
+            map: leaveLink.data.map,
+            type: "leave",
+            x: leaveLink.data.x,
+            y: leaveLink.data.y,
+        }
         for (const node of walkableNodes) {
             // Create town links
             if (node.id !== townNode.id) this.addLinkToGraph(node, townNode, townLinkData)
@@ -525,12 +579,16 @@ export class Pathfinder {
     }
 
     public static findClosestNode(map: MapName, x: number, y: number): Node<NodeData> {
-        let closest: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
-        let closestWalkable: { distance: number, node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
+        let closest: { distance: number; node: Node<NodeData> } = { distance: Number.MAX_VALUE, node: undefined }
+        let closestWalkable: { distance: number; node: Node<NodeData> } = {
+            distance: Number.MAX_VALUE,
+            node: undefined,
+        }
         const from = { map, x, y }
         this.graph.forEachNode((node) => {
             if (node.data.map !== map) return
-            const distance = ((from.x - node.data.x) * (from.x - node.data.x)) + ((from.y - node.data.y) * (from.y - node.data.y))
+            const distance =
+                (from.x - node.data.x) * (from.x - node.data.x) + (from.y - node.data.y) * (from.y - node.data.y)
 
             // If we're further than one we can already walk to, don't check further
             if (distance > closest.distance) return
@@ -545,16 +603,20 @@ export class Pathfinder {
         return closestWalkable.node ? closestWalkable.node : closest.node
     }
 
-    public static findClosestSpawn(map: MapName, x: number, y: number): { map: MapName, x: number, y: number, distance: number } {
+    public static findClosestSpawn(
+        map: MapName,
+        x: number,
+        y: number,
+    ): { map: MapName; x: number; y: number; distance: number } {
         const closest = {
             distance: Number.MAX_VALUE,
             map: map,
             x: Number.MAX_VALUE,
-            y: Number.MAX_VALUE
+            y: Number.MAX_VALUE,
         }
         // Look through all the spawns, and find the closest one
         for (const spawn of this.G.maps[map].spawns) {
-            const distance = ((x - spawn[0]) * (x - spawn[0])) + ((y - spawn[1]) * (y - spawn[1]))
+            const distance = (x - spawn[0]) * (x - spawn[0]) + (y - spawn[1]) * (y - spawn[1])
             if (distance < closest.distance) {
                 closest.x = spawn[0]
                 closest.y = spawn[1]
@@ -567,9 +629,16 @@ export class Pathfinder {
     public static getPath(from: NodeData, to: NodeData, options?: PathfinderOptions): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
 
-        if (from.map == to.map && this.canWalkPath(from, to) && Math.hypot(from.x - to.x, from.y - to.y) < (options?.costs?.town ?? this.TOWN_COST)) {
+        if (
+            from.map == to.map &&
+            this.canWalkPath(from, to) &&
+            Math.hypot(from.x - to.x, from.y - to.y) < (options?.costs?.town ?? this.TOWN_COST)
+        ) {
             // Return a straight line to the destination
-            return [{ map: from.map, type: "move", x: from.x, y: from.y }, { map: from.map, type: "move", x: to.x, y: to.y }]
+            return [
+                { map: from.map, type: "move", x: from.x, y: from.y },
+                { map: from.map, type: "move", x: to.x, y: to.y },
+            ]
         }
 
         const fromNode = this.findClosestNode(from.map, from.x, from.y)
@@ -577,13 +646,16 @@ export class Pathfinder {
 
         const path: LinkData[] = []
 
-        if (options?.showConsole) console.debug(`Looking for a path from ${fromNode.id} to ${toNode.id} (from ${from.map}:${from.x},${from.y} to ${to.map}:${to.x},${to.y})...`)
+        if (options?.showConsole)
+            console.debug(
+                `Looking for a path from ${fromNode.id} to ${toNode.id} (from ${from.map}:${from.x},${from.y} to ${to.map}:${to.x},${to.y})...`,
+            )
 
         const pathfinder = ngraph.nba(Pathfinder.graph, {
             distance: (fromNode, toNode, link) => {
                 return this.computeLinkCost(fromNode.data, toNode.data, link.data, options)
             },
-            oriented: true
+            oriented: true,
         })
 
         const rawPath: Node<NodeData>[] = pathfinder.find(fromNode.id, toNode.id)
@@ -653,7 +725,8 @@ export class Pathfinder {
         let xStep, yStep // the step on y and x axis
         let error // the error accumulated during the increment
         let errorPrev // *vision the previous value of the error variable
-        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x, y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
+        let x = Math.trunc(from.x) - this.G.geometry[from.map].min_x,
+            y = Math.trunc(from.y) - this.G.geometry[from.map].min_y // the line points
         let dx = Math.trunc(to.x) - Math.trunc(from.x)
         let dy = Math.trunc(to.y) - Math.trunc(from.y)
 
@@ -677,29 +750,61 @@ export class Pathfinder {
         const ddy = 2 * dy
         const ddx = 2 * dx
 
-        if (ddx >= ddy) { // first octant (0 <= slope <= 1)
+        if (ddx >= ddy) {
+            // first octant (0 <= slope <= 1)
             // compulsory initialization (even for errorPrev, needed when dx==dy)
             errorPrev = error = dx // start in the middle of the square
-            for (let i = 0; i < dx; i++) { // do not use the first point (already done)
+            for (let i = 0; i < dx; i++) {
+                // do not use the first point (already done)
                 x += xStep
                 error += ddy
-                if (error > ddx) { // increment y if AFTER the middle ( > )
+                if (error > ddx) {
+                    // increment y if AFTER the middle ( > )
                     y += yStep
                     error -= ddx
                     // three cases (octant == right->right-top for directions below):
-                    if (error + errorPrev < ddx) { // bottom square also
-                        if (grid[(y - yStep) * width + x] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
-                    } else if (error + errorPrev > ddx) { // left square also
-                        if (grid[y * width + x - xStep] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
-                    } else { // corner: bottom and left squares also
-                        if (grid[(y - yStep) * width + x] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
-                        if (grid[y * width + x - xStep] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
+                    if (error + errorPrev < ddx) {
+                        // bottom square also
+                        if (grid[(y - yStep) * width + x] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
+                    } else if (error + errorPrev > ddx) {
+                        // left square also
+                        if (grid[y * width + x - xStep] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
+                    } else {
+                        // corner: bottom and left squares also
+                        if (grid[(y - yStep) * width + x] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
+                        if (grid[y * width + x - xStep] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
                     }
                 }
-                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE)
+                    return {
+                        map: from.map,
+                        x: x - xStep + this.G.geometry[from.map].min_x,
+                        y: y + this.G.geometry[from.map].min_y,
+                    }
                 errorPrev = error
             }
-        } else { // the same as above
+        } else {
+            // the same as above
             errorPrev = error = dy
             for (let i = 0; i < dy; i++) {
                 y += yStep
@@ -708,15 +813,40 @@ export class Pathfinder {
                     x += xStep
                     error -= ddy
                     if (error + errorPrev < ddy) {
-                        if (grid[y * width + x - xStep] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xStep] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
                     } else if (error + errorPrev > ddy) {
-                        if (grid[(y - yStep) * width + x] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
+                        if (grid[(y - yStep) * width + x] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
                     } else {
-                        if (grid[y * width + x - xStep] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
-                        if (grid[(y - yStep) * width + x] !== WALKABLE) return { map: from.map, x: x - xStep + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
+                        if (grid[y * width + x - xStep] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
+                        if (grid[(y - yStep) * width + x] !== WALKABLE)
+                            return {
+                                map: from.map,
+                                x: x - xStep + this.G.geometry[from.map].min_x,
+                                y: y - yStep + this.G.geometry[from.map].min_y,
+                            }
                     }
                 }
-                if (grid[y * width + x] !== WALKABLE) return { map: from.map, x: x + this.G.geometry[from.map].min_x, y: y - yStep + this.G.geometry[from.map].min_y }
+                if (grid[y * width + x] !== WALKABLE)
+                    return {
+                        map: from.map,
+                        x: x + this.G.geometry[from.map].min_x,
+                        y: y - yStep + this.G.geometry[from.map].min_y,
+                    }
                 errorPrev = error
             }
         }
@@ -724,24 +854,26 @@ export class Pathfinder {
         return to
     }
 
-    public static async prepare(g: GData, options: {
-        base?: {
-            h: number,
-            v: number,
-            vn: number
-        },
-        cheat?: boolean,
-        remove_abtesting?: boolean,
-        remove_bank_b?: boolean,
-        remove_bank_u?: boolean,
-        remove_goobrawl?: boolean,
-        remove_test?: boolean,
-        maps?: MapName[],
-        showConsole?: boolean
-    } = {}): Promise<void> {
+    public static async prepare(
+        g: GData,
+        options: {
+            base?: {
+                h: number
+                v: number
+                vn: number
+            }
+            cheat?: boolean
+            remove_abtesting?: boolean
+            remove_bank_b?: boolean
+            remove_bank_u?: boolean
+            remove_goobrawl?: boolean
+            remove_test?: boolean
+            maps?: MapName[]
+            showConsole?: boolean
+        } = {},
+    ): Promise<void> {
         if (!g) throw new Error("Please provide GData. You can use Game.getGData().")
         this.G = g
-
 
         if (!options) options = {}
         if (options.showConsole) console.debug("Preparing pathfinding...")
@@ -769,11 +901,11 @@ export class Pathfinder {
         // Add disconnected maps
         options.maps.push("abtesting", "goobrawl", "jail")
 
-        if (options.remove_abtesting) options.maps = options.maps.filter(m => m !== "abtesting")
-        if (options.remove_bank_b) options.maps = options.maps.filter(m => m !== "bank_b")
-        if (options.remove_bank_u) options.maps = options.maps.filter(m => m !== "bank_u")
-        if (options.remove_goobrawl) options.maps = options.maps.filter(m => m !== "goobrawl")
-        if (options.remove_test) options.maps = options.maps.filter(m => m !== "test")
+        if (options.remove_abtesting) options.maps = options.maps.filter((m) => m !== "abtesting")
+        if (options.remove_bank_b) options.maps = options.maps.filter((m) => m !== "bank_b")
+        if (options.remove_bank_u) options.maps = options.maps.filter((m) => m !== "bank_u")
+        if (options.remove_goobrawl) options.maps = options.maps.filter((m) => m !== "goobrawl")
+        if (options.remove_test) options.maps = options.maps.filter((m) => m !== "test")
 
         // Prepare each map
         for (const map of options.maps) {
@@ -900,8 +1032,8 @@ export class Pathfinder {
 
         // We know the location of some special monsters
         const specialMonsters: Partial<Record<MonsterName, MonsterName>> = {
-            "goldenbat": "bat",
-            "snowman": "snowman"
+            goldenbat: "bat",
+            snowman: "snowman",
         }
 
         const locations: IPosition[] = []
@@ -921,11 +1053,19 @@ export class Pathfinder {
                     }
                 } else if (monsterSpawn.boundary) {
                     // The monster has a single spawn boundary on this map
-                    locations.push({ "map": mapName as MapName, "x": (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2, "y": (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2 })
+                    locations.push({
+                        map: mapName as MapName,
+                        x: (monsterSpawn.boundary[0] + monsterSpawn.boundary[2]) / 2,
+                        y: (monsterSpawn.boundary[1] + monsterSpawn.boundary[3]) / 2,
+                    })
                 } else if (monsterSpawn.boundaries) {
                     // The monster can spawn on multiple maps
                     for (const boundary of monsterSpawn.boundaries) {
-                        locations.push({ "map": boundary[0], "x": (boundary[1] + boundary[3]) / 2, "y": (boundary[2] + boundary[4]) / 2 })
+                        locations.push({
+                            map: boundary[0],
+                            x: (boundary[1] + boundary[3]) / 2,
+                            y: (boundary[2] + boundary[4]) / 2,
+                        })
                     }
                 }
             }

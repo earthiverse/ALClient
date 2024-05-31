@@ -23,6 +23,6 @@ export interface IPlayer {
     y: number
 }
 
-export interface IPlayerDocument extends IPlayer, Document { }
+export interface IPlayerDocument extends IPlayer, Document {}
 
 export type IPlayerModel = Model<IPlayerDocument>

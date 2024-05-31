@@ -1,5 +1,15 @@
 import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
-import { Attribute, ConditionName, DamageType, GData, GMonster, GMonsterAbilities, MapName, MonsterName, SkillName } from "./definitions/adventureland-data.js"
+import {
+    Attribute,
+    ConditionName,
+    DamageType,
+    GData,
+    GMonster,
+    GMonsterAbilities,
+    MapName,
+    MonsterName,
+    SkillName,
+} from "./definitions/adventureland-data.js"
 import { ActionData, MonsterData } from "./definitions/adventureland-server.js"
 import { Character } from "./Character.js"
 import { Player } from "./Player.js"
@@ -162,14 +172,15 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (defender.s.marked) baseDamage *= 1.1
 
         if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing)
-        else if (this.damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing)
+        else if (this.damage_type == "magical")
+            baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing)
 
         if (this.crit) {
             if (this.crit >= 100) {
                 // Guaranteed crit
-                return [baseDamage * 0.9 * (2 + (this.critdamage / 100)), baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+                return [baseDamage * 0.9 * (2 + this.critdamage / 100), baseDamage * 1.1 * (2 + this.critdamage / 100)]
             } else {
-                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + (this.critdamage / 100))]
+                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + this.critdamage / 100)]
             }
         } else {
             return [baseDamage * 0.9, baseDamage * 1.1]
@@ -187,7 +198,12 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @return {*}  {boolean}
      * @memberof Entity
      */
-    public couldDieToProjectiles(character: Character, projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
+    public couldDieToProjectiles(
+        character: Character,
+        projectiles: Map<string, ActionData>,
+        players: Map<string, Player>,
+        entities: Map<string, Entity>,
+    ): boolean {
         if (this.avoidance >= 100) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {
@@ -320,7 +336,12 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @return {*}  {boolean}
      * @memberof Entity
      */
-    public willDieToProjectiles(character: Character, projectiles: Map<string, ActionData>, players: Map<string, Player>, entities: Map<string, Entity>): boolean {
+    public willDieToProjectiles(
+        character: Character,
+        projectiles: Map<string, ActionData>,
+        players: Map<string, Player>,
+        entities: Map<string, Entity>,
+    ): boolean {
         if (this.avoidance) return false
         let incomingProjectileDamage = 0
         for (const projectile of projectiles.values()) {

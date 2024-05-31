@@ -44,7 +44,7 @@ export class Warrior extends PingCompensatedCharacter {
         // TODO: Get IDs of cleaved monsters, or the projectiles
         const response = this.getResponsePromise("cleave")
         this.socket.emit("skill", {
-            name: "cleave"
+            name: "cleave",
         })
         return response
     }
@@ -70,7 +70,7 @@ export class Warrior extends PingCompensatedCharacter {
         this.socket.emit("skill", {
             name: "dash",
             x: to.x,
-            y: to.y
+            y: to.y,
         })
         return response
     }
@@ -80,7 +80,7 @@ export class Warrior extends PingCompensatedCharacter {
 
         const response = this.getResponsePromise("hardshell")
         this.socket.emit("skill", {
-            name: "hardshell"
+            name: "hardshell",
         })
         return response
     }

@@ -4,7 +4,7 @@ const { Schema } = pkg
 const DeathSchema = new Schema({
     __v: {
         select: false,
-        type: Number
+        type: Number,
     },
     name: String,
     cause: String,
@@ -13,7 +13,7 @@ const DeathSchema = new Schema({
     y: Number,
     serverRegion: String,
     serverIdentifier: String,
-    time: Number
+    time: Number,
 })
 
 DeathSchema.index({ serverRegion: 1, serverIdentifier: 1 })

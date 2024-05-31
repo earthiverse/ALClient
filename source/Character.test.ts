@@ -55,7 +55,14 @@ beforeAll(async () => {
         in: "mtunnel",
         int: 399,
         isize: 42,
-        items: [{ name: "computer" }, { name: "tracker" }, { q: 999, name: "mpot1" }, { q: 1000, name: "hpot1" }, { q: 9999, name: "beewings" }, { q: 1000, name: "beewings" }],
+        items: [
+            { name: "computer" },
+            { name: "tracker" },
+            { q: 999, name: "mpot1" },
+            { q: 1000, name: "hpot1" },
+            { q: 9999, name: "beewings" },
+            { q: 1000, name: "beewings" },
+        ],
         level: 86,
         lifesteal: 2.5,
         luckm: 1.4849999999999999,
@@ -100,7 +107,7 @@ beforeAll(async () => {
             pants: { acc: 3076803, name: "wbreeches", level: 9, ach: "gooped", stat_type: "int" },
             ring1: { name: "intring", level: 4 },
             ring2: { level: 4, name: "intring" },
-            shoes: { level: 9, stat_type: "int", name: "wshoes" }
+            shoes: { level: 9, stat_type: "int", name: "wshoes" },
         },
         speed: 69,
         str: 52,
@@ -118,281 +125,275 @@ beforeAll(async () => {
 
     warrior = new Character("", "", "", Game.G, serverData)
     warrior.parseCharacter({
-        "hp": 8021,
-        "max_hp": 17379,
-        "mp": 1603,
-        "max_mp": 2015,
-        "xp": 358723304.59999967,
-        "attack": 2500,
-        "frequency": 1.2302949574138597,
-        "speed": 80,
-        "range": 43,
-        "armor": 541,
-        "resistance": 369,
-        "level": 87,
-        "party": "earthMer",
-        "rip": false,
-        "afk": "code",
-        "target": "1376991",
-        "s": {
-            "mlifesteal": {
-                "ms": 3421915
+        hp: 8021,
+        max_hp: 17379,
+        mp: 1603,
+        max_mp: 2015,
+        xp: 358723304.59999967,
+        attack: 2500,
+        frequency: 1.2302949574138597,
+        speed: 80,
+        range: 43,
+        armor: 541,
+        resistance: 369,
+        level: 87,
+        party: "earthMer",
+        rip: false,
+        afk: "code",
+        target: "1376991",
+        s: {
+            mlifesteal: {
+                ms: 3421915,
             },
-            "mluck": {
-                "ms": 3027636,
-                "f": "earthMer",
-                "strong": true
+            mluck: {
+                ms: 3027636,
+                f: "earthMer",
+                strong: true,
             },
-            "monsterhunt": {
-                "sn": "US II",
-                "id": "bbpompom",
-                "c": 148,
-                "ms": 1429212,
-                "dl": true
-            }
+            monsterhunt: {
+                sn: "US II",
+                id: "bbpompom",
+                c: 148,
+                ms: 1429212,
+                dl: true,
+            },
         },
-        "c": {
-            "town": {
-                "ms": 2583
-            }
+        c: {
+            town: {
+                ms: 2583,
+            },
         },
-        "q": {},
-        "age": 566,
-        "pdps": 387649.7774099083,
-        "id": "earthWar",
-        "x": 600,
-        "y": -1275,
-        "moving": false,
-        "going_x": 0,
-        "going_y": 11,
-        "abs": false,
-        "move_num": 15980872,
-        "angle": 113.52706394742098,
-        "cid": 8380,
-        "controller": "",
-        "skin": "fwarrior",
-        "cx": {},
-        "slots": {
-            "ring1": {
-                "level": 4,
-                "name": "strring"
+        q: {},
+        age: 566,
+        pdps: 387649.7774099083,
+        id: "earthWar",
+        x: 600,
+        y: -1275,
+        moving: false,
+        going_x: 0,
+        going_y: 11,
+        abs: false,
+        move_num: 15980872,
+        angle: 113.52706394742098,
+        cid: 8380,
+        controller: "",
+        skin: "fwarrior",
+        cx: {},
+        slots: {
+            ring1: {
+                level: 4,
+                name: "strring",
             },
-            "ring2": {
-                "name": "strring",
-                "level": 5
+            ring2: {
+                name: "strring",
+                level: 5,
             },
-            "earring1": {
-                "level": 5,
-                "name": "strearring"
+            earring1: {
+                level: 5,
+                name: "strearring",
             },
-            "earring2": {
-                "name": "strearring",
-                "level": 5
+            earring2: {
+                name: "strearring",
+                level: 5,
             },
-            "belt": {
-                "level": 5,
-                "name": "strbelt"
+            belt: {
+                level: 5,
+                name: "strbelt",
             },
-            "mainhand": {
-                "acc": 5,
-                "ps": [
-                    "firehazard"
-                ],
-                "name": "fireblade",
-                "level": 9,
-                "p": "firehazard"
+            mainhand: {
+                acc: 5,
+                ps: ["firehazard"],
+                name: "fireblade",
+                level: 9,
+                p: "firehazard",
             },
-            "offhand": {
-                "name": "candycanesword",
-                "level": 9
+            offhand: {
+                name: "candycanesword",
+                level: 9,
             },
-            "helmet": {
-                "acc": 1,
-                "level": 9,
-                "stat_type": "str",
-                "name": "helmet1"
+            helmet: {
+                acc: 1,
+                level: 9,
+                stat_type: "str",
+                name: "helmet1",
             },
-            "chest": {
-                "stat_type": "str",
-                "name": "coat1",
-                "level": 9
+            chest: {
+                stat_type: "str",
+                name: "coat1",
+                level: 9,
             },
-            "pants": {
-                "acc": 315748,
-                "name": "pants1",
-                "level": 9,
-                "ach": "gooped",
-                "stat_type": "str"
+            pants: {
+                acc: 315748,
+                name: "pants1",
+                level: 9,
+                ach: "gooped",
+                stat_type: "str",
             },
-            "shoes": {
-                "level": 9,
-                "stat_type": "str",
-                "name": "wingedboots"
+            shoes: {
+                level: 9,
+                stat_type: "str",
+                name: "wingedboots",
             },
-            "gloves": {
-                "stat_type": "str",
-                "name": "gloves1",
-                "level": 9
+            gloves: {
+                stat_type: "str",
+                name: "gloves1",
+                level: 9,
             },
-            "amulet": {
-                "name": "stramulet",
-                "level": 5
+            amulet: {
+                name: "stramulet",
+                level: 5,
             },
-            "orb": {
-                "level": 0,
-                "name": "jacko"
+            orb: {
+                level: 0,
+                name: "jacko",
             },
-            "elixir": {
-                "expires": "2021-04-11T03:16:29.795Z",
-                "name": "elixirluck",
-                "ex": true
+            elixir: {
+                expires: "2021-04-11T03:16:29.795Z",
+                name: "elixirluck",
+                ex: true,
             },
-            "cape": {
-                "acc": 343382,
-                "ps": [
-                    "festive"
-                ],
-                "name": "cape",
-                "level": 8,
-                "ach": "festive",
-                "p": "festive",
-                "stat_type": "str"
-            }
+            cape: {
+                acc: 343382,
+                ps: ["festive"],
+                name: "cape",
+                level: 8,
+                ach: "festive",
+                p: "festive",
+                stat_type: "str",
+            },
         },
-        "ctype": "warrior",
-        "owner": "12345",
-        "int": 62,
-        "str": 378,
-        "dex": 58,
-        "vit": 103,
-        "for": 42.75,
-        "mp_cost": 14,
-        "mp_reduction": 0,
-        "max_xp": 7900000000,
-        "goldm": 1.1,
-        "xpm": 1.1400000000000001,
-        "luckm": 1.35,
-        "map": "winterland",
-        "in": "winterland",
-        "isize": 42,
-        "esize": 20,
-        "gold": 500046945,
-        "cash": 4336,
-        "targets": 0,
-        "m": 48,
-        "evasion": 1.25,
-        "miss": 0,
-        "reflection": 0.5,
-        "lifesteal": 2.5,
-        "manasteal": 0,
-        "rpiercing": 31,
-        "apiercing": 9,
-        "crit": 0.75,
-        "critdamage": 4,
-        "dreturn": 1,
-        "tax": 0.01,
-        "xrange": 25,
-        "pnresistance": 0,
-        "firesistance": 0,
-        "fzresistance": 1,
-        "stun": 0,
-        "blast": 0,
-        "explosion": 0,
-        "courage": 18,
-        "mcourage": 2,
-        "pcourage": 2,
-        "fear": 0,
-        "items": [
+        ctype: "warrior",
+        owner: "12345",
+        int: 62,
+        str: 378,
+        dex: 58,
+        vit: 103,
+        for: 42.75,
+        mp_cost: 14,
+        mp_reduction: 0,
+        max_xp: 7900000000,
+        goldm: 1.1,
+        xpm: 1.1400000000000001,
+        luckm: 1.35,
+        map: "winterland",
+        in: "winterland",
+        isize: 42,
+        esize: 20,
+        gold: 500046945,
+        cash: 4336,
+        targets: 0,
+        m: 48,
+        evasion: 1.25,
+        miss: 0,
+        reflection: 0.5,
+        lifesteal: 2.5,
+        manasteal: 0,
+        rpiercing: 31,
+        apiercing: 9,
+        crit: 0.75,
+        critdamage: 4,
+        dreturn: 1,
+        tax: 0.01,
+        xrange: 25,
+        pnresistance: 0,
+        firesistance: 0,
+        fzresistance: 1,
+        stun: 0,
+        blast: 0,
+        explosion: 0,
+        courage: 18,
+        mcourage: 2,
+        pcourage: 2,
+        fear: 0,
+        items: [
             null,
             {
-                "name": "tracker"
+                name: "tracker",
             },
             {
-                "q": 1000,
-                "name": "mpot1"
+                q: 1000,
+                name: "mpot1",
             },
             {
-                "q": 1000,
-                "name": "hpot1"
+                q: 1000,
+                name: "hpot1",
             },
             {
-                "level": 4,
-                "name": "orbg"
+                level: 4,
+                name: "orbg",
             },
             {
-                "acc": 1,
-                "level": 8,
-                "name": "bataxe"
+                acc: 1,
+                level: 8,
+                name: "bataxe",
             },
             {
-                "name": "carrotsword",
-                "level": 8
+                name: "carrotsword",
+                level: 8,
             },
             {
-                "name": "shield",
-                "level": 8
+                name: "shield",
+                level: 8,
             },
             {
-                "acc": 1,
-                "name": "basher",
-                "level": 8
+                acc: 1,
+                name: "basher",
+                level: 8,
             },
             {
-                "name": "swordofthedead",
-                "level": 9
+                name: "swordofthedead",
+                level: 9,
             },
             {
-                "name": "woodensword",
-                "level": 8
+                name: "woodensword",
+                level: 8,
             },
             {
-                "name": "test_orb",
-                "level": 1
+                name: "test_orb",
+                level: 1,
             },
             {
-                "name": "vitring",
-                "level": 0,
-                "v": "2022-01-29T00:31:16.690Z"
+                name: "vitring",
+                level: 0,
+                v: "2022-01-29T00:31:16.690Z",
             },
             {
-                "name": "sshield",
-                "level": 8
+                name: "sshield",
+                level: 8,
             },
             {
-                "name": "lantern",
-                "level": 3
+                name: "lantern",
+                level: 3,
             },
             {
-                "name": "orbofstr",
-                "level": 2
+                name: "orbofstr",
+                level: 2,
             },
             {
-                "name": "heartwood",
-                "level": 3,
-                "p": "glitched"
+                name: "heartwood",
+                level: 3,
+                p: "glitched",
             },
             {
-                "name": "strring",
-                "level": 0
+                name: "strring",
+                level: 0,
             },
             {
-                "q": 1,
-                "name": "xptome"
+                q: 1,
+                name: "xptome",
             },
             {
-                "name": "ringsj",
-                "level": 0
+                name: "ringsj",
+                level: 0,
             },
             {
-                "name": "bfur",
-                "q": 1
+                name: "bfur",
+                q: 1,
             },
             {
-                "name": "seashell",
-                "q": 1
+                name: "seashell",
+                q: 1,
             },
-            null,
-            null,
             null,
             null,
             null,
@@ -410,80 +411,106 @@ beforeAll(async () => {
             null,
             null,
             null,
-            null
+            null,
+            null,
+            null,
         ],
-        "cc": 16,
-        "name": "earthWar"
+        cc: 16,
+        name: "earthWar",
     })
-    warrior.entities.set("310", new Entity({
-        "x": 1132.9330374688902,
-        "y": -1490.2216005989717,
-        "type": "rudolph",
-        "hp": 12000000,
-        "max_hp": 12000000,
-        "mp": 60000,
-        "speed": 24,
-        "xp": 2000000,
-        "attack": 1600,
-        "frequency": 10,
-        "resistance": 1200,
-        "id": "310",
-        "move_num": 18599161,
-        "cid": 5,
-        "s": {},
-        "level": 1,
-        "moving": true,
-        "abs": false,
-        "going_x": 1099.9910932334997,
-        "going_y": -1489.247069218715,
-        "angle": 178.30549604505748,
-    }, "winterland", "winterland", Game.G))
-    warrior.entities.set("3522746", new Entity({
-        "speed": 20.48,
-        "hp": 9000,
-        "mp": 60,
-        "attack": 300,
-        "xp": 21600,
-        "frequency": 0.768,
-        "resistance": 0,
-        "max_hp": 18000,
-        "id": "3522746",
-        "x": -32.47015687797802,
-        "y": -1189.7117335078665,
-        "moving": true,
-        "going_x": -75.23303846301431,
-        "going_y": -923.8665561296592,
-        "abs": false,
-        "move_num": 18598332,
-        "angle": 99.13811034660513,
-        "type": "boar",
-        "cid": 2,
-        "s": {},
-        "level": 1
-    }, "winterland", "winterland", Game.G))
-    warrior.entities.set("3523318", new Entity({
-        "speed": 20.48,
-        "hp": 18000,
-        "mp": 60,
-        "attack": 300,
-        "xp": 21600,
-        "frequency": 0.768,
-        "resistance": 0,
-        "max_hp": 18000,
-        "id": "3523318",
-        "x": 66.57447859556282,
-        "y": -823.8041679458063,
-        "moving": true,
-        "going_x": -72.08830589834515,
-        "going_y": -981.8175155998056,
-        "abs": false,
-        "move_num": 18620031,
-        "angle": -131.26819535494937,
-        "type": "boar",
-        "cid": 2,
-        "s": {},
-        "level": 2
-    }, "winterland", "winterland", Game.G))
+    warrior.entities.set(
+        "310",
+        new Entity(
+            {
+                x: 1132.9330374688902,
+                y: -1490.2216005989717,
+                type: "rudolph",
+                hp: 12000000,
+                max_hp: 12000000,
+                mp: 60000,
+                speed: 24,
+                xp: 2000000,
+                attack: 1600,
+                frequency: 10,
+                resistance: 1200,
+                id: "310",
+                move_num: 18599161,
+                cid: 5,
+                s: {},
+                level: 1,
+                moving: true,
+                abs: false,
+                going_x: 1099.9910932334997,
+                going_y: -1489.247069218715,
+                angle: 178.30549604505748,
+            },
+            "winterland",
+            "winterland",
+            Game.G,
+        ),
+    )
+    warrior.entities.set(
+        "3522746",
+        new Entity(
+            {
+                speed: 20.48,
+                hp: 9000,
+                mp: 60,
+                attack: 300,
+                xp: 21600,
+                frequency: 0.768,
+                resistance: 0,
+                max_hp: 18000,
+                id: "3522746",
+                x: -32.47015687797802,
+                y: -1189.7117335078665,
+                moving: true,
+                going_x: -75.23303846301431,
+                going_y: -923.8665561296592,
+                abs: false,
+                move_num: 18598332,
+                angle: 99.13811034660513,
+                type: "boar",
+                cid: 2,
+                s: {},
+                level: 1,
+            },
+            "winterland",
+            "winterland",
+            Game.G,
+        ),
+    )
+    warrior.entities.set(
+        "3523318",
+        new Entity(
+            {
+                speed: 20.48,
+                hp: 18000,
+                mp: 60,
+                attack: 300,
+                xp: 21600,
+                frequency: 0.768,
+                resistance: 0,
+                max_hp: 18000,
+                id: "3523318",
+                x: 66.57447859556282,
+                y: -823.8041679458063,
+                moving: true,
+                going_x: -72.08830589834515,
+                going_y: -981.8175155998056,
+                abs: false,
+                move_num: 18620031,
+                angle: -131.26819535494937,
+                type: "boar",
+                cid: 2,
+                s: {},
+                level: 2,
+            },
+            "winterland",
+            "winterland",
+            Game.G,
+        ),
+    )
 }, 60000)
 
 test("Character attributes", () => {
@@ -553,7 +580,10 @@ test("Character.canCraft", () => {
     expect(priest.canCraft("frostbow")).toBe(true)
 
     // Wrong place
-    priest.items = [{ name: "bow", level: 0 }, { name: "essenceoffrost", q: 3 }]
+    priest.items = [
+        { name: "bow", level: 0 },
+        { name: "essenceoffrost", q: 3 },
+    ]
     priest.map = witchLocation.map as MapName
     priest.x = witchLocation.x
     priest.y = witchLocation.y
@@ -570,7 +600,10 @@ test("Character.canCraft", () => {
     expect(priest.canCraft("frostbow", { ignoreLocation: true })).toBe(true)
 
     // Wrong place (witch)
-    priest.items = [{ name: "cshell", q: 10 }, { name: "hpot0", q: 9999 }]
+    priest.items = [
+        { name: "cshell", q: 10 },
+        { name: "hpot0", q: 9999 },
+    ]
     priest.map = craftsmanLocation.map as MapName
     priest.x = craftsmanLocation.x
     priest.y = craftsmanLocation.y
@@ -583,11 +616,24 @@ test("Character.canCraft", () => {
     priest.y = witchLocation.y
     expect(priest.canCraft("elixirfires")).toBe(true)
 
-    priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    priest.items = [
+        { name: "throwingstars", level: 7 },
+        { q: 2, name: "essenceoffire" },
+        { name: "computer", l: "l" },
+    ]
     expect(priest.canCraft("firestars")).toBe(false)
-    priest.items = [{ "name": "throwingstars", "level": 0 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    priest.items = [
+        { name: "throwingstars", level: 0 },
+        { q: 2, name: "essenceoffire" },
+        { name: "computer", l: "l" },
+    ]
     expect(priest.canCraft("firestars")).toBe(true)
-    priest.items = [{ "name": "throwingstars", "level": 8 }, { "name": "throwingstars", "level": 0 }, { "q": 2, "name": "essenceoffire" }, { "name": "computer", "l": "l" }]
+    priest.items = [
+        { name: "throwingstars", level: 8 },
+        { name: "throwingstars", level: 0 },
+        { q: 2, name: "essenceoffire" },
+        { name: "computer", l: "l" },
+    ]
     expect(priest.canCraft("firestars")).toBe(true)
     // Restore
     priest.items = itemsBackup
@@ -637,7 +683,6 @@ test("Character.canExchange", async () => {
     priest.y = locationBackup.y
 })
 
-
 test("Character.canCompound", async () => {
     // Backup so we can change things
     const itemsBackup = [...priest.items]
@@ -646,29 +691,61 @@ test("Character.canCompound", async () => {
     // Set up the compound location
     expect(Game.G.maps.main.ref?.c_mid?.[0]).toBeDefined()
     expect(Game.G.maps.main.ref?.c_mid?.[1]).toBeDefined()
-    const compoundLocation: IPosition = { map: "main", x: Game.G.maps.main.ref?.c_mid?.[0], y: Game.G.maps.main.ref?.c_mid?.[1] }
+    const compoundLocation: IPosition = {
+        map: "main",
+        x: Game.G.maps.main.ref?.c_mid?.[0],
+        y: Game.G.maps.main.ref?.c_mid?.[1],
+    }
 
     // Compoundable
-    priest.items = [{ name: "computer" }, { name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.items = [
+        { name: "computer" },
+        { name: "cscroll0", q: 1 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+    ]
     expect(priest.canCompound(2, 3, 4, 1)).toBe(true)
 
     // Compoundable with higher level scroll
-    priest.items = [{ name: "computer" }, { name: "cscroll3", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.items = [
+        { name: "computer" },
+        { name: "cscroll3", q: 1 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+    ]
     expect(priest.canCompound(2, 3, 4, 1)).toBe(true)
 
     // Upgradable (not Compoundable)
-    priest.items = [{ name: "computer" }, { name: "cscroll0", q: 1 }, { name: "coat", level: 0 }, { name: "coat", level: 0 }, { name: "coat", level: 0 }]
+    priest.items = [
+        { name: "computer" },
+        { name: "cscroll0", q: 1 },
+        { name: "coat", level: 0 },
+        { name: "coat", level: 0 },
+        { name: "coat", level: 0 },
+    ]
     expect(priest.canCompound(2, 3, 4, 1)).toBe(false)
 
     // Wrong location
-    priest.items = [{ name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.items = [
+        { name: "cscroll0", q: 1 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+    ]
     priest.map = "winterland"
     priest.x = 0
     priest.y = 0
     expect(priest.canCompound(1, 2, 3, 0)).toBe(false)
 
     // Correct Location
-    priest.items = [{ name: "cscroll0", q: 1 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }, { name: "dexearring", level: 0 }]
+    priest.items = [
+        { name: "cscroll0", q: 1 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+        { name: "dexearring", level: 0 },
+    ]
     priest.map = compoundLocation.map as MapName
     priest.x = compoundLocation.x
     priest.y = compoundLocation.y
@@ -689,7 +766,11 @@ test("Character.canUpgrade", async () => {
     // Set up the upgrade location
     expect(Game.G.maps.main.ref?.u_mid?.[0]).toBeDefined()
     expect(Game.G.maps.main.ref?.u_mid?.[1]).toBeDefined()
-    const upgradeLocation: IPosition = { map: "main", x: Game.G.maps.main.ref?.u_mid?.[0], y: Game.G.maps.main.ref?.u_mid?.[1] }
+    const upgradeLocation: IPosition = {
+        map: "main",
+        x: Game.G.maps.main.ref?.u_mid?.[0],
+        y: Game.G.maps.main.ref?.u_mid?.[1],
+    }
 
     // Upgradable
     priest.items = [{ name: "computer" }, { name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
@@ -733,14 +814,20 @@ test("Character.canUpgrade", async () => {
     expect(priest.canUpgrade(2, 1)).toBe(false)
 
     // Wrong location
-    priest.items = [{ name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
+    priest.items = [
+        { name: "scroll0", q: 1 },
+        { name: "coat", level: 0 },
+    ]
     priest.map = "winterland"
     priest.x = 0
     priest.y = 0
     expect(priest.canUpgrade(1, 0)).toBe(false)
 
     // Correct Location
-    priest.items = [{ name: "scroll0", q: 1 }, { name: "coat", level: 0 }]
+    priest.items = [
+        { name: "scroll0", q: 1 },
+        { name: "coat", level: 0 },
+    ]
     priest.map = upgradeLocation.map as MapName
     priest.x = upgradeLocation.x
     priest.y = upgradeLocation.y
@@ -754,27 +841,32 @@ test("Character.canUpgrade", async () => {
 })
 
 test("Character.canKillInOneShot", () => {
-    const bee = new Entity({
-        "mp": 2,
-        "armor": 0,
-        "resistance": 0,
-        "id": "5185017",
-        "x": 70.32182893235411,
-        "y": 1487.9526638730226,
-        "moving": true,
-        "going_x": 206.28099056907251,
-        "going_y": 1485.9456975484566,
-        "abs": false,
-        "move_num": 49572238,
-        "angle": -0.8457123996441614,
-        "type": "bee",
-        "cid": 1,
-        "s": {
-            "young": {
-                "ms": 340
-            }
-        }
-    }, "main", "main", Game.G)
+    const bee = new Entity(
+        {
+            mp: 2,
+            armor: 0,
+            resistance: 0,
+            id: "5185017",
+            x: 70.32182893235411,
+            y: 1487.9526638730226,
+            moving: true,
+            going_x: 206.28099056907251,
+            going_y: 1485.9456975484566,
+            abs: false,
+            move_num: 49572238,
+            angle: -0.8457123996441614,
+            type: "bee",
+            cid: 1,
+            s: {
+                young: {
+                    ms: 340,
+                },
+            },
+        },
+        "main",
+        "main",
+        Game.G,
+    )
     expect(priest.canKillInOneShot(bee)).toBe(true)
 })
 
@@ -841,9 +933,9 @@ test("Character.canUse", () => {
 
     // Equip axe
     warrior.slots.mainhand = {
-        "acc": 1,
-        "level": 8,
-        "name": "bataxe"
+        acc: 1,
+        level: 8,
+        name: "bataxe",
     }
     warrior.slots.offhand = null
     expect(warrior.canUse("cleave")).toBe(true)
@@ -904,29 +996,37 @@ test("Character.getEntity", () => {
     expect(warrior.getEntity({ type: "boar", returnNearest: true })).not.toBeUndefined()
     expect(warrior.getEntity({ type: "goo", returnNearest: true })).toBeUndefined()
 
-    warrior.entities.set("nearbyMonster", new Entity({
-        "x": warrior.x,
-        "y": warrior.y,
-        "type": "rudolph",
-        "hp": 12000000,
-        "max_hp": 12000000,
-        "mp": 60000,
-        "speed": 24,
-        "xp": 2000000,
-        "attack": 1600,
-        "frequency": 10,
-        "resistance": 1200,
-        "id": "nearbyMonster",
-        "move_num": 18599161,
-        "cid": 5,
-        "s": {},
-        "level": 1,
-        "moving": false,
-        "abs": false,
-        "going_x": warrior.x,
-        "going_y": warrior.y,
-        "angle": 0,
-    }, "winterland", "winterland", Game.G))
+    warrior.entities.set(
+        "nearbyMonster",
+        new Entity(
+            {
+                x: warrior.x,
+                y: warrior.y,
+                type: "rudolph",
+                hp: 12000000,
+                max_hp: 12000000,
+                mp: 60000,
+                speed: 24,
+                xp: 2000000,
+                attack: 1600,
+                frequency: 10,
+                resistance: 1200,
+                id: "nearbyMonster",
+                move_num: 18599161,
+                cid: 5,
+                s: {},
+                level: 1,
+                moving: false,
+                abs: false,
+                going_x: warrior.x,
+                going_y: warrior.y,
+                angle: 0,
+            },
+            "winterland",
+            "winterland",
+            Game.G,
+        ),
+    )
     expect(warrior.getEntity({ type: "rudolph", returnNearest: true }).id).toBe("nearbyMonster")
 })
 
@@ -934,27 +1034,32 @@ test("Character.getTargetEntity", () => {
     priest.target = undefined
     expect(priest.getTargetEntity()).toBeUndefined()
 
-    const bee = new Entity({
-        "mp": 2,
-        "armor": 0,
-        "resistance": 0,
-        "id": "5185017",
-        "x": 70.32182893235411,
-        "y": 1487.9526638730226,
-        "moving": true,
-        "going_x": 206.28099056907251,
-        "going_y": 1485.9456975484566,
-        "abs": false,
-        "move_num": 49572238,
-        "angle": -0.8457123996441614,
-        "type": "bee",
-        "cid": 1,
-        "s": {
-            "young": {
-                "ms": 340
-            }
-        }
-    }, "main", "main", Game.G)
+    const bee = new Entity(
+        {
+            mp: 2,
+            armor: 0,
+            resistance: 0,
+            id: "5185017",
+            x: 70.32182893235411,
+            y: 1487.9526638730226,
+            moving: true,
+            going_x: 206.28099056907251,
+            going_y: 1485.9456975484566,
+            abs: false,
+            move_num: 49572238,
+            angle: -0.8457123996441614,
+            type: "bee",
+            cid: 1,
+            s: {
+                young: {
+                    ms: 340,
+                },
+            },
+        },
+        "main",
+        "main",
+        Game.G,
+    )
     priest.entities.set(bee.id, bee)
     priest.target = bee.id
     expect(priest.getTargetEntity()).toBeTruthy()
@@ -964,18 +1069,25 @@ test("Character.getTargetEntity", () => {
 test("Character.hasItem", () => {
     const itemsBackup = [...priest.items]
 
-    priest.items = [{ "name": "throwingstars", "level": 7 }, { "q": 2, "name": "essenceoffire" }]
+    priest.items = [
+        { name: "throwingstars", level: 7 },
+        { q: 2, name: "essenceoffire" },
+    ]
     expect(priest.hasItem("firestars")).toBe(false)
     expect(priest.hasItem("throwingstars")).toBe(true)
     expect(priest.hasItem(["firestars", "throwingstars"])).toBe(true)
     expect(priest.hasItem(["throwingstars", "firestars"])).toBe(true)
     expect(priest.hasItem(["wblade", "firestars"])).toBe(false)
-    expect(priest.hasItem("throwingstars", priest.items, {
-        level: 6
-    })).toBe(false)
-    expect(priest.hasItem("throwingstars", priest.items, {
-        level: 7
-    })).toBe(true)
+    expect(
+        priest.hasItem("throwingstars", priest.items, {
+            level: 6,
+        }),
+    ).toBe(false)
+    expect(
+        priest.hasItem("throwingstars", priest.items, {
+            level: 7,
+        }),
+    ).toBe(true)
 
     expect(!warrior.hasItem(["computer", "supercomputer"])).toBe(true)
 
@@ -1010,21 +1122,16 @@ test("Character.isPVP", () => {
     // False if the map and server are not PVP
     priest.server = {
         S: {
-            "dragold": {
-                "live": false,
-                "spawn": "2023-01-21T05:28:15.387Z"
+            dragold: {
+                live: false,
+                spawn: "2023-01-21T05:28:15.387Z",
             },
-            "schedule": {
-                "dailies": [
-                    13,
-                    20
-                ],
-                "night": false,
-                "nightlies": [
-                    23
-                ],
-                "time_offset": 7
-            }
+            schedule: {
+                dailies: [13, 20],
+                night: false,
+                nightlies: [23],
+                time_offset: 7,
+            },
         },
         region: "ASIA",
         name: "I",
@@ -1034,7 +1141,7 @@ test("Character.isPVP", () => {
         info: {},
         pvp: false,
         x: 0,
-        y: 0
+        y: 0,
     }
     priest.map = "main"
     expect(priest.isPVP()).toBe(false)
@@ -1055,7 +1162,17 @@ test("Character.isPVP", () => {
 test("Character.locateItem", () => {
     // Create the character's inventory for testing
     const itemsBackup = [...priest.items]
-    priest.items = [null, { name: "mpot0", q: 1 }, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, { name: "zapper", level: 0, l: "l" }, null]
+    priest.items = [
+        null,
+        { name: "mpot0", q: 1 },
+        { name: "mpot0", q: 10 },
+        { name: "pants", level: 0, l: "l" },
+        { name: "pants", level: 1 },
+        { name: "coat", level: 2 },
+        { name: "coat", level: 0 },
+        { name: "zapper", level: 0, l: "l" },
+        null,
+    ]
     priest.isize = priest.items.length
 
     expect(priest.locateItem("pants")).toBeTruthy()
@@ -1082,7 +1199,17 @@ test("Character.locateItems", async () => {
     // Create the character's inventory for testing
     priest.esize = 2
     const itemsBackup = [...priest.items]
-    priest.items = [{ name: "mpot0", q: 1 }, null, { name: "mpot0", q: 10 }, { name: "pants", level: 0, l: "l" }, { name: "pants", level: 1 }, { name: "coat", level: 2 }, { name: "coat", level: 0 }, null, { name: "mpot0", q: 10 }]
+    priest.items = [
+        { name: "mpot0", q: 1 },
+        null,
+        { name: "mpot0", q: 10 },
+        { name: "pants", level: 0, l: "l" },
+        { name: "pants", level: 1 },
+        { name: "coat", level: 2 },
+        { name: "coat", level: 0 },
+        null,
+        { name: "mpot0", q: 10 },
+    ]
     priest.isize = priest.items.length
 
     expect(priest.locateItems("pants").length).toBe(2)
@@ -1105,378 +1232,254 @@ test("Character.locateItemsByLevel", () => {
     priest.esize = 0
     priest.items = [
         {
-            "name": "hpamulet",
-            "p": "shiny",
-            "level": 0
+            name: "hpamulet",
+            p: "shiny",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "cclaw",
-            "level": 0
+            name: "cclaw",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "name": "hpbelt",
-            "level": 0
-        }
+            name: "hpbelt",
+            level: 0,
+        },
     ]
     const duplicates = priest.locateItemsByLevel(priest.items, { minAmount: 2 })
     expect(duplicates).toMatchObject({
-        "hpamulet": {
-            "0": [
-                0,
-                1,
-                2,
-                4,
-                6,
-                9,
-                12,
-                13,
-                14,
-                15,
-                16,
-                19,
-                20,
-                21,
-                26,
-                29,
-                31,
-                35
-            ]
+        hpamulet: {
+            "0": [0, 1, 2, 4, 6, 9, 12, 13, 14, 15, 16, 19, 20, 21, 26, 29, 31, 35],
         },
-        "hpbelt": {
-            "0": [
-                5,
-                7,
-                8,
-                10,
-                11,
-                17,
-                18,
-                22,
-                23,
-                24,
-                25,
-                32,
-                34,
-                36,
-                39,
-                40,
-                41
-            ]
+        hpbelt: {
+            "0": [5, 7, 8, 10, 11, 17, 18, 22, 23, 24, 25, 32, 34, 36, 39, 40, 41],
         },
-        "ringsj": {
-            "0": [
-                27,
-                28,
-                30,
-                33,
-                37,
-                38
-            ]
-        }
+        ringsj: {
+            "0": [27, 28, 30, 33, 37, 38],
+        },
     })
     const sevenplicates = priest.locateItemsByLevel(priest.items, { minAmount: 7 })
     expect(sevenplicates).toMatchObject({
-        "hpamulet": {
-            "0": [
-                0,
-                1,
-                2,
-                4,
-                6,
-                9,
-                12,
-                13,
-                14,
-                15,
-                16,
-                19,
-                20,
-                21,
-                26,
-                29,
-                31,
-                35
-            ]
+        hpamulet: {
+            "0": [0, 1, 2, 4, 6, 9, 12, 13, 14, 15, 16, 19, 20, 21, 26, 29, 31, 35],
         },
-        "hpbelt": {
-            "0": [
-                5,
-                7,
-                8,
-                10,
-                11,
-                17,
-                18,
-                22,
-                23,
-                24,
-                25,
-                32,
-                34,
-                36,
-                39,
-                40,
-                41
-            ]
-        }
+        hpbelt: {
+            "0": [5, 7, 8, 10, 11, 17, 18, 22, 23, 24, 25, 32, 34, 36, 39, 40, 41],
+        },
     })
     const noSpecial = priest.locateItemsByLevel(priest.items, { minAmount: 2, excludeSpecialItems: true })
     expect(noSpecial).toMatchObject({
-        "hpamulet": {
-            "0": [
-                1,
-                2,
-                4,
-                6,
-                9,
-                12,
-                13,
-                14,
-                15,
-                16,
-                19,
-                20,
-                21,
-                26,
-                29,
-                31,
-                35
-            ]
+        hpamulet: {
+            "0": [1, 2, 4, 6, 9, 12, 13, 14, 15, 16, 19, 20, 21, 26, 29, 31, 35],
         },
-        "hpbelt": {
-            "0": [
-                5,
-                7,
-                8,
-                10,
-                11,
-                17,
-                18,
-                22,
-                23,
-                24,
-                25,
-                32,
-                34,
-                36,
-                39,
-                40,
-                41
-            ]
+        hpbelt: {
+            "0": [5, 7, 8, 10, 11, 17, 18, 22, 23, 24, 25, 32, 34, 36, 39, 40, 41],
         },
-        "ringsj": {
-            "0": [
-                27,
-                28,
-                30,
-                33,
-                37,
-                38
-            ]
-        }
+        ringsj: {
+            "0": [27, 28, 30, 33, 37, 38],
+        },
     })
 
     priest.isize = 42
     priest.esize = 22
     priest.items = [
         {
-            "q": 200,
-            "name": "hpot0",
-            "gift": 1
+            q: 200,
+            name: "hpot0",
+            gift: 1,
         },
         {
-            "q": 156,
-            "name": "mpot0",
-            "gift": 1
+            q: 156,
+            name: "mpot0",
+            gift: 1,
         },
         {
-            "name": "hpbelt",
-            "level": 0
+            name: "hpbelt",
+            level: 0,
         },
         {
-            "q": 2,
-            "name": "gslime"
+            q: 2,
+            name: "gslime",
         },
         {
-            "q": 217,
-            "name": "beewings"
+            q: 217,
+            name: "beewings",
         },
         {
-            "name": "ringsj",
-            "level": 0
+            name: "ringsj",
+            level: 0,
         },
         {
-            "name": "hpamulet",
-            "level": 0
+            name: "hpamulet",
+            level: 0,
         },
-        null,
-        null,
-        {
-            "name": "wshoes",
-            "level": 0
-        },
-        null,
         null,
         null,
         {
-            "name": "wcap",
-            "level": 0
+            name: "wshoes",
+            level: 0,
+        },
+        null,
+        null,
+        null,
+        {
+            name: "wcap",
+            level: 0,
         },
         null,
         null,
@@ -1505,7 +1508,7 @@ test("Character.locateItemsByLevel", () => {
         null,
         null,
         null,
-        null
+        null,
     ]
     const noDuplicates = priest.locateItemsByLevel(priest.items, { minAmount: 2 })
     expect(noDuplicates).toMatchObject({})

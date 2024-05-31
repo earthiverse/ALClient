@@ -16,7 +16,7 @@ test("PartyData type validation", async () => {
             "kakaka",
             "lolwutpear",
             "shoopdawhoop",
-            "ytmnd"
+            "ytmnd",
         ],
         party: {
             earthiverse: {
@@ -32,7 +32,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             earthMag: {
                 skin: "fmage",
@@ -47,7 +47,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             earthMag2: {
                 skin: "fmage",
@@ -62,7 +62,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             cclair: {
                 skin: "mbody4g",
@@ -77,7 +77,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             fathergreen: {
                 skin: "mbody4g",
@@ -92,7 +92,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             kakaka: {
                 skin: "mbody2d",
@@ -107,7 +107,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             lolwutpear: {
                 skin: "mbody5f",
@@ -122,7 +122,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             shoopdawhoop: {
                 skin: "mbody5f",
@@ -137,7 +137,7 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
+                gold: 5,
             },
             ytmnd: {
                 skin: "mbody5f",
@@ -152,10 +152,10 @@ test("PartyData type validation", async () => {
                 l: 9,
                 xp: 40,
                 luck: 0,
-                gold: 5
-            }
+                gold: 5,
+            },
         },
-        message: "ytmnd joined the party"
+        message: "ytmnd joined the party",
     }
     expect(join).toBeDefined()
 })

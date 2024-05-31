@@ -4,7 +4,7 @@ const { Schema } = pkg
 const EntitySchema = new Schema({
     __v: {
         select: false,
-        type: Number
+        type: Number,
     },
     firstSeen: { required: false, type: Number },
     hp: { required: false, type: Number },
@@ -19,11 +19,14 @@ const EntitySchema = new Schema({
     type: String,
     s: { required: false, type: Object },
     x: Number,
-    y: Number
+    y: Number,
 })
 
 EntitySchema.index({ type: 1 })
-EntitySchema.index({ name: 1, serverIdentifier: 1, serverRegion: 1, type: 1 }, { unique: true, partialFilterExpression: { name: { $type: "string" } } })
+EntitySchema.index(
+    { name: 1, serverIdentifier: 1, serverRegion: 1, type: 1 },
+    { unique: true, partialFilterExpression: { name: { $type: "string" } } },
+)
 EntitySchema.index({ lastSeen: 1 })
 
 export default EntitySchema

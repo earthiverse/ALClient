@@ -17,6 +17,6 @@ export interface IInstance {
     }
 }
 
-export interface IInstanceDocument extends IInstance, Document { }
+export interface IInstanceDocument extends IInstance, Document {}
 
 export type IInstanceModel = Model<IInstanceDocument>

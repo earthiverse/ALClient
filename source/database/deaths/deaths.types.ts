@@ -13,6 +13,6 @@ export interface IDeath {
     time: number
 }
 
-export interface IDeathDocument extends IDeath, Document { }
+export interface IDeathDocument extends IDeath, Document {}
 
 export type IDeathModel = Model<IDeathDocument>

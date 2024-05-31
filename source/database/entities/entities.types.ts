@@ -19,6 +19,6 @@ export interface IEntity {
     lastSeen?: number
 }
 
-export interface IEntityDocument extends IEntity, Document { }
+export interface IEntityDocument extends IEntity, Document {}
 
 export type IEntityModel = Model<IEntityDocument>

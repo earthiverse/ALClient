@@ -4,14 +4,26 @@ import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 export class Ranger extends PingCompensatedCharacter {
     ctype: "ranger" = "ranger" as const
 
-    public async fiveShot(target1: string, target2: string, target3: string, target4: string, target5: string): Promise<string[]> {
+    public async fiveShot(
+        target1: string,
+        target2: string,
+        target3: string,
+        target4: string,
+        target5: string,
+    ): Promise<string[]> {
         if (!this.ready) throw new Error("We aren't ready yet [fiveShot].")
 
         const projectiles: string[] = []
         const getProjectiles = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.type == "5shot"
-                && (data.target == target1 || data.target == target2 || data.target == target3 || data.target == target4 || data.target == target5)) {
+            if (
+                data.attacker == this.id &&
+                data.type == "5shot" &&
+                (data.target == target1 ||
+                    data.target == target2 ||
+                    data.target == target3 ||
+                    data.target == target4 ||
+                    data.target == target5)
+            ) {
                 projectiles.push(data.pid)
             }
         }
@@ -21,7 +33,7 @@ export class Ranger extends PingCompensatedCharacter {
             const response = this.getResponsePromise("5shot")
             this.socket.emit("skill", {
                 ids: [target1, target2, target3, target4, target5],
-                name: "5shot"
+                name: "5shot",
             })
             await response
         } finally {
@@ -39,7 +51,7 @@ export class Ranger extends PingCompensatedCharacter {
         const response = this.getResponsePromise("4fingers")
         this.socket.emit("skill", {
             id: target,
-            name: "4fingers"
+            name: "4fingers",
         })
         return response
     }
@@ -50,7 +62,7 @@ export class Ranger extends PingCompensatedCharacter {
         const response = this.getResponsePromise("huntersmark")
         this.socket.emit("skill", {
             id: target,
-            name: "huntersmark"
+            name: "huntersmark",
         })
         return response
     }
@@ -60,9 +72,7 @@ export class Ranger extends PingCompensatedCharacter {
 
         let projectile: string
         const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.target == target
-                && data.type == "piercingshot") {
+            if (data.attacker == this.id && data.target == target && data.type == "piercingshot") {
                 this.socket.off("action", getProjectile)
                 projectile = data.pid
             }
@@ -87,9 +97,7 @@ export class Ranger extends PingCompensatedCharacter {
 
         let projectile: string
         const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.target == target
-                && data.type == "poisonarrow") {
+            if (data.attacker == this.id && data.target == target && data.type == "poisonarrow") {
                 this.socket.off("action", getProjectile)
                 projectile = data.pid
             }
@@ -118,9 +126,7 @@ export class Ranger extends PingCompensatedCharacter {
         // Set up to return the projectile for the super shot.
         let projectile: string
         const getProjectile = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.type == "supershot"
-                && data.target == target) {
+            if (data.attacker == this.id && data.type == "supershot" && data.target == target) {
                 projectile = data.pid
             }
         }
@@ -142,9 +148,11 @@ export class Ranger extends PingCompensatedCharacter {
 
         const projectiles: string[] = []
         const getProjectiles = (data: ActionData) => {
-            if (data.attacker == this.id
-                && data.type == "3shot"
-                && (data.target == target1 || data.target == target2 || data.target == target3)) {
+            if (
+                data.attacker == this.id &&
+                data.type == "3shot" &&
+                (data.target == target1 || data.target == target2 || data.target == target3)
+            ) {
                 projectiles.push(data.pid)
             }
         }
@@ -154,7 +162,7 @@ export class Ranger extends PingCompensatedCharacter {
             const response = this.getResponsePromise("3shot")
             this.socket.emit("skill", {
                 ids: [target1, target2, target3],
-                name: "3shot"
+                name: "3shot",
             })
             await response
         } finally {

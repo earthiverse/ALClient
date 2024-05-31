@@ -8,14 +8,14 @@ import { LimitDCReportData } from "./adventureland-server"
 test("LimitDCReportData type validation", async () => {
     const reports: LimitDCReportData[] = [
         {
-            "mcalls": {
-                "loaded": 1,
-                "send_updates": 51,
-                "ping_trig": 1
+            mcalls: {
+                loaded: 1,
+                send_updates: 51,
+                ping_trig: 1,
             },
-            "climit": 25,
-            "total": 5
-        }
+            climit: 25,
+            total: 5,
+        },
     ]
     for (const report of reports) expect(report).toBeDefined()
 })

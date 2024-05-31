@@ -1,67 +1,68 @@
 {
-  "name": "alclient",
-  "version": "0.20.3",
-  "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
-  "files": [
-    "build/**/*",
-    "package.json",
-    "README.md"
-  ],
-  "main": "build/index.js",
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "clean": "rimraf --glob build/*",
-    "cleanTests": "rimraf --glob build/**/*.test.*",
-    "lint": "eslint source/**.ts",
-    "fix": "eslint --fix source/**.ts",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && node node_modules/madge/bin/cli.js --warning --circular --extensions js ./",
-    "prepare": "npm run clean && npm run build && npm run cleanTests",
-    "prepublishOnly": "npm run lint && npm test",
-    "postpublish": "cross-var git tag v$npm_package_version",
-    "preversion": "npm run lint",
-    "version": "git add -A source"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/earthiverse/ALClient.git"
-  },
-  "keywords": [
-    "adventureland",
-    "alclient",
-    "adventure",
-    "land",
-    "node",
-    "typescript"
-  ],
-  "author": "Kent Rasmussen",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/earthiverse/ALClient/issues"
-  },
-  "homepage": "https://github.com/earthiverse/ALClient#readme",
-  "devDependencies": {
-    "@types/jest": "^29.5.8",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.53.0",
-    "jest": "^29.7.0",
-    "madge": "^6.1.0",
-    "rimraf": "^5.0.5",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.4.4"
-  },
-  "dependencies": {
-    "@types/node": "^20.9.0",
-    "axios": "^1.6.1",
-    "cross-var": "^1.1.0",
-    "delaunator": "^5.0.0",
-    "is-number": "^7.0.0",
-    "lru-cache": "^10.0.1",
-    "mongoose": "^7.2.1",
-    "ngraph.graph": "^20.0.1",
-    "ngraph.path": "^1.5.0",
-    "socket.io-client": "^4.7.5"
-  }
+    "name": "alclient",
+    "version": "0.20.3",
+    "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
+    "files": [
+        "build/**/*",
+        "package.json",
+        "README.md"
+    ],
+    "main": "build/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rimraf --glob build/*",
+        "cleanTests": "rimraf --glob build/**/*.test.*",
+        "lint": "eslint source/**.ts && prettier -c .",
+        "fix": "eslint --fix source/**.ts && prettier --write .",
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && node node_modules/madge/bin/cli.js --warning --circular --extensions js ./",
+        "prepare": "npm run clean && npm run build && npm run cleanTests",
+        "prepublishOnly": "npm run lint && npm test",
+        "postpublish": "cross-var git tag v$npm_package_version",
+        "preversion": "npm run lint",
+        "version": "git add -A source"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/earthiverse/ALClient.git"
+    },
+    "keywords": [
+        "adventureland",
+        "alclient",
+        "adventure",
+        "land",
+        "node",
+        "typescript"
+    ],
+    "author": "Kent Rasmussen",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/earthiverse/ALClient/issues"
+    },
+    "homepage": "https://github.com/earthiverse/ALClient#readme",
+    "devDependencies": {
+        "@types/jest": "^29.5.8",
+        "@typescript-eslint/eslint-plugin": "^6.10.0",
+        "@typescript-eslint/parser": "^6.10.0",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.53.0",
+        "jest": "^29.7.0",
+        "madge": "^6.1.0",
+        "rimraf": "^5.0.5",
+        "ts-jest": "^29.1.2",
+        "typescript": "^5.4.4"
+    },
+    "dependencies": {
+        "@types/node": "^20.9.0",
+        "axios": "^1.6.1",
+        "cross-var": "^1.1.0",
+        "delaunator": "^5.0.0",
+        "is-number": "^7.0.0",
+        "lru-cache": "^10.0.1",
+        "mongoose": "^7.2.1",
+        "ngraph.graph": "^20.0.1",
+        "ngraph.path": "^1.5.0",
+        "prettier": "^3.2.5",
+        "socket.io-client": "^4.7.5"
+    }
 }

@@ -6,6 +6,6 @@ export interface IBank extends BankInfo {
     owner: string
 }
 
-export interface IBankDocument extends IBank, Document { }
+export interface IBankDocument extends IBank, Document {}
 
 export type IBankModel = Model<IBankDocument>

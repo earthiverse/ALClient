@@ -3,12 +3,40 @@
  * game uses to interact with the server.
  */
 
-import { BankInfo, IPosition, ServerIdentifier, ServerRegion, SlotInfo, SlotType, StatusInfo, TradeSlotType } from "./adventureland.js"
-import { AchievementName, AnimationName, Attribute, BankPackName, CharacterType, ConditionName, CXData, EmotionName, GDropItem, ItemName, MapName, MonsterName, NPCName, ProjectileName, SkillName, TitleName } from "./adventureland-data.js"
+import {
+    BankInfo,
+    IPosition,
+    ServerIdentifier,
+    ServerRegion,
+    SlotInfo,
+    SlotType,
+    StatusInfo,
+    TradeSlotType,
+} from "./adventureland.js"
+import {
+    AchievementName,
+    AnimationName,
+    Attribute,
+    BankPackName,
+    CharacterType,
+    ConditionName,
+    CXData,
+    EmotionName,
+    GDropItem,
+    ItemName,
+    MapName,
+    MonsterName,
+    NPCName,
+    ProjectileName,
+    SkillName,
+    TitleName,
+} from "./adventureland-data.js"
 
-export type AchievementProgressData = AchievementProgressDataFirehazard | {
-    name: string
-}
+export type AchievementProgressData =
+    | AchievementProgressDataFirehazard
+    | {
+          name: string
+      }
 
 export type AchievementProgressDataFirehazard = {
     name: "firehazard"
@@ -58,9 +86,9 @@ export type AuthData = {
 }
 
 export type ChannelInfo = {
-    fishing?: { ms: number, drop: "f1" }
-    mining?: { ms: number, drop: "m1" | "m2" }
-    pickpocket?: { ms: number, target: string }
+    fishing?: { ms: number; drop: "f1" }
+    mining?: { ms: number; drop: "m1" | "m2" }
+    pickpocket?: { ms: number; target: string }
     town?: { ms: number }
 }
 
@@ -99,7 +127,7 @@ export type CharacterData = PlayerData & {
     going_x?: number
     going_y?: number
     moving?: boolean
-    stand?: boolean | "cstand" | "stand0",
+    stand?: boolean | "cstand" | "stand0"
     skin: string
     slots: SlotInfo
     ctype: CharacterType
@@ -263,36 +291,39 @@ export type DeathData = {
     }
 }
 
-export type DiceData = {
-    state: "bets"
-    hex: string
-    algorithm: "hmac-sha256"
-} | {
-    state: "lock"
-    key: string
-    /** The result of the dice roll (##.##) */
-    num: string
-    /** If you compute the HMAC-SHA256 of this string, with the key provided, you can confirm that it matches the hex from the `bets` state */
-    text: string
-} | {
-    state: "roll"
-}
+export type DiceData =
+    | {
+          state: "bets"
+          hex: string
+          algorithm: "hmac-sha256"
+      }
+    | {
+          state: "lock"
+          key: string
+          /** The result of the dice roll (##.##) */
+          num: string
+          /** If you compute the HMAC-SHA256 of this string, with the key provided, you can confirm that it matches the hex from the `bets` state */
+          text: string
+      }
+    | {
+          state: "roll"
+      }
 
 export type DisappearData =
     /** Character used 'blink' */
-    DisappearBlinkData |
+    | DisappearBlinkData
     /** Character (rogue) went invisible */
-    DisappearInvisData |
+    | DisappearInvisData
     /** Character disconnected */
-    DisappearDisconnectData |
+    | DisappearDisconnectData
     /** Character used 'magiport' */
-    DisappearMagiportData |
+    | DisappearMagiportData
     /** Attacking a monster that's missing */
-    DisappearNotThereData |
+    | DisappearNotThereData
     /** Character went through a door */
-    DisappearDoorData |
+    | DisappearDoorData
     /** Character used a 'town' teleport */
-    DisappearTownData
+    | DisappearTownData
 
 export type DisappearBlinkData = {
     /** Blink animation will be used */
@@ -350,28 +381,34 @@ export type DisappearingTextData = {
     x: number
     y: number
     id: string
-    args: {
-        c: string
-        s: string
-    } | {
-        color: string
-        size: string
-    }
+    args:
+        | {
+              c: string
+              s: string
+          }
+        | {
+              color: string
+              size: string
+          }
 }
 
-export type DisconnectCharacterResponse = {
-    message: "You don't own that character."
-    type: "ui_error"
-} | {
-    message: "No character with that name."
-    type: "ui_error"
-} | {
-    message: "Sent the disconnect signal to the server"
-    type: "message"
-} | {
-    message: "Character is not in game."
-    type: "ui_error"
-}
+export type DisconnectCharacterResponse =
+    | {
+          message: "You don't own that character."
+          type: "ui_error"
+      }
+    | {
+          message: "No character with that name."
+          type: "ui_error"
+      }
+    | {
+          message: "Sent the disconnect signal to the server"
+          type: "message"
+      }
+    | {
+          message: "Character is not in game."
+          type: "ui_error"
+      }
 
 export type DisconnectReasonData = "limitdc"
 
@@ -392,24 +429,28 @@ export type EntitiesData = {
 }
 
 // TODO: Capture an "update" and confirm that it has friends.
-export type FriendData = {
-    event: "lost"
-    friends: string[]
-    /** The name of the player that you are no longer friends with */
-    name: string
-} | {
-    event: "new"
-    /** The name of the player that you are now friends with */
-    friends: string[]
-    name: string
-} | {
-    event: "request"
-    /** The name of the player who sent you a friend request */
-    name: string
-} | {
-    event: "update"
-    friends: string[]
-}
+export type FriendData =
+    | {
+          event: "lost"
+          friends: string[]
+          /** The name of the player that you are no longer friends with */
+          name: string
+      }
+    | {
+          event: "new"
+          /** The name of the player that you are now friends with */
+          friends: string[]
+          name: string
+      }
+    | {
+          event: "request"
+          /** The name of the player who sent you a friend request */
+          name: string
+      }
+    | {
+          event: "update"
+          friends: string[]
+      }
 
 export type MonsterData = {
     id: string
@@ -448,15 +489,18 @@ export type EvalData = {
 }
 
 export type LoginData = LoginDataItem[]
-export type LoginDataItem = {
-    code: string
-    type: string
-} | {
-    message: string
-    type: string
-} | {
-    html: string
-}
+export type LoginDataItem =
+    | {
+          code: string
+          type: string
+      }
+    | {
+          message: string
+          type: string
+      }
+    | {
+          html: string
+      }
 
 export type GameEventData = {
     name: MonsterName
@@ -474,19 +518,16 @@ export type GameLogDataString =
     /** Sent when you chat with { code: true } */
     | "You can't chat this fast with Code yet. The interval is 15 seconds."
 
-export type GameResponseData =
-    GameResponseDataObject
-    | GameResponseDataString
-    | GameResponseDataUpgradeChance
+export type GameResponseData = GameResponseDataObject | GameResponseDataString | GameResponseDataUpgradeChance
 
 export type GameResponseDataUpgradeChance = {
-    response: "compound_chance" | "upgrade_chance",
+    response: "compound_chance" | "upgrade_chance"
     /** The chance for a success */
-    chance: number,
+    chance: number
     /** The item being compounded */
-    item: ItemData,
+    item: ItemData
     /** The scroll used for the compound calculation */
-    scroll: ItemName,
+    scroll: ItemName
     /** Related to compound chance */
     grace: number
 }
@@ -561,17 +602,19 @@ export type ProjectileSkillGRDataObject = {
     failed?: boolean
     id?: string
 } & Partial<ActionDataProjectile>
-export type SetHomeGRDataObject = {
-    home: string
-    place: "set_home"
-    response: "home_set"
-    success: true
-} | {
-    hours: number
-    place: "set_home"
-    response: "sh_time"
-    failed: true
-}
+export type SetHomeGRDataObject =
+    | {
+          home: string
+          place: "set_home"
+          response: "home_set"
+          success: true
+      }
+    | {
+          hours: number
+          place: "set_home"
+          response: "sh_time"
+          failed: true
+      }
 export type DefeatedByMonsterGRDataObject = {
     response: "defeated_by_a_monster"
     xp: number
@@ -668,25 +711,29 @@ export type TooFarGRDataObject = {
     id: string
     dist: number
 }
-export type TownGRDataObject = {
-    success: false
-    in_progress: true
-    response: "data"
-    place: "town"
-} | {
-    success: false
-    response: "cant_escape"
-    place: "town"
-}
-export type TransportGRDataObject = {
-    success: true
-    response: "data"
-    place: "transport"
-} | {
-    success: false
-    response: "cant_escape"
-    place: "transport"
-}
+export type TownGRDataObject =
+    | {
+          success: false
+          in_progress: true
+          response: "data"
+          place: "town"
+      }
+    | {
+          success: false
+          response: "cant_escape"
+          place: "town"
+      }
+export type TransportGRDataObject =
+    | {
+          success: true
+          response: "data"
+          place: "transport"
+      }
+    | {
+          success: false
+          response: "cant_escape"
+          place: "transport"
+      }
 export type UnfriendFailedGRDataObject = {
     response: "unfriend_failed"
     reason: "bank" | "coms failure" | "nouser"
@@ -725,13 +772,44 @@ export type UpgradeCompoundGRDataObject = {
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
-    AttackFailedGRDataObject | BankOPXGRDataObject | BankRestrictionsGRDataObject | BuySuccessGRDataObject | CooldownGRDataObject |
-    CraftGRDataObject | DestroyGRDataObject | SkillSuccessGRDataObject | ProjectileSkillGRDataObject | DefeatedByMonsterGRDataObject | DisabledGRDataObject |
-    DismantleGRDataObject | DonateGRDataObject | CondExpGRDataObject | EnterGRDataObject | GetCloserGRDataObject | GoldSentGRDataObject | ItemLockedGRDataObject |
-    ItemSentGRDataObject | LostFoundInfoGRDataObject | MagiportGRDataObject | TakeMailItemGRDataObject | NoItemGRDataObject | NoMPGRDataObject |
-    NoTargetGRDataObject | SeashellGRDataObject | SkillStatusGRDataObject | TargetLockGRDataObject | TooFarGRDataObject | UnfriendFailedGRDataObject |
-    GoldReceivedGRDataObject | TownGRDataObject | TransportGRDataObject | EquipGRDataObject | ExchangeNotEnoughGRDataObject | UpgradeCompoundGRDataObject |
-    BankOperationGRDataObject | SetHomeGRDataObject
+    | AttackFailedGRDataObject
+    | BankOPXGRDataObject
+    | BankRestrictionsGRDataObject
+    | BuySuccessGRDataObject
+    | CooldownGRDataObject
+    | CraftGRDataObject
+    | DestroyGRDataObject
+    | SkillSuccessGRDataObject
+    | ProjectileSkillGRDataObject
+    | DefeatedByMonsterGRDataObject
+    | DisabledGRDataObject
+    | DismantleGRDataObject
+    | DonateGRDataObject
+    | CondExpGRDataObject
+    | EnterGRDataObject
+    | GetCloserGRDataObject
+    | GoldSentGRDataObject
+    | ItemLockedGRDataObject
+    | ItemSentGRDataObject
+    | LostFoundInfoGRDataObject
+    | MagiportGRDataObject
+    | TakeMailItemGRDataObject
+    | NoItemGRDataObject
+    | NoMPGRDataObject
+    | NoTargetGRDataObject
+    | SeashellGRDataObject
+    | SkillStatusGRDataObject
+    | TargetLockGRDataObject
+    | TooFarGRDataObject
+    | UnfriendFailedGRDataObject
+    | GoldReceivedGRDataObject
+    | TownGRDataObject
+    | TransportGRDataObject
+    | EquipGRDataObject
+    | ExchangeNotEnoughGRDataObject
+    | UpgradeCompoundGRDataObject
+    | BankOperationGRDataObject
+    | SetHomeGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -951,11 +1029,11 @@ export type ItemDataTrade = ItemData & {
     /** If set, this item is not for sale. The player wants to buy this item. */
     b?: boolean
     /** Number of minutes remaining for giveaway items */
-    giveaway?: number;
+    giveaway?: number
     /** List of character IDs that are in the giveaway */
-    list?: string[];
-    price: number;
-    rid: string;
+    list?: string[]
+    price: number
+    rid: string
 }
 
 export type LimitDCReportData = {
@@ -1013,13 +1091,15 @@ export type MailData = {
     type: "mail"
 }
 
-export type MailDeleteResponse = {
-    message: "Mail deleted."
-    type: "message"
-} | {
-    message: "Can't delete."
-    type: "ui_error"
-}
+export type MailDeleteResponse =
+    | {
+          message: "Mail deleted."
+          type: "message"
+      }
+    | {
+          message: "Can't delete."
+          type: "ui_error"
+      }
 
 export type MailMessageData = {
     /** The mail's ID */
@@ -1040,11 +1120,13 @@ export type MailMessageData = {
     taken?: boolean
 }
 
-export type MapInfo = {
-    dice: "bets" | "roll" | "lock"
-    num?: string
-    seconds: number
-} | Record<string, never>
+export type MapInfo =
+    | {
+          dice: "bets" | "roll" | "lock"
+          num?: string
+          seconds: number
+      }
+    | Record<string, never>
 
 export type PullMerchantsData = {
     type: "merchants"
@@ -1267,16 +1349,18 @@ export type ServerInfoData = {
 } & {
     goobrawl?: ServerInfoDataEvent
 } & {
-    abtesting?: ServerInfoDataEvent | {
-        /** A date string of when sign-ups will stop for the event */
-        signup_end: string
-        /** How many characters are on team A. TODO: Check that this is actually what it means */
-        A: number
-        /** How many characters are on team B. TODO: Check that this is actually what it means */
-        B: number
-        /** The event ID. TODO: Do we need this? */
-        id: string
-    }
+    abtesting?:
+        | ServerInfoDataEvent
+        | {
+              /** A date string of when sign-ups will stop for the event */
+              signup_end: string
+              /** How many characters are on team A. TODO: Check that this is actually what it means */
+              A: number
+              /** How many characters are on team B. TODO: Check that this is actually what it means */
+              B: number
+              /** The event ID. TODO: Do we need this? */
+              id: string
+          }
 }
 
 export type ServerInfoDataEvent = {
@@ -1300,15 +1384,17 @@ export type ServerInfoDataNotLive = {
     spawn: string
 }
 
-export type ServerMessageData = {
-    color: string
-    discord: string
-    message: string
-} | {
-    color: string
-    event: boolean
-    message: string
-}
+export type ServerMessageData =
+    | {
+          color: string
+          discord: string
+          message: string
+      }
+    | {
+          color: string
+          event: boolean
+          message: string
+      }
 
 export type SkillTimeoutData = {
     name: SkillName
@@ -1422,7 +1508,14 @@ export type UIDataAOE = {
     ids: string[]
 }
 
-export type UIData = UIDataBuySell | UIDataTrade | UIDataFishingMining | UIDataMassProduction | UIDataMLuck | UIDataAOE | UIDataRspeed
+export type UIData =
+    | UIDataBuySell
+    | UIDataTrade
+    | UIDataFishingMining
+    | UIDataMassProduction
+    | UIDataMLuck
+    | UIDataAOE
+    | UIDataRspeed
 
 export type UpgradeData = {
     type: string | "compound" | "exchange" | "upgrade"
@@ -1448,147 +1541,222 @@ export type WelcomeData = {
 }
 
 export type ServerToClientEvents = {
-    "achievement_progress": (data: AchievementProgressData) => void
-    "action": (data: ActionData) => void
-    "chat_log": (data: ChatLogData) => void
-    "chest_opened": (data: ChestOpenedData) => void
-    "cm": (data: CMData) => void
-    "code_eval": (data: string) => void
-    "death": (data: DeathData) => void
-    "disappear": (data: DisappearData) => void
-    "disappearing_text": (data: DisappearingTextData) => void
+    achievement_progress: (data: AchievementProgressData) => void
+    action: (data: ActionData) => void
+    chat_log: (data: ChatLogData) => void
+    chest_opened: (data: ChestOpenedData) => void
+    cm: (data: CMData) => void
+    code_eval: (data: string) => void
+    death: (data: DeathData) => void
+    disappear: (data: DisappearData) => void
+    disappearing_text: (data: DisappearingTextData) => void
     // TODO: Add return data
-    "disconnect_reason": (data: unknown) => void
-    "drop": (data: ChestData) => void
-    "eval": (data: EvalData) => void
-    "emotion": (data: EmotionData) => void
-    "entities": (data: EntitiesData) => void
+    disconnect_reason: (data: unknown) => void
+    drop: (data: ChestData) => void
+    eval: (data: EvalData) => void
+    emotion: (data: EmotionData) => void
+    entities: (data: EntitiesData) => void
     // TODO: Confirm that there isn't a separate `friends` socket event
-    "friend": (data: FriendData) => void
+    friend: (data: FriendData) => void
     // TODO: Create GameErrorData type
-    "game_error": (data: string | { message: string }) => void
-    "game_event": (data: GameEventData) => void
-    "game_log": (data: GameLogData) => void
-    "game_response": (data: GameResponseData) => void
-    "hit": (data: HitData) => void
-    "invite": (data: InviteData) => void
-    "limitdcreport": (data: LimitDCReportData) => void
-    "lostandfound": (data: ItemDataTrade[]) => void
-    "magiport": (data: { name: string }) => void
-    "new_map": (data: NewMapData) => void
+    game_error: (data: string | { message: string }) => void
+    game_event: (data: GameEventData) => void
+    game_log: (data: GameLogData) => void
+    game_response: (data: GameResponseData) => void
+    hit: (data: HitData) => void
+    invite: (data: InviteData) => void
+    limitdcreport: (data: LimitDCReportData) => void
+    lostandfound: (data: ItemDataTrade[]) => void
+    magiport: (data: { name: string }) => void
+    new_map: (data: NewMapData) => void
     // TODO: Is this real? How does this happen?
-    "notthere": (data: NotThereData) => void
-    "party_update": (data: PartyData) => void
-    "ping_ack": (data: { id: string }) => void
-    "player": (data: CharacterData) => void
-    "players": (data: PlayersData) => void
-    "pm": (data: PMData) => void
-    "q_data": (data: PQData) => void
-    "request": (data: { name: string }) => void
-    "secondhands": (data: ItemDataTrade[]) => void
-    "server_info": (data: ServerInfoData) => void
-    "skill_timeout": (data: SkillTimeoutData) => void
-    "start": (data: StartData) => void
-    "tavern": (data: TavernEventData) => void
-    "tracker": (data: TrackerData) => void
-    "trade_history": (data: TradeHistoryData) => void
-    "ui": (data: UIData) => void
-    "upgrade": (data: UpgradeData) => void
-    "welcome": (data: WelcomeData) => void
+    notthere: (data: NotThereData) => void
+    party_update: (data: PartyData) => void
+    ping_ack: (data: { id: string }) => void
+    player: (data: CharacterData) => void
+    players: (data: PlayersData) => void
+    pm: (data: PMData) => void
+    q_data: (data: PQData) => void
+    request: (data: { name: string }) => void
+    secondhands: (data: ItemDataTrade[]) => void
+    server_info: (data: ServerInfoData) => void
+    skill_timeout: (data: SkillTimeoutData) => void
+    start: (data: StartData) => void
+    tavern: (data: TavernEventData) => void
+    tracker: (data: TrackerData) => void
+    trade_history: (data: TradeHistoryData) => void
+    ui: (data: UIData) => void
+    upgrade: (data: UpgradeData) => void
+    welcome: (data: WelcomeData) => void
 }
 
 export type ClientToServerSkillData =
     /** Skills that don't take any parameters */
-    | { name: Extract<SkillName, "agitate" | "alchemy" | "charge" | "cleave" | "darkblessing" | "fishing" | "hardshell" | "invis" | "light" | "massproduction" | "massproductionpp" | "mcourage" | "mining" | "mshield" | "partyheal" | "scare" | "selfheal" | "stomp" | "warcry"> }
+    | {
+          name: Extract<
+              SkillName,
+              | "agitate"
+              | "alchemy"
+              | "charge"
+              | "cleave"
+              | "darkblessing"
+              | "fishing"
+              | "hardshell"
+              | "invis"
+              | "light"
+              | "massproduction"
+              | "massproductionpp"
+              | "mcourage"
+              | "mining"
+              | "mshield"
+              | "partyheal"
+              | "scare"
+              | "selfheal"
+              | "stomp"
+              | "warcry"
+          >
+      }
     /** Skills that target an entity */
-    | { name: Extract<SkillName, "4fingers" | "absorb" | "burst" | "curse" | "huntersmark" | "magiport" | "mentalburst" | "mluck" | "piercingshot" | "pickpocket" | "purify" | "quickpunch" | "quickstab" | "reflection" | "rspeed" | "smash" | "supershot" | "taunt" | "zapperzap">, id: string }
+    | {
+          name: Extract<
+              SkillName,
+              | "4fingers"
+              | "absorb"
+              | "burst"
+              | "curse"
+              | "huntersmark"
+              | "magiport"
+              | "mentalburst"
+              | "mluck"
+              | "piercingshot"
+              | "pickpocket"
+              | "purify"
+              | "quickpunch"
+              | "quickstab"
+              | "reflection"
+              | "rspeed"
+              | "smash"
+              | "supershot"
+              | "taunt"
+              | "zapperzap"
+          >
+          id: string
+      }
     /** Skills that use an item */
-    | { name: Extract<SkillName, "pcoat" | "shadowstrike">, num: number }
+    | { name: Extract<SkillName, "pcoat" | "shadowstrike">; num: number }
     /** Skills that target an entity and use an item */
-    | { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">, id: string, num: number }
+    | { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">; id: string; num: number }
     /** Other special skills */
-    | { name: Extract<SkillName, "3shot">, ids: [string, string, string] }
-    | { name: Extract<SkillName, "5shot">, ids: [string, string, string, string, string] }
-    | { name: Extract<SkillName, "blink" | "dash">, x: number, y: number }
-    | { name: Extract<SkillName, "cburst">, targets: [string, number][] }
-    | { name: Extract<SkillName, "energize">, id: string, mp: number }
+    | { name: Extract<SkillName, "3shot">; ids: [string, string, string] }
+    | { name: Extract<SkillName, "5shot">; ids: [string, string, string, string, string] }
+    | { name: Extract<SkillName, "blink" | "dash">; x: number; y: number }
+    | { name: Extract<SkillName, "cburst">; targets: [string, number][] }
+    | { name: Extract<SkillName, "energize">; id: string; mp: number }
 
 export type ClientToServerEvents = {
-    "attack": (data: { id: string }) => void
-    "bet": (data: { type: "dice", dir: "up" | "down", num: number, gold: number }) => void
-    "auth": (data: AuthData) => void
+    attack: (data: { id: string }) => void
+    bet: (data: { type: "dice"; dir: "up" | "down"; num: number; gold: number }) => void
+    auth: (data: AuthData) => void
     // TODO: Create BankData type
-    "bank": (data: { amount: number, operation: "deposit" | "withdraw" } | { inv: number, operation: "swap", pack: BankPackName, str: number } | { operation: "move", a: number, b: number, pack: BankPackName }) => void
-    "booster": (data: { action: "shift", num: number, to: string }) => void
+    bank: (
+        data:
+            | { amount: number; operation: "deposit" | "withdraw" }
+            | { inv: number; operation: "swap"; pack: BankPackName; str: number }
+            | { operation: "move"; a: number; b: number; pack: BankPackName },
+    ) => void
+    booster: (data: { action: "shift"; num: number; to: string }) => void
     // TODO: Create BuyData type
-    "buy": (data: { name: ItemName, quantity?: number }) => void
-    "cm": (data: { message: string, to: string[] }) => void
+    buy: (data: { name: ItemName; quantity?: number }) => void
+    cm: (data: { message: string; to: string[] }) => void
     // TODO: Create CompoundData type
-    "compound": (data: { calculate?: boolean, clevel: number, items: [number, number, number], offering_num?: number, scroll_num: number }) => void
+    compound: (data: {
+        calculate?: boolean
+        clevel: number
+        items: [number, number, number]
+        offering_num?: number
+        scroll_num: number
+    }) => void
     // TODO: Create CraftData type
-    "craft": (data: { items: [number, number][] }) => void
-    "destroy": (data: { num: number, q: number, statue: true }) => void
-    "dismantle": (data: { num: number }) => void
-    "donate": (donation: { gold: number }) => void
-    "emotion": (data: { name: EmotionName }) => void
-    "enter": (data: { name: string, place: MapName }) => void
-    "equip": (data: { num: number, slot: SlotType } | { consume: true, num: number } | { num: number, price: number, q: number, slot: TradeSlotType }) => void
-    "equip_batch": (data: { num: number, slot: SlotType }[]) => void
-    "eval": (data: { command: string }) => void
-    "exchange": (data: { item_num: number, q?: number }) => void
+    craft: (data: { items: [number, number][] }) => void
+    destroy: (data: { num: number; q: number; statue: true }) => void
+    dismantle: (data: { num: number }) => void
+    donate: (donation: { gold: number }) => void
+    emotion: (data: { name: EmotionName }) => void
+    enter: (data: { name: string; place: MapName }) => void
+    equip: (
+        data:
+            | { num: number; slot: SlotType }
+            | { consume: true; num: number }
+            | { num: number; price: number; q: number; slot: TradeSlotType },
+    ) => void
+    equip_batch: (data: { num: number; slot: SlotType }[]) => void
+    eval: (data: { command: string }) => void
+    exchange: (data: { item_num: number; q?: number }) => void
     // TODO: Create ExchangeBuyData type
-    "exchange_buy": (data: { name: ItemName, num: number, q: number }) => void
+    exchange_buy: (data: { name: ItemName; num: number; q: number }) => void
     // TODO: Create FriendData type
     // NOTE: We already have FriendData for receiving `friend` sockets.
     //       Maybe FriendEmitData type?
-    "friend": (data: { event: "accept" | "request" | "unfriend", name: string }) => void
-    "heal": (data: { id: string }) => void
-    "imove": (data: { a: number, b: number }) => void
-    "interaction": (data: { key: string } | { type: "newyear_tree" }) => void
-    "join": (data: { name: string }) => void
-    "join_giveaway": (data: { slot: TradeSlotType, id: string, rid: string }) => void
-    "leave": () => void
-    "loaded": (data: LoadedData) => void
-    "lostandfound": (reserveInfo?: "info") => void
-    "mail": (data: { item: boolean, message: string, subject: string, to: string }) => void
-    "mail_take_item": (data: { id: string }) => void
-    "magiport": (data: { name: string }) => void
-    "merchant": (data: { close: number } | { num: number }) => void
-    "monsterhunt": () => void
-    "move": (data: { going_x: number, going_y: number, m: number, x: number, y: number } | { key: "down" | "left" | "right" | "up" }) => void
-    "open_chest": (data: { id: string }) => void
+    friend: (data: { event: "accept" | "request" | "unfriend"; name: string }) => void
+    heal: (data: { id: string }) => void
+    imove: (data: { a: number; b: number }) => void
+    interaction: (data: { key: string } | { type: "newyear_tree" }) => void
+    join: (data: { name: string }) => void
+    join_giveaway: (data: { slot: TradeSlotType; id: string; rid: string }) => void
+    leave: () => void
+    loaded: (data: LoadedData) => void
+    lostandfound: (reserveInfo?: "info") => void
+    mail: (data: { item: boolean; message: string; subject: string; to: string }) => void
+    mail_take_item: (data: { id: string }) => void
+    magiport: (data: { name: string }) => void
+    merchant: (data: { close: number } | { num: number }) => void
+    monsterhunt: () => void
+    move: (
+        data:
+            | { going_x: number; going_y: number; m: number; x: number; y: number }
+            | { key: "down" | "left" | "right" | "up" },
+    ) => void
+    open_chest: (data: { id: string }) => void
     // TODO: Create PartyData type
     // NOTE: We already have PartyData for receiving `party_update` sockets.
     //       Maybe change existing PartyData to PartyUpdateData?
-    "party": (data: { event: "accept" | "invite" | "kick" | "raccept" | "request", name: string } | { event: "leave" }) => void
+    party: (
+        data: { event: "accept" | "invite" | "kick" | "raccept" | "request"; name: string } | { event: "leave" },
+    ) => void
     // TODO: Create PingTrigData type
-    "ping_trig": (data: { id: string }) => void
-    "players": () => void
+    ping_trig: (data: { id: string }) => void
+    players: () => void
     // TODO: Create PropertyData type
-    "property": (data: { typing: boolean }) => void
-    "respawn": (data: { safe: boolean }) => void
-    "say": (data: { message: string, name?: string }) => void
+    property: (data: { typing: boolean }) => void
+    respawn: (data: { safe: boolean }) => void
+    say: (data: { message: string; name?: string }) => void
     // TODO: Create SBuyData type
-    "sbuy": (data: { rid: string }) => void
-    "secondhands": () => void
-    "sell": (data: { num: number, quantity: number }) => void
-    "send": (data: { gold: number, name: string } | { name: string, num: number, q: number }) => void
+    sbuy: (data: { rid: string }) => void
+    secondhands: () => void
+    sell: (data: { num: number; quantity: number }) => void
+    send: (data: { gold: number; name: string } | { name: string; num: number; q: number }) => void
     // TODO: Create SendUpdatesData type
-    "send_updates": (data: Record<string, never>) => void
-    "set_home": () => void
-    "skill": (data: ClientToServerSkillData) => void
-    "split": (data: { num: number, quantity: number }) => void
-    "stop": (data: { action: "invis" | "town" }) => void
-    "town": () => void
-    "tracker": () => void
-    "transport": (data: { s: number, to: MapName }) => void
+    send_updates: (data: Record<string, never>) => void
+    set_home: () => void
+    skill: (data: ClientToServerSkillData) => void
+    split: (data: { num: number; quantity: number }) => void
+    stop: (data: { action: "invis" | "town" }) => void
+    town: () => void
+    tracker: () => void
+    transport: (data: { s: number; to: MapName }) => void
     // TODO: Confirm that 'q' is a string
     // TODO: Create TradeBuyData type
-    "trade_buy": (data: { id: string, q: string, rid: string, slot: TradeSlotType }) => void
-    "trade_history": () => void
-    "trade_sell": (data: { id: string, q: number, rid: string, slot: TradeSlotType }) => void
-    "trade_wishlist": (data: { level?: number, name: ItemName, price: number, q: number, slot: TradeSlotType }) => void
-    "unequip": (data: { slot: SlotType | TradeSlotType }) => void
-    "upgrade": (data: { calculate?: boolean, clevel: number, item_num: number, offering_num: number, scroll_num: number }) => void
-    "use": (data: { item: "hp" | "mp" }) => void
+    trade_buy: (data: { id: string; q: string; rid: string; slot: TradeSlotType }) => void
+    trade_history: () => void
+    trade_sell: (data: { id: string; q: number; rid: string; slot: TradeSlotType }) => void
+    trade_wishlist: (data: { level?: number; name: ItemName; price: number; q: number; slot: TradeSlotType }) => void
+    unequip: (data: { slot: SlotType | TradeSlotType }) => void
+    upgrade: (data: {
+        calculate?: boolean
+        clevel: number
+        item_num: number
+        offering_num: number
+        scroll_num: number
+    }) => void
+    use: (data: { item: "hp" | "mp" }) => void
 }

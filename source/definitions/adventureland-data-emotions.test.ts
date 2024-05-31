@@ -7,16 +7,16 @@ import { GData } from "./adventureland-data"
 
 test("G.emotions type validation", async () => {
     const G_emotions: Pick<GData, "emotions"> = {
-        "emotions": {
-            "drop_egg": {
-                "fx": "drop_egg",
-                "cooldown": 2000
+        emotions: {
+            drop_egg: {
+                fx: "drop_egg",
+                cooldown: 2000,
             },
-            "hearts_single": {
-                "fx": "hearts_single",
-                "cooldown": 2000
-            }
-        }
+            hearts_single: {
+                fx: "hearts_single",
+                cooldown: 2000,
+            },
+        },
     }
     expect(G_emotions).toBeDefined()
 })

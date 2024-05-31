@@ -20,9 +20,9 @@ export type GetEntitiesFilters = {
     isCooperative?: boolean
     isDisabled?: boolean
     withinRange?: number | SkillName
-    /** 
+    /**
      * Only set this if you're not checking within the range of your own character.
-     * 
+     *
      * If you set this, make sure that `withinRange` is also set!
      */
     withinRangeOf?: IPosition
@@ -86,28 +86,28 @@ export type GetPlayerFilters = GetPlayersFilters & {
 
 /** Filters for returning a list of items */
 export type LocateItemsFilters = {
-    level?: number;
-    levelGreaterThan?: number;
-    levelLessThan?: number;
-    locked?: boolean;
+    level?: number
+    levelGreaterThan?: number
+    levelLessThan?: number
+    locked?: boolean
     /** Is the item PvP marked? (i.e. does it have a chance to drop if we die to another player?) */
-    pvpMarked?: boolean;
-    quantityGreaterThan?: number;
-    quantityLessThan?: number;
+    pvpMarked?: boolean
+    quantityGreaterThan?: number
+    quantityLessThan?: number
     /** Is the item special? (e.g.: shiny, firehazard, lucky, glitched, ...) */
-    special?: boolean | TitleName;
+    special?: boolean | TitleName
     /** The scroll applied to the weapon (e.g.: int, dex, str, ...) */
-    statType?: Attribute;
+    statType?: Attribute
     /** Some items, like cosmetics, have a data property */
-    data?: string;
+    data?: string
 }
 
 /** Filters for returning a single item */
 export type LocateItemFilters = LocateItemsFilters & {
-    returnHighestLevel?: boolean;
-    returnHighestQuantity?: boolean;
-    returnLowestLevel?: boolean;
-    returnLowestQuantity?: boolean;
+    returnHighestLevel?: boolean
+    returnHighestQuantity?: boolean
+    returnLowestLevel?: boolean
+    returnLowestQuantity?: boolean
 }
 
 export type SmartMoveOptions = PathfinderOptions & {

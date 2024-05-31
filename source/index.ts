@@ -84,5 +84,5 @@ export default {
     ServerModel,
     Tools,
     TradeItem,
-    Warrior
+    Warrior,
 }

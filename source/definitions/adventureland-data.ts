@@ -46,68 +46,76 @@ export type GData = {
             y?: number
         }
     }
-    classes: { [T in CharacterType]: {
-        [T in Attribute]?: number
-    } & {
-        /** What items you get if you create a new character */
-        base_slots: Partial<SlotInfo>
-        /** TODO: ??? What does this do? Does it prevent your damage from decreasing when feared? */
-        brave?: boolean
-        /** What type of damage this class does */
-        damage_type: DamageType
-        /** A short lore of the class */
-        description: string
-        /** A list of items that the class can equip using both hands */
-        doublehand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
+    classes: {
+        [T in CharacterType]: {
             [T in Attribute]?: number
-        } };
-        /** (GUI related) What sprites are available for the given class */
-        looks: [string, CXData][]
-        /** Statistics the class gets with a level up */
-        lstats: {
-            dex: number
-            for: number
-            int: number
-            str: number
-            vit: number
+        } & {
+            /** What items you get if you create a new character */
+            base_slots: Partial<SlotInfo>
+            /** TODO: ??? What does this do? Does it prevent your damage from decreasing when feared? */
+            brave?: boolean
+            /** What type of damage this class does */
+            damage_type: DamageType
+            /** A short lore of the class */
+            description: string
+            /** A list of items that the class can equip using both hands */
+            doublehand: {
+                [T in WeaponType]?: {
+                    /** Modifier on the given stat for equipping this type of item */
+                    [T in Attribute]?: number
+                }
+            }
+            /** (GUI related) What sprites are available for the given class */
+            looks: [string, CXData][]
+            /** Statistics the class gets with a level up */
+            lstats: {
+                dex: number
+                for: number
+                int: number
+                str: number
+                vit: number
+            }
+            /** (GUI related) What sprite to use for heals */
+            healing_projectile?: string
+            /** The class's main attribute. Increasing this will increase attack. */
+            main_stat: Attribute
+            /** A list of items that the class can equip in its mainhand */
+            mainhand: {
+                [T in WeaponType]?: {
+                    /** Modifier on the given stat for equipping this type of item */
+                    [T in Attribute]?: number
+                }
+            }
+            /** A list of items that the class can equip in its offhand */
+            offhand: {
+                [T in WeaponType]?: {
+                    /** Modifier on the given stat for equipping this type of item */
+                    [T in Attribute]?: number
+                }
+            }
+            /** (GUI related) What sprite the class uses for attacks */
+            projectile: string
+            /** TODO: ??? What is this? */
+            side_stat?: Attribute
+            /** Statistics the class starts with */
+            stats: {
+                dex: number
+                for: number
+                int: number
+                str: number
+                vit: number
+            }
+            /** TODO: ??? GUI related? */
+            xcx?: any[]
         }
-        /** (GUI related) What sprite to use for heals */
-        healing_projectile?: string
-        /** The class's main attribute. Increasing this will increase attack. */
-        main_stat: Attribute
-        /** A list of items that the class can equip in its mainhand */
-        mainhand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
-            [T in Attribute]?: number
-        } };
-        /** A list of items that the class can equip in its offhand */
-        offhand: { [T in WeaponType]?: {
-            /** Modifier on the given stat for equipping this type of item */
-            [T in Attribute]?: number
-        } };
-        /** (GUI related) What sprite the class uses for attacks */
-        projectile: string
-        /** TODO: ??? What is this? */
-        side_stat?: Attribute
-        /** Statistics the class starts with */
-        stats: {
-            dex: number
-            for: number
-            int: number
-            str: number
-            vit: number
-        }
-        /** TODO: ??? GUI related? */
-        xcx?: any[]
-    } };
+    }
     conditions: {
-        "eburn": {
+        eburn: {
             damage: number
             intensity: string
         }
     } & {
-        "reflection": {
+        reflection: {
             cap_reflection: number
         }
     } & {
@@ -149,7 +157,8 @@ export type GData = {
             special?: ItemName
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
-        } }
+        }
+    }
     cosmetics: {
         bundle: {
             [T in string]: string[]
@@ -179,16 +188,17 @@ export type GData = {
         prop: {
             [T in string]: string[]
         }
-
     }
-    craft: { [T in ItemName]?: {
-        /** These are the items that are required to craft the given item
-         *  [quantity, item name, item level (0 if not set)] */
-        items: [number, ItemName, number?][]
-        /** The cost to craft this item */
-        cost: number
-        quest?: Extract<NPCName, "mcollector" | "witch">
-    } }
+    craft: {
+        [T in ItemName]?: {
+            /** These are the items that are required to craft the given item
+             *  [quantity, item name, item level (0 if not set)] */
+            items: [number, ItemName, number?][]
+            /** The cost to craft this item */
+            cost: number
+            quest?: Extract<NPCName, "mcollector" | "witch">
+        }
+    }
     dimensions: {
         /** TODO: Figure out these. [width, height, ???, base_w, base_w] */
         [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
@@ -264,7 +274,19 @@ export type GData = {
         }
     }
     geometry: {
-        [T in Exclude<MapName, "batcave" | "d1" | "d2" | "d3" | "frozencave" | "maintest" | "old_bank" | "old_main" | "original_main" | "therush">]: GGeometry
+        [T in Exclude<
+            MapName,
+            | "batcave"
+            | "d1"
+            | "d2"
+            | "d3"
+            | "frozencave"
+            | "maintest"
+            | "old_bank"
+            | "old_main"
+            | "original_main"
+            | "therush"
+        >]: GGeometry
     }
     // TODO: Add type information
     images: {
@@ -286,7 +308,7 @@ export type GData = {
     }
     items: {
         [T in ItemName]: GItem
-    };
+    }
     levels: {
         [T in string]?: number
     }
@@ -368,7 +390,49 @@ export type GData = {
              *  If it's "witch", you can exchange whatever has `quest: "witch"` in `G.craft` */
             quest?: QuestName
             /** The role the NPC has */
-            role: "announcer" | "blocker" | "bouncer" | "citizen" | "companion" | "compound" | "craftsman" | "cx" | "daily_events" | "exchange" | "funtokens" | "gold" | "guard" | "items" | "jailer" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "merchant" | "monstertokens" | "newupgrade" | "newyear_tree" | "petkeeper" | "premium" | "pvp_announcer" | "pvptokens" | "quest" | "repeater" | "resort" | "rewards" | "secondhands" | "shells" | "ship" | "shrine" | "standmerchant" | "tavern" | "tease" | "thesearch" | "transport" | "witch" | string
+            role:
+                | "announcer"
+                | "blocker"
+                | "bouncer"
+                | "citizen"
+                | "companion"
+                | "compound"
+                | "craftsman"
+                | "cx"
+                | "daily_events"
+                | "exchange"
+                | "funtokens"
+                | "gold"
+                | "guard"
+                | "items"
+                | "jailer"
+                | "locksmith"
+                | "lostandfound"
+                | "lotterylady"
+                | "mcollector"
+                | "merchant"
+                | "monstertokens"
+                | "newupgrade"
+                | "newyear_tree"
+                | "petkeeper"
+                | "premium"
+                | "pvp_announcer"
+                | "pvptokens"
+                | "quest"
+                | "repeater"
+                | "resort"
+                | "rewards"
+                | "secondhands"
+                | "shells"
+                | "ship"
+                | "shrine"
+                | "standmerchant"
+                | "tavern"
+                | "tease"
+                | "thesearch"
+                | "transport"
+                | "witch"
+                | string
             /** (GUI) Lines the NPC can say */
             says?: string[] | string
             /** (TODO: Confirm) If you have a lot of this stat, the NPC might follow you around? */
@@ -399,7 +463,7 @@ export type GData = {
             type?: "full" | "fullstatic" | "static" | CharacterType
         }
     } & {
-        "transporter": {
+        transporter: {
             /** Places that the transporter can take you */
             places?: {
                 /** The number refers to the given spawn on the map */
@@ -409,10 +473,11 @@ export type GData = {
     }
     /** TODO: ??? What is this? GUI related sprite positions in some sort of image map? */
     positions: {
-        [T in string]: string[] |
-        [string, number, number, number, number][] |
-        [string, number, number, number, number] |
-        [string, number, number]
+        [T in string]:
+            | string[]
+            | [string, number, number, number, number][]
+            | [string, number, number, number, number]
+            | [string, number, number]
     }
     projectiles: {
         [T in ProjectileName]: {
@@ -432,7 +497,6 @@ export type GData = {
             ray?: AnimationName
             /** Projectile speed */
             speed?: number
-
         }
     }
     sets: {
@@ -459,97 +523,117 @@ export type GData = {
             name: string
         }
     }
-    skills: { [T in SkillName]: {
-        action?: string
-        apiercing?: number;
-        aura?: boolean
-        class?: CharacterType[]
-        code?: boolean | string
-        /** Additional */
-        complementary?: string
-        condition?: ConditionName
-        consume?: ItemName
-        cooldown?: number
-        cooldown_multiplier?: number
-        damage?: number
-        damage_multiplier?: number
-        damage_type?: DamageType
-        /** How long the condition lasts */
-        duration?: number
-        duration_min?: number
-        duration_max?: number
-        /** An exlpanation of what this skill does */
-        explanation?: string
-        global?: true
-        heal?: boolean
-        /** If true, we can't use this skill in a safe zone */
-        hostile?: boolean;
-        /** Items that this we need to use the skill */
-        inventory?: ItemName[];
-        kill_buff?: ConditionName
-        level?: number;
-        levels?: [number, number][]
-        /** If set, the skill requires a list of targets */
-        list?: boolean
-        max?: number
-        merchant_use?: true
-        /** Can we use this skill on monsters? */
-        monsters?: boolean;
-        /** MP Cost for skill */
-        mp?: number;
-        multi?: boolean;
-        /** The name of the skill */
-        name: string;
-        negative?: ItemName[]
-        nprop?: Attribute[]
-        /** For skills that get better with level, this is how much the default does */
-        output?: number
-        /** If this is set, this skill will affect all party members */
-        party?: boolean
-        passive?: boolean
-        /** If true, the cooldown will persist while your character is disconnected */
-        persistent?: boolean
-        /** If this is set, this skill can be used against immune monsters. */
-        pierces_immunity?: boolean
-        positive?: ItemName[]
-        procs?: boolean
-        projectile?: ProjectileName
-        range?: number;
-        range_bonus?: number;
-        range_multiplier?: number;
-        /** For MP use skills on the mage, 1 mp will equal this much damage */
-        ratio?: number;
-        /** Requirements for using the skill */
-        requirements?: { [T in Attribute]?: number }
-        reuse_cooldown?: number
-        set_speed?: number
-        /** The cooldown this skill shares with another skill */
-        share?: SkillName;
-        skin?: string
-        skins?: string[]
-        /** The item(s) required to use this skill */
-        slot?: [SlotType, ItemName][];
-        /** Does this skill require a single target? (Don't use an array) */
-        target?: true | "monster" | "player";
-        /** Does this skill require multiple targets? (Use an array) */
-        targets?: boolean;
-        toggle?: boolean;
-        /** NOTE: If the type is 'monster', only monsters have this ability */
-        type?: "ability" | "gm" | "monster" | "passive" | "skill" | "utility"
-        ui?: boolean
-        use_range?: boolean
-        warning?: string;
-        /** The weapon type needed to use this skill */
-        wtype?: WeaponType | WeaponType[];
-        /** How much percent to vary the output by (random chance) */
-        variance?: number
-    } }
+    skills: {
+        [T in SkillName]: {
+            action?: string
+            apiercing?: number
+            aura?: boolean
+            class?: CharacterType[]
+            code?: boolean | string
+            /** Additional */
+            complementary?: string
+            condition?: ConditionName
+            consume?: ItemName
+            cooldown?: number
+            cooldown_multiplier?: number
+            damage?: number
+            damage_multiplier?: number
+            damage_type?: DamageType
+            /** How long the condition lasts */
+            duration?: number
+            duration_min?: number
+            duration_max?: number
+            /** An exlpanation of what this skill does */
+            explanation?: string
+            global?: true
+            heal?: boolean
+            /** If true, we can't use this skill in a safe zone */
+            hostile?: boolean
+            /** Items that this we need to use the skill */
+            inventory?: ItemName[]
+            kill_buff?: ConditionName
+            level?: number
+            levels?: [number, number][]
+            /** If set, the skill requires a list of targets */
+            list?: boolean
+            max?: number
+            merchant_use?: true
+            /** Can we use this skill on monsters? */
+            monsters?: boolean
+            /** MP Cost for skill */
+            mp?: number
+            multi?: boolean
+            /** The name of the skill */
+            name: string
+            negative?: ItemName[]
+            nprop?: Attribute[]
+            /** For skills that get better with level, this is how much the default does */
+            output?: number
+            /** If this is set, this skill will affect all party members */
+            party?: boolean
+            passive?: boolean
+            /** If true, the cooldown will persist while your character is disconnected */
+            persistent?: boolean
+            /** If this is set, this skill can be used against immune monsters. */
+            pierces_immunity?: boolean
+            positive?: ItemName[]
+            procs?: boolean
+            projectile?: ProjectileName
+            range?: number
+            range_bonus?: number
+            range_multiplier?: number
+            /** For MP use skills on the mage, 1 mp will equal this much damage */
+            ratio?: number
+            /** Requirements for using the skill */
+            requirements?: { [T in Attribute]?: number }
+            reuse_cooldown?: number
+            set_speed?: number
+            /** The cooldown this skill shares with another skill */
+            share?: SkillName
+            skin?: string
+            skins?: string[]
+            /** The item(s) required to use this skill */
+            slot?: [SlotType, ItemName][]
+            /** Does this skill require a single target? (Don't use an array) */
+            target?: true | "monster" | "player"
+            /** Does this skill require multiple targets? (Use an array) */
+            targets?: boolean
+            toggle?: boolean
+            /** NOTE: If the type is 'monster', only monsters have this ability */
+            type?: "ability" | "gm" | "monster" | "passive" | "skill" | "utility"
+            ui?: boolean
+            use_range?: boolean
+            warning?: string
+            /** The weapon type needed to use this skill */
+            wtype?: WeaponType | WeaponType[]
+            /** How much percent to vary the output by (random chance) */
+            variance?: number
+        }
+    }
     // TODO: Add type information
     sprites: {
         [T in string]: {
             columns: number
             rows: number
-            type?: "a_hat" | "a_makeup" | "animation" | "armor" | "beard" | "body" | "character" | "emblem" | "face" | "gravestone" | "hair" | "hat" | "head" | "makeup" | "s_wings" | "skin" | "tail" | "v_animation"
+            type?:
+                | "a_hat"
+                | "a_makeup"
+                | "animation"
+                | "armor"
+                | "beard"
+                | "body"
+                | "character"
+                | "emblem"
+                | "face"
+                | "gravestone"
+                | "hair"
+                | "hat"
+                | "head"
+                | "makeup"
+                | "s_wings"
+                | "skin"
+                | "tail"
+                | "v_animation"
             /** The URL that contains the sprites in the matrix */
             file: string
             /** List of sprites in the given file */
@@ -573,7 +657,7 @@ export type GData = {
         }
     }
     titles: {
-        "sniper": {
+        sniper: {
             consecutive_200p_range_last_hits: number
         }
     } & {
@@ -594,7 +678,8 @@ export type GData = {
             improve?: boolean
             /** TODO: ??? */
             manual?: boolean
-        } }
+        }
+    }
     tokens: {
         [T in TokenType]: {
             /** For the ItemName, it costs this many tokens */
@@ -631,8 +716,36 @@ export type DocsData = {
     }
 }
 
-export type DocsImage = "bank" | "character_button" | "cue" | "newyear_tree" | "topleft_character" | "topleft_monster" | "upgrade"
-export type DocsTask = "addstats" | "bank" | "buycscroll0" | "buyscrolls" | "character" | "code" | "com" | "compound" | "deposit" | "engage" | "firstloot" | "guide" | "inventory" | "killagoo" | "settings" | "skills" | "stats" | "store" | "travel" | "upgrade" | "x"
+export type DocsImage =
+    | "bank"
+    | "character_button"
+    | "cue"
+    | "newyear_tree"
+    | "topleft_character"
+    | "topleft_monster"
+    | "upgrade"
+export type DocsTask =
+    | "addstats"
+    | "bank"
+    | "buycscroll0"
+    | "buyscrolls"
+    | "character"
+    | "code"
+    | "com"
+    | "compound"
+    | "deposit"
+    | "engage"
+    | "firstloot"
+    | "guide"
+    | "inventory"
+    | "killagoo"
+    | "settings"
+    | "skills"
+    | "stats"
+    | "store"
+    | "travel"
+    | "upgrade"
+    | "x"
 
 export type CXData = {
     chin?: string
@@ -663,7 +776,17 @@ export type CXData = {
  *
  * [8]: If [7] is "key", then this is the key that is required to open this door
  */
-export type DoorInfo = [number, number, number, number, MapName, number?, number?, ("key" | "protected" | "ulocked")?, (ItemName | "complicated")?]
+export type DoorInfo = [
+    number,
+    number,
+    number,
+    number,
+    MapName,
+    number?,
+    number?,
+    ("key" | "protected" | "ulocked")?,
+    (ItemName | "complicated")?,
+]
 
 export type GGeometry = {
     /** TODO: Not implemented yet */
@@ -703,7 +826,11 @@ export type GGeometry = {
         [T in string]: [number, number, number, number]
     }
     /** (GUI Related) Texture atlas for tiles, [name, x, y, height, width] */
-    tiles: ([TilesetName, number, number, number, null, number] | [TilesetName, number, number, number, number] | [TilesetName, number, number, number])[]
+    tiles: (
+        | [TilesetName, number, number, number, null, number]
+        | [TilesetName, number, number, number, number]
+        | [TilesetName, number, number, number]
+    )[]
     /* Walls along the x-axis. The wall is from ([0], [1]) to ([0], [2]) */
     x_lines?: [number, number, number][]
     /* Walls along the y-axis. The wall is from ([1], [0]) to ([2], [0]) */
@@ -854,16 +981,15 @@ export type GItem = {
     /** TODO: ??? What is this? */
     xscroll?: boolean
 } & {
-        /** Items can give bonus stats on certain maps, or for certain character types */
-        [T in CharacterType | MapName]?:
-        {
+    /** Items can give bonus stats on certain maps, or for certain character types */
+    [T in CharacterType | MapName]?: {
+        [T in Exclude<Attribute, "stat">]?: number
+    } & {
+        upgrade?: {
             [T in Exclude<Attribute, "stat">]?: number
-        } & {
-            upgrade?: {
-                [T in Exclude<Attribute, "stat">]?: number
-            }
         }
     }
+}
 
 export type GDropItem =
     /** The drop is an item [chance, item name, item quantity] */
@@ -924,7 +1050,7 @@ export type GMap = {
         position?: [number, number]
         /** TODO: ??? Old? */
         radius?: number
-    }[];
+    }[]
     npcs: {
         /** [x, y, direction] spawn position for the given NPC on the map */
         position?: [number, number, number?]
@@ -956,7 +1082,25 @@ export type GMap = {
     /** If true, this map should be ignored (it probably isn't accessible, or is a work in progress) */
     ignore?: boolean
     /** Signs and doors on maps that don't work, but could contain useful information */
-    quirks?: [number, number, number, number, string | "compound" | "info" | "invisible_statue" | "list_pvp" | "log" | "note" | "sign" | "the_lever" | "upgrade", string?][]
+    quirks?: [
+        number,
+        number,
+        number,
+        number,
+        (
+            | string
+            | "compound"
+            | "info"
+            | "invisible_statue"
+            | "list_pvp"
+            | "log"
+            | "note"
+            | "sign"
+            | "the_lever"
+            | "upgrade"
+        ),
+        string?,
+    ][]
     /** If set, this map has a different burn chance %. Multiply the burn chance by this multiplier. */
     burn_multiplier?: number
     /** If set, this map has a different freeze chance %. Multiply the freeze chance by this multiplier. */
@@ -972,7 +1116,7 @@ export type GMap = {
      *
      * [3]: If set, randomly places you within this distance of the spawn to prevent stacking. TODO: Confirm.
      */
-    spawns: ([number, number, number?, number?])[]
+    spawns: [number, number, number?, number?][]
     /** TODO: What is this? */
     world?: string
     traps?: {
@@ -1145,59 +1289,59 @@ export type GMonsterAbilities = {
         condition?: ConditionName
     }
 } & {
-    "burn"?: {
+    burn?: {
         attr0: number
         unlimited: boolean
     }
 } & {
-    "degen"?: {
+    degen?: {
         cooldown: number
         amount: number
     }
 } & {
-    "heal"?: {
+    heal?: {
         heal: number
     }
 } & {
-    "healing"?: {
+    healing?: {
         cooldown: number
         heal: number
     }
 } & {
-    "multi_burn"?: {
+    multi_burn?: {
         damage: number
     }
 } & {
-    "multi_freeze"?: {
+    multi_freeze?: {
         cooldown: number
         damage: number
     }
 } & {
-    "putrid"?: {
+    putrid?: {
         curse: boolean
         poison: boolean
     }
 } & {
-    "self_healing"?: {
+    self_healing?: {
         heal: number
     }
 } & {
-    "warp_on_hit"?: {
+    warp_on_hit?: {
         attr0: number
         unlimited: boolean
     }
 } & {
-    "warpstomp"?: {
+    warpstomp?: {
         cooldown: number
         radius: number
         stun: number
     }
 } & {
-    "weakness_aura"?: {
+    weakness_aura?: {
         condition: "weakness"
     }
 } & {
-    "zap"?: {
+    zap?: {
         cooldown: number
         amount: number
         pure?: boolean
@@ -1320,38 +1464,297 @@ export type Attribute =
     | "xp"
 
 export type AchievementName =
-    "100boss" | "1000boss" | "discoverlair" | "festive" | "firehazard" | "gooped" | "lucky" | "monsterhunter" | "reach40" | "reach50" | "reach60" | "reach70" | "reach80" | "reach90" | "stomped" | "upgrade10"
+    | "100boss"
+    | "1000boss"
+    | "discoverlair"
+    | "festive"
+    | "firehazard"
+    | "gooped"
+    | "lucky"
+    | "monsterhunter"
+    | "reach40"
+    | "reach50"
+    | "reach60"
+    | "reach70"
+    | "reach80"
+    | "reach90"
+    | "stomped"
+    | "upgrade10"
 
 /**
  * Generate with:
  * { const is = []; for(const i in G.animations) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type AnimationName =
-    "acid" | "arrow1" | "arrow_hit" | "block" | "burst" | "carrow" | "confetti" | "crackle" | "cuarrow" | "curse" | "curse_new" | "curse_projectile" | "dampened" | "exchange" | "explode_a" | "explode_b" | "explode_c" | "explode_p" | "explode_up" | "failure" | "firearrow" | "fireball" | "flare_blue" | "flare_yellow" | "fog" | "frostarrow" | "frostball" | "garrow" | "gburst" | "gm" | "gold" | "gold_anim" | "hardshell" | "heal" | "heal_projectile" | "hearts_single" | "icecrack" | "invincible" | "light" | "magic0" | "magic1" | "magic2" | "magic3" | "magic4" | "mblob" | "mblob_purplish" | "mblob_red" | "mluck" | "party_heal" | "pblob" | "pinky" | "poucharrow" | "rain" | "reflection" | "revival" | "rspeed" | "slash" | "slash0" | "slash1" | "slash2" | "slash3" | "snow" | "snowball" | "snowball_hit" | "snowflake" | "spark0" | "starkiller" | "stunned" | "success" | "superarrow" | "supershot" | "tangle" | "taunt" | "tiling_burst" | "tiling_burst_g" | "tiling_burstj" | "transport" | "typing" | "wandy" | "wslash"
+    | "acid"
+    | "arrow1"
+    | "arrow_hit"
+    | "block"
+    | "burst"
+    | "carrow"
+    | "confetti"
+    | "crackle"
+    | "cuarrow"
+    | "curse"
+    | "curse_new"
+    | "curse_projectile"
+    | "dampened"
+    | "exchange"
+    | "explode_a"
+    | "explode_b"
+    | "explode_c"
+    | "explode_p"
+    | "explode_up"
+    | "failure"
+    | "firearrow"
+    | "fireball"
+    | "flare_blue"
+    | "flare_yellow"
+    | "fog"
+    | "frostarrow"
+    | "frostball"
+    | "garrow"
+    | "gburst"
+    | "gm"
+    | "gold"
+    | "gold_anim"
+    | "hardshell"
+    | "heal"
+    | "heal_projectile"
+    | "hearts_single"
+    | "icecrack"
+    | "invincible"
+    | "light"
+    | "magic0"
+    | "magic1"
+    | "magic2"
+    | "magic3"
+    | "magic4"
+    | "mblob"
+    | "mblob_purplish"
+    | "mblob_red"
+    | "mluck"
+    | "party_heal"
+    | "pblob"
+    | "pinky"
+    | "poucharrow"
+    | "rain"
+    | "reflection"
+    | "revival"
+    | "rspeed"
+    | "slash"
+    | "slash0"
+    | "slash1"
+    | "slash2"
+    | "slash3"
+    | "snow"
+    | "snowball"
+    | "snowball_hit"
+    | "snowflake"
+    | "spark0"
+    | "starkiller"
+    | "stunned"
+    | "success"
+    | "superarrow"
+    | "supershot"
+    | "tangle"
+    | "taunt"
+    | "tiling_burst"
+    | "tiling_burst_g"
+    | "tiling_burstj"
+    | "transport"
+    | "typing"
+    | "wandy"
+    | "wslash"
 
 export type BankPackName =
-    "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47"
+    | "items0"
+    | "items1"
+    | "items2"
+    | "items3"
+    | "items4"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
+    | "items10"
+    | "items11"
+    | "items12"
+    | "items13"
+    | "items14"
+    | "items15"
+    | "items16"
+    | "items17"
+    | "items18"
+    | "items19"
+    | "items20"
+    | "items21"
+    | "items22"
+    | "items23"
+    | "items24"
+    | "items25"
+    | "items26"
+    | "items27"
+    | "items28"
+    | "items29"
+    | "items30"
+    | "items31"
+    | "items32"
+    | "items33"
+    | "items34"
+    | "items35"
+    | "items36"
+    | "items37"
+    | "items38"
+    | "items39"
+    | "items40"
+    | "items41"
+    | "items42"
+    | "items43"
+    | "items44"
+    | "items45"
+    | "items46"
+    | "items47"
 
-export type CharacterType =
-    "mage" | "merchant" | "paladin" | "priest" | "ranger" | "rogue" | "warrior"
-
+export type CharacterType = "mage" | "merchant" | "paladin" | "priest" | "ranger" | "rogue" | "warrior"
 
 /**
  * Generate with:
  * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ConditionName =
-    "authfail" | "blink" | "block" | "burned" | "charging" | "charmed" | "cursed" | "dampened" | "darkblessing" | "dash" | "deepfreezed" | "easterluck" | "eburn" | "eheal" | "energized" | "fingered" | "fishing" | "frozen" | "fullguard" | "fullguardx" | "halloween0" | "halloween1" | "halloween2" | "hardshell" | "holidayspirit" | "hopsickness" | "invincible" | "invis" | "licenced" | "marked" | "massproduction" | "massproductionpp" | "mcourage" | "mfrenzy" | "mining" | "mlifesteal" | "mluck" | "monsterhunt" | "mshield" | "newcomersblessing" | "notverified" | "penalty_cd" | "phasedout" | "poisoned" | "poisonous" | "power" | "purifier" | "reflection" | "rspeed" | "sanguine" | "shocked" | "sleeping" | "slowness" | "stack" | "stoned" | "stunned" | "sugarrush" | "tangled" | "town" | "warcry" | "weakness" | "withdrawal" | "woven" | "xpower" | "xshotted"
+    | "authfail"
+    | "blink"
+    | "block"
+    | "burned"
+    | "charging"
+    | "charmed"
+    | "cursed"
+    | "dampened"
+    | "darkblessing"
+    | "dash"
+    | "deepfreezed"
+    | "easterluck"
+    | "eburn"
+    | "eheal"
+    | "energized"
+    | "fingered"
+    | "fishing"
+    | "frozen"
+    | "fullguard"
+    | "fullguardx"
+    | "halloween0"
+    | "halloween1"
+    | "halloween2"
+    | "hardshell"
+    | "holidayspirit"
+    | "hopsickness"
+    | "invincible"
+    | "invis"
+    | "licenced"
+    | "marked"
+    | "massproduction"
+    | "massproductionpp"
+    | "mcourage"
+    | "mfrenzy"
+    | "mining"
+    | "mlifesteal"
+    | "mluck"
+    | "monsterhunt"
+    | "mshield"
+    | "newcomersblessing"
+    | "notverified"
+    | "penalty_cd"
+    | "phasedout"
+    | "poisoned"
+    | "poisonous"
+    | "power"
+    | "purifier"
+    | "reflection"
+    | "rspeed"
+    | "sanguine"
+    | "shocked"
+    | "sleeping"
+    | "slowness"
+    | "stack"
+    | "stoned"
+    | "stunned"
+    | "sugarrush"
+    | "tangled"
+    | "town"
+    | "warcry"
+    | "weakness"
+    | "withdrawal"
+    | "woven"
+    | "xpower"
+    | "xshotted"
 
-export type DamageType =
-    "heal" | "magical" | "none" | "physical" | "pure"
+export type DamageType = "heal" | "magical" | "none" | "physical" | "pure"
 
 export type DropName =
-    "5bucks" | "abtesting" | "apologybox" | "armorbox" | "armorx" | "basicelixir" | "basketofeggs" | "bugbountybox" | "candy0" | "candy0v2" | "candy0v3" | "candy1" | "candy1v2" | "candy1v3" | "candycane" | "candypop" | "cosmo0" | "cosmo1" | "cosmo2" | "cosmo3" | "eastereggs" | "f1" | "gem0" | "gem1_old" | "gem1" | "gemfragment" | "gift0" | "gift1" | "glitch" | "goldenegg" | "greenenvelope" | "jewellerybox" | "konami" | "leather" | "lightmage" | "lostearring0" | "lostearring1" | "lostearring2" | "lostearring3" | "lostearring4" | "m1" | "mistletoe" | "mysterybox" | "ornament" | "quiver" | "redenvelope" | "redenvelopev2_shouldhavebeen" | "redenvelopev2" | "redenvelopev3" | "seashell" | "statamulet" | "statbelt" | "statring" | "test" | "thrash" | "troll" | "weaponbox" | "weaponofthedead" | "xbox" | "xN"
+    | "5bucks"
+    | "abtesting"
+    | "apologybox"
+    | "armorbox"
+    | "armorx"
+    | "basicelixir"
+    | "basketofeggs"
+    | "bugbountybox"
+    | "candy0"
+    | "candy0v2"
+    | "candy0v3"
+    | "candy1"
+    | "candy1v2"
+    | "candy1v3"
+    | "candycane"
+    | "candypop"
+    | "cosmo0"
+    | "cosmo1"
+    | "cosmo2"
+    | "cosmo3"
+    | "eastereggs"
+    | "f1"
+    | "gem0"
+    | "gem1_old"
+    | "gem1"
+    | "gemfragment"
+    | "gift0"
+    | "gift1"
+    | "glitch"
+    | "goldenegg"
+    | "greenenvelope"
+    | "jewellerybox"
+    | "konami"
+    | "leather"
+    | "lightmage"
+    | "lostearring0"
+    | "lostearring1"
+    | "lostearring2"
+    | "lostearring3"
+    | "lostearring4"
+    | "m1"
+    | "mistletoe"
+    | "mysterybox"
+    | "ornament"
+    | "quiver"
+    | "redenvelope"
+    | "redenvelopev2_shouldhavebeen"
+    | "redenvelopev2"
+    | "redenvelopev3"
+    | "seashell"
+    | "statamulet"
+    | "statbelt"
+    | "statring"
+    | "test"
+    | "thrash"
+    | "troll"
+    | "weaponbox"
+    | "weaponofthedead"
+    | "xbox"
+    | "xN"
 
-export type EmotionName =
-    | "drop_egg"
-    | "hearts_single"
+export type EmotionName = "drop_egg" | "hearts_single"
 
 export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
 /**
@@ -1359,43 +1762,1045 @@ export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
  * { const is = []; for(const i in G.items) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ItemName =
-    "5bucks" | "ale" | "amuletofm" | "angelwings" | "apiercingscroll" | "apologybox" | "armorbox" | "armorring" | "armorscroll" | "ascale" | "axe3" | "bandages" | "basher" | "basketofeggs" | "bataxe" | "bcandle" | "bcape" | "beewings" | "bfang" | "bfangamulet" | "bfur" | "bkey" | "blade" | "blue" | "bottleofxp" | "bow" | "bow4" | "bowofthedead" | "bronzeingot" | "bronzenugget" | "broom" | "brownegg" | "btusk" | "bugbountybox" | "bunnyears" | "bunnyelixir" | "bwing" | "cake" | "candy0" | "candy0v2" | "candy0v3" | "candy1" | "candy1v2" | "candy1v3" | "candycane" | "candycanesword" | "candypop" | "cape" | "carrot" | "carrotsword" | "cclaw" | "cdarktristone" | "cdragon" | "cearring" | "charmer" | "chrysalis0" | "claw" | "coal" | "coat" | "coat1" | "cocoon" | "computer" | "confetti" | "cosmo0" | "cosmo1" | "cosmo2" | "cosmo3" | "cosmo4" | "crabclaw" | "cring" | "critscroll" | "crossbow" | "cryptkey" | "cscale" | "cscroll0" | "cscroll1" | "cscroll2" | "cscroll3" | "cshell" | "ctristone" | "cupid" | "cxjar" | "cyber" | "dagger" | "daggerofthedead" | "darktristone" | "dartgun" | "dexamulet" | "dexbelt" | "dexearring" | "dexearringx" | "dexring" | "dexscroll" | "dkey" | "dragondagger" | "drapes" | "dreturnscroll" | "dstones" | "ecape" | "ectoplasm" | "eears" | "egg0" | "egg1" | "egg2" | "egg3" | "egg4" | "egg5" | "egg6" | "egg7" | "egg8" | "eggnog" | "electronics" | "elixirdex0" | "elixirdex1" | "elixirdex2" | "elixirfires" | "elixirfzres" | "elixirint0" | "elixirint1" | "elixirint2" | "elixirluck" | "elixirpnres" | "elixirstr0" | "elixirstr1" | "elixirstr2" | "elixirvit0" | "elixirvit1" | "elixirvit2" | "emotionjar" | "emptyheart" | "emptyjar" | "epyjamas" | "eslippers" | "espresso" | "essenceofether" | "essenceoffire" | "essenceoffrost" | "essenceofgreed" | "essenceoflife" | "essenceofnature" | "evasionscroll" | "exoarm" | "fallen" | "fcape" | "fclaw" | "feather0" | "feather1" | "fieldgen0" | "fierygloves" | "figurine" | "fireblade" | "firebow" | "firecrackers" | "firestaff" | "firestars" | "flute" | "forscroll" | "frankypants" | "frequencyscroll" | "friendtoken" | "frogt" | "frostbow" | "froststaff" | "frozenkey" | "frozenstone" | "fsword" | "ftrinket" | "funtoken" | "fury" | "gbow" | "gcape" | "gem0" | "gem1" | "gem2" | "gem3" | "gemfragment" | "ghatb" | "ghatp" | "gift0" | "gift1" | "glitch" | "glolipop" | "gloves" | "gloves1" | "goldbooster" | "goldenegg" | "goldenpowerglove" | "goldingot" | "goldnugget" | "goldring" | "goldscroll" | "gphelmet" | "greenbomb" | "greenenvelope" | "gslime" | "gstaff" | "gum" | "hammer" | "handofmidas" | "harbringer" | "harmor" | "harpybow" | "hboots" | "hbow" | "hdagger" | "heartwood" | "helmet" | "helmet1" | "hgloves" | "hhelmet" | "hotchocolate" | "hpamulet" | "hpants" | "hpbelt" | "hpot0" | "hpot1" | "hpotx" | "iceskates" | "ijx" | "ink" | "intamulet" | "intbelt" | "intearring" | "intring" | "intscroll" | "jacko" | "jewellerybox" | "kitty1" | "lantern" | "lbelt" | "leather" | "ledger" | "licence" | "lifestealscroll" | "lmace" | "lostearring" | "lotusf" | "lspores" | "luckbooster" | "luckscroll" | "luckyt" | "mace" | "maceofthedead" | "mageshood" | "manastealscroll" | "mbelt" | "mbones" | "mcape" | "mcarmor" | "mcboots" | "mcgloves" | "mchat" | "mcpants" | "mearring" | "merry" | "mistletoe" | "mittens" | "mmarmor" | "mmgloves" | "mmhat" | "mmpants" | "mmshoes" | "molesteeth" | "monsterbox" | "monstertoken" | "mparmor" | "mpcostscroll" | "mpgloves" | "mphat" | "mpot0" | "mpot1" | "mpotx" | "mppants" | "mpshoes" | "mpxamulet" | "mpxbelt" | "mpxgloves" | "mrarmor" | "mrboots" | "mrgloves" | "mrhood" | "mrnarmor" | "mrnboots" | "mrngloves" | "mrnhat" | "mrnpants" | "mrpants" | "mshield" | "mushroomstaff" | "mwarmor" | "mwboots" | "mwgloves" | "mwhelmet" | "mwpants" | "mysterybox" | "networkcard" | "nheart" | "northstar" | "offering" | "offeringp" | "offeringx" | "ololipop" | "oozingterror" | "orbg" | "orbofdex" | "orbofint" | "orbofsc" | "orbofstr" | "orbofvit" | "ornament" | "ornamentstaff" | "outputscroll" | "oxhelmet" | "pants" | "pants1" | "partyhat" | "phelmet" | "pickaxe" | "pico" | "pinkie" | "placeholder" | "placeholder_m" | "platinumingot" | "platinumnugget" | "pleather" | "pmace" | "pmaceofthedead" | "poison" | "poker" | "pouchbow" | "powerglove" | "pstem" | "pumpkinspice" | "puppy1" | "puppyer" | "pvptoken" | "pyjamas" | "qubics" | "quiver" | "rabbitsfoot" | "rapier" | "rattail" | "redenvelope" | "redenvelopev2" | "redenvelopev3" | "redenvelopev4" | "rednose" | "reflectionscroll" | "resistancering" | "resistancescroll" | "rfangs" | "rfur" | "ringhs" | "ringofluck" | "ringsj" | "rod" | "rpiercingscroll" | "sanguine" | "santasbelt" | "sbelt" | "scroll0" | "scroll1" | "scroll2" | "scroll3" | "scroll4" | "scythe" | "seashell" | "shadowstone" | "shield" | "shoes" | "shoes1" | "skullamulet" | "slimestaff" | "smoke" | "smush" | "snakefang" | "snakeoil" | "snowball" | "snowboots" | "snowflakes" | "snring" | "solitaire" | "spear" | "spearofthedead" | "speedscroll" | "spidersilk" | "spookyamulet" | "spores" | "sshield" | "sstinger" | "staff" | "staff2" | "staff3" | "staff4" | "staffofthedead" | "stand0" | "stand1" | "starkillers" | "stealthcape" | "stick" | "stinger" | "stonekey" | "stoneofgold" | "stoneofluck" | "stoneofxp" | "storagebox" | "stramulet" | "strbelt" | "strearring" | "strring" | "strscroll" | "suckerpunch" | "supercomputer" | "supermittens" | "svenom" | "sweaterhs" | "swifty" | "swirlipop" | "sword" | "swordofthedead" | "t2bow" | "t2dexamulet" | "t2intamulet" | "t2quiver" | "t2stramulet" | "t3bow" | "talkingskull" | "test" | "test2" | "test_orb" | "throwingstars" | "tigercape" | "tigerhelmet" | "tigershield" | "tigerstone" | "tombkey" | "tracker" | "trigger" | "trinkets" | "tristone" | "troll" | "tshell" | "tshirt0" | "tshirt1" | "tshirt2" | "tshirt3" | "tshirt4" | "tshirt6" | "tshirt7" | "tshirt8" | "tshirt88" | "tshirt9" | "ukey" | "vattire" | "vblood" | "vboots" | "vcape" | "vdagger" | "vgloves" | "vhammer" | "vitearring" | "vitring" | "vitscroll" | "vorb" | "vring" | "vstaff" | "vsword" | "wand" | "warmscarf" | "warpvest" | "watercore" | "wattire" | "wbasher" | "wblade" | "wbook0" | "wbook1" | "wbookhs" | "wbreeches" | "wcap" | "weaponbox" | "weaver" | "wgloves" | "whiskey" | "whiteegg" | "wine" | "wingedboots" | "woodensword" | "wshield" | "wshoes" | "x0" | "x1" | "x2" | "x3" | "x4" | "x5" | "x6" | "x7" | "x8" | "xarmor" | "xboots" | "xbox" | "xgloves" | "xhelmet" | "xmace" | "xmashat" | "xmaspants" | "xmasshoes" | "xmassweater" | "xpants" | "xpbooster" | "xpscroll" | "xptome" | "xshield" | "xshot" | "zapper"
+    | "5bucks"
+    | "ale"
+    | "amuletofm"
+    | "angelwings"
+    | "apiercingscroll"
+    | "apologybox"
+    | "armorbox"
+    | "armorring"
+    | "armorscroll"
+    | "ascale"
+    | "axe3"
+    | "bandages"
+    | "basher"
+    | "basketofeggs"
+    | "bataxe"
+    | "bcandle"
+    | "bcape"
+    | "beewings"
+    | "bfang"
+    | "bfangamulet"
+    | "bfur"
+    | "bkey"
+    | "blade"
+    | "blue"
+    | "bottleofxp"
+    | "bow"
+    | "bow4"
+    | "bowofthedead"
+    | "bronzeingot"
+    | "bronzenugget"
+    | "broom"
+    | "brownegg"
+    | "btusk"
+    | "bugbountybox"
+    | "bunnyears"
+    | "bunnyelixir"
+    | "bwing"
+    | "cake"
+    | "candy0"
+    | "candy0v2"
+    | "candy0v3"
+    | "candy1"
+    | "candy1v2"
+    | "candy1v3"
+    | "candycane"
+    | "candycanesword"
+    | "candypop"
+    | "cape"
+    | "carrot"
+    | "carrotsword"
+    | "cclaw"
+    | "cdarktristone"
+    | "cdragon"
+    | "cearring"
+    | "charmer"
+    | "chrysalis0"
+    | "claw"
+    | "coal"
+    | "coat"
+    | "coat1"
+    | "cocoon"
+    | "computer"
+    | "confetti"
+    | "cosmo0"
+    | "cosmo1"
+    | "cosmo2"
+    | "cosmo3"
+    | "cosmo4"
+    | "crabclaw"
+    | "cring"
+    | "critscroll"
+    | "crossbow"
+    | "cryptkey"
+    | "cscale"
+    | "cscroll0"
+    | "cscroll1"
+    | "cscroll2"
+    | "cscroll3"
+    | "cshell"
+    | "ctristone"
+    | "cupid"
+    | "cxjar"
+    | "cyber"
+    | "dagger"
+    | "daggerofthedead"
+    | "darktristone"
+    | "dartgun"
+    | "dexamulet"
+    | "dexbelt"
+    | "dexearring"
+    | "dexearringx"
+    | "dexring"
+    | "dexscroll"
+    | "dkey"
+    | "dragondagger"
+    | "drapes"
+    | "dreturnscroll"
+    | "dstones"
+    | "ecape"
+    | "ectoplasm"
+    | "eears"
+    | "egg0"
+    | "egg1"
+    | "egg2"
+    | "egg3"
+    | "egg4"
+    | "egg5"
+    | "egg6"
+    | "egg7"
+    | "egg8"
+    | "eggnog"
+    | "electronics"
+    | "elixirdex0"
+    | "elixirdex1"
+    | "elixirdex2"
+    | "elixirfires"
+    | "elixirfzres"
+    | "elixirint0"
+    | "elixirint1"
+    | "elixirint2"
+    | "elixirluck"
+    | "elixirpnres"
+    | "elixirstr0"
+    | "elixirstr1"
+    | "elixirstr2"
+    | "elixirvit0"
+    | "elixirvit1"
+    | "elixirvit2"
+    | "emotionjar"
+    | "emptyheart"
+    | "emptyjar"
+    | "epyjamas"
+    | "eslippers"
+    | "espresso"
+    | "essenceofether"
+    | "essenceoffire"
+    | "essenceoffrost"
+    | "essenceofgreed"
+    | "essenceoflife"
+    | "essenceofnature"
+    | "evasionscroll"
+    | "exoarm"
+    | "fallen"
+    | "fcape"
+    | "fclaw"
+    | "feather0"
+    | "feather1"
+    | "fieldgen0"
+    | "fierygloves"
+    | "figurine"
+    | "fireblade"
+    | "firebow"
+    | "firecrackers"
+    | "firestaff"
+    | "firestars"
+    | "flute"
+    | "forscroll"
+    | "frankypants"
+    | "frequencyscroll"
+    | "friendtoken"
+    | "frogt"
+    | "frostbow"
+    | "froststaff"
+    | "frozenkey"
+    | "frozenstone"
+    | "fsword"
+    | "ftrinket"
+    | "funtoken"
+    | "fury"
+    | "gbow"
+    | "gcape"
+    | "gem0"
+    | "gem1"
+    | "gem2"
+    | "gem3"
+    | "gemfragment"
+    | "ghatb"
+    | "ghatp"
+    | "gift0"
+    | "gift1"
+    | "glitch"
+    | "glolipop"
+    | "gloves"
+    | "gloves1"
+    | "goldbooster"
+    | "goldenegg"
+    | "goldenpowerglove"
+    | "goldingot"
+    | "goldnugget"
+    | "goldring"
+    | "goldscroll"
+    | "gphelmet"
+    | "greenbomb"
+    | "greenenvelope"
+    | "gslime"
+    | "gstaff"
+    | "gum"
+    | "hammer"
+    | "handofmidas"
+    | "harbringer"
+    | "harmor"
+    | "harpybow"
+    | "hboots"
+    | "hbow"
+    | "hdagger"
+    | "heartwood"
+    | "helmet"
+    | "helmet1"
+    | "hgloves"
+    | "hhelmet"
+    | "hotchocolate"
+    | "hpamulet"
+    | "hpants"
+    | "hpbelt"
+    | "hpot0"
+    | "hpot1"
+    | "hpotx"
+    | "iceskates"
+    | "ijx"
+    | "ink"
+    | "intamulet"
+    | "intbelt"
+    | "intearring"
+    | "intring"
+    | "intscroll"
+    | "jacko"
+    | "jewellerybox"
+    | "kitty1"
+    | "lantern"
+    | "lbelt"
+    | "leather"
+    | "ledger"
+    | "licence"
+    | "lifestealscroll"
+    | "lmace"
+    | "lostearring"
+    | "lotusf"
+    | "lspores"
+    | "luckbooster"
+    | "luckscroll"
+    | "luckyt"
+    | "mace"
+    | "maceofthedead"
+    | "mageshood"
+    | "manastealscroll"
+    | "mbelt"
+    | "mbones"
+    | "mcape"
+    | "mcarmor"
+    | "mcboots"
+    | "mcgloves"
+    | "mchat"
+    | "mcpants"
+    | "mearring"
+    | "merry"
+    | "mistletoe"
+    | "mittens"
+    | "mmarmor"
+    | "mmgloves"
+    | "mmhat"
+    | "mmpants"
+    | "mmshoes"
+    | "molesteeth"
+    | "monsterbox"
+    | "monstertoken"
+    | "mparmor"
+    | "mpcostscroll"
+    | "mpgloves"
+    | "mphat"
+    | "mpot0"
+    | "mpot1"
+    | "mpotx"
+    | "mppants"
+    | "mpshoes"
+    | "mpxamulet"
+    | "mpxbelt"
+    | "mpxgloves"
+    | "mrarmor"
+    | "mrboots"
+    | "mrgloves"
+    | "mrhood"
+    | "mrnarmor"
+    | "mrnboots"
+    | "mrngloves"
+    | "mrnhat"
+    | "mrnpants"
+    | "mrpants"
+    | "mshield"
+    | "mushroomstaff"
+    | "mwarmor"
+    | "mwboots"
+    | "mwgloves"
+    | "mwhelmet"
+    | "mwpants"
+    | "mysterybox"
+    | "networkcard"
+    | "nheart"
+    | "northstar"
+    | "offering"
+    | "offeringp"
+    | "offeringx"
+    | "ololipop"
+    | "oozingterror"
+    | "orbg"
+    | "orbofdex"
+    | "orbofint"
+    | "orbofsc"
+    | "orbofstr"
+    | "orbofvit"
+    | "ornament"
+    | "ornamentstaff"
+    | "outputscroll"
+    | "oxhelmet"
+    | "pants"
+    | "pants1"
+    | "partyhat"
+    | "phelmet"
+    | "pickaxe"
+    | "pico"
+    | "pinkie"
+    | "placeholder"
+    | "placeholder_m"
+    | "platinumingot"
+    | "platinumnugget"
+    | "pleather"
+    | "pmace"
+    | "pmaceofthedead"
+    | "poison"
+    | "poker"
+    | "pouchbow"
+    | "powerglove"
+    | "pstem"
+    | "pumpkinspice"
+    | "puppy1"
+    | "puppyer"
+    | "pvptoken"
+    | "pyjamas"
+    | "qubics"
+    | "quiver"
+    | "rabbitsfoot"
+    | "rapier"
+    | "rattail"
+    | "redenvelope"
+    | "redenvelopev2"
+    | "redenvelopev3"
+    | "redenvelopev4"
+    | "rednose"
+    | "reflectionscroll"
+    | "resistancering"
+    | "resistancescroll"
+    | "rfangs"
+    | "rfur"
+    | "ringhs"
+    | "ringofluck"
+    | "ringsj"
+    | "rod"
+    | "rpiercingscroll"
+    | "sanguine"
+    | "santasbelt"
+    | "sbelt"
+    | "scroll0"
+    | "scroll1"
+    | "scroll2"
+    | "scroll3"
+    | "scroll4"
+    | "scythe"
+    | "seashell"
+    | "shadowstone"
+    | "shield"
+    | "shoes"
+    | "shoes1"
+    | "skullamulet"
+    | "slimestaff"
+    | "smoke"
+    | "smush"
+    | "snakefang"
+    | "snakeoil"
+    | "snowball"
+    | "snowboots"
+    | "snowflakes"
+    | "snring"
+    | "solitaire"
+    | "spear"
+    | "spearofthedead"
+    | "speedscroll"
+    | "spidersilk"
+    | "spookyamulet"
+    | "spores"
+    | "sshield"
+    | "sstinger"
+    | "staff"
+    | "staff2"
+    | "staff3"
+    | "staff4"
+    | "staffofthedead"
+    | "stand0"
+    | "stand1"
+    | "starkillers"
+    | "stealthcape"
+    | "stick"
+    | "stinger"
+    | "stonekey"
+    | "stoneofgold"
+    | "stoneofluck"
+    | "stoneofxp"
+    | "storagebox"
+    | "stramulet"
+    | "strbelt"
+    | "strearring"
+    | "strring"
+    | "strscroll"
+    | "suckerpunch"
+    | "supercomputer"
+    | "supermittens"
+    | "svenom"
+    | "sweaterhs"
+    | "swifty"
+    | "swirlipop"
+    | "sword"
+    | "swordofthedead"
+    | "t2bow"
+    | "t2dexamulet"
+    | "t2intamulet"
+    | "t2quiver"
+    | "t2stramulet"
+    | "t3bow"
+    | "talkingskull"
+    | "test"
+    | "test2"
+    | "test_orb"
+    | "throwingstars"
+    | "tigercape"
+    | "tigerhelmet"
+    | "tigershield"
+    | "tigerstone"
+    | "tombkey"
+    | "tracker"
+    | "trigger"
+    | "trinkets"
+    | "tristone"
+    | "troll"
+    | "tshell"
+    | "tshirt0"
+    | "tshirt1"
+    | "tshirt2"
+    | "tshirt3"
+    | "tshirt4"
+    | "tshirt6"
+    | "tshirt7"
+    | "tshirt8"
+    | "tshirt88"
+    | "tshirt9"
+    | "ukey"
+    | "vattire"
+    | "vblood"
+    | "vboots"
+    | "vcape"
+    | "vdagger"
+    | "vgloves"
+    | "vhammer"
+    | "vitearring"
+    | "vitring"
+    | "vitscroll"
+    | "vorb"
+    | "vring"
+    | "vstaff"
+    | "vsword"
+    | "wand"
+    | "warmscarf"
+    | "warpvest"
+    | "watercore"
+    | "wattire"
+    | "wbasher"
+    | "wblade"
+    | "wbook0"
+    | "wbook1"
+    | "wbookhs"
+    | "wbreeches"
+    | "wcap"
+    | "weaponbox"
+    | "weaver"
+    | "wgloves"
+    | "whiskey"
+    | "whiteegg"
+    | "wine"
+    | "wingedboots"
+    | "woodensword"
+    | "wshield"
+    | "wshoes"
+    | "x0"
+    | "x1"
+    | "x2"
+    | "x3"
+    | "x4"
+    | "x5"
+    | "x6"
+    | "x7"
+    | "x8"
+    | "xarmor"
+    | "xboots"
+    | "xbox"
+    | "xgloves"
+    | "xhelmet"
+    | "xmace"
+    | "xmashat"
+    | "xmaspants"
+    | "xmasshoes"
+    | "xmassweater"
+    | "xpants"
+    | "xpbooster"
+    | "xpscroll"
+    | "xptome"
+    | "xshield"
+    | "xshot"
+    | "zapper"
 
 export type MapName =
-    "abtesting" | "arena" | "bank_b" | "bank_u" | "bank" | "batcave" | "cave" | "cgallery" | "crypt" | "cyberland" | "d_a1" | "d_a2" | "d_b1" | "d_e" | "d_g" | "d1" | "d2" | "d3" | "desertland" | "duelland" | "dungeon0" | "frozencave" | "goobrawl" | "halloween" | "hut" | "jail" | "level1" | "level2" | "level2e" | "level2n" | "level2s" | "level2w" | "level3" | "level4" | "main" | "maintest" | "mansion" | "mtunnel" | "old_bank" | "old_main" | "original_main" | "resort_e" | "resort" | "shellsisland" | "ship0" | "spookytown" | "tavern" | "test" | "therush" | "tomb" | "tunnel" | "winter_cave" | "winter_cove" | "winter_inn_rooms" | "winter_inn" | "winter_instance" | "winterland" | "woffice"
+    | "abtesting"
+    | "arena"
+    | "bank_b"
+    | "bank_u"
+    | "bank"
+    | "batcave"
+    | "cave"
+    | "cgallery"
+    | "crypt"
+    | "cyberland"
+    | "d_a1"
+    | "d_a2"
+    | "d_b1"
+    | "d_e"
+    | "d_g"
+    | "d1"
+    | "d2"
+    | "d3"
+    | "desertland"
+    | "duelland"
+    | "dungeon0"
+    | "frozencave"
+    | "goobrawl"
+    | "halloween"
+    | "hut"
+    | "jail"
+    | "level1"
+    | "level2"
+    | "level2e"
+    | "level2n"
+    | "level2s"
+    | "level2w"
+    | "level3"
+    | "level4"
+    | "main"
+    | "maintest"
+    | "mansion"
+    | "mtunnel"
+    | "old_bank"
+    | "old_main"
+    | "original_main"
+    | "resort_e"
+    | "resort"
+    | "shellsisland"
+    | "ship0"
+    | "spookytown"
+    | "tavern"
+    | "test"
+    | "therush"
+    | "tomb"
+    | "tunnel"
+    | "winter_cave"
+    | "winter_cove"
+    | "winter_inn_rooms"
+    | "winter_inn"
+    | "winter_instance"
+    | "winterland"
+    | "woffice"
 
 /**
  * Generate with:
  * { const is = []; for(const i in G.monsters) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type MonsterName =
-    "a1" | "a2" | "a3" | "a4" | "a5" | "a6" | "a7" | "a8" | "arcticbee" | "armadillo" | "bat" | "bbpompom" | "bee" | "bgoo" | "bigbird" | "bluefairy" | "boar" | "booboo" | "bscorpion" | "cgoo" | "chestm" | "crab" | "crabx" | "crabxx" | "croc" | "cutebee" | "d_wiz" | "dknight2" | "dragold" | "eelemental" | "ent" | "felemental" | "fieldgen0" | "fireroamer" | "franky" | "frog" | "fvampire" | "gbluepro" | "ggreenpro" | "ghost" | "goblin" | "goldenbat" | "goo" | "gpurplepro" | "gredpro" | "greenfairy" | "greenjr" | "grinch" | "gscorpion" | "harpy" | "hen" | "icegolem" | "iceroamer" | "jr" | "jrat" | "kitty1" | "kitty2" | "kitty3" | "kitty4" | "ligerx" | "mechagnome" | "minimush" | "mole" | "mrgreen" | "mrpumpkin" | "mummy" | "mvampire" | "nelemental" | "nerfedbat" | "nerfedmummy" | "oneeye" | "osnake" | "phoenix" | "pinkgoblin" | "pinkgoo" | "plantoid" | "poisio" | "porcupine" | "pppompom" | "prat" | "puppy1" | "puppy2" | "puppy3" | "puppy4" | "rat" | "redfairy" | "rgoo" | "rharpy" | "rooster" | "rudolph" | "scorpion" | "skeletor" | "slenderman" | "snake" | "snowman" | "spider" | "squig" | "squigtoad" | "stompy" | "stoneworm" | "target" | "target_a500" | "target_a750" | "target_ar500red" | "target_ar900" | "target_r500" | "target_r750" | "tiger" | "tinyp" | "tortoise" | "vbat" | "wabbit" | "welemental" | "wolf" | "wolfie" | "xmagefi" | "xmagefz" | "xmagen" | "xmagex" | "xscorpion" | "zapper0"
+    | "a1"
+    | "a2"
+    | "a3"
+    | "a4"
+    | "a5"
+    | "a6"
+    | "a7"
+    | "a8"
+    | "arcticbee"
+    | "armadillo"
+    | "bat"
+    | "bbpompom"
+    | "bee"
+    | "bgoo"
+    | "bigbird"
+    | "bluefairy"
+    | "boar"
+    | "booboo"
+    | "bscorpion"
+    | "cgoo"
+    | "chestm"
+    | "crab"
+    | "crabx"
+    | "crabxx"
+    | "croc"
+    | "cutebee"
+    | "d_wiz"
+    | "dknight2"
+    | "dragold"
+    | "eelemental"
+    | "ent"
+    | "felemental"
+    | "fieldgen0"
+    | "fireroamer"
+    | "franky"
+    | "frog"
+    | "fvampire"
+    | "gbluepro"
+    | "ggreenpro"
+    | "ghost"
+    | "goblin"
+    | "goldenbat"
+    | "goo"
+    | "gpurplepro"
+    | "gredpro"
+    | "greenfairy"
+    | "greenjr"
+    | "grinch"
+    | "gscorpion"
+    | "harpy"
+    | "hen"
+    | "icegolem"
+    | "iceroamer"
+    | "jr"
+    | "jrat"
+    | "kitty1"
+    | "kitty2"
+    | "kitty3"
+    | "kitty4"
+    | "ligerx"
+    | "mechagnome"
+    | "minimush"
+    | "mole"
+    | "mrgreen"
+    | "mrpumpkin"
+    | "mummy"
+    | "mvampire"
+    | "nelemental"
+    | "nerfedbat"
+    | "nerfedmummy"
+    | "oneeye"
+    | "osnake"
+    | "phoenix"
+    | "pinkgoblin"
+    | "pinkgoo"
+    | "plantoid"
+    | "poisio"
+    | "porcupine"
+    | "pppompom"
+    | "prat"
+    | "puppy1"
+    | "puppy2"
+    | "puppy3"
+    | "puppy4"
+    | "rat"
+    | "redfairy"
+    | "rgoo"
+    | "rharpy"
+    | "rooster"
+    | "rudolph"
+    | "scorpion"
+    | "skeletor"
+    | "slenderman"
+    | "snake"
+    | "snowman"
+    | "spider"
+    | "squig"
+    | "squigtoad"
+    | "stompy"
+    | "stoneworm"
+    | "target"
+    | "target_a500"
+    | "target_a750"
+    | "target_ar500red"
+    | "target_ar900"
+    | "target_r500"
+    | "target_r750"
+    | "tiger"
+    | "tinyp"
+    | "tortoise"
+    | "vbat"
+    | "wabbit"
+    | "welemental"
+    | "wolf"
+    | "wolfie"
+    | "xmagefi"
+    | "xmagefz"
+    | "xmagen"
+    | "xmagex"
+    | "xscorpion"
+    | "zapper0"
 
 export type NPCName =
-    "antip2w" | "appearance" | "armors" | "basics" | "bean" | "bouncer" | "citizen0" | "citizen1" | "citizen2" | "citizen3" | "citizen4" | "citizen5" | "citizen6" | "citizen7" | "citizen8" | "citizen9" | "citizen10" | "citizen11" | "citizen12" | "citizen13" | "citizen14" | "citizen15" | "citizen16" | "compound" | "craftsman" | "exchange" | "fancypots" | "firstc" | "fisherman" | "friendtokens" | "funtokens" | "gemmerchant" | "goldnpc" | "guard" | "holo" | "holo0" | "holo1" | "holo2" | "holo3" | "holo4" | "holo5" | "items0" | "items1" | "items2" | "items3" | "items4" | "items5" | "items6" | "items7" | "items8" | "items9" | "items10" | "items11" | "items12" | "items13" | "items14" | "items15" | "items16" | "items17" | "items18" | "items19" | "items20" | "items21" | "items22" | "items23" | "items24" | "items25" | "items26" | "items27" | "items28" | "items29" | "items30" | "items31" | "items32" | "items33" | "items34" | "items35" | "items36" | "items37" | "items38" | "items39" | "items40" | "items41" | "items42" | "items43" | "items44" | "items45" | "items46" | "items47" | "jailer" | "leathermerchant" | "lichteaser" | "locksmith" | "lostandfound" | "lotterylady" | "mcollector" | "mistletoe" | "monsterhunter" | "newupgrade" | "newyear_tree" | "ornaments" | "pete" | "pots" | "premium" | "princess" | "pvp" | "pvpblocker" | "pvptokens" | "pwincess" | "rewards" | "santa" | "scrolls" | "secondhands" | "shellsguy" | "ship" | "shrine" | "standmerchant" | "tavern" | "tbartender" | "thief" | "transporter" | "wbartender" | "weapons" | "witch" | "wizardrepeater" | "wnpc"
+    | "antip2w"
+    | "appearance"
+    | "armors"
+    | "basics"
+    | "bean"
+    | "bouncer"
+    | "citizen0"
+    | "citizen1"
+    | "citizen2"
+    | "citizen3"
+    | "citizen4"
+    | "citizen5"
+    | "citizen6"
+    | "citizen7"
+    | "citizen8"
+    | "citizen9"
+    | "citizen10"
+    | "citizen11"
+    | "citizen12"
+    | "citizen13"
+    | "citizen14"
+    | "citizen15"
+    | "citizen16"
+    | "compound"
+    | "craftsman"
+    | "exchange"
+    | "fancypots"
+    | "firstc"
+    | "fisherman"
+    | "friendtokens"
+    | "funtokens"
+    | "gemmerchant"
+    | "goldnpc"
+    | "guard"
+    | "holo"
+    | "holo0"
+    | "holo1"
+    | "holo2"
+    | "holo3"
+    | "holo4"
+    | "holo5"
+    | "items0"
+    | "items1"
+    | "items2"
+    | "items3"
+    | "items4"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
+    | "items10"
+    | "items11"
+    | "items12"
+    | "items13"
+    | "items14"
+    | "items15"
+    | "items16"
+    | "items17"
+    | "items18"
+    | "items19"
+    | "items20"
+    | "items21"
+    | "items22"
+    | "items23"
+    | "items24"
+    | "items25"
+    | "items26"
+    | "items27"
+    | "items28"
+    | "items29"
+    | "items30"
+    | "items31"
+    | "items32"
+    | "items33"
+    | "items34"
+    | "items35"
+    | "items36"
+    | "items37"
+    | "items38"
+    | "items39"
+    | "items40"
+    | "items41"
+    | "items42"
+    | "items43"
+    | "items44"
+    | "items45"
+    | "items46"
+    | "items47"
+    | "jailer"
+    | "leathermerchant"
+    | "lichteaser"
+    | "locksmith"
+    | "lostandfound"
+    | "lotterylady"
+    | "mcollector"
+    | "mistletoe"
+    | "monsterhunter"
+    | "newupgrade"
+    | "newyear_tree"
+    | "ornaments"
+    | "pete"
+    | "pots"
+    | "premium"
+    | "princess"
+    | "pvp"
+    | "pvpblocker"
+    | "pvptokens"
+    | "pwincess"
+    | "rewards"
+    | "santa"
+    | "scrolls"
+    | "secondhands"
+    | "shellsguy"
+    | "ship"
+    | "shrine"
+    | "standmerchant"
+    | "tavern"
+    | "tbartender"
+    | "thief"
+    | "transporter"
+    | "wbartender"
+    | "weapons"
+    | "witch"
+    | "wizardrepeater"
+    | "wnpc"
 
 /**
  * Generate with:
  * { const is = []; for(const i in G.projectiles) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ProjectileName =
-    "acid" | "arrow" | "bigmagic" | "burst" | "crossbowarrow" | "cupid" | "curse" | "firearrow" | "fireball" | "frostarrow" | "frostball" | "garrow" | "gburst" | "magic" | "magic_divine" | "magic_purple" | "mentalburst" | "mmagic" | "momentum" | "partyheal" | "pinky" | "plight" | "pmagic" | "poisonarrow" | "pouch" | "purify" | "quickpunch" | "quickstab" | "sburst" | "smash" | "snowball" | "stone" | "stone_k" | "supershot" | "wandy" | "wmomentum"
+    | "acid"
+    | "arrow"
+    | "bigmagic"
+    | "burst"
+    | "crossbowarrow"
+    | "cupid"
+    | "curse"
+    | "firearrow"
+    | "fireball"
+    | "frostarrow"
+    | "frostball"
+    | "garrow"
+    | "gburst"
+    | "magic"
+    | "magic_divine"
+    | "magic_purple"
+    | "mentalburst"
+    | "mmagic"
+    | "momentum"
+    | "partyheal"
+    | "pinky"
+    | "plight"
+    | "pmagic"
+    | "poisonarrow"
+    | "pouch"
+    | "purify"
+    | "quickpunch"
+    | "quickstab"
+    | "sburst"
+    | "smash"
+    | "snowball"
+    | "stone"
+    | "stone_k"
+    | "supershot"
+    | "wandy"
+    | "wmomentum"
 
 export type SetName =
-    "easter" | "fury" | "holidays" | "legends" | "mmage" | "mmerchant" | "mpriest" | "mpx" | "mranger" | "mrogue" | "mwarrior" | "rugged" | "swift" | "vampires" | "wanderers" | "wt3" | "wt4"
+    | "easter"
+    | "fury"
+    | "holidays"
+    | "legends"
+    | "mmage"
+    | "mmerchant"
+    | "mpriest"
+    | "mpx"
+    | "mranger"
+    | "mrogue"
+    | "mwarrior"
+    | "rugged"
+    | "swift"
+    | "vampires"
+    | "wanderers"
+    | "wt3"
+    | "wt4"
 
 /**
  * Generate with:
  * { const is = []; for(const i in G.skills) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type SkillName =
-    "3shot" | "4fingers" | "5shot" | "absorb" | "agitate" | "alchemy" | "anger" | "attack" | "blink" | "burst" | "cburst" | "charge" | "charm" | "cleave" | "curse" | "curse_aura" | "dampening_aura" | "darkblessing" | "dash" | "deepfreeze" | "emotion" | "energize" | "entangle" | "esc" | "fireball" | "fishing" | "frostball" | "gm" | "hardshell" | "heal" | "healing" | "huntersmark" | "interact" | "invis" | "light" | "magiport" | "massproduction" | "massproductionpp" | "mcourage" | "mentalburst" | "mfrenzy" | "mining" | "mlight" | "mluck" | "move_down" | "move_left" | "move_right" | "move_up" | "mshield" | "mtangle" | "multi_burn" | "multi_freeze" | "open_snippet" | "partyheal" | "pcoat" | "phaseout" | "piercingshot" | "pickpocket" | "poisonarrow" | "portal" | "power" | "pure_eval" | "purify" | "quickpunch" | "quickstab" | "reflection" | "regen_hp" | "regen_mp" | "revive" | "rspeed" | "scare" | "self_healing" | "selfheal" | "shadowstrike" | "smash" | "snippet" | "snowball" | "stack" | "stomp" | "stone" | "stop" | "supershot" | "tangle" | "taunt" | "throw" | "toggle_character" | "toggle_code" | "toggle_inventory" | "toggle_run_code" | "toggle_stats" | "track" | "travel" | "use_hp" | "use_mp" | "use_town" | "warcry" | "warp" | "warpstomp" | "weakness_aura" | "xpower" | "zap" | "zapperzap"
+    | "3shot"
+    | "4fingers"
+    | "5shot"
+    | "absorb"
+    | "agitate"
+    | "alchemy"
+    | "anger"
+    | "attack"
+    | "blink"
+    | "burst"
+    | "cburst"
+    | "charge"
+    | "charm"
+    | "cleave"
+    | "curse"
+    | "curse_aura"
+    | "dampening_aura"
+    | "darkblessing"
+    | "dash"
+    | "deepfreeze"
+    | "emotion"
+    | "energize"
+    | "entangle"
+    | "esc"
+    | "fireball"
+    | "fishing"
+    | "frostball"
+    | "gm"
+    | "hardshell"
+    | "heal"
+    | "healing"
+    | "huntersmark"
+    | "interact"
+    | "invis"
+    | "light"
+    | "magiport"
+    | "massproduction"
+    | "massproductionpp"
+    | "mcourage"
+    | "mentalburst"
+    | "mfrenzy"
+    | "mining"
+    | "mlight"
+    | "mluck"
+    | "move_down"
+    | "move_left"
+    | "move_right"
+    | "move_up"
+    | "mshield"
+    | "mtangle"
+    | "multi_burn"
+    | "multi_freeze"
+    | "open_snippet"
+    | "partyheal"
+    | "pcoat"
+    | "phaseout"
+    | "piercingshot"
+    | "pickpocket"
+    | "poisonarrow"
+    | "portal"
+    | "power"
+    | "pure_eval"
+    | "purify"
+    | "quickpunch"
+    | "quickstab"
+    | "reflection"
+    | "regen_hp"
+    | "regen_mp"
+    | "revive"
+    | "rspeed"
+    | "scare"
+    | "self_healing"
+    | "selfheal"
+    | "shadowstrike"
+    | "smash"
+    | "snippet"
+    | "snowball"
+    | "stack"
+    | "stomp"
+    | "stone"
+    | "stop"
+    | "supershot"
+    | "tangle"
+    | "taunt"
+    | "throw"
+    | "toggle_character"
+    | "toggle_code"
+    | "toggle_inventory"
+    | "toggle_run_code"
+    | "toggle_stats"
+    | "track"
+    | "travel"
+    | "use_hp"
+    | "use_mp"
+    | "use_town"
+    | "warcry"
+    | "warp"
+    | "warpstomp"
+    | "weakness_aura"
+    | "xpower"
+    | "zap"
+    | "zapperzap"
 
 export type TilesetName =
-    "ash" | "beach" | "castle" | "custom_a" | "custom" | "custom2" | "dark" | "doors" | "dungeon" | "fort" | "house" | "inside" | "jungle" | "licht" | "lights" | "new" | "outside" | "puzzle" | "ruins" | "ship" | "stands" | "tree" | "water" | "winter"
+    | "ash"
+    | "beach"
+    | "castle"
+    | "custom_a"
+    | "custom"
+    | "custom2"
+    | "dark"
+    | "doors"
+    | "dungeon"
+    | "fort"
+    | "house"
+    | "inside"
+    | "jungle"
+    | "licht"
+    | "lights"
+    | "new"
+    | "outside"
+    | "puzzle"
+    | "ruins"
+    | "ship"
+    | "stands"
+    | "tree"
+    | "water"
+    | "winter"
 
 export type TitleName =
-    "critmonger" | "fast" | "festive" | "firehazard" | "glitched" | "gooped" | "legacy" | "lucky" | "shiny" | "sniper" | "stomped" | "superfast"
+    | "critmonger"
+    | "fast"
+    | "festive"
+    | "firehazard"
+    | "glitched"
+    | "gooped"
+    | "legacy"
+    | "lucky"
+    | "shiny"
+    | "sniper"
+    | "stomped"
+    | "superfast"
 
 export type QuestName =
     | ItemName // Not all items are quests, check with `G.items[ItemName].e` if you can exchange it

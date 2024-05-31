@@ -9,66 +9,59 @@ test("DisappearData type validation", async () => {
     const reports: DisappearData[] = [
         {
             id: "Drippy",
-            reason: "transport"
+            reason: "transport",
         },
         {
             id: "earthMer",
             reason: "transport",
             s: 0,
-            to: "bank"
+            to: "bank",
         },
         {
             id: "Bjarna",
             invis: true,
-            reason: "invis"
+            reason: "invis",
         },
         {
             effect: "blink",
             id: "cclair",
-            reason: "transport"
+            reason: "transport",
         },
         {
             effect: "blink",
             id: "Theron",
             reason: "transport",
-            s: [
-                -120,
-                1360,
-                0
-            ],
-            to: "main"
+            s: [-120, 1360, 0],
+            to: "main",
         },
         {
             effect: 1,
             id: "BadgerMage",
             reason: "transport",
             s: 5,
-            to: "main"
+            to: "main",
         },
         {
             id: "Oristus",
-            reason: "disconnect"
+            reason: "disconnect",
         },
         {
             effect: "magiport",
             id: "Dotrawr",
             reason: "transport",
-            s: [
-                -50,
-                1890
-            ],
-            to: "main"
+            s: [-50, 1890],
+            to: "main",
         },
         {
             id: "ScoutWarr",
             reason: "transport",
-            to: "jail"
+            to: "jail",
         },
         {
             id: "2591176",
             place: "mentalburst",
-            reason: "not_there"
-        }
+            reason: "not_there",
+        },
     ]
     for (const report of reports) expect(report).toBeDefined()
 })

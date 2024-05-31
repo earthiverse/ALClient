@@ -7,129 +7,129 @@ import { HitData } from "./adventureland-server"
 
 test("HitData type validation", async () => {
     const killMonster: HitData = {
-        "hid": "Wolfff",
-        "source": "attack",
-        "pid": "wMoXut",
-        "projectile": "momentum",
-        "id": "808131",
-        "anim": "slash1",
-        "damage": 2323,
-        "kill": true
+        hid: "Wolfff",
+        source: "attack",
+        pid: "wMoXut",
+        projectile: "momentum",
+        id: "808131",
+        anim: "slash1",
+        damage: 2323,
+        kill: true,
     }
     expect(killMonster).toBeDefined()
 
     const killPlayer: HitData = {
-        "hid": "2884433",
-        "source": "attack",
-        "pid": "zNrJc9",
-        "projectile": "stone",
-        "id": "BadgerMage",
-        "anim": "slash1",
-        "damage": 51,
-        "kill": true
+        hid: "2884433",
+        source: "attack",
+        pid: "zNrJc9",
+        projectile: "stone",
+        id: "BadgerMage",
+        anim: "slash1",
+        damage: 51,
+        kill: true,
     }
     expect(killPlayer).toBeDefined()
 
     const burn: HitData = {
-        "source": "burn",
-        "hid": "Casmer",
-        "id": "833320",
-        "damage": 538,
-        "kill": false
+        source: "burn",
+        hid: "Casmer",
+        id: "833320",
+        damage: 538,
+        kill: false,
     }
     expect(burn).toBeDefined()
 
     const burn2: HitData = {
-        "anim": "explode_c",
-        "burn": true,
-        "damage": 149,
-        "hid": "3454686",
-        "id": "PriestMain",
-        "mobbing": 706,
-        "pid": "R0sK4T",
-        "projectile": "mmagic",
-        "source": "attack"
+        anim: "explode_c",
+        burn: true,
+        damage: 149,
+        hid: "3454686",
+        id: "PriestMain",
+        mobbing: 706,
+        pid: "R0sK4T",
+        projectile: "mmagic",
+        source: "attack",
     }
     expect(burn2).toBeDefined()
 
     const cleave: HitData = {
-        "anim": "slash1",
-        "aoe": true,
-        "damage": 3235,
-        "hid": "earthWar",
-        "id": "2549449",
-        "kill": true,
-        "lifesteal": 21,
-        "no_lines": true,
-        "pid": "PUc91s",
-        "projectile": "momentum",
-        "source": "cleave"
+        anim: "slash1",
+        aoe: true,
+        damage: 3235,
+        hid: "earthWar",
+        id: "2549449",
+        kill: true,
+        lifesteal: 21,
+        no_lines: true,
+        pid: "PUc91s",
+        projectile: "momentum",
+        source: "cleave",
     }
     expect(cleave).toBeDefined()
 
     const curse: HitData = {
-        "hid": "Tsumiki",
-        "source": "curse",
-        "pid": "Rfrh76",
-        "projectile": "curse",
-        "id": "808131",
-        "anim": "curse",
-        "damage": 0
+        hid: "Tsumiki",
+        source: "curse",
+        pid: "Rfrh76",
+        projectile: "curse",
+        id: "808131",
+        anim: "curse",
+        damage: 0,
     }
     expect(curse).toBeDefined()
 
     const evaded: HitData = {
-        "pid": "k8tW8A",
-        "hid": "2866470",
-        "id": "DoubleG",
-        "anim": "miss",
-        "damage": 0,
-        "evade": true
+        pid: "k8tW8A",
+        hid: "2866470",
+        id: "DoubleG",
+        anim: "miss",
+        damage: 0,
+        evade: true,
     }
     expect(evaded).toBeDefined()
 
     const heal: HitData = {
-        "hid": "earthPri",
-        "source": "heal",
-        "pid": "lGUeW1",
-        "projectile": "fireball",
-        "id": "earthPri",
-        "anim": "heal",
-        "heal": 768
+        hid: "earthPri",
+        source: "heal",
+        pid: "lGUeW1",
+        projectile: "fireball",
+        id: "earthPri",
+        anim: "heal",
+        heal: 768,
     }
     expect(heal).toBeDefined()
 
     const manaSteal: HitData = {
-        "hid": "Trexnamedtut",
-        "source": "attack",
-        "pid": "gd3S5D",
-        "projectile": "fireball",
-        "id": "2859937",
-        "anim": "explode_c",
-        "damage": 2537,
-        "lifesteal": 70,
-        "manasteal": 3,
-        "kill": true
+        hid: "Trexnamedtut",
+        source: "attack",
+        pid: "gd3S5D",
+        projectile: "fireball",
+        id: "2859937",
+        anim: "explode_c",
+        damage: 2537,
+        lifesteal: 70,
+        manasteal: 3,
+        kill: true,
     }
     expect(manaSteal).toBeDefined()
 
     const missData: HitData = {
-        "pid": "JGgAkq",
-        "hid": "Trexnamedtut",
-        "id": "2859876",
-        "anim": "miss",
-        "damage": 0,
-        "miss": true
+        pid: "JGgAkq",
+        hid: "Trexnamedtut",
+        id: "2859876",
+        anim: "miss",
+        damage: 0,
+        miss: true,
     }
     expect(missData).toBeDefined()
 
     const reflected: HitData = {
-        "pid": "LPT7be",
-        "hid": "3982690",
-        "id": "earthPri",
-        "anim": "reflect",
-        "damage": 0,
-        "reflect": 154
+        pid: "LPT7be",
+        hid: "3982690",
+        id: "earthPri",
+        anim: "reflect",
+        damage: 0,
+        reflect: 154,
     }
     expect(reflected).toBeDefined()
 })

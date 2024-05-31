@@ -7,1439 +7,1439 @@ import { StartData } from "./adventureland-server"
 
 test("StartData type validation", async () => {
     const startData: StartData = {
-        "acx": {},
-        "afk": true,
-        "age": 529,
-        "apiercing": 2,
-        "armor": 316,
-        "attack": 867,
-        "base_gold": {
-            "a1": {
-                "crypt": 9537313
+        acx: {},
+        afk: true,
+        age: 529,
+        apiercing: 2,
+        armor: 316,
+        attack: 867,
+        base_gold: {
+            a1: {
+                crypt: 9537313,
             },
-            "a2": {
-                "crypt": 94349
+            a2: {
+                crypt: 94349,
             },
-            "a3": {
-                "crypt": 76827
+            a3: {
+                crypt: 76827,
             },
-            "a4": {
-                "crypt": 210093
+            a4: {
+                crypt: 210093,
             },
-            "a5": {
-                "crypt": 51668
+            a5: {
+                crypt: 51668,
             },
-            "a6": {
-                "crypt": 71885
+            a6: {
+                crypt: 71885,
             },
-            "a7": {
-                "crypt": 161741
+            a7: {
+                crypt: 161741,
             },
-            "a8": {
-                "crypt": 125799
+            a8: {
+                crypt: 125799,
             },
-            "arcticbee": {
-                "winterland": 78
+            arcticbee: {
+                winterland: 78,
             },
-            "armadillo": {
-                "main": 85
+            armadillo: {
+                main: 85,
             },
-            "bat": {
-                "batcave": 569,
-                "cave": 270,
-                "old_main": 569
+            bat: {
+                batcave: 569,
+                cave: 270,
+                old_main: 569,
             },
-            "bbpompom": {
-                "level3": 397,
-                "winter_cave": 320
+            bbpompom: {
+                level3: 397,
+                winter_cave: 320,
             },
-            "bee": {
-                "main": 26
+            bee: {
+                main: 26,
             },
-            "bigbird": {
-                "main": 899
+            bigbird: {
+                main: 899,
             },
-            "bluefairy": {
-                "main": 112320
+            bluefairy: {
+                main: 112320,
             },
-            "boar": {
-                "winterland": 587
+            boar: {
+                winterland: 587,
             },
-            "booboo": {
-                "spookytown": 281
+            booboo: {
+                spookytown: 281,
             },
-            "bscorpion": {
-                "desertland": 29315
+            bscorpion: {
+                desertland: 29315,
             },
-            "cgoo": {
-                "arena": 405,
-                "level2s": 405,
-                "level4": 405
+            cgoo: {
+                arena: 405,
+                level2s: 405,
+                level4: 405,
             },
-            "crab": {
-                "main": 28
+            crab: {
+                main: 28,
             },
-            "crabx": {
-                "main": 118
+            crabx: {
+                main: 118,
             },
-            "crabxx": {
-                "main": 269568
+            crabxx: {
+                main: 269568,
             },
-            "croc": {
-                "main": 90
+            croc: {
+                main: 90,
             },
-            "d_wiz": {
-                "d2": 16528
+            d_wiz: {
+                d2: 16528,
             },
-            "dknight2": {
-                "old_main": 6283
+            dknight2: {
+                old_main: 6283,
             },
-            "ent": {
-                "desertland": 675949
+            ent: {
+                desertland: 675949,
             },
-            "fireroamer": {
-                "desertland": 6535
+            fireroamer: {
+                desertland: 6535,
             },
-            "franky": {
-                "level2w": 6955164
+            franky: {
+                level2w: 6955164,
             },
-            "frog": {
-                "main": 487
+            frog: {
+                main: 487,
             },
-            "fvampire": {
-                "halloween": 6740
+            fvampire: {
+                halloween: 6740,
             },
-            "gbluepro": {
-                "tomb": 311626
+            gbluepro: {
+                tomb: 311626,
             },
-            "ggreenpro": {
-                "tomb": 44928
+            ggreenpro: {
+                tomb: 44928,
             },
-            "ghost": {
-                "halloween": 588
+            ghost: {
+                halloween: 588,
             },
-            "goo": {
-                "dungeon0": 16,
-                "main": 9,
-                "old_main": 9
+            goo: {
+                dungeon0: 16,
+                main: 9,
+                old_main: 9,
             },
-            "gpurplepro": {
-                "tomb": 376650
+            gpurplepro: {
+                tomb: 376650,
             },
-            "gredpro": {
-                "tomb": 190619
+            gredpro: {
+                tomb: 190619,
             },
-            "greenfairy": {
-                "main": 101088
+            greenfairy: {
+                main: 101088,
             },
-            "greenjr": {
-                "halloween": 236
+            greenjr: {
+                halloween: 236,
             },
-            "grinch": {
-                "woffice": 673920
+            grinch: {
+                woffice: 673920,
             },
-            "harpy": {
-                "winter_cove": 26514
+            harpy: {
+                winter_cove: 26514,
             },
-            "hen": {
-                "main": 6
+            hen: {
+                main: 6,
             },
-            "icegolem": {
-                "winterland": 7731924
+            icegolem: {
+                winterland: 7731924,
             },
-            "iceroamer": {
-                "winterland": 196
+            iceroamer: {
+                winterland: 196,
             },
-            "jr": {
-                "spookytown": 180
+            jr: {
+                spookytown: 180,
             },
-            "jrat": {
-                "jail": 64
+            jrat: {
+                jail: 64,
             },
-            "kitty1": {
-                "main": 20,
-                "shellsisland": 20
+            kitty1: {
+                main: 20,
+                shellsisland: 20,
             },
-            "kitty2": {
-                "main": 20,
-                "shellsisland": 20
+            kitty2: {
+                main: 20,
+                shellsisland: 20,
             },
-            "kitty3": {
-                "main": 20,
-                "shellsisland": 20
+            kitty3: {
+                main: 20,
+                shellsisland: 20,
             },
-            "kitty4": {
-                "main": 20,
-                "shellsisland": 20
+            kitty4: {
+                main: 20,
+                shellsisland: 20,
             },
-            "mechagnome": {
-                "cyberland": 25509
+            mechagnome: {
+                cyberland: 25509,
             },
-            "minimush": {
-                "halloween": 34
+            minimush: {
+                halloween: 34,
             },
-            "mole": {
-                "tunnel": 958
+            mole: {
+                tunnel: 958,
             },
-            "mrgreen": {
-                "spookytown": 2768812
+            mrgreen: {
+                spookytown: 2768812,
             },
-            "mrpumpkin": {
-                "halloween": 2102543
+            mrpumpkin: {
+                halloween: 2102543,
             },
-            "mummy": {
-                "level3": 1995,
-                "level4": 1995,
-                "spookytown": 1119
+            mummy: {
+                level3: 1995,
+                level4: 1995,
+                spookytown: 1119,
             },
-            "mvampire": {
-                "batcave": 6740,
-                "cave": 6740
+            mvampire: {
+                batcave: 6740,
+                cave: 6740,
             },
-            "oneeye": {
-                "level2w": 35997
+            oneeye: {
+                level2w: 35997,
             },
-            "osnake": {
-                "halloween": 87
+            osnake: {
+                halloween: 87,
             },
-            "phoenix": {
-                "main": 4493,
-                "old_main": 4493
+            phoenix: {
+                main: 4493,
+                old_main: 4493,
             },
-            "pinkgoblin": {
-                "level2e": 79530
+            pinkgoblin: {
+                level2e: 79530,
             },
-            "plantoid": {
-                "desertland": 9870
+            plantoid: {
+                desertland: 9870,
             },
-            "poisio": {
-                "main": 102
+            poisio: {
+                main: 102,
             },
-            "porcupine": {
-                "desertland": 287
+            porcupine: {
+                desertland: 287,
             },
-            "pppompom": {
-                "level2n": 4586
+            pppompom: {
+                level2n: 4586,
             },
-            "prat": {
-                "level1": 734
+            prat: {
+                level1: 734,
             },
-            "puppy1": {
-                "main": 20,
-                "shellsisland": 20
+            puppy1: {
+                main: 20,
+                shellsisland: 20,
             },
-            "puppy2": {
-                "main": 20,
-                "shellsisland": 20
+            puppy2: {
+                main: 20,
+                shellsisland: 20,
             },
-            "puppy3": {
-                "main": 20,
-                "shellsisland": 20
+            puppy3: {
+                main: 20,
+                shellsisland: 20,
             },
-            "puppy4": {
-                "main": 20,
-                "shellsisland": 20
+            puppy4: {
+                main: 20,
+                shellsisland: 20,
             },
-            "rat": {
-                "mansion": 70
+            rat: {
+                mansion: 70,
             },
-            "redfairy": {
-                "main": 134784
+            redfairy: {
+                main: 134784,
             },
-            "rgoo": {
-                "goobrawl": 28080
+            rgoo: {
+                goobrawl: 28080,
             },
-            "rharpy": {
-                "winter_cove": 26957
+            rharpy: {
+                winter_cove: 26957,
             },
-            "rooster": {
-                "main": 6
+            rooster: {
+                main: 6,
             },
-            "scorpion": {
-                "desertland": 1538,
-                "main": 674,
-                "old_main": 1538
+            scorpion: {
+                desertland: 1538,
+                main: 674,
+                old_main: 1538,
             },
-            "skeletor": {
-                "arena": 2247
+            skeletor: {
+                arena: 2247,
             },
-            "snake": {
-                "halloween": 44,
-                "main": 44
+            snake: {
+                halloween: 44,
+                main: 44,
             },
-            "spider": {
-                "main": 506,
-                "old_main": 1212
+            spider: {
+                main: 506,
+                old_main: 1212,
             },
-            "squig": {
-                "main": 61
+            squig: {
+                main: 61,
             },
-            "squigtoad": {
-                "main": 809
+            squigtoad: {
+                main: 809,
             },
-            "stompy": {
-                "winterland": 36724
+            stompy: {
+                winterland: 36724,
             },
-            "stoneworm": {
-                "spookytown": 65
+            stoneworm: {
+                spookytown: 65,
             },
-            "target": {
-                "main": 20
+            target: {
+                main: 20,
             },
-            "target_a500": {
-                "main": 20
+            target_a500: {
+                main: 20,
             },
-            "target_a750": {
-                "main": 20
+            target_a750: {
+                main: 20,
             },
-            "target_ar500red": {
-                "main": 20
+            target_ar500red: {
+                main: 20,
             },
-            "target_ar900": {
-                "main": 20
+            target_ar900: {
+                main: 20,
             },
-            "target_r500": {
-                "main": 20
+            target_r500: {
+                main: 20,
             },
-            "target_r750": {
-                "main": 20
+            target_r750: {
+                main: 20,
             },
-            "tinyp": {
-                "halloween": 158
+            tinyp: {
+                halloween: 158,
             },
-            "tortoise": {
-                "main": 203
+            tortoise: {
+                main: 203,
             },
-            "vbat": {
-                "crypt": 74469
+            vbat: {
+                crypt: 74469,
             },
-            "wolf": {
-                "winterland": 6013
+            wolf: {
+                winterland: 6013,
             },
-            "wolfie": {
-                "winterland": 1235
+            wolfie: {
+                winterland: 1235,
             },
-            "xmagefi": {
-                "winter_instance": 702110
+            xmagefi: {
+                winter_instance: 702110,
             },
-            "xmagefz": {
-                "winter_instance": 449998
+            xmagefz: {
+                winter_instance: 449998,
             },
-            "xmagen": {
-                "winter_instance": 513598
+            xmagen: {
+                winter_instance: 513598,
             },
-            "xmagex": {
-                "winter_instance": 24747003
+            xmagex: {
+                winter_instance: 24747003,
             },
-            "xscorpion": {
-                "halloween": 5382
-            }
+            xscorpion: {
+                halloween: 5382,
+            },
         },
-        "blast": 0,
-        "c": {},
-        "cash": 760,
-        "cc": 0,
-        "cid": 2,
-        "code": "/* eslint-disable no-undef */\n/**\n * This script is meant to be an example of how I construct and manage loops.\n * Each loop serves a different function, and is not relied upon by other loops.\n */\nconst attackThisType = \"osnake\"\nasync function attackLoop() {\n    try {\n        const target = get_nearest_monster({ path_check: true })\n        if (target && character.range >= distance(character, target)) {\n            // Awaiting the attack lets us setTimeout right before the next attack is ready to maximize DPS.\n            await attack(target)\n\n            // `reduce_cooldown` is used to compensate for ping between the client and server. Utilizing it increases DPS.\n            // However, if you reduce_cooldown too much, you may miss an attack.\n            reduce_cooldown(\"attack\", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { attackLoop() }, Math.max(100, parent.next_skill[\"attack\"].getTime() - Date.now()))\n}\nattackLoop()\n\nasync function moveLoop() {\n    try {\n        // NOTE: If you want to move around the map, for example to refill potions,\n        // you should modify this function.\n\n        const target = get_nearest_monster({ path_check: true, type: attackThisType })\n        if (!target) {\n            // We're not near any targets, let's move to them\n            await smart_move(attackThisType)\n        } else if (character.range < distance(character, target)) {\n            // We are out of range to attack the target, so let's move closer\n            move(character.x + (target.x - character.x) / 2, character.y + (target.y - character.y) / 2)\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { moveLoop() }, 250)\n}\nmoveLoop()\n\nasync function regenLoop() {\n    try {\n        const hp_ratio = character.hp / character.max_hp\n        const mp_ratio = character.mp / character.max_mp\n\n        // NOTE: If you want to use potions, modify this function,\n        // because potions share a cooldown with regen_hp and regen_mp\n\n        if (mp_ratio < hp_ratio && can_use(\"regen_mp\")) {\n            // We have less MP than HP, so let's regen some MP.\n            await use_skill(\"regen_mp\")\n            reduce_cooldown(\"regen_mp\", Math.min(...parent.pings))\n        } else if (can_use(\"regen_hp\")) {\n            // We have less HP than MP, so let's regen some HP.\n            await use_skill(\"regen_hp\")\n            reduce_cooldown(\"regen_hp\", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { regenLoop() }, Math.max(100, parent.next_skill[\"use_hp\"].getTime() - Date.now()))\n}\nregenLoop()\n\nasync function lootLoop() {\n    try {\n        // The built in loot() does pretty much all of the work for us!\n        loot()\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { lootLoop() }, 250)\n}\nlootLoop()\n\npause()",
-        "code_slot": 5911786786652160,
-        "code_version": 18,
-        "courage": 2,
-        "crit": 0.75,
-        "critdamage": 0,
-        "ctype": "ranger",
-        "cx": {
-            "hair": "hairdo106",
-            "head": "makeup105"
+        blast: 0,
+        c: {},
+        cash: 760,
+        cc: 0,
+        cid: 2,
+        code: '/* eslint-disable no-undef */\n/**\n * This script is meant to be an example of how I construct and manage loops.\n * Each loop serves a different function, and is not relied upon by other loops.\n */\nconst attackThisType = "osnake"\nasync function attackLoop() {\n    try {\n        const target = get_nearest_monster({ path_check: true })\n        if (target && character.range >= distance(character, target)) {\n            // Awaiting the attack lets us setTimeout right before the next attack is ready to maximize DPS.\n            await attack(target)\n\n            // `reduce_cooldown` is used to compensate for ping between the client and server. Utilizing it increases DPS.\n            // However, if you reduce_cooldown too much, you may miss an attack.\n            reduce_cooldown("attack", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { attackLoop() }, Math.max(100, parent.next_skill["attack"].getTime() - Date.now()))\n}\nattackLoop()\n\nasync function moveLoop() {\n    try {\n        // NOTE: If you want to move around the map, for example to refill potions,\n        // you should modify this function.\n\n        const target = get_nearest_monster({ path_check: true, type: attackThisType })\n        if (!target) {\n            // We\'re not near any targets, let\'s move to them\n            await smart_move(attackThisType)\n        } else if (character.range < distance(character, target)) {\n            // We are out of range to attack the target, so let\'s move closer\n            move(character.x + (target.x - character.x) / 2, character.y + (target.y - character.y) / 2)\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { moveLoop() }, 250)\n}\nmoveLoop()\n\nasync function regenLoop() {\n    try {\n        const hp_ratio = character.hp / character.max_hp\n        const mp_ratio = character.mp / character.max_mp\n\n        // NOTE: If you want to use potions, modify this function,\n        // because potions share a cooldown with regen_hp and regen_mp\n\n        if (mp_ratio < hp_ratio && can_use("regen_mp")) {\n            // We have less MP than HP, so let\'s regen some MP.\n            await use_skill("regen_mp")\n            reduce_cooldown("regen_mp", Math.min(...parent.pings))\n        } else if (can_use("regen_hp")) {\n            // We have less HP than MP, so let\'s regen some HP.\n            await use_skill("regen_hp")\n            reduce_cooldown("regen_hp", Math.min(...parent.pings))\n        }\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { regenLoop() }, Math.max(100, parent.next_skill["use_hp"].getTime() - Date.now()))\n}\nregenLoop()\n\nasync function lootLoop() {\n    try {\n        // The built in loot() does pretty much all of the work for us!\n        loot()\n    } catch (e) {\n        console.error(e)\n    }\n    setTimeout(async () => { lootLoop() }, 250)\n}\nlootLoop()\n\npause()',
+        code_slot: 5911786786652160,
+        code_version: 18,
+        courage: 2,
+        crit: 0.75,
+        critdamage: 0,
+        ctype: "ranger",
+        cx: {
+            hair: "hairdo106",
+            head: "makeup105",
         },
-        "dex": 281,
-        "dreturn": 0.5,
-        "emx": {},
-        "entities": {
-            "in": "main",
-            "map": "main",
-            "monsters": [
+        dex: 281,
+        dreturn: 0.5,
+        emx: {},
+        entities: {
+            in: "main",
+            map: "main",
+            monsters: [
                 {
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": -571,
-                    "going_y": 323,
-                    "id": "30",
-                    "resistance": 0,
-                    "s": {},
-                    "type": "target",
-                    "x": -571,
-                    "y": 323
+                    armor: 0,
+                    cid: 1,
+                    going_x: -571,
+                    going_y: 323,
+                    id: "30",
+                    resistance: 0,
+                    s: {},
+                    type: "target",
+                    x: -571,
+                    y: 323,
                 },
                 {
-                    "cid": 1,
-                    "going_x": -290,
-                    "going_y": 280,
-                    "id": "31",
-                    "resistance": 0,
-                    "s": {},
-                    "type": "target_a500",
-                    "x": -290,
-                    "y": 280
+                    cid: 1,
+                    going_x: -290,
+                    going_y: 280,
+                    id: "31",
+                    resistance: 0,
+                    s: {},
+                    type: "target_a500",
+                    x: -290,
+                    y: 280,
                 },
                 {
-                    "cid": 1,
-                    "going_x": -270,
-                    "going_y": 280,
-                    "id": "32",
-                    "resistance": 0,
-                    "s": {},
-                    "type": "target_a750",
-                    "x": -270,
-                    "y": 280
+                    cid: 1,
+                    going_x: -270,
+                    going_y: 280,
+                    id: "32",
+                    resistance: 0,
+                    s: {},
+                    type: "target_a750",
+                    x: -270,
+                    y: 280,
                 },
                 {
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": -250,
-                    "going_y": 280,
-                    "id": "33",
-                    "s": {},
-                    "type": "target_r500",
-                    "x": -250,
-                    "y": 280
+                    armor: 0,
+                    cid: 1,
+                    going_x: -250,
+                    going_y: 280,
+                    id: "33",
+                    s: {},
+                    type: "target_r500",
+                    x: -250,
+                    y: 280,
                 },
                 {
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": -230,
-                    "going_y": 280,
-                    "id": "34",
-                    "s": {},
-                    "type": "target_r750",
-                    "x": -230,
-                    "y": 280
+                    armor: 0,
+                    cid: 1,
+                    going_x: -230,
+                    going_y: 280,
+                    id: "34",
+                    s: {},
+                    type: "target_r750",
+                    x: -230,
+                    y: 280,
                 },
                 {
-                    "cid": 1,
-                    "going_x": -210,
-                    "going_y": 280,
-                    "id": "35",
-                    "s": {},
-                    "type": "target_ar900",
-                    "x": -210,
-                    "y": 280
+                    cid: 1,
+                    going_x: -210,
+                    going_y: 280,
+                    id: "35",
+                    s: {},
+                    type: "target_ar900",
+                    x: -210,
+                    y: 280,
                 },
                 {
-                    "cid": 103,
-                    "going_x": -150,
-                    "going_y": 400,
-                    "id": "36",
-                    "s": {
-                        "self_healing": {
-                            "ability": true,
-                            "ms": 5080
-                        }
+                    cid: 103,
+                    going_x: -150,
+                    going_y: 400,
+                    id: "36",
+                    s: {
+                        self_healing: {
+                            ability: true,
+                            ms: 5080,
+                        },
                     },
-                    "type": "target_ar500red",
-                    "x": -150,
-                    "y": 400
+                    type: "target_ar500red",
+                    x: -150,
+                    y: 400,
                 },
                 {
-                    "abs": false,
-                    "angle": -13.355796742225266,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": 88.9616574235385,
-                    "going_y": 727.4092173731257,
-                    "hp": 250,
-                    "id": "37",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 40363,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": 39.24816286259453,
-                    "xp": 400,
-                    "y": 739.2121194472377
+                    abs: false,
+                    angle: -13.355796742225266,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: 88.9616574235385,
+                    going_y: 727.4092173731257,
+                    hp: 250,
+                    id: "37",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 40363,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: 39.24816286259453,
+                    xp: 400,
+                    y: 739.2121194472377,
                 },
                 {
-                    "abs": false,
-                    "angle": -161.1971276522608,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": -236.55436941676808,
-                    "going_y": 702.096494029094,
-                    "hp": 250,
-                    "id": "38",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 40526,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": -126.94402339420583,
-                    "xp": 400,
-                    "y": 739.4170314378342
+                    abs: false,
+                    angle: -161.1971276522608,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: -236.55436941676808,
+                    going_y: 702.096494029094,
+                    hp: 250,
+                    id: "38",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 40526,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: -126.94402339420583,
+                    xp: 400,
+                    y: 739.4170314378342,
                 },
                 {
-                    "abs": false,
-                    "angle": -145.79546702184857,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": -231.4755127576796,
-                    "going_y": 708.3789459126892,
-                    "hp": 250,
-                    "id": "39",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 41650,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": -200.58147295438832,
-                    "xp": 400,
-                    "y": 729.378086932357
+                    abs: false,
+                    angle: -145.79546702184857,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: -231.4755127576796,
+                    going_y: 708.3789459126892,
+                    hp: 250,
+                    id: "39",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 41650,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: -200.58147295438832,
+                    xp: 400,
+                    y: 729.378086932357,
                 },
                 {
-                    "abs": false,
-                    "angle": 160.62709948315313,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 5,
-                    "frequency": 0.44,
-                    "going_x": -174.6417270819341,
-                    "going_y": 867.0346923847221,
-                    "hp": 300,
-                    "id": "40",
-                    "level": 5,
-                    "max_hp": 300,
-                    "move_num": 40991,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.8,
-                    "type": "goo",
-                    "x": -7.783674216935139,
-                    "xp": 500,
-                    "y": 808.3633883552222
+                    abs: false,
+                    angle: 160.62709948315313,
+                    armor: 0,
+                    attack: 6,
+                    cid: 5,
+                    frequency: 0.44,
+                    going_x: -174.6417270819341,
+                    going_y: 867.0346923847221,
+                    hp: 300,
+                    id: "40",
+                    level: 5,
+                    max_hp: 300,
+                    move_num: 40991,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.8,
+                    type: "goo",
+                    x: -7.783674216935139,
+                    xp: 500,
+                    y: 808.3633883552222,
                 },
                 {
-                    "abs": false,
-                    "angle": -94.78522801442017,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": 90.94438765762129,
-                    "going_y": 744.4722415613326,
-                    "hp": 250,
-                    "id": "41",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 42073,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": 92.88518834666951,
-                    "xp": 400,
-                    "y": 767.6563028088743
+                    abs: false,
+                    angle: -94.78522801442017,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: 90.94438765762129,
+                    going_y: 744.4722415613326,
+                    hp: 250,
+                    id: "41",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 42073,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: 92.88518834666951,
+                    xp: 400,
+                    y: 767.6563028088743,
                 },
                 {
-                    "abs": false,
-                    "angle": -18.44612328256978,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": 200.56767291142586,
-                    "going_y": 724.141865671726,
-                    "hp": 250,
-                    "id": "42",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 41682,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": -90.90212672385265,
-                    "xp": 400,
-                    "y": 821.3616315234228
+                    abs: false,
+                    angle: -18.44612328256978,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: 200.56767291142586,
+                    going_y: 724.141865671726,
+                    hp: 250,
+                    id: "42",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 41682,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: -90.90212672385265,
+                    xp: 400,
+                    y: 821.3616315234228,
                 },
                 {
-                    "abs": false,
-                    "angle": -4.230150074609014,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 4,
-                    "frequency": 0.43200000000000005,
-                    "going_x": 194.1375214193584,
-                    "going_y": 834.5315392853906,
-                    "hp": 250,
-                    "id": "43",
-                    "level": 4,
-                    "max_hp": 250,
-                    "move_num": 41213,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.64,
-                    "type": "goo",
-                    "x": -17.898381056657495,
-                    "xp": 400,
-                    "y": 850.2146658098246
+                    abs: false,
+                    angle: -4.230150074609014,
+                    armor: 0,
+                    attack: 6,
+                    cid: 4,
+                    frequency: 0.43200000000000005,
+                    going_x: 194.1375214193584,
+                    going_y: 834.5315392853906,
+                    hp: 250,
+                    id: "43",
+                    level: 4,
+                    max_hp: 250,
+                    move_num: 41213,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.64,
+                    type: "goo",
+                    x: -17.898381056657495,
+                    xp: 400,
+                    y: 850.2146658098246,
                 },
                 {
-                    "abs": false,
-                    "angle": -50.255405551162795,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 5,
-                    "frequency": 0.44,
-                    "going_x": -133.89413787672152,
-                    "going_y": 706.4508768525724,
-                    "hp": 300,
-                    "id": "44",
-                    "level": 5,
-                    "max_hp": 300,
-                    "move_num": 41777,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.8,
-                    "type": "goo",
-                    "x": -199.85698402819546,
-                    "xp": 500,
-                    "y": 785.7778005756762
+                    abs: false,
+                    angle: -50.255405551162795,
+                    armor: 0,
+                    attack: 6,
+                    cid: 5,
+                    frequency: 0.44,
+                    going_x: -133.89413787672152,
+                    going_y: 706.4508768525724,
+                    hp: 300,
+                    id: "44",
+                    level: 5,
+                    max_hp: 300,
+                    move_num: 41777,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.8,
+                    type: "goo",
+                    x: -199.85698402819546,
+                    xp: 500,
+                    y: 785.7778005756762,
                 },
                 {
-                    "abs": false,
-                    "angle": -2.315486133766456,
-                    "armor": 0,
-                    "attack": 6,
-                    "cid": 5,
-                    "frequency": 0.44,
-                    "going_x": 172.0470543586547,
-                    "going_y": 809.803320609579,
-                    "hp": 300,
-                    "id": "45",
-                    "level": 5,
-                    "max_hp": 300,
-                    "move_num": 41023,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 6.8,
-                    "type": "goo",
-                    "x": 54.29771565373419,
-                    "xp": 500,
-                    "y": 814.564500041868
+                    abs: false,
+                    angle: -2.315486133766456,
+                    armor: 0,
+                    attack: 6,
+                    cid: 5,
+                    frequency: 0.44,
+                    going_x: 172.0470543586547,
+                    going_y: 809.803320609579,
+                    hp: 300,
+                    id: "45",
+                    level: 5,
+                    max_hp: 300,
+                    move_num: 41023,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 6.8,
+                    type: "goo",
+                    x: 54.29771565373419,
+                    xp: 500,
+                    y: 814.564500041868,
                 },
                 {
-                    "abs": false,
-                    "angle": -14.775365286067245,
-                    "armor": 0,
-                    "attack": 20,
-                    "cid": 5,
-                    "frequency": 0.54,
-                    "going_x": 566.2179850788538,
-                    "going_y": 756.1881670582069,
-                    "hp": 900,
-                    "id": "58",
-                    "level": 5,
-                    "max_hp": 900,
-                    "move_num": 42021,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 12.8,
-                    "type": "bee",
-                    "x": 479.22402822385527,
-                    "xp": 2000,
-                    "y": 779.1329517417557
+                    abs: false,
+                    angle: -14.775365286067245,
+                    armor: 0,
+                    attack: 20,
+                    cid: 5,
+                    frequency: 0.54,
+                    going_x: 566.2179850788538,
+                    going_y: 756.1881670582069,
+                    hp: 900,
+                    id: "58",
+                    level: 5,
+                    max_hp: 900,
+                    move_num: 42021,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 12.8,
+                    type: "bee",
+                    x: 479.22402822385527,
+                    xp: 2000,
+                    y: 779.1329517417557,
                 },
                 {
-                    "abs": false,
-                    "angle": 26.01833426261002,
-                    "armor": 0,
-                    "attack": 19,
-                    "cid": 4,
-                    "frequency": 0.532,
-                    "going_x": 583.0606071860042,
-                    "going_y": 771.6651274202809,
-                    "hp": 750,
-                    "id": "59",
-                    "level": 4,
-                    "max_hp": 750,
-                    "move_num": 41789,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 12.64,
-                    "type": "bee",
-                    "x": 555.8517649770029,
-                    "xp": 1600,
-                    "y": 758.3837088855616
+                    abs: false,
+                    angle: 26.01833426261002,
+                    armor: 0,
+                    attack: 19,
+                    cid: 4,
+                    frequency: 0.532,
+                    going_x: 583.0606071860042,
+                    going_y: 771.6651274202809,
+                    hp: 750,
+                    id: "59",
+                    level: 4,
+                    max_hp: 750,
+                    move_num: 41789,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 12.64,
+                    type: "bee",
+                    x: 555.8517649770029,
+                    xp: 1600,
+                    y: 758.3837088855616,
                 },
                 {
-                    "abs": false,
-                    "angle": 111.13544765937716,
-                    "armor": 0,
-                    "attack": 19,
-                    "cid": 4,
-                    "frequency": 0.532,
-                    "going_x": 508.73384400708807,
-                    "going_y": 759.1415704491533,
-                    "hp": 750,
-                    "id": "60",
-                    "level": 4,
-                    "max_hp": 750,
-                    "move_num": 41901,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 12.64,
-                    "type": "bee",
-                    "x": 509.7733240878247,
-                    "xp": 1600,
-                    "y": 756.452649220138
+                    abs: false,
+                    angle: 111.13544765937716,
+                    armor: 0,
+                    attack: 19,
+                    cid: 4,
+                    frequency: 0.532,
+                    going_x: 508.73384400708807,
+                    going_y: 759.1415704491533,
+                    hp: 750,
+                    id: "60",
+                    level: 4,
+                    max_hp: 750,
+                    move_num: 41901,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 12.64,
+                    type: "bee",
+                    x: 509.7733240878247,
+                    xp: 1600,
+                    y: 756.452649220138,
                 },
                 {
-                    "abs": false,
-                    "angle": -72.67651797214761,
-                    "armor": 0,
-                    "attack": 20,
-                    "cid": 5,
-                    "frequency": 0.54,
-                    "going_x": 698.3987139529781,
-                    "going_y": 692.4421954234372,
-                    "hp": 900,
-                    "id": "61",
-                    "level": 5,
-                    "max_hp": 900,
-                    "move_num": 41975,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "speed": 12.8,
-                    "type": "bee",
-                    "x": 692.400697257469,
-                    "xp": 2000,
-                    "y": 711.6718485568568
+                    abs: false,
+                    angle: -72.67651797214761,
+                    armor: 0,
+                    attack: 20,
+                    cid: 5,
+                    frequency: 0.54,
+                    going_x: 698.3987139529781,
+                    going_y: 692.4421954234372,
+                    hp: 900,
+                    id: "61",
+                    level: 5,
+                    max_hp: 900,
+                    move_num: 41975,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    speed: 12.8,
+                    type: "bee",
+                    x: 692.400697257469,
+                    xp: 2000,
+                    y: 711.6718485568568,
                 },
                 {
-                    "abs": false,
-                    "angle": -0.11666188292442714,
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": 656.7116968630587,
-                    "going_y": 1018.6406951833428,
-                    "id": "4850",
-                    "move_num": 42014,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "type": "bee",
-                    "x": 556.8967775750432,
-                    "y": 1018.8439320119418
+                    abs: false,
+                    angle: -0.11666188292442714,
+                    armor: 0,
+                    cid: 1,
+                    going_x: 656.7116968630587,
+                    going_y: 1018.6406951833428,
+                    id: "4850",
+                    move_num: 42014,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    type: "bee",
+                    x: 556.8967775750432,
+                    y: 1018.8439320119418,
                 },
                 {
-                    "abs": false,
-                    "angle": 42.56872953534701,
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": 537.6671954805817,
-                    "going_y": 1101.9297344616698,
-                    "id": "4855",
-                    "move_num": 42045,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {},
-                    "type": "bee",
-                    "x": 476.07039659925226,
-                    "y": 1045.3505872099236
+                    abs: false,
+                    angle: 42.56872953534701,
+                    armor: 0,
+                    cid: 1,
+                    going_x: 537.6671954805817,
+                    going_y: 1101.9297344616698,
+                    id: "4855",
+                    move_num: 42045,
+                    moving: true,
+                    resistance: 0,
+                    s: {},
+                    type: "bee",
+                    x: 476.07039659925226,
+                    y: 1045.3505872099236,
                 },
                 {
-                    "abs": false,
-                    "angle": 76.81907941056525,
-                    "armor": 0,
-                    "cid": 1,
-                    "going_x": 514.2887588381756,
-                    "going_y": 1147.1749030601375,
-                    "id": "4857",
-                    "move_num": 42071,
-                    "moving": true,
-                    "resistance": 0,
-                    "s": {
-                        "young": {
-                            "ms": 93
-                        }
+                    abs: false,
+                    angle: 76.81907941056525,
+                    armor: 0,
+                    cid: 1,
+                    going_x: 514.2887588381756,
+                    going_y: 1147.1749030601375,
+                    id: "4857",
+                    move_num: 42071,
+                    moving: true,
+                    resistance: 0,
+                    s: {
+                        young: {
+                            ms: 93,
+                        },
                     },
-                    "type": "bee",
-                    "x": 485.6913997139055,
-                    "y": 1025.0665544651274
-                }
+                    type: "bee",
+                    x: 485.6913997139055,
+                    y: 1025.0665544651274,
+                },
             ],
-            "players": [
+            players: [
                 {
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "hp": 1200,
-                    "id": "$Rose",
-                    "level": 100,
-                    "max_hp": 1200,
-                    "mp": 2000,
-                    "name": "Rose",
-                    "npc": "lotterylady",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "llady",
-                    "speed": 20,
-                    "x": -341,
-                    "xp": 0,
-                    "y": 168
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {},
+                    hp: 1200,
+                    id: "$Rose",
+                    level: 100,
+                    max_hp: 1200,
+                    mp: 2000,
+                    name: "Rose",
+                    npc: "lotterylady",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "llady",
+                    speed: 20,
+                    x: -341,
+                    xp: 0,
+                    y: 168,
                 },
                 {
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {
-                        "hat": "hat221"
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {
+                        hat: "hat221",
                     },
-                    "hp": 1200,
-                    "id": "$Divian",
-                    "level": 100,
-                    "max_hp": 1200,
-                    "mp": 2000,
-                    "name": "Divian",
-                    "npc": "standmerchant",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "purplelady",
-                    "speed": 20,
-                    "x": -193,
-                    "xp": 0,
-                    "y": 680
+                    hp: 1200,
+                    id: "$Divian",
+                    level: 100,
+                    max_hp: 1200,
+                    mp: 2000,
+                    name: "Divian",
+                    npc: "standmerchant",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "purplelady",
+                    speed: 20,
+                    x: -193,
+                    xp: 0,
+                    y: 680,
                 },
                 {
-                    "abs": false,
-                    "allow": true,
-                    "angle": 50.042451069170916,
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "going_x": 325,
-                    "going_y": 499,
-                    "hp": 5000,
-                    "id": "$Ace",
-                    "level": 100,
-                    "max_hp": 5000,
-                    "move_num": 479,
-                    "moving": false,
-                    "mp": 2000,
-                    "name": "Ace",
-                    "npc": "pvp",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "thehelmet",
-                    "speed": 40,
-                    "x": 325,
-                    "xp": 0,
-                    "y": 499
+                    abs: false,
+                    allow: true,
+                    angle: 50.042451069170916,
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {},
+                    going_x: 325,
+                    going_y: 499,
+                    hp: 5000,
+                    id: "$Ace",
+                    level: 100,
+                    max_hp: 5000,
+                    move_num: 479,
+                    moving: false,
+                    mp: 2000,
+                    name: "Ace",
+                    npc: "pvp",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "thehelmet",
+                    speed: 40,
+                    x: 325,
+                    xp: 0,
+                    y: 499,
                 },
                 {
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "hp": 1200,
-                    "id": "$Leo",
-                    "level": 100,
-                    "max_hp": 1200,
-                    "mp": 2000,
-                    "name": "Leo",
-                    "npc": "craftsman",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "npcc",
-                    "speed": 20,
-                    "x": 92,
-                    "xp": 0,
-                    "y": 670
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {},
+                    hp: 1200,
+                    id: "$Leo",
+                    level: 100,
+                    max_hp: 1200,
+                    mp: 2000,
+                    name: "Leo",
+                    npc: "craftsman",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "npcc",
+                    speed: 20,
+                    x: 92,
+                    xp: 0,
+                    y: 670,
                 },
                 {
-                    "abs": false,
-                    "angle": 45,
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "going_x": 10,
-                    "going_y": 102,
-                    "hp": 3200,
-                    "id": "$Bean",
-                    "level": 100,
-                    "max_hp": 3200,
-                    "move_num": 41951,
-                    "moving": false,
-                    "mp": 2000,
-                    "name": "Bean",
-                    "npc": "bean",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "lionsuit",
-                    "speed": 30,
-                    "x": -22,
-                    "xp": 0,
-                    "y": 70
+                    abs: false,
+                    angle: 45,
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {},
+                    going_x: 10,
+                    going_y: 102,
+                    hp: 3200,
+                    id: "$Bean",
+                    level: 100,
+                    max_hp: 3200,
+                    move_num: 41951,
+                    moving: false,
+                    mp: 2000,
+                    name: "Bean",
+                    npc: "bean",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "lionsuit",
+                    speed: 30,
+                    x: -22,
+                    xp: 0,
+                    y: 70,
                 },
                 {
-                    "armor": 500,
-                    "attack": 100,
-                    "c": {},
-                    "cid": 0,
-                    "ctype": "merchant",
-                    "cx": {},
-                    "hp": 1200,
-                    "id": "$Gn. Spence",
-                    "level": 100,
-                    "max_hp": 1200,
-                    "mp": 2000,
-                    "name": "Gn. Spence",
-                    "npc": "pvptokens",
-                    "owner": "",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 40,
-                    "s": {},
-                    "skin": "pvptokens",
-                    "speed": 20,
-                    "x": 159,
-                    "xp": 0,
-                    "y": 403
+                    armor: 500,
+                    attack: 100,
+                    c: {},
+                    cid: 0,
+                    ctype: "merchant",
+                    cx: {},
+                    hp: 1200,
+                    id: "$Gn. Spence",
+                    level: 100,
+                    max_hp: 1200,
+                    mp: 2000,
+                    name: "Gn. Spence",
+                    npc: "pvptokens",
+                    owner: "",
+                    pdps: 0,
+                    q: {},
+                    range: 40,
+                    s: {},
+                    skin: "pvptokens",
+                    speed: 20,
+                    x: 159,
+                    xp: 0,
+                    y: 403,
                 },
                 {
-                    "afk": true,
-                    "age": 1323,
-                    "armor": 153,
-                    "attack": 301,
-                    "c": {},
-                    "cid": 76,
-                    "code": true,
-                    "ctype": "warrior",
-                    "cx": {},
-                    "frequency": 0.9313737659698026,
-                    "heal": 0,
-                    "hp": 4781,
-                    "id": "Jimmyy",
-                    "level": 52,
-                    "max_hp": 5345,
-                    "max_mp": 640,
-                    "mp": 140,
-                    "owner": "5131508925857792",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 32,
-                    "resistance": 88,
-                    "rip": false,
-                    "s": {},
-                    "skin": "mwarrior2",
-                    "slots": {
-                        "amulet": {
-                            "level": 2,
-                            "name": "hpamulet"
+                    afk: true,
+                    age: 1323,
+                    armor: 153,
+                    attack: 301,
+                    c: {},
+                    cid: 76,
+                    code: true,
+                    ctype: "warrior",
+                    cx: {},
+                    frequency: 0.9313737659698026,
+                    heal: 0,
+                    hp: 4781,
+                    id: "Jimmyy",
+                    level: 52,
+                    max_hp: 5345,
+                    max_mp: 640,
+                    mp: 140,
+                    owner: "5131508925857792",
+                    pdps: 0,
+                    q: {},
+                    range: 32,
+                    resistance: 88,
+                    rip: false,
+                    s: {},
+                    skin: "mwarrior2",
+                    slots: {
+                        amulet: {
+                            level: 2,
+                            name: "hpamulet",
                         },
-                        "belt": {
-                            "level": 2,
-                            "name": "hpbelt"
+                        belt: {
+                            level: 2,
+                            name: "hpbelt",
                         },
-                        "cape": null,
-                        "chest": {
-                            "level": 3,
-                            "name": "xmassweater"
+                        cape: null,
+                        chest: {
+                            level: 3,
+                            name: "xmassweater",
                         },
-                        "earring1": null,
-                        "earring2": null,
-                        "elixir": null,
-                        "gloves": {
-                            "level": 0,
-                            "name": "gloves"
+                        earring1: null,
+                        earring2: null,
+                        elixir: null,
+                        gloves: {
+                            level: 0,
+                            name: "gloves",
                         },
-                        "helmet": {
-                            "level": 6,
-                            "name": "wcap"
+                        helmet: {
+                            level: 6,
+                            name: "wcap",
                         },
-                        "mainhand": {
-                            "level": 6,
-                            "name": "blade"
+                        mainhand: {
+                            level: 6,
+                            name: "blade",
                         },
-                        "offhand": {
-                            "level": 0,
-                            "name": "cclaw"
+                        offhand: {
+                            level: 0,
+                            name: "cclaw",
                         },
-                        "orb": null,
-                        "pants": {
-                            "acc": 1580,
-                            "ach": "gooped",
-                            "level": 0,
-                            "name": "pants"
+                        orb: null,
+                        pants: {
+                            acc: 1580,
+                            ach: "gooped",
+                            level: 0,
+                            name: "pants",
                         },
-                        "ring1": {
-                            "level": 2,
-                            "name": "ringsj"
+                        ring1: {
+                            level: 2,
+                            name: "ringsj",
                         },
-                        "ring2": {
-                            "level": 2,
-                            "name": "ringsj"
+                        ring2: {
+                            level: 2,
+                            name: "ringsj",
                         },
-                        "shoes": {
-                            "level": 3,
-                            "name": "xmasshoes"
-                        }
+                        shoes: {
+                            level: 3,
+                            name: "xmasshoes",
+                        },
                     },
-                    "speed": 70,
-                    "x": 108.1782452743793,
-                    "xp": 7593661,
-                    "y": 797.843039643556
+                    speed: 70,
+                    x: 108.1782452743793,
+                    xp: 7593661,
+                    y: 797.843039643556,
                 },
                 {
-                    "abs": false,
-                    "afk": "code",
-                    "age": 833,
-                    "angle": -39.22567409733672,
-                    "armor": 214,
-                    "attack": 2,
-                    "c": {},
-                    "cid": 205,
-                    "controller": "",
-                    "ctype": "merchant",
-                    "cx": {
-                        "hair": "hairdo521",
-                        "hat": "hat404",
-                        "head": "makeup117"
+                    abs: false,
+                    afk: "code",
+                    age: 833,
+                    angle: -39.22567409733672,
+                    armor: 214,
+                    attack: 2,
+                    c: {},
+                    cid: 205,
+                    controller: "",
+                    ctype: "merchant",
+                    cx: {
+                        hair: "hairdo521",
+                        hat: "hat404",
+                        head: "makeup117",
                     },
-                    "frequency": 0.37652281746031746,
-                    "going_x": 595,
-                    "going_y": 1019,
-                    "heal": 0,
-                    "hp": 3372,
-                    "id": "Merchantydoo",
-                    "level": 41,
-                    "max_hp": 3372,
-                    "max_mp": 1290,
-                    "move_num": 3477,
-                    "moving": false,
-                    "mp": 1290,
-                    "owner": "5373561187860480",
-                    "party": "Merchantydoo",
-                    "pdps": 18.55447631795323,
-                    "q": {},
-                    "range": 22,
-                    "resistance": 338,
-                    "rip": false,
-                    "s": {
-                        "mluck": {
-                            "f": "Merchantydoo",
-                            "ms": 2643246,
-                            "strong": true
-                        }
+                    frequency: 0.37652281746031746,
+                    going_x: 595,
+                    going_y: 1019,
+                    heal: 0,
+                    hp: 3372,
+                    id: "Merchantydoo",
+                    level: 41,
+                    max_hp: 3372,
+                    max_mp: 1290,
+                    move_num: 3477,
+                    moving: false,
+                    mp: 1290,
+                    owner: "5373561187860480",
+                    party: "Merchantydoo",
+                    pdps: 18.55447631795323,
+                    q: {},
+                    range: 22,
+                    resistance: 338,
+                    rip: false,
+                    s: {
+                        mluck: {
+                            f: "Merchantydoo",
+                            ms: 2643246,
+                            strong: true,
+                        },
                     },
-                    "skin": "marmor12a",
-                    "slots": {
-                        "amulet": {
-                            "level": 2,
-                            "name": "hpamulet"
+                    skin: "marmor12a",
+                    slots: {
+                        amulet: {
+                            level: 2,
+                            name: "hpamulet",
                         },
-                        "belt": {
-                            "level": 2,
-                            "name": "hpbelt"
+                        belt: {
+                            level: 2,
+                            name: "hpbelt",
                         },
-                        "cape": null,
-                        "chest": {
-                            "level": 3,
-                            "name": "coat1",
-                            "stat_type": "str"
+                        cape: null,
+                        chest: {
+                            level: 3,
+                            name: "coat1",
+                            stat_type: "str",
                         },
-                        "earring1": {
-                            "level": 1,
-                            "name": "vitearring"
+                        earring1: {
+                            level: 1,
+                            name: "vitearring",
                         },
-                        "earring2": {
-                            "level": 0,
-                            "name": "vitearring"
+                        earring2: {
+                            level: 0,
+                            name: "vitearring",
                         },
-                        "elixir": null,
-                        "gloves": {
-                            "level": 5,
-                            "name": "gloves1",
-                            "stat_type": "str"
+                        elixir: null,
+                        gloves: {
+                            level: 5,
+                            name: "gloves1",
+                            stat_type: "str",
                         },
-                        "helmet": {
-                            "level": 3,
-                            "name": "helmet1",
-                            "stat_type": "str"
+                        helmet: {
+                            level: 3,
+                            name: "helmet1",
+                            stat_type: "str",
                         },
-                        "mainhand": {
-                            "level": 6,
-                            "name": "slimestaff"
+                        mainhand: {
+                            level: 6,
+                            name: "slimestaff",
                         },
-                        "offhand": {
-                            "level": 1,
-                            "name": "lantern"
+                        offhand: {
+                            level: 1,
+                            name: "lantern",
                         },
-                        "orb": {
-                            "level": 2,
-                            "name": "jacko"
+                        orb: {
+                            level: 2,
+                            name: "jacko",
                         },
-                        "pants": {
-                            "level": 3,
-                            "name": "pants1",
-                            "stat_type": "str"
+                        pants: {
+                            level: 3,
+                            name: "pants1",
+                            stat_type: "str",
                         },
-                        "ring1": {
-                            "level": 1,
-                            "name": "ringsj"
+                        ring1: {
+                            level: 1,
+                            name: "ringsj",
                         },
-                        "ring2": {
-                            "level": 1,
-                            "name": "ringsj"
+                        ring2: {
+                            level: 1,
+                            name: "ringsj",
                         },
-                        "shoes": {
-                            "level": 6,
-                            "name": "shoes1",
-                            "stat_type": "str"
+                        shoes: {
+                            level: 6,
+                            name: "shoes1",
+                            stat_type: "str",
                         },
-                        "trade1": {
-                            "b": true,
-                            "level": 0,
-                            "name": "dexearring",
-                            "price": 50000,
-                            "q": 3,
-                            "rid": "K9P7"
+                        trade1: {
+                            b: true,
+                            level: 0,
+                            name: "dexearring",
+                            price: 50000,
+                            q: 3,
+                            rid: "K9P7",
                         },
-                        "trade2": {
-                            "b": true,
-                            "level": 0,
-                            "name": "intearring",
-                            "price": 50000,
-                            "q": 5,
-                            "rid": "draH"
+                        trade2: {
+                            b: true,
+                            level: 0,
+                            name: "intearring",
+                            price: 50000,
+                            q: 5,
+                            rid: "draH",
                         },
-                        "trade3": null,
-                        "trade4": null
+                        trade3: null,
+                        trade4: null,
                     },
-                    "speed": 72,
-                    "stand": false,
-                    "x": 595,
-                    "xp": 664756,
-                    "y": 1019
+                    speed: 72,
+                    stand: false,
+                    x: 595,
+                    xp: 664756,
+                    y: 1019,
                 },
                 {
-                    "abs": false,
-                    "afk": "code",
-                    "age": 833,
-                    "angle": -61.53135763744086,
-                    "armor": 108,
-                    "attack": 1121,
-                    "c": {},
-                    "cid": 3120,
-                    "controller": "",
-                    "ctype": "mage",
-                    "cx": {
-                        "head": "makeup117"
+                    abs: false,
+                    afk: "code",
+                    age: 833,
+                    angle: -61.53135763744086,
+                    armor: 108,
+                    attack: 1121,
+                    c: {},
+                    cid: 3120,
+                    controller: "",
+                    ctype: "mage",
+                    cx: {
+                        head: "makeup117",
                     },
-                    "frequency": 1.0540346738288813,
-                    "going_x": 528,
-                    "going_y": 1045,
-                    "heal": 0,
-                    "hp": 2693,
-                    "id": "Magiclydoo",
-                    "level": 76,
-                    "max_hp": 3001,
-                    "max_mp": 5105,
-                    "move_num": 3479,
-                    "moving": false,
-                    "mp": 80,
-                    "owner": "5373561187860480",
-                    "party": "Merchantydoo",
-                    "pdps": 39759.83953208568,
-                    "q": {},
-                    "range": 200,
-                    "resistance": 298,
-                    "rip": false,
-                    "s": {
-                        "mluck": {
-                            "f": "Merchantydoo",
-                            "ms": 3558705,
-                            "strong": true
-                        }
+                    frequency: 1.0540346738288813,
+                    going_x: 528,
+                    going_y: 1045,
+                    heal: 0,
+                    hp: 2693,
+                    id: "Magiclydoo",
+                    level: 76,
+                    max_hp: 3001,
+                    max_mp: 5105,
+                    move_num: 3479,
+                    moving: false,
+                    mp: 80,
+                    owner: "5373561187860480",
+                    party: "Merchantydoo",
+                    pdps: 39759.83953208568,
+                    q: {},
+                    range: 200,
+                    resistance: 298,
+                    rip: false,
+                    s: {
+                        mluck: {
+                            f: "Merchantydoo",
+                            ms: 3558705,
+                            strong: true,
+                        },
                     },
-                    "skin": "marmor12d",
-                    "slots": {
-                        "amulet": {
-                            "level": 2,
-                            "name": "intamulet"
+                    skin: "marmor12d",
+                    slots: {
+                        amulet: {
+                            level: 2,
+                            name: "intamulet",
                         },
-                        "belt": {
-                            "level": 2,
-                            "name": "hpbelt"
+                        belt: {
+                            level: 2,
+                            name: "hpbelt",
                         },
-                        "cape": {
-                            "acc": 347,
-                            "ach": "festive",
-                            "level": 5,
-                            "name": "cape",
-                            "stat_type": "int"
+                        cape: {
+                            acc: 347,
+                            ach: "festive",
+                            level: 5,
+                            name: "cape",
+                            stat_type: "int",
                         },
-                        "chest": {
-                            "level": 6,
-                            "name": "wattire",
-                            "stat_type": "int"
+                        chest: {
+                            level: 6,
+                            name: "wattire",
+                            stat_type: "int",
                         },
-                        "earring1": {
-                            "level": 1,
-                            "name": "intearring"
+                        earring1: {
+                            level: 1,
+                            name: "intearring",
                         },
-                        "earring2": {
-                            "level": 2,
-                            "name": "intearring"
+                        earring2: {
+                            level: 2,
+                            name: "intearring",
                         },
-                        "elixir": null,
-                        "gloves": {
-                            "level": 7,
-                            "name": "wgloves",
-                            "stat_type": "int"
+                        elixir: null,
+                        gloves: {
+                            level: 7,
+                            name: "wgloves",
+                            stat_type: "int",
                         },
-                        "helmet": {
-                            "level": 7,
-                            "name": "wcap",
-                            "stat_type": "int"
+                        helmet: {
+                            level: 7,
+                            name: "wcap",
+                            stat_type: "int",
                         },
-                        "mainhand": {
-                            "level": 5,
-                            "name": "oozingterror"
+                        mainhand: {
+                            level: 5,
+                            name: "oozingterror",
                         },
-                        "offhand": {
-                            "level": 3,
-                            "name": "wbook0"
+                        offhand: {
+                            level: 3,
+                            name: "wbook0",
                         },
-                        "orb": {
-                            "level": 0,
-                            "name": "talkingskull"
+                        orb: {
+                            level: 0,
+                            name: "talkingskull",
                         },
-                        "pants": {
-                            "level": 8,
-                            "name": "wbreeches",
-                            "stat_type": "int"
+                        pants: {
+                            level: 8,
+                            name: "wbreeches",
+                            stat_type: "int",
                         },
-                        "ring1": {
-                            "level": 3,
-                            "name": "ringsj"
+                        ring1: {
+                            level: 3,
+                            name: "ringsj",
                         },
-                        "ring2": {
-                            "level": 3,
-                            "name": "ringsj"
+                        ring2: {
+                            level: 3,
+                            name: "ringsj",
                         },
-                        "shoes": {
-                            "level": 8,
-                            "name": "wshoes",
-                            "stat_type": "int"
+                        shoes: {
+                            level: 8,
+                            name: "wshoes",
+                            stat_type: "int",
                         },
-                        "trade1": null,
-                        "trade2": null,
-                        "trade3": null,
-                        "trade4": null
+                        trade1: null,
+                        trade2: null,
+                        trade3: null,
+                        trade4: null,
                     },
-                    "speed": 60,
-                    "target": "4852",
-                    "x": 528,
-                    "xp": 436331101,
-                    "y": 1045
+                    speed: 60,
+                    target: "4852",
+                    x: 528,
+                    xp: 436331101,
+                    y: 1045,
                 },
                 {
-                    "afk": true,
-                    "age": 529,
-                    "armor": 316,
-                    "attack": 867,
-                    "c": {},
-                    "cid": 2,
-                    "ctype": "ranger",
-                    "cx": {
-                        "hair": "hairdo106",
-                        "head": "makeup105"
+                    afk: true,
+                    age: 529,
+                    armor: 316,
+                    attack: 867,
+                    c: {},
+                    cid: 2,
+                    ctype: "ranger",
+                    cx: {
+                        hair: "hairdo106",
+                        head: "makeup105",
                     },
-                    "frequency": 1.3536437569974156,
-                    "heal": 0,
-                    "hp": 5407,
-                    "id": "attacking",
-                    "level": 75,
-                    "max_hp": 5824,
-                    "max_mp": 1550,
-                    "mp": 1522,
-                    "owner": "6133449939746816",
-                    "pdps": 0,
-                    "q": {},
-                    "range": 200,
-                    "resistance": 365,
-                    "rip": false,
-                    "s": {
-                        "holidayspirit": {
-                            "ms": 78375941
+                    frequency: 1.3536437569974156,
+                    heal: 0,
+                    hp: 5407,
+                    id: "attacking",
+                    level: 75,
+                    max_hp: 5824,
+                    max_mp: 1550,
+                    mp: 1522,
+                    owner: "6133449939746816",
+                    pdps: 0,
+                    q: {},
+                    range: 200,
+                    resistance: 365,
+                    rip: false,
+                    s: {
+                        holidayspirit: {
+                            ms: 78375941,
                         },
-                        "hopsickness": {
-                            "ms": 720000
+                        hopsickness: {
+                            ms: 720000,
                         },
-                        "mluck": {
-                            "f": "Suarez",
-                            "ms": 3032604
+                        mluck: {
+                            f: "Suarez",
+                            ms: 3032604,
                         },
-                        "rspeed": {
-                            "f": "TeloRusk",
-                            "ms": 518702
-                        }
+                        rspeed: {
+                            f: "TeloRusk",
+                            ms: 518702,
+                        },
                     },
-                    "skin": "marmor5a",
-                    "slots": {
-                        "amulet": {
-                            "level": 4,
-                            "name": "dexamulet"
+                    skin: "marmor5a",
+                    slots: {
+                        amulet: {
+                            level: 4,
+                            name: "dexamulet",
                         },
-                        "belt": {
-                            "level": 3,
-                            "name": "dexbelt"
+                        belt: {
+                            level: 3,
+                            name: "dexbelt",
                         },
-                        "cape": {
-                            "level": 0,
-                            "name": "ecape",
-                            "stat_type": "dex"
+                        cape: {
+                            level: 0,
+                            name: "ecape",
+                            stat_type: "dex",
                         },
-                        "chest": {
-                            "level": 8,
-                            "name": "coat1",
-                            "stat_type": "dex"
+                        chest: {
+                            level: 8,
+                            name: "coat1",
+                            stat_type: "dex",
                         },
-                        "earring1": {
-                            "level": 1,
-                            "name": "dexearring"
+                        earring1: {
+                            level: 1,
+                            name: "dexearring",
                         },
-                        "earring2": {
-                            "level": 1,
-                            "name": "dexearring"
+                        earring2: {
+                            level: 1,
+                            name: "dexearring",
                         },
-                        "elixir": null,
-                        "gloves": {
-                            "level": 8,
-                            "name": "gloves1",
-                            "stat_type": "dex"
+                        elixir: null,
+                        gloves: {
+                            level: 8,
+                            name: "gloves1",
+                            stat_type: "dex",
                         },
-                        "helmet": {
-                            "level": 8,
-                            "name": "helmet1",
-                            "stat_type": "dex"
+                        helmet: {
+                            level: 8,
+                            name: "helmet1",
+                            stat_type: "dex",
                         },
-                        "mainhand": {
-                            "level": 8,
-                            "name": "t2bow"
+                        mainhand: {
+                            level: 8,
+                            name: "t2bow",
                         },
-                        "offhand": {
-                            "level": 7,
-                            "name": "quiver"
+                        offhand: {
+                            level: 7,
+                            name: "quiver",
                         },
-                        "orb": {
-                            "level": 1,
-                            "name": "jacko"
+                        orb: {
+                            level: 1,
+                            name: "jacko",
                         },
-                        "pants": {
-                            "acc": 333,
-                            "ach": "gooped",
-                            "level": 8,
-                            "name": "pants1",
-                            "stat_type": "dex"
+                        pants: {
+                            acc: 333,
+                            ach: "gooped",
+                            level: 8,
+                            name: "pants1",
+                            stat_type: "dex",
                         },
-                        "ring1": {
-                            "level": 2,
-                            "name": "ringsj"
+                        ring1: {
+                            level: 2,
+                            name: "ringsj",
                         },
-                        "ring2": {
-                            "level": 2,
-                            "name": "ringsj",
-                            "p": "shiny"
+                        ring2: {
+                            level: 2,
+                            name: "ringsj",
+                            p: "shiny",
                         },
-                        "shoes": {
-                            "level": 8,
-                            "name": "shoes1",
-                            "stat_type": "dex"
-                        }
+                        shoes: {
+                            level: 8,
+                            name: "shoes1",
+                            stat_type: "dex",
+                        },
                     },
-                    "speed": 82,
-                    "x": 34.13955603965892,
-                    "xp": 45891765,
-                    "y": 549.9999999
-                }
+                    speed: 82,
+                    x: 34.13955603965892,
+                    xp: 45891765,
+                    y: 549.9999999,
+                },
             ],
-            "type": "all"
+            type: "all",
         },
-        "esize": 39,
-        "evasion": 0,
-        "explosion": 0,
-        "fear": 0,
-        "firesistance": 0,
-        "for": 19,
-        "frequency": 1.3536437569974156,
-        "friends": [],
-        "fzresistance": 0,
-        "gold": 1000009,
-        "goldm": 0.43500000000000005,
-        "heal": 0,
-        "home": "ASIAI",
-        "hp": 5407,
-        "id": "attacking",
-        "in": "main",
-        "incdmgamp": 0,
-        "info": {},
-        "int": 52,
-        "ipass": "EH10ZSeBwiAx",
-        "isize": 42,
-        "items": [
+        esize: 39,
+        evasion: 0,
+        explosion: 0,
+        fear: 0,
+        firesistance: 0,
+        for: 19,
+        frequency: 1.3536437569974156,
+        friends: [],
+        fzresistance: 0,
+        gold: 1000009,
+        goldm: 0.43500000000000005,
+        heal: 0,
+        home: "ASIAI",
+        hp: 5407,
+        id: "attacking",
+        in: "main",
+        incdmgamp: 0,
+        info: {},
+        int: 52,
+        ipass: "EH10ZSeBwiAx",
+        isize: 42,
+        items: [
             null,
             null,
             null,
@@ -1480,174 +1480,169 @@ test("StartData type validation", async () => {
             null,
             null,
             {
-                "name": "hpot1",
-                "q": 9955
+                name: "hpot1",
+                q: 9955,
             },
             {
-                "name": "mpot1",
-                "q": 8274
+                name: "mpot1",
+                q: 8274,
             },
             {
-                "l": "l",
-                "name": "tracker"
-            }
+                l: "l",
+                name: "tracker",
+            },
         ],
-        "level": 75,
-        "lifesteal": 0,
-        "luckm": 0.53,
-        "m": 0,
-        "manasteal": 0,
-        "map": "main",
-        "max_hp": 5824,
-        "max_mp": 1550,
-        "max_xp": 750000000,
-        "mcourage": 2,
-        "miss": 0,
-        "mp": 1522,
-        "mp_cost": 18,
-        "mp_reduction": 0,
-        "owner": "6133449939746816",
-        "pcourage": 2,
-        "pdps": 0,
-        "phresistance": 25,
-        "pnresistance": 10,
-        "q": {},
-        "range": 200,
-        "reflection": 0,
-        "resistance": 365,
-        "rip": false,
-        "rpiercing": 43,
-        "s": {
-            "holidayspirit": {
-                "ms": 78375941
+        level: 75,
+        lifesteal: 0,
+        luckm: 0.53,
+        m: 0,
+        manasteal: 0,
+        map: "main",
+        max_hp: 5824,
+        max_mp: 1550,
+        max_xp: 750000000,
+        mcourage: 2,
+        miss: 0,
+        mp: 1522,
+        mp_cost: 18,
+        mp_reduction: 0,
+        owner: "6133449939746816",
+        pcourage: 2,
+        pdps: 0,
+        phresistance: 25,
+        pnresistance: 10,
+        q: {},
+        range: 200,
+        reflection: 0,
+        resistance: 365,
+        rip: false,
+        rpiercing: 43,
+        s: {
+            holidayspirit: {
+                ms: 78375941,
             },
-            "hopsickness": {
-                "ms": 720000
+            hopsickness: {
+                ms: 720000,
             },
-            "mluck": {
-                "f": "Suarez",
-                "ms": 3032604
+            mluck: {
+                f: "Suarez",
+                ms: 3032604,
             },
-            "rspeed": {
-                "f": "TeloRusk",
-                "ms": 518702
-            }
+            rspeed: {
+                f: "TeloRusk",
+                ms: 518702,
+            },
         },
-        "s_info": {
-            "dragold": {
-                "hp": 13390960,
-                "live": true,
-                "map": "cave",
-                "max_hp": 25600000,
-                "target": "fathergreen",
-                "x": 1056,
-                "y": -944
+        s_info: {
+            dragold: {
+                hp: 13390960,
+                live: true,
+                map: "cave",
+                max_hp: 25600000,
+                target: "fathergreen",
+                x: 1056,
+                y: -944,
             },
-            "lunarnewyear": true,
-            "schedule": {
-                "dailies": [
-                    13,
-                    20
-                ],
-                "night": false,
-                "nightlies": [
-                    23
-                ],
-                "time_offset": -5
+            lunarnewyear: true,
+            schedule: {
+                dailies: [13, 20],
+                night: false,
+                nightlies: [23],
+                time_offset: -5,
             },
-            "tiger": {
-                "hp": 11697,
-                "live": true,
-                "map": "main",
-                "max_hp": 12000
-            }
+            tiger: {
+                hp: 11697,
+                live: true,
+                map: "main",
+                max_hp: 12000,
+            },
         },
-        "skin": "marmor5a",
-        "slots": {
-            "amulet": {
-                "level": 4,
-                "name": "dexamulet"
+        skin: "marmor5a",
+        slots: {
+            amulet: {
+                level: 4,
+                name: "dexamulet",
             },
-            "belt": {
-                "level": 3,
-                "name": "dexbelt"
+            belt: {
+                level: 3,
+                name: "dexbelt",
             },
-            "cape": {
-                "level": 0,
-                "name": "ecape",
-                "stat_type": "dex"
+            cape: {
+                level: 0,
+                name: "ecape",
+                stat_type: "dex",
             },
-            "chest": {
-                "level": 8,
-                "name": "coat1",
-                "stat_type": "dex"
+            chest: {
+                level: 8,
+                name: "coat1",
+                stat_type: "dex",
             },
-            "earring1": {
-                "level": 1,
-                "name": "dexearring"
+            earring1: {
+                level: 1,
+                name: "dexearring",
             },
-            "earring2": {
-                "level": 1,
-                "name": "dexearring"
+            earring2: {
+                level: 1,
+                name: "dexearring",
             },
-            "elixir": null,
-            "gloves": {
-                "level": 8,
-                "name": "gloves1",
-                "stat_type": "dex"
+            elixir: null,
+            gloves: {
+                level: 8,
+                name: "gloves1",
+                stat_type: "dex",
             },
-            "helmet": {
-                "level": 8,
-                "name": "helmet1",
-                "stat_type": "dex"
+            helmet: {
+                level: 8,
+                name: "helmet1",
+                stat_type: "dex",
             },
-            "mainhand": {
-                "level": 8,
-                "name": "t2bow"
+            mainhand: {
+                level: 8,
+                name: "t2bow",
             },
-            "offhand": {
-                "level": 7,
-                "name": "quiver"
+            offhand: {
+                level: 7,
+                name: "quiver",
             },
-            "orb": {
-                "level": 1,
-                "name": "jacko"
+            orb: {
+                level: 1,
+                name: "jacko",
             },
-            "pants": {
-                "acc": 333,
-                "ach": "gooped",
-                "level": 8,
-                "name": "pants1",
-                "stat_type": "dex"
+            pants: {
+                acc: 333,
+                ach: "gooped",
+                level: 8,
+                name: "pants1",
+                stat_type: "dex",
             },
-            "ring1": {
-                "level": 2,
-                "name": "ringsj"
+            ring1: {
+                level: 2,
+                name: "ringsj",
             },
-            "ring2": {
-                "level": 2,
-                "name": "ringsj",
-                "p": "shiny"
+            ring2: {
+                level: 2,
+                name: "ringsj",
+                p: "shiny",
             },
-            "shoes": {
-                "level": 8,
-                "name": "shoes1",
-                "stat_type": "dex"
-            }
+            shoes: {
+                level: 8,
+                name: "shoes1",
+                stat_type: "dex",
+            },
         },
-        "speed": 82,
-        "str": 45,
-        "stresistance": 20,
-        "stun": 0,
-        "targets": 0,
-        "tax": 0.02,
-        "vit": 53,
-        "x": 34.13955603965892,
-        "xcx": [],
-        "xp": 45891765,
-        "xpm": 0.41000000000000003,
-        "xrange": 25,
-        "y": 549.9999999
+        speed: 82,
+        str: 45,
+        stresistance: 20,
+        stun: 0,
+        targets: 0,
+        tax: 0.02,
+        vit: 53,
+        x: 34.13955603965892,
+        xcx: [],
+        xp: 45891765,
+        xpm: 0.41000000000000003,
+        xrange: 25,
+        y: 549.9999999,
     }
     expect(startData).toBeDefined()
 })

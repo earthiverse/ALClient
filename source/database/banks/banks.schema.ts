@@ -4,7 +4,7 @@ const { Schema } = pkg
 const BankSchema = new Schema({
     __v: {
         select: false,
-        type: Number
+        type: Number,
     },
     gold: Number,
     items0: { required: false, type: Object },
@@ -56,7 +56,7 @@ const BankSchema = new Schema({
     items46: { required: false, type: Object },
     items47: { required: false, type: Object },
     lastUpdated: { required: false, type: Number },
-    owner: String
+    owner: String,
 })
 
 export default BankSchema

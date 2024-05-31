@@ -9,6 +9,6 @@ export interface IServer {
     serverRegion: ServerRegion
 }
 
-export interface IServerDocument extends IServer, Document { }
+export interface IServerDocument extends IServer, Document {}
 
 export type IServerModel = Model<IServerDocument>

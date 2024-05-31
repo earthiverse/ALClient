@@ -7,33 +7,33 @@ import { GData } from "./adventureland-data"
 
 test("G.events type validation", async () => {
     const G_emotions: Pick<GData, "events"> = {
-        "events": {
-            "abtesting": {
-                "daily": true,
-                "duration": 480,
-                "join": true
+        events: {
+            abtesting: {
+                daily: true,
+                duration: 480,
+                join: true,
             },
-            "crabxx": {
-                "daily": true,
-                "duration": 2400,
-                "join": true
+            crabxx: {
+                daily: true,
+                duration: 2400,
+                join: true,
             },
-            "franky": {
-                "daily": true,
-                "duration": 2400,
-                "join": true
+            franky: {
+                daily: true,
+                duration: 2400,
+                join: true,
             },
-            "goobrawl": {
-                "daily": true,
-                "duration": 540,
-                "join": true
+            goobrawl: {
+                daily: true,
+                duration: 540,
+                join: true,
             },
-            "icegolem": {
-                "daily": true,
-                "duration": 2400,
-                "join": true
-            }
-        }
+            icegolem: {
+                daily: true,
+                duration: 2400,
+                join: true,
+            },
+        },
     }
     expect(G_emotions).toBeDefined()
 })

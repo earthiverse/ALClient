@@ -28,7 +28,8 @@ export class Mage extends PingCompensatedCharacter {
             y = roundedY
         }
 
-        if (!Pathfinder.canStand({ map: this.map, x: x, y: y })) throw new Error(`We cannot blink to ${this.map},${x},${y}`)
+        if (!Pathfinder.canStand({ map: this.map, x: x, y: y }))
+            throw new Error(`We cannot blink to ${this.map},${x},${y}`)
 
         const response = this.getResponsePromise("blink")
         this.socket.emit("skill", { name: "blink", x: x, y: y })
@@ -75,7 +76,7 @@ export class Mage extends PingCompensatedCharacter {
         this.socket.emit("skill", {
             id: target,
             name: "entangle",
-            num: essenceofnature
+            num: essenceofnature,
         })
         return response
     }
@@ -85,7 +86,7 @@ export class Mage extends PingCompensatedCharacter {
 
         const response = this.getResponsePromise("light")
         this.socket.emit("skill", {
-            name: "light"
+            name: "light",
         })
         return response
     }
@@ -139,7 +140,7 @@ export class Mage extends PingCompensatedCharacter {
         const response = this.getResponsePromise("reflection")
         this.socket.emit("skill", {
             id: target,
-            name: "reflection"
+            name: "reflection",
         })
         return response
     }

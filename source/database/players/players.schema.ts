@@ -4,7 +4,7 @@ const { Schema } = pkg
 const PlayerSchema = new Schema({
     __v: {
         select: false,
-        type: Number
+        type: Number,
     },
     /** Key for use with ALData */
     aldata: { required: false, type: String },

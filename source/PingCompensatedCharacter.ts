@@ -1,4 +1,12 @@
-import { ChannelInfo, CharacterData, EntitiesData, PlayerData, PQData, QInfo, ServerData } from "./definitions/adventureland-server.js"
+import {
+    ChannelInfo,
+    CharacterData,
+    EntitiesData,
+    PlayerData,
+    PQData,
+    QInfo,
+    ServerData,
+} from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
 import { Tools } from "./Tools.js"
@@ -31,7 +39,7 @@ export class PingCompensatedCharacter extends Character {
 
         // Compensate movement
         if (this.moving) {
-            const distanceTraveled = this.speed * pingCompensation / 1000
+            const distanceTraveled = (this.speed * pingCompensation) / 1000
             const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
             const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
             if (distanceTraveled > distanceToGoal) {
@@ -85,9 +93,12 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.entities.get(monster.id)
             if (!entity || !entity.moving) continue
-            const distanceTraveled = entity.speed * pingCompensation / 1000
+            const distanceTraveled = (entity.speed * pingCompensation) / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
+            const distanceToGoal = Tools.distance(
+                { x: entity.x, y: entity.y },
+                { x: entity.going_x, y: entity.going_y },
+            )
             if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
@@ -111,9 +122,12 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.players.get(player.id)
             if (!entity || !entity.moving) continue
-            const distanceTraveled = entity.speed * pingCompensation / 1000
+            const distanceTraveled = (entity.speed * pingCompensation) / 1000
             const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
+            const distanceToGoal = Tools.distance(
+                { x: entity.x, y: entity.y },
+                { x: entity.going_x, y: entity.going_y },
+            )
             if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
@@ -161,24 +175,31 @@ export class PingCompensatedCharacter extends Character {
         // Update our `q` to match the new data
         for (const process in data.q) {
             const newCooldown = data.q[process as keyof QInfo].ms - pingCompensation
-            if (newCooldown <= 0)
-                delete this.q[process as keyof QInfo]
-            else
-                this.q[process] = data.q[process]
+            if (newCooldown <= 0) delete this.q[process as keyof QInfo]
+            else this.q[process] = data.q[process]
         }
     }
 
     protected pingLoop(): void {
         if (!this.socket || this.socket.disconnected) {
-            this.timeouts.set("pingLoop", setTimeout(() => this.pingLoop(), 1000))
+            this.timeouts.set(
+                "pingLoop",
+                setTimeout(() => this.pingLoop(), 1000),
+            )
             return
         }
 
         this.sendPing(false).catch(console.error)
         if (this.pings.length > Math.ceil(Constants.MAX_PINGS / 10)) {
-            this.timeouts.set("pingLoop", setTimeout(() => this.pingLoop(), Constants.PING_EVERY_MS))
+            this.timeouts.set(
+                "pingLoop",
+                setTimeout(() => this.pingLoop(), Constants.PING_EVERY_MS),
+            )
         } else {
-            this.timeouts.set("pingLoop", setTimeout(() => this.pingLoop(), 1000))
+            this.timeouts.set(
+                "pingLoop",
+                setTimeout(() => this.pingLoop(), 1000),
+            )
         }
     }
 }

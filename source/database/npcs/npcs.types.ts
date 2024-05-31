@@ -14,6 +14,6 @@ export interface INPC {
     lastSeen?: number
 }
 
-export interface INPCDocument extends INPC, Document { }
+export interface INPCDocument extends INPC, Document {}
 
 export type INPCModel = Model<INPCDocument>

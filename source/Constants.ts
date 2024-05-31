@@ -28,7 +28,7 @@ export class Constants {
     static BASE = {
         h: 8,
         v: 7,
-        vn: 2
+        vn: 2,
     }
 
     /** Character size */
@@ -54,16 +54,85 @@ export class Constants {
 
     /** Monsters that are worth tracking in our database */
     static MONSTER_RESPAWN_TIMES: { [T in MonsterName]?: number } = {
-        "snowman": 20 * 60 * 60 * 1000 // 20 hours (This is an estimate based on #game_events in Discord) NOTE: If the winter event is happening, they respawn faster
+        snowman: 20 * 60 * 60 * 1000, // 20 hours (This is an estimate based on #game_events in Discord) NOTE: If the winter event is happening, they respawn faster
     }
-    static ONE_SPAWN_MONSTERS: MonsterName[] = ["crabxx", "dragold", "fvampire", "franky", "greenjr", "grinch", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "wabbit"]
-    static SERVER_INFO_MONSTERS: MonsterName[] = ["crabxx", "dragold", "franky", "grinch", "icegolem", "pinkgoo", "slenderman", "snowman", "tiger", "wabbit"]
+    static ONE_SPAWN_MONSTERS: MonsterName[] = [
+        "crabxx",
+        "dragold",
+        "fvampire",
+        "franky",
+        "greenjr",
+        "grinch",
+        "icegolem",
+        "jr",
+        "mrgreen",
+        "mrpumpkin",
+        "mvampire",
+        "phoenix",
+        "pinkgoo",
+        "rharpy",
+        "rudolph",
+        "skeletor",
+        "slenderman",
+        "snowman",
+        "stompy",
+        "tiger",
+        "wabbit",
+    ]
+    static SERVER_INFO_MONSTERS: MonsterName[] = [
+        "crabxx",
+        "dragold",
+        "franky",
+        "grinch",
+        "icegolem",
+        "pinkgoo",
+        "slenderman",
+        "snowman",
+        "tiger",
+        "wabbit",
+    ]
     static SPECIAL_MONSTERS: MonsterName[] = [
         // Noraml monsters
-        "crabxx", "cutebee", "dragold", "fvampire", "franky", "goldenbat", "greenjr", "grinch", "harpy", "icegolem", "jr", "mrgreen", "mrpumpkin", "mvampire", "phoenix", "pinkgoo", "rharpy", "rudolph", "skeletor", "slenderman", "snowman", "stompy", "tiger", "tinyp", "wabbit",
+        "crabxx",
+        "cutebee",
+        "dragold",
+        "fvampire",
+        "franky",
+        "goldenbat",
+        "greenjr",
+        "grinch",
+        "harpy",
+        "icegolem",
+        "jr",
+        "mrgreen",
+        "mrpumpkin",
+        "mvampire",
+        "phoenix",
+        "pinkgoo",
+        "rharpy",
+        "rudolph",
+        "skeletor",
+        "slenderman",
+        "snowman",
+        "stompy",
+        "tiger",
+        "tinyp",
+        "wabbit",
         // Goo Brawl
         "rgoo",
         // Crypt monsters
-        "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "vbat", "xmagefi", "xmagefz", "xmagen", "xmagex"
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "vbat",
+        "xmagefi",
+        "xmagefz",
+        "xmagen",
+        "xmagex",
     ]
 }

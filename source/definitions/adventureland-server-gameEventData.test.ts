@@ -7,10 +7,10 @@ import { GameEventData } from "./adventureland-server"
 
 test("GameEventData type validation", async () => {
     const snowman: GameEventData = {
-        "name": "snowman",
-        "map": "winterland",
-        "x": 900,
-        "y": -800
+        name: "snowman",
+        map: "winterland",
+        x: 900,
+        y: -800,
     }
     expect(snowman).toBeDefined()
 })

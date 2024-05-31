@@ -1,11 +1,7 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "lib": [
-            "ESNext",
-            "DOM",
-            "DOM.Iterable"
-        ],
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "allowSyntheticDefaultImports": true,
         "alwaysStrict": true,
         "declaration": true,
@@ -19,16 +15,8 @@
         "removeComments": false,
         "rootDir": "source",
         "sourceMap": true,
-        "types": [
-            "jest",
-            "mongoose"
-        ]
+        "types": ["jest", "mongoose"]
     },
-    "include": [
-        "source"
-    ],
-    "exclude": [
-        "node_modules",
-        "source/**/*.test.*"
-    ]
+    "include": ["source"],
+    "exclude": ["node_modules", "source/**/*.test.*"]
 }

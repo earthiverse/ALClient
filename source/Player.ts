@@ -1,6 +1,14 @@
 import { Character } from "./Character.js"
 import { SlotInfo, StatusInfo, TradeSlotType } from "./definitions/adventureland.js"
-import { CharacterType, CXData, DamageType, GData, MapName, NPCName, SkillName } from "./definitions/adventureland-data.js"
+import {
+    CharacterType,
+    CXData,
+    DamageType,
+    GData,
+    MapName,
+    NPCName,
+    SkillName,
+} from "./definitions/adventureland-data.js"
 import { ChannelInfo, PlayerData, QInfo } from "./definitions/adventureland-server.js"
 import { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
@@ -111,8 +119,10 @@ export class Player implements PlayerData {
         // NOTE: currently no skills with rpiercing
         // let additionalRpiercing = 0
         // if (gSkill?.rpiercing) additionalRpiercing = gSkill.rpiercing
-        if (damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
-        else if (damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+        if (damage_type == "physical")
+            baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
+        else if (damage_type == "magical")
+            baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
         if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
 
@@ -121,9 +131,9 @@ export class Player implements PlayerData {
 
         if (this.crit) {
             if (this.crit >= 100) {
-                lowerLimit *= (2 + (this.critdamage / 100))
+                lowerLimit *= 2 + this.critdamage / 100
             }
-            upperLimit *= (2 + (this.critdamage / 100))
+            upperLimit *= 2 + this.critdamage / 100
         }
 
         // NOTE: This information is from @Wizard on Discord on May 1st, 2020
@@ -207,7 +217,7 @@ export class Player implements PlayerData {
      * @returns If the player is disabled
      */
     public isDisabled(): boolean {
-        return this.rip || ((this.s.stunned || this.s.fingered || this.s.deepfreezed || this.s.sleeping) !== undefined)
+        return this.rip || (this.s.stunned || this.s.fingered || this.s.deepfreezed || this.s.sleeping) !== undefined
     }
 
     /**

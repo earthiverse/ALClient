@@ -7,14 +7,14 @@ import { GData } from "./adventureland-data"
 
 test("G.multipliers type validation", async () => {
     const G_multipliers: Pick<GData, "multipliers"> = {
-        "multipliers": {
-            "buy_to_sell": 0.6,
-            "extra_shells": 0,
-            "lostandfound_mult": 4,
-            "secondhands_cash_mult": 3,
-            "secondhands_mult": 2,
-            "shells_to_gold": 32000
-        }
+        multipliers: {
+            buy_to_sell: 0.6,
+            extra_shells: 0,
+            lostandfound_mult: 4,
+            secondhands_cash_mult: 3,
+            secondhands_mult: 2,
+            shells_to_gold: 32000,
+        },
     }
     expect(G_multipliers).toBeDefined()
 })

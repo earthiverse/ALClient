@@ -7,60 +7,48 @@ import { GData } from "./adventureland-data"
 
 test("G.sets type validation", async () => {
     const G_sets: Pick<GData, "sets"> = {
-        "sets": {
-            "wt3": {
-                "name": "Heavy Armor",
-                "items": [
-                    "hhelmet",
-                    "harmor",
-                    "hboots",
-                    "hgloves",
-                    "hpants"
-                ],
+        sets: {
+            wt3: {
+                name: "Heavy Armor",
+                items: ["hhelmet", "harmor", "hboots", "hgloves", "hpants"],
                 "1": {
-                    "for": 2
+                    for: 2,
                 },
                 "3": {
-                    "for": 6
+                    for: 6,
                 },
                 "2": {
-                    "for": 4
+                    for: 4,
                 },
                 "5": {
-                    "for": 16
+                    for: 16,
                 },
                 "4": {
-                    "for": 10
-                }
+                    for: 10,
+                },
             },
-            "wt4": {
-                "name": "Darkforge Armor",
-                "items": [
-                    "xhelmet",
-                    "xarmor",
-                    "xboots",
-                    "xgloves",
-                    "xpants"
-                ],
+            wt4: {
+                name: "Darkforge Armor",
+                items: ["xhelmet", "xarmor", "xboots", "xgloves", "xpants"],
                 "1": {
-                    "for": 3
+                    for: 3,
                 },
                 "3": {
-                    "for": 7
+                    for: 7,
                 },
                 "2": {
-                    "for": 5
+                    for: 5,
                 },
                 "5": {
-                    "for": 22
+                    for: 22,
                 },
                 "4": {
-                    "for": 15
-                }
+                    for: 15,
+                },
             },
-            "vampires": {
+            vampires: {
                 "1": {},
-                "items": [
+                items: [
                     "mcape",
                     "vgloves",
                     "vboots",
@@ -72,151 +60,121 @@ test("G.sets type validation", async () => {
                     "vstaff",
                     "vsword",
                     "vblood",
-                    "vring"
+                    "vring",
                 ],
                 "3": {
-                    "lifesteal": 1
+                    lifesteal: 1,
                 },
                 "2": {
-                    "vit": 10
+                    vit: 10,
                 },
-                "name": "Vampires"
+                name: "Vampires",
             },
-            "easter": {
+            easter: {
                 "1": {},
                 "3": {
-                    "vit": 3
+                    vit: 3,
                 },
                 "2": {
-                    "luck": 5
+                    luck: 5,
                 },
                 "5": {
-                    "vit": 2
+                    vit: 2,
                 },
-                "name": "Bunny Set",
+                name: "Bunny Set",
                 "6": {
-                    "vit": 2
+                    vit: 2,
                 },
-                "items": [
-                    "eears",
-                    "ecape",
-                    "epyjamas",
-                    "eslippers",
-                    "pinkie",
-                    "carrotsword"
-                ],
-                "explanation": "An Easter / Bunny themed set!",
+                items: ["eears", "ecape", "epyjamas", "eslippers", "pinkie", "carrotsword"],
+                explanation: "An Easter / Bunny themed set!",
                 "4": {
-                    "speed": 2
-                }
+                    speed: 2,
+                },
             },
-            "fury": {
-                "name": "Rage and Fury",
-                "items": [
-                    "suckerpunch",
-                    "suckerpunch",
-                    "fury",
-                    "fallen"
-                ],
+            fury: {
+                name: "Rage and Fury",
+                items: ["suckerpunch", "suckerpunch", "fury", "fallen"],
                 "1": {},
                 "3": {
-                    "dex": 2
+                    dex: 2,
                 },
                 "2": {
-                    "str": 1
+                    str: 1,
                 },
                 "4": {
-                    "apiercing": 32
-                }
+                    apiercing: 32,
+                },
             },
-            "mranger": {
+            mranger: {
                 "1": {},
                 "3": {
-                    "dex": 3,
-                    "speed": 2
+                    dex: 3,
+                    speed: 2,
                 },
                 "2": {
-                    "dex": 3
+                    dex: 3,
                 },
                 "5": {
-                    "resistance": 100
+                    resistance: 100,
                 },
-                "name": "Monster Hunter Ranger",
-                "items": [
-                    "mrnhat",
-                    "mrnarmor",
-                    "mrngloves",
-                    "mrnpants",
-                    "mrnboots"
-                ],
-                "explanation": "A set for a noble ranger who serves our realm!",
+                name: "Monster Hunter Ranger",
+                items: ["mrnhat", "mrnarmor", "mrngloves", "mrnpants", "mrnboots"],
+                explanation: "A set for a noble ranger who serves our realm!",
                 "4": {
-                    "apiercing": 60
-                }
+                    apiercing: 60,
+                },
             },
-            "mrogue": {
+            mrogue: {
                 "1": {},
                 "3": {
-                    "dex": 4,
-                    "speed": 3
+                    dex: 4,
+                    speed: 3,
                 },
                 "2": {
-                    "dex": 6
+                    dex: 6,
                 },
                 "5": {
-                    "crit": 5
+                    crit: 5,
                 },
-                "name": "Monster Hunter Rogue",
-                "items": [
-                    "mrhood",
-                    "mrarmor",
-                    "mrgloves",
-                    "mrpants",
-                    "mrboots"
-                ],
-                "explanation": "A set for a noble rogue who serves our realm!",
+                name: "Monster Hunter Rogue",
+                items: ["mrhood", "mrarmor", "mrgloves", "mrpants", "mrboots"],
+                explanation: "A set for a noble rogue who serves our realm!",
                 "4": {
-                    "apiercing": 80
-                }
+                    apiercing: 80,
+                },
             },
-            "mmage": {
+            mmage: {
                 "1": {},
                 "3": {
-                    "int": 3,
-                    "speed": 2
+                    int: 3,
+                    speed: 2,
                 },
                 "2": {
-                    "int": 2
+                    int: 2,
                 },
                 "5": {
-                    "crit": 2
+                    crit: 2,
                 },
-                "name": "Monster Hunter Mage",
-                "items": [
-                    "mmhat",
-                    "mmarmor",
-                    "mmgloves",
-                    "mmpants",
-                    "mmshoes"
-                ],
-                "explanation": "A set for a noble mage who serves our realm!",
+                name: "Monster Hunter Mage",
+                items: ["mmhat", "mmarmor", "mmgloves", "mmpants", "mmshoes"],
+                explanation: "A set for a noble mage who serves our realm!",
                 "4": {
-                    "rpiercing": 40
-                }
+                    rpiercing: 40,
+                },
             },
-            "holidays": {
+            holidays: {
                 "1": {},
                 "3": {
-                    "vit": 1
+                    vit: 1,
                 },
                 "2": {
-                    "dex": 1
+                    dex: 1,
                 },
                 "5": {},
-                "name": "Holiday Spirit",
+                name: "Holiday Spirit",
                 "6": {},
                 "7": {},
-                "items": [
+                items: [
                     "xmashat",
                     "xmassweater",
                     "xmasshoes",
@@ -229,193 +187,152 @@ test("G.sets type validation", async () => {
                     "merry",
                     "orbofsc",
                     "mearring",
-                    "xmace"
+                    "xmace",
                 ],
-                "explanation": "Every month is December with this set!",
+                explanation: "Every month is December with this set!",
                 "4": {
-                    "luck": 6
-                }
+                    luck: 6,
+                },
             },
-            "wanderers": {
+            wanderers: {
                 "1": {},
                 "3": {
-                    "mp": 100
+                    mp: 100,
                 },
                 "2": {
-                    "hp": 200
+                    hp: 200,
                 },
                 "5": {
-                    "luck": 16
+                    luck: 16,
                 },
-                "name": "Wanderer's Set",
-                "items": [
-                    "wcap",
-                    "wattire",
-                    "wbreeches",
-                    "wgloves",
-                    "wshoes"
-                ],
-                "explanation": "Wanderer was a curious adventurer. Traveling from place to place. The items he left over make up a very lucky set when they are combined.",
+                name: "Wanderer's Set",
+                items: ["wcap", "wattire", "wbreeches", "wgloves", "wshoes"],
+                explanation:
+                    "Wanderer was a curious adventurer. Traveling from place to place. The items he left over make up a very lucky set when they are combined.",
                 "4": {
-                    "gold": 10
-                }
+                    gold: 10,
+                },
             },
-            "mmerchant": {
+            mmerchant: {
                 "1": {},
                 "3": {
-                    "speed": 2,
-                    "str": 3,
-                    "vit": 8
+                    speed: 2,
+                    str: 3,
+                    vit: 8,
                 },
                 "2": {
-                    "courage": 1,
-                    "pcourage": 1,
-                    "vit": 6,
-                    "mcourage": 1
+                    courage: 1,
+                    pcourage: 1,
+                    vit: 6,
+                    mcourage: 1,
                 },
                 "5": {
-                    "courage": 2,
-                    "pcourage": 2,
-                    "for": 32,
-                    "mcourage": 2
+                    courage: 2,
+                    pcourage: 2,
+                    for: 32,
+                    mcourage: 2,
                 },
-                "name": "Monster Hunter Merchant",
-                "items": [
-                    "mchat",
-                    "mcarmor",
-                    "mcgloves",
-                    "mcpants",
-                    "mcboots"
-                ],
-                "explanation": "A set for a noble merchant who has some friends that serve our realm!",
+                name: "Monster Hunter Merchant",
+                items: ["mchat", "mcarmor", "mcgloves", "mcpants", "mcboots"],
+                explanation: "A set for a noble merchant who has some friends that serve our realm!",
                 "4": {
-                    "evasion": 6
-                }
+                    evasion: 6,
+                },
             },
-            "mpriest": {
+            mpriest: {
                 "1": {},
                 "3": {
-                    "int": 3,
-                    "speed": 2
+                    int: 3,
+                    speed: 2,
                 },
                 "2": {
-                    "int": 3
+                    int: 3,
                 },
                 "5": {
-                    "mp": 2000
+                    mp: 2000,
                 },
-                "name": "Monster Hunter Priest",
-                "items": [
-                    "mphat",
-                    "mparmor",
-                    "mpgloves",
-                    "mppants",
-                    "mpshoes"
-                ],
-                "explanation": "A set for a noble priest who serves our realm!",
+                name: "Monster Hunter Priest",
+                items: ["mphat", "mparmor", "mpgloves", "mppants", "mpshoes"],
+                explanation: "A set for a noble priest who serves our realm!",
                 "4": {
-                    "rpiercing": 120
-                }
+                    rpiercing: 120,
+                },
             },
-            "mwarrior": {
+            mwarrior: {
                 "1": {},
                 "3": {
-                    "speed": 1,
-                    "str": 3
+                    speed: 1,
+                    str: 3,
                 },
                 "2": {
-                    "str": 2
+                    str: 2,
                 },
                 "5": {
-                    "crit": 5
+                    crit: 5,
                 },
-                "name": "Monster Hunter Warrior",
-                "items": [
-                    "mwhelmet",
-                    "mwarmor",
-                    "mwgloves",
-                    "mwpants",
-                    "mwboots"
-                ],
-                "explanation": "A set for a noble warrior who serves our realm!",
+                name: "Monster Hunter Warrior",
+                items: ["mwhelmet", "mwarmor", "mwgloves", "mwpants", "mwboots"],
+                explanation: "A set for a noble warrior who serves our realm!",
                 "4": {
-                    "apiercing": 40
-                }
+                    apiercing: 40,
+                },
             },
-            "rugged": {
+            rugged: {
                 "1": {},
                 "3": {
-                    "armor": 20,
-                    "range": 2,
-                    "resistance": 20
+                    armor: 20,
+                    range: 2,
+                    resistance: 20,
                 },
                 "2": {
-                    "dex": 1,
-                    "int": 1,
-                    "str": 1
+                    dex: 1,
+                    int: 1,
+                    str: 1,
                 },
                 "5": {
-                    "speed": 4
+                    speed: 4,
                 },
-                "name": "Rugged Set",
-                "items": [
-                    "helmet1",
-                    "coat1",
-                    "shoes1",
-                    "gloves1",
-                    "pants1"
-                ],
-                "explanation": "Just the right amount of protection for the agile wearer",
+                name: "Rugged Set",
+                items: ["helmet1", "coat1", "shoes1", "gloves1", "pants1"],
+                explanation: "Just the right amount of protection for the agile wearer",
                 "4": {
-                    "for": 8
-                }
-            },
-            "swift": {
-                "1": {},
-                "items": [
-                    "wingedboots",
-                    "fierygloves"
-                ],
-                "2": {
-                    "dex": 1
+                    for: 8,
                 },
-                "name": "Swift Judgement"
             },
-            "mpx": {
+            swift: {
                 "1": {},
-                "items": [
-                    "mpxbelt",
-                    "mpxgloves",
-                    "mpxamulet"
-                ],
+                items: ["wingedboots", "fierygloves"],
+                "2": {
+                    dex: 1,
+                },
+                name: "Swift Judgement",
+            },
+            mpx: {
+                "1": {},
+                items: ["mpxbelt", "mpxgloves", "mpxamulet"],
                 "3": {
-                    "speed": 1,
-                    "mp": 500,
-                    "rpiercing": 20
+                    speed: 1,
+                    mp: 500,
+                    rpiercing: 20,
                 },
                 "2": {
-                    "mp": 100
+                    mp: 100,
                 },
-                "name": "MP X"
+                name: "MP X",
             },
-            "legends": {
-                "name": "The Legends",
-                "items": [
-                    "warpvest",
-                    "starkillers",
-                    "powerglove",
-                    "goldenpowerglove"
-                ],
+            legends: {
+                name: "The Legends",
+                items: ["warpvest", "starkillers", "powerglove", "goldenpowerglove"],
                 "1": {},
                 "3": {
-                    "for": 10
+                    for: 10,
                 },
                 "2": {},
                 "4": {
-                    "for": 2
-                }
-            }
-        }
+                    for: 2,
+                },
+            },
+        },
     }
     expect(G_sets).toBeDefined()
 })

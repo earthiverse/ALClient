@@ -8,6 +8,6 @@ export interface IAchievement {
     max: { [T in MonsterName]: number }
 }
 
-export interface IAchievementDocument extends IAchievement, Document { }
+export interface IAchievementDocument extends IAchievement, Document {}
 
 export type IAchievementModel = Model<IAchievementDocument>

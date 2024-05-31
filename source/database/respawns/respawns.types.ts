@@ -9,6 +9,6 @@ export interface IRespawn {
     type: MonsterName
 }
 
-export interface IRespawnDocument extends IRespawn, Document { }
+export interface IRespawnDocument extends IRespawn, Document {}
 
 export type IRespawnModel = Model<IRespawnDocument>

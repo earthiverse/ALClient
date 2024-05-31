@@ -1,7 +1,27 @@
 import socketio, { Socket } from "socket.io-client"
 import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
 import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, WelcomeData, LoadedData, ActionData, ServerInfoData, ServerInfoDataLive, DeathData, DisappearData, EntitiesData, HitData, NewMapData, ServerInfoDataNotLive, GameEventData, ServerToClientEvents, ClientToServerEvents, ActionDataRay, ActionDataProjectile, QInfo, ChannelInfo } from "./definitions/adventureland-server.js"
+import {
+    ServerData,
+    WelcomeData,
+    LoadedData,
+    ActionData,
+    ServerInfoData,
+    ServerInfoDataLive,
+    DeathData,
+    DisappearData,
+    EntitiesData,
+    HitData,
+    NewMapData,
+    ServerInfoDataNotLive,
+    GameEventData,
+    ServerToClientEvents,
+    ClientToServerEvents,
+    ActionDataRay,
+    ActionDataProjectile,
+    QInfo,
+    ChannelInfo,
+} from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
 import { Player } from "./Player.js"
@@ -24,12 +44,12 @@ export class Observer {
 
     protected secret?: string
     protected pingIndex = 0
-    protected pingMap = new Map<string, { log: boolean, time: number }>()
+    protected pingMap = new Map<string, { log: boolean; time: number }>()
     protected pingNum = 1
     private static pingsPerServer = new Map<string, number[]>()
     public pings: number[] = []
     public players = new Map<string, Player>()
-    public projectiles = new Map<string, ActionData & { date: Date; }>()
+    public projectiles = new Map<string, ActionData & { date: Date }>()
     public S: ServerInfoData = {}
     public server: WelcomeData
 
@@ -63,12 +83,15 @@ export class Observer {
     }
 
     public async connect(reconnect = false, start = true): Promise<void> {
-        this.socket = socketio(`ws${this.serverData.secure ? "s" : ""}://${this.serverData.addr}:${this.serverData.port}`, {
-            autoConnect: false,
-            query: this.secret ? { secret: this.secret } : {},
-            reconnection: reconnect,
-            transports: ["websocket"],
-        })
+        this.socket = socketio(
+            `ws${this.serverData.secure ? "s" : ""}://${this.serverData.addr}:${this.serverData.port}`,
+            {
+                autoConnect: false,
+                query: this.secret ? { secret: this.secret } : {},
+                reconnection: reconnect,
+                transports: ["websocket"],
+            },
+        )
 
         this.socket.on("action", (data: ActionData) => {
             if ((data as ActionDataRay).instant) return // It's instant, don't add a projectile
@@ -100,10 +123,14 @@ export class Observer {
 
             if (!Database.connection || data.reason == "disconnect" || data.reason == "invis") return // We don't track these
 
-            if ((data.effect == "blink" || data.effect == "magiport")
-                && data.to !== undefined && this.G.maps[data.to] && data.s !== undefined
+            if (
+                (data.effect == "blink" || data.effect == "magiport") &&
+                data.to !== undefined &&
+                this.G.maps[data.to] &&
+                data.s !== undefined &&
                 // NOTE: entity IDs are numbers, so the isNumber check filters out entities
-                && !isNumber(data.id)) {
+                !isNumber(data.id)
+            ) {
                 // They used "blink" or "magiport" and don't have a stealth cape
                 const updateData: Partial<IPlayer> = {
                     lastSeen: Date.now(),
@@ -111,12 +138,20 @@ export class Observer {
                     serverIdentifier: this.serverData.name,
                     serverRegion: this.serverData.region,
                     x: data.s[0],
-                    y: data.s[1]
+                    y: data.s[1],
                 }
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${data.id}`)
                 if (!nextUpdate || Date.now() >= nextUpdate) {
-                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${data.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true })
+                        .lean()
+                        .exec()
+                        .catch((e) => {
+                            console.error(e)
+                        })
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}${data.id}`,
+                        Date.now() + Constants.MONGO_UPDATE_MS,
+                    )
                 }
             } else if (data.to !== undefined && data.effect == 1) {
                 let s = 0
@@ -130,12 +165,20 @@ export class Observer {
                     serverIdentifier: this.serverData.name,
                     serverRegion: this.serverData.region,
                     x: spawnLocation[0],
-                    y: spawnLocation[1]
+                    y: spawnLocation[1],
                 }
                 const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${data.id}`)
                 if (!nextUpdate || Date.now() >= nextUpdate) {
-                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${data.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true })
+                        .lean()
+                        .exec()
+                        .catch((e) => {
+                            console.error(e)
+                        })
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}${data.id}`,
+                        Date.now() + Constants.MONGO_UPDATE_MS,
+                    )
                 }
             }
         })
@@ -161,23 +204,32 @@ export class Observer {
                     map: data.map,
                     s: this.G.monsters[data.name].s,
                     x: data.x,
-                    y: data.y
+                    y: data.y,
                 }
 
                 this.S[data.name] = {
                     ...monsterData,
                     live: true,
-                    max_hp: monsterData.hp
+                    max_hp: monsterData.hp,
                 }
 
                 if (Database.connection) {
-                    EntityModel.updateOne({
-                        serverIdentifier: this.serverData.name,
-                        serverRegion: this.serverData.region,
-                        type: data.name
-                    }, monsterData, {
-                        upsert: true
-                    }).lean().exec().catch((e) => { console.error(e) })
+                    EntityModel.updateOne(
+                        {
+                            serverIdentifier: this.serverData.name,
+                            serverRegion: this.serverData.region,
+                            type: data.name,
+                        },
+                        monsterData,
+                        {
+                            upsert: true,
+                        },
+                    )
+                        .lean()
+                        .exec()
+                        .catch((e) => {
+                            console.error(e)
+                        })
                 }
             }
         })
@@ -217,7 +269,7 @@ export class Observer {
             this.parseNewMap(data)
         })
 
-        this.socket.on("ping_ack", (data: { id: string; }) => {
+        this.socket.on("ping_ack", (data: { id: string }) => {
             const ping = this.pingMap.get(data.id)
             if (ping) {
                 // Add the new ping
@@ -254,15 +306,20 @@ export class Observer {
                         const nextSpawn = new Date((data[mtype as MonsterName] as ServerInfoDataNotLive).spawn)
                         databaseRespawnUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mtype },
+                                filter: {
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                    type: mtype,
+                                },
                                 update: { estimatedRespawn: nextSpawn.getTime() },
-                                upsert: true
-                            }
+                                upsert: true,
+                            },
                         })
                     }
                     continue
                 }
-                if (data[mtype as MonsterName]["x"] == undefined || data[mtype as MonsterName]["y"] == undefined) continue // No location data (e.g.: Slenderman)
+                if (data[mtype as MonsterName]["x"] == undefined || data[mtype as MonsterName]["y"] == undefined)
+                    continue // No location data (e.g.: Slenderman)
 
                 // Add soft properties to monster
                 const mN = mtype as MonsterName
@@ -277,26 +334,39 @@ export class Observer {
                     const updateKey = `${this.serverData.name}${this.serverData.region}${mN}`
                     const nextUpdate = Database.nextUpdate.get(updateKey)
                     if (nextUpdate && Date.now() < nextUpdate) continue // We've updated this monster recently
-                    const filter = { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: mN }
-                    const update = { hp: goodData.hp, lastSeen: now, map: goodData.map, target: goodData.target, x: goodData.x, y: goodData.y }
+                    const filter = {
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                        type: mN,
+                    }
+                    const update = {
+                        hp: goodData.hp,
+                        lastSeen: now,
+                        map: goodData.map,
+                        target: goodData.target,
+                        x: goodData.x,
+                        y: goodData.y,
+                    }
                     databaseEntityUpdates.push({
                         updateOne: {
                             filter: filter,
                             update: update,
-                            upsert: true
-                        }
+                            upsert: true,
+                        },
                     })
                     databaseRespawnUpdates.push({
                         deleteOne: {
-                            filter: filter
-                        }
+                            filter: filter,
+                        },
                     })
                     Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
 
             if (Database.connection) {
-                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}*server_info*`)
+                const nextUpdate = Database.nextUpdate.get(
+                    `${this.serverData.name}${this.serverData.region}*server_info*`,
+                )
                 if (!nextUpdate || Date.now() >= nextUpdate) {
                     for (const type in Constants.MONSTER_RESPAWN_TIMES) {
                         const mtype = type as MonsterName
@@ -308,23 +378,46 @@ export class Observer {
                         const nextSpawn = Date.now() + Constants.MONSTER_RESPAWN_TIMES[mtype]
                         databaseRespawnUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: type },
+                                filter: {
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                    type: type,
+                                },
                                 update: { estimatedRespawn: nextSpawn },
-                                upsert: true
-                            }
+                                upsert: true,
+                            },
                         })
                     }
-                    if (databaseDeletes.size) EntityModel.deleteMany({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: { $in: [...databaseDeletes] } }).lean().exec().catch(console.error)
+                    if (databaseDeletes.size)
+                        EntityModel.deleteMany({
+                            serverIdentifier: this.serverData.name,
+                            serverRegion: this.serverData.region,
+                            type: { $in: [...databaseDeletes] },
+                        })
+                            .lean()
+                            .exec()
+                            .catch(console.error)
                     if (databaseEntityUpdates.length) EntityModel.bulkWrite(databaseEntityUpdates).catch(console.error)
-                    if (databaseRespawnUpdates.length) RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
+                    if (databaseRespawnUpdates.length)
+                        RespawnModel.bulkWrite(databaseRespawnUpdates).catch(console.error)
                     const updateData = {
                         S: data,
                         lastUpdate: now,
                         serverIdentifier: this.serverData.name,
-                        serverRegion: this.serverData.region
+                        serverRegion: this.serverData.region,
                     }
-                    ServerModel.updateOne({ serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }, updateData, { upsert: true }).lean().exec().catch(console.error)
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*server_info*`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    ServerModel.updateOne(
+                        { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
+                        updateData,
+                        { upsert: true },
+                    )
+                        .lean()
+                        .exec()
+                        .catch(console.error)
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}*server_info*`,
+                        Date.now() + Constants.MONGO_UPDATE_MS,
+                    )
                 }
             }
 
@@ -341,13 +434,17 @@ export class Observer {
             const connected = new Promise<void>((resolve, reject) => {
                 this.socket.on("welcome", (data: WelcomeData) => {
                     if (data.region !== this.serverData.region || data.name !== this.serverData.name) {
-                        reject(new Error(`We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`))
+                        reject(
+                            new Error(
+                                `We wanted the server ${this.serverData.region}${this.serverData.name}, but we are on ${data.region}${data.name}.`,
+                            ),
+                        )
                     } else {
                         this.socket.emit("loaded", {
                             height: 1080,
                             scale: 2,
                             success: 1,
-                            width: 1920
+                            width: 1920,
                         } as LoadedData)
                         resolve()
                     }
@@ -377,30 +474,53 @@ export class Observer {
 
             // Delete the entity from the database on death
             if (Database.connection && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
-                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${entity.id}`)
+                const nextUpdate = Database.nextUpdate.get(
+                    `${this.serverData.name}${this.serverData.region}${entity.id}`,
+                )
                 if (death && nextUpdate !== Number.MAX_VALUE) {
                     if (entity.in !== entity.map) {
                         // It's an instanced monster
                         const now = Date.now()
-                        InstanceModel.updateOne({
-                            in: entity.in,
-                            map: entity.map,
-                            serverIdentifier: this.serverData.name,
-                            serverRegion: this.serverData.region,
-                        }, {
-                            $inc: {
-                                [`killed.${entity.type}`]: 1
+                        InstanceModel.updateOne(
+                            {
+                                in: entity.in,
+                                map: entity.map,
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region,
                             },
-                            $max: {
-                                lastEntered: now
+                            {
+                                $inc: {
+                                    [`killed.${entity.type}`]: 1,
+                                },
+                                $max: {
+                                    lastEntered: now,
+                                },
+                                $min: {
+                                    firstEntered: now,
+                                },
                             },
-                            $min: {
-                                firstEntered: now
-                            }
-                        }, { upsert: true }).lean().exec().catch(() => { /* Suppress errors */ })
+                            { upsert: true },
+                        )
+                            .lean()
+                            .exec()
+                            .catch(() => {
+                                /* Suppress errors */
+                            })
                     }
-                    EntityModel.deleteOne({ name: id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(() => { /* Suppress errors */ })
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${entity.id}`, Number.MAX_VALUE)
+                    EntityModel.deleteOne({
+                        name: id,
+                        serverIdentifier: this.serverData.name,
+                        serverRegion: this.serverData.region,
+                    })
+                        .lean()
+                        .exec()
+                        .catch(() => {
+                            /* Suppress errors */
+                        })
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}${entity.id}`,
+                        Number.MAX_VALUE,
+                    )
                 }
             }
 
@@ -451,23 +571,62 @@ export class Observer {
                         // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
                             updateOne: {
-                                filter: { serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { $min: { firstSeen: firstSeen }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
-                                upsert: true
-                            }
+                                filter: {
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                    type: e.type,
+                                },
+                                update: {
+                                    $min: { firstSeen: firstSeen },
+                                    hp: e.hp,
+                                    in: e.in,
+                                    lastSeen: now,
+                                    level: e.level,
+                                    map: e.map,
+                                    name: e.id,
+                                    s: e.s,
+                                    target: e.target,
+                                    x: e.x,
+                                    y: e.y,
+                                },
+                                upsert: true,
+                            },
                         })
-                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.type}`, now + Constants.MONGO_UPDATE_MS)
+                        Database.nextUpdate.set(
+                            `${this.serverData.name}${this.serverData.region}${e.type}`,
+                            now + Constants.MONGO_UPDATE_MS,
+                        )
                     } else {
                         // Include the id in the filter
                         entityUpdates.push({
                             updateOne: {
-                                filter: { name: e.id, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region, type: e.type },
-                                update: { $min: { firstSeen: firstSeen }, hp: e.hp, in: e.in, lastSeen: now, level: e.level, map: e.map, name: e.id, s: e.s, target: e.target, x: e.x, y: e.y },
-                                upsert: true
-                            }
+                                filter: {
+                                    name: e.id,
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                    type: e.type,
+                                },
+                                update: {
+                                    $min: { firstSeen: firstSeen },
+                                    hp: e.hp,
+                                    in: e.in,
+                                    lastSeen: now,
+                                    level: e.level,
+                                    map: e.map,
+                                    name: e.id,
+                                    s: e.s,
+                                    target: e.target,
+                                    x: e.x,
+                                    y: e.y,
+                                },
+                                upsert: true,
+                            },
                         })
                     }
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${e.id}`, now + Constants.MONGO_UPDATE_MS)
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}${e.id}`,
+                        now + Constants.MONGO_UPDATE_MS,
+                    )
                 }
             }
         }
@@ -492,10 +651,14 @@ export class Observer {
                     if (p.isNPC()) {
                         npcUpdates.push({
                             updateOne: {
-                                filter: { name: p.name, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region },
+                                filter: {
+                                    name: p.name,
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                },
                                 update: { $min: { firstSeen: now }, lastSeen: now, map: p.map, x: p.x, y: p.y },
-                                upsert: true
-                            }
+                                upsert: true,
+                            },
                         })
                     } else {
                         const updateData: UpdateQuery<IPlayer> = {
@@ -566,11 +729,14 @@ export class Observer {
                             updateOne: {
                                 filter: { name: p.id },
                                 update: updateData,
-                                upsert: true
-                            }
+                                upsert: true,
+                            },
                         })
                     }
-                    Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}${p.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+                    Database.nextUpdate.set(
+                        `${this.serverData.name}${this.serverData.region}${p.id}`,
+                        Date.now() + Constants.MONGO_UPDATE_MS,
+                    )
                 }
             }
         }
@@ -598,7 +764,7 @@ export class Observer {
                             serverIdentifier: this.serverData.name,
                             serverRegion: this.serverData.region,
                             type: { $nin: liveSpecialMonsters },
-                        }
+                        },
                     },
                     {
                         $project: {
@@ -606,28 +772,39 @@ export class Observer {
                                 $sqrt: {
                                     $add: [
                                         { $pow: [{ $subtract: [this.y, "$y"] }, 2] },
-                                        { $pow: [{ $subtract: [this.x, "$x"] }, 2] }
-                                    ]
-                                }
-                            }
-                        }
+                                        { $pow: [{ $subtract: [this.x, "$x"] }, 2] },
+                                    ],
+                                },
+                            },
+                        },
                     },
                     {
                         $match: {
                             distance: {
-                                $lt: Constants.MAX_VISIBLE_RANGE / 2
-                            }
+                                $lt: Constants.MAX_VISIBLE_RANGE / 2,
+                            },
+                        },
+                    },
+                ])
+                    .exec()
+                    .then((toDeletes) => {
+                        try {
+                            const ids = []
+                            for (const toDelete of toDeletes) ids.push(toDelete._id)
+                            if (ids.length)
+                                EntityModel.deleteMany({
+                                    _id: { $in: ids },
+                                    serverIdentifier: this.serverData.name,
+                                    serverRegion: this.serverData.region,
+                                })
+                                    .lean()
+                                    .exec()
+                                    .catch(console.error)
+                        } catch (e) {
+                            console.error(e)
                         }
-                    }
-                ]).exec().then((toDeletes => {
-                    try {
-                        const ids = []
-                        for (const toDelete of toDeletes) ids.push(toDelete._id)
-                        if (ids.length) EntityModel.deleteMany({ _id: { $in: ids }, serverIdentifier: this.serverData.name, serverRegion: this.serverData.region }).lean().exec().catch(console.error)
-                    } catch (e) {
-                        console.error(e)
-                    }
-                })).catch(console.error)
+                    })
+                    .catch(console.error)
             }
         }
     }
@@ -641,25 +818,34 @@ export class Observer {
         this.in = data.in
 
         if (
-            data.in !== data.name // We're in an instance
-            && data.effect !== "magiport" // Don't update for magiports
-            && data.effect !== "blink" // Don't update for blinks
-            && data.effect !== 1 // Don't update for town warps
+            data.in !== data.name && // We're in an instance
+            data.effect !== "magiport" && // Don't update for magiports
+            data.effect !== "blink" && // Don't update for blinks
+            data.effect !== 1 // Don't update for town warps
         ) {
             const now = Date.now()
-            InstanceModel.updateOne({
-                in: data.in,
-                map: data.name,
-                serverIdentifier: this.serverData.name,
-                serverRegion: this.serverData.region,
-            }, {
-                $max: {
-                    lastEntered: now
+            InstanceModel.updateOne(
+                {
+                    in: data.in,
+                    map: data.name,
+                    serverIdentifier: this.serverData.name,
+                    serverRegion: this.serverData.region,
                 },
-                $min: {
-                    firstEntered: now
-                }
-            }, { upsert: true }).lean().exec().catch(() => { /* Suppress errors */ })
+                {
+                    $max: {
+                        lastEntered: now,
+                    },
+                    $min: {
+                        firstEntered: now,
+                    },
+                },
+                { upsert: true },
+            )
+                .lean()
+                .exec()
+                .catch(() => {
+                    /* Suppress errors */
+                })
         }
 
         this.parseEntities(data.entities)
@@ -672,14 +858,16 @@ export class Observer {
 
             // Update entities
             for (const [, entity] of this.entities) {
-                if (!entity.moving)
-                    continue
+                if (!entity.moving) continue
 
                 const speed = entity.speed
 
-                const distanceTraveled = speed * msSinceLastUpdate / 1000
+                const distanceTraveled = (speed * msSinceLastUpdate) / 1000
                 const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-                const distanceToGoal = Tools.distance({ x: entity.x, y: entity.y }, { x: entity.going_x, y: entity.going_y })
+                const distanceToGoal = Tools.distance(
+                    { x: entity.x, y: entity.y },
+                    { x: entity.going_x, y: entity.going_y },
+                )
                 if (distanceTraveled > distanceToGoal) {
                     entity.moving = false
                     entity.x = entity.going_x
@@ -692,20 +880,20 @@ export class Observer {
                 // Update conditions
                 for (const condition in entity.s) {
                     const newCooldown = entity.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete entity.s[condition as ConditionName]
-                    else
-                        entity.s[condition as ConditionName].ms = newCooldown
+                    if (newCooldown <= 0) delete entity.s[condition as ConditionName]
+                    else entity.s[condition as ConditionName].ms = newCooldown
                 }
             }
 
             // Update players
             for (const [, player] of this.players) {
-                if (!player.moving)
-                    continue
-                const distanceTraveled = player.speed * msSinceLastUpdate / 1000
+                if (!player.moving) continue
+                const distanceTraveled = (player.speed * msSinceLastUpdate) / 1000
                 const angle = Math.atan2(player.going_y - player.y, player.going_x - player.x)
-                const distanceToGoal = Tools.distance({ x: player.x, y: player.y }, { x: player.going_x, y: player.going_y })
+                const distanceToGoal = Tools.distance(
+                    { x: player.x, y: player.y },
+                    { x: player.going_x, y: player.going_y },
+                )
                 if (distanceTraveled > distanceToGoal) {
                     player.moving = false
                     player.x = player.going_x
@@ -718,28 +906,22 @@ export class Observer {
                 // Update conditions
                 for (const condition in player.s) {
                     const newCooldown = player.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete player.s[condition as ConditionName]
-                    else
-                        player.s[condition as ConditionName].ms = newCooldown
+                    if (newCooldown <= 0) delete player.s[condition as ConditionName]
+                    else player.s[condition as ConditionName].ms = newCooldown
                 }
 
                 // Update processes
                 for (const process in player.q) {
                     const newCooldown = player.q[process as keyof QInfo].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete player.q[process as keyof QInfo]
-                    else
-                        player.q[process as keyof QInfo].ms = newCooldown
+                    if (newCooldown <= 0) delete player.q[process as keyof QInfo]
+                    else player.q[process as keyof QInfo].ms = newCooldown
                 }
 
                 // Update channels
                 for (const channel in player.c) {
                     const newCooldown = player.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
-                    if (newCooldown <= 0)
-                        delete player.c[channel as keyof ChannelInfo]
-                    else
-                        player.c[channel as keyof ChannelInfo].ms = newCooldown
+                    if (newCooldown <= 0) delete player.c[channel as keyof ChannelInfo]
+                    else player.c[channel as keyof ChannelInfo].ms = newCooldown
                 }
             }
         }
@@ -747,8 +929,7 @@ export class Observer {
         // Erase all entities that are far away
         let toDelete: string[] = []
         for (const [id, entity] of this.entities) {
-            if (Tools.squaredDistance(this, entity) < Constants.MAX_VISIBLE_RANGE_SQUARED)
-                continue
+            if (Tools.squaredDistance(this, entity) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
             toDelete.push(id)
         }
         for (const id of toDelete) this.deleteEntity(id)
@@ -756,12 +937,10 @@ export class Observer {
         // Erase all players that are far away
         toDelete = []
         for (const [id, player] of this.players) {
-            if (Tools.squaredDistance(this, player) < Constants.MAX_VISIBLE_RANGE_SQUARED)
-                continue
+            if (Tools.squaredDistance(this, player) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
             toDelete.push(id)
         }
-        for (const id of toDelete)
-            this.players.delete(id)
+        for (const id of toDelete) this.players.delete(id)
 
         // Erase all stale projectiles
         for (const [id, projectile] of this.projectiles) {

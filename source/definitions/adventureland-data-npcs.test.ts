@@ -8,16 +8,12 @@ import { GData } from "./adventureland-data"
 
 test("G.npcs type validation", async () => {
     const G_npcs: Pick<GData, "npcs"> = {
-        "npcs": {
-            "antip2w": {
-                "id": "antip2w",
-                "items": [
-                    "cosmo0",
-                    "cosmo2",
-                    "cosmo3"
-                ],
-                "name": "Mr. Dworf",
-                "old_items": [
+        npcs: {
+            antip2w: {
+                id: "antip2w",
+                items: ["cosmo0", "cosmo2", "cosmo3"],
+                name: "Mr. Dworf",
+                old_items: [
                     "xpbooster",
                     "goldbooster",
                     "luckbooster",
@@ -31,46 +27,47 @@ test("G.npcs type validation", async () => {
                     "qubics",
                     null,
                     null,
-                    null
+                    null,
                 ],
-                "old_role": "merchant",
-                "old_side_interaction": {
-                    "auto": true,
-                    "message": "I'm the Anti-P2W Authority around here. Making sure all critical items can be bought with gold. Prices can fluctuate based on inflation.",
-                    "skin": "fancyd"
+                old_role: "merchant",
+                old_side_interaction: {
+                    auto: true,
+                    message:
+                        "I'm the Anti-P2W Authority around here. Making sure all critical items can be bought with gold. Prices can fluctuate based on inflation.",
+                    skin: "fancyd",
                 },
-                "role": "premium",
-                "says": "Sup",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "Hey there, good looking fellow. Would you be interested in looking better?",
-                    "skin": "fancyd"
+                role: "premium",
+                says: "Sup",
+                side_interaction: {
+                    auto: true,
+                    message: "Hey there, good looking fellow. Would you be interested in looking better?",
+                    skin: "fancyd",
                 },
-                "skin": "fancyd",
-                "type": "fullstatic"
+                skin: "fancyd",
+                type: "fullstatic",
             },
-            "appearance": {
-                "aspeed": "slow",
-                "color": "#D95CB4",
-                "id": "appearance",
-                "name": "Haila",
-                "quest": "cx",
-                "role": "cx",
-                "says": "Now!",
-                "skin": "zengirl"
+            appearance: {
+                aspeed: "slow",
+                color: "#D95CB4",
+                id: "appearance",
+                name: "Haila",
+                quest: "cx",
+                role: "cx",
+                says: "Now!",
+                skin: "zengirl",
             },
-            "armors": {
-                "atype": "flow",
-                "id": "armors",
-                "items": [],
-                "role": "merchant",
-                "says": "YESS",
-                "skin": "armorguy"
+            armors: {
+                atype: "flow",
+                id: "armors",
+                items: [],
+                role: "merchant",
+                says: "YESS",
+                skin: "armorguy",
             },
-            "basics": {
-                "atype": "flow",
-                "id": "basics",
-                "items": [
+            basics: {
+                atype: "flow",
+                id: "basics",
+                items: [
                     "helmet",
                     "shoes",
                     "gloves",
@@ -83,83 +80,80 @@ test("G.npcs type validation", async () => {
                     "wshield",
                     "wand",
                     "mace",
-                    "wbasher"
+                    "wbasher",
                 ],
-                "name": "Gabriel",
-                "role": "merchant",
-                "says": "Blades, blades, blades",
-                "skin": "daggers"
+                name: "Gabriel",
+                role: "merchant",
+                says: "Blades, blades, blades",
+                skin: "daggers",
             },
-            "bean": {
-                "allow": false,
-                "hp": 3200,
-                "id": "bean",
-                "moving": true,
-                "name": "Bean",
-                "role": "events",
-                "skin": "lionsuit",
-                "speed": 30,
-                "type": "fullstatic"
+            bean: {
+                allow: false,
+                hp: 3200,
+                id: "bean",
+                moving: true,
+                name: "Bean",
+                role: "events",
+                skin: "lionsuit",
+                speed: 30,
+                type: "fullstatic",
             },
-            "bouncer": {
-                "id": "bouncer",
-                "interaction": [
+            bouncer: {
+                id: "bouncer",
+                interaction: [
                     "Wanna taste my daggers? One move out of line. And you will!",
-                    "Come on! One sexist word out of your mouth. Just one. Let's see what your tombstone looks like."
+                    "Come on! One sexist word out of your mouth. Just one. Let's see what your tombstone looks like.",
                 ],
-                "level": 88,
-                "name": "Wogue",
-                "role": "bouncer",
-                "says": [
-                    "What?",
-                    "BOUNCE"
-                ],
-                "skin": "bouncer",
-                "type": "fullstatic"
+                level: 88,
+                name: "Wogue",
+                role: "bouncer",
+                says: ["What?", "BOUNCE"],
+                skin: "bouncer",
+                type: "fullstatic",
             },
-            "citizen0": {
-                "aura": {
-                    "luck": 200
+            citizen0: {
+                aura: {
+                    luck: 200,
                 },
-                "delay": 1200,
-                "hp": 3200,
-                "id": "citizen0",
-                "interaction": [
+                delay: 1200,
+                hp: 3200,
+                id: "citizen0",
+                interaction: [
                     "Hey There! This town is the safest place around. Outside can be dangerous.",
                     "Heyo, I don't understand how those shop owners can just stand around all day. I got to be moving. Kind of restless.",
                     "Just finished school and I've got to go get a real job now. I might become an adventurer since they seem to make a lot of money.",
-                    "A friend of mine said the frog thingies in the beach drop some old money or sth like that."
+                    "A friend of mine said the frog thingies in the beach drop some old money or sth like that.",
                 ],
-                "level": 12,
-                "name": "Kane",
-                "role": "citizen",
-                "says": [
+                level: 12,
+                name: "Kane",
+                role: "citizen",
+                says: [
                     "Heyoo",
                     "Greetings",
                     "I want a Puppy!",
                     "I want a Kitten!",
                     "Sup",
                     "Nice day",
-                    "I wonder why everyone's sitting on my head all of a sudden ..."
+                    "I wonder why everyone's sitting on my head all of a sudden ...",
                 ],
-                "seek": "thrill",
-                "skin": "greencap",
-                "speed": 30,
-                "type": "fullstatic"
+                seek: "thrill",
+                skin: "greencap",
+                speed: 30,
+                type: "fullstatic",
             },
-            "citizen1": {
-                "delay": 1200,
-                "hp": 13200,
-                "id": "citizen1",
-                "interaction": [
+            citizen1: {
+                delay: 1200,
+                hp: 13200,
+                id: "citizen1",
+                interaction: [
                     "If you don't have a beer in your hand then what are you doing in here!?",
                     "Sit down and tell me a tale!",
-                    "If you can't handle the cold then stay inside.. not saying I can't handle the cold.."
+                    "If you can't handle the cold then stay inside.. not saying I can't handle the cold..",
                 ],
-                "level": 120,
-                "name": "Kilgore",
-                "role": "citizen",
-                "says": [
+                level: 120,
+                name: "Kilgore",
+                role: "citizen",
+                says: [
                     "What is your name",
                     "Bartender give me your strongest liquor",
                     "How are you stranger",
@@ -177,28 +171,28 @@ test("G.npcs type validation", async () => {
                     "What beer should I buy",
                     "I need to rent a room",
                     "This place is pretty nice",
-                    "Hi there"
+                    "Hi there",
                 ],
-                "skin": "fxrogue",
-                "speed": 40,
-                "steps": 12,
-                "type": "fullstatic"
+                skin: "fxrogue",
+                speed: 40,
+                steps: 12,
+                type: "fullstatic",
             },
-            "citizen10": {
-                "class": "priest",
-                "delay": 1200,
-                "heal": 2400,
-                "hp": 12000,
-                "id": "citizen10",
-                "interaction": [
+            citizen10: {
+                class: "priest",
+                delay: 1200,
+                heal: 2400,
+                hp: 12000,
+                id: "citizen10",
+                interaction: [
                     "Hey Hey guess what! I like the color Pink! I bet you couldn't guess that.",
                     "If Santa ever comes back, I hope I could be his little helper.",
-                    "Make sure you wear warm clothes, it's a little chilly out here."
+                    "Make sure you wear warm clothes, it's a little chilly out here.",
                 ],
-                "level": 92,
-                "name": "Caroline",
-                "role": "citizen",
-                "says": [
+                level: 92,
+                name: "Caroline",
+                role: "citizen",
+                says: [
                     "Hi",
                     "My coat keeps me super warm",
                     "Stompy used to be my favorite boar",
@@ -214,30 +208,30 @@ test("G.npcs type validation", async () => {
                     "Hello",
                     "*wiggles in pink coat*",
                     "Pink is my favorite color",
-                    "I'd love to work for Santa"
+                    "I'd love to work for Santa",
                 ],
-                "seek": "cuteness",
-                "skin": "pink",
-                "speed": 28,
-                "type": "fullstatic"
+                seek: "cuteness",
+                skin: "pink",
+                speed: 28,
+                type: "fullstatic",
             },
-            "citizen11": {
-                "attack": 1800,
-                "class": "priest",
-                "delay": 12000,
-                "hp": 120000,
-                "id": "citizen11",
-                "interaction": [
+            citizen11: {
+                attack: 1800,
+                class: "priest",
+                delay: 12000,
+                hp: 120000,
+                id: "citizen11",
+                interaction: [
                     "Guard.    Village.    Protect.    Innocents.",
                     "Brothers.     Rest.     Here.    Protect.    Over.    Their.    Graves.",
                     "Remember.    The.    Fallen.    Never.    Forget.  Their.    Sacrifices.",
-                    "Heal.    The.    Fallen."
+                    "Heal.    The.    Fallen.",
                 ],
-                "level": 120,
-                "name": "Baron",
-                "range": 320,
-                "role": "citizen",
-                "says": [
+                level: 120,
+                name: "Baron",
+                range: 320,
+                role: "citizen",
+                says: [
                     "Stranger",
                     "Where is mother",
                     "Cursed land",
@@ -254,24 +248,24 @@ test("G.npcs type validation", async () => {
                     "Never forget",
                     "Defend",
                     "Protect",
-                    "For honor"
+                    "For honor",
                 ],
-                "seek": "low_hp",
-                "skin": "baron",
-                "speed": 28,
-                "type": "fullstatic"
+                seek: "low_hp",
+                skin: "baron",
+                speed: 28,
+                type: "fullstatic",
             },
-            "citizen12": {
-                "delay": 3200,
-                "hp": 1200,
-                "id": "citizen12",
-                "interaction": [
-                    "I watch over the graves. Sometimes people leave 'gifts' on a grave. Ehhh, sometimes I clean the graves of these items."
+            citizen12: {
+                delay: 3200,
+                hp: 1200,
+                id: "citizen12",
+                interaction: [
+                    "I watch over the graves. Sometimes people leave 'gifts' on a grave. Ehhh, sometimes I clean the graves of these items.",
                 ],
-                "level": 42,
-                "name": "Marven",
-                "role": "citizen",
-                "says": [
+                level: 42,
+                name: "Marven",
+                role: "citizen",
+                says: [
                     "I'd hate to find you dead *wink*",
                     "Bloody hell",
                     "What are you doing here",
@@ -286,26 +280,26 @@ test("G.npcs type validation", async () => {
                     "Ever heard of minding your own business",
                     "Ever seen a dead man",
                     "Hhehehe",
-                    "Finders keepers"
+                    "Finders keepers",
                 ],
-                "skin": "marven",
-                "speed": 32,
-                "type": "fullstatic"
+                skin: "marven",
+                speed: 32,
+                type: "fullstatic",
             },
-            "citizen13": {
-                "delay": 3200,
-                "hp": 1200,
-                "id": "citizen13",
-                "interaction": [
+            citizen13: {
+                delay: 3200,
+                hp: 1200,
+                id: "citizen13",
+                interaction: [
                     "I am a firm believer that the dark arts would solve a lot of problems if it was acceptable to practice them.",
                     "Did you know that Ms. Dracul used to be a member of this village... before she transcended the limitations of mankind. I wish I had the courage to do the rituals required.",
                     "Dracul is a very well-known name around these parts. I wish I could be like them..",
-                    "I heard there is a way to get +13 items, anything can turn into one, but you can't even see it ..."
+                    "I heard there is a way to get +13 items, anything can turn into one, but you can't even see it ...",
                 ],
-                "level": 42,
-                "name": "Divian",
-                "role": "citizen",
-                "says": [
+                level: 42,
+                name: "Divian",
+                role: "citizen",
+                says: [
                     "I see dead people",
                     "Ghosts speak to me",
                     "Are zombies real",
@@ -322,25 +316,25 @@ test("G.npcs type validation", async () => {
                     "It never rains here, I'm only happy when it rains",
                     "My eyes are blood red",
                     "My favorite color is red",
-                    "I'd like to meet my demons"
+                    "I'd like to meet my demons",
                 ],
-                "skin": "grogue",
-                "speed": 32,
-                "type": "fullstatic"
+                skin: "grogue",
+                speed: 32,
+                type: "fullstatic",
             },
-            "citizen14": {
-                "delay": 4000,
-                "hp": 4000,
-                "id": "citizen14",
-                "interaction": [
+            citizen14: {
+                delay: 4000,
+                hp: 4000,
+                id: "citizen14",
+                interaction: [
                     "Have you seen my son? He should be around here somewhere.",
                     "It's not a very nice neighborhood around here, But the rent is cheap!",
-                    "I heard somewhere that's there's some sort of pumpkin person walking around? That just sounds silly to me"
+                    "I heard somewhere that's there's some sort of pumpkin person walking around? That just sounds silly to me",
                 ],
-                "level": 70,
-                "name": "Violet",
-                "role": "citizen",
-                "says": [
+                level: 70,
+                name: "Violet",
+                role: "citizen",
+                says: [
                     "Hello there",
                     "Where's that boy?",
                     "SON!!!",
@@ -351,25 +345,25 @@ test("G.npcs type validation", async () => {
                     "Well hi there",
                     "It's getting late",
                     "Home sweet home",
-                    "Are you hungry?"
+                    "Are you hungry?",
                 ],
-                "skin": "spkw",
-                "speed": 28,
-                "type": "fullstatic"
+                skin: "spkw",
+                speed: 28,
+                type: "fullstatic",
             },
-            "citizen15": {
-                "delay": 200,
-                "hp": 200,
-                "id": "citizen15",
-                "interaction": [
+            citizen15: {
+                delay: 200,
+                hp: 200,
+                id: "citizen15",
+                interaction: [
                     "Be careful around here? It's really dangerous up to the north.",
                     "I like to play with the pumpkins, but sometimes they don't want to play and just walk away..",
-                    "My imaginary friend is real! And a pumpkin!!"
+                    "My imaginary friend is real! And a pumpkin!!",
                 ],
-                "level": 4,
-                "name": "Timmy",
-                "role": "citizen",
-                "says": [
+                level: 4,
+                name: "Timmy",
+                role: "citizen",
+                says: [
                     "I think I saw a pumpkin move!!",
                     "I like pumpkins",
                     "Size doesn't matter!",
@@ -377,53 +371,51 @@ test("G.npcs type validation", async () => {
                     "Boo!!",
                     "Weee",
                     "Hello",
-                    "*Mumble Mumble*"
+                    "*Mumble Mumble*",
                 ],
-                "skin": "spkc",
-                "speed": 16,
-                "type": "fullstatic"
+                skin: "spkc",
+                speed: 16,
+                type: "fullstatic",
             },
-            "citizen16": {
-                "attack": 1200,
-                "class": "ranger",
-                "delay": 1000,
-                "hp": 12000,
-                "id": "citizen16",
-                "interaction": [
+            citizen16: {
+                attack: 1200,
+                class: "ranger",
+                delay: 1000,
+                hp: 12000,
+                id: "citizen16",
+                interaction: [
                     "What? What? WHAT?!",
                     "I don't really have much tolerance for anyone.",
-                    "I follow only the most badass!"
+                    "I follow only the most badass!",
                 ],
-                "level": 72,
-                "name": "Cunn",
-                "range": 320,
-                "role": "citizen",
-                "says": [
-                    "Yo"
-                ],
-                "seek": "dragondagger",
-                "skin": "cunn",
-                "slots": {
-                    "mainhand": {
-                        "level": 7,
-                        "name": "crossbow"
-                    }
+                level: 72,
+                name: "Cunn",
+                range: 320,
+                role: "citizen",
+                says: ["Yo"],
+                seek: "dragondagger",
+                skin: "cunn",
+                slots: {
+                    mainhand: {
+                        level: 7,
+                        name: "crossbow",
+                    },
                 },
-                "speed": 36,
-                "transport": true,
-                "type": "fullstatic"
+                speed: 36,
+                transport: true,
+                type: "fullstatic",
             },
-            "citizen2": {
-                "delay": 12000,
-                "hp": 2400,
-                "id": "citizen2",
-                "interaction": [
-                    "Ehh. Back in my day we didn't have all these fancy additions in town, we had the essentials and that's it."
+            citizen2: {
+                delay: 12000,
+                hp: 2400,
+                id: "citizen2",
+                interaction: [
+                    "Ehh. Back in my day we didn't have all these fancy additions in town, we had the essentials and that's it.",
                 ],
-                "level": 32,
-                "name": "Stewart",
-                "role": "citizen",
-                "says": [
+                level: 32,
+                name: "Stewart",
+                role: "citizen",
+                says: [
                     "Freaking youngens",
                     "Go away - Kill some monsters",
                     "Stop",
@@ -434,26 +426,26 @@ test("G.npcs type validation", async () => {
                     "Mmmehh",
                     "Ugg",
                     "Noob",
-                    "Young yipper snappers"
+                    "Young yipper snappers",
                 ],
-                "skin": "oldcitizen",
-                "speed": 10,
-                "type": "fullstatic"
+                skin: "oldcitizen",
+                speed: 10,
+                type: "fullstatic",
             },
-            "citizen3": {
-                "delay": 3600,
-                "hp": 3200,
-                "id": "citizen3",
-                "interaction": [
+            citizen3: {
+                delay: 3600,
+                hp: 3200,
+                id: "citizen3",
+                interaction: [
                     "I Grind 24 hours a day! 7 days a week! Never Stop! Never Give up! Always Training!!",
                     "My body fat ratio is just 18%. Can you believe it? Yes!",
                     "Do you even lift Bro.",
-                    "Hi, I do laps around this town all the time. Gotta stay in shape."
+                    "Hi, I do laps around this town all the time. Gotta stay in shape.",
                 ],
-                "level": 32,
-                "name": "Reny",
-                "role": "citizen",
-                "says": [
+                level: 32,
+                name: "Reny",
+                role: "citizen",
+                says: [
                     "Do you even lift bro",
                     "Broooo",
                     "Yah I work out",
@@ -468,30 +460,30 @@ test("G.npcs type validation", async () => {
                     "Wanna work out",
                     "Red headband for the win",
                     "Winners are not losers and I'm a winner",
-                    "No I never give up"
+                    "No I never give up",
                 ],
-                "skin": "renaldo",
-                "speed": 55,
-                "type": "fullstatic"
+                skin: "renaldo",
+                speed: 55,
+                type: "fullstatic",
             },
-            "citizen4": {
-                "aura": {
-                    "gold": 200
+            citizen4: {
+                aura: {
+                    gold: 200,
                 },
-                "delay": 6000,
-                "hp": 24000,
-                "id": "citizen4",
-                "interaction": [
+                delay: 6000,
+                hp: 24000,
+                id: "citizen4",
+                interaction: [
                     "I used to sell potions around here, but I decided to retire.",
                     "Always nice to see smiling new faces.",
                     "Are you new here? Welcome.",
-                    "This town has grown a lot, I was around when it was just one small block of land."
+                    "This town has grown a lot, I was around when it was just one small block of land.",
                 ],
-                "level": 80,
-                "modal": "npc-angel",
-                "name": "Angel",
-                "role": "citizen",
-                "says": [
+                level: 80,
+                modal: "npc-angel",
+                name: "Angel",
+                role: "citizen",
+                says: [
                     "Ohh look who walked into my life",
                     "Single and ready to mingle",
                     "No um I don't own a shop",
@@ -514,26 +506,26 @@ test("G.npcs type validation", async () => {
                     "Oh hi there cutie",
                     "Lovely weather today",
                     "Do you like my dress",
-                    "Welcome to the town"
+                    "Welcome to the town",
                 ],
-                "seek": "gold",
-                "skin": "angel",
-                "speed": 20,
-                "type": "fullstatic"
+                seek: "gold",
+                skin: "angel",
+                speed: 20,
+                type: "fullstatic",
             },
-            "citizen5": {
-                "delay": 1200,
-                "hp": 18600,
-                "id": "citizen5",
-                "interaction": [
+            citizen5: {
+                delay: 1200,
+                hp: 18600,
+                id: "citizen5",
+                interaction: [
                     "It is pretty cold outside. I should invest in a hat.",
-                    "I came here to pursue a beast called \"Stompy\". I've heard this creature lives in the Ice Mountains nearby.",
-                    "I came here for adventure, but now I'm stuck in this bar due to the cold."
+                    'I came here to pursue a beast called "Stompy". I\'ve heard this creature lives in the Ice Mountains nearby.',
+                    "I came here for adventure, but now I'm stuck in this bar due to the cold.",
                 ],
-                "level": 90,
-                "name": "Grundur",
-                "role": "citizen",
-                "says": [
+                level: 90,
+                name: "Grundur",
+                role: "citizen",
+                says: [
                     "I remember the battle of the beards",
                     "Hello",
                     "Greetings",
@@ -547,25 +539,25 @@ test("G.npcs type validation", async () => {
                     "Stompy better die",
                     "*yawns*",
                     "So much snow around here",
-                    "*drinks beer*"
+                    "*drinks beer*",
                 ],
-                "skin": "generalg",
-                "speed": 30,
-                "steps": 12,
-                "type": "fullstatic"
+                skin: "generalg",
+                speed: 30,
+                steps: 12,
+                type: "fullstatic",
             },
-            "citizen6": {
-                "delay": 1200,
-                "hp": 18600,
-                "id": "citizen6",
-                "interaction": [
+            citizen6: {
+                delay: 1200,
+                hp: 18600,
+                id: "citizen6",
+                interaction: [
                     "Hi, I'm a mail man! But no one sends mail out here much. So I guess it's a pretty easy job.",
-                    "Careful it's cold outside. But it's nice and warm in here."
+                    "Careful it's cold outside. But it's nice and warm in here.",
                 ],
-                "level": 90,
-                "name": "Fredric",
-                "role": "citizen",
-                "says": [
+                level: 90,
+                name: "Fredric",
+                role: "citizen",
+                says: [
                     "*searches through mail bag*",
                     "*hums to self*",
                     "*whisles*",
@@ -574,26 +566,26 @@ test("G.npcs type validation", async () => {
                     "Good day adventurer",
                     "I like love letters they are sweet",
                     "Um I don't read your letters",
-                    "Hey stranger"
+                    "Hey stranger",
                 ],
-                "skin": "mailman",
-                "speed": 30,
-                "steps": 12,
-                "type": "fullstatic"
+                skin: "mailman",
+                speed: 30,
+                steps: 12,
+                type: "fullstatic",
             },
-            "citizen7": {
-                "delay": 1200,
-                "hp": 3200,
-                "id": "citizen7",
-                "interaction": [
+            citizen7: {
+                delay: 1200,
+                hp: 3200,
+                id: "citizen7",
+                interaction: [
                     "Hi! Would you like to know a secret? I love the snow.",
                     "Make sure you keep moving, don't want to catch a cold out here.",
-                    "I have heard that Santa sometimes visits here during Xmas!"
+                    "I have heard that Santa sometimes visits here during Xmas!",
                 ],
-                "level": 48,
-                "name": "Lucy",
-                "role": "citizen",
-                "says": [
+                level: 48,
+                name: "Lucy",
+                role: "citizen",
+                says: [
                     "Do you like my scarf",
                     "My mom made my scarf",
                     "Do you know who santa is",
@@ -605,48 +597,48 @@ test("G.npcs type validation", async () => {
                     "Don't hit on me",
                     "I have a boyfriend",
                     "The leather guy is my boyfriend",
-                    "I think Stompy is just misunderstood"
+                    "I think Stompy is just misunderstood",
                 ],
-                "skin": "lucy",
-                "speed": 30,
-                "type": "fullstatic"
+                skin: "lucy",
+                speed: 30,
+                type: "fullstatic",
             },
-            "citizen8": {
-                "delay": 1200,
-                "hp": 16000,
-                "id": "citizen8",
-                "interaction": [
+            citizen8: {
+                delay: 1200,
+                hp: 16000,
+                id: "citizen8",
+                interaction: [
                     "Are you here to kill Stompy too? Well I guess let the best adventurer get to him first!",
-                    "My hair was actually black, before it happened."
+                    "My hair was actually black, before it happened.",
                 ],
-                "level": 78,
-                "name": "Wyr",
-                "role": "citizen",
-                "says": [
+                level: 78,
+                name: "Wyr",
+                role: "citizen",
+                says: [
                     "How are you",
                     "*wipes snow off himself*",
                     "It's cold here",
                     "*shivers*",
                     "This is a pretty small village",
                     "I've meet a real elf",
-                    "Don't go swimming here it's cold"
+                    "Don't go swimming here it's cold",
                 ],
-                "skin": "frozenrogue",
-                "speed": 38,
-                "type": "fullstatic"
+                skin: "frozenrogue",
+                speed: 38,
+                type: "fullstatic",
             },
-            "citizen9": {
-                "delay": 1200,
-                "hp": 12000,
-                "id": "citizen9",
-                "interaction": [
+            citizen9: {
+                delay: 1200,
+                hp: 12000,
+                id: "citizen9",
+                interaction: [
                     "Greetings Adventurer, are you here to kill some monsters? Great! Always looking for help keeping this land safe.",
-                    "Believe it or not. I am the highest ranking officer in these parts. I work hard to keep this town operating and safe."
+                    "Believe it or not. I am the highest ranking officer in these parts. I work hard to keep this town operating and safe.",
                 ],
-                "level": 92,
-                "name": "Lilith",
-                "role": "citizen",
-                "says": [
+                level: 92,
+                name: "Lilith",
+                role: "citizen",
+                says: [
                     "Oh you like my hair",
                     "Are you here to serve",
                     "I'm sure I can fight off stompy",
@@ -664,39 +656,39 @@ test("G.npcs type validation", async () => {
                     "Hi stranger",
                     "I serve the mighty Wizard",
                     "I was instructed to keep this village safe",
-                    "The cold doesn't bother me"
+                    "The cold doesn't bother me",
                 ],
-                "skin": "lilith",
-                "speed": 32,
-                "type": "fullstatic"
+                skin: "lilith",
+                speed: 32,
+                type: "fullstatic",
             },
-            "compound": {
-                "id": "compound",
-                "role": "compound",
-                "skin": "shrine2",
-                "type": "static"
+            compound: {
+                id: "compound",
+                role: "compound",
+                skin: "shrine2",
+                type: "static",
             },
-            "craftsman": {
-                "color": "#9EACAE",
-                "id": "craftsman",
-                "name": "Leo",
-                "role": "craftsman",
-                "says": "Give it to me",
-                "skin": "npcc",
-                "type": "fullstatic"
+            craftsman: {
+                color: "#9EACAE",
+                id: "craftsman",
+                name: "Leo",
+                role: "craftsman",
+                says: "Give it to me",
+                skin: "npcc",
+                type: "fullstatic",
             },
-            "exchange": {
-                "id": "exchange",
-                "name": "Xyn",
-                "role": "exchange",
-                "says": "Good Luck!",
-                "skin": "magic"
+            exchange: {
+                id: "exchange",
+                name: "Xyn",
+                role: "exchange",
+                says: "Good Luck!",
+                skin: "magic",
             },
-            "fancypots": {
-                "atype": "flow",
-                "color": "#E57636",
-                "id": "fancypots",
-                "items": [
+            fancypots: {
+                atype: "flow",
+                color: "#E57636",
+                id: "fancypots",
+                items: [
                     "hpot0",
                     "mpot0",
                     "hpot1",
@@ -716,887 +708,861 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    null
+                    null,
                 ],
-                "name": "Ernis",
-                "role": "merchant",
-                "says": "Woo. Hic.",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "Hello there. Are you injured or in need of some potions? My family and I pride ourselves with having the best quality potions and elixirs around. Take as much as you need. *hic*",
-                    "skin": "potiongirl"
+                name: "Ernis",
+                role: "merchant",
+                says: "Woo. Hic.",
+                side_interaction: {
+                    auto: true,
+                    message:
+                        "Hello there. Are you injured or in need of some potions? My family and I pride ourselves with having the best quality potions and elixirs around. Take as much as you need. *hic*",
+                    skin: "potiongirl",
                 },
-                "skin": "fancypots"
+                skin: "fancypots",
             },
-            "firstc": {
-                "id": "firstc",
-                "role": "companion",
-                "says": [
-                    "I've heard Goo's drop Amulets.",
-                    "I'm strictly on a goo-only diet."
-                ],
-                "skin": "lady1",
-                "type": "fullstatic"
+            firstc: {
+                id: "firstc",
+                role: "companion",
+                says: ["I've heard Goo's drop Amulets.", "I'm strictly on a goo-only diet."],
+                skin: "lady1",
+                type: "fullstatic",
             },
-            "fisherman": {
-                "color": "#429DDF",
-                "id": "fisherman",
-                "name": "Tristian",
-                "quest": "seashell",
-                "role": "quest",
-                "says": "Beautiful",
-                "skin": "fisherman",
-                "type": "fullstatic"
+            fisherman: {
+                color: "#429DDF",
+                id: "fisherman",
+                name: "Tristian",
+                quest: "seashell",
+                role: "quest",
+                says: "Beautiful",
+                skin: "fisherman",
+                type: "fullstatic",
             },
-            "friendtokens": {
-                "aspeed": "slow",
-                "atype": "flow",
-                "color": "#92D467",
-                "id": "friendtokens",
-                "name": "Fvona",
-                "role": "friendtokens",
-                "says": "Hihihi",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "Invite your friends to Adventure Land to win some of these goodie goodies!",
-                    "skin": "xxschar2h"
+            friendtokens: {
+                aspeed: "slow",
+                atype: "flow",
+                color: "#92D467",
+                id: "friendtokens",
+                name: "Fvona",
+                role: "friendtokens",
+                says: "Hihihi",
+                side_interaction: {
+                    auto: true,
+                    message: "Invite your friends to Adventure Land to win some of these goodie goodies!",
+                    skin: "xxschar2h",
                 },
-                "skin": "xxschar2h",
-                "stand": "fstand_texture",
-                "token": "friendtoken"
+                skin: "xxschar2h",
+                stand: "fstand_texture",
+                token: "friendtoken",
             },
-            "funtokens": {
-                "aspeed": "slow",
-                "atype": "flow",
-                "color": "#92D467",
-                "id": "funtokens",
-                "name": "Tricksy",
-                "role": "funtokens",
-                "says": "Hihihi",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "Bring your fun tokens to me and I'll give you some exciting items!",
-                    "skin": "ftokener"
+            funtokens: {
+                aspeed: "slow",
+                atype: "flow",
+                color: "#92D467",
+                id: "funtokens",
+                name: "Tricksy",
+                role: "funtokens",
+                says: "Hihihi",
+                side_interaction: {
+                    auto: true,
+                    message: "Bring your fun tokens to me and I'll give you some exciting items!",
+                    skin: "ftokener",
                 },
-                "skin": "funtokens",
-                "stand": "standg_texture",
-                "token": "funtoken"
+                skin: "funtokens",
+                stand: "standg_texture",
+                token: "funtoken",
             },
-            "gemmerchant": {
-                "color": "#A058DF",
-                "id": "gemmerchant",
-                "name": "Mine Heathcliff",
-                "quest": "gemfragment",
-                "role": "quest",
-                "says": "Bling",
-                "skin": "gemmerchant",
-                "type": "fullstatic"
+            gemmerchant: {
+                color: "#A058DF",
+                id: "gemmerchant",
+                name: "Mine Heathcliff",
+                quest: "gemfragment",
+                role: "quest",
+                says: "Bling",
+                skin: "gemmerchant",
+                type: "fullstatic",
             },
-            "goldnpc": {
-                "aspeed": "slow",
-                "color": "#E0B427",
-                "id": "goldnpc",
-                "name": "Mr. Rich",
-                "role": "gold",
-                "says": "GOLD!",
-                "skin": "goblin_a"
+            goldnpc: {
+                aspeed: "slow",
+                color: "#E0B427",
+                id: "goldnpc",
+                name: "Mr. Rich",
+                role: "gold",
+                says: "GOLD!",
+                skin: "goblin_a",
             },
-            "guard": {
-                "id": "guard",
-                "name": "Guard",
-                "role": "guard",
-                "says": "...",
-                "skin": "thehelmet",
-                "type": "fullstatic"
+            guard: {
+                id: "guard",
+                name: "Guard",
+                role: "guard",
+                says: "...",
+                skin: "thehelmet",
+                type: "fullstatic",
             },
-            "holo": {
-                "color": "#EBECEE",
-                "id": "holo",
-                "name": "Z",
-                "role": "resort",
-                "says": "△ ▽ ▲ ▼",
-                "skin": "holo",
-                "type": "fullstatic"
+            holo: {
+                color: "#EBECEE",
+                id: "holo",
+                name: "Z",
+                role: "resort",
+                says: "△ ▽ ▲ ▼",
+                skin: "holo",
+                type: "fullstatic",
             },
-            "holo0": {
-                "delay": 5000,
-                "hp": 6000,
-                "id": "holo0",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Green",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "greengreen",
-                "speed": 24,
-                "type": "fullstatic"
+            holo0: {
+                delay: 5000,
+                hp: 6000,
+                id: "holo0",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Green",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "greengreen",
+                speed: 24,
+                type: "fullstatic",
             },
-            "holo1": {
-                "delay": 5000,
-                "hp": 6000,
-                "id": "holo1",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Pink",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "pinkie",
-                "speed": 24,
-                "type": "fullstatic"
+            holo1: {
+                delay: 5000,
+                hp: 6000,
+                id: "holo1",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Pink",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "pinkie",
+                speed: 24,
+                type: "fullstatic",
             },
-            "holo2": {
-                "delay": 7000,
-                "hp": 6000,
-                "id": "holo2",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Purple",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "purpo",
-                "speed": 30,
-                "type": "fullstatic"
+            holo2: {
+                delay: 7000,
+                hp: 6000,
+                id: "holo2",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Purple",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "purpo",
+                speed: 30,
+                type: "fullstatic",
             },
-            "holo3": {
-                "delay": 3000,
-                "hp": 6000,
-                "id": "holo3",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Scarf",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "scarf",
-                "speed": 24,
-                "type": "fullstatic"
+            holo3: {
+                delay: 3000,
+                hp: 6000,
+                id: "holo3",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Scarf",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "scarf",
+                speed: 24,
+                type: "fullstatic",
             },
-            "holo4": {
-                "delay": 24000,
-                "hp": 6000,
-                "id": "holo4",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Twig",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "twig",
-                "speed": 48,
-                "type": "fullstatic"
+            holo4: {
+                delay: 24000,
+                hp: 6000,
+                id: "holo4",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Twig",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "twig",
+                speed: 48,
+                type: "fullstatic",
             },
-            "holo5": {
-                "delay": 8000,
-                "hp": 6000,
-                "id": "holo5",
-                "interaction": [
-                    "rbin"
-                ],
-                "level": 0,
-                "name": "Bobo",
-                "role": "citizen",
-                "says": [
-                    "rbin"
-                ],
-                "skin": "bobo",
-                "speed": 16,
-                "type": "fullstatic"
+            holo5: {
+                delay: 8000,
+                hp: 6000,
+                id: "holo5",
+                interaction: ["rbin"],
+                level: 0,
+                name: "Bobo",
+                role: "citizen",
+                says: ["rbin"],
+                skin: "bobo",
+                speed: 16,
+                type: "fullstatic",
             },
-            "items0": {
-                "color": "#E0D8A5",
-                "id": "items0",
-                "name": "Gabrielle",
-                "pack": "items0",
-                "role": "items",
-                "skin": "gabrielle",
-                "type": "fullstatic"
+            items0: {
+                color: "#E0D8A5",
+                id: "items0",
+                name: "Gabrielle",
+                pack: "items0",
+                role: "items",
+                skin: "gabrielle",
+                type: "fullstatic",
             },
-            "items1": {
-                "color": "#E0D8A5",
-                "id": "items1",
-                "name": "Gabriella",
-                "pack": "items1",
-                "role": "items",
-                "skin": "gabrielle",
-                "type": "fullstatic"
+            items1: {
+                color: "#E0D8A5",
+                id: "items1",
+                name: "Gabriella",
+                pack: "items1",
+                role: "items",
+                skin: "gabrielle",
+                type: "fullstatic",
             },
-            "items10": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items10: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items10",
-                "name": "X10",
-                "pack": "items10",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items10",
+                name: "X10",
+                pack: "items10",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items11": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items11: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items11",
-                "name": "X11",
-                "pack": "items11",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items11",
+                name: "X11",
+                pack: "items11",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items12": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items12: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items12",
-                "name": "X12",
-                "pack": "items12",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items12",
+                name: "X12",
+                pack: "items12",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items13": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items13: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items13",
-                "name": "X13",
-                "pack": "items13",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items13",
+                name: "X13",
+                pack: "items13",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items14": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items14: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items14",
-                "name": "X14",
-                "pack": "items14",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items14",
+                name: "X14",
+                pack: "items14",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items15": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items15: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items15",
-                "name": "X15",
-                "pack": "items15",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items15",
+                name: "X15",
+                pack: "items15",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items16": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items16: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items16",
-                "name": "X16",
-                "pack": "items16",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items16",
+                name: "X16",
+                pack: "items16",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items17": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items17: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items17",
-                "name": "X17",
-                "pack": "items17",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items17",
+                name: "X17",
+                pack: "items17",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items18": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items18: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items18",
-                "name": "X18",
-                "pack": "items18",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items18",
+                name: "X18",
+                pack: "items18",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items19": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items19: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items19",
-                "name": "X19",
-                "pack": "items19",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items19",
+                name: "X19",
+                pack: "items19",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items2": {
-                "color": "#E0D8A5",
-                "id": "items2",
-                "name": "Ledia",
-                "pack": "items2",
-                "role": "items",
-                "skin": "lady3",
-                "type": "fullstatic"
+            items2: {
+                color: "#E0D8A5",
+                id: "items2",
+                name: "Ledia",
+                pack: "items2",
+                role: "items",
+                skin: "lady3",
+                type: "fullstatic",
             },
-            "items20": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items20: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items20",
-                "name": "X20",
-                "pack": "items20",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items20",
+                name: "X20",
+                pack: "items20",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items21": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items21: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items21",
-                "name": "X21",
-                "pack": "items21",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items21",
+                name: "X21",
+                pack: "items21",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items22": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items22: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items22",
-                "name": "X22",
-                "pack": "items22",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items22",
+                name: "X22",
+                pack: "items22",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items23": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items23: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items23",
-                "name": "X23",
-                "pack": "items23",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items23",
+                name: "X23",
+                pack: "items23",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items24": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items24: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items24",
-                "name": "X24",
-                "pack": "items24",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items24",
+                name: "X24",
+                pack: "items24",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items25": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items25: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items25",
-                "name": "X25",
-                "pack": "items25",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items25",
+                name: "X25",
+                pack: "items25",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items26": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items26: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items26",
-                "name": "X26",
-                "pack": "items26",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items26",
+                name: "X26",
+                pack: "items26",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items27": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items27: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items27",
-                "name": "X27",
-                "pack": "items27",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items27",
+                name: "X27",
+                pack: "items27",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items28": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items28: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items28",
-                "name": "X28",
-                "pack": "items28",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items28",
+                name: "X28",
+                pack: "items28",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items29": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items29: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items29",
-                "name": "X29",
-                "pack": "items29",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items29",
+                name: "X29",
+                pack: "items29",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items3": {
-                "color": "#E0D8A5",
-                "id": "items3",
-                "name": "Lidia",
-                "pack": "items3",
-                "role": "items",
-                "skin": "lady3",
-                "type": "fullstatic"
+            items3: {
+                color: "#E0D8A5",
+                id: "items3",
+                name: "Lidia",
+                pack: "items3",
+                role: "items",
+                skin: "lady3",
+                type: "fullstatic",
             },
-            "items30": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items30: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items30",
-                "name": "X30",
-                "pack": "items30",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items30",
+                name: "X30",
+                pack: "items30",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items31": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items31: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items31",
-                "name": "X31",
-                "pack": "items31",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items31",
+                name: "X31",
+                pack: "items31",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items32": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items32: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items32",
-                "name": "X32",
-                "pack": "items32",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items32",
+                name: "X32",
+                pack: "items32",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items33": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items33: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items33",
-                "name": "X33",
-                "pack": "items33",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items33",
+                name: "X33",
+                pack: "items33",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items34": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items34: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items34",
-                "name": "X34",
-                "pack": "items34",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items34",
+                name: "X34",
+                pack: "items34",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items35": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items35: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items35",
-                "name": "X35",
-                "pack": "items35",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items35",
+                name: "X35",
+                pack: "items35",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items36": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items36: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items36",
-                "name": "X36",
-                "pack": "items36",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items36",
+                name: "X36",
+                pack: "items36",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items37": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items37: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items37",
-                "name": "X37",
-                "pack": "items37",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items37",
+                name: "X37",
+                pack: "items37",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items38": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items38: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items38",
-                "name": "X38",
-                "pack": "items38",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items38",
+                name: "X38",
+                pack: "items38",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items39": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items39: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items39",
-                "name": "X39",
-                "pack": "items39",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items39",
+                name: "X39",
+                pack: "items39",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items4": {
-                "color": "#E0D8A5",
-                "id": "items4",
-                "name": "Christie",
-                "pack": "items4",
-                "role": "items",
-                "skin": "lady4",
-                "type": "fullstatic"
+            items4: {
+                color: "#E0D8A5",
+                id: "items4",
+                name: "Christie",
+                pack: "items4",
+                role: "items",
+                skin: "lady4",
+                type: "fullstatic",
             },
-            "items40": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items40: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items40",
-                "name": "X40",
-                "pack": "items40",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items40",
+                name: "X40",
+                pack: "items40",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items41": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items41: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items41",
-                "name": "X41",
-                "pack": "items41",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items41",
+                name: "X41",
+                pack: "items41",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items42": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items42: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items42",
-                "name": "X42",
-                "pack": "items42",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items42",
+                name: "X42",
+                pack: "items42",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items43": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items43: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items43",
-                "name": "X43",
-                "pack": "items43",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items43",
+                name: "X43",
+                pack: "items43",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items44": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items44: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items44",
-                "name": "X44",
-                "pack": "items44",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items44",
+                name: "X44",
+                pack: "items44",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items45": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items45: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items45",
-                "name": "X45",
-                "pack": "items45",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items45",
+                name: "X45",
+                pack: "items45",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items46": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items46: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items46",
-                "name": "X46",
-                "pack": "items46",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items46",
+                name: "X46",
+                pack: "items46",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items47": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items47: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items47",
-                "name": "X47",
-                "pack": "items47",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items47",
+                name: "X47",
+                pack: "items47",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items5": {
-                "color": "#E0D8A5",
-                "id": "items5",
-                "name": "Christina",
-                "pack": "items5",
-                "role": "items",
-                "skin": "lady4",
-                "type": "fullstatic"
+            items5: {
+                color: "#E0D8A5",
+                id: "items5",
+                name: "Christina",
+                pack: "items5",
+                role: "items",
+                skin: "lady4",
+                type: "fullstatic",
             },
-            "items6": {
-                "color": "#E0D8A5",
-                "id": "items6",
-                "name": "Jane",
-                "pack": "items6",
-                "role": "items",
-                "skin": "lady2",
-                "type": "fullstatic"
+            items6: {
+                color: "#E0D8A5",
+                id: "items6",
+                name: "Jane",
+                pack: "items6",
+                role: "items",
+                skin: "lady2",
+                type: "fullstatic",
             },
-            "items7": {
-                "color": "#E0D8A5",
-                "id": "items7",
-                "name": "Janet",
-                "pack": "items7",
-                "role": "items",
-                "skin": "lady2",
-                "type": "fullstatic"
+            items7: {
+                color: "#E0D8A5",
+                id: "items7",
+                name: "Janet",
+                pack: "items7",
+                role: "items",
+                skin: "lady2",
+                type: "fullstatic",
             },
-            "items8": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items8: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items8",
-                "name": "X8",
-                "pack": "items8",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items8",
+                name: "X8",
+                pack: "items8",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "items9": {
-                "color": "#E0D8A5",
-                "cx": {
-                    "head": "bwhead"
+            items9: {
+                color: "#E0D8A5",
+                cx: {
+                    head: "bwhead",
                 },
-                "id": "items9",
-                "name": "X9",
-                "pack": "items9",
-                "role": "items",
-                "skin": "mabw",
-                "type": "fullstatic"
+                id: "items9",
+                name: "X9",
+                pack: "items9",
+                role: "items",
+                skin: "mabw",
+                type: "fullstatic",
             },
-            "jailer": {
-                "color": "#62C3DF",
-                "id": "jailer",
-                "name": "Jailord",
-                "role": "jailer",
-                "says": "Tu-tu-tu",
-                "skin": "thehelmet",
-                "type": "fullstatic"
+            jailer: {
+                color: "#62C3DF",
+                id: "jailer",
+                name: "Jailord",
+                role: "jailer",
+                says: "Tu-tu-tu",
+                skin: "thehelmet",
+                type: "fullstatic",
             },
-            "leathermerchant": {
-                "color": "#6E4430",
-                "id": "leathermerchant",
-                "name": "Landon",
-                "quest": "leather",
-                "role": "quest",
-                "says": "Have leathers?",
-                "skin": "lmerchant",
-                "type": "fullstatic"
+            leathermerchant: {
+                color: "#6E4430",
+                id: "leathermerchant",
+                name: "Landon",
+                quest: "leather",
+                role: "quest",
+                says: "Have leathers?",
+                skin: "lmerchant",
+                type: "fullstatic",
             },
-            "lichteaser": {
-                "color": "#5A1D7F",
-                "id": "lichteaser",
-                "role": "tease",
-                "says": "Soon",
-                "skin": "lichteaser",
-                "type": "static"
+            lichteaser: {
+                color: "#5A1D7F",
+                id: "lichteaser",
+                role: "tease",
+                says: "Soon",
+                skin: "lichteaser",
+                type: "static",
             },
-            "locksmith": {
-                "id": "locksmith",
-                "name": "Smith",
-                "role": "locksmith",
-                "says": "X",
-                "skin": "asoldier",
-                "type": "fullstatic"
+            locksmith: {
+                id: "locksmith",
+                name: "Smith",
+                role: "locksmith",
+                says: "X",
+                skin: "asoldier",
+                type: "fullstatic",
             },
-            "lostandfound": {
-                "color": "#7E65D3",
-                "id": "lostandfound",
-                "name": "Ron",
-                "role": "lostandfound",
-                "says": "Finders keepers",
-                "skin": "goblin",
-                "type": "fullstatic"
+            lostandfound: {
+                color: "#7E65D3",
+                id: "lostandfound",
+                name: "Ron",
+                role: "lostandfound",
+                says: "Finders keepers",
+                skin: "goblin",
+                type: "fullstatic",
             },
-            "lotterylady": {
-                "color": "#DF5AC5",
-                "id": "lotterylady",
-                "name": "Rose",
-                "role": "lottery",
-                "says": "Hi Dear",
-                "skin": "llady",
-                "type": "fullstatic"
+            lotterylady: {
+                color: "#DF5AC5",
+                id: "lotterylady",
+                name: "Rose",
+                role: "lottery",
+                says: "Hi Dear",
+                skin: "llady",
+                type: "fullstatic",
             },
-            "mcollector": {
-                "color": "#67A464",
-                "id": "mcollector",
-                "name": "Cole",
-                "quest": "mcollector",
-                "role": "mcollector",
-                "says": "Hmm",
-                "skin": "proft",
-                "type": "fullstatic"
+            mcollector: {
+                color: "#67A464",
+                id: "mcollector",
+                name: "Cole",
+                quest: "mcollector",
+                role: "mcollector",
+                says: "Hmm",
+                skin: "proft",
+                type: "fullstatic",
             },
-            "mistletoe": {
-                "color": "#E376E5",
-                "id": "mistletoe",
-                "name": "Faith",
-                "quest": "mistletoe",
-                "role": "quest",
-                "says": "Uhhh",
-                "skin": "pink",
-                "type": "fullstatic"
+            mistletoe: {
+                color: "#E376E5",
+                id: "mistletoe",
+                name: "Faith",
+                quest: "mistletoe",
+                role: "quest",
+                says: "Uhhh",
+                skin: "pink",
+                type: "fullstatic",
             },
-            "monsterhunter": {
-                "color": "#B4FAA0",
-                "id": "monsterhunter",
-                "name": "Daisy",
-                "role": "monstertokens",
-                "says": "Hi!",
-                "skin": "daisy",
-                "token": "monstertoken",
-                "type": "fullstatic"
+            monsterhunter: {
+                color: "#B4FAA0",
+                id: "monsterhunter",
+                name: "Daisy",
+                role: "monstertokens",
+                says: "Hi!",
+                skin: "daisy",
+                token: "monstertoken",
+                type: "fullstatic",
             },
-            "newupgrade": {
-                "atype": "flow",
-                "id": "newupgrade",
-                "name": "Cue",
-                "role": "newupgrade",
-                "says": "+1",
-                "skin": "newupgrade"
+            newupgrade: {
+                atype: "flow",
+                id: "newupgrade",
+                name: "Cue",
+                role: "newupgrade",
+                says: "+1",
+                skin: "newupgrade",
             },
-            "newyear_tree": {
-                "aspeed": "fast",
-                "atype": "flow",
-                "color": "#B7161F",
-                "id": "newyear_tree",
-                "name": "New Year Tree",
-                "role": "newyear_tree",
-                "says": "*Tin* *Tin* *Tin* *Tin*",
-                "skin": "newyear_tree"
+            newyear_tree: {
+                aspeed: "fast",
+                atype: "flow",
+                color: "#B7161F",
+                id: "newyear_tree",
+                name: "New Year Tree",
+                role: "newyear_tree",
+                says: "*Tin* *Tin* *Tin* *Tin*",
+                skin: "newyear_tree",
             },
-            "ornaments": {
-                "color": "#E56D39",
-                "id": "ornaments",
-                "name": "Jayson",
-                "quest": "ornament",
-                "role": "quest",
-                "says": "Hmm. Hmm. Hmm.",
-                "skin": "splithair",
-                "type": "fullstatic"
+            ornaments: {
+                color: "#E56D39",
+                id: "ornaments",
+                name: "Jayson",
+                quest: "ornament",
+                role: "quest",
+                says: "Hmm. Hmm. Hmm.",
+                skin: "splithair",
+                type: "fullstatic",
             },
-            "pete": {
-                "color": "#EBECEE",
-                "id": "pete",
-                "name": "Pete",
-                "role": "petkeeper",
-                "says": "Purr",
-                "skin": "lionsuit",
-                "type": "fullstatic"
+            pete: {
+                color: "#EBECEE",
+                id: "pete",
+                name: "Pete",
+                role: "petkeeper",
+                says: "Purr",
+                skin: "lionsuit",
+                type: "fullstatic",
             },
-            "pots": {
-                "atype": "once",
-                "id": "pots",
-                "ignore": true,
-                "items": [
+            pots: {
+                atype: "once",
+                id: "pots",
+                ignore: true,
+                items: [
                     "hpot0",
                     "mpot0",
                     "hpot1",
@@ -1616,17 +1582,17 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    null
+                    null,
                 ],
-                "role": "merchant",
-                "says": "Oh, Hello",
-                "skin": "yellowlady",
-                "stopframe": 1
+                role: "merchant",
+                says: "Oh, Hello",
+                skin: "yellowlady",
+                stopframe: 1,
             },
-            "premium": {
-                "atype": "flow",
-                "id": "premium",
-                "items": [
+            premium: {
+                atype: "flow",
+                id: "premium",
+                items: [
                     "xpbooster",
                     "goldbooster",
                     "luckbooster",
@@ -1646,101 +1612,98 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    null
+                    null,
                 ],
-                "name": "Garwyn",
-                "old_role": "premium",
-                "role": "merchant",
-                "says": "MMM",
-                "skin": "pflow"
+                name: "Garwyn",
+                old_role: "premium",
+                role: "merchant",
+                says: "MMM",
+                skin: "pflow",
             },
-            "princess": {
-                "delay": 5000,
-                "hp": 6000,
-                "id": "princess",
-                "interaction": [
-                    "Wanna taste my daggers?"
-                ],
-                "level": 72,
-                "name": "Princess",
-                "role": "citizen",
-                "says": [
-                    "Oh, Hello!"
-                ],
-                "skin": "princess",
-                "speed": 24,
-                "type": "fullstatic"
+            princess: {
+                delay: 5000,
+                hp: 6000,
+                id: "princess",
+                interaction: ["Wanna taste my daggers?"],
+                level: 72,
+                name: "Princess",
+                role: "citizen",
+                says: ["Oh, Hello!"],
+                skin: "princess",
+                speed: 24,
+                type: "fullstatic",
             },
-            "pvp": {
-                "allow": false,
-                "hp": 5000,
-                "id": "pvp",
-                "name": "Ace",
-                "role": "pvp_announcer",
-                "skin": "thehelmet",
-                "speed": 40,
-                "type": "fullstatic"
+            pvp: {
+                allow: false,
+                hp: 5000,
+                id: "pvp",
+                name: "Ace",
+                role: "pvp_announcer",
+                skin: "thehelmet",
+                speed: 40,
+                type: "fullstatic",
             },
-            "pvpblocker": {
-                "id": "pvpblocker",
-                "role": "blocker",
-                "says": "I will leave when there are* 4 people around.",
-                "skin": "thehelmet",
-                "type": "fullstatic"
+            pvpblocker: {
+                id: "pvpblocker",
+                role: "blocker",
+                says: "I will leave when there are* 4 people around.",
+                skin: "thehelmet",
+                type: "fullstatic",
             },
-            "pvptokens": {
-                "aspeed": "slow",
-                "color": "#9C201C",
-                "id": "pvptokens",
-                "name": "Gn. Spence",
-                "role": "pvptokens",
-                "says": "Grrr",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "These tokens of honor represent victory. Make sure to join all the PVP events and spend some time in PVP realms. Glorious!",
-                    "skin": "pknight"
+            pvptokens: {
+                aspeed: "slow",
+                color: "#9C201C",
+                id: "pvptokens",
+                name: "Gn. Spence",
+                role: "pvptokens",
+                says: "Grrr",
+                side_interaction: {
+                    auto: true,
+                    message:
+                        "These tokens of honor represent victory. Make sure to join all the PVP events and spend some time in PVP realms. Glorious!",
+                    skin: "pknight",
                 },
-                "skin": "pvptokens",
-                "stand": "wstand_texture",
-                "token": "pvptoken"
+                skin: "pvptokens",
+                stand: "wstand_texture",
+                token: "pvptoken",
             },
-            "pwincess": {
-                "color": "#FECDF7",
-                "id": "pwincess",
-                "name": "Wynifreed",
-                "quest": "lostearring",
-                "role": "quest",
-                "says": "eek",
-                "skin": "pwincess",
-                "type": "fullstatic"
+            pwincess: {
+                color: "#FECDF7",
+                id: "pwincess",
+                name: "Wynifreed",
+                quest: "lostearring",
+                role: "quest",
+                says: "eek",
+                skin: "pwincess",
+                type: "fullstatic",
             },
-            "rewards": {
-                "color": "#7E65D3",
-                "cx": {
-                    "face": "coolblueg",
-                    "hair": "hairdo518",
-                    "hat": "hat400",
-                    "head": "makeup107"
+            rewards: {
+                color: "#7E65D3",
+                cx: {
+                    face: "coolblueg",
+                    hair: "hairdo518",
+                    hat: "hat400",
+                    head: "makeup107",
                 },
-                "id": "rewards",
-                "name": "Werdars",
-                "role": "rewards",
-                "says": "Rewards!",
-                "skin": "marmor9h",
-                "type": "fullstatic"
+                id: "rewards",
+                name: "Werdars",
+                role: "rewards",
+                says: "Rewards!",
+                skin: "marmor9h",
+                type: "fullstatic",
             },
-            "santa": {
-                "color": "#DF2A2F",
-                "id": "santa",
-                "name": "Santa",
-                "quest": "candycane",
-                "role": "santa",
-                "says": "Ho Ho Ho",
-                "skin": "santa"
+            santa: {
+                color: "#DF2A2F",
+                id: "santa",
+                name: "Santa",
+                quest: "candycane",
+                role: "santa",
+                says: "Ho Ho Ho",
+                skin: "santa",
             },
-            "scrolls": {
-                "id": "scrolls",
-                "items": [
+            scrolls: {
+                id: "scrolls",
+                items: [
                     "scroll0",
                     "cscroll0",
                     "strscroll",
@@ -1754,56 +1717,57 @@ test("G.npcs type validation", async () => {
                     "scroll2",
                     "cscroll2",
                     null,
-                    null
+                    null,
                 ],
-                "name": "Lucas",
-                "role": "merchant",
-                "says": "Good Luck",
-                "skin": "scrolls"
+                name: "Lucas",
+                role: "merchant",
+                says: "Good Luck",
+                skin: "scrolls",
             },
-            "secondhands": {
-                "color": "#7E65D3",
-                "id": "secondhands",
-                "name": "Ponty",
-                "role": "secondhands",
-                "says": "There's some good stuff in here",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "They sell them. I buy them. You buy them from me for higher prices. Win win. I win. Bling!",
-                    "skin": "blingbling"
+            secondhands: {
+                color: "#7E65D3",
+                id: "secondhands",
+                name: "Ponty",
+                role: "secondhands",
+                says: "There's some good stuff in here",
+                side_interaction: {
+                    auto: true,
+                    message:
+                        "They sell them. I buy them. You buy them from me for higher prices. Win win. I win. Bling!",
+                    skin: "blingbling",
                 },
-                "skin": "blingbling",
-                "type": "fullstatic"
+                skin: "blingbling",
+                type: "fullstatic",
             },
-            "shellsguy": {
-                "id": "shellsguy",
-                "name": "Mr. Dworf",
-                "role": "shells",
-                "says": "Sup",
-                "skin": "fancyd",
-                "type": "fullstatic"
+            shellsguy: {
+                id: "shellsguy",
+                name: "Mr. Dworf",
+                role: "shells",
+                says: "Sup",
+                skin: "fancyd",
+                type: "fullstatic",
             },
-            "ship": {
-                "aspeed": "slower",
-                "atype": "flow",
-                "id": "ship",
-                "role": "ship",
-                "says": "Ahoy",
-                "skin": "ship"
+            ship: {
+                aspeed: "slower",
+                atype: "flow",
+                id: "ship",
+                role: "ship",
+                says: "Ahoy",
+                skin: "ship",
             },
-            "shrine": {
-                "id": "shrine",
-                "role": "shrine",
-                "skin": "shrine",
-                "type": "static"
+            shrine: {
+                id: "shrine",
+                role: "shrine",
+                skin: "shrine",
+                type: "static",
             },
-            "standmerchant": {
-                "color": "#3FEEA2",
-                "cx": {
-                    "hat": "hat221"
+            standmerchant: {
+                color: "#3FEEA2",
+                cx: {
+                    hat: "hat221",
                 },
-                "id": "standmerchant",
-                "items": [
+                id: "standmerchant",
+                items: [
                     "stand0",
                     null,
                     null,
@@ -1823,27 +1787,27 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    "test_orb"
+                    "test_orb",
                 ],
-                "name": "Divian",
-                "role": "standmerchant",
-                "says": "Huu Huu",
-                "skin": "purplelady",
-                "type": "fullstatic"
+                name: "Divian",
+                role: "standmerchant",
+                says: "Huu Huu",
+                skin: "purplelady",
+                type: "fullstatic",
             },
-            "tavern": {
-                "color": "#EBECEE",
-                "id": "tavern",
-                "name": "Jaqk",
-                "role": "tavern",
-                "says": "Hi",
-                "skin": "showoffi",
-                "type": "fullstatic"
+            tavern: {
+                color: "#EBECEE",
+                id: "tavern",
+                name: "Jaqk",
+                role: "tavern",
+                says: "Hi",
+                skin: "showoffi",
+                type: "fullstatic",
             },
-            "tbartender": {
-                "color": "#EBECEE",
-                "id": "tbartender",
-                "items": [
+            tbartender: {
+                color: "#EBECEE",
+                id: "tbartender",
+                items: [
                     "whiskey",
                     "wine",
                     "ale",
@@ -1863,23 +1827,24 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    "xshot"
+                    "xshot",
                 ],
-                "name": "Jaqk",
-                "role": "merchant",
-                "says": "Hello there",
-                "side_interaction": {
-                    "auto": true,
-                    "message": "Hello there, partner! Care for a drink? Good luck on the games! Don't lose all your gold at once, heh.",
-                    "skin": "showoffi"
+                name: "Jaqk",
+                role: "merchant",
+                says: "Hello there",
+                side_interaction: {
+                    auto: true,
+                    message:
+                        "Hello there, partner! Care for a drink? Good luck on the games! Don't lose all your gold at once, heh.",
+                    skin: "showoffi",
                 },
-                "skin": "showoffi",
-                "type": "fullstatic"
+                skin: "showoffi",
+                type: "fullstatic",
             },
-            "thief": {
-                "color": "#E7E2E7",
-                "id": "thief",
-                "items": [
+            thief: {
+                color: "#E7E2E7",
+                id: "thief",
+                items: [
                     "licence",
                     null,
                     null,
@@ -1899,34 +1864,34 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     "scroll3",
-                    "cscroll3"
+                    "cscroll3",
                 ],
-                "name": "Crun",
-                "role": "merchant",
-                "says": "Careful",
-                "skin": "thief",
-                "type": "fullstatic"
+                name: "Crun",
+                role: "merchant",
+                says: "Careful",
+                skin: "thief",
+                type: "fullstatic",
             },
-            "transporter": {
-                "color": "#7965C6",
-                "id": "transporter",
-                "name": "Alia",
-                "places": {
-                    "cyberland": 0,
-                    "d_e": 0,
-                    "desertland": 1,
-                    "main": 9,
-                    "test": 0,
-                    "winterland": 1
+            transporter: {
+                color: "#7965C6",
+                id: "transporter",
+                name: "Alia",
+                places: {
+                    cyberland: 0,
+                    d_e: 0,
+                    desertland: 1,
+                    main: 9,
+                    test: 0,
+                    winterland: 1,
                 },
-                "role": "transport",
-                "says": "Woo",
-                "skin": "spell"
+                role: "transport",
+                says: "Woo",
+                skin: "spell",
             },
-            "wbartender": {
-                "color": "#67CCB2",
-                "id": "wbartender",
-                "items": [
+            wbartender: {
+                color: "#67CCB2",
+                id: "wbartender",
+                items: [
                     "hpot0",
                     "mpot0",
                     "hpot1",
@@ -1946,59 +1911,54 @@ test("G.npcs type validation", async () => {
                     null,
                     null,
                     null,
-                    null
+                    null,
                 ],
-                "name": "Warin",
-                "role": "merchant",
-                "says": "Welcome!",
-                "skin": "npc63",
-                "type": "fullstatic"
+                name: "Warin",
+                role: "merchant",
+                says: "Welcome!",
+                skin: "npc63",
+                type: "fullstatic",
             },
-            "weapons": {
-                "atype": "flow",
-                "id": "weapons",
-                "ignore": true,
-                "items": [
-                    "blade",
-                    "claw",
-                    "staff",
-                    "bow"
-                ],
-                "role": "merchant",
-                "says": "Blades, blades, blades",
-                "skin": "daggers"
+            weapons: {
+                atype: "flow",
+                id: "weapons",
+                ignore: true,
+                items: ["blade", "claw", "staff", "bow"],
+                role: "merchant",
+                says: "Blades, blades, blades",
+                skin: "daggers",
             },
-            "witch": {
-                "aspeed": "slow",
-                "color": "#AF6AE2",
-                "id": "witch",
-                "name": "Witch",
-                "quest": "witch",
-                "role": "witch",
-                "says": "Brew Brew Brew",
-                "skin": "brewingwitch"
+            witch: {
+                aspeed: "slow",
+                color: "#AF6AE2",
+                id: "witch",
+                name: "Witch",
+                quest: "witch",
+                role: "witch",
+                says: "Brew Brew Brew",
+                skin: "brewingwitch",
             },
-            "wizardrepeater": {
-                "color": "#66BB52",
-                "id": "wizardrepeater",
-                "interval": 3000,
-                "name": "Wizard",
-                "role": "repeater",
-                "says": "SHELLS!",
-                "skin": "wizard",
-                "type": "fullstatic"
+            wizardrepeater: {
+                color: "#66BB52",
+                id: "wizardrepeater",
+                interval: 3000,
+                name: "Wizard",
+                role: "repeater",
+                says: "SHELLS!",
+                skin: "wizard",
+                type: "fullstatic",
             },
-            "wnpc": {
-                "color": "#D96643",
-                "id": "wnpc",
-                "name": "Wizard",
-                "quest": "glitch",
-                "role": "thesearch",
-                "says": "Help",
-                "skin": "wizard",
-                "type": "fullstatic"
-            }
-        }
+            wnpc: {
+                color: "#D96643",
+                id: "wnpc",
+                name: "Wizard",
+                quest: "glitch",
+                role: "thesearch",
+                says: "Help",
+                skin: "wizard",
+                type: "fullstatic",
+            },
+        },
     }
     expect(G_npcs).toBeDefined()
 })

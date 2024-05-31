@@ -19,7 +19,7 @@ test("Pathfinder.prepare", async () => {
 
     await expect(async () => {
         await Pathfinder.prepare(Game.G, {
-            showConsole: false
+            showConsole: false,
         })
     }).not.toThrow()
     expect(Pathfinder.getGrid("main")).toBeDefined()
@@ -30,7 +30,7 @@ test("Pathfinder.prepare", async () => {
     await expect(async () => {
         await Pathfinder.prepare(Game.G, {
             cheat: true,
-            showConsole: true
+            showConsole: true,
         })
     }).not.toThrowError()
     expect(logMock).not.toHaveBeenCalled()
@@ -62,13 +62,23 @@ test("Pathfinder.doorDistance", async () => {
 
     // Test outside the door
     const doorOutside_1 = { x: mainBankDoor[0] + mainBankDoor[2], y: mainBankDoor[1] - mainBankDoor[3] }
-    expect(Pathfinder.doorDistanceSquared(doorOutside_1, mainBankDoor)).toBe((mainBankDoor[2] / 2) * (mainBankDoor[2] / 2))
+    expect(Pathfinder.doorDistanceSquared(doorOutside_1, mainBankDoor)).toBe(
+        (mainBankDoor[2] / 2) * (mainBankDoor[2] / 2),
+    )
 })
 
 test("Pathfinder.getPath", async () => {
     const mainSpawn: NodeData = { map: "main", x: Game.G.maps.main.spawns[0][0], y: Game.G.maps.main.spawns[0][1] }
-    const mainOffset: NodeData = { map: "main", x: Game.G.maps.main.spawns[0][0] + 100, y: Game.G.maps.main.spawns[0][1] + 100 }
-    const halloweenSpawn: NodeData = { map: "halloween", x: Game.G.maps.halloween.spawns[0][0], y: Game.G.maps.halloween.spawns[0][1] }
+    const mainOffset: NodeData = {
+        map: "main",
+        x: Game.G.maps.main.spawns[0][0] + 100,
+        y: Game.G.maps.main.spawns[0][1] + 100,
+    }
+    const halloweenSpawn: NodeData = {
+        map: "halloween",
+        x: Game.G.maps.halloween.spawns[0][0],
+        y: Game.G.maps.halloween.spawns[0][1],
+    }
 
     // Simple line of sight path
     expect(() => {
@@ -84,9 +94,13 @@ test("Pathfinder.getPath", async () => {
 
     // Don't use town warps
     expect(() => {
-        const path = Pathfinder.getPath({ map: "main", x: 383, y: 1480 }, { map: "main", x: 17, y: -152 }, { avoidTownWarps: true })
+        const path = Pathfinder.getPath(
+            { map: "main", x: 383, y: 1480 },
+            { map: "main", x: 17, y: -152 },
+            { avoidTownWarps: true },
+        )
         expect(path.length).toBeTruthy
-        for (const link of (path as unknown as LinkData[])) expect(link.type).not.toEqual("town")
+        for (const link of path as unknown as LinkData[]) expect(link.type).not.toEqual("town")
     }).not.toThrowError()
 
     // Takes bank
@@ -94,7 +108,7 @@ test("Pathfinder.getPath", async () => {
         const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
         expect(path.length).toBeTruthy()
         let hasBankLink = false
-        for (const link of (path as unknown as LinkData[])) {
+        for (const link of path as unknown as LinkData[]) {
             if (link && link.map.startsWith("bank")) {
                 hasBankLink = true
                 break
@@ -105,16 +119,24 @@ test("Pathfinder.getPath", async () => {
 
     // Avoids bank
     expect(() => {
-        const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        const path = Pathfinder.getPath(
+            { map: "main", x: 0, y: 0 },
+            { map: "level2w", x: 0, y: 0 },
+            { avoidMaps: ["bank", "bank_b", "bank_u"] },
+        )
         expect(path.length).toBeTruthy()
-        for (const link of (path as unknown as LinkData[])) {
+        for (const link of path as unknown as LinkData[]) {
             if (link) expect(link.map).not.toMatch(/^bank/)
         }
     }).not.toThrowError()
 
     // Still goes to bank
     expect(() => {
-        const path = Pathfinder.getPath({ map: "main", x: 2, y: 3 }, { map: "bank_u", x: 4, y: 5 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        const path = Pathfinder.getPath(
+            { map: "main", x: 2, y: 3 },
+            { map: "bank_u", x: 4, y: 5 },
+            { avoidMaps: ["bank", "bank_b", "bank_u"] },
+        )
         expect(path.length).toBeTruthy()
         const end = path[path.length - 1]
         expect(end.map).toEqual("bank_u")
@@ -124,7 +146,11 @@ test("Pathfinder.getPath", async () => {
 
     // Still exits bank
     expect(() => {
-        const path = Pathfinder.getPath({ map: "bank_u", x: 2, y: 3 }, { map: "main", x: 4, y: 5 }, { avoidMaps: ["bank", "bank_b", "bank_u"] })
+        const path = Pathfinder.getPath(
+            { map: "bank_u", x: 2, y: 3 },
+            { map: "main", x: 4, y: 5 },
+            { avoidMaps: ["bank", "bank_b", "bank_u"] },
+        )
         expect(path.length).toBeTruthy()
         const end = path[path.length - 1]
         expect(end.map).toEqual("main")
@@ -141,7 +167,9 @@ test("Pathfinder.locateCraftNPC", () => {
     // mcollector location
     expect(Pathfinder.locateCraftNPC("resistancering")).toStrictEqual<IPosition>({ map: "main", x: 81, y: -283 })
     // not craftable
-    expect(() => { Pathfinder.locateCraftNPC("gem0") }).toThrowError()
+    expect(() => {
+        Pathfinder.locateCraftNPC("gem0")
+    }).toThrowError()
 })
 
 test("Pathfinder.locateExchangeNPC", () => {
@@ -152,7 +180,9 @@ test("Pathfinder.locateExchangeNPC", () => {
     // quest
     expect(Pathfinder.locateExchangeNPC("leather")).toStrictEqual<IPosition>({ map: "winterland", x: 262, y: -48.5 })
     // not exchangeable
-    expect(() => { Pathfinder.locateExchangeNPC("mpot0") }).toThrowError()
+    expect(() => {
+        Pathfinder.locateExchangeNPC("mpot0")
+    }).toThrowError()
 })
 
 test("Pathfinder.locateMonster", () => {

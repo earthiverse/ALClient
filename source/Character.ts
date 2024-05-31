@@ -1,8 +1,83 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Database, DeathModel, EntityModel, InstanceModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
-import { BankInfo, SlotType, IPosition, TradeSlotType, SlotInfo, StatusInfo, ServerRegion, ServerIdentifier, TokenType } from "./definitions/adventureland.js"
-import { Attribute, BankPackName, CharacterType, ConditionName, CXData, DamageType, EmotionName, GData, GMap, ItemName, MapName, MonsterName, NPCName, SkillName } from "./definitions/adventureland-data.js"
-import { AchievementProgressData, CharacterData, ServerData, ActionData, ChestOpenedData, ChestData, EntitiesData, EvalData, GameResponseData, NewMapData, PartyData, StartData, LoadedData, AuthData, DisappearingTextData, GameLogData, UIData, UpgradeData, PQData, TrackerData, EmotionData, PlayersData, ItemData, ItemDataTrade, PlayerData, FriendData, PMData, ChatLogData, GameResponseDataUpgradeChance, HitData, QInfo, SkillTimeoutData, TavernEventData, BuySuccessGRDataObject, ProjectileSkillGRDataObject, GameResponseDataObject, ChannelInfo, DisappearData, DisappearNotThereData, TradeHistoryData, DestroyGRDataObject } from "./definitions/adventureland-server.js"
+import {
+    Database,
+    DeathModel,
+    EntityModel,
+    InstanceModel,
+    IPlayer,
+    NPCModel,
+    PlayerModel,
+} from "./database/Database.js"
+import {
+    BankInfo,
+    SlotType,
+    IPosition,
+    TradeSlotType,
+    SlotInfo,
+    StatusInfo,
+    ServerRegion,
+    ServerIdentifier,
+    TokenType,
+} from "./definitions/adventureland.js"
+import {
+    Attribute,
+    BankPackName,
+    CharacterType,
+    ConditionName,
+    CXData,
+    DamageType,
+    EmotionName,
+    GData,
+    GMap,
+    ItemName,
+    MapName,
+    MonsterName,
+    NPCName,
+    SkillName,
+} from "./definitions/adventureland-data.js"
+import {
+    AchievementProgressData,
+    CharacterData,
+    ServerData,
+    ActionData,
+    ChestOpenedData,
+    ChestData,
+    EntitiesData,
+    EvalData,
+    GameResponseData,
+    NewMapData,
+    PartyData,
+    StartData,
+    LoadedData,
+    AuthData,
+    DisappearingTextData,
+    GameLogData,
+    UIData,
+    UpgradeData,
+    PQData,
+    TrackerData,
+    EmotionData,
+    PlayersData,
+    ItemData,
+    ItemDataTrade,
+    PlayerData,
+    FriendData,
+    PMData,
+    ChatLogData,
+    GameResponseDataUpgradeChance,
+    HitData,
+    QInfo,
+    SkillTimeoutData,
+    TavernEventData,
+    BuySuccessGRDataObject,
+    ProjectileSkillGRDataObject,
+    GameResponseDataObject,
+    ChannelInfo,
+    DisappearData,
+    DisappearNotThereData,
+    TradeHistoryData,
+    DestroyGRDataObject,
+} from "./definitions/adventureland-server.js"
 import { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import { Entity } from "./Entity.js"
@@ -16,7 +91,15 @@ import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
 import { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
-import { GetEntitiesFilters, GetEntityFilters, GetPlayerFilters, GetPlayersFilters, LocateItemFilters, LocateItemsFilters, SmartMoveOptions } from "./definitions/alclient.js"
+import {
+    GetEntitiesFilters,
+    GetEntityFilters,
+    GetPlayerFilters,
+    GetPlayersFilters,
+    LocateItemFilters,
+    LocateItemsFilters,
+    SmartMoveOptions,
+} from "./definitions/alclient.js"
 import { UpdateQuery } from "mongoose"
 import { TradeItem } from "./TradeItem.js"
 
@@ -26,7 +109,9 @@ export class Character extends Observer implements CharacterData {
     public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
     public achievements = new Map<string, AchievementProgressData>()
-    public get bank(): BankInfo { return this.user }
+    public get bank(): BankInfo {
+        return this.user
+    }
     public chests = new Map<string, ChestData>()
     public nextSkill = new Map<SkillName, Date>()
     public partyData: PartyData
@@ -144,29 +229,51 @@ export class Character extends Observer implements CharacterData {
     protected async updateLoop(): Promise<void> {
         if (this.noReconnect) return
         if (!this.socket || this.socket.disconnected || !this.ready) {
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set(
+                "updateLoop",
+                setTimeout(async () => {
+                    this.updateLoop()
+                }, Constants.UPDATE_POSITIONS_EVERY_MS),
+            )
             return
         }
 
         if (this.lastPositionUpdate === undefined) {
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set(
+                "updateLoop",
+                setTimeout(async () => {
+                    this.updateLoop()
+                }, Constants.UPDATE_POSITIONS_EVERY_MS),
+            )
             return
         }
 
         if (this.lastAllEntities !== undefined && Date.now() - this.lastAllEntities > Constants.STALE_MONSTER_MS) {
-            await this.requestEntitiesData().catch(() => { /* Suppress Errors */ })
+            await this.requestEntitiesData().catch(() => {
+                /* Suppress Errors */
+            })
         }
 
         const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
         if (msSinceLastUpdate > Constants.UPDATE_POSITIONS_EVERY_MS) {
             // Update now
             this.updatePositions()
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS))
+            this.timeouts.set(
+                "updateLoop",
+                setTimeout(async () => {
+                    this.updateLoop()
+                }, Constants.UPDATE_POSITIONS_EVERY_MS),
+            )
             return
         } else {
             // Update in a bit
-            this.timeouts.set("updateLoop", setTimeout(async () => { this.updateLoop() }, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate))
+            this.timeouts.set(
+                "updateLoop",
+                setTimeout(async () => {
+                    this.updateLoop()
+                }, Constants.UPDATE_POSITIONS_EVERY_MS - msSinceLastUpdate),
+            )
             return
         }
     }
@@ -201,10 +308,18 @@ export class Character extends Observer implements CharacterData {
                         const updateData: Partial<IBank> = {
                             lastUpdated: Date.now(),
                             owner: this.owner,
-                            ...(data as CharacterData).user
+                            ...(data as CharacterData).user,
                         }
-                        BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-                        Database.nextUpdate.set(`${this.serverData.name}${this.serverData.region}*bank*`, Date.now() + Constants.MONGO_UPDATE_MS)
+                        BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true })
+                            .lean()
+                            .exec()
+                            .catch((e) => {
+                                console.error(e)
+                            })
+                        Database.nextUpdate.set(
+                            `${this.serverData.name}${this.serverData.region}*bank*`,
+                            Date.now() + Constants.MONGO_UPDATE_MS,
+                        )
                     }
                 }
 
@@ -278,7 +393,7 @@ export class Character extends Observer implements CharacterData {
                 "slots.trade4": this.slots.trade4,
                 type: this.ctype,
                 x: this.x,
-                y: this.y
+                y: this.y,
             }
 
             if (this.stand) {
@@ -311,8 +426,16 @@ export class Character extends Observer implements CharacterData {
             }
 
             if (this.owner) updateData.owner = this.owner
-            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).lean().exec().catch((e) => { console.error(e) })
-            Database.nextUpdate.set(`${this.server.name}${this.server.region}${this.id}`, Date.now() + Constants.MONGO_UPDATE_MS)
+            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true })
+                .lean()
+                .exec()
+                .catch((e) => {
+                    console.error(e)
+                })
+            Database.nextUpdate.set(
+                `${this.server.name}${this.server.region}${this.id}`,
+                Date.now() + Constants.MONGO_UPDATE_MS,
+            )
         }
     }
 
@@ -391,7 +514,7 @@ export class Character extends Observer implements CharacterData {
 
     protected parseGameResponse(data: GameResponseData): void {
         // Adjust cooldowns
-        if (typeof (data) == "object") {
+        if (typeof data == "object") {
             if (data.response == "cooldown") {
                 // A skill is on cooldown
                 const skill = data.skill ?? data.place
@@ -400,16 +523,18 @@ export class Character extends Observer implements CharacterData {
                     this.setNextSkill(skill, new Date(Date.now() + Math.ceil(cooldown)))
                 }
             } else if (Database.connection && data.response == "defeated_by_a_monster") {
-                DeathModel.insertMany([{
-                    cause: data.monster,
-                    map: this.map,
-                    name: this.id,
-                    serverIdentifier: this.server.name,
-                    serverRegion: this.server.region,
-                    time: Date.now(),
-                    x: this.x,
-                    y: this.y
-                }]).catch(console.error)
+                DeathModel.insertMany([
+                    {
+                        cause: data.monster,
+                        map: this.map,
+                        name: this.id,
+                        serverIdentifier: this.server.name,
+                        serverRegion: this.server.region,
+                        time: Date.now(),
+                        x: this.x,
+                        y: this.y,
+                    },
+                ]).catch(console.error)
             } else if (data.response == "ex_condition") {
                 // The condition expired
                 delete this.s[data.name]
@@ -419,7 +544,7 @@ export class Character extends Observer implements CharacterData {
                     this.setNextSkill(data.name, new Date(Date.now() + cooldown))
                 }
             }
-        } else if (typeof (data) == "string") {
+        } else if (typeof data == "string") {
             if (data == "resolve_skill") {
                 // Ignore. We resolve our skills a different way than the vanilla client
             }
@@ -455,7 +580,7 @@ export class Character extends Observer implements CharacterData {
 
             // Update character
             if (this.moving) {
-                const distanceTraveled = this.speed * msSinceLastUpdate / 1000
+                const distanceTraveled = (this.speed * msSinceLastUpdate) / 1000
                 const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
                 const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
                 if (distanceTraveled > distanceToGoal) {
@@ -471,28 +596,22 @@ export class Character extends Observer implements CharacterData {
             // Update conditions
             for (const condition in this.s) {
                 const newCooldown = this.s[condition as ConditionName].ms - msSinceLastUpdate
-                if (newCooldown <= 0)
-                    delete this.s[condition as ConditionName]
-                else
-                    this.s[condition as ConditionName].ms = newCooldown
+                if (newCooldown <= 0) delete this.s[condition as ConditionName]
+                else this.s[condition as ConditionName].ms = newCooldown
             }
 
             // Update processes
             for (const process in this.q) {
                 const newCooldown = this.q[process as keyof QInfo].ms - msSinceLastUpdate
-                if (newCooldown <= 0)
-                    delete this.q[process as keyof QInfo]
-                else
-                    this.q[process as keyof QInfo].ms = newCooldown
+                if (newCooldown <= 0) delete this.q[process as keyof QInfo]
+                else this.q[process as keyof QInfo].ms = newCooldown
             }
 
             // Update channels
             for (const channel in this.c) {
                 const newCooldown = this.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
-                if (newCooldown <= 0)
-                    delete this.c[channel as keyof ChannelInfo]
-                else
-                    this.c[channel as keyof ChannelInfo].ms = newCooldown
+                if (newCooldown <= 0) delete this.c[channel as keyof ChannelInfo]
+                else this.c[channel as keyof ChannelInfo].ms = newCooldown
             }
         }
 
@@ -506,7 +625,10 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public async connect(): Promise<void> {
-        if (this.noReconnect) throw new Error("You can no longer reconnect with this character. Call `Game.startCharacter()` and make a new Character.")
+        if (this.noReconnect)
+            throw new Error(
+                "You can no longer reconnect with this character. Call `Game.startCharacter()` and make a new Character.",
+            )
 
         await super.connect(false, false)
 
@@ -602,17 +724,20 @@ export class Character extends Observer implements CharacterData {
                         serverRegion: this.serverData.region,
                         type: cData.type,
                         x: cData.x,
-                        y: cData.y
+                        y: cData.y,
                     }
                     playerUpdates.push({
                         updateOne: {
                             filter: { name: id },
                             update: updateData,
-                            upsert: true
-                        }
+                            upsert: true,
+                        },
                     })
                 }
-                if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch((e) => { console.error(e) })
+                if (playerUpdates.length)
+                    PlayerModel.bulkWrite(playerUpdates).catch((e) => {
+                        console.error(e)
+                    })
             }
         })
 
@@ -637,7 +762,7 @@ export class Character extends Observer implements CharacterData {
                         serverRegion: this.server.region,
                         time: Date.now(),
                         x: this.x,
-                        y: this.y
+                        y: this.y,
                     }).catch(console.error)
                 }
             })
@@ -656,7 +781,14 @@ export class Character extends Observer implements CharacterData {
                 }
 
                 // Add tracker data to the database
-                await AchievementModel.create({ date: Date.now(), max: data.max, monsters: data.monsters, name: this.id }).catch((e) => { console.error(e) })
+                await AchievementModel.create({
+                    date: Date.now(),
+                    max: data.max,
+                    monsters: data.monsters,
+                    name: this.id,
+                }).catch((e) => {
+                    console.error(e)
+                })
             })
         }
 
@@ -667,7 +799,6 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("upgrade", (data: UpgradeData) => {
             if (data.type == "compound" && this.q.compound) delete this.q.compound
-
             // else if (data.type == "exchange" && this.q.exchange) delete this.q.exchange
             else if (data.type == "upgrade" && this.q.upgrade) delete this.q.upgrade
         })
@@ -678,7 +809,7 @@ export class Character extends Observer implements CharacterData {
                 height: 1080,
                 scale: 2,
                 success: 1,
-                width: 1920
+                width: 1920,
             } as LoadedData)
 
             // When we're loaded, authenticate
@@ -691,7 +822,7 @@ export class Character extends Observer implements CharacterData {
                 passphrase: "",
                 scale: 2,
                 user: this.owner,
-                width: 1920
+                width: 1920,
             } as AuthData)
         })
 
@@ -702,7 +833,7 @@ export class Character extends Observer implements CharacterData {
                 this.socket.off("disconnect_reason", failCheck2)
                 clearTimeout(timeout)
             }
-            const failCheck = (data: string | { message: string; }) => {
+            const failCheck = (data: string | { message: string }) => {
                 cleanup()
                 if (typeof data == "string") {
                     reject(new Error(`Failed to connect: ${data}`))
@@ -781,7 +912,7 @@ export class Character extends Observer implements CharacterData {
     }
 
     public error(e: Error | string, trace = true, military = true): void {
-        const message = `[${this.getTime(military)}, ERROR, ${this.id}]: ${(typeof e === "string") ? e : e.message}`
+        const message = `[${this.getTime(military)}, ERROR, ${this.id}]: ${typeof e === "string" ? e : e.message}`
         console.error(message)
         if (trace) console.trace(e)
     }
@@ -909,8 +1040,7 @@ export class Character extends Observer implements CharacterData {
 
         const acceptedInvite = new Promise<PartyData>((resolve, reject) => {
             const partyCheck = (data: PartyData) => {
-                if (data.list && data.list.includes(this.id)
-                    && data.list.includes(id)) {
+                if (data.list && data.list.includes(this.id) && data.list.includes(id)) {
                     this.socket.off("party_update", partyCheck)
                     this.socket.off("game_log", unableCheck)
                     resolve(data)
@@ -1001,14 +1131,15 @@ export class Character extends Observer implements CharacterData {
             return // We aren't buying any
         }
         const cost = gData.g * (gData.markup ?? 1) * quantity
-        if (this.gold < cost) throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
+        if (this.gold < cost)
+            throw new Error(`Insufficient gold. We only have ${this.gold}, but ${quantity}x${itemName} costs ${cost}.`)
 
         const response = this.getResponsePromise("buy", "buy_success", {
             extraGameResponseCheck: (data: GameResponseData) => {
                 if ((data as BuySuccessGRDataObject).name !== itemName) return false
                 if ((data as BuySuccessGRDataObject).q !== quantity) return false
                 return true
-            }
+            },
         }) as Promise<BuySuccessGRDataObject>
         this.socket.emit("buy", { name: itemName, quantity: quantity })
         const data = await response
@@ -1020,31 +1151,31 @@ export class Character extends Observer implements CharacterData {
      * @param itemName The item you wish to purchase with tokens
      * @param useToken If set, we will only use this token to purchase the item, otherwise we will use any available token.
      */
-    public async buyWithTokens(itemName: ItemName, useToken?: (keyof GData["tokens"])): Promise<void> {
+    public async buyWithTokens(itemName: ItemName, useToken?: keyof GData["tokens"]): Promise<void> {
         const numBefore = this.countItem(itemName)
 
         const tokenInfo: {
-            [T in (keyof GData["tokens"])]: {
+            [T in keyof GData["tokens"]]: {
                 error: Error
                 npcLocs: IPosition[]
             }
         } = {
             friendtoken: {
                 error: null,
-                npcLocs: Pathfinder.locateNPC("friendtokens")
+                npcLocs: Pathfinder.locateNPC("friendtokens"),
             },
             funtoken: {
                 error: null,
-                npcLocs: Pathfinder.locateNPC("funtokens")
+                npcLocs: Pathfinder.locateNPC("funtokens"),
             },
             monstertoken: {
                 error: null,
-                npcLocs: Pathfinder.locateNPC("monsterhunter")
+                npcLocs: Pathfinder.locateNPC("monsterhunter"),
             },
             pvptoken: {
                 error: null,
-                npcLocs: Pathfinder.locateNPC("pvptokens")
-            }
+                npcLocs: Pathfinder.locateNPC("pvptokens"),
+            },
         }
 
         // Check if we can purchase the items with tokens
@@ -1056,9 +1187,13 @@ export class Character extends Observer implements CharacterData {
 
             if (!this.hasItem(["computer", "supercomputer"])) {
                 // Check if we're nearby the token exchange NPC
-                const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => { return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE })
+                const inRange = tokenInfo[tokenType].npcLocs.some((npcLoc) => {
+                    return Tools.distance(this, npcLoc) <= Constants.NPC_INTERACTION_DISTANCE
+                })
                 if (!inRange) {
-                    tokenInfo[tokenType].error = new Error(`We are too far away from the ${tokenType} npc to purchase anything.`)
+                    tokenInfo[tokenType].error = new Error(
+                        `We are too far away from the ${tokenType} npc to purchase anything.`,
+                    )
                     continue
                 }
             }
@@ -1068,7 +1203,9 @@ export class Character extends Observer implements CharacterData {
                 const numTokensNeeded = gToken[itemName]
                 const numTokens = this.countItem(tokenType)
                 if (numTokens < numTokensNeeded) {
-                    tokenInfo[tokenType].error = new Error(`We need ${numTokensNeeded} of ${tokenType} to buy ${itemName}, but we only have ${numTokens}`)
+                    tokenInfo[tokenType].error = new Error(
+                        `We need ${numTokensNeeded} of ${tokenType} to buy ${itemName}, but we only have ${numTokens}`,
+                    )
                     continue
                 }
 
@@ -1128,7 +1265,8 @@ export class Character extends Observer implements CharacterData {
         if (quantity <= 0) throw new Error(`We can not buy a quantity of ${quantity}.`)
         const merchant = this.players.get(id)
         if (!merchant) throw new Error(`We can not see ${id} nearby.`)
-        if (Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw new Error(`We are too far away from ${id} to buy from.`)
+        if (Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+            throw new Error(`We are too far away from ${id} to buy from.`)
 
         const item = merchant.slots[slot]
         if (!item) throw new Error(`We could not find an item in slot ${slot} on ${id}.`)
@@ -1145,11 +1283,15 @@ export class Character extends Observer implements CharacterData {
 
         if (this.gold < merchant.slots[slot].price * quantity) {
             if (this.gold < merchant.slots[slot].price)
-                throw new Error(`We don't have enough gold. It costs ${merchant.slots[slot].price}, but we only have ${this.gold}`)
+                throw new Error(
+                    `We don't have enough gold. It costs ${merchant.slots[slot].price}, but we only have ${this.gold}`,
+                )
 
             // Determine how many we *can* buy.
             const buyableQuantity = Math.floor(this.gold / merchant.slots[slot].price)
-            console.warn(`We don't have enough gold to buy ${quantity}, we can only buy ${buyableQuantity}, so we're doing that.`)
+            console.warn(
+                `We don't have enough gold to buy ${quantity}, we can only buy ${buyableQuantity}, so we're doing that.`,
+            )
             quantity = buyableQuantity
         }
 
@@ -1218,8 +1360,7 @@ export class Character extends Observer implements CharacterData {
 
             const successCheck = (data: CharacterData) => {
                 const numNow = this.countItem(item.name, data.items)
-                if ((item.q && numNow == numBefore + item.q)
-                    || (numNow == numBefore + 1)) {
+                if ((item.q && numNow == numBefore + item.q) || numNow == numBefore + 1) {
                     cleanup()
                     resolve()
                 }
@@ -1253,18 +1394,18 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public calculateTargets(): {
-        magical: number;
-        physical: number;
-        pure: number;
+        magical: number
+        physical: number
+        pure: number
     } {
         const targets = {
             magical: 0,
             physical: 0,
-            pure: 0
+            pure: 0,
         }
 
         for (const entity of this.getEntities({
-            targetingMe: true
+            targetingMe: true,
         })) {
             switch (entity.damage_type) {
                 case "magical":
@@ -1279,7 +1420,7 @@ export class Character extends Observer implements CharacterData {
             }
         }
 
-        if ((targets.magical + targets.physical + targets.pure) < this.targets) {
+        if (targets.magical + targets.physical + targets.pure < this.targets) {
             // Something else is targeting us, assume the worst
             const difference = this.targets - (targets.magical + targets.physical + targets.pure)
             targets.magical += difference
@@ -1298,7 +1439,13 @@ export class Character extends Observer implements CharacterData {
      *
      * You need to be near the upgrade NPC, or have a computer, in order to calculate the compound chance.
      */
-    public async calculateCompound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
+    public async calculateCompound(
+        item1Pos: number,
+        item2Pos: number,
+        item3Pos: number,
+        cscrollPos: number,
+        offeringPos?: number,
+    ): Promise<GameResponseDataUpgradeChance> {
         if (!this.ready) throw new Error("We aren't ready yet [compound].")
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
@@ -1312,8 +1459,10 @@ export class Character extends Observer implements CharacterData {
             const offeringInfo = this.items[offeringPos]
             if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
         }
-        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) throw new Error("You can only combine 3 of the same items.")
-        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) throw new Error("You can only combine 3 items of the same level.")
+        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name)
+            throw new Error("You can only combine 3 of the same items.")
+        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level)
+            throw new Error("You can only combine 3 items of the same level.")
 
         const compoundChance = new Promise<GameResponseDataUpgradeChance>((resolve, reject) => {
             const gameResponseCheck = (data: GameResponseData) => {
@@ -1321,7 +1470,11 @@ export class Character extends Observer implements CharacterData {
                     if (data.response == "bank_restrictions" && data.place == "compound") {
                         this.socket.off("game_response", gameResponseCheck)
                         reject(new Error("You can't compound items in the bank."))
-                    } else if (data.response == "compound_chance" && data.item.name == item1Info.name && data.item.level == item1Info.level) {
+                    } else if (
+                        data.response == "compound_chance" &&
+                        data.item.name == item1Info.name &&
+                        data.item.level == item1Info.level
+                    ) {
                         resolve(data)
                     }
                 } else if (typeof data == "string") {
@@ -1342,7 +1495,7 @@ export class Character extends Observer implements CharacterData {
             clevel: item1Info.level,
             items: [item1Pos, item2Pos, item3Pos],
             offering_num: offeringPos,
-            scroll_num: cscrollPos
+            scroll_num: cscrollPos,
         })
         return compoundChance
     }
@@ -1357,20 +1510,25 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos The position of the offering to use to upgrade the item in your inventory
      * @returns
      */
-    public async calculateUpgrade(itemPos: number, scrollPos?: number, offeringPos?: number): Promise<GameResponseDataUpgradeChance> {
+    public async calculateUpgrade(
+        itemPos: number,
+        scrollPos?: number,
+        offeringPos?: number,
+    ): Promise<GameResponseDataUpgradeChance> {
         if (!this.ready) throw new Error("We aren't ready yet [upgrade].")
         if (this.G.maps[this.map].mount) throw new Error("We can't upgrade things in the bank.")
 
-        if (scrollPos == undefined && offeringPos == undefined) throw new Error("There must be either a scroll or an offering in order to calculate upgrade chance.")
+        if (scrollPos == undefined && offeringPos == undefined)
+            throw new Error("There must be either a scroll or an offering in order to calculate upgrade chance.")
 
         const itemInfo = this.items[itemPos]
         if (!itemInfo) throw new Error(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[itemInfo.name].upgrade == undefined) throw new Error("This item is not upgradable.")
-        const scrollInfo = (scrollPos !== undefined) ? this.items[scrollPos] : null
+        const scrollInfo = scrollPos !== undefined ? this.items[scrollPos] : null
         if (scrollPos !== undefined && !scrollInfo) {
             throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
         }
-        const offeringInfo = (offeringPos !== undefined) ? this.items[offeringPos] : null
+        const offeringInfo = offeringPos !== undefined ? this.items[offeringPos] : null
         if (offeringPos !== undefined && !offeringInfo) {
             throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
         }
@@ -1387,7 +1545,11 @@ export class Character extends Observer implements CharacterData {
                     } else if (data.response == "get_closer" && data.place == "upgrade") {
                         this.socket.off("game_response", gameResponseCheck)
                         reject(new Error("We are too far away to upgrade items."))
-                    } else if (data.response == "upgrade_chance" && data.item.name == itemInfo.name && data.item.level == itemInfo.level) {
+                    } else if (
+                        data.response == "upgrade_chance" &&
+                        data.item.name == itemInfo.name &&
+                        data.item.level == itemInfo.level
+                    ) {
                         this.socket.off("game_response", gameResponseCheck)
                         resolve(data)
                     }
@@ -1400,10 +1562,18 @@ export class Character extends Observer implements CharacterData {
                         reject(new Error("We are already upgrading something."))
                     } else if (data == "upgrade_incompatible_scroll") {
                         this.socket.off("game_response", gameResponseCheck)
-                        reject(new Error(`The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`))
+                        reject(
+                            new Error(
+                                `The scroll we're trying to use (${scrollInfo.name}) isn't a high enough grade to upgrade this item.`,
+                            ),
+                        )
                     } else if (data == "upgrade_invalid_offering") {
                         this.socket.off("game_response", gameResponseCheck)
-                        reject(new Error(`The upgrade we're trying to use (${offeringInfo.name}) isn't enough to upgrade this item.`))
+                        reject(
+                            new Error(
+                                `The upgrade we're trying to use (${offeringInfo.name}) isn't enough to upgrade this item.`,
+                            ),
+                        )
                     }
                 }
             }
@@ -1414,7 +1584,13 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", gameResponseCheck)
         })
 
-        this.socket.emit("upgrade", { calculate: true, clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
+        this.socket.emit("upgrade", {
+            calculate: true,
+            clevel: this.items[itemPos].level,
+            item_num: itemPos,
+            offering_num: offeringPos,
+            scroll_num: scrollPos,
+        })
         return upgradeChance
     }
 
@@ -1442,8 +1618,10 @@ export class Character extends Observer implements CharacterData {
         // NOTE: currently no skills with rpiercing
         // let additionalRpiercing = 0
         // if (gSkill?.rpiercing) additionalRpiercing = gSkill.rpiercing
-        if (damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
-        else if (damage_type == "magical") baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
+        if (damage_type == "physical")
+            baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
+        else if (damage_type == "magical")
+            baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
 
         if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
 
@@ -1452,9 +1630,9 @@ export class Character extends Observer implements CharacterData {
 
         if (this.crit) {
             if (this.crit >= 100) {
-                lowerLimit *= (2 + (this.critdamage / 100))
+                lowerLimit *= 2 + this.critdamage / 100
             }
-            upperLimit *= (2 + (this.critdamage / 100))
+            upperLimit *= 2 + this.critdamage / 100
         }
 
         // NOTE: This information is from @Wizard on Discord on May 1st, 2020
@@ -1510,7 +1688,7 @@ export class Character extends Observer implements CharacterData {
         }
 
         // The first level of a gifted item is only worth 1 gold.
-        if (item.gift) cost -= (gInfo.g - 1)
+        if (item.gift) cost -= gInfo.g - 1
 
         return cost
     }
@@ -1530,10 +1708,13 @@ export class Character extends Observer implements CharacterData {
         return grade
     }
 
-    public canBuy(item: ItemName, options?: {
-        ignoreLocation?: boolean
-        quantity?: number
-    }): boolean {
+    public canBuy(
+        item: ItemName,
+        options?: {
+            ignoreLocation?: boolean
+            quantity?: number
+        },
+    ): boolean {
         if (!options) options = {}
         if (options.quantity <= 0) options.quantity = 1
 
@@ -1563,7 +1744,14 @@ export class Character extends Observer implements CharacterData {
                 for (const i of this.G.npcs[npc.id].items) {
                     if (i == item) {
                         buyable = true
-                        if (Tools.squaredDistance(this, { map: map as MapName, x: npc.position[0], y: npc.position[1] }) < Constants.NPC_INTERACTION_DISTANCE_SQUARED) close = true
+                        if (
+                            Tools.squaredDistance(this, {
+                                map: map as MapName,
+                                x: npc.position[0],
+                                y: npc.position[1],
+                            }) < Constants.NPC_INTERACTION_DISTANCE_SQUARED
+                        )
+                            close = true
                         break
                     }
                 }
@@ -1571,13 +1759,17 @@ export class Character extends Observer implements CharacterData {
         }
         if (!buyable) return false
 
-        return (computerAvailable || close || options?.ignoreLocation)
+        return computerAvailable || close || options?.ignoreLocation
     }
 
-    public canBuyWithTokens(item: ItemName, token: TokenType, options?: {
-        ignoreLocation?: boolean
-        quantity?: number
-    }): boolean {
+    public canBuyWithTokens(
+        item: ItemName,
+        token: TokenType,
+        options?: {
+            ignoreLocation?: boolean
+            quantity?: number
+        },
+    ): boolean {
         if (this.isFull()) return false // We are full
 
         const gTokens = this.G.tokens[token]
@@ -1616,12 +1808,15 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canCraft(itemToCraft: ItemName, options?: {
-        /** If true, we won't check if we're near the NPC that crafts this item */
-        ignoreLocation?: boolean,
-        /** If true, we will consider it craftable if we can buy the remaining items from an NPC */
-        ignoreNpcItems?: boolean
-    }): boolean {
+    public canCraft(
+        itemToCraft: ItemName,
+        options?: {
+            /** If true, we won't check if we're near the NPC that crafts this item */
+            ignoreLocation?: boolean
+            /** If true, we will consider it craftable if we can buy the remaining items from an NPC */
+            ignoreNpcItems?: boolean
+        },
+    ): boolean {
         const gCraft = this.G.craft[itemToCraft]
         if (!gCraft) return false // Item is not craftable
         if (gCraft.cost > this.gold) return false // We don't have enough money
@@ -1633,10 +1828,21 @@ export class Character extends Observer implements CharacterData {
                 if (gInfo.upgrade || gInfo.compound) fixedItemLevel = 0
             }
 
-            if (!this.hasItem(requiredItem, this.items, { level: fixedItemLevel, quantityGreaterThan: requiredQuantity - 1 })) {
+            if (
+                !this.hasItem(requiredItem, this.items, {
+                    level: fixedItemLevel,
+                    quantityGreaterThan: requiredQuantity - 1,
+                })
+            ) {
                 if (options?.ignoreNpcItems && !fixedItemLevel) {
                     // Check if we can buy the item from an NPC
-                    if (this.canBuy(requiredItem, { ignoreLocation: options?.ignoreLocation, quantity: requiredQuantity })) continue
+                    if (
+                        this.canBuy(requiredItem, {
+                            ignoreLocation: options?.ignoreLocation,
+                            quantity: requiredQuantity,
+                        })
+                    )
+                        continue
                 }
 
                 // We don't have this required item
@@ -1672,7 +1878,8 @@ export class Character extends Observer implements CharacterData {
         if (!options?.ignoreLocation && !this.hasItem(["computer", "supercomputer"])) {
             // Check if we're near the NPC we need
             const craftableLocation = Pathfinder.locateCraftNPC(itemToCraft)
-            if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+            if (Tools.squaredDistance(this, craftableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+                return false
         }
 
         return true
@@ -1691,13 +1898,18 @@ export class Character extends Observer implements CharacterData {
      * @param options.ignoreInventory whether to ignore whether we have the item or not
      * @returns true or false
      */
-    public canDismantle(itemToDismantle: ItemName, options?: { ignoreInventory?: boolean, ignoreLocation?: boolean }): boolean {
+    public canDismantle(
+        itemToDismantle: ItemName,
+        options?: { ignoreInventory?: boolean; ignoreLocation?: boolean },
+    ): boolean {
         const gDismantle = this.G.dismantle[itemToDismantle]
         const compoundable = this.G.items[itemToDismantle].compound !== undefined
         if (!gDismantle && !compoundable) return false // Item can't be dismantled
         if (this.G.maps[this.map].mount && !options?.ignoreLocation) return false // Can't dismantle in the bank
         if (!gDismantle && compoundable) {
-            console.warn(`We currently don't have any way of calculating the cost of dismantling ${itemToDismantle}; but as long as the level is 1 or higher; it can be dismantled.`)
+            console.warn(
+                `We currently don't have any way of calculating the cost of dismantling ${itemToDismantle}; but as long as the level is 1 or higher; it can be dismantled.`,
+            )
             return false
         }
         if (gDismantle.cost > this.gold) return false // We don't have enough money
@@ -1706,12 +1918,12 @@ export class Character extends Observer implements CharacterData {
         if (!this.hasItem(["computer", "supercomputer"]) && !options?.ignoreLocation) {
             // Check if we're near the NPC we need
             const dismantleLocation = Pathfinder.locateNPC("craftsman")[0]
-            if (Tools.squaredDistance(this, dismantleLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+            if (Tools.squaredDistance(this, dismantleLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+                return false
         }
 
         return true
     }
-
 
     /**
      * Returns true if you have enough of the exchangeable items, and you are
@@ -1724,21 +1936,28 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canExchange(itemToExchange: ItemName, options?: {
-        ignoreLocation?: boolean
-    }): boolean {
+    public canExchange(
+        itemToExchange: ItemName,
+        options?: {
+            ignoreLocation?: boolean
+        },
+    ): boolean {
         // Check if we are already exchanging something
         if (this.q.exchange) return false
 
         // Find stacks that contain enough to exchange
-        if (!this.hasItem(itemToExchange, this.items, {
-            locked: false,
-            quantityGreaterThan: (this.G.items[itemToExchange].e ?? 1) - 1
-        })) return false // We don't have enough to exchange
+        if (
+            !this.hasItem(itemToExchange, this.items, {
+                locked: false,
+                quantityGreaterThan: (this.G.items[itemToExchange].e ?? 1) - 1,
+            })
+        )
+            return false // We don't have enough to exchange
 
         if (!this.hasItem("computer") && !this.hasItem("supercomputer") && !options?.ignoreLocation) {
             const exchangeableLocation = Pathfinder.locateExchangeNPC(itemToExchange)
-            if (Tools.squaredDistance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false // Too far away
+            if (Tools.squaredDistance(this, exchangeableLocation) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+                return false // Too far away
         }
 
         return true
@@ -1783,7 +2002,11 @@ export class Character extends Observer implements CharacterData {
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             const gNPC = this.G.npcs[npc.id]
             if (!gNPC.items) continue // This NPC doesn't do merchant stuff
-            if (Tools.squaredDistance(this, { map: this.map, x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
+            if (
+                Tools.squaredDistance(this, { map: this.map, x: npc.position[0], y: npc.position[1] }) >
+                Constants.NPC_INTERACTION_DISTANCE_SQUARED
+            )
+                continue // Too far away
 
             return true
         }
@@ -1802,7 +2025,13 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canCompound(itemPos1: number, itemPos2: number, itemPos3: number, scrollPos?: number, offeringPos?: number): boolean {
+    public canCompound(
+        itemPos1: number,
+        itemPos2: number,
+        itemPos3: number,
+        scrollPos?: number,
+        offeringPos?: number,
+    ): boolean {
         if (this.q.compound) return false // Already compounding
         if (this.map.startsWith("bank")) return false // Can't compound in the bank
 
@@ -1845,17 +2074,21 @@ export class Character extends Observer implements CharacterData {
             const offeringInfo = this.items[offeringPos]
             if (!offeringInfo) throw new Error(`No offering in inventory position '${offeringPos}'.`)
             if (offeringInfo.l) throw new Error(`Offering in position '${offeringPos}' is locked`)
-            if (this.G.items[offeringInfo.name].type !== "offering") throw new Error(`${offeringInfo.name} is not suitable as an offering`)
+            if (this.G.items[offeringInfo.name].type !== "offering")
+                throw new Error(`${offeringInfo.name} is not suitable as an offering`)
         }
 
         // Distance check
         if (
-            !this.hasItem("computer")
-            && !this.hasItem("supercomputer")
-            && Tools.squaredDistance(
-                this,
-                { map: "main", x: this.G.maps.main.ref.c_mid[0], y: this.G.maps.main.ref.c_mid[1] }
-            ) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+            !this.hasItem("computer") &&
+            !this.hasItem("supercomputer") &&
+            Tools.squaredDistance(this, {
+                map: "main",
+                x: this.G.maps.main.ref.c_mid[0],
+                y: this.G.maps.main.ref.c_mid[1],
+            }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED
+        )
+            return false
 
         return true
     }
@@ -1892,7 +2125,7 @@ export class Character extends Observer implements CharacterData {
             const grade = itemItem.calculateGrade()
             if (gScroll.type === "pscroll") {
                 // Attribute scroll
-                if (scrollInfo.q < (10 ** grade)) return false // throw new Error("Not enough scrolls to apply")
+                if (scrollInfo.q < 10 ** grade) return false // throw new Error("Not enough scrolls to apply")
             } else if (gScroll.type === "uscroll") {
                 // Upgrade scroll
                 if (gScroll.grade === undefined || gScroll.grade < grade) return false // throw new Error("Too low grade")
@@ -1913,12 +2146,15 @@ export class Character extends Observer implements CharacterData {
 
         // Distance check
         if (
-            !this.hasItem("computer")
-            && !this.hasItem("supercomputer")
-            && Tools.squaredDistance(
-                this,
-                { map: "main", x: this.G.maps.main.ref.u_mid[0], y: this.G.maps.main.ref.u_mid[1] }
-            ) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) return false
+            !this.hasItem("computer") &&
+            !this.hasItem("supercomputer") &&
+            Tools.squaredDistance(this, {
+                map: "main",
+                x: this.G.maps.main.ref.u_mid[0],
+                y: this.G.maps.main.ref.u_mid[1],
+            }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED
+        )
+            return false
 
         return true
     }
@@ -1938,12 +2174,15 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {boolean}
      * @memberof Character
      */
-    public canUse(skill: SkillName, options: {
-        ignoreCooldown?: boolean,
-        ignoreEquipped?: boolean,
-        ignoreLocation?: boolean,
-        ignoreMP?: boolean
-    } = {}): boolean {
+    public canUse(
+        skill: SkillName,
+        options: {
+            ignoreCooldown?: boolean
+            ignoreEquipped?: boolean
+            ignoreLocation?: boolean
+            ignoreMP?: boolean
+        } = {},
+    ): boolean {
         if (this.rip) return false // We are dead
         for (const conditionName in this.s) {
             const gCondition = this.G.conditions[conditionName as ConditionName]
@@ -1968,12 +2207,10 @@ export class Character extends Observer implements CharacterData {
                         break
                     }
                 }
-                if (!isAcceptableWeapon)
-                    return false
+                if (!isAcceptableWeapon) return false
             } else {
                 // There's only one acceptable weapon type
-                if (gInfoWeapon.wtype !== gInfoSkill.wtype)
-                    return false // We don't have the right weapon type equipped
+                if (gInfoWeapon.wtype !== gInfoSkill.wtype) return false // We don't have the right weapon type equipped
             }
         }
         if (gInfoSkill.consume && !options.ignoreEquipped) {
@@ -2066,7 +2303,13 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos
      * @returns
      */
-    public async compound(item1Pos: number, item2Pos: number, item3Pos: number, cscrollPos: number, offeringPos?: number): Promise<boolean> {
+    public async compound(
+        item1Pos: number,
+        item2Pos: number,
+        item3Pos: number,
+        cscrollPos: number,
+        offeringPos?: number,
+    ): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [compound].")
         const item1Info = this.items[item1Pos]
         const item2Info = this.items[item2Pos]
@@ -2080,8 +2323,10 @@ export class Character extends Observer implements CharacterData {
             const offeringInfo = this.items[offeringPos]
             if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
         }
-        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name) throw new Error("You can only combine 3 of the same items.")
-        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level) throw new Error("You can only combine 3 items of the same level.")
+        if (item1Info.name != item2Info.name || item1Info.name != item3Info.name)
+            throw new Error("You can only combine 3 of the same items.")
+        if (item1Info.level != item2Info.level || item1Info.level != item3Info.level)
+            throw new Error("You can only combine 3 items of the same level.")
 
         // Check if the upgrade started
         const compoundStarted = new Promise<QInfo>((resolve, reject) => {
@@ -2120,10 +2365,10 @@ export class Character extends Observer implements CharacterData {
         })
 
         this.socket.emit("compound", {
-            "clevel": item1Info.level,
-            "items": [item1Pos, item2Pos, item3Pos],
-            "offering_num": offeringPos,
-            "scroll_num": cscrollPos
+            clevel: item1Info.level,
+            items: [item1Pos, item2Pos, item3Pos],
+            offering_num: offeringPos,
+            scroll_num: cscrollPos,
         })
         const timeoutMS = (await compoundStarted).compound.ms + Constants.TIMEOUT
 
@@ -2188,7 +2433,8 @@ export class Character extends Observer implements CharacterData {
                 quantityGreaterThan: requiredQuantity > 1 ? requiredQuantity - 1 : undefined,
                 returnLowestQuantity: fixedItemLevel === undefined ? true : undefined,
             })
-            if (itemPos == undefined) throw new Error(`We don't have ${requiredQuantity} ${requiredName} to craft ${item}.`)
+            if (itemPos == undefined)
+                throw new Error(`We don't have ${requiredQuantity} ${requiredName} to craft ${item}.`)
 
             itemPositions.push([i, itemPos])
         }
@@ -2240,12 +2486,13 @@ export class Character extends Observer implements CharacterData {
      */
     public async depositItem(inventoryPos: number, bankPack?: BankPackName, bankSlot = -1): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [depositItem].")
-        if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u") throw new Error(`We're not in the bank (we're in '${this.map}')`)
+        if (this.map !== "bank" && this.map !== "bank_b" && this.map !== "bank_u")
+            throw new Error(`We're not in the bank (we're in '${this.map}')`)
 
         // Wait up to 5s to get bank items
         for (let i = 0; i < 20; i++) {
             if (this.bank) break
-            await new Promise(resolve => setTimeout(resolve, 250))
+            await new Promise((resolve) => setTimeout(resolve, 250))
         }
         if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.")
 
@@ -2255,9 +2502,11 @@ export class Character extends Observer implements CharacterData {
         if (bankPack) {
             // Check if we can access the supplied bankPack
             const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
-            if ((this.map == "bank" && bankPackNum > 7)
-                || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
-                || (this.map == "bank_u" && bankPackNum < 24)) {
+            if (
+                (this.map == "bank" && bankPackNum > 7) ||
+                (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23)) ||
+                (this.map == "bank_u" && bankPackNum < 24)
+            ) {
                 throw new Error(`We can't access ${bankPack} on ${this.map}.`)
             }
         } else {
@@ -2297,7 +2546,7 @@ export class Character extends Observer implements CharacterData {
                             emptyPack = packName
                             emptySlot = slotNum
                         }
-                    } else if (numStackable && slot.name == item.name && (slot.q + item.q <= numStackable)) {
+                    } else if (numStackable && slot.name == item.name && slot.q + item.q <= numStackable) {
                         // We found a place to stack our items!
                         bankPack = packName
                         bankSlot = -1 // Apparently -1 will figure it out...
@@ -2305,14 +2554,18 @@ export class Character extends Observer implements CharacterData {
                     }
                 }
 
-                if (bankPack && bankSlot !== undefined)
-                    break // We found something
+                if (bankPack && bankSlot !== undefined) break // We found something
             }
             if (bankPack == undefined && bankSlot == undefined && emptyPack !== undefined && emptySlot !== undefined) {
                 // We can't stack it on an existing stack, use an empty slot we found
                 bankPack = emptyPack
                 bankSlot = emptySlot
-            } else if (bankPack === undefined && bankSlot === undefined && emptyPack === undefined && emptySlot === undefined) {
+            } else if (
+                bankPack === undefined &&
+                bankSlot === undefined &&
+                emptyPack === undefined &&
+                emptySlot === undefined
+            ) {
                 // We have nowhere to stack it...
                 throw new Error(`Bank is full. There is nowhere to place '${item.name}'.`)
             }
@@ -2328,8 +2581,10 @@ export class Character extends Observer implements CharacterData {
                     }
                 } else {
                     const newBankItemCount = this.countItem(item.name, data.user[bankPack])
-                    if ((item.q && newBankItemCount == (bankItemCount + item.q))
-                        || (!item.q && newBankItemCount == (bankItemCount + 1))) {
+                    if (
+                        (item.q && newBankItemCount == bankItemCount + item.q) ||
+                        (!item.q && newBankItemCount == bankItemCount + 1)
+                    ) {
                         this.socket.off("player", checkDeposit)
                         return resolve()
                     }
@@ -2356,13 +2611,9 @@ export class Character extends Observer implements CharacterData {
      * @param num The inventory slot for the item we should destroy
      */
     public async destroy(num: number, quantity = 1): Promise<unknown> {
-        const response = this.getResponsePromise(
-            "destroy",
-            "destroyed",
-            {
-                extraGameResponseCheck: (data: GameResponseData) => (data as DestroyGRDataObject).num === num
-            }
-        )
+        const response = this.getResponsePromise("destroy", "destroyed", {
+            extraGameResponseCheck: (data: GameResponseData) => (data as DestroyGRDataObject).num === num,
+        })
         this.socket.emit("destroy", { num: num, q: quantity, statue: true })
         return response
     }
@@ -2373,8 +2624,8 @@ export class Character extends Observer implements CharacterData {
         if (!itemData) throw new Error(`We don't have anything in item slot ${slot} to dismantle.`)
         const gInfo = this.G.dismantle[itemData.name]
         if (!gInfo) throw new Error(`Can not find a recipe for ${itemData.name}.`)
-        if (gInfo.cost > this.gold) throw new Error(`We don't have enough gold to dismantle ${itemData.name} (cost is ${gInfo.cost}).`)
-
+        if (gInfo.cost > this.gold)
+            throw new Error(`We don't have enough gold to dismantle ${itemData.name} (cost is ${gInfo.cost}).`)
 
         const dismantled = new Promise<void>((resolve, reject) => {
             const successCheck = async (data: GameResponseData) => {
@@ -2403,9 +2654,11 @@ export class Character extends Observer implements CharacterData {
         const donated = new Promise<void>((resolve, reject) => {
             const checkDonate = (data: GameResponseData) => {
                 if (typeof data == "object") {
-                    if (data.response == "donate_gum"
-                        || data.response == "donate_low"
-                        || data.response == "donate_thx") {
+                    if (
+                        data.response == "donate_gum" ||
+                        data.response == "donate_low" ||
+                        data.response == "donate_thx"
+                    ) {
                         this.socket.off("game_response", checkDonate)
                         resolve()
                     }
@@ -2492,7 +2745,8 @@ export class Character extends Observer implements CharacterData {
             break
         }
         if (!found) throw new Error(`There is no door to ${map} from ${this.map}.`)
-        if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED) throw new Error(`We are too far (${Math.sqrt(distance)}) from the door to ${map}.`)
+        if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED)
+            throw new Error(`We are too far (${Math.sqrt(distance)}) from the door to ${map}.`)
 
         const enterComplete = new Promise<void>((resolve, reject) => {
             const enterCheck = (data: NewMapData) => {
@@ -2519,14 +2773,18 @@ export class Character extends Observer implements CharacterData {
                                 in: instance,
                                 map: map,
                                 serverIdentifier: this.serverData.name,
-                                serverRegion: this.serverData.region
-                            }).lean().exec()
+                                serverRegion: this.serverData.region,
+                            })
+                                .lean()
+                                .exec()
                             EntityModel.deleteMany({
                                 in: instance,
                                 map: map,
                                 serverIdentifier: this.serverData.name,
-                                serverRegion: this.serverData.region
-                            }).lean().exec()
+                                serverRegion: this.serverData.region,
+                            })
+                                .lean()
+                                .exec()
                         }
 
                         reject(new Error(`The instance '${instance}' for ${map} is no longer valid .`))
@@ -2567,10 +2825,7 @@ export class Character extends Observer implements CharacterData {
                 if (equipSlot) {
                     // Check the slot we equipped it to
                     const item = data.slots[equipSlot]
-                    if (item
-                        && item.name == iInfo.name
-                        && item.level == iInfo.level
-                        && item.p == iInfo.p) {
+                    if (item && item.name == iInfo.name && item.level == iInfo.level && item.p == iInfo.p) {
                         this.socket.off("player", equipCheck)
                         this.socket.off("disappearing_text", cantEquipCheck)
                         resolve()
@@ -2612,7 +2867,7 @@ export class Character extends Observer implements CharacterData {
      *
      * @see equip Equipping a single item
      */
-    public async equipBatch(toEquip: { num: number, slot: SlotType }[]): Promise<unknown> {
+    public async equipBatch(toEquip: { num: number; slot: SlotType }[]): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [equipBath].")
 
         if (toEquip.length > 15) throw new Error("We can only equip_batch at most 15 items")
@@ -2695,16 +2950,24 @@ export class Character extends Observer implements CharacterData {
     public async finishMonsterHuntQuest(): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [finishMonsterHuntQuest].")
         if (!this.s.monsterhunt) throw new Error("We don't have a monster hunt to turn in.")
-        if (this.s.monsterhunt.c > 0) throw new Error(`We still have to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
+        if (this.s.monsterhunt.c > 0)
+            throw new Error(`We still have to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
 
         const [region, id] = this.s.monsterhunt.sn.split(" ") as [ServerRegion, ServerIdentifier]
-        if (region !== this.serverData.region || id !== this.serverData.name) throw new Error(`The monster hunt is for '${region} ${id}', but we are on '${this.serverData.region} ${this.serverData.name}'`)
+        if (region !== this.serverData.region || id !== this.serverData.name)
+            throw new Error(
+                `The monster hunt is for '${region} ${id}', but we are on '${this.serverData.region} ${this.serverData.name}'`,
+            )
 
         let close = false
         // Look for a monsterhunter on the current map
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             if (npc.id !== "monsterhunter") continue // Not the monsterhunter
-            if (Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
+            if (
+                Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) >
+                Constants.NPC_INTERACTION_DISTANCE_SQUARED
+            )
+                continue // Too far away
             close = true
             break
         }
@@ -2737,8 +3000,7 @@ export class Character extends Observer implements CharacterData {
      */
     public getEntities(filters: GetEntitiesFilters = {}): Entity[] {
         const entities: Entity[] = []
-        filterCheck:
-        for (const [, entity] of this.entities) {
+        filterCheck: for (const [, entity] of this.entities) {
             if (filters.ignoreIDs !== undefined) {
                 for (const id of filters.ignoreIDs) {
                     if (id == entity.id) continue filterCheck
@@ -2801,8 +3063,10 @@ export class Character extends Observer implements CharacterData {
                     } else {
                         // This skill is based on attack range
                         let range = this.range
-                        if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
-                        if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
+                        if (this.G.skills[filters.withinRange].range_multiplier)
+                            range *= this.G.skills[filters.withinRange].range_multiplier
+                        if (this.G.skills[filters.withinRange].range_bonus)
+                            range += this.G.skills[filters.withinRange].range_bonus
                         squaredRange = range * range
                     }
                 }
@@ -2814,11 +3078,21 @@ export class Character extends Observer implements CharacterData {
                 if (!filters.canDamage && entity.avoidance < 100) continue
 
                 // We can't damage if we do physical damage and evasion is >= 100
-                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "physical" && entity.evasion >= 100) continue
+                if (
+                    (filters.canDamage === true || filters.canDamage == "attack") &&
+                    this.damage_type == "physical" &&
+                    entity.evasion >= 100
+                )
+                    continue
                 if (filters.canDamage === false && this.damage_type == "physical" && entity.evasion < 100) continue
 
                 // We can't damage if we do magical damage and reflection is >= 100
-                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "magical" && entity.reflection >= 100) continue
+                if (
+                    (filters.canDamage === true || filters.canDamage == "attack") &&
+                    this.damage_type == "magical" &&
+                    entity.reflection >= 100
+                )
+                    continue
                 if (filters.canDamage === false && this.damage_type == "magical" && entity.reflection < 100) continue
 
                 if (typeof filters.canDamage == "string") {
@@ -2836,7 +3110,12 @@ export class Character extends Observer implements CharacterData {
                 if (!filters.canWalkTo && canWalkTo) continue
             }
             if (filters.couldDieToProjectiles !== undefined) {
-                const couldDieToProjectiles = entity.couldDieToProjectiles(this, this.projectiles, this.players, this.entities)
+                const couldDieToProjectiles = entity.couldDieToProjectiles(
+                    this,
+                    this.projectiles,
+                    this.players,
+                    this.entities,
+                )
                 if (filters.couldDieToProjectiles && !couldDieToProjectiles) continue
                 if (!filters.couldDieToProjectiles && couldDieToProjectiles) continue
             }
@@ -2851,7 +3130,12 @@ export class Character extends Observer implements CharacterData {
                 if (!filters.willBurnToDeath && willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles !== undefined) {
-                const willDieToProjectiles = entity.willDieToProjectiles(this, this.projectiles, this.players, this.entities)
+                const willDieToProjectiles = entity.willDieToProjectiles(
+                    this,
+                    this.projectiles,
+                    this.players,
+                    this.entities,
+                )
                 if (filters.willDieToProjectiles && !willDieToProjectiles) continue
                 if (!filters.willDieToProjectiles && willDieToProjectiles) continue
             }
@@ -2859,7 +3143,11 @@ export class Character extends Observer implements CharacterData {
                 let hasIncomingProjectile = false
                 for (const [, projectileData] of this.projectiles) {
                     if (projectileData.target !== entity.id) continue // Projectile is not targeting the entity
-                    if (typeof filters.hasIncomingProjectile === "string" && projectileData.attacker !== filters.hasIncomingProjectile) continue // Attacker is different
+                    if (
+                        typeof filters.hasIncomingProjectile === "string" &&
+                        projectileData.attacker !== filters.hasIncomingProjectile
+                    )
+                        continue // Attacker is different
                     hasIncomingProjectile = true
                     break
                 }
@@ -2892,7 +3180,10 @@ export class Character extends Observer implements CharacterData {
         if (filters.returnLowestHP) numReturnOptions++
         if (filters.returnFurthest) numReturnOptions++
         if (filters.returnNearest) numReturnOptions++
-        if (numReturnOptions > 1) console.warn("You supplied getEntity with more than one returnX option. This function may not return the entity you want.")
+        if (numReturnOptions > 1)
+            console.warn(
+                "You supplied getEntity with more than one returnX option. This function may not return the entity you want.",
+            )
 
         if (entities.length <= 1 || numReturnOptions == 0) return entities[0]
 
@@ -3010,7 +3301,8 @@ export class Character extends Observer implements CharacterData {
      */
     public getHolidaySpirit() {
         if (!this.ready) throw new Error("We aren't ready yet [getHolidaySpirit]")
-        if (!this.S.holidayseason) throw new Error("We can only get holiday spirit when the `holidayseason` event is active.")
+        if (!this.S.holidayseason)
+            throw new Error("We can only get holiday spirit when the `holidayseason` event is active.")
         this.socket.emit("interaction", { type: "newyear_tree" })
     }
 
@@ -3117,12 +3409,17 @@ export class Character extends Observer implements CharacterData {
                             {
                                 name: "Ron",
                                 serverIdentifier: this.serverData.name,
-                                serverRegion: this.serverData.region
+                                serverRegion: this.serverData.region,
                             },
                             {
-                                items: data
-                            }
-                        ).lean().exec().catch((e) => { console.error(e) })
+                                items: data,
+                            },
+                        )
+                            .lean()
+                            .exec()
+                            .catch((e) => {
+                                console.error(e)
+                            })
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
@@ -3145,14 +3442,21 @@ export class Character extends Observer implements CharacterData {
 
     public async getMonsterHuntQuest(): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [getMonsterHuntQuest].")
-        if (this.s.monsterhunt && this.s.monsterhunt.c > 0) throw new Error(`We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`)
+        if (this.s.monsterhunt && this.s.monsterhunt.c > 0)
+            throw new Error(
+                `We can't get a new monsterhunt. We have ${this.s.monsterhunt.ms}ms left to kill ${this.s.monsterhunt.c} ${this.s.monsterhunt.id}(s).`,
+            )
         if (this.ctype == "merchant") throw new Error("Merchants can't do Monster Hunts.")
 
         // Check if we're close enough to get a monster hunt
         let close = false
         for (const npc of (this.G.maps[this.map] as GMap).npcs) {
             if (npc.id !== "monsterhunter") continue // Not the monsterhunter
-            if (Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) continue // Too far away
+            if (
+                Tools.squaredDistance(this, { x: npc.position[0], y: npc.position[1] }) >
+                Constants.NPC_INTERACTION_DISTANCE_SQUARED
+            )
+                continue // Too far away
             close = true
             break
         }
@@ -3207,7 +3511,10 @@ export class Character extends Observer implements CharacterData {
         if (filters.returnHighestHP) numReturnOptions++
         if (filters.returnLowestHP) numReturnOptions++
         if (filters.returnNearest) numReturnOptions++
-        if (numReturnOptions > 1) console.warn("You supplied getPlayer with more than one returnX option. This function may not return the player you want.")
+        if (numReturnOptions > 1)
+            console.warn(
+                "You supplied getPlayer with more than one returnX option. This function may not return the player you want.",
+            )
 
         if (players.length <= 1 || numReturnOptions == 0) return players[0]
 
@@ -3320,8 +3627,10 @@ export class Character extends Observer implements CharacterData {
                     } else {
                         // This skill is based on attack range
                         let range = this.range
-                        if (this.G.skills[filters.withinRange].range_multiplier) range *= this.G.skills[filters.withinRange].range_multiplier
-                        if (this.G.skills[filters.withinRange].range_bonus) range += this.G.skills[filters.withinRange].range_bonus
+                        if (this.G.skills[filters.withinRange].range_multiplier)
+                            range *= this.G.skills[filters.withinRange].range_multiplier
+                        if (this.G.skills[filters.withinRange].range_bonus)
+                            range += this.G.skills[filters.withinRange].range_bonus
                         squaredRange = range * range
                     }
                 }
@@ -3338,11 +3647,21 @@ export class Character extends Observer implements CharacterData {
                 if (!filters.canDamage && player.avoidance < 100) continue
 
                 // We can't damage if we do physical damage and evasion is >= 100
-                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "physical" && player.evasion >= 100) continue
+                if (
+                    (filters.canDamage === true || filters.canDamage == "attack") &&
+                    this.damage_type == "physical" &&
+                    player.evasion >= 100
+                )
+                    continue
                 if (filters.canDamage === false && this.damage_type == "physical" && player.evasion < 100) continue
 
                 // We can't damage if we do magical damage and reflection is >= 100
-                if ((filters.canDamage === true || filters.canDamage == "attack") && this.damage_type == "magical" && player.reflection >= 100) continue
+                if (
+                    (filters.canDamage === true || filters.canDamage == "attack") &&
+                    this.damage_type == "magical" &&
+                    player.reflection >= 100
+                )
+                    continue
                 if (filters.canDamage === false && this.damage_type == "magical" && player.reflection < 100) continue
             }
             if (filters.canWalkTo !== undefined) {
@@ -3404,12 +3723,17 @@ export class Character extends Observer implements CharacterData {
                             {
                                 name: "Ponty",
                                 serverIdentifier: this.serverData.name,
-                                serverRegion: this.serverData.region
+                                serverRegion: this.serverData.region,
                             },
                             {
-                                items: data
-                            }
-                        ).lean().exec().catch((e) => { console.error(e) })
+                                items: data,
+                            },
+                        )
+                            .lean()
+                            .exec()
+                            .catch((e) => {
+                                console.error(e)
+                            })
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
@@ -3462,9 +3786,9 @@ export class Character extends Observer implements CharacterData {
         skill: SkillName | "buy" | "destroy" | "equip_batch" | "imove" | "join" | "set_home",
         response: string = "data",
         options?: {
-            extraGameResponseCheck?: (data: GameResponseData) => boolean,
+            extraGameResponseCheck?: (data: GameResponseData) => boolean
             timeoutMs?: number
-        }
+        },
     ) {
         if (!options) options = {}
         if (options.timeoutMs === undefined) options.timeoutMs = Constants.TIMEOUT
@@ -3481,12 +3805,8 @@ export class Character extends Observer implements CharacterData {
                 if ((data as any).place !== skill) return // The response is for a different skill
 
                 if (
-                    data.response == response
-                    && (
-                        (data as any).success
-                        || (data as any).in_progress
-                        || !(data as any).failed
-                    )
+                    data.response == response &&
+                    ((data as any).success || (data as any).in_progress || !(data as any).failed)
                 ) {
                     if (options.extraGameResponseCheck && !options.extraGameResponseCheck(data)) return // Didn't pass extra checks
 
@@ -3597,7 +3917,7 @@ export class Character extends Observer implements CharacterData {
      * @returns If we are disabled
      */
     public isDisabled(): boolean {
-        return this.rip || ((this.s.stunned || this.s.fingered || this.s.deepfreezed) !== undefined)
+        return this.rip || (this.s.stunned || this.s.fingered || this.s.deepfreezed) !== undefined
     }
 
     /**
@@ -3647,7 +3967,8 @@ export class Character extends Observer implements CharacterData {
         if (!this.party) return // We're not in a party, so consider whoever they are "kicked"...
         if (!this.partyData.list.includes(toKick)) return // They aren't in our party, so consider whoever they are "kicked"...
         if (toKick == this.id) return this.leaveParty() // If it's us, leave the party instead, don't kick ourselves.
-        if (this.partyData.list.indexOf(this.id) > this.partyData.list.indexOf(toKick)) throw new Error(`We can't kick ${toKick}, they're higher on the party list.`)
+        if (this.partyData.list.indexOf(this.id) > this.partyData.list.indexOf(toKick))
+            throw new Error(`We can't kick ${toKick}, they're higher on the party list.`)
 
         const kicked = new Promise<void>((resolve, reject) => {
             const kickedCheck = (data: PartyData) => {
@@ -3749,26 +4070,37 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async move(x: number, y: number, options?: { disableAlreadyThereCheck?: boolean, disableSafetyCheck?: boolean, disableErrorLogs?: boolean, resolveOnStart?: boolean }): Promise<IPosition> {
+    public async move(
+        x: number,
+        y: number,
+        options?: {
+            disableAlreadyThereCheck?: boolean
+            disableSafetyCheck?: boolean
+            disableErrorLogs?: boolean
+            resolveOnStart?: boolean
+        },
+    ): Promise<IPosition> {
         if (!this.ready) throw new Error("We aren't ready yet [move].")
         if (x == undefined || y == undefined) throw new Error("Please provide an x and y coordinate to move.")
         if (typeof x !== "number" || typeof y !== "number") throw new Error("Please use a number for both x and y.")
 
         let to: IPosition = { map: this.map, x: x, y: y }
         if (!options?.disableSafetyCheck) {
-            to = Pathfinder.getSafeWalkTo(
-                { map: this.map, x: this.x, y: this.y },
-                { map: this.map, x, y })
+            to = Pathfinder.getSafeWalkTo({ map: this.map, x: this.x, y: this.y }, { map: this.map, x, y })
             if ((to.x !== x || to.y !== y) && !options?.disableErrorLogs) {
-                console.warn(`move: We can't move to {x: ${x}, y: ${y}} safely. We will move to {x: ${to.x}, y: ${to.y}}.`)
+                console.warn(
+                    `move: We can't move to {x: ${x}, y: ${y}} safely. We will move to {x: ${to.x}, y: ${to.y}}.`,
+                )
             }
         }
 
         // Check if we're already there
-        if (!options?.disableAlreadyThereCheck && this.x == to.x && this.y == to.y) return { map: this.map, x: this.x, y: this.y }
+        if (!options?.disableAlreadyThereCheck && this.x == to.x && this.y == to.y)
+            return { map: this.map, x: this.x, y: this.y }
 
         const moveFinished = new Promise<IPosition>((resolve, reject) => {
-            let timeToFinishMove = 1 + this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
+            let timeToFinishMove =
+                1 + this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
 
             const checkPlayer = async (data: CharacterData) => {
                 if (options?.resolveOnStart) {
@@ -3794,7 +4126,10 @@ export class Character extends Observer implements CharacterData {
                     }
                 } else {
                     // We're still moving in the right direction
-                    timeToFinishMove = 1 + this.ping + Tools.distance({ x: this.x, y: this.y }, { x: data.going_x, y: data.going_y }) / data.speed
+                    timeToFinishMove =
+                        1 +
+                        this.ping +
+                        Tools.distance({ x: this.x, y: this.y }, { x: data.going_x, y: data.going_y }) / data.speed
                     clearTimeout(timeout)
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 }
@@ -3817,12 +4152,17 @@ export class Character extends Observer implements CharacterData {
                     resolve({ map: this.map, x: to.x, y: to.y })
                 } else if (this.moving && this.going_x == to.x && this.going_y == to.y) {
                     // We are still moving in the right direction
-                    timeToFinishMove = this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
+                    timeToFinishMove =
+                        this.ping + Tools.distance({ x: this.x, y: this.y }, { x: to.x, y: to.y }) / this.speed
                     timeout = setTimeout(checkPosition, timeToFinishMove)
                 } else {
                     // We're not moving in the right direction
                     this.socket.off("player", checkPlayer)
-                    reject(new Error(`move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`))
+                    reject(
+                        new Error(
+                            `move to (${to.x}, ${to.y}) failed (we're currently going from (${this.x}, ${this.y}) to (${this.going_x}, ${this.going_y}))`,
+                        ),
+                    )
                 }
             }
             let timeout = setTimeout(checkPosition, timeToFinishMove)
@@ -3941,7 +4281,7 @@ export class Character extends Observer implements CharacterData {
                 reject(new Error("playSlots timeout (30000ms)"))
             }, 30000)
         })
-        this.socket.emit("bet", { "dir": dir, "gold": bet, "num": num, "type": "dice" })
+        this.socket.emit("bet", { dir: dir, gold: bet, num: num, type: "dice" })
 
         return playedSlots
     }
@@ -4088,10 +4428,14 @@ export class Character extends Observer implements CharacterData {
         const sold = new Promise<boolean>((resolve, reject) => {
             const soldCheck = (data: UIData) => {
                 if (data?.type == "-$" && data.name == this.id && parseInt(data.num) == itemPos) {
-                    if (data.item?.q && (quantity !== data.item?.q)) {
+                    if (data.item?.q && quantity !== data.item?.q) {
                         this.socket.off("ui", soldCheck)
                         this.socket.off("game_response", failCheck)
-                        reject(new Error(`Attempted to sell ${quantity} ${data.item.name}(s), but actually sold ${data.item.q}.`))
+                        reject(
+                            new Error(
+                                `Attempted to sell ${quantity} ${data.item.name}(s), but actually sold ${data.item.q}.`,
+                            ),
+                        )
                     } else {
                         this.socket.off("ui", soldCheck)
                         this.socket.off("game_response", failCheck)
@@ -4149,7 +4493,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             const failCheck = (data: GameResponseData) => {
-                if (typeof (data) == "string") {
+                if (typeof data == "string") {
                     if (data == "trade_bspace") {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("ui", soldCheck)
@@ -4175,7 +4519,7 @@ export class Character extends Observer implements CharacterData {
 
     public async sendCM(to: string[], message: unknown): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [sendCM].")
-        const msg = (typeof message == "string") ? message as string : JSON.stringify(message)
+        const msg = typeof message == "string" ? (message as string) : JSON.stringify(message)
         this.socket.emit("cm", { message: msg, to: to })
     }
 
@@ -4236,7 +4580,7 @@ export class Character extends Observer implements CharacterData {
                     resolve()
                 }
             }
-            const failCheck = (data: string | { message: string; }) => {
+            const failCheck = (data: string | { message: string }) => {
                 if (data == "You can't chat this fast.") {
                     this.socket.off("chat_log", sentCheck)
                     this.socket.off("game_error", failCheck)
@@ -4289,7 +4633,8 @@ export class Character extends Observer implements CharacterData {
         if (this.gold == 0) throw new Error("We have no gold to send.")
         const player = this.players.get(to)
         if (!player) throw new Error(`We can't see ${to} nearby to send gold.`)
-        if (Tools.squaredDistance(this, player) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw new Error(`We are too far away from ${to} to send gold.`)
+        if (Tools.squaredDistance(this, player) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+            throw new Error(`We are too far away from ${to} to send gold.`)
 
         const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
             const sentCheck = (data: GameResponseData) => {
@@ -4318,7 +4663,8 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [sendItem].")
         if (!this.players.has(to)) throw new Error(`${to} is not nearby.`)
         if (!this.items[inventoryPos]) throw new Error(`No item in inventory slot ${inventoryPos}.`)
-        if (this.items[inventoryPos]?.q < quantity) throw new Error(`We only have a quantity of ${this.items[inventoryPos].q}, not ${quantity}.`)
+        if (this.items[inventoryPos]?.q < quantity)
+            throw new Error(`We only have a quantity of ${this.items[inventoryPos].q}, not ${quantity}.`)
 
         const item = this.items[inventoryPos]
 
@@ -4330,7 +4676,13 @@ export class Character extends Observer implements CharacterData {
                 } else if (data == "send_no_space") {
                     this.socket.off("game_response", sentCheck)
                     reject(new Error(`sendItem failed, ${to} has no inventory space`))
-                } else if (typeof data == "object" && data.response == "item_sent" && data.name == to && data.item == item.name && data.q == quantity) {
+                } else if (
+                    typeof data == "object" &&
+                    data.response == "item_sent" &&
+                    data.name == to &&
+                    data.item == item.name &&
+                    data.q == quantity
+                ) {
                     this.socket.off("game_response", sentCheck)
                     resolve()
                 }
@@ -4405,7 +4757,8 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [shiftBooster].")
         const itemInfo = this.items[booster]
         if (!itemInfo) throw new Error(`Inventory Slot ${booster} is empty.`)
-        if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name)) throw new Error(`The given item is not a booster (it's a '${itemInfo.name}')`)
+        if (!["goldbooster", "luckbooster", "xpbooster"].includes(itemInfo.name))
+            throw new Error(`The given item is not a booster (it's a '${itemInfo.name}')`)
 
         this.socket.emit("booster", { action: "shift", num: booster, to: to })
     }
@@ -4421,7 +4774,10 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {Promise<IPosition>}
      * @memberof Character
      */
-    public async smartMove(to: IPosition | ItemName | MapName | MonsterName | NPCName | BankPackName, options?: SmartMoveOptions): Promise<IPosition> {
+    public async smartMove(
+        to: IPosition | ItemName | MapName | MonsterName | NPCName | BankPackName,
+        options?: SmartMoveOptions,
+    ): Promise<IPosition> {
         if (!this.ready) throw new Error("We aren't ready yet [smartMove].")
 
         if (this.rip) throw new Error("We can't smartMove, we are dead.")
@@ -4438,27 +4794,15 @@ export class Character extends Observer implements CharacterData {
 
         // If it's goobrawl, and we're not currently there, join goobrawl
         if (
-            this.map !== "goobrawl"
-            && (
-                to == "goobrawl"
-                || to == "rgoo"
-                || to == "bgoo"
-                || (typeof to == "object" && to.map == "goobrawl")
-            )
+            this.map !== "goobrawl" &&
+            (to == "goobrawl" || to == "rgoo" || to == "bgoo" || (typeof to == "object" && to.map == "goobrawl"))
         ) {
             await this.join("goobrawl")
             return this.smartMove(to, options)
         }
 
         // If it's jail, and we're not currently there, warp to jail
-        if (
-            this.map !== "jail"
-            && (
-                to == "jail"
-                || to == "jrat"
-                || (typeof to == "object" && to.map == "jail")
-            )
-        ) {
+        if (this.map !== "jail" && (to == "jail" || to == "jrat" || (typeof to == "object" && to.map == "jail"))) {
             await this.warpToJail()
             return this.smartMove(to, options)
         }
@@ -4466,7 +4810,7 @@ export class Character extends Observer implements CharacterData {
         if (options == undefined) options = {}
         if (options.costs == undefined) options.costs = {}
         if (options.costs.blink == undefined) options.costs.blink = this.speed * 3.2 + 250 // We can't attack for 3.2 seconds after a blink, + it uses a lot of mana
-        if (options.costs.town == undefined) options.costs.town = this.speed * (4 + (this.timeout / 500)) // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
+        if (options.costs.town == undefined) options.costs.town = this.speed * (4 + this.timeout / 500) // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
         if (options.costs.transport == undefined) options.costs.transport = this.speed * (this.timeout / 500) // Based on how long it takes to confirm with the server
 
         let fixedTo: IPosition & { map: MapName }
@@ -4488,7 +4832,11 @@ export class Character extends Observer implements CharacterData {
                     const locations = Pathfinder.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
+                        const potentialPath = await Pathfinder.getPath(
+                            this,
+                            location as IPosition & { map: MapName },
+                            options,
+                        )
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4510,7 +4858,11 @@ export class Character extends Observer implements CharacterData {
                     // Set `to` to the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
+                        const potentialPath = await Pathfinder.getPath(
+                            this,
+                            location as IPosition & { map: MapName },
+                            options,
+                        )
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4534,7 +4886,7 @@ export class Character extends Observer implements CharacterData {
                         for (const npc of (this.G.maps[map as MapName] as GMap).npcs) {
                             if (this.G.npcs[npc.id].items === undefined) continue
                             for (const i of this.G.npcs[npc.id].items) {
-                                if (i == to as ItemName) {
+                                if (i == (to as ItemName)) {
                                     // We found an NPC that sells the item
                                     locations.push({ map: map as MapName, x: npc.position[0], y: npc.position[1] })
                                 }
@@ -4545,7 +4897,11 @@ export class Character extends Observer implements CharacterData {
                     // Find the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(this, location as IPosition & { map: MapName }, options)
+                        const potentialPath = await Pathfinder.getPath(
+                            this,
+                            location as IPosition & { map: MapName },
+                            options,
+                        )
                         const distance = Pathfinder.computePathCost(potentialPath)
                         if (distance < closestDistance) {
                             path = potentialPath
@@ -4578,7 +4934,11 @@ export class Character extends Observer implements CharacterData {
             // Check if we're on the same map, but in a different instance
             if (to.in && this.map === to.map && this.in !== to.in) {
                 // Leave our current instance
-                await this.smartMove("main", { stopIfTrue: async () => { return this.map !== to.map } })
+                await this.smartMove("main", {
+                    stopIfTrue: async () => {
+                        return this.map !== to.map
+                    },
+                })
             }
         } else {
             if (options?.showConsole) console.debug(to)
@@ -4586,7 +4946,10 @@ export class Character extends Observer implements CharacterData {
         }
 
         // Check if we're already close enough
-        const distance = Tools.distance({ in: this.in, map: this.map, x: this.x, y: this.y }, { in: fixedTo.in, map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })
+        const distance = Tools.distance(
+            { in: this.in, map: this.map, x: this.x, y: this.y },
+            { in: fixedTo.in, map: fixedTo.map, x: fixedTo.x, y: fixedTo.y },
+        )
         if (distance == 0) return fixedTo
         if (options?.getWithin >= distance) return { map: this.map, x: this.x, y: this.y }
 
@@ -4620,25 +4983,35 @@ export class Character extends Observer implements CharacterData {
                     await this.stopSmartMove()
                 } else {
                     // Check again later
-                    this.timeouts.set("checkStopIfTrueLoop", setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS))
+                    this.timeouts.set(
+                        "checkStopIfTrueLoop",
+                        setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS),
+                    )
                 }
             }
-            this.timeouts.set("checkStopIfTrueLoop", setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS))
+            this.timeouts.set(
+                "checkStopIfTrueLoop",
+                setTimeout(() => checkStopIfTrueLoop(), Constants.SMART_MOVE_STOP_CHECK_MS),
+            )
         }
 
         for (let i = 0; i < path.length; i++) {
-            if (options?.getWithin >= Tools.distance({ map: this.map, x: this.x, y: this.y }, { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y })) {
+            if (
+                options?.getWithin >=
+                Tools.distance(
+                    { map: this.map, x: this.x, y: this.y },
+                    { map: fixedTo.map, x: fixedTo.x, y: fixedTo.y },
+                )
+            ) {
                 break // We're already close enough!
             }
 
             // Stop if we meet our conditions
-            if (options.stopIfTrue && await options.stopIfTrue()) break
+            if (options.stopIfTrue && (await options.stopIfTrue())) break
 
             if (started < this.lastSmartMove) {
-                if (typeof to == "string")
-                    throw new Error(`smartMove to ${to} cancelled (new smartMove started)`)
-                else
-                    throw new Error(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
+                if (typeof to == "string") throw new Error(`smartMove to ${to} cancelled (new smartMove started)`)
+                else throw new Error(`smartMove to ${to.map}:${to.x},${to.y} cancelled (new smartMove started)`)
             }
 
             if (this.rip) {
@@ -4655,7 +5028,7 @@ export class Character extends Observer implements CharacterData {
                     map: this.map,
                     type: "move",
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
-                    y: fixedTo.y + Math.sin(angle) * options.getWithin
+                    y: fixedTo.y + Math.sin(angle) * options.getWithin,
                 }
                 if (Pathfinder.canWalkPath(this, potentialMove)) {
                     i = path.length
@@ -4683,11 +5056,22 @@ export class Character extends Observer implements CharacterData {
                 for (let j = path.length - 1; j > i; j--) {
                     const potentialMove = path[j]
                     if (potentialMove.map !== this.map) continue
-                    if (Tools.squaredDistance(currentMove, potentialMove) < (options.costs.blink * options.costs.blink)) break // We're close, don't waste a blink
+                    if (Tools.squaredDistance(currentMove, potentialMove) < options.costs.blink * options.costs.blink)
+                        break // We're close, don't waste a blink
 
                     // Get closest blinkable spot near the potential move
                     let roundedMove: IPosition
-                    for (const [dX, dY] of [[0, 0], [-10, 0], [10, 0], [0, -10], [0, 10], [-10, -10], [-10, 10], [10, -10], [10, 10]]) {
+                    for (const [dX, dY] of [
+                        [0, 0],
+                        [-10, 0],
+                        [10, 0],
+                        [0, -10],
+                        [0, 10],
+                        [-10, -10],
+                        [-10, 10],
+                        [10, -10],
+                        [10, 10],
+                    ]) {
                         // Check if we can blink there
                         const roundedX = Math.round((potentialMove.x + dX) / 10) * 10
                         const roundedY = Math.round((potentialMove.y + dY) / 10) * 10
@@ -4703,16 +5087,19 @@ export class Character extends Observer implements CharacterData {
                         await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                     } catch (e) {
                         if (!this.canUse("blink")) break // We can't use it, don't bother trying again
-                        if (options?.showConsole) console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
+                        if (options?.showConsole)
+                            console.log(`Error blinking while smartMoving: ${e}, attempting 1 more time`)
                         try {
-                            await new Promise(resolve => setTimeout(resolve, this.timeout))
+                            await new Promise((resolve) => setTimeout(resolve, this.timeout))
                             await (this as unknown as Mage).blink(roundedMove.x, roundedMove.y)
                         } catch (e2) {
                             if (options?.showConsole) console.error(`Failed blinking while smartMoving: ${e2}`)
                             break
                         }
                     }
-                    this.stopWarpToTown()?.catch(() => { /* Suppress errors */ })
+                    this.stopWarpToTown()?.catch(() => {
+                        /* Suppress errors */
+                    })
                     i = j - 1
                     if (potentialMove.type !== "move") i -= 1 // We have more movement to do, we just warped to a door
                     blinked = true
@@ -4726,9 +5113,13 @@ export class Character extends Observer implements CharacterData {
                 const futureMove = path[j]
                 if (currentMove.map !== futureMove.map) break
                 if (futureMove.type == "town") {
-                    this.warpToTown()?.then(() => {
-                        i = j - 1
-                    })?.catch((e) => { if (options?.showConsole) console.error(e) })
+                    this.warpToTown()
+                        ?.then(() => {
+                            i = j - 1
+                        })
+                        ?.catch((e) => {
+                            if (options?.showConsole) console.error(e)
+                        })
                     break
                 }
             }
@@ -4757,7 +5148,8 @@ export class Character extends Observer implements CharacterData {
             // Perform the next movement
             try {
                 if (currentMove.type == "enter") {
-                    if (!fixedTo.in && !this.hasItem(currentMove.key)) throw new Error(`We need '${currentMove.key}' to enter '${currentMove.map}'.`)
+                    if (!fixedTo.in && !this.hasItem(currentMove.key))
+                        throw new Error(`We need '${currentMove.key}' to enter '${currentMove.map}'.`)
                     await this.enter(currentMove.map, fixedTo.in)
                 } else if (currentMove.type == "leave") {
                     await this.leaveMap()
@@ -4766,7 +5158,10 @@ export class Character extends Observer implements CharacterData {
                         throw new Error(`We are supposed to be in ${currentMove.map}, but we are in ${this.map}`)
                     }
                     if (options.resolveOnFinalMoveStart && i >= path.length - 1) {
-                        await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true, resolveOnStart: true })
+                        await this.move(currentMove.x, currentMove.y, {
+                            disableSafetyCheck: true,
+                            resolveOnStart: true,
+                        })
                     } else {
                         await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
                     }
@@ -4784,15 +5179,21 @@ export class Character extends Observer implements CharacterData {
                 }
 
                 // Look for the path again
-                this.stopWarpToTown()?.catch(() => { /* Suppress warnings */ })
-                await this.requestPlayerData()?.catch((e) => { if (options?.showConsole) console.error(e) })
+                this.stopWarpToTown()?.catch(() => {
+                    /* Suppress warnings */
+                })
+                await this.requestPlayerData()?.catch((e) => {
+                    if (options?.showConsole) console.error(e)
+                })
                 path = Pathfinder.getPath(this, fixedTo, options)
                 i = -1
-                await new Promise(resolve => setTimeout(resolve, this.timeout))
+                await new Promise((resolve) => setTimeout(resolve, this.timeout))
             }
         }
 
-        this.stopWarpToTown()?.catch((e) => { if (options?.showConsole) console.error(e) })
+        this.stopWarpToTown()?.catch((e) => {
+            if (options?.showConsole) console.error(e)
+        })
         this.smartMoving = undefined
         return { map: this.map, x: this.x, y: this.y }
     }
@@ -4869,17 +5270,17 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("game_response", successCheck)
         })
 
-        this.socket.emit("move", { "key": "up" })
-        this.socket.emit("move", { "key": "up" })
-        this.socket.emit("move", { "key": "down" })
-        this.socket.emit("move", { "key": "down" })
-        this.socket.emit("move", { "key": "left" })
-        this.socket.emit("move", { "key": "right" })
-        this.socket.emit("move", { "key": "left" })
-        this.socket.emit("move", { "key": "right" })
-        this.socket.emit("interaction", { "key": "B" })
-        this.socket.emit("interaction", { "key": "A" })
-        this.socket.emit("interaction", { "key": "enter" })
+        this.socket.emit("move", { key: "up" })
+        this.socket.emit("move", { key: "up" })
+        this.socket.emit("move", { key: "down" })
+        this.socket.emit("move", { key: "down" })
+        this.socket.emit("move", { key: "left" })
+        this.socket.emit("move", { key: "right" })
+        this.socket.emit("move", { key: "left" })
+        this.socket.emit("move", { key: "right" })
+        this.socket.emit("interaction", { key: "B" })
+        this.socket.emit("interaction", { key: "A" })
+        this.socket.emit("interaction", { key: "enter" })
 
         return started
     }
@@ -4921,19 +5322,13 @@ export class Character extends Observer implements CharacterData {
                 const checkItemDataA = data.user[pack][itemPosA]
                 const checkItemDataB = data.user[pack][itemPosB]
 
-                if (
-                    isDeepStrictEqual(checkItemDataB, itemDataA)
-                    && isDeepStrictEqual(checkItemDataA, itemDataB)
-                ) {
+                if (isDeepStrictEqual(checkItemDataB, itemDataA) && isDeepStrictEqual(checkItemDataA, itemDataB)) {
                     // We swapped them
                     this.socket.off("player", successCheck)
                     resolve()
                 }
 
-                if (
-                    itemDataB.q !== undefined
-                    && checkItemDataB.q == itemDataA.q + itemDataB.q
-                ) {
+                if (itemDataB.q !== undefined && checkItemDataB.q == itemDataA.q + itemDataB.q) {
                     // We stacked them
                     this.socket.off("player", successCheck)
                     resolve()
@@ -5001,9 +5396,7 @@ export class Character extends Observer implements CharacterData {
             let projectile: string
 
             const attackCheck = (data: ActionData) => {
-                if (data.attacker == this.id
-                    && data.type == "snowball"
-                    && data.target == target) {
+                if (data.attacker == this.id && data.type == "snowball" && data.target == target) {
                     projectile = data.pid
                 }
             }
@@ -5063,7 +5456,11 @@ export class Character extends Observer implements CharacterData {
                     if (data == "cant_enter") {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("new_map", transportCheck)
-                        reject(new Error(`The door to spawn ${spawn} on ${map} requires a key. Use 'enter' instead of 'transport'.`))
+                        reject(
+                            new Error(
+                                `The door to spawn ${spawn} on ${map} requires a key. Use 'enter' instead of 'transport'.`,
+                            ),
+                        )
                     } else if (data == "transport_cant_locked") {
                         this.socket.off("game_response", failCheck)
                         this.socket.off("new_map", transportCheck)
@@ -5077,7 +5474,8 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Leaving/entering the bank can take a while
-            const timeout = this.map.startsWith("bank") || map.startsWith("bank") ? Constants.TIMEOUT * 5 : Constants.TIMEOUT
+            const timeout =
+                this.map.startsWith("bank") || map.startsWith("bank") ? Constants.TIMEOUT * 5 : Constants.TIMEOUT
 
             setTimeout(() => {
                 this.socket.off("game_response", failCheck)
@@ -5112,7 +5510,6 @@ export class Character extends Observer implements CharacterData {
         const unequipped = new Promise<number>((resolve, reject) => {
             const unequipCheck = (data: CharacterData) => {
                 if (data.slots[slot] === null) {
-
                     // Look for the unequipped item in the inventory
                     let inventorySlot: number = undefined
                     for (let i = data.isize - 1; i > 0; i--) {
@@ -5252,7 +5649,12 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", playerCheck)
         })
 
-        this.socket.emit("upgrade", { clevel: this.items[itemPos].level, item_num: itemPos, offering_num: offeringPos, scroll_num: scrollPos })
+        this.socket.emit("upgrade", {
+            clevel: this.items[itemPos].level,
+            item_num: itemPos,
+            offering_num: offeringPos,
+            scroll_num: scrollPos,
+        })
         const timeoutMS = (await upgradeStarted).upgrade.ms + Constants.TIMEOUT
 
         // Check for the upgrade result
@@ -5312,12 +5714,10 @@ export class Character extends Observer implements CharacterData {
             const failCheck = (data: GameResponseData) => {
                 if (typeof data == "object") {
                     if (
-                        (
-                            data.response == "cant_equip"
-                            || data.response == "not_ready"
-                        )
-                        && data.place == "equip"
-                        && data.failed) {
+                        (data.response == "cant_equip" || data.response == "not_ready") &&
+                        data.place == "equip" &&
+                        data.failed
+                    ) {
                         cleanup()
                         reject(new Error(`Failed to use Potion (${data.response})`))
                     }
@@ -5415,10 +5815,8 @@ export class Character extends Observer implements CharacterData {
     public async withdrawGold(gold: number): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [withdrawGold].")
         // TODO: Check if you can be in the basement and withdraw gold
-        if (this.map !== "bank")
-            throw new Error("We need to be in 'bank' to withdraw gold.")
-        if (gold <= 0)
-            throw new Error("We can't withdraw 0 or less gold.")
+        if (this.map !== "bank") throw new Error("We need to be in 'bank' to withdraw gold.")
+        if (gold <= 0) throw new Error("We can't withdraw 0 or less gold.")
 
         if (gold > this.bank.gold) {
             gold = this.bank.gold
@@ -5437,7 +5835,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.bank) {
             for (let i = 0; i < 20; i++) {
                 if (this.bank) break
-                await new Promise(resolve => setTimeout(resolve, 250))
+                await new Promise((resolve) => setTimeout(resolve, 250))
             }
             if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.")
         }
@@ -5446,9 +5844,11 @@ export class Character extends Observer implements CharacterData {
         if (!item) throw new Error(`There is no item in bank ${bankPack}[${bankPos}]`)
 
         const bankPackNum = Number.parseInt(bankPack.substring(5, 7))
-        if ((this.map == "bank" && bankPackNum > 7)
-            || (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23))
-            || (this.map == "bank_u" && bankPackNum < 24)) {
+        if (
+            (this.map == "bank" && bankPackNum > 7) ||
+            (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23)) ||
+            (this.map == "bank_u" && bankPackNum < 24)
+        ) {
             throw new Error(`We can't access ${bankPack} on ${this.map}.`)
         }
 
@@ -5457,8 +5857,7 @@ export class Character extends Observer implements CharacterData {
         const withdrawn = new Promise<void>((resolve, reject) => {
             const checkWithdrawal = (data: CharacterData) => {
                 const newCount = this.countItem(item.name, data.items)
-                if ((item.q && newCount == (itemCount + item.q))
-                    || (!item.q && newCount == (itemCount + 1))) {
+                if ((item.q && newCount == itemCount + item.q) || (!item.q && newCount == itemCount + 1)) {
                     this.socket.off("player", checkWithdrawal)
                     return resolve()
                 }
@@ -5695,8 +6094,7 @@ export class Character extends Observer implements CharacterData {
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItem(iN: ItemName | ItemName[], inv = this.items,
-        filters?: LocateItemFilters): number {
+    public locateItem(iN: ItemName | ItemName[], inv = this.items, filters?: LocateItemFilters): number {
         const located = this.locateItems(iN, inv, filters)
 
         if (located.length == 0) return undefined // No items found
@@ -5707,7 +6105,10 @@ export class Character extends Observer implements CharacterData {
         if (filters?.returnHighestQuantity) numReturnOptions++
         if (filters?.returnLowestLevel) numReturnOptions++
         if (filters?.returnLowestQuantity) numReturnOptions++
-        if (numReturnOptions > 1) console.warn("You supplied locateItem with more than one returnX option. This function may not return the item you want.")
+        if (numReturnOptions > 1)
+            console.warn(
+                "You supplied locateItem with more than one returnX option. This function may not return the item you want.",
+            )
 
         if (filters?.returnHighestLevel) {
             let highestLevel: number = Number.MIN_SAFE_INTEGER
@@ -5778,8 +6179,7 @@ export class Character extends Observer implements CharacterData {
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItems(iN: ItemName | ItemName[], inv = this.items,
-        filters?: LocateItemsFilters): number[] {
+    public locateItems(iN: ItemName | ItemName[], inv = this.items, filters?: LocateItemsFilters): number[] {
         if (filters?.quantityGreaterThan <= 0) delete filters.quantityGreaterThan
         if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
@@ -5792,60 +6192,42 @@ export class Character extends Observer implements CharacterData {
             if (!iN.includes(item.name)) continue
 
             if (filters?.level !== undefined) {
-                if (item.level !== filters.level)
-                    continue // The item's level doesn't match
+                if (item.level !== filters.level) continue // The item's level doesn't match
             }
             if (filters?.levelGreaterThan !== undefined) {
-                if (item.level === undefined)
-                    continue // This item doesn't have a level
-                if (item.level <= filters.levelGreaterThan)
-                    continue // This item is a lower level than desired
+                if (item.level === undefined) continue // This item doesn't have a level
+                if (item.level <= filters.levelGreaterThan) continue // This item is a lower level than desired
             }
             if (filters?.levelLessThan !== undefined) {
-                if (item.level === undefined)
-                    continue // This item doesn't have a level
-                if (item.level >= filters.levelLessThan)
-                    continue // This item is a higher level than desired
+                if (item.level === undefined) continue // This item doesn't have a level
+                if (item.level >= filters.levelLessThan) continue // This item is a higher level than desired
             }
             if (filters?.locked !== undefined) {
-                if (filters.locked && !(item.l == "l" || item.l == "s"))
-                    continue // This item isn't locked
-                if (!filters.locked && (item.l == "l" || item.l == "s"))
-                    continue // This item is locked
+                if (filters.locked && !(item.l == "l" || item.l == "s")) continue // This item isn't locked
+                if (!filters.locked && (item.l == "l" || item.l == "s")) continue // This item is locked
             }
             if (filters?.pvpMarked !== undefined) {
-                if (filters.pvpMarked && !item.v)
-                    continue // The item isn't pvp marked
-                if (!filters.pvpMarked && item.v)
-                    continue // The item is pvp marked
+                if (filters.pvpMarked && !item.v) continue // The item isn't pvp marked
+                if (!filters.pvpMarked && item.v) continue // The item is pvp marked
             }
             if (filters?.quantityGreaterThan !== undefined) {
-                if (item.q === undefined)
-                    continue // This item doesn't have a quantity
-                if (item.q <= filters.quantityGreaterThan)
-                    continue // There isn't enough items in this stack
+                if (item.q === undefined) continue // This item doesn't have a quantity
+                if (item.q <= filters.quantityGreaterThan) continue // There isn't enough items in this stack
             }
             if (filters?.quantityLessThan !== undefined) {
-                if (item.q === undefined)
-                    continue // This item doesn't have a quantity
-                if (item.q >= filters.quantityLessThan)
-                    continue // There are too many items in this stack
+                if (item.q === undefined) continue // This item doesn't have a quantity
+                if (item.q >= filters.quantityLessThan) continue // There are too many items in this stack
             }
             if (filters?.special !== undefined) {
-                if (filters.special === true && !item.p)
-                    continue // The item isn't titled
-                if (filters.special === false && item.p)
-                    continue // The item is titled
-                if (typeof filters.special === "string" && filters.special !== item.p)
-                    continue // The item is special, but not the right kind of special
+                if (filters.special === true && !item.p) continue // The item isn't titled
+                if (filters.special === false && item.p) continue // The item is titled
+                if (typeof filters.special === "string" && filters.special !== item.p) continue // The item is special, but not the right kind of special
             }
             if (filters?.statType !== undefined) {
-                if (item.stat_type !== filters.statType)
-                    continue // This item doesn't match the stat scroll
+                if (item.stat_type !== filters.statType) continue // This item doesn't match the stat scroll
             }
             if (filters?.data !== undefined) {
-                if (item.data !== filters.data)
-                    continue
+                if (item.data !== filters.data) continue
             }
 
             found.push(i)
@@ -5869,15 +6251,18 @@ export class Character extends Observer implements CharacterData {
      *     }}
      * @memberof Character
      */
-    public locateItemsByLevel(inventory = this.items, options?: {
-        excludeLockedItems?: boolean
-        excludeSpecialItems?: boolean
-        minAmount?: number
-    }): {
-            [name in ItemName]?: {
-                [level in number]?: number[];
-            }
-        } {
+    public locateItemsByLevel(
+        inventory = this.items,
+        options?: {
+            excludeLockedItems?: boolean
+            excludeSpecialItems?: boolean
+            minAmount?: number
+        },
+    ): {
+        [name in ItemName]?: {
+            [level in number]?: number[]
+        }
+    } {
         const itemsByLevel = inventory.reduce((items, item, slotNum) => {
             if (item) {
                 const { name, level } = item
@@ -5893,7 +6278,8 @@ export class Character extends Observer implements CharacterData {
         if (options?.minAmount) {
             for (const itemName in itemsByLevel) {
                 for (const itemLevel in itemsByLevel[itemName]) {
-                    if (itemsByLevel[itemName][itemLevel].length < options?.minAmount) delete itemsByLevel[itemName][itemLevel]
+                    if (itemsByLevel[itemName][itemLevel].length < options?.minAmount)
+                        delete itemsByLevel[itemName][itemLevel]
                 }
 
                 if (!Object.keys(itemsByLevel[itemName]).length) delete itemsByLevel[itemName]

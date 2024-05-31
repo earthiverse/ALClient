@@ -1,5 +1,13 @@
 import { ItemType, WeaponType } from "./definitions/adventureland.js"
-import { Attribute, CharacterType, GData, GItem, ItemName, SkillName, TitleName } from "./definitions/adventureland-data.js"
+import {
+    Attribute,
+    CharacterType,
+    GData,
+    GItem,
+    ItemName,
+    SkillName,
+    TitleName,
+} from "./definitions/adventureland-data.js"
 import { ItemData } from "./definitions/adventureland-server.js"
 
 export class Item implements ItemData, GItem {
@@ -19,7 +27,16 @@ export class Item implements ItemData, GItem {
     public type: ItemType
 
     // Optional
-    public ability?: SkillName | "burn" | "freeze" | "poke" | "posion" | "restore_mp" | "secondchance" | "sugarrush" | "weave"
+    public ability?:
+        | SkillName
+        | "burn"
+        | "freeze"
+        | "poke"
+        | "posion"
+        | "restore_mp"
+        | "secondchance"
+        | "sugarrush"
+        | "weave"
     public armor = 0
     public attack = 0
     public dex = 0
@@ -110,7 +127,16 @@ export class Item implements ItemData, GItem {
             // This item has a title, add the extra stats the title gives
             const gTitle = g.titles[this.p]
             for (const prop in gTitle) {
-                if (prop == "achievement" || prop == "consecutive_200p_range_last_hits" || prop == "manual" || prop == "misc" || prop == "source" || prop == "title" || prop == "type") continue
+                if (
+                    prop == "achievement" ||
+                    prop == "consecutive_200p_range_last_hits" ||
+                    prop == "manual" ||
+                    prop == "misc" ||
+                    prop == "source" ||
+                    prop == "title" ||
+                    prop == "type"
+                )
+                    continue
                 this[prop] += gTitle[prop]
             }
         }
@@ -166,7 +192,7 @@ export class Item implements ItemData, GItem {
         }
 
         // The first level of a gifted item is only worth 1 gold.
-        if (this.gift) cost -= (gInfo.g - 1)
+        if (this.gift) cost -= gInfo.g - 1
 
         return cost
     }

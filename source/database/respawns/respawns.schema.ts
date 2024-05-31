@@ -4,7 +4,7 @@ const { Schema } = pkg
 const RespawnSchema = new Schema({
     __v: {
         select: false,
-        type: Number
+        type: Number,
     },
     estimatedRespawn: Number,
     serverIdentifier: String,

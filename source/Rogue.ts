@@ -32,7 +32,7 @@ export class Rogue extends PingCompensatedCharacter {
             this.socket.off("player", getTime)
         }
 
-        return new Promise(resolve => setTimeout(resolve, Math.ceil(time)))
+        return new Promise((resolve) => setTimeout(resolve, Math.ceil(time)))
     }
 
     public async mentalBurst(target: string): Promise<unknown> {
@@ -41,7 +41,7 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("mentalburst")
         this.socket.emit("skill", {
             id: target,
-            name: "mentalburst"
+            name: "mentalburst",
         })
         return response
     }
@@ -54,7 +54,7 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("pcoat")
         this.socket.emit("skill", {
             name: "pcoat",
-            num: poison
+            num: poison,
         })
         return response
     }
@@ -67,7 +67,7 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("quickpunch")
         this.socket.emit("skill", {
             id: target,
-            name: "quickpunch"
+            name: "quickpunch",
         })
         return response
     }
@@ -79,7 +79,7 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("quickstab")
         this.socket.emit("skill", {
             id: target,
-            name: "quickstab"
+            name: "quickstab",
         })
         return response
     }
@@ -104,7 +104,7 @@ export class Rogue extends PingCompensatedCharacter {
         const response = this.getResponsePromise("shadowstrike")
         this.socket.emit("skill", {
             name: "shadowstrike",
-            num: shadowstone
+            num: shadowstone,
         })
         return response
     }

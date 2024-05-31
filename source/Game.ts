@@ -4,7 +4,17 @@ import url from "url"
 import { Database, PlayerModel } from "./database/Database.js"
 import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import { GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import { ServerData, CharacterListData, MailData, MailMessageData, PullMerchantsCharData, PullMerchantsData, LoginData, MailDeleteResponse, DisconnectCharacterResponse } from "./definitions/adventureland-server.js"
+import {
+    ServerData,
+    CharacterListData,
+    MailData,
+    MailMessageData,
+    PullMerchantsCharData,
+    PullMerchantsData,
+    LoginData,
+    MailDeleteResponse,
+    DisconnectCharacterResponse,
+} from "./definitions/adventureland-server.js"
 import { Paladin } from "./Paladin.js"
 import { Mage } from "./Mage.js"
 import { Merchant } from "./Merchant.js"
@@ -16,7 +26,7 @@ import { Rogue } from "./Rogue.js"
 import { Warrior } from "./Warrior.js"
 
 export class Game {
-    protected static user: { userID: string, userAuth: string, secure: boolean }
+    protected static user: { userID: string; userAuth: string; secure: boolean }
 
     public static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
     public static characters: { [T in string]?: CharacterListData } = {}
@@ -47,7 +57,11 @@ export class Game {
 
     static async deleteMail(mailID: string): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post<MailDeleteResponse[]>(`${this.url}/api/delete_mail`, `method=delete_mail&arguments={"mid":"${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<MailDeleteResponse[]>(
+            `${this.url}/api/delete_mail`,
+            `method=delete_mail&arguments={"mid":"${mailID}"}`,
+            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+        )
         const data = response.data[0]
         if (data.message == "Mail deleted.") return true
         return false
@@ -55,9 +69,14 @@ export class Game {
 
     static async disconnectCharacter(characterName: string): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post<DisconnectCharacterResponse[]>(`${this.url}/api/disconnect_character`, `method=disconnect_character&arguments={"name":"${characterName}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<DisconnectCharacterResponse[]>(
+            `${this.url}/api/disconnect_character`,
+            `method=disconnect_character&arguments={"name":"${characterName}"}`,
+            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+        )
         const data = response.data[0]
-        if (data.message == "Sent the disconnect signal to the server" || data.message == "Character is not in game.") return true
+        if (data.message == "Sent the disconnect signal to the server" || data.message == "Character is not in game.")
+            return true
         return false
     }
 
@@ -96,7 +115,9 @@ export class Game {
 
     static async getMail(all = true): Promise<MailMessageData[]> {
         if (!this.user) throw new Error("You must login first.")
-        let response = await axios.post<MailData[]>(`${this.url}/api/pull_mail`, "method=pull_mail&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        let response = await axios.post<MailData[]>(`${this.url}/api/pull_mail`, "method=pull_mail&arguments={}", {
+            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
+        })
         const mail: MailMessageData[] = []
 
         while (response.data.length > 0) {
@@ -104,7 +125,11 @@ export class Game {
 
             if (all && response.data[0].more) {
                 // Get more mail
-                response = await axios.post(`${this.url}/api/pull_mail`, `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+                response = await axios.post(
+                    `${this.url}/api/pull_mail`,
+                    `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`,
+                    { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+                )
             } else {
                 break
             }
@@ -118,7 +143,9 @@ export class Game {
         //const merchants: PullMerchantsData[] = []
         const merchants: PullMerchantsCharData[] = []
 
-        const data = await axios.post<PullMerchantsData[]>(`${this.url}/api/pull_merchants`, "method=pull_merchants", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = await axios.post<PullMerchantsData[]>(`${this.url}/api/pull_merchants`, "method=pull_merchants", {
+            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
+        })
         for (const datum of data.data) {
             if (datum.type == "merchants") {
                 for (const char of datum.chars) {
@@ -134,45 +161,52 @@ export class Game {
             const promises: Promise<unknown>[] = []
             for (const merchant of merchants) {
                 const server = merchant.server.split(" ")
-                promises.push(PlayerModel.updateOne({ lastSeen: { $lt: informationDate }, name: merchant.name }, {
-                    lastSeen: informationDate,
-                    map: merchant.map,
-                    serverIdentifier: server[1] as ServerIdentifier,
-                    serverRegion: server[0] as ServerRegion,
-                    // We have to update all of the trade slots individually so we don't overwrite what they have equipped
-                    "slots.trade1": merchant.slots.trade1 ?? null,
-                    "slots.trade2": merchant.slots.trade2 ?? null,
-                    "slots.trade3": merchant.slots.trade3 ?? null,
-                    "slots.trade4": merchant.slots.trade4 ?? null,
-                    "slots.trade5": merchant.slots.trade5 ?? null,
-                    "slots.trade6": merchant.slots.trade6 ?? null,
-                    "slots.trade7": merchant.slots.trade7 ?? null,
-                    "slots.trade8": merchant.slots.trade8 ?? null,
-                    "slots.trade9": merchant.slots.trade9 ?? null,
-                    "slots.trade10": merchant.slots.trade10 ?? null,
-                    "slots.trade11": merchant.slots.trade11 ?? null,
-                    "slots.trade12": merchant.slots.trade12 ?? null,
-                    "slots.trade13": merchant.slots.trade13 ?? null,
-                    "slots.trade14": merchant.slots.trade14 ?? null,
-                    "slots.trade15": merchant.slots.trade15 ?? null,
-                    "slots.trade16": merchant.slots.trade16 ?? null,
-                    "slots.trade17": merchant.slots.trade17 ?? null,
-                    "slots.trade18": merchant.slots.trade18 ?? null,
-                    "slots.trade19": merchant.slots.trade19 ?? null,
-                    "slots.trade20": merchant.slots.trade20 ?? null,
-                    "slots.trade21": merchant.slots.trade21 ?? null,
-                    "slots.trade22": merchant.slots.trade22 ?? null,
-                    "slots.trade23": merchant.slots.trade23 ?? null,
-                    "slots.trade24": merchant.slots.trade24 ?? null,
-                    "slots.trade25": merchant.slots.trade25 ?? null,
-                    "slots.trade26": merchant.slots.trade26 ?? null,
-                    "slots.trade27": merchant.slots.trade27 ?? null,
-                    "slots.trade28": merchant.slots.trade28 ?? null,
-                    "slots.trade29": merchant.slots.trade29 ?? null,
-                    "slots.trade30": merchant.slots.trade30 ?? null,
-                    x: merchant.x,
-                    y: merchant.y
-                }).lean().exec())
+                promises.push(
+                    PlayerModel.updateOne(
+                        { lastSeen: { $lt: informationDate }, name: merchant.name },
+                        {
+                            lastSeen: informationDate,
+                            map: merchant.map,
+                            serverIdentifier: server[1] as ServerIdentifier,
+                            serverRegion: server[0] as ServerRegion,
+                            // We have to update all of the trade slots individually so we don't overwrite what they have equipped
+                            "slots.trade1": merchant.slots.trade1 ?? null,
+                            "slots.trade2": merchant.slots.trade2 ?? null,
+                            "slots.trade3": merchant.slots.trade3 ?? null,
+                            "slots.trade4": merchant.slots.trade4 ?? null,
+                            "slots.trade5": merchant.slots.trade5 ?? null,
+                            "slots.trade6": merchant.slots.trade6 ?? null,
+                            "slots.trade7": merchant.slots.trade7 ?? null,
+                            "slots.trade8": merchant.slots.trade8 ?? null,
+                            "slots.trade9": merchant.slots.trade9 ?? null,
+                            "slots.trade10": merchant.slots.trade10 ?? null,
+                            "slots.trade11": merchant.slots.trade11 ?? null,
+                            "slots.trade12": merchant.slots.trade12 ?? null,
+                            "slots.trade13": merchant.slots.trade13 ?? null,
+                            "slots.trade14": merchant.slots.trade14 ?? null,
+                            "slots.trade15": merchant.slots.trade15 ?? null,
+                            "slots.trade16": merchant.slots.trade16 ?? null,
+                            "slots.trade17": merchant.slots.trade17 ?? null,
+                            "slots.trade18": merchant.slots.trade18 ?? null,
+                            "slots.trade19": merchant.slots.trade19 ?? null,
+                            "slots.trade20": merchant.slots.trade20 ?? null,
+                            "slots.trade21": merchant.slots.trade21 ?? null,
+                            "slots.trade22": merchant.slots.trade22 ?? null,
+                            "slots.trade23": merchant.slots.trade23 ?? null,
+                            "slots.trade24": merchant.slots.trade24 ?? null,
+                            "slots.trade25": merchant.slots.trade25 ?? null,
+                            "slots.trade26": merchant.slots.trade26 ?? null,
+                            "slots.trade27": merchant.slots.trade27 ?? null,
+                            "slots.trade28": merchant.slots.trade28 ?? null,
+                            "slots.trade29": merchant.slots.trade29 ?? null,
+                            "slots.trade30": merchant.slots.trade30 ?? null,
+                            x: merchant.x,
+                            y: merchant.y,
+                        },
+                    )
+                        .lean()
+                        .exec(),
+                )
             }
             await Promise.all(promises)
         }
@@ -200,7 +234,11 @@ export class Game {
      */
     static async markMailAsRead(mailID: string): Promise<void> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post(`${this.url}/api/read_mail`, `method=read_mail&arguments={"mail": "${mailID}"}`, { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post(
+            `${this.url}/api/read_mail`,
+            `method=read_mail&arguments={"mail": "${mailID}"}`,
+            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+        )
         return response.data[0]
     }
 
@@ -214,9 +252,7 @@ export class Game {
             const params = new url.URLSearchParams()
             params.append("method", "signup_or_login")
             params.append("arguments", JSON.stringify({ email: email, only_login: true, password: password }))
-            const login = await axios.post<LoginData>(
-                `${this.url}/api/signup_or_login`,
-                params.toString())
+            const login = await axios.post<LoginData>(`${this.url}/api/signup_or_login`, params.toString())
             let loginResult
             for (const datum of login.data) {
                 if (datum["message"]) {
@@ -235,7 +271,7 @@ export class Game {
                         this.user = {
                             secure: secure,
                             userAuth: result[1].split("-")[1],
-                            userID: result[1].split("-")[0]
+                            userID: result[1].split("-")[0],
                         }
                         break
                     }
@@ -261,14 +297,15 @@ export class Game {
         } catch (e) {
             throw new Error(`Could not locate '${path}'.`)
         }
-        const data: { email: string, password: string, mongo: string, userAuth?: string, userID?: string } = JSON.parse(fileData)
+        const data: { email: string; password: string; mongo: string; userAuth?: string; userID?: string } =
+            JSON.parse(fileData)
 
         // Set UserID & UserAuth if it exists in the credentials file
         if (data.userID && data.userAuth) {
             this.user = {
                 secure: secure,
                 userAuth: data.userAuth,
-                userID: data.userID
+                userID: data.userID,
             }
         }
 
@@ -291,7 +328,6 @@ export class Game {
             data.userAuth = this.user.userAuth
             data.userID = this.user.userID
             fs.writeFileSync(path, JSON.stringify(data, undefined, 4), "utf8")
-
         }
         return true
     }
@@ -299,7 +335,9 @@ export class Game {
     static async logoutEverywhere(): Promise<unknown> {
         if (!this.user) throw new Error("You must login first.")
 
-        const response = await axios.post<unknown>(`${this.url}/api/logout_everywhere`, "method=logout_everywhere", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const response = await axios.post<unknown>(`${this.url}/api/logout_everywhere`, "method=logout_everywhere", {
+            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
+        })
         delete this.user
 
         return response.data
@@ -337,7 +375,7 @@ export class Game {
 
         // Optimize min and max values to improve pathfinding generation
         for (const mapName in g.geometry) {
-            const gGeometry = (g.geometry[mapName as MapName]) as GGeometry
+            const gGeometry = g.geometry[mapName as MapName] as GGeometry
             delete gGeometry.groups
             delete gGeometry.placements
             delete gGeometry.points
@@ -379,7 +417,11 @@ export class Game {
         return g
     }
 
-    static async startCharacter(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<PingCompensatedCharacter> {
+    static async startCharacter(
+        cName: string,
+        sRegion: ServerRegion,
+        sID: ServerIdentifier,
+    ): Promise<PingCompensatedCharacter> {
         if (!this.user) throw new Error("You must login first.")
         if (!this.characters) await this.updateServersAndCharacters()
         if (!this.characters[cName]) throw new Error(`You don't have a character with the name '${cName}'`)
@@ -423,31 +465,31 @@ export class Game {
     }
 
     static async startMage(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Mage> {
-        return await Game.startCharacter(cName, sRegion, sID) as Mage
+        return (await Game.startCharacter(cName, sRegion, sID)) as Mage
     }
 
     static async startMerchant(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Merchant> {
-        return await Game.startCharacter(cName, sRegion, sID) as Merchant
+        return (await Game.startCharacter(cName, sRegion, sID)) as Merchant
     }
 
     static async startPaladin(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Paladin> {
-        return await Game.startCharacter(cName, sRegion, sID) as Paladin
+        return (await Game.startCharacter(cName, sRegion, sID)) as Paladin
     }
 
     static async startPriest(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Priest> {
-        return await Game.startCharacter(cName, sRegion, sID) as Priest
+        return (await Game.startCharacter(cName, sRegion, sID)) as Priest
     }
 
     static async startRanger(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Ranger> {
-        return await Game.startCharacter(cName, sRegion, sID) as Ranger
+        return (await Game.startCharacter(cName, sRegion, sID)) as Ranger
     }
 
     static async startRogue(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Rogue> {
-        return await Game.startCharacter(cName, sRegion, sID) as Rogue
+        return (await Game.startCharacter(cName, sRegion, sID)) as Rogue
     }
 
     static async startWarrior(cName: string, sRegion: ServerRegion, sID: ServerIdentifier): Promise<Warrior> {
-        return await Game.startCharacter(cName, sRegion, sID) as Warrior
+        return (await Game.startCharacter(cName, sRegion, sID)) as Warrior
     }
 
     static async startObserver(region: ServerRegion, id: ServerIdentifier): Promise<Observer> {
@@ -483,7 +525,11 @@ export class Game {
      */
     static async updateServersAndCharacters(): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const data = await axios.post(`${this.url}/api/servers_and_characters`, "method=servers_and_characters&arguments={}", { headers: { "cookie": `auth=${this.user.userID}-${this.user.userAuth}` } })
+        const data = await axios.post(
+            `${this.url}/api/servers_and_characters`,
+            "method=servers_and_characters&arguments={}",
+            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+        )
 
         if (data.status == 200) {
             // Populate server information

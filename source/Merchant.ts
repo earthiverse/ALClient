@@ -1,4 +1,12 @@
-import { CharacterData, DisappearingTextData, GameLogData, GameResponseData, SkillTimeoutData, UIData, UIDataFishingMining } from "./definitions/adventureland-server.js"
+import {
+    CharacterData,
+    DisappearingTextData,
+    GameLogData,
+    GameResponseData,
+    SkillTimeoutData,
+    UIData,
+    UIDataFishingMining,
+} from "./definitions/adventureland-server.js"
 import { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
@@ -68,7 +76,8 @@ export class Merchant extends PingCompensatedCharacter {
     public async joinGiveaway(slot: TradeSlotType, id: string, rid: string): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [joinGiveaway].")
         const merchant = this.players.get(id)
-        if (!merchant || Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED) throw new Error(`${id} is too far away.`)
+        if (!merchant || Tools.squaredDistance(this, merchant) > Constants.NPC_INTERACTION_DISTANCE_SQUARED)
+            throw new Error(`${id} is too far away.`)
         if (!merchant.slots[slot]?.giveaway) throw new Error(`${id}'s slot ${slot} is not a giveaway.`)
         if (merchant.slots[slot]?.list.includes(this.id)) return // We've already joined it
 
@@ -90,7 +99,12 @@ export class Merchant extends PingCompensatedCharacter {
      * @return {*}  {Promise<unknown>}
      * @memberof Merchant
      */
-    public async listForSale(itemPos: number, price: number, tradeSlot?: TradeSlotType, quantity = 1): Promise<unknown> {
+    public async listForSale(
+        itemPos: number,
+        price: number,
+        tradeSlot?: TradeSlotType,
+        quantity = 1,
+    ): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [listForSale].")
         const itemInfo = this.items[itemPos]
         if (!itemInfo) throw new Error(`We do not have an item in slot ${itemPos}`)
@@ -130,12 +144,14 @@ export class Merchant extends PingCompensatedCharacter {
         }
         const slotInfo = this.slots[tradeSlot]
         if (slotInfo) {
-            if (itemInfo.name == slotInfo.name // Same item
-                && itemInfo.p == slotInfo.p
-                && itemInfo.data == slotInfo.data
-                && price >= slotInfo.price // Same, or higher price
-                && gInfo.s && (quantity + slotInfo.q) <= gInfo.s // Stackable
-                && this.esize > 0 // NOTE: Unequipping trade items only works if we have an empty slot, even if we can stack the items
+            if (
+                itemInfo.name == slotInfo.name && // Same item
+                itemInfo.p == slotInfo.p &&
+                itemInfo.data == slotInfo.data &&
+                price >= slotInfo.price && // Same, or higher price
+                gInfo.s &&
+                quantity + slotInfo.q <= gInfo.s && // Stackable
+                this.esize > 0 // NOTE: Unequipping trade items only works if we have an empty slot, even if we can stack the items
             ) {
                 if (itemPos !== 0) {
                     // Swap items so when it gets stacked, it gets stacked in the correct position
@@ -201,7 +217,7 @@ export class Merchant extends PingCompensatedCharacter {
             num: itemPos,
             price: price,
             q: quantity,
-            slot: tradeSlot
+            slot: tradeSlot,
         })
         return listed
     }
@@ -219,7 +235,13 @@ export class Merchant extends PingCompensatedCharacter {
      * @param quantity How many of the item you want to buy
      * @param level For equipment, the level of the item you wish to buy
      */
-    public async listForPurchase(itemName: ItemName, price: number, tradeSlot?: TradeSlotType, quantity = 1, level?: number): Promise<unknown> {
+    public async listForPurchase(
+        itemName: ItemName,
+        price: number,
+        tradeSlot?: TradeSlotType,
+        quantity = 1,
+        level?: number,
+    ): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [listForPurchase].")
 
         if (price <= 0) throw new Error("The lowest you can set the price is 1.")
@@ -273,7 +295,7 @@ export class Merchant extends PingCompensatedCharacter {
             name: itemName,
             price: price,
             q: quantity,
-            slot: tradeSlot
+            slot: tradeSlot,
         })
         return wishListed
     }
@@ -342,9 +364,13 @@ export class Merchant extends PingCompensatedCharacter {
             const player = this.players.get(target)
             if (!player) throw new Error(`Could not find ${target} to mluck.`)
             if (player.npc) throw new Error(`${target} is an NPC. You can't mluck NPCs.`)
-            if (player.s.mluck && player.s.mluck.strong // They have a strong mluck
-                && ((player.owner && player.owner !== this.owner) // If they are public, check if they are from different owners
-                    || (player.s.mluck.f !== this.id))) { // Else, rely on the character id
+            if (
+                player.s.mluck &&
+                player.s.mluck.strong && // They have a strong mluck
+                ((player.owner && player.owner !== this.owner) || // If they are public, check if they are from different owners
+                    player.s.mluck.f !== this.id)
+            ) {
+                // Else, rely on the character id
                 throw new Error(`${target} has a strong mluck from ${player.s.mluck.f}.`)
             }
         }

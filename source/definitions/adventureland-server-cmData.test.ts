@@ -6,8 +6,6 @@ import { CMData } from "./adventureland-server"
  */
 
 test("CMData type validation", async () => {
-    const cms: CMData[] = [
-        { "name": "earthPal", "message": "{\"message\":\"hi\"}" }
-    ]
+    const cms: CMData[] = [{ name: "earthPal", message: '{"message":"hi"}' }]
     for (const cm of cms) expect(cm).toBeDefined()
 })
