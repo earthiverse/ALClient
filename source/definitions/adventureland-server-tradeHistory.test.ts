@@ -1,4 +1,4 @@
-import { TrackerData, TradeHistoryData } from "./adventureland-server"
+import type { TradeHistoryData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2023-05-16

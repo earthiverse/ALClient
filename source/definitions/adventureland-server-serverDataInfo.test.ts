@@ -1,4 +1,4 @@
-import { ServerInfoData } from "./adventureland-server"
+import type { ServerInfoData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-23 to 2022-02-07

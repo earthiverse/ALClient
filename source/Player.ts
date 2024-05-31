@@ -1,6 +1,6 @@
-import { Character } from "./Character.js"
-import { SlotInfo, StatusInfo, TradeSlotType } from "./definitions/adventureland.js"
-import {
+import type { Character } from "./Character.js"
+import type { SlotInfo, StatusInfo, TradeSlotType } from "./definitions/adventureland.js"
+import type {
     CharacterType,
     CXData,
     DamageType,
@@ -9,8 +9,8 @@ import {
     NPCName,
     SkillName,
 } from "./definitions/adventureland-data.js"
-import { ChannelInfo, PlayerData, QInfo } from "./definitions/adventureland-server.js"
-import { Entity } from "./Entity.js"
+import type { ChannelInfo, PlayerData, QInfo } from "./definitions/adventureland-server.js"
+import type { Entity } from "./Entity.js"
 import { Tools } from "./Tools.js"
 import { Constants } from "./Constants.js"
 import { TradeItem } from "./TradeItem.js"

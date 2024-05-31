@@ -1,4 +1,4 @@
-import { MapName } from "./definitions/adventureland-data.js"
+import type { MapName } from "./definitions/adventureland-data.js"
 
 export class Tools {
     /**

@@ -1,4 +1,4 @@
-import { WelcomeData } from "./adventureland-server"
+import type { WelcomeData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-22

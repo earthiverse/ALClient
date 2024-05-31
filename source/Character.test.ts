@@ -1,11 +1,11 @@
 /* eslint-disable sort-keys */
 import { Game } from "./Game"
 import { Character } from "./Character"
-import { ServerData } from "./definitions/adventureland-server"
+import type { ServerData } from "./definitions/adventureland-server"
 import { Entity } from "./Entity"
 import { Pathfinder } from "./Pathfinder"
-import { MapName } from "./definitions/adventureland-data"
-import { IPosition } from "./definitions/adventureland"
+import type { MapName } from "./definitions/adventureland-data"
+import type { IPosition } from "./definitions/adventureland"
 
 let priest: Character
 let warrior: Character

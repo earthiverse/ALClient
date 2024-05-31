@@ -1,4 +1,4 @@
-import { NewMapData } from "./adventureland-server"
+import type { NewMapData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-25 to 2022-05-05

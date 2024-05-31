@@ -1,4 +1,4 @@
-import { TrackerData } from "./adventureland-server"
+import type { TrackerData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-05-08

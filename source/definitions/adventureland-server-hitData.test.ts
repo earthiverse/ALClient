@@ -1,4 +1,4 @@
-import { HitData } from "./adventureland-server"
+import type { HitData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-22 to 2021-04-23

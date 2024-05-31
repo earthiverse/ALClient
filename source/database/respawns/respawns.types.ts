@@ -1,6 +1,6 @@
-import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
-import { MonsterName } from "../../definitions/adventureland-data.js"
+import type { Document, Model } from "mongoose"
+import type { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
+import type { MonsterName } from "../../definitions/adventureland-data.js"
 
 export interface IRespawn {
     estimatedRespawn: number

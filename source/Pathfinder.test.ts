@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals"
 import { Game } from "./Game"
 import { Pathfinder } from "./Pathfinder"
-import { LinkData, NodeData } from "./definitions/pathfinder"
-import { IPosition } from "./definitions/adventureland"
+import type { LinkData, NodeData } from "./definitions/pathfinder"
+import type { IPosition } from "./definitions/adventureland"
 
 beforeAll(async () => {
     await Game.getGData(true, false)

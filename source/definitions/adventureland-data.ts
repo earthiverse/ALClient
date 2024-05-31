@@ -3,7 +3,7 @@
  * In-game, this is *most* things that are available in parent.G
  */
 
-import { IPosition, ItemType, SlotInfo, SlotType, TokenType, WeaponType } from "./adventureland.js"
+import type { IPosition, ItemType, SlotInfo, SlotType, TokenType, WeaponType } from "./adventureland.js"
 
 export type GData = {
     achievements: {
@@ -106,7 +106,7 @@ export type GData = {
                 vit: number
             }
             /** TODO: ??? GUI related? */
-            xcx?: any[]
+            xcx?: unknown[]
         }
     }
     conditions: {
@@ -1133,7 +1133,7 @@ export type GMap = {
     }
     event?: string
     /** TODO: Figure out these types */
-    machines?: any
+    machines?: unknown
     /** TODO: ??? What is this? GUI related? */
     unlist?: boolean
     /** TODO: ??? GUI related? */

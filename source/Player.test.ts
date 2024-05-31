@@ -2,7 +2,7 @@
 import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
-import { GData } from "./definitions/adventureland-data"
+import type { GData } from "./definitions/adventureland-data"
 
 let G: GData
 let character: Character

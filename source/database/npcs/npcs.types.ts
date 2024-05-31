@@ -1,7 +1,7 @@
-import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
-import { MapName } from "../../definitions/adventureland-data.js"
-import { ItemDataTrade } from "../../definitions/adventureland-server.js"
+import type { Document, Model } from "mongoose"
+import type { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
+import type { MapName } from "../../definitions/adventureland-data.js"
+import type { ItemDataTrade } from "../../definitions/adventureland-server.js"
 
 export interface INPC {
     name: string

@@ -1,4 +1,4 @@
-import { EntitiesData } from "./adventureland-server"
+import type { EntitiesData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-05-22

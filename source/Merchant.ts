@@ -1,4 +1,4 @@
-import {
+import type {
     CharacterData,
     DisappearingTextData,
     GameLogData,
@@ -7,11 +7,11 @@ import {
     UIData,
     UIDataFishingMining,
 } from "./definitions/adventureland-server.js"
-import { TradeSlotType } from "./definitions/adventureland.js"
+import type { TradeSlotType } from "./definitions/adventureland.js"
 import { Constants } from "./Constants.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 import { Tools } from "./Tools.js"
-import { ItemName } from "./definitions/adventureland-data.js"
+import type { ItemName } from "./definitions/adventureland-data.js"
 
 export class Merchant extends PingCompensatedCharacter {
     ctype: "merchant" = "merchant" as const

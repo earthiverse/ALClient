@@ -1,7 +1,7 @@
 import pkg from "mongoose"
 const { model } = pkg
 
-import { IAchievementDocument } from "./achievements.types.js"
+import type { IAchievementDocument } from "./achievements.types.js"
 import AchievementSchema from "./achievements.schema.js"
 
 export const AchievementModel = model<IAchievementDocument>("achievement", AchievementSchema)

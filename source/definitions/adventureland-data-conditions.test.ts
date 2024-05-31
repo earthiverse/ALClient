@@ -1,4 +1,4 @@
-import { GData } from "./adventureland-data"
+import type { GData } from "./adventureland-data"
 
 /**
  * The following is from http://adventure.land/data.js, version 749 (2022-08-29)

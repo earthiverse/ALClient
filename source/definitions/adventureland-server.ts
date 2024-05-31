@@ -3,7 +3,7 @@
  * game uses to interact with the server.
  */
 
-import {
+import type {
     BankInfo,
     IPosition,
     ServerIdentifier,
@@ -13,7 +13,7 @@ import {
     StatusInfo,
     TradeSlotType,
 } from "./adventureland.js"
-import {
+import type {
     AchievementName,
     AnimationName,
     Attribute,

@@ -2,9 +2,9 @@ import axios from "axios"
 import fs from "fs"
 import url from "url"
 import { Database, PlayerModel } from "./database/Database.js"
-import { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
-import { GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import {
+import type { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
+import type { GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
+import type {
     ServerData,
     CharacterListData,
     MailData,

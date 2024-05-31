@@ -1,4 +1,4 @@
-import { DeathData } from "./adventureland-server"
+import type { DeathData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-23 to 2023-01-16

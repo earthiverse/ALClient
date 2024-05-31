@@ -1,4 +1,4 @@
-import { ActionData } from "./definitions/adventureland-server.js"
+import type { ActionData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Ranger extends PingCompensatedCharacter {

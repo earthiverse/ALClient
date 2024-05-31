@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-    Database,
-    DeathModel,
-    EntityModel,
-    InstanceModel,
-    IPlayer,
-    NPCModel,
-    PlayerModel,
-} from "./database/Database.js"
-import {
+import type { IPlayer } from "./database/Database.js"
+import { Database, DeathModel, EntityModel, InstanceModel, NPCModel, PlayerModel } from "./database/Database.js"
+import type {
     BankInfo,
     SlotType,
     IPosition,
@@ -19,7 +12,7 @@ import {
     ServerIdentifier,
     TokenType,
 } from "./definitions/adventureland.js"
-import {
+import type {
     Attribute,
     BankPackName,
     CharacterType,
@@ -35,7 +28,7 @@ import {
     NPCName,
     SkillName,
 } from "./definitions/adventureland-data.js"
-import {
+import type {
     AchievementProgressData,
     CharacterData,
     ServerData,
@@ -78,20 +71,20 @@ import {
     TradeHistoryData,
     DestroyGRDataObject,
 } from "./definitions/adventureland-server.js"
-import { LinkData } from "./definitions/pathfinder.js"
+import type { LinkData } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
-import { Entity } from "./Entity.js"
+import type { Entity } from "./Entity.js"
 import { Item } from "./Item.js"
-import { Mage } from "./Mage.js"
+import type { Mage } from "./Mage.js"
 import { Observer } from "./Observer.js"
-import { Player } from "./Player.js"
+import type { Player } from "./Player.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { Tools } from "./Tools.js"
 import { AchievementModel } from "./database/achievements/achievements.model.js"
 import { BankModel } from "./database/banks/banks.model.js"
-import { IBank } from "./database/banks/banks.types.js"
+import type { IBank } from "./database/banks/banks.types.js"
 import { isDeepStrictEqual } from "util"
-import {
+import type {
     GetEntitiesFilters,
     GetEntityFilters,
     GetPlayerFilters,
@@ -100,7 +93,7 @@ import {
     LocateItemsFilters,
     SmartMoveOptions,
 } from "./definitions/alclient.js"
-import { UpdateQuery } from "mongoose"
+import type { UpdateQuery } from "mongoose"
 import { TradeItem } from "./TradeItem.js"
 
 export class Character extends Observer implements CharacterData {

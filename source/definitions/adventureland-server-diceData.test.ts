@@ -1,4 +1,4 @@
-import { DiceData } from "./adventureland-server"
+import type { DiceData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2022-05-05

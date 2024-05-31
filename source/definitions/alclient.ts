@@ -1,6 +1,6 @@
-import { Attribute, CharacterType, MonsterName, SkillName, TitleName } from "./adventureland-data.js"
-import { IPosition } from "./adventureland.js"
-import { PathfinderOptions } from "./pathfinder.js"
+import type { Attribute, CharacterType, MonsterName, SkillName, TitleName } from "./adventureland-data.js"
+import type { IPosition } from "./adventureland.js"
+import type { PathfinderOptions } from "./pathfinder.js"
 
 /** Filters for returning a list of entities */
 export type GetEntitiesFilters = {

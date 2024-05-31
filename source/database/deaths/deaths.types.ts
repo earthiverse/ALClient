@@ -1,6 +1,6 @@
-import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
-import { MapName } from "../../definitions/adventureland-data.js"
+import type { Document, Model } from "mongoose"
+import type { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
+import type { MapName } from "../../definitions/adventureland-data.js"
 
 export interface IDeath {
     name: string

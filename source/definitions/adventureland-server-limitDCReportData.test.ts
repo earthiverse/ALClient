@@ -1,4 +1,4 @@
-import { LimitDCReportData } from "./adventureland-server"
+import type { LimitDCReportData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-24

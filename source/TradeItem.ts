@@ -1,6 +1,6 @@
 import { Item } from "./Item.js"
-import { GData } from "./definitions/adventureland-data.js"
-import { ItemDataTrade } from "./definitions/adventureland-server.js"
+import type { GData } from "./definitions/adventureland-data.js"
+import type { ItemDataTrade } from "./definitions/adventureland-server.js"
 
 export class TradeItem extends Item implements ItemDataTrade {
     public b: boolean = false

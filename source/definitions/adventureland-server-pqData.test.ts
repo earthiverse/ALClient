@@ -1,4 +1,4 @@
-import { PQData } from "./adventureland-server"
+import type { PQData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2022-09-13

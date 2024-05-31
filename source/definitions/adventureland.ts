@@ -4,8 +4,8 @@
  * Please help me transfer definitions to those files, too!
  */
 
-import { BankPackName, ConditionName, ItemName, MapName, MonsterName } from "./adventureland-data.js"
-import { ItemData, ItemDataTrade } from "./adventureland-server.js"
+import type { BankPackName, ConditionName, ItemName, MapName, MonsterName } from "./adventureland-data.js"
+import type { ItemData, ItemDataTrade } from "./adventureland-server.js"
 
 export type BankInfo = {
     [T in Exclude<BankPackName, "gold">]?: ItemData[]

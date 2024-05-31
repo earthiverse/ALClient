@@ -1,5 +1,5 @@
-import { ItemType, WeaponType } from "./definitions/adventureland.js"
-import {
+import type { ItemType, WeaponType } from "./definitions/adventureland.js"
+import type {
     Attribute,
     CharacterType,
     GData,
@@ -8,7 +8,7 @@ import {
     SkillName,
     TitleName,
 } from "./definitions/adventureland-data.js"
-import { ItemData } from "./definitions/adventureland-server.js"
+import type { ItemData } from "./definitions/adventureland-server.js"
 
 export class Item implements ItemData, GItem {
     // ItemData (required)

@@ -1,4 +1,4 @@
-import { GameResponseData } from "./adventureland-server"
+import type { GameResponseData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2022-04-30 to 2022-09-24

@@ -1,5 +1,5 @@
-import { Document, Model } from "mongoose"
-import { BankInfo } from "../../definitions/adventureland.js"
+import type { Document, Model } from "mongoose"
+import type { BankInfo } from "../../definitions/adventureland.js"
 
 export interface IBank extends BankInfo {
     lastUpdated?: number

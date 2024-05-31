@@ -1,4 +1,4 @@
-import { StartData } from "./adventureland-server"
+import type { StartData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2023-01-21

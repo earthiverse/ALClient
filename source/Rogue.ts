@@ -1,4 +1,4 @@
-import { CharacterData } from "./definitions/adventureland-server.js"
+import type { CharacterData } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Rogue extends PingCompensatedCharacter {

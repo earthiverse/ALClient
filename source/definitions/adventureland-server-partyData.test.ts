@@ -1,4 +1,4 @@
-import { PartyData } from "./adventureland-server"
+import type { PartyData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-05-10

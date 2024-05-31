@@ -1,4 +1,4 @@
-import { ItemName, MapName } from "./adventureland-data.js"
+import type { ItemName, MapName } from "./adventureland-data.js"
 
 export type Grid = Uint8Array
 export type Grids = { [T in MapName]?: Grid }

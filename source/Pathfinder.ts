@@ -1,9 +1,18 @@
 import Delaunator from "delaunator"
-import createGraph, { Graph, Link, Node } from "ngraph.graph"
+import type { Graph, Link, Node } from "ngraph.graph"
+import createGraph from "ngraph.graph"
 import ngraph from "ngraph.path"
-import { IPosition } from "./definitions/adventureland.js"
-import { DoorInfo, GData, GMap, ItemName, MapName, MonsterName, NPCName } from "./definitions/adventureland-data.js"
-import { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
+import type { IPosition } from "./definitions/adventureland.js"
+import type {
+    DoorInfo,
+    GData,
+    GMap,
+    ItemName,
+    MapName,
+    MonsterName,
+    NPCName,
+} from "./definitions/adventureland-data.js"
+import type { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 
 const UNKNOWN = 1

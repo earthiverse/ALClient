@@ -1,6 +1,6 @@
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
-import { ProjectileSkillGRDataObject, UIData } from "./definitions/adventureland-server.js"
-import { IPosition } from "./definitions/adventureland.js"
+import type { ProjectileSkillGRDataObject, UIData } from "./definitions/adventureland-server.js"
+import type { IPosition } from "./definitions/adventureland.js"
 import { Tools } from "./Tools.js"
 
 export class Warrior extends PingCompensatedCharacter {

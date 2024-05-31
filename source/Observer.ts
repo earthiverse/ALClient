@@ -1,7 +1,9 @@
-import socketio, { Socket } from "socket.io-client"
-import { Database, EntityModel, IPlayer, NPCModel, PlayerModel } from "./database/Database.js"
-import { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
-import {
+import type { Socket } from "socket.io-client"
+import socketio from "socket.io-client"
+import type { IPlayer } from "./database/Database.js"
+import { Database, EntityModel, NPCModel, PlayerModel } from "./database/Database.js"
+import type { ConditionName, GData, GMap, MapName, MonsterName } from "./definitions/adventureland-data.js"
+import type {
     ServerData,
     WelcomeData,
     LoadedData,
@@ -28,7 +30,7 @@ import { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
 import { RespawnModel } from "./database/respawns/respawns.model.js"
 import isNumber from "is-number"
-import { UpdateQuery } from "mongoose"
+import type { UpdateQuery } from "mongoose"
 import { ServerModel } from "./database/servers/servers.model.js"
 import { InstanceModel } from "./database/instances/instances.model.js"
 

@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals"
-import { EvalData } from "./adventureland-server"
+import type { EvalData } from "./adventureland-server"
 import { Game } from "../Game"
 import { Character } from "../Character"
 

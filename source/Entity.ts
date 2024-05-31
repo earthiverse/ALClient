@@ -1,5 +1,5 @@
-import { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
-import {
+import type { SlotInfo, StatusInfo } from "./definitions/adventureland.js"
+import type {
     Attribute,
     ConditionName,
     DamageType,
@@ -10,9 +10,9 @@ import {
     MonsterName,
     SkillName,
 } from "./definitions/adventureland-data.js"
-import { ActionData, MonsterData } from "./definitions/adventureland-server.js"
-import { Character } from "./Character.js"
-import { Player } from "./Player.js"
+import type { ActionData, MonsterData } from "./definitions/adventureland-server.js"
+import type { Character } from "./Character.js"
+import type { Player } from "./Player.js"
 import { Tools } from "./Tools.js"
 
 export class Entity implements MonsterData, Partial<GMonster> {

@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { GData } from "./adventureland-data"
+import type { GData } from "./adventureland-data"
 
 /**
  * The following is from http://adventure.land/data.js, version 729 (2022-08-06)

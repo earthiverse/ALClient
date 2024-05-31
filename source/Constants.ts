@@ -1,4 +1,4 @@
-import { MapName, MonsterName } from "./definitions/adventureland-data.js"
+import type { MapName, MonsterName } from "./definitions/adventureland-data.js"
 
 export class Constants {
     // Various client related things

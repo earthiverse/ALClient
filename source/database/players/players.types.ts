@@ -1,7 +1,7 @@
-import { Document, Model } from "mongoose"
-import { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../definitions/adventureland.js"
-import { CharacterType, MapName } from "../../definitions/adventureland-data.js"
-import { ItemData } from "../../definitions/adventureland-server.js"
+import type { Document, Model } from "mongoose"
+import type { ServerRegion, ServerIdentifier, StatusInfo, SlotInfo } from "../../definitions/adventureland.js"
+import type { CharacterType, MapName } from "../../definitions/adventureland-data.js"
+import type { ItemData } from "../../definitions/adventureland-server.js"
 
 export interface IPlayer {
     aldata?: string

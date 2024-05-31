@@ -1,7 +1,7 @@
-import { Document, Model } from "mongoose"
-import { ServerInfoData } from "../../definitions/adventureland-server.js"
-import { ServerIdentifier, ServerRegion } from "../../definitions/adventureland.js"
-import { MapName, MonsterName } from "../../definitions/adventureland-data.js"
+import type { Document, Model } from "mongoose"
+import type { ServerInfoData } from "../../definitions/adventureland-server.js"
+import type { ServerIdentifier, ServerRegion } from "../../definitions/adventureland.js"
+import type { MapName, MonsterName } from "../../definitions/adventureland-data.js"
 
 export interface IInstance {
     S: ServerInfoData

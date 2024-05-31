@@ -1,4 +1,4 @@
-import { MagiportGRDataObject } from "./definitions/adventureland-server.js"
+import type { MagiportGRDataObject } from "./definitions/adventureland-server.js"
 import { Pathfinder } from "./Pathfinder.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 

@@ -1,6 +1,6 @@
-import { Document, Model } from "mongoose"
-import { ServerInfoData } from "../../definitions/adventureland-server.js"
-import { ServerIdentifier, ServerRegion } from "../../definitions/adventureland.js"
+import type { Document, Model } from "mongoose"
+import type { ServerInfoData } from "../../definitions/adventureland-server.js"
+import type { ServerIdentifier, ServerRegion } from "../../definitions/adventureland.js"
 
 export interface IServer {
     S: ServerInfoData

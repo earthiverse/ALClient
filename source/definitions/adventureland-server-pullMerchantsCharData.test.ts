@@ -1,4 +1,4 @@
-import { PullMerchantsData } from "./adventureland-server"
+import type { PullMerchantsData } from "./adventureland-server"
 
 /**
  * The following is from a socket event received 2021-04-22

@@ -1,4 +1,4 @@
-import { ProjectileSkillGRDataObject } from "./definitions/adventureland-server.js"
+import type { ProjectileSkillGRDataObject } from "./definitions/adventureland-server.js"
 import { PingCompensatedCharacter } from "./PingCompensatedCharacter.js"
 
 export class Priest extends PingCompensatedCharacter {

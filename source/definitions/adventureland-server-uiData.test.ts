@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { UIData } from "./adventureland-server"
+import type { UIData } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2021-04-22 to 2021-07-14

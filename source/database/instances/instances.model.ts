@@ -1,7 +1,7 @@
 import pkg from "mongoose"
 const { model } = pkg
 
-import { IInstanceDocument } from "./instances.types.js"
+import type { IInstanceDocument } from "./instances.types.js"
 import InstanceSchema from "./instances.schema.js"
 
 export const InstanceModel = model<IInstanceDocument>("instance", InstanceSchema)
