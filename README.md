@@ -1,21 +1,10 @@
-# ALClient README
+# ALClient
 
-**NOTE: This code is very much a work in progress. Things will quickly change, and your code will likely break between changes.**
+This is a node client for the game [Adventure Land - The Code MMORPG](https://adventure.land).
 
----
-
-This is a node client for the game [Adventure Land - The Code MMORPG](https://adventure.land). It's 99% custom code that seems _much_ more efficient than running the code in-game, or using the game's official CLI.
-
-This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull/ALBot) aims to be. The code that you run in the console in game **WILL NOT** run as-is if you try to run your in-game code using this project.
-
-## Requirements
-
--   Node
-    -   Tested with **16.5**, but some earlier versions will most likely work, too.
+This code is **NOT** compatible with scripts written directly in the game. If you are just looking for a way to run your code headless, or with fewer resources, I recommend trying [caracAL](https://github.com/numbereself/caracAL).
 
 ## Basic Usage
-
-**For Beginners:**
 
 1. Install the latest version of [node](https://nodejs.org/en/download/).
 2. Create a new folder for your project
@@ -23,13 +12,13 @@ This code is **NOT** a 1-to-1 drop in, like [ALBot](https://github.com/NexusNull
 4. If you are using Typescript, which is strongly recommended, install it by running `npm install typescript`. Save your files as `.ts` files instead of `.js` files.
 5. If you are using Typescript, build your code by running `npx tsc`.
 
-**Notes:**
+### Notes
 
 In your tsconfig.json, make sure `"esModuleInterop": true` is set.
 
 In your package.json, make sure `"type": "module"` is set.
 
-**General Steps:**
+### General Steps
 
 1. Install the package using `npm install alclient`.
 2. Add a `credentials.json` file that looks like this:
@@ -60,7 +49,8 @@ async function run() {
     await Promise.all([AL.Game.loginJSONFile("../credentials.json"), AL.Game.getGData()])
     await AL.Pathfinder.prepare(AL.Game.G)
 
-    const merchant = await AL.Game.startMerchant("earthMer2", "ASIA", "I")
+    // Set `<<MERCHANT_NAME>>` to your merchant
+    const merchant = await AL.Game.startMerchant("<<MERCHANT_NAME>>", "ASIA", "I")
     console.log("Moving to main")
     await merchant.smartMove("main")
     console.log("Moving to cyberland")
@@ -72,6 +62,8 @@ async function run() {
 }
 run()
 ```
+
+4. While the code is running, you should be able to see your character using [/comm](https://adventure.land/comm)
 
 ## Notable differences from 'native' Adventure Land code.
 
