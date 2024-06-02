@@ -637,6 +637,8 @@ export class Pathfinder {
 
     public static getPath(from: NodeData, to: NodeData, options?: PathfinderOptions): LinkData[] {
         if (!this.G) throw new Error("Prepare pathfinding before querying getPath()!")
+        if (!this.grids[from.map]) throw new Error(`We have not prepared ${from.map}!`)
+        if (!this.grids[to.map]) throw new Error(`We have not prepared ${to.map}!`)
 
         if (
             from.map == to.map &&

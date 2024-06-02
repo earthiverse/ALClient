@@ -4825,16 +4825,20 @@ export class Character extends Observer implements CharacterData {
                     const locations = Pathfinder.locateMonster(to as MonsterName)
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(
-                            this,
-                            location as IPosition & { map: MapName },
-                            options,
-                        )
-                        const distance = Pathfinder.computePathCost(potentialPath)
-                        if (distance < closestDistance) {
-                            path = potentialPath
-                            fixedTo = path[path.length - 1]
-                            closestDistance = distance
+                        try {
+                            const potentialPath = await Pathfinder.getPath(
+                                this,
+                                location as IPosition & { map: MapName },
+                                options,
+                            )
+                            const distance = Pathfinder.computePathCost(potentialPath)
+                            if (distance < closestDistance) {
+                                path = potentialPath
+                                fixedTo = path[path.length - 1]
+                                closestDistance = distance
+                            }
+                        } catch (e) {
+                            if (options?.showConsole) console.error(e)
                         }
                     }
                 }
@@ -4851,16 +4855,20 @@ export class Character extends Observer implements CharacterData {
                     // Set `to` to the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(
-                            this,
-                            location as IPosition & { map: MapName },
-                            options,
-                        )
-                        const distance = Pathfinder.computePathCost(potentialPath)
-                        if (distance < closestDistance) {
-                            path = potentialPath
-                            fixedTo = path[path.length - 1]
-                            closestDistance = distance
+                        try {
+                            const potentialPath = await Pathfinder.getPath(
+                                this,
+                                location as IPosition & { map: MapName },
+                                options,
+                            )
+                            const distance = Pathfinder.computePathCost(potentialPath)
+                            if (distance < closestDistance) {
+                                path = potentialPath
+                                fixedTo = path[path.length - 1]
+                                closestDistance = distance
+                            }
+                        } catch (e) {
+                            if (options?.showConsole) console.error(e)
                         }
                     }
                 }
@@ -4890,16 +4898,20 @@ export class Character extends Observer implements CharacterData {
                     // Find the closest NPC
                     let closestDistance: number = Number.MAX_VALUE
                     for (const location of locations) {
-                        const potentialPath = await Pathfinder.getPath(
-                            this,
-                            location as IPosition & { map: MapName },
-                            options,
-                        )
-                        const distance = Pathfinder.computePathCost(potentialPath)
-                        if (distance < closestDistance) {
-                            path = potentialPath
-                            fixedTo = path[path.length - 1]
-                            closestDistance = distance
+                        try {
+                            const potentialPath = await Pathfinder.getPath(
+                                this,
+                                location as IPosition & { map: MapName },
+                                options,
+                            )
+                            const distance = Pathfinder.computePathCost(potentialPath)
+                            if (distance < closestDistance) {
+                                path = potentialPath
+                                fixedTo = path[path.length - 1]
+                                closestDistance = distance
+                            }
+                        } catch (e) {
+                            if (options?.showConsole) console.error(e)
                         }
                     }
                 }
