@@ -15,9 +15,9 @@ import type {
 import type { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 
-const UNKNOWN = 1
-const UNWALKABLE = 2
-const WALKABLE = 3
+const UNKNOWN = 2
+const UNWALKABLE = 0
+const WALKABLE = 1
 
 export class Pathfinder {
     protected static G: GData
@@ -261,16 +261,12 @@ export class Pathfinder {
 
         // Make the y_lines unwalkable
         for (const yLine of this.G.geometry[map].y_lines) {
-            for (
-                let y = Math.max(0, yLine[0] - this.G.geometry[map].min_y - base.vn);
-                y <= yLine[0] - this.G.geometry[map].min_y + base.v && y < height;
-                y++
-            ) {
-                for (
-                    let x = Math.max(0, yLine[1] - this.G.geometry[map].min_x - base.h);
-                    x <= yLine[2] - this.G.geometry[map].min_x + base.h && x < width;
-                    x++
-                ) {
+            const fromY = Math.max(0, yLine[0] - this.G.geometry[map].min_y - base.vn)
+            const toY = Math.min(yLine[0] - this.G.geometry[map].min_y + base.v, height - 1)
+            for (let y = fromY; y <= toY; y++) {
+                const fromX = Math.max(0, yLine[1] - this.G.geometry[map].min_x - base.h)
+                const toX = Math.min(yLine[2] - this.G.geometry[map].min_x + base.h, width - 1)
+                for (let x = fromX; x <= toX; x++) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
@@ -278,16 +274,12 @@ export class Pathfinder {
 
         // Make the x_lines unwalkable
         for (const xLine of this.G.geometry[map].x_lines) {
-            for (
-                let x = Math.max(0, xLine[0] - this.G.geometry[map].min_x - base.h);
-                x <= xLine[0] - this.G.geometry[map].min_x + base.h && x < width;
-                x++
-            ) {
-                for (
-                    let y = Math.max(0, xLine[1] - this.G.geometry[map].min_y - base.vn);
-                    y <= xLine[2] - this.G.geometry[map].min_y + base.v && y < height;
-                    y++
-                ) {
+            const fromX = Math.max(0, xLine[0] - this.G.geometry[map].min_x - base.h)
+            const toX = Math.min(xLine[0] - this.G.geometry[map].min_x + base.h, width - 1)
+            for (let x = fromX; x <= toX; x++) {
+                const fromY = Math.max(0, xLine[1] - this.G.geometry[map].min_y - base.vn)
+                const toY = Math.min(xLine[2] - this.G.geometry[map].min_y + base.v, height - 1)
+                for (let y = fromY; y <= toY; y++) {
                     grid[y * width + x] = UNWALKABLE
                 }
             }
