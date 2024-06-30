@@ -1655,7 +1655,6 @@ export type ClientToServerSkillData =
 
 export type ClientToServerEvents = {
     attack: (data: { id: string }) => void
-    bet: (data: { type: "dice"; dir: "up" | "down"; num: number; gold: number }) => void
     auth: (data: AuthData) => void
     // TODO: Create BankData type
     bank: (
@@ -1664,10 +1663,14 @@ export type ClientToServerEvents = {
             | { inv: number; operation: "swap"; pack: BankPackName; str: number }
             | { operation: "move"; a: number; b: number; pack: BankPackName },
     ) => void
+    bet: (data: { type: "dice"; dir: "up" | "down"; num: number; gold: number }) => void
+    blend: () => void
     booster: (data: { action: "shift"; num: number; to: string }) => void
     // TODO: Create BuyData type
     buy: (data: { name: ItemName; quantity?: number }) => void
+    ccreport: () => void
     cm: (data: { message: string; to: string[] }) => void
+    code: (data: { code: boolean }) => void
     // TODO: Create CompoundData type
     compound: (data: {
         calculate?: boolean
@@ -1678,6 +1681,7 @@ export type ClientToServerEvents = {
     }) => void
     // TODO: Create CraftData type
     craft: (data: { items: [number, number][] }) => void
+    cruise: (speed: number) => void
     destroy: (data: { num: number; q: number; statue: true }) => void
     dismantle: (data: { num: number }) => void
     donate: (donation: { gold: number }) => void
@@ -1698,6 +1702,7 @@ export type ClientToServerEvents = {
     // NOTE: We already have FriendData for receiving `friend` sockets.
     //       Maybe FriendEmitData type?
     friend: (data: { event: "accept" | "request" | "unfriend"; name: string }) => void
+    harakiri: () => void
     heal: (data: { id: string }) => void
     imove: (data: { a: number; b: number }) => void
     interaction: (data: { key: string } | { type: "newyear_tree" }) => void
@@ -1727,7 +1732,7 @@ export type ClientToServerEvents = {
     ping_trig: (data: { id: string }) => void
     players: () => void
     // TODO: Create PropertyData type
-    property: (data: { typing: boolean }) => void
+    property: (data: { typing: boolean } | { afk: boolean }) => void
     respawn: (data: { safe: boolean }) => void
     say: (data: { message: string; name?: string }) => void
     // TODO: Create SBuyData type
@@ -1741,6 +1746,7 @@ export type ClientToServerEvents = {
     skill: (data: ClientToServerSkillData) => void
     split: (data: { num: number; quantity: number }) => void
     stop: (data: { action: "invis" | "town" }) => void
+    tavern: (data: { event: "info" }) => void
     town: () => void
     tracker: () => void
     transport: (data: { s: number; to: MapName }) => void
