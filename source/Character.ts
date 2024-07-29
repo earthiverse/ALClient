@@ -4920,7 +4920,7 @@ export class Character extends Observer implements CharacterData {
             // Check if our destination is a bank pack name. If it is, go to the map that has that bank pack.
             if (!fixedTo) {
                 const matches = to.match(/^items(\d+)$/)
-                if (matches.length) {
+                if (matches) {
                     const bankPackNum = Number.parseInt(matches[1])
                     let targetMap: MapName = "bank"
                     if (bankPackNum >= 8 && bankPackNum <= 23) targetMap = "bank_b"
