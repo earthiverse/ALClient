@@ -147,9 +147,7 @@ export class Observer {
                     PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true })
                         .lean()
                         .exec()
-                        .catch((e) => {
-                            console.error(e)
-                        })
+                        .catch(console.error)
                     Database.nextUpdate.set(
                         `${this.serverData.name}${this.serverData.region}${data.id}`,
                         Date.now() + Constants.MONGO_UPDATE_MS,
@@ -174,9 +172,7 @@ export class Observer {
                     PlayerModel.updateOne({ name: data.id }, updateData, { upsert: true })
                         .lean()
                         .exec()
-                        .catch((e) => {
-                            console.error(e)
-                        })
+                        .catch(console.error)
                     Database.nextUpdate.set(
                         `${this.serverData.name}${this.serverData.region}${data.id}`,
                         Date.now() + Constants.MONGO_UPDATE_MS,
@@ -229,9 +225,7 @@ export class Observer {
                     )
                         .lean()
                         .exec()
-                        .catch((e) => {
-                            console.error(e)
-                        })
+                        .catch(console.error)
                 }
             }
         })
@@ -505,9 +499,34 @@ export class Observer {
                         )
                             .lean()
                             .exec()
-                            .catch(() => {
-                                /* Suppress errors */
-                            })
+                            .catch(console.error)
+                    }
+                    if (
+                        Constants.ONE_SPAWN_MONSTERS.includes(entity.type) &&
+                        this.G.monsters[entity.type].respawn > 10
+                    ) {
+                        // G.monsters time is in seconds. We need the time in ms.
+                        let monsterRespawn = this.G.monsters[entity.type].respawn
+                        if (monsterRespawn > 200) {
+                            // Long respawns have a random chance to spawn from 28% early to 10% late
+                            monsterRespawn *= 720
+                        } else {
+                            monsterRespawn *= 1000
+                        }
+                        RespawnModel.updateOne(
+                            {
+                                type: entity.type,
+                                serverIdentifier: this.serverData.name,
+                                serverRegion: this.serverData.region,
+                            },
+                            {
+                                estimatedRespawn: Date.now() + monsterRespawn,
+                            },
+                            { upsert: true },
+                        )
+                            .lean()
+                            .exec()
+                            .catch(console.error)
                     }
                     EntityModel.deleteOne({
                         name: id,
@@ -516,9 +535,7 @@ export class Observer {
                     })
                         .lean()
                         .exec()
-                        .catch(() => {
-                            /* Suppress errors */
-                        })
+                        .catch(console.error)
                     Database.nextUpdate.set(
                         `${this.serverData.name}${this.serverData.region}${entity.id}`,
                         Number.MAX_VALUE,

@@ -306,9 +306,7 @@ export class Character extends Observer implements CharacterData {
                         BankModel.updateOne({ owner: this.owner }, updateData, { upsert: true })
                             .lean()
                             .exec()
-                            .catch((e) => {
-                                console.error(e)
-                            })
+                            .catch(console.error)
                         Database.nextUpdate.set(
                             `${this.serverData.name}${this.serverData.region}*bank*`,
                             Date.now() + Constants.MONGO_UPDATE_MS,
@@ -419,12 +417,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             if (this.owner) updateData.owner = this.owner
-            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true })
-                .lean()
-                .exec()
-                .catch((e) => {
-                    console.error(e)
-                })
+            PlayerModel.updateOne({ name: this.id }, updateData, { upsert: true }).lean().exec().catch(console.error)
             Database.nextUpdate.set(
                 `${this.server.name}${this.server.region}${this.id}`,
                 Date.now() + Constants.MONGO_UPDATE_MS,
@@ -727,10 +720,7 @@ export class Character extends Observer implements CharacterData {
                         },
                     })
                 }
-                if (playerUpdates.length)
-                    PlayerModel.bulkWrite(playerUpdates).catch((e) => {
-                        console.error(e)
-                    })
+                if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
             }
         })
 
@@ -779,9 +769,7 @@ export class Character extends Observer implements CharacterData {
                     max: data.max,
                     monsters: data.monsters,
                     name: this.id,
-                }).catch((e) => {
-                    console.error(e)
-                })
+                }).catch(console.error)
             })
         }
 
@@ -3410,9 +3398,7 @@ export class Character extends Observer implements CharacterData {
                         )
                             .lean()
                             .exec()
-                            .catch((e) => {
-                                console.error(e)
-                            })
+                            .catch(console.error)
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
@@ -3724,9 +3710,7 @@ export class Character extends Observer implements CharacterData {
                         )
                             .lean()
                             .exec()
-                            .catch((e) => {
-                                console.error(e)
-                            })
+                            .catch(console.error)
                         Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                     }
                 }
