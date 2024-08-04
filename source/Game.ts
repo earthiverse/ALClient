@@ -26,7 +26,7 @@ import { Rogue } from "./Rogue.js"
 import { Warrior } from "./Warrior.js"
 
 export class Game {
-    protected static user: { userID: string; userAuth: string; secure: boolean }
+    public static user: { userID: string; userAuth: string; secure: boolean }
 
     public static servers: { [T in ServerRegion]?: { [T in ServerIdentifier]?: ServerData } } = {}
     public static characters: { [T in string]?: CharacterListData } = {}
