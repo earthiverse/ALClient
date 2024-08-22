@@ -1,0 +1,26 @@
+{
+  "name": "alclient",
+  "version": "1.0.0",
+  "description": "A Node client for Adventureland (MMORPG)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/earthiverse/alclient.git"
+  },
+  "keywords": [
+    "alclient",
+    "adventureland"
+  ],
+  "author": "Kent Rasmussen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/earthiverse/alclient/issues"
+  },
+  "homepage": "https://github.com/earthiverse/alclient#readme",
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
