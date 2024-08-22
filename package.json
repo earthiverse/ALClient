@@ -1,10 +1,11 @@
 {
   "name": "alclient",
+  "type": "module",
   "version": "1.0.0",
   "description": "A Node client for Adventureland (MMORPG)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   },
   "homepage": "https://github.com/earthiverse/alclient#readme",
   "devDependencies": {
+    "@total-typescript/tsconfig": "^1.0.4",
+    "@types/node": "^22.5.0",
     "typescript": "^5.5.4"
   }
 }
