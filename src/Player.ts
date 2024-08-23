@@ -1,4 +1,13 @@
+import type EventEmitter from "node:events";
+import EventBus from "./EventBus.js";
 import { type Game } from "./Game.js";
+
+export interface PlayerEventMap {
+  player_created: [Player];
+}
+
+// Typescript will enforce only PlayerEventMap events to be allowed
+const PlayerEventBus = EventBus as unknown as EventEmitter<PlayerEventMap>;
 
 export class Player {
   /**
@@ -26,6 +35,8 @@ export class Player {
     this.userId = userId;
     this.userAuth = userAuth;
     this.game = game;
+
+    PlayerEventBus.emit("player_created", this);
   }
 }
 
