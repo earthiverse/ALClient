@@ -1,11 +1,19 @@
 import type EventEmitter from "node:events";
 import {
+  type ClassKey,
   type ServersAndCharactersApiResponse,
   type XOnlineCharacter,
 } from "typed-adventureland";
 import Character from "./Character.js";
 import EventBus from "./EventBus.js";
 import { type Game } from "./Game.js";
+import Mage from "./Mage.js";
+import Merchant from "./Merchant.js";
+import Paladin from "./Paladin.js";
+import Priest from "./Priest.js";
+import Ranger from "./Ranger.js";
+import Rogue from "./Rogue.js";
+import Warrior from "./Warrior.js";
 
 export interface PlayerEventMap {
   /** A `Player` was instantiated */
@@ -67,10 +75,37 @@ export class Player {
     PlayerEventBus.emit("player_created", this);
   }
 
-  public async createCharacter(): Promise<Character> {
-    // TODO: Use info from this.characters
-    // TODO: Start character based on type
-    return new Character(this, "12312321");
+  /**
+   * Creates a {@link Character} with the given name.
+   *
+   * NOTE: This will not start the character
+   */
+  public async createCharacter<T extends Character>(name: string): Promise<T> {
+    const character = this.characters.find((c) => c.name === name);
+    if (!character) {
+      throw new Error(
+        `No character with the name '${name}' belongs to this Player`
+      );
+    }
+
+    // TODO: Add eslint & https://typescript-eslint.io/rules/switch-exhaustiveness-check/
+    // TODO: Remove `as ClassKey` once `typed-adventureland` gets updated
+    switch (character.type as ClassKey) {
+      case "mage":
+        return new Mage(this, character.id) as T;
+      case "merchant":
+        return new Merchant(this, character.id) as T;
+      case "paladin":
+        return new Paladin(this, character.id) as T;
+      case "priest":
+        return new Priest(this, character.id) as T;
+      case "ranger":
+        return new Ranger(this, character.id) as T;
+      case "rogue":
+        return new Rogue(this, character.id) as T;
+      case "warrior":
+        return new Warrior(this, character.id) as T;
+    }
   }
 
   /**
