@@ -80,7 +80,7 @@ export class Player {
    *
    * NOTE: This will not start the character
    */
-  public async createCharacter<T extends Character>(name: string): Promise<T> {
+  public createCharacter<T extends Character>(name: string): T {
     const character = this.characters.find((c) => c.name === name);
     if (!character) {
       throw new Error(
@@ -88,7 +88,6 @@ export class Player {
       );
     }
 
-    // TODO: Add eslint & https://typescript-eslint.io/rules/switch-exhaustiveness-check/
     // TODO: Remove `as ClassKey` once `typed-adventureland` gets updated
     switch (character.type as ClassKey) {
       case "mage":
@@ -105,6 +104,8 @@ export class Player {
         return new Rogue(this, character.id) as T;
       case "warrior":
         return new Warrior(this, character.id) as T;
+      // default:
+      //   return new Character(this, character.id) as T;
     }
   }
 

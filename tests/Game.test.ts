@@ -43,9 +43,7 @@ test("`login()` with valid credentials returns a `Player` object", async () => {
 
   const player = await game.login(email, password);
   expect(player).toBeInstanceOf(Player);
-  expect(player.characters.length).toBe<number>(
-    Number.parseInt(numCharacters)
-  );
+  expect(player.characters.length).toBe<number>(Number.parseInt(numCharacters));
 
   // Event should have triggered
   expect(eventHappened).toBe(true);
@@ -53,9 +51,9 @@ test("`login()` with valid credentials returns a `Player` object", async () => {
 
 // TODO: Custom server login test? We might be able to use docker.
 
-test("`.G` throws error when missing", async () => {
+test("`.G` throws error when missing", () => {
   const game = new Game();
-  expect(() => game.G).toThrow;
+  expect(() => game.G).toThrow();
 });
 
 test("`updateG()` works", async () => {

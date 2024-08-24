@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.json",
+  "include": ["tests/**/*.ts", "*.config.js"],
   "compilerOptions": {
     "verbatimModuleSyntax": false
   }

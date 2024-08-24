@@ -1,6 +1,6 @@
 {
   "extends": "@total-typescript/tsconfig/tsc/no-dom/library",
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",

@@ -125,7 +125,7 @@ export class Game {
 
       let userId: string | undefined;
       let userAuth: string | undefined;
-      let characters: Player["characters"] = [];
+      const characters: Player["characters"] = [];
       for (const entry of loginJson) {
         if (entry.type === "ui_error") throw new Error(entry.message);
 
@@ -186,7 +186,7 @@ export class Game {
       if (text.startsWith("var G=")) text = text.slice(6);
       if (text.endsWith(";")) text = text.slice(0, text.length - 1);
 
-      const g = (this._G = JSON.parse(text));
+      const g = JSON.parse(text) as GData;
       GameEventBus.emit("g_updated", this, g);
       this._G = g;
       return g;
@@ -215,7 +215,7 @@ export class Game {
         throw new Error("Could not find server data", { cause: text });
       }
 
-      const servers = JSON.parse(result[1]);
+      const servers = JSON.parse(result[1]) as XServerInfos[];
       GameEventBus.emit("servers_updated", this, servers);
       this._servers = servers;
       return servers;
