@@ -1,18 +1,32 @@
 import type { EventEmitter } from "node:events";
-import type { GData } from "typed-adventureland";
+import type {
+  ClassKey,
+  GData,
+  XOnlineCharacter,
+  XServerInfos,
+} from "typed-adventureland";
 import EventBus from "./EventBus.js";
 import Player from "./Player.js";
 
 export type GameOptions = {
-  server: string;
+  url: string;
   G?: GData;
+  servers?: XServerInfos[];
 };
 
 export interface GameEventMap {
+  /** A `Game` was instantiated */
   game_created: [Game];
+  /** `Game.login()` failed */
   login_failed: [Game, Error];
+  /** `Game.updateG()` failed */
   update_g_failed: [Game, Error];
+  /** `Game.updateServers()` failed */
+  update_servers_failed: [Game, Error];
+  /** `Game.G` was updated */
   g_updated: [Game, GData];
+  /** `Game.servers` was updated */
+  servers_updated: [Game, XServerInfos[]];
 }
 
 // Typescript will enforce only GameEventMap events to be allowed
@@ -20,20 +34,39 @@ const GameEventBus = EventBus as unknown as EventEmitter<GameEventMap>;
 
 export class Game {
   public options: GameOptions = {
-    server: "https://adventure.land",
+    url: "https://adventure.land",
   };
 
   private _G?: GData;
   public get G(): GData {
     if (this._G === undefined)
       throw new Error(
-        "No G Data. Call `updateGameData()` after creating `Game`, or include G Data when creating `Game`."
+        "No G data. Call `updateGameData()` after creating `Game`, or include G data when creating `Game`."
       );
     return this._G;
   }
 
+  public get apiUrl(): string {
+    return `${this.options.url}/api`;
+  }
+
+  public get url(): string {
+    return this.options.url;
+  }
+
   public get version(): number {
     return this.G.version;
+  }
+
+  /** @internal */
+  public _servers?: XServerInfos[];
+  public get servers(): XServerInfos[] {
+    if (this._servers === undefined) {
+      throw new Error(
+        "No servers data. Call `updateServers()` after creating `Game`, or include server data when creating `Game`."
+      );
+    }
+    return this._servers;
   }
 
   /**
@@ -51,8 +84,9 @@ export class Game {
    */
   public constructor(options?: Partial<GameOptions>) {
     // Override defaults if set
-    if (options?.server) this.options.server = options.server;
+    if (options?.url) this.options.url = options.url;
     if (options?.G) this._G = options.G;
+    if (options?.servers) this._servers = options.servers;
 
     GameEventBus.emit("game_created", this);
   }
@@ -65,49 +99,67 @@ export class Game {
    * ```
    */
   public async login(email: string, password: string): Promise<Player> {
-    // TODO: return Player
     try {
-      const loginResponse = await fetch(
-        `${this.options.server}/api/signup_or_login`,
-        {
-          method: "POST",
-          credentials: "include",
-          body: new URLSearchParams({
-            method: "signup_or_login",
-            arguments: JSON.stringify({
-              only_login: true,
-              email: email,
-              password: password,
-            }),
+      const loginResponse = await fetch(this.apiUrl, {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+          method: "signup_or_login",
+          arguments: JSON.stringify({
+            only_login: true,
+            email: email,
+            password: password,
           }),
-        }
-      );
+        }),
+      });
 
       if (!loginResponse.ok) {
         throw new Error(await loginResponse.text());
       }
 
       const loginJson = (await loginResponse.json()) as (
+        | { type: "content"; html: string }
         | { type: "message"; message: string }
         | { type: "ui_error"; message: string }
-        | { type: string; message: undefined }
       )[];
 
+      let userId: string | undefined;
+      let userAuth: string | undefined;
+      let characters: Player["characters"] = [];
       for (const entry of loginJson) {
         if (entry.type === "ui_error") throw new Error(entry.message);
-        if (entry.type === "message" && entry.message === "Logged In!") {
-          // TODO: Store ID & Auth
-          for (const cookie of loginResponse.headers.getSetCookie()) {
-            const result = /^auth=(.+?);/.exec(cookie);
-            if (result && result[1]) {
-              const [userId, userAuth] = result[1].split("-");
-              if (userId && userAuth) {
-                const player = new Player(userId, userAuth, this);
-                return player;
-              }
+
+        if (entry.type === "content") {
+          // Parse the HTML to get character data
+          // TODO: We can grab more information with a better regex
+          const regex =
+            /observe_character\('(?<name>.+?)'\)\)\s+log_in\(user_id,'(?<id>\d+)'.+?<span class="gray".+?>(?<type>.+?)<\/span>/gms;
+          for (const result of entry.html.matchAll(regex)) {
+            if (result.groups) {
+              const { name, id, type } = result.groups;
+              if (name && id && type)
+                characters.push({
+                  id: id,
+                  name: name,
+                  type: type.toLowerCase() as ClassKey,
+                } as XOnlineCharacter);
             }
           }
         }
+
+        if (entry.type === "message" && entry.message === "Logged In!") {
+          // Parse the cookie to get User ID and auth
+          for (const cookie of loginResponse.headers.getSetCookie()) {
+            const result = /^auth=(.+?);/.exec(cookie);
+            if (result && result[1]) {
+              [userId, userAuth] = result[1].split("-");
+            }
+          }
+        }
+      }
+
+      if (userAuth && userId) {
+        return new Player(this, userId, userAuth, characters);
       }
 
       throw new Error(JSON.stringify(loginJson));
@@ -121,9 +173,9 @@ export class Game {
   /**
    * Updates `G`
    */
-  public async updateGameData(): Promise<GData> {
+  public async updateG(): Promise<GData> {
     try {
-      const dataResponse = await fetch(`${this.options.server}/data.js`);
+      const dataResponse = await fetch(`${this.options.url}/data.js`);
 
       let text = (await dataResponse.text()).trim();
       if (!dataResponse.ok) {
@@ -141,6 +193,35 @@ export class Game {
     } catch (e) {
       const error = new Error("Failed updating G", { cause: e });
       GameEventBus.emit("update_g_failed", this, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Updates `servers`
+   */
+  public async updateServers(): Promise<XServerInfos[]> {
+    try {
+      // We use comm because we don't need to be logged in to get the servers
+      const commResponse = await fetch(`${this.options.url}/comm`);
+
+      const text = (await commResponse.text()).trim();
+      if (!commResponse.ok) {
+        throw new Error(text);
+      }
+
+      const result = text.match(/X\.servers=(.+?);?$/m);
+      if (!result || !result[1]) {
+        throw new Error("Could not find server data", { cause: text });
+      }
+
+      const servers = JSON.parse(result[1]);
+      GameEventBus.emit("servers_updated", this, servers);
+      this._servers = servers;
+      return servers;
+    } catch (e) {
+      const error = new Error("Failed updating servers", { cause: e });
+      GameEventBus.emit("update_servers_failed", this, error);
       throw error;
     }
   }

@@ -34,5 +34,8 @@
     "ts-node": "^10.9.2",
     "typed-adventureland": "^0.0.44",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
   }
 }

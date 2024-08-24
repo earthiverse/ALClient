@@ -1,15 +1,27 @@
 import type EventEmitter from "node:events";
+import {
+  type ServersAndCharactersApiResponse,
+  type XOnlineCharacter,
+} from "typed-adventureland";
+import Character from "./Character.js";
 import EventBus from "./EventBus.js";
 import { type Game } from "./Game.js";
 
 export interface PlayerEventMap {
+  /** A `Player` was instantiated */
   player_created: [Player];
+  /** `Player.characters` was updated */
+  characters_updated: [Player, Player["characters"]];
+  /** `Player.updateCharacters()` failed */
+  update_characters_failed: [Player, Error];
 }
 
 // Typescript will enforce only PlayerEventMap events to be allowed
 const PlayerEventBus = EventBus as unknown as EventEmitter<PlayerEventMap>;
 
 export class Player {
+  public readonly game: Game;
+
   /**
    * Your user ID is a string of numbers.
    * If your characters are not private, their `owner` will be this value.
@@ -29,14 +41,73 @@ export class Player {
    */
   public readonly userAuth: string;
 
-  public readonly game: Game;
+  /**
+   * Headers for sending API requests with authentication
+   */
+  protected get apiHeaders(): { Cookie: string } {
+    return { Cookie: `auth=${this.userId}-${this.userAuth}` };
+  }
 
-  constructor(userId: string, userAuth: string, game: Game) {
+  public characters: XOnlineCharacter[] = [];
+
+  /**
+   * This class represents a single player (account)
+   */
+  constructor(
+    game: Game,
+    userId: string,
+    userAuth: string,
+    characters: Player["characters"] = []
+  ) {
+    this.game = game;
     this.userId = userId;
     this.userAuth = userAuth;
-    this.game = game;
+    this.characters = characters;
 
     PlayerEventBus.emit("player_created", this);
+  }
+
+  public async createCharacter(): Promise<Character> {
+    // TODO: Use info from this.characters
+    // TODO: Start character based on type
+    return new Character(this, "12312321");
+  }
+
+  /**
+   * Updates `characters`
+   */
+  public async updateCharacters(): Promise<Player["characters"]> {
+    try {
+      const updateResponse = await fetch(`${this.game.apiUrl}`, {
+        method: "POST",
+        headers: this.apiHeaders,
+        body: new URLSearchParams({
+          method: "servers_and_characters",
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error(await updateResponse.text());
+      }
+
+      const updateJson = (
+        (await updateResponse.json()) as [ServersAndCharactersApiResponse]
+      )[0];
+
+      if (!updateJson.characters || !updateJson.servers) {
+        throw new Error(JSON.stringify(updateJson));
+      }
+
+      this.characters = updateJson.characters;
+      EventBus.emit("characters_updated", this, this.characters);
+      this.game._servers = updateJson.servers;
+      EventBus.emit("servers_updated", this.game, this.game.servers);
+      return this.characters;
+    } catch (e) {
+      const error = new Error("Failed updating characters", { cause: e });
+      PlayerEventBus.emit("update_characters_failed", this, error);
+      throw error;
+    }
   }
 }
 

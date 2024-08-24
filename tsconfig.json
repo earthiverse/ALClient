@@ -5,6 +5,7 @@
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "stripInternal": true
   }
 }

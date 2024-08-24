@@ -1,8 +1,9 @@
 import { EventEmitter } from "node:events";
+import type { CharacterEventMap } from "./Character.js";
 import type { GameEventMap } from "./Game.js";
 import type { PlayerEventMap } from "./Player.js";
 
-interface EventMap extends GameEventMap, PlayerEventMap {}
+interface EventMap extends CharacterEventMap, GameEventMap, PlayerEventMap {}
 
 export class EventBus extends EventEmitter<EventMap> {}
 
