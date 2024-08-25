@@ -2,6 +2,8 @@ import type { EventEmitter } from "node:events";
 import type {
   ClassKey,
   GData,
+  ServerIdentifier,
+  ServerRegion,
   XOnlineCharacter,
   XServerInfos,
 } from "typed-adventureland";
@@ -41,7 +43,7 @@ export class Game {
   public get G(): GData {
     if (this._G === undefined)
       throw new Error(
-        "No G data. Call `updateGameData()` after creating `Game`, or include G data when creating `Game`."
+        "No G data. Call `updateGameData()` after creating `Game`, or include G data when creating `Game`.",
       );
     return this._G;
   }
@@ -63,7 +65,7 @@ export class Game {
   public get servers(): XServerInfos[] {
     if (this._servers === undefined) {
       throw new Error(
-        "No servers data. Call `updateServers()` after creating `Game`, or include server data when creating `Game`."
+        "No servers data. Call `updateServers()` after creating `Game`, or include server data when creating `Game`.",
       );
     }
     return this._servers;
@@ -224,6 +226,20 @@ export class Game {
       GameEventBus.emit("update_servers_failed", this, error);
       throw error;
     }
+  }
+
+  public getServer(serverKey: string): XServerInfos;
+  public getServer(serverRegion: ServerRegion, serverId: ServerIdentifier): XServerInfos;
+  public getServer(serverKeyOrRegion: string, serverId?: ServerIdentifier): XServerInfos {
+    let server: XServerInfos | undefined;
+    if (serverId === undefined) {
+      server = this.servers.find((s) => s.key === serverKeyOrRegion);
+    } else {
+      server = this.servers.find((s) => s.region === serverKeyOrRegion && s.name === serverId);
+    }
+
+    if (!server) throw new Error(`Could not find server with key '${serverKeyOrRegion}'`);
+    return server;
   }
 }
 

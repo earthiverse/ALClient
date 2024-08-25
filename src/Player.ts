@@ -1,9 +1,5 @@
 import type EventEmitter from "node:events";
-import {
-  type ClassKey,
-  type ServersAndCharactersApiResponse,
-  type XOnlineCharacter,
-} from "typed-adventureland";
+import { type ServersAndCharactersApiResponse, type XOnlineCharacter } from "typed-adventureland";
 import Character from "./Character.js";
 import EventBus from "./EventBus.js";
 import { type Game } from "./Game.js";
@@ -61,12 +57,7 @@ export class Player {
   /**
    * This class represents a single player (account)
    */
-  constructor(
-    game: Game,
-    userId: string,
-    userAuth: string,
-    characters: Player["characters"] = []
-  ) {
+  constructor(game: Game, userId: string, userAuth: string, characters: Player["characters"] = []) {
     this.game = game;
     this.userId = userId;
     this.userAuth = userAuth;
@@ -83,13 +74,10 @@ export class Player {
   public createCharacter<T extends Character>(name: string): T {
     const character = this.characters.find((c) => c.name === name);
     if (!character) {
-      throw new Error(
-        `No character with the name '${name}' belongs to this Player`
-      );
+      throw new Error(`No character with the name '${name}' belongs to this Player`);
     }
 
-    // TODO: Remove `as ClassKey` once `typed-adventureland` gets updated
-    switch (character.type as ClassKey) {
+    switch (character.type) {
       case "mage":
         return new Mage(this, character.id) as T;
       case "merchant":
@@ -126,9 +114,7 @@ export class Player {
         throw new Error(await updateResponse.text());
       }
 
-      const updateJson = (
-        (await updateResponse.json()) as [ServersAndCharactersApiResponse]
-      )[0];
+      const [updateJson] = (await updateResponse.json()) as ServersAndCharactersApiResponse;
 
       if (!updateJson.characters || !updateJson.servers) {
         throw new Error(JSON.stringify(updateJson));
