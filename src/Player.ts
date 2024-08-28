@@ -38,10 +38,9 @@ export class Player {
    *
    * You can remove old unused auths:
    *
-   * 1. Visit https://adventure.land (or custom server website)
-   * 2. Log in
-   * 3. Click Email and Account (top left)
-   * 4. Click Logout Everywhere
+   * 1. Log in to https://adventure.land (or your custom server)
+   * 2. Click Email and Account (top left)
+   * 3. Click Logout Everywhere
    */
   public readonly userAuth: string;
 
@@ -102,7 +101,7 @@ export class Player {
    */
   public async updateCharacters(): Promise<Player["characters"]> {
     try {
-      const updateResponse = await fetch(`${this.game.apiUrl}`, {
+      const updateResponse = await fetch(this.game.apiUrl, {
         method: "POST",
         headers: this.apiHeaders,
         body: new URLSearchParams({

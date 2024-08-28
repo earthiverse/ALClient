@@ -17,9 +17,7 @@ test("`login()` with invalid credentials throws an error", async () => {
   });
 
   // Bad login
-  await expect(() =>
-    game.login("hyprkookeez+test@gmail.com", "this_is_not_my_real_password")
-  ).rejects.toThrow();
+  await expect(() => game.login("hyprkookeez+test@gmail.com", "this_is_not_my_real_password")).rejects.toThrow();
 
   // Event should have triggered
   expect(eventHappened).toBe(true);
