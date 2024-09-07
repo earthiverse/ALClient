@@ -19,9 +19,17 @@ import EventBus from "./EventBus.js";
 import Game from "./Game.js";
 
 export interface ObserverEventMap {
+  character_disappear: [Observer, EntityCharacter];
   monster_death: [Observer, EntityMonster];
+  monster_disappear: [Observer, EntityMonster];
   observer_created: [Observer];
   observer_started: [Observer, XServerInfos];
+  positions_updated: [
+    Observer,
+    Map<string, EntityCharacter>,
+    Map<string, EntityMonster>,
+    Map<string, EntityProjectile>,
+  ];
 }
 
 // Typescript will enforce only ObserverEventMap events to be allowed
@@ -117,19 +125,18 @@ export class Observer extends Entity {
 
     s.on("disappear", (data) => {
       let found = false;
-      if (this.monsters) {
-        const monster = this.monsters.get(data.id);
-        if (monster) {
-          found = true;
-          // TODO: Event
-          this.monsters.delete(data.id);
-        }
+      const monster = this.monsters.get(data.id);
+      if (monster) {
+        found = true;
+        ObserverEventBus.emit("monster_disappear", this, monster);
+        this.monsters.delete(data.id);
       }
-      if (!found && this.characters) {
+
+      if (!found) {
         const character = this.characters.get(data.id);
         if (character) {
           found = true;
-          // TODO: Event
+          ObserverEventBus.emit("character_disappear", this, character);
           this.characters.delete(data.id);
         }
       }
@@ -226,14 +233,6 @@ export class Observer extends Entity {
    * Updates positions of nearby monsters and characters
    */
   protected updatePositions() {
-    for (const [id, entity] of this.monsters) {
-      if (character.map !== this.map || character.in !== this.in) {
-        this.characters.delete(id);
-        continue;
-      }
-      // TODO: Remove if far away
-      entity.updatePosition();
-    }
     for (const [id, character] of this.characters) {
       if (character.map !== this.map || character.in !== this.in) {
         this.characters.delete(id);
@@ -241,6 +240,14 @@ export class Observer extends Entity {
       }
       // TODO: Remove if far away
       character.updatePosition();
+    }
+    for (const [id, entity] of this.monsters) {
+      if (character.map !== this.map || character.in !== this.in) {
+        this.characters.delete(id);
+        continue;
+      }
+      // TODO: Remove if far away
+      entity.updatePosition();
     }
     for (const [id, projectile] of this.projectiles) {
       if (this.map !== projectile.map || this.in !== projectile.in) {
@@ -251,7 +258,7 @@ export class Observer extends Entity {
       projectile.updatePosition();
     }
 
-    // TODO: Event
+    ObserverEventBus.emit("positions_updated", this, this.characters, this.monsters, this.projectiles);
   }
 }
 
