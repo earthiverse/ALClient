@@ -34,7 +34,7 @@ test("`start()` works", async () => {
   expect(eventHappened).toBe(true); // Event should have triggered
   expect(observer.socket?.connected).toBe(true); // We should be connected
 
-  observer.stop(); // TODO: We should have a `stop` method on the observer
+  observer.stop();
 }, 10000);
 
 test("`start` throws error if already started", async () => {

@@ -2,16 +2,19 @@ import EventEmitter from "node:events";
 import socket, { Socket } from "socket.io-client";
 import type {
   ClientToServerEvents,
-  MapKey,
   ServerIdentifier,
   ServerRegion,
+  ServerToClient_action_projectile,
+  ServerToClient_action_ray,
   ServerToClient_entities,
+  ServerToClient_hit,
   ServerToClientEvents,
   XServerInfos,
 } from "typed-adventureland";
+import { Entity } from "./Entity.js";
 import { EntityCharacter } from "./EntityCharacter.js";
 import { EntityMonster } from "./EntityMonster.js";
-import type { EntityProjectile } from "./EntityProjectile.js";
+import { EntityProjectile } from "./EntityProjectile.js";
 import EventBus from "./EventBus.js";
 import Game from "./Game.js";
 
@@ -24,9 +27,7 @@ export interface ObserverEventMap {
 // Typescript will enforce only ObserverEventMap events to be allowed
 const ObserverEventBus = EventBus as unknown as EventEmitter<ObserverEventMap>;
 
-export class Observer {
-  public readonly game: Game;
-
+export class Observer extends Entity {
   public socket?: Socket<
     { [E in keyof ServerToClientEvents]: (data: ServerToClientEvents[E]) => void },
     { [E in keyof ClientToServerEvents]: (data: ClientToServerEvents[E]) => void }
@@ -54,37 +55,8 @@ export class Observer {
     return this._projectiles;
   }
 
-  protected _map?: MapKey;
-  /** Current map */
-  public get map(): MapKey {
-    if (!this._map) throw new Error("Missing map data");
-    return this._map;
-  }
-
-  protected _in?: string;
-  /** Current instance */
-  public get in(): string {
-    if (!this._in) throw new Error("Missing instance data");
-    return this._in;
-  }
-
-  protected _x?: number;
-  /** Current x position */
-  public get x(): number {
-    if (!this._x) throw new Error("Missing position data");
-    return this._x;
-  }
-
-  protected _y?: number;
-  /** Current y position */
-  public get y(): number {
-    if (!this._y) throw new Error("Missing position data");
-    return this._y;
-  }
-
   constructor(game: Game, emitEvent = true) {
-    this.game = game;
-
+    super(game, "");
     if (emitEvent) ObserverEventBus.emit("observer_created", this);
   }
 
@@ -118,7 +90,21 @@ export class Observer {
       },
     );
 
-    // TODO: on("action")
+    s.on("action", (data) => {
+      if ((data as ServerToClient_action_ray).instant) return; // It's a ray, not a projectile
+
+      const attacker: Entity | undefined =
+        data.attacker === this.id ? this : (this.characters.get(data.attacker) ?? this.monsters.get(data.attacker));
+      const target: Entity | undefined =
+        data.target === this.id ? this : (this.characters.get(data.target) ?? this.monsters.get(data.target));
+
+      if (!attacker && !target) return; // We don't see either entity!?
+
+      this.projectiles.set(
+        data.pid,
+        new EntityProjectile(this.game, data as ServerToClient_action_projectile, attacker, target),
+      );
+    });
 
     s.on("death", (data) => {
       if (!this.monsters) return;
@@ -126,7 +112,7 @@ export class Observer {
       if (!monster) return;
 
       ObserverEventBus.emit("monster_death", this, monster);
-      this.monsters?.delete(data.id);
+      this.monsters.delete(data.id);
     });
 
     s.on("disappear", (data) => {
@@ -152,6 +138,15 @@ export class Observer {
 
     s.on("entities", (data) => {
       this.parseEntities(data);
+    });
+
+    s.on("hit", (data: ServerToClient_hit) => {
+      if (data.miss || data.evade) {
+        this.projectiles.delete(data.pid);
+        return;
+      }
+
+      // TODO other things
     });
 
     // Set up the connection
@@ -212,20 +207,18 @@ export class Observer {
     // Update monsters
     for (const monsterData of data.monsters) {
       const monster = this.monsters.get(monsterData.id);
-      const updatedData = { ...monsterData, map: this.map, in: this.in };
-      if (monster) monster.updateData(updatedData);
-      else this.monsters.set(updatedData.id, new EntityMonster(this.game, updatedData));
+      if (monster) monster.updateData(monsterData);
+      else this.monsters.set(monsterData.id, new EntityMonster(this.game, data, monsterData));
     }
 
     for (const characterData of data.players) {
       const character = this.characters.get(characterData.id);
-      const updatedData = { ...characterData, map: this.map, in: this.in };
+      const updatedData = { ...characterData, map: this.map, in: this._in };
       if (character) character.updateData(updatedData);
-      else this.characters.set(characterData.id, new EntityCharacter(this.game, updatedData));
+      else this.characters.set(characterData.id, new EntityCharacter(this.game, data, updatedData));
     }
 
-    if (data.type === "xy") this.updatePositions();
-
+    this.updatePositions();
     // TODO: Event
   }
 
@@ -233,9 +226,30 @@ export class Observer {
    * Updates positions of nearby monsters and characters
    */
   protected updatePositions() {
-    for (const [, entity] of this.monsters) entity.updatePosition();
-    for (const [, character] of this.characters) character.updatePosition();
-    for (const [, projectile] of this.projectiles) projectile.updatePosition();
+    for (const [id, entity] of this.monsters) {
+      if (character.map !== this.map || character.in !== this.in) {
+        this.characters.delete(id);
+        continue;
+      }
+      // TODO: Remove if far away
+      entity.updatePosition();
+    }
+    for (const [id, character] of this.characters) {
+      if (character.map !== this.map || character.in !== this.in) {
+        this.characters.delete(id);
+        continue;
+      }
+      // TODO: Remove if far away
+      character.updatePosition();
+    }
+    for (const [id, projectile] of this.projectiles) {
+      if (this.map !== projectile.map || this.in !== projectile.in) {
+        this.projectiles.delete(id);
+        continue;
+      }
+      // TODO: Remove if far away or old
+      projectile.updatePosition();
+    }
 
     // TODO: Event
   }
