@@ -107,6 +107,7 @@ export class Observer extends Entity {
         transports: ["websocket"],
       },
     );
+    this.socket = s;
 
     s.on("action", (data) => {
       if ((data as ServerToClient_action_ray).instant) return; // It's a ray, not a projectile
@@ -190,17 +191,15 @@ export class Observer extends Entity {
 
     // Set up the connection
     const connected = new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(
-        reject,
-        Configuration.CONNECT_TIMEOUT_MS,
-        new Error(`Failed to connect to ${server.key} within ${Configuration.CONNECT_TIMEOUT_MS}ms`),
-      );
+      const timeout = setTimeout(() => {
+        this.stop();
+        reject(new Error(`Failed to connect to ${server.key} within ${Configuration.CONNECT_TIMEOUT_MS}ms`));
+      }, Configuration.CONNECT_TIMEOUT_MS);
       s.on("welcome", (data) => {
         if (data.region !== server.region || data.name !== server.name)
           return reject(new Error(`Expected to connect to ${server.key}, but connected to ${data.name}${data.region}`));
 
         // Prepare the Observer
-        this.socket = s;
         this.server = server;
         this._characters = new Map();
         this._monsters = new Map();
@@ -222,9 +221,8 @@ export class Observer extends Entity {
     //   ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
     // });
 
-    // Wait for connection
     s.connect();
-    await connected;
+    await connected; // Wait for connection
 
     ObserverEventBus.emit("observer_started", this, server);
     return;
@@ -242,6 +240,7 @@ export class Observer extends Entity {
 
     delete this._characters;
     delete this._monsters;
+    delete this._projectiles;
 
     delete this._map;
     delete this._in;

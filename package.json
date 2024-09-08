@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint",
-    "test": "jest --maxWorkers=1 --coverage"
+    "test": "jest --maxWorkers=2 --coverage"
   },
   "repository": {
     "type": "git",

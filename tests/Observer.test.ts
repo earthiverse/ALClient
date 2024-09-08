@@ -44,7 +44,7 @@ test("`start` throws error if already started", async () => {
   await observer.start("US", "I");
 
   // Should throw, and the error message should contain the server we're currently running
-  await expect(() => observer.start("EU", "PVP")).rejects.toThrow(/USI/);
+  await expect(observer.start("EU", "PVP")).rejects.toThrow(/USI/);
 
   observer.stop();
 }, 10_000);

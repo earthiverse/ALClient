@@ -13,6 +13,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
   // Reset values
+  Configuration.CONNECT_TIMEOUT_MS = defaultConfig.CONNECT_TIMEOUT_MS;
   Configuration.SOCKET_EMIT_TIMEOUT_MS = defaultConfig.SOCKET_EMIT_TIMEOUT_MS;
 
   EventBus.removeAllListeners();
@@ -21,11 +22,19 @@ beforeEach(() => {
 test("SOCKET_EMIT_TIMEOUT_MS", async () => {
   const observer = new Observer(game);
 
+  // Should throw if we set the timeout to something unreasonable
+  Configuration.CONNECT_TIMEOUT_MS = 1;
+  await expect(observer.start("US", "I")).rejects.toThrow(/1ms/);
+}, 10_000);
+
+test("SOCKET_EMIT_TIMEOUT_MS", async () => {
+  const observer = new Observer(game);
+
   await observer.start("US", "I");
 
   // Should throw if we set the timeout to something unreasonable
   Configuration.SOCKET_EMIT_TIMEOUT_MS = 1;
-  await expect(() => observer.ping()).rejects.toThrow("Timeout (1ms)");
+  await expect(observer.ping()).rejects.toThrow(/1ms/);
 
   observer.stop();
 }, 10_000);
