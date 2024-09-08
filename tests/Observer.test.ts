@@ -5,8 +5,8 @@ import Observer from "../src/Observer.js";
 let game: Game;
 beforeAll(async () => {
   game = new Game();
-  await game.updateServers();
-}, 10000);
+  await Promise.all([game.updateG(), game.updateServers()]);
+}, 30_000);
 
 beforeEach(() => {
   EventBus.removeAllListeners();
@@ -35,7 +35,7 @@ test("`start()` works", async () => {
   expect(observer.socket?.connected).toBe(true); // We should be connected
 
   observer.stop();
-}, 10000);
+}, 10_000);
 
 test("`start` throws error if already started", async () => {
   const observer = new Observer(game);
@@ -47,4 +47,21 @@ test("`start` throws error if already started", async () => {
   await expect(() => observer.start("EU", "PVP")).rejects.toThrow(/USI/);
 
   observer.stop();
-}, 10000);
+}, 10_000);
+
+test("`ping()` works", async () => {
+  const observer = new Observer(game);
+
+  // First start should be OK
+  await observer.start("US", "I");
+
+  const before = performance.now();
+  const ms = await observer.ping();
+  const elapsed = performance.now() - before;
+
+  observer.stop();
+
+  expect(ms).toBeGreaterThan(0);
+  expect(ms).toBeLessThanOrEqual(elapsed);
+  expect(ms - elapsed).toBeLessThan(1); // Should be within a ms (I thought it would be a lot lower, but there's a lot of Promise overhead!?)
+}, 10_000);

@@ -42,9 +42,11 @@ export class EntityProjectile extends Entity {
       this._y = attacker.y;
     }
 
-    if (target) {
-      this._going_x = target.x;
-      this._going_y = target.y;
+    this._going_x = target?.x ?? data.x;
+    this._going_y = target?.y ?? data.y;
+
+    if (this._going_x === undefined) {
+      console.error(data);
     }
   }
 }

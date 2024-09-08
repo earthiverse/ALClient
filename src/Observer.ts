@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import EventEmitter from "node:events";
 import socket, { Socket } from "socket.io-client";
 import type {
@@ -7,10 +8,11 @@ import type {
   ServerToClient_action_projectile,
   ServerToClient_action_ray,
   ServerToClient_entities,
-  ServerToClient_hit,
+  ServerToClient_ping_ack,
   ServerToClientEvents,
   XServerInfos,
 } from "typed-adventureland";
+import Configuration from "./Configuration.js";
 import { Entity } from "./Entity.js";
 import { EntityCharacter } from "./EntityCharacter.js";
 import { EntityMonster } from "./EntityMonster.js";
@@ -30,6 +32,9 @@ export interface ObserverEventMap {
     Map<string, EntityMonster>,
     Map<string, EntityProjectile>,
   ];
+  // TODO: Can we emit for any socket event?
+  // socket_in: [Observer, keyof ServerToClientEvents, unknown];
+  // socket_out: [Observer, keyof ClientToServerEvents, unknown];
 }
 
 // Typescript will enforce only ObserverEventMap events to be allowed
@@ -61,6 +66,11 @@ export class Observer extends Entity {
   public get projectiles(): Exclude<Observer["_projectiles"], undefined> {
     if (!this._projectiles) throw new Error("Missing projectiles data");
     return this._projectiles;
+  }
+
+  protected _S?: unknown;
+  public get S(): unknown {
+    return structuredClone(this._S);
   }
 
   constructor(game: Game, emitEvent = true) {
@@ -147,18 +157,44 @@ export class Observer extends Entity {
       this.parseEntities(data);
     });
 
-    s.on("hit", (data: ServerToClient_hit) => {
-      if (data.miss || data.evade) {
-        this.projectiles.delete(data.pid);
-        return;
-      }
+    s.on("hit", (data) => {
+      if (data.pid) this.projectiles.delete(data.pid);
+      if (data.damage === 0) return;
 
-      // TODO other things
+      // TODO: Are data.hid & data.id always set?
+      const target =
+        data.id === this.id ? this : (this.monsters.get(data.id as string) ?? this.characters.get(data.id as string));
+
+      if (target) {
+        if (data.kill) {
+          // NOTE: Removal of entity happens in s.on("death")
+          target.updateData({ hp: 0, rip: true });
+        } else if (data.damage) {
+          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp - data.damage });
+        } else if (data.heal) {
+          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp + data.heal });
+        }
+      }
+    });
+
+    s.on("new_map", (data) => {
+      this._x = data.x;
+      this._y = data.y;
+
+      this.parseEntities(data.entities);
+    });
+
+    s.on("server_info", (data) => {
+      this._S = data;
     });
 
     // Set up the connection
     const connected = new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(reject, 5_000, new Error(`Failed to connect to ${server.key} within 5,000 ms`)); // TODO: Move timeout to a config
+      const timeout = setTimeout(
+        reject,
+        Configuration.CONNECT_TIMEOUT_MS,
+        new Error(`Failed to connect to ${server.key} within ${Configuration.CONNECT_TIMEOUT_MS}ms`),
+      );
       s.on("welcome", (data) => {
         if (data.region !== server.region || data.name !== server.name)
           return reject(new Error(`Expected to connect to ${server.key}, but connected to ${data.name}${data.region}`));
@@ -168,12 +204,23 @@ export class Observer extends Entity {
         this.server = server;
         this._characters = new Map();
         this._monsters = new Map();
+        this._projectiles = new Map();
+
+        this._S = data.S;
 
         clearTimeout(timeout);
         s.emit("loaded", {}); // Tell the server we're ready
         return resolve();
       });
     });
+
+    // TODO: Can we emit for any socket event?
+    // s.onAny((eventName, args) => {
+    //   ObserverEventBus.emit("socket_in", this, eventName as keyof ServerToClientEvents, args);
+    // });
+    // s.onAnyOutgoing((eventName, args) => {
+    //   ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
+    // });
 
     // Wait for connection
     s.connect();
@@ -200,6 +247,50 @@ export class Observer extends Entity {
     delete this._in;
     delete this._x;
     delete this._y;
+  }
+
+  /**
+   * Pings the server
+   *
+   * @returns elapsed time in ms
+   */
+  public ping(): Promise<number> {
+    if (!this.socket || this.socket.disconnected) {
+      throw new Error("Not connected");
+    }
+
+    const s = this.socket;
+
+    // Generate a random ID to use for the ping
+    const id = randomBytes(5).toString("hex");
+
+    const promise = new Promise<number>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("ping_ack", pingListener);
+        s.off("disconnect", cleanup);
+      };
+
+      const pingListener = (data: ServerToClient_ping_ack) => {
+        if (data.id !== id) return;
+        const elapsed = performance.now() - now;
+        cleanup();
+        resolve(elapsed);
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("ping_ack", pingListener);
+      s.on("disconnect", cleanup);
+    });
+
+    const now = performance.now();
+    s.emit("ping_trig", { id });
+
+    return promise;
   }
 
   protected parseEntities(data: ServerToClient_entities) {
@@ -241,13 +332,13 @@ export class Observer extends Entity {
       // TODO: Remove if far away
       character.updatePosition();
     }
-    for (const [id, entity] of this.monsters) {
-      if (character.map !== this.map || character.in !== this.in) {
+    for (const [id, monster] of this.monsters) {
+      if (monster.map !== this.map || monster.in !== this.in) {
         this.characters.delete(id);
         continue;
       }
       // TODO: Remove if far away
-      entity.updatePosition();
+      monster.updatePosition();
     }
     for (const [id, projectile] of this.projectiles) {
       if (this.map !== projectile.map || this.in !== projectile.in) {

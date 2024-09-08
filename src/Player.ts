@@ -1,8 +1,8 @@
 import type EventEmitter from "node:events";
-import { type ServersAndCharactersApiResponse, type XOnlineCharacter } from "typed-adventureland";
+import type { ServersAndCharactersApiResponse, XOnlineCharacter } from "typed-adventureland";
 import Character from "./Character.js";
 import EventBus from "./EventBus.js";
-import { type Game } from "./Game.js";
+import type { Game } from "./Game.js";
 import Mage from "./Mage.js";
 import Merchant from "./Merchant.js";
 import Paladin from "./Paladin.js";

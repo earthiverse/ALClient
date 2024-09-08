@@ -1,3 +1,14 @@
+# `npm i`
 node_modules
+
+# `npm pack`
+*.tgz
+
+# `npm run build`
 dist
+
+# `npm run test`
+coverage
+
+# Environment variables (secrets)
 *.env

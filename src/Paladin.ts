@@ -1,5 +1,5 @@
 import Character from "./Character.js";
 
-export class Merchant extends Character {}
+export class Paladin extends Character {}
 
-export default Merchant;
+export default Paladin;
