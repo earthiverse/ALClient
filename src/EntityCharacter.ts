@@ -1,6 +1,6 @@
 import type { ClassKey, MapKey, ServerToClient_entities_players } from "typed-adventureland";
 import { Entity } from "./Entity.js";
-import { type Game } from "./Game.js";
+import type { Game } from "./Game.js";
 
 export class EntityCharacter extends Entity {
   protected _ctype: ClassKey;

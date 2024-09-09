@@ -1,6 +1,6 @@
 import type { MapKey, MonsterKey, ServerToClient_entities_monsters } from "typed-adventureland";
 import { Entity } from "./Entity.js";
-import { type Game } from "./Game.js";
+import type { Game } from "./Game.js";
 
 export class EntityMonster extends Entity {
   protected _type: MonsterKey;

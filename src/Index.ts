@@ -15,4 +15,3 @@ export * from "./Priest.js";
 export * from "./Ranger.js";
 export * from "./Rogue.js";
 export * from "./Warrior.js";
-

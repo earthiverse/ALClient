@@ -1,15 +1,15 @@
 import type EventEmitter from "node:events";
 import type { ServersAndCharactersApiResponse, XOnlineCharacter } from "typed-adventureland";
-import Character from "./Character.js";
+import { Character } from "./Character.js";
 import EventBus from "./EventBus.js";
 import type { Game } from "./Game.js";
-import Mage from "./Mage.js";
-import Merchant from "./Merchant.js";
-import Paladin from "./Paladin.js";
-import Priest from "./Priest.js";
-import Ranger from "./Ranger.js";
-import Rogue from "./Rogue.js";
-import Warrior from "./Warrior.js";
+import { Mage } from "./Mage.js";
+import { Merchant } from "./Merchant.js";
+import { Paladin } from "./Paladin.js";
+import { Priest } from "./Priest.js";
+import { Ranger } from "./Ranger.js";
+import { Rogue } from "./Rogue.js";
+import { Warrior } from "./Warrior.js";
 
 export interface PlayerEventMap {
   /** A `Player` was instantiated */

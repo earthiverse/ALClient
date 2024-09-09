@@ -1,6 +1,6 @@
 import type { ProjectileKey, ServerToClient_action_projectile } from "typed-adventureland";
 import { Entity } from "./Entity.js";
-import { Game } from "./Game.js";
+import type { Game } from "./Game.js";
 
 export class EntityProjectile extends Entity {
   protected _projectile: ProjectileKey;

@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
-import EventEmitter from "node:events";
-import socket, { Socket } from "socket.io-client";
+import type { EventEmitter } from "node:events";
+import socket, { type Socket } from "socket.io-client";
 import type {
   ClientToServerEvents,
   ServerIdentifier,
@@ -18,7 +18,7 @@ import { EntityCharacter } from "./EntityCharacter.js";
 import { EntityMonster } from "./EntityMonster.js";
 import { EntityProjectile } from "./EntityProjectile.js";
 import EventBus from "./EventBus.js";
-import Game from "./Game.js";
+import type { Game } from "./Game.js";
 
 export interface ObserverEventMap {
   character_disappear: [Observer, EntityCharacter];
@@ -37,14 +37,16 @@ export interface ObserverEventMap {
   // socket_out: [Observer, keyof ClientToServerEvents, unknown];
 }
 
+export type TypedSocket = Socket<
+  { [E in keyof ServerToClientEvents]: (data: ServerToClientEvents[E]) => void },
+  { [E in keyof ClientToServerEvents]: (data: ClientToServerEvents[E]) => void }
+>;
+
 // Typescript will enforce only ObserverEventMap events to be allowed
 const ObserverEventBus = EventBus as unknown as EventEmitter<ObserverEventMap>;
 
 export class Observer extends Entity {
-  public socket?: Socket<
-    { [E in keyof ServerToClientEvents]: (data: ServerToClientEvents[E]) => void },
-    { [E in keyof ClientToServerEvents]: (data: ClientToServerEvents[E]) => void }
-  >;
+  public socket?: TypedSocket;
   public server?: XServerInfos;
 
   protected _characters?: Map<string, EntityCharacter>;
@@ -266,11 +268,11 @@ export class Observer extends Entity {
     const promise = new Promise<number>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
-        s.off("ping_ack", pingListener);
+        s.off("ping_ack", pingHandler);
         s.off("disconnect", cleanup);
       };
 
-      const pingListener = (data: ServerToClient_ping_ack) => {
+      const pingHandler = (data: ServerToClient_ping_ack) => {
         if (data.id !== id) return;
         const elapsed = performance.now() - now;
         cleanup();
@@ -282,7 +284,7 @@ export class Observer extends Entity {
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
-      s.on("ping_ack", pingListener);
+      s.on("ping_ack", pingHandler);
       s.on("disconnect", cleanup);
     });
 
