@@ -71,6 +71,11 @@ export class Character extends Observer {
     return this._max_hp;
   }
 
+  protected _party: string = "";
+  public get party(): string | undefined {
+    return this._party ? this._party : undefined;
+  }
+
   protected _s?: StatusInfo;
   public get s(): StatusInfo {
     if (this._s === undefined) throw new Error("No player data");
@@ -160,6 +165,7 @@ export class Character extends Observer {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
+    if (data.party !== undefined) this._party = data.party;
     if (data.s !== undefined) this._s = data.s;
   }
 

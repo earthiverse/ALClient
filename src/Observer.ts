@@ -319,9 +319,10 @@ export class Observer extends Entity {
 
     for (const characterData of data.players) {
       const character = this.characters.get(characterData.id);
-      const updatedData = { ...characterData, map: this.map, in: this._in };
-      if (character) character.updateData(updatedData);
-      else this.characters.set(characterData.id, new EntityCharacter(this.game, data, updatedData));
+      characterData.rip = characterData.rip ?? false;
+      characterData.party = characterData.party ?? "";
+      if (character) character.updateData(characterData);
+      else this.characters.set(characterData.id, new EntityCharacter(this.game, data, characterData));
     }
 
     this.updatePositions();
