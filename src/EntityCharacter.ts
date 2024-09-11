@@ -46,6 +46,7 @@ export class EntityCharacter extends Entity {
     this.updateData(data);
   }
 
+  /** @internal */
   public override updateData(data: Partial<ServerToClient_entities_players>): void {
     super.updateData(data);
 

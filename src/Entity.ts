@@ -85,6 +85,7 @@ export abstract class Entity implements EntityData, Location, Movement {
     this.id = id;
   }
 
+  /** @internal */
   public updateData(data: Partial<Location> & Partial<Movement>) {
     // Position
     this._lastUpdate = Date.now();
@@ -99,6 +100,7 @@ export abstract class Entity implements EntityData, Location, Movement {
     if (data.going_y !== undefined) this._going_y = data.going_y;
   }
 
+  /** @internal */
   public updatePosition() {
     const msSinceLastUpdate = Date.now() - this._lastUpdate;
     if (msSinceLastUpdate <= 0) return; // We already checked recently

@@ -149,6 +149,7 @@ export class Character extends Observer {
     return;
   }
 
+  /** @internal */
   public override updateData(data: Partial<ServerToClient_start | ServerToClient_player>): void {
     super.updateData(data);
 
