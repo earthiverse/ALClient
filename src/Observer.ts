@@ -209,6 +209,10 @@ export class Observer extends Entity {
         this._monsters = new Map();
         this._projectiles = new Map();
 
+        this._map = data.map;
+        this._in = data.in;
+        this._x = data.x;
+        this._y = data.y;
         this._S = data.S;
 
         clearTimeout(timeout);
@@ -250,6 +254,7 @@ export class Observer extends Entity {
     delete this._in;
     delete this._x;
     delete this._y;
+    delete this._S;
   }
 
   /**
