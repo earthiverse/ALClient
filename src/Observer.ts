@@ -106,6 +106,8 @@ export class Observer extends Entity {
           secret: options?.secret,
         },
         reconnection: true,
+        reconnectionDelay: Configuration.SOCKET_RECONNECT_DELAY_MS,
+        randomizationFactor: Configuration.SOCKET_RANDOMIZATION_FACTOR,
         transports: ["websocket"],
       },
     );
