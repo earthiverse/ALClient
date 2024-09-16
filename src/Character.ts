@@ -2,15 +2,19 @@ import type EventEmitter from "node:events";
 import type {
   AttackFailedGRDataObject,
   ClassKey,
+  CooldownGRDataObject,
+  NotReadyGRDataObject,
   ProjectileSkillGRDataObject,
   ServerIdentifier,
   ServerRegion,
   ServerToClient_disappear,
+  ServerToClient_disappearing_text,
   ServerToClient_disconnect_reason,
   ServerToClient_game_error,
   ServerToClient_game_response,
   ServerToClient_player,
   ServerToClient_start,
+  SkillKey,
   SkillSuccessGRDataObject,
   StatusInfo,
   XServerInfos,
@@ -35,6 +39,8 @@ export class Character extends Observer {
   public readonly player: Player;
 
   public readonly characterId: string;
+
+  protected readonly nextSkill = new Map<SkillKey, number>();
 
   protected _attack?: number;
   public get attack(): number {
@@ -114,6 +120,37 @@ export class Character extends Observer {
 
     const s = this.socket;
 
+    s.on("eval", (data) => {
+      if (data.code.startsWith("pot_timeout")) {
+        // potion cooldown still uses eval
+        const match = data.code.match(/[\d.]+/);
+        if (match) {
+          const futureMs = Date.now() + Number.parseFloat(match[0]);
+          this.nextSkill.set("use_hp", futureMs);
+          this.nextSkill.set("use_mp", futureMs);
+        }
+        return;
+      }
+    });
+
+    s.on("game_response", (data) => {
+      if ((data as NotReadyGRDataObject).response === "not_ready") {
+        // "not_ready" is used for cooldown on regen and potions
+        const ms = (data as NotReadyGRDataObject).ms;
+        if (ms === undefined) return; // TODO: https://github.com/kaansoral/adventureland/pull/154 will guarantee this is always defined
+        const futureMs = Date.now() + ms;
+        this.nextSkill.set("use_hp", futureMs);
+        this.nextSkill.set("use_mp", futureMs);
+        return;
+      }
+
+      if ((data as CooldownGRDataObject).response === "cooldown") {
+        const futureMs = Date.now() + (data as CooldownGRDataObject).ms;
+        this.nextSkill.set((data as CooldownGRDataObject).place, futureMs);
+        return;
+      }
+    });
+
     s.on("player", (data) => {
       this.updateData(data);
     });
@@ -134,6 +171,8 @@ export class Character extends Observer {
       const startHandler = (data: ServerToClient_start) => {
         cleanup();
         this._S = data.s_info;
+        this._going_x = data.x;
+        this._going_y = data.y;
         this.updateData(data);
         this.parseEntities(data.entities);
         resolve();
@@ -185,11 +224,11 @@ export class Character extends Observer {
   }
 
   protected override updatePositions(): void {
-    this.updatePosition();
+    if (this._going_x !== undefined && this._going_y !== undefined) this.updatePosition();
     super.updatePositions();
   }
 
-  public basicAttack(id: Entity | string): Promise<unknown> {
+  public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
     if (id instanceof Entity) id = id.id;
@@ -213,15 +252,15 @@ export class Character extends Observer {
       };
 
       const attackHandler = (data: ServerToClient_game_response) => {
-        if ((data as ProjectileSkillGRDataObject).place !== "attack") return; // Not attack
+        if ((data as ProjectileSkillGRDataObject).place !== "attack") return; // Different skill
 
         cleanup();
 
-        if ((data as ProjectileSkillGRDataObject).failed)
-          reject(new Error((data as ProjectileSkillGRDataObject).reason));
-
-        if ((data as AttackFailedGRDataObject).response === "attack_failed")
-          reject(new Error((data as AttackFailedGRDataObject).response));
+        if (
+          (data as ProjectileSkillGRDataObject).failed ||
+          (data as AttackFailedGRDataObject).response === "attack_failed"
+        )
+          reject(new Error((data as ProjectileSkillGRDataObject).reason ?? (data as CooldownGRDataObject).response));
 
         resolve(data as SkillSuccessGRDataObject);
       };
@@ -229,6 +268,7 @@ export class Character extends Observer {
       const disappearHandler = (data: ServerToClient_disappear) => {
         if (data.id !== id) return; // Different entity
         if (data.reason !== "not_there") return;
+        cleanup();
         reject(new Error("not_there"));
       };
 
@@ -242,6 +282,80 @@ export class Character extends Observer {
     });
 
     s.emit("attack", { id });
+
+    return promise;
+  }
+
+  public regenHp(): Promise<number> {
+    const s = this.socket;
+
+    const promise = new Promise<number>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("disappearing_text", successHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const successHandler = (data: ServerToClient_disappearing_text) => {
+        if (data.id !== this.id) return; // Different player
+        if ((data.args as { s: "hp" | "mp" }).s !== "hp") return; // Not HP regen
+        cleanup();
+        resolve(Number.parseInt(data.message));
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
+        cleanup();
+        reject(new Error((data as NotReadyGRDataObject).response));
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("disappearing_text", successHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("use", { item: "hp" });
+
+    return promise;
+  }
+
+  public regenMp(): Promise<number> {
+    const s = this.socket;
+
+    const promise = new Promise<number>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("disappearing_text", successHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const successHandler = (data: ServerToClient_disappearing_text) => {
+        if (data.id !== this.id) return; // Different player
+        if ((data.args as { s: "hp" | "mp" }).s !== "mp") return; // Not MP regen
+        cleanup();
+        resolve(Number.parseInt(data.message));
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
+        cleanup();
+        reject(new Error((data as NotReadyGRDataObject).response));
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("disappearing_text", successHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("use", { item: "mp" });
 
     return promise;
   }
