@@ -133,6 +133,8 @@ export class Character extends Observer {
           const futureMs = Date.now() + Number.parseFloat(match[0]);
           this.nextSkill.set("use_hp", futureMs);
           this.nextSkill.set("use_mp", futureMs);
+          this.nextSkill.set("regen_mp", futureMs);
+          this.nextSkill.set("regen_hp", futureMs);
         }
         return;
       }
@@ -146,6 +148,8 @@ export class Character extends Observer {
         const futureMs = Date.now() + ms;
         this.nextSkill.set("use_hp", futureMs);
         this.nextSkill.set("use_mp", futureMs);
+        this.nextSkill.set("regen_mp", futureMs);
+        this.nextSkill.set("regen_hp", futureMs);
         return;
       }
 
