@@ -1,4 +1,6 @@
 export class Configuration {
+  /** If true, we will throw an error when using a skill that's on cooldown */
+  public CHECK_COOLDOWN_BEFORE_EMIT = false;
   /** How long to wait for the `welcome` socket when initially connecting */
   public CONNECT_TIMEOUT_MS = 5000;
   /** How long to wait for a response for a socket emit */

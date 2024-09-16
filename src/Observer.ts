@@ -9,6 +9,7 @@ import type {
   ServerToClient_action_ray,
   ServerToClient_entities,
   ServerToClient_ping_ack,
+  ServerToClient_server_info,
   ServerToClientEvents,
   XServerInfos,
 } from "typed-adventureland";
@@ -46,8 +47,15 @@ export type TypedSocket = Socket<
 const ObserverEventBus = EventBus as unknown as EventEmitter<ObserverEventMap>;
 
 export class Observer extends Entity {
-  public socket?: TypedSocket;
   public server?: XServerInfos;
+
+  protected _socket?: TypedSocket;
+  public get socket(): TypedSocket {
+    if (this._socket === undefined || this._socket.disconnected) {
+      throw new Error("Not connected");
+    }
+    return this._socket;
+  }
 
   protected _characters?: Map<string, EntityCharacter>;
   /** Nearby characters, mapped by ID */
@@ -70,8 +78,9 @@ export class Observer extends Entity {
     return this._projectiles;
   }
 
-  protected _S?: unknown;
-  public get S(): unknown {
+  protected _S?: ServerToClient_server_info;
+  public get S(): ServerToClient_server_info {
+    if (!this._S) throw new Error("Missing server info");
     return structuredClone(this._S);
   }
 
@@ -89,7 +98,7 @@ export class Observer extends Entity {
    * @returns
    */
   public async start(serverRegion: ServerRegion, serverId: ServerIdentifier, options?: { secret?: string }) {
-    if (this.socket) {
+    if (this._socket) {
       if (!this.server) {
         throw new Error("This Observer has already started"); // This shouldn't happen
       }
@@ -111,7 +120,7 @@ export class Observer extends Entity {
         transports: ["websocket"],
       },
     );
-    this.socket = s;
+    this._socket = s;
 
     s.on("action", (data) => {
       if ((data as ServerToClient_action_ray).instant) return; // It's a ray, not a projectile
@@ -240,21 +249,15 @@ export class Observer extends Entity {
    * Stops this Observer
    */
   public stop() {
-    this.socket?.disconnect();
+    this._socket?.disconnect();
 
     // Reset variables
-    delete this.socket;
     delete this.server;
+    delete this._socket;
 
     delete this._characters;
     delete this._monsters;
     delete this._projectiles;
-
-    delete this._map;
-    delete this._in;
-    delete this._x;
-    delete this._y;
-    delete this._S;
   }
 
   /**
@@ -263,10 +266,6 @@ export class Observer extends Entity {
    * @returns elapsed time in ms
    */
   public ping(): Promise<number> {
-    if (!this.socket || this.socket.disconnected) {
-      throw new Error("Not connected");
-    }
-
     const s = this.socket;
 
     // Generate a random ID to use for the ping
@@ -283,6 +282,7 @@ export class Observer extends Entity {
         if (data.id !== id) return;
         const elapsed = performance.now() - now;
         cleanup();
+        // TODO: Event
         resolve(elapsed);
       };
 
@@ -343,7 +343,7 @@ export class Observer extends Entity {
     }
     for (const [id, monster] of this.monsters) {
       if (monster.map !== this.map || monster.in !== this.in) {
-        this.characters.delete(id);
+        this.monsters.delete(id);
         continue;
       }
       // TODO: Remove if far away

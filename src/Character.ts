@@ -5,18 +5,22 @@ import type {
   ProjectileSkillGRDataObject,
   ServerIdentifier,
   ServerRegion,
+  ServerToClient_disappear,
   ServerToClient_disconnect_reason,
   ServerToClient_game_error,
+  ServerToClient_game_response,
   ServerToClient_player,
   ServerToClient_start,
+  SkillSuccessGRDataObject,
   StatusInfo,
   XServerInfos,
 } from "typed-adventureland";
 import type { EntityChannelInfos } from "typed-adventureland/dist/src/entities/base-entity.js";
 import type { CharacterEntitySlotsInfos } from "typed-adventureland/dist/src/entities/character-entity.js";
 import Configuration from "./Configuration.js";
+import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
-import { Observer, type TypedSocket } from "./Observer.js";
+import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
 
 export interface CharacterEventMap {
@@ -108,7 +112,7 @@ export class Character extends Observer {
   public override async start(serverRegion: ServerRegion, serverId: ServerIdentifier): Promise<void> {
     await super.start(serverRegion, serverId);
 
-    const s = this.socket as TypedSocket;
+    const s = this.socket;
 
     s.on("player", (data) => {
       this.updateData(data);
@@ -177,11 +181,69 @@ export class Character extends Observer {
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.party !== undefined) this._party = data.party;
     if (data.s !== undefined) this._s = data.s;
+    if (data.slots !== undefined) this._slots = data.slots;
   }
 
   protected override updatePositions(): void {
     this.updatePosition();
     super.updatePositions();
+  }
+
+  public basicAttack(id: Entity | string): Promise<unknown> {
+    const s = this.socket;
+
+    if (id instanceof Entity) id = id.id;
+    if (!id) throw new Error("`id` not provided");
+
+    // TODO: Add configuration for check cooldown before emit
+    // if(Configuration.CHECK_COOLDOWN_BEFORE_EMIT) {
+
+    // }
+
+    // TODO: Add merchant check
+    // if(this.ctype === "merchant") {
+
+    // }
+
+    const promise = new Promise<SkillSuccessGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", attackHandler);
+        s.off("disappear", disappearHandler);
+      };
+
+      const attackHandler = (data: ServerToClient_game_response) => {
+        if ((data as ProjectileSkillGRDataObject).place !== "attack") return; // Not attack
+
+        cleanup();
+
+        if ((data as ProjectileSkillGRDataObject).failed)
+          reject(new Error((data as ProjectileSkillGRDataObject).reason));
+
+        if ((data as AttackFailedGRDataObject).response === "attack_failed")
+          reject(new Error((data as AttackFailedGRDataObject).response));
+
+        resolve(data as SkillSuccessGRDataObject);
+      };
+
+      const disappearHandler = (data: ServerToClient_disappear) => {
+        if (data.id !== id) return; // Different entity
+        if (data.reason !== "not_there") return;
+        reject(new Error("not_there"));
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", attackHandler);
+      s.on("disappear", disappearHandler);
+    });
+
+    s.emit("attack", { id });
+
+    return promise;
   }
 }
 
