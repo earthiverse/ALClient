@@ -164,6 +164,10 @@ export class Character extends Observer {
       this.updateData(data);
     });
 
+    s.on("skill_timeout", (data) => {
+      this.nextSkill.set(data.name, Date.now() + data.ms);
+    });
+
     const started = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
