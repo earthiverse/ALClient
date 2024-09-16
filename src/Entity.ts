@@ -104,10 +104,14 @@ export abstract class Entity implements EntityData, Location, Movement {
   public updatePosition() {
     const msSinceLastUpdate = Date.now() - this._lastUpdate;
     if (msSinceLastUpdate <= 0) return; // We already checked recently
-    if (!this.moving) return; // We aren't moving
-    if (!this.speed) return; // We aren't moving
-    if (this._x === undefined || this._y === undefined || this._going_x === undefined || this.going_y === undefined)
-      return; // We don't have positional data
+    if (
+      this._x === undefined ||
+      this._y === undefined ||
+      this._going_x === undefined ||
+      this.going_y === undefined ||
+      !this._speed
+    )
+      return; // No positional data, or not moving
 
     const distanceTraveled = (this.speed * msSinceLastUpdate) / 1000;
     const yToGoal = this.going_y - this.y;
