@@ -1,8 +1,9 @@
-import type { ClassKey } from "typed-adventureland";
 import { Character } from "./Character.js";
 
 export class Mage extends Character {
-  protected override _ctype: ClassKey = "mage";
+  public override get ctype(): "mage" {
+    return "mage";
+  }
 }
 
 export default Mage;
