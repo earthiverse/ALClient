@@ -133,9 +133,9 @@ export abstract class Entity implements EntityData, Location, Movement {
    * @param to
    * @returns Distance between this entity and the given location
    */
-  public getDistanceTo(to: Location) {
-    if (to.map !== this.map) return undefined; // Different map
-    if (to.in !== this.in) return undefined; // Different instance
+  public getDistanceTo(to: Location): number {
+    if (to.map !== this.map) return Number.POSITIVE_INFINITY; // Different map
+    if (to.in !== this.in) return Number.POSITIVE_INFINITY; // Different instance
     return Math.hypot(to.x - this.x, to.y - this.y);
   }
 }
