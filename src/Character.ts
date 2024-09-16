@@ -238,6 +238,11 @@ export class Character extends Observer {
     super.updatePositions();
   }
 
+  public getTimeout(skill: SkillKey): number {
+    const ms = this.nextSkill.get(skill);
+    return ms === undefined ? 0 : Math.max(0, ms - Date.now());
+  }
+
   public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
