@@ -1,10 +1,10 @@
 export * from "./Character.js";
-export * from "./Configuration.js";
+export { default as Configuration } from "./Configuration.js";
 export * from "./Entity.js";
 export * from "./EntityCharacter.js";
 export * from "./EntityMonster.js";
 export * from "./EntityProjectile.js";
-export * from "./EventBus.js";
+export { default as EventBus } from "./EventBus.js";
 export * from "./Game.js";
 export * from "./Mage.js";
 export * from "./Merchant.js";
@@ -15,3 +15,4 @@ export * from "./Priest.js";
 export * from "./Ranger.js";
 export * from "./Rogue.js";
 export * from "./Warrior.js";
+
