@@ -8,7 +8,6 @@ import type {
   ServerIdentifier,
   ServerRegion,
   ServerToClient_disappear,
-  ServerToClient_disappearing_text,
   ServerToClient_disconnect_reason,
   ServerToClient_game_error,
   ServerToClient_game_response,
@@ -93,6 +92,12 @@ export class Character extends Observer {
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
+  }
+
+  protected _range?: number;
+  public get range(): number {
+    if (this._range === undefined) throw new Error("No player data");
+    return this._range;
   }
 
   protected _s?: StatusInfo;
@@ -219,6 +224,7 @@ export class Character extends Observer {
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.party !== undefined) this._party = data.party;
+    if (data.range !== undefined) this._range = data.range;
     if (data.s !== undefined) this._s = data.s;
     if (data.slots !== undefined) this._slots = data.slots;
   }
@@ -286,27 +292,23 @@ export class Character extends Observer {
     return promise;
   }
 
-  public regenHp(): Promise<number> {
+  public regenHp(): Promise<void> {
     const s = this.socket;
 
-    const promise = new Promise<number>((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
-        s.off("disappearing_text", successHandler);
         s.off("game_response", responseHandler);
-      };
-
-      const successHandler = (data: ServerToClient_disappearing_text) => {
-        if (data.id !== this.id) return; // Different player
-        if ((data.args as { s: "hp" | "mp" }).s !== "hp") return; // Not HP regen
-        cleanup();
-        resolve(Number.parseInt(data.message));
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
         if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
         cleanup();
-        reject(new Error((data as NotReadyGRDataObject).response));
+        if ((data as SkillSuccessGRDataObject).success) {
+          resolve();
+        } else {
+          reject(new Error((data as NotReadyGRDataObject).response));
+        }
       };
 
       const timeout = setTimeout(() => {
@@ -314,7 +316,6 @@ export class Character extends Observer {
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
-      s.on("disappearing_text", successHandler);
       s.on("game_response", responseHandler);
     });
 
@@ -323,27 +324,23 @@ export class Character extends Observer {
     return promise;
   }
 
-  public regenMp(): Promise<number> {
+  public regenMp(): Promise<void> {
     const s = this.socket;
 
-    const promise = new Promise<number>((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
-        s.off("disappearing_text", successHandler);
         s.off("game_response", responseHandler);
-      };
-
-      const successHandler = (data: ServerToClient_disappearing_text) => {
-        if (data.id !== this.id) return; // Different player
-        if ((data.args as { s: "hp" | "mp" }).s !== "mp") return; // Not MP regen
-        cleanup();
-        resolve(Number.parseInt(data.message));
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
         if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
         cleanup();
-        reject(new Error((data as NotReadyGRDataObject).response));
+        if ((data as SkillSuccessGRDataObject).success) {
+          resolve();
+        } else {
+          reject(new Error((data as NotReadyGRDataObject).response));
+        }
       };
 
       const timeout = setTimeout(() => {
@@ -351,7 +348,6 @@ export class Character extends Observer {
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
-      s.on("disappearing_text", successHandler);
       s.on("game_response", responseHandler);
     });
 
