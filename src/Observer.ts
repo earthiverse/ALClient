@@ -33,9 +33,8 @@ export interface ObserverEventMap {
     Map<string, EntityMonster>,
     Map<string, EntityProjectile>,
   ];
-  // TODO: Can we emit for any socket event?
-  // socket_in: [Observer, keyof ServerToClientEvents, unknown];
-  // socket_out: [Observer, keyof ClientToServerEvents, unknown];
+  socket_in: [Observer, keyof ServerToClientEvents, unknown]; // TODO: Can we get this typed?
+  socket_out: [Observer, keyof ClientToServerEvents, unknown]; // TODO: Can we get this typed?
 }
 
 export type TypedSocket = Socket<
@@ -230,13 +229,14 @@ export class Observer extends Entity {
       });
     });
 
-    // TODO: Can we emit for any socket event?
-    // s.onAny((eventName, args) => {
-    //   ObserverEventBus.emit("socket_in", this, eventName as keyof ServerToClientEvents, args);
-    // });
-    // s.onAnyOutgoing((eventName, args) => {
-    //   ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
-    // });
+    s.onAny((eventName, args) => {
+      // TODO: Can we get this typed?
+      ObserverEventBus.emit("socket_in", this, eventName as keyof ServerToClientEvents, args);
+    });
+    s.onAnyOutgoing((eventName, args) => {
+      // TODO: Can we get this typed?
+      ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
+    });
 
     s.connect();
     await connected; // Wait for connection
