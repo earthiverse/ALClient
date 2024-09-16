@@ -27,6 +27,7 @@ export interface ObserverEventMap {
   monster_disappear: [Observer, EntityMonster];
   observer_created: [Observer];
   observer_started: [Observer, XServerInfos];
+  ping: [Observer, XServerInfos, number];
   positions_updated: [
     Observer,
     Map<string, EntityCharacter>,
@@ -46,7 +47,11 @@ export type TypedSocket = Socket<
 const ObserverEventBus = EventBus as unknown as EventEmitter<ObserverEventMap>;
 
 export class Observer extends Entity {
-  public server?: XServerInfos;
+  public _server?: XServerInfos;
+  public get server(): XServerInfos {
+    if (this._server === undefined) throw new Error("Missing server data");
+    return this._server;
+  }
 
   protected _socket?: TypedSocket;
   public get socket(): TypedSocket {
@@ -212,7 +217,7 @@ export class Observer extends Entity {
           return reject(new Error(`Expected to connect to ${server.key}, but connected to ${data.name}${data.region}`));
 
         // Prepare the Observer
-        this.server = server;
+        this._server = server;
         this._characters = new Map();
         this._monsters = new Map();
         this._projectiles = new Map();
@@ -252,7 +257,7 @@ export class Observer extends Entity {
     this._socket?.disconnect();
 
     // Reset variables
-    delete this.server;
+    delete this._server;
     delete this._socket;
 
     delete this._characters;
@@ -282,7 +287,7 @@ export class Observer extends Entity {
         if (data.id !== id) return;
         const elapsed = performance.now() - now;
         cleanup();
-        // TODO: Event
+        ObserverEventBus.emit("ping", this, this.server, elapsed);
         resolve(elapsed);
       };
 
