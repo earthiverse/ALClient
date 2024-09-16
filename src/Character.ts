@@ -1,5 +1,8 @@
 import type EventEmitter from "node:events";
 import type {
+  AttackFailedGRDataObject,
+  ClassKey,
+  ProjectileSkillGRDataObject,
   ServerIdentifier,
   ServerRegion,
   ServerToClient_disconnect_reason,
@@ -45,6 +48,12 @@ export class Character extends Observer {
   public get cash(): number {
     if (this._cash === undefined) throw new Error("No player data");
     return this._cash;
+  }
+
+  protected _ctype?: ClassKey;
+  public get ctype(): ClassKey {
+    if (this._ctype === undefined) throw new Error("No player data");
+    return this._ctype;
   }
 
   protected _gold?: number;
@@ -161,6 +170,7 @@ export class Character extends Observer {
     if (data.attack !== undefined) this._attack = data.attack;
     if (data.c !== undefined) this._c = data.c;
     if (data.cash !== undefined) this._cash = data.cash;
+    if (data.ctype !== undefined) this._ctype = data.ctype;
     if (data.gold !== undefined) this._gold = data.gold;
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
