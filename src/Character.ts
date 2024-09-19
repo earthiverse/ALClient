@@ -264,6 +264,17 @@ export class Character extends Observer {
     return ms === undefined ? 0 : Math.max(0, ms - Date.now());
   }
 
+  /**
+   * Used to adjust the cooldown of a specific skill. Useful for ping compensation.
+   *
+   * @param skill
+   * @param amount Time to add (or subtract, if negative) from the cooldown for the given skill
+   */
+  public adjustCooldown(skill: SkillKey, amount: number) {
+    const next = this.nextSkill.get(skill);
+    if (next) this.nextSkill.set(skill, next + amount);
+  }
+
   public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
