@@ -55,8 +55,8 @@ export class Observer extends Entity {
 
   protected _socket?: TypedSocket;
   public get socket(): TypedSocket {
-    if (this._socket === undefined || this._socket.disconnected) {
-      throw new Error("Not connected");
+    if (this._socket === undefined) {
+      throw new Error("Not started");
     }
     return this._socket;
   }
