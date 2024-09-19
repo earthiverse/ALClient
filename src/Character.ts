@@ -213,6 +213,16 @@ export class Character extends Observer {
       s.on("disconnect_reason", disconnectReasonHandler);
     });
 
+    s.on("welcome", () => {
+      // This emit is if the socket gets reconnected
+      s.emit("auth", {
+        auth: this.player.userAuth,
+        character: this.characterId,
+        user: this.player.userId,
+      });
+    });
+
+    // This emit is for the first auth
     s.emit("auth", {
       auth: this.player.userAuth,
       character: this.characterId,
@@ -220,7 +230,7 @@ export class Character extends Observer {
     });
     await started; // Wait for start
 
-    CharacterEventBus.emit("character_started", this, this.server as XServerInfos);
+    CharacterEventBus.emit("character_started", this, this.server);
 
     return;
   }
