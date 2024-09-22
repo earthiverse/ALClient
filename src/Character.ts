@@ -38,6 +38,7 @@ export interface CharacterEventMap {
   chest_opened: [Character, ServerToClient_chest_opened];
   conditions_set: [Character, StatusInfo];
   next_skill_set: [Character, SkillKey, number];
+  party_request_received: [Character, string];
   progress_set: [Character, CharacterEntityQInfos];
 }
 
@@ -204,6 +205,10 @@ export class Character extends Observer {
       this.updateData(data);
     });
 
+    s.on("request", (data) => {
+      CharacterEventBus.emit("party_request_received", this, data.name);
+    });
+
     s.on("skill_timeout", (data) => {
       this.setNextSkill(data.name, Date.now() + data.ms, true);
     });
@@ -327,6 +332,42 @@ export class Character extends Observer {
   public setNextSkill(skill: SkillKey, when: number, emit = false) {
     this.nextSkill.set(skill, when);
     if (emit) CharacterEventBus.emit("next_skill_set", this, skill, when);
+  }
+
+  /**
+   * @param name ID of character who requested an invite to your party
+   * @returns
+   */
+  public acceptPartyRequest(name: string) {
+    const s = this.socket;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        // TODO: Improve typing
+        if ((data as { place: string }).place !== "party") return; // Not a party response
+        cleanup();
+        if ((data as { success: boolean }).success) {
+          resolve();
+        } else {
+          reject(new Error((data as { response: string }).response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("party", { name, event: "raccept" });
+    return promise;
   }
 
   public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
@@ -500,6 +541,44 @@ export class Character extends Observer {
 
     s.emit("use", { item: "mp" });
 
+    return promise;
+  }
+
+  /**
+   * NOTE: This function will return a successful promise if the request was successfully sent, NOT if we successfully joined the party.
+   *
+   * @param name ID of character whose party you wish to join
+   * @returns
+   */
+  public sendPartyRequest(name: string): Promise<void> {
+    const s = this.socket;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        // TODO: Improve typing
+        if ((data as { place: string }).place !== "party") return; // Not a party response
+        cleanup();
+        if ((data as { success: boolean }).success) {
+          resolve();
+        } else {
+          reject(new Error((data as { response: string }).response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("party", { name, event: "request" });
     return promise;
   }
 }
