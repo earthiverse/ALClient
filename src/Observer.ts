@@ -187,11 +187,11 @@ export class Observer extends Entity {
       if (target) {
         if (data.kill) {
           // NOTE: Removal of entity happens in s.on("death")
-          target.updateData({ hp: 0, rip: true });
+          target.updateData({ hp: 0, rip: true }, false);
         } else if (data.damage) {
-          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp - data.damage });
+          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp - data.damage }, false);
         } else if (data.heal) {
-          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp + data.heal });
+          target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp + data.heal }, false);
         }
       }
     });
@@ -237,10 +237,12 @@ export class Observer extends Entity {
 
     s.onAny((eventName, args) => {
       // TODO: Can we get this typed?
+      this.updatePositions();
       ObserverEventBus.emit("socket_in", this, eventName as keyof ServerToClientEvents, args);
     });
     s.onAnyOutgoing((eventName, args) => {
       // TODO: Can we get this typed?
+      this.updatePositions();
       ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
     });
 

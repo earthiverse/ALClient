@@ -86,9 +86,9 @@ export abstract class Entity implements EntityData, Location, Movement {
   }
 
   /** @internal */
-  public updateData(data: Partial<Location> & Partial<Movement>) {
+  public updateData(data: Partial<Location> & Partial<Movement>, setLastUpdate = true) {
     // Position
-    this._lastUpdate = Date.now();
+    if (setLastUpdate) this._lastUpdate = Date.now();
     if (data.map !== undefined) this._map = data.map;
     if (data.in !== undefined) this._in = data.in;
     if (data.x !== undefined) this._x = data.x;

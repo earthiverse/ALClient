@@ -79,8 +79,8 @@ export class EntityCharacter extends Entity {
   }
 
   /** @internal */
-  public override updateData(data: Partial<ServerToClient_entities_players>): void {
-    super.updateData(data);
+  public override updateData(data: Partial<ServerToClient_entities_players>, setLastUpdate = true): void {
+    super.updateData(data, setLastUpdate);
 
     if (data.armor !== undefined) this._armor = data.armor;
     if (data.attack !== undefined) this._attack = data.attack;

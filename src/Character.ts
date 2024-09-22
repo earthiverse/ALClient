@@ -7,8 +7,10 @@ import type {
   ProjectileSkillGRDataObject,
   ServerIdentifier,
   ServerRegion,
+  ServerToClient_chest_opened,
   ServerToClient_disappear,
   ServerToClient_disconnect_reason,
+  ServerToClient_drop,
   ServerToClient_game_error,
   ServerToClient_game_response,
   ServerToClient_player,
@@ -32,6 +34,8 @@ import type { Player } from "./Player.js";
 export interface CharacterEventMap {
   character_created: [Character];
   character_started: [Character, XServerInfos];
+  chest_dropped: [Character, ServerToClient_drop];
+  chest_opened: [Character, ServerToClient_chest_opened];
   conditions_set: [Character, StatusInfo];
   next_skill_set: [Character, SkillKey, number];
   progress_set: [Character, CharacterEntityQInfos];
@@ -46,6 +50,7 @@ export class Character extends Observer {
   public readonly characterId: string;
 
   protected readonly nextSkill = new Map<SkillKey, number>();
+  protected readonly chests = new Map<string, ServerToClient_drop>();
 
   protected _attack?: number;
   public get attack(): number {
@@ -95,6 +100,8 @@ export class Character extends Observer {
     return this._level;
   }
 
+  protected _m: number = 0;
+
   protected _max_hp?: number;
   public get max_hp(): number {
     if (this._max_hp === undefined) throw new Error("No player data");
@@ -116,6 +123,11 @@ export class Character extends Observer {
   public get range(): number {
     if (this._range === undefined) throw new Error("No player data");
     return this._range;
+  }
+
+  protected _rip?: boolean;
+  public get rip(): boolean {
+    return !!this._rip;
   }
 
   protected _s?: StatusInfo;
@@ -142,6 +154,16 @@ export class Character extends Observer {
     await super.start(serverRegion, serverId);
 
     const s = this.socket;
+
+    s.on("chest_opened", (data) => {
+      this.chests.delete(data.id);
+      CharacterEventBus.emit("chest_opened", this, data);
+    });
+
+    s.on("drop", (data) => {
+      this.chests.set(data.id, data);
+      CharacterEventBus.emit("chest_dropped", this, data);
+    });
 
     s.on("eval", (data) => {
       if (data.code.startsWith("pot_timeout")) {
@@ -248,8 +270,8 @@ export class Character extends Observer {
   }
 
   /** @internal */
-  public override updateData(data: Partial<ServerToClient_start | ServerToClient_player>): void {
-    super.updateData(data);
+  public override updateData(data: Partial<ServerToClient_start | ServerToClient_player>, setLastUpdate = true): void {
+    super.updateData(data, setLastUpdate);
 
     if (data.attack !== undefined) this._attack = data.attack;
     if (data.c !== undefined) this._c = data.c;
@@ -259,6 +281,7 @@ export class Character extends Observer {
     if (data.gold !== undefined) this._gold = data.gold;
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
+    if (data.m !== undefined) this._m = data.m;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.party !== undefined) this._party = data.party;
     if (data.q !== undefined) {
@@ -276,6 +299,19 @@ export class Character extends Observer {
   protected override updatePositions(): void {
     if (this._going_x !== undefined && this._going_y !== undefined) this.updatePosition();
     super.updatePositions();
+  }
+
+  public canMove(): boolean {
+    if (this.rip) return false;
+    if (this.s) {
+      if (this.s.deepfreezed) return false;
+      if (this.s.fingered) return false;
+      if (this.s.sleeping) return false;
+      if (this.s.stoned) return false;
+      if (this.s.stunned) return false;
+    }
+
+    return true;
   }
 
   public getTimeout(skill: SkillKey): number {
@@ -347,6 +383,58 @@ export class Character extends Observer {
     });
 
     s.emit("attack", { id });
+
+    return promise;
+  }
+
+  public move(x: number, y: number): Promise<void> {
+    const s = this.socket;
+
+    if (this.going_x === x && this.going_y === y) return Promise.resolve(); // We're already moving there
+    if (!this.canMove()) return Promise.reject(new Error("We can't move"));
+
+    this._going_x = x;
+    this._going_y = y;
+
+    const distance = this.getDistanceTo({ x, y, map: this.map, in: this.in });
+
+    s.emit("move", { x: this.x, y: this.y, going_x: this.going_x, going_y: this.going_y, m: this._m });
+    return new Promise<void>((resolve) => setTimeout(resolve, (1000 * distance) / this.speed));
+  }
+
+  public openChest(id: string): Promise<ServerToClient_chest_opened> {
+    const s = this.socket;
+
+    const promise = new Promise<ServerToClient_chest_opened>((resolve, reject) => {
+      const cleanup = () => {
+        s.off("chest_opened", chestOpenedHandler);
+        s.off("game_response", gameResponseHandler);
+        clearTimeout(timeout);
+      };
+
+      const chestOpenedHandler = (data: ServerToClient_chest_opened) => {
+        if (data.id !== id) return; // Different chest
+        cleanup();
+        resolve(data);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (data == "loot_no_space" || data == "loot_failed") {
+          cleanup();
+          reject(new Error(data));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("chest_opened", chestOpenedHandler);
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("open_chest", { id });
 
     return promise;
   }
