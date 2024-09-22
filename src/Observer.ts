@@ -27,6 +27,7 @@ export interface ObserverEventMap {
   monster_disappear: [Observer, EntityMonster];
   observer_created: [Observer];
   observer_started: [Observer, XServerInfos];
+  observer_stopped: [Observer];
   ping: [Observer, XServerInfos, number];
   positions_updated: [
     Observer,
@@ -47,7 +48,7 @@ export type TypedSocket = Socket<
 const ObserverEventBus = EventBus as unknown as EventEmitter<ObserverEventMap>;
 
 export class Observer extends Entity {
-  public _server?: XServerInfos;
+  protected _server?: XServerInfos;
   public get server(): XServerInfos {
     if (this._server === undefined) throw new Error("Missing server data");
     return this._server;
@@ -263,6 +264,7 @@ export class Observer extends Entity {
     delete this._characters;
     delete this._monsters;
     delete this._projectiles;
+    ObserverEventBus.emit("observer_stopped", this);
   }
 
   /**

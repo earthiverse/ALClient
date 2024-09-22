@@ -19,7 +19,10 @@ import type {
   XServerInfos,
 } from "typed-adventureland";
 import type { EntityChannelInfos } from "typed-adventureland/dist/src/entities/base-entity.js";
-import type { CharacterEntitySlotsInfos } from "typed-adventureland/dist/src/entities/character-entity.js";
+import type {
+  CharacterEntityQInfos,
+  CharacterEntitySlotsInfos,
+} from "typed-adventureland/dist/src/entities/character-entity.js";
 import Configuration from "./Configuration.js";
 import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
@@ -29,6 +32,9 @@ import type { Player } from "./Player.js";
 export interface CharacterEventMap {
   character_created: [Character];
   character_started: [Character, XServerInfos];
+  conditions_set: [Character, StatusInfo];
+  next_skill_set: [Character, SkillKey, number];
+  progress_set: [Character, CharacterEntityQInfos];
 }
 
 // Typescript will enforce only CharacterEventMap events to be allowed
@@ -100,6 +106,12 @@ export class Character extends Observer {
     return this._party ? this._party : undefined;
   }
 
+  protected _q?: CharacterEntityQInfos;
+  public get q(): CharacterEntityQInfos {
+    if (this._q === undefined) throw new Error("No player data");
+    return this._q;
+  }
+
   protected _range?: number;
   public get range(): number {
     if (this._range === undefined) throw new Error("No player data");
@@ -137,10 +149,10 @@ export class Character extends Observer {
         const match = data.code.match(/[\d.]+/);
         if (match) {
           const futureMs = Date.now() + Number.parseFloat(match[0]);
-          this.nextSkill.set("use_hp", futureMs);
-          this.nextSkill.set("use_mp", futureMs);
-          this.nextSkill.set("regen_mp", futureMs);
-          this.nextSkill.set("regen_hp", futureMs);
+          this.setNextSkill("use_hp", futureMs, true);
+          this.setNextSkill("use_mp", futureMs, true);
+          this.setNextSkill("regen_hp", futureMs, true);
+          this.setNextSkill("regen_mp", futureMs, true);
         }
         return;
       }
@@ -152,16 +164,16 @@ export class Character extends Observer {
         const ms = (data as NotReadyGRDataObject).ms;
         if (ms === undefined) return; // TODO: https://github.com/kaansoral/adventureland/pull/154 will guarantee this is always defined
         const futureMs = Date.now() + ms;
-        this.nextSkill.set("use_hp", futureMs);
-        this.nextSkill.set("use_mp", futureMs);
-        this.nextSkill.set("regen_mp", futureMs);
-        this.nextSkill.set("regen_hp", futureMs);
+        this.setNextSkill("use_hp", futureMs, true);
+        this.setNextSkill("use_mp", futureMs, true);
+        this.setNextSkill("regen_hp", futureMs, true);
+        this.setNextSkill("regen_mp", futureMs, true);
         return;
       }
 
       if ((data as CooldownGRDataObject).response === "cooldown") {
         const futureMs = Date.now() + (data as CooldownGRDataObject).ms;
-        this.nextSkill.set((data as CooldownGRDataObject).place, futureMs);
+        this.setNextSkill((data as CooldownGRDataObject).place, futureMs, true);
         return;
       }
     });
@@ -171,7 +183,7 @@ export class Character extends Observer {
     });
 
     s.on("skill_timeout", (data) => {
-      this.nextSkill.set(data.name, Date.now() + data.ms);
+      this.setNextSkill(data.name, Date.now() + data.ms, true);
     });
 
     const started = new Promise<void>((resolve, reject) => {
@@ -249,8 +261,15 @@ export class Character extends Observer {
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.party !== undefined) this._party = data.party;
+    if (data.q !== undefined) {
+      this._q = data.q;
+      CharacterEventBus.emit("progress_set", this, data.q);
+    }
     if (data.range !== undefined) this._range = data.range;
-    if (data.s !== undefined) this._s = data.s;
+    if (data.s !== undefined) {
+      this._s = data.s;
+      CharacterEventBus.emit("conditions_set", this, data.s);
+    }
     if (data.slots !== undefined) this._slots = data.slots;
   }
 
@@ -265,14 +284,13 @@ export class Character extends Observer {
   }
 
   /**
-   * Used to adjust the cooldown of a specific skill. Useful for ping compensation.
-   *
    * @param skill
-   * @param amount Time to add (or subtract, if negative) from the cooldown for the given skill
+   * @param when The time that the skill will be available again
+   * @param emit Whether to emit the `next_skill_set` event.
    */
-  public adjustCooldown(skill: SkillKey, amount: number) {
-    const next = this.nextSkill.get(skill);
-    if (next) this.nextSkill.set(skill, next + amount);
+  public setNextSkill(skill: SkillKey, when: number, emit = false) {
+    this.nextSkill.set(skill, when);
+    if (emit) CharacterEventBus.emit("next_skill_set", this, skill, when);
   }
 
   public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
