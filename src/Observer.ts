@@ -237,12 +237,10 @@ export class Observer extends Entity {
 
     s.onAny((eventName, args) => {
       // TODO: Can we get this typed?
-      this.updatePositions();
       ObserverEventBus.emit("socket_in", this, eventName as keyof ServerToClientEvents, args);
     });
     s.onAnyOutgoing((eventName, args) => {
       // TODO: Can we get this typed?
-      this.updatePositions();
       ObserverEventBus.emit("socket_out", this, eventName as keyof ClientToServerEvents, args);
     });
 
