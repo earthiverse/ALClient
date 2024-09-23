@@ -89,8 +89,8 @@ export class Observer extends Entity {
     return structuredClone(this._S);
   }
 
-  constructor(game: Game, emitEvent = true) {
-    super(game, "");
+  constructor(game: Game, emitEvent = true, id = "") {
+    super(game, id);
     if (emitEvent) ObserverEventBus.emit("observer_created", this);
   }
 

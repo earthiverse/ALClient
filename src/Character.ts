@@ -143,8 +143,8 @@ export class Character extends Observer {
     return this.slots;
   }
 
-  constructor(player: Player, characterId: string) {
-    super(player.game, false);
+  constructor(player: Player, characterId: string, id: string) {
+    super(player.game, false, id);
 
     this.player = player;
     this.characterId = characterId;
@@ -322,6 +322,10 @@ export class Character extends Observer {
   public getTimeout(skill: SkillKey): number {
     const ms = this.nextSkill.get(skill);
     return ms === undefined ? 0 : Math.max(0, ms - Date.now());
+  }
+
+  public isOnCooldown(skill: SkillKey): boolean {
+    return this.getTimeout(skill) > 0;
   }
 
   /**
