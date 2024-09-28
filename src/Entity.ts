@@ -85,7 +85,12 @@ export abstract class Entity implements EntityData, Location, Movement {
     this.id = id;
   }
 
-  /** @internal */
+  /**
+   * NOTE: This function is intended for internal use.
+   *
+   * @param data
+   * @param setLastUpdate
+   */
   public updateData(data: Partial<Location> & Partial<Movement>, setLastUpdate = true) {
     // Position
     if (setLastUpdate) this._lastUpdate = Date.now();

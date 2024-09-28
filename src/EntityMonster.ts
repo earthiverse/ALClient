@@ -54,7 +54,6 @@ export class EntityMonster extends Entity {
     this.updateData(data);
   }
 
-  /** @internal */
   public override updateData(data: Partial<ServerToClient_entities_monsters>, setLastUpdate = true): void {
     super.updateData(data, setLastUpdate);
 
