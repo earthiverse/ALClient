@@ -23,6 +23,7 @@ import type { Game } from "./Game.js";
 
 export interface ObserverEventMap {
   character_disappear: [Observer, EntityCharacter];
+  entities_updated: [Observer, EntityMonster[], EntityCharacter[]];
   monster_death: [Observer, EntityMonster];
   monster_disappear: [Observer, EntityMonster];
   observer_created: [Observer];
@@ -318,22 +319,34 @@ export class Observer extends Entity {
     this._in = data.in;
 
     // Update monsters
+    const updatedMonsters: EntityMonster[] = [];
     for (const monsterData of data.monsters) {
-      const monster = this.monsters.get(monsterData.id);
-      if (monster) monster.updateData(monsterData);
-      else this.monsters.set(monsterData.id, new EntityMonster(this.game, data, monsterData));
+      let monster = this.monsters.get(monsterData.id);
+      if (monster) {
+        monster.updateData(monsterData);
+      } else {
+        monster = new EntityMonster(this.game, data, monsterData);
+        this.monsters.set(monsterData.id, monster);
+      }
+      updatedMonsters.push(monster);
     }
 
+    const updatedCharacters: EntityCharacter[] = [];
     for (const characterData of data.players) {
-      const character = this.characters.get(characterData.id);
+      let character = this.characters.get(characterData.id);
       characterData.rip = characterData.rip ?? false;
       characterData.party = characterData.party ?? "";
-      if (character) character.updateData(characterData);
-      else this.characters.set(characterData.id, new EntityCharacter(this.game, data, characterData));
+      if (character) {
+        character.updateData(characterData);
+      } else {
+        character = new EntityCharacter(this.game, data, characterData);
+        this.characters.set(characterData.id, character);
+      }
+      updatedCharacters.push(character);
     }
 
     this.updatePositions();
-    // TODO: Event
+    ObserverEventBus.emit("entities_updated", this, updatedMonsters, updatedCharacters);
   }
 
   /**
