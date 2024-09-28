@@ -3,6 +3,7 @@ import type {
   AttackFailedGRDataObject,
   ClassKey,
   CooldownGRDataObject,
+  ItemInfo,
   NotReadyGRDataObject,
   ProjectileSkillGRDataObject,
   ServerIdentifier,
@@ -93,6 +94,12 @@ export class Character extends Observer {
   public get hp(): number {
     if (this._hp === undefined) throw new Error("No player data");
     return this._hp;
+  }
+
+  protected _items?: Array<ItemInfo | null>;
+  public get items(): Array<ItemInfo | null> {
+    if (this._items === undefined) throw new Error("No player data");
+    return this._items;
   }
 
   protected _level?: number;
@@ -285,6 +292,7 @@ export class Character extends Observer {
     if (data.frequency !== undefined) this._frequency = data.frequency;
     if (data.gold !== undefined) this._gold = data.gold;
     if (data.hp !== undefined) this._hp = data.hp;
+    if (data.items !== undefined) this._items = data.items;
     if (data.level !== undefined) this._level = data.level;
     if (data.m !== undefined) this._m = data.m;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
@@ -322,6 +330,24 @@ export class Character extends Observer {
   public getTimeout(skill: SkillKey): number {
     const ms = this.nextSkill.get(skill);
     return ms === undefined ? 0 : Math.max(0, ms - Date.now());
+  }
+
+  public locateItem(item: Partial<ItemInfo>): number | undefined {
+    for (let index = 0; index < this.items.length; index++) {
+      const i = this.items[index];
+      if (i === null) continue;
+
+      let match = true;
+      for (const prop in i) {
+        if (item[prop as keyof ItemInfo] !== i[prop as keyof ItemInfo]) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) return index;
+    }
+    return undefined;
   }
 
   public isOnCooldown(skill: SkillKey): boolean {
