@@ -3,6 +3,7 @@ import type {
   AttackFailedGRDataObject,
   ClassKey,
   CooldownGRDataObject,
+  GoldReceivedGRDataObject,
   ItemInfo,
   NotReadyGRDataObject,
   ProjectileSkillGRDataObject,
@@ -584,6 +585,45 @@ export class Character extends Observer {
 
     s.emit("use", { item: "mp" });
 
+    return promise;
+  }
+
+  /**
+   * Sells an item to the NPC
+   *
+   * @param num Index of item in inventory
+   * @param quantity If the item is stackable, the number of items to sell
+   * @returns
+   */
+  public sell(num: number, quantity = 1): Promise<GoldReceivedGRDataObject> {
+    const s = this.socket;
+
+    const promise = new Promise<GoldReceivedGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        // TODO: Improve typing
+        if ((data as { place: string }).place !== "sell") return; // Not a sell response
+        cleanup();
+        if ((data as { success: boolean }).success) {
+          resolve(data as GoldReceivedGRDataObject);
+        } else {
+          reject(new Error((data as { response: string }).response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("sell", { num, quantity });
     return promise;
   }
 
