@@ -116,6 +116,18 @@ export class Character extends Observer {
     return this._max_hp;
   }
 
+  protected _max_mp?: number;
+  public get max_mp(): number {
+    if (this._max_mp === undefined) throw new Error("No player data");
+    return this._max_mp;
+  }
+
+  protected _mp?: number;
+  public get mp(): number {
+    if (this._mp === undefined) throw new Error("No player data");
+    return this._mp;
+  }
+
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
@@ -295,6 +307,8 @@ export class Character extends Observer {
     if (data.level !== undefined) this._level = data.level;
     if (data.m !== undefined) this._m = data.m;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
+    if (data.max_mp !== undefined) this._max_mp = data.max_mp;
+    if (data.mp !== undefined) this._mp = data.mp;
     if (data.party !== undefined) this._party = data.party;
     if (data.q !== undefined) {
       this._q = data.q;
