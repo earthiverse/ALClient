@@ -53,7 +53,7 @@ export class Character extends Observer {
   public readonly characterId: string;
 
   protected readonly nextSkill = new Map<SkillKey, number>();
-  protected readonly chests = new Map<string, ServerToClient_drop>();
+  public readonly chests = new Map<string, ServerToClient_drop>();
 
   protected _attack?: number;
   public get attack(): number {
@@ -487,6 +487,14 @@ export class Character extends Observer {
     return new Promise<void>((resolve) => setTimeout(resolve, (1000 * distance) / this.speed));
   }
 
+  /**
+   * Opens a chest with the given ID
+   * 
+   * See also {@see this.openChest}
+   * 
+   * @param id 
+   * @returns 
+   */
   public openChest(id: string): Promise<ServerToClient_chest_opened> {
     const s = this.socket;
 
