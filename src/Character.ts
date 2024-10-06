@@ -3,6 +3,7 @@ import type {
   AttackFailedGRDataObject,
   ClassKey,
   CooldownGRDataObject,
+  DestroyGRDataObject,
   GoldReceivedGRDataObject,
   ItemInfo,
   NotReadyGRDataObject,
@@ -472,6 +473,47 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   *
+   * @param num Index of item in inventory
+   * @param q If the item is stackable, we will destroy this many
+   * @returns
+   */
+  public destroy(num: number, q = 1): Promise<DestroyGRDataObject> {
+    const s = this.socket;
+
+    // TODO: Pre-checks (locked, no item)
+
+    const promise = new Promise<DestroyGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        // TODO: Improve typing
+        if ((data as DestroyGRDataObject).place !== "destroy") return; // Not a destroy response
+        if ((data as DestroyGRDataObject).num !== num) return; // Response for destroying a different item
+        cleanup();
+        if ((data as DestroyGRDataObject).success) {
+          resolve(data as DestroyGRDataObject);
+        } else {
+          reject(new Error((data as DestroyGRDataObject).response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("destroy", { num, q, statue: true });
+    return promise;
+  }
+
   public move(x: number, y: number): Promise<void> {
     const s = this.socket;
 
@@ -489,11 +531,11 @@ export class Character extends Observer {
 
   /**
    * Opens a chest with the given ID
-   * 
+   *
    * See also {@see this.openChest}
-   * 
-   * @param id 
-   * @returns 
+   *
+   * @param id
+   * @returns
    */
   public openChest(id: string): Promise<ServerToClient_chest_opened> {
     const s = this.socket;
@@ -605,6 +647,8 @@ export class Character extends Observer {
    */
   public sell(num: number, quantity = 1): Promise<GoldReceivedGRDataObject> {
     const s = this.socket;
+
+    // TODO: Pre-checks (locked, no item)
 
     const promise = new Promise<GoldReceivedGRDataObject>((resolve, reject) => {
       const cleanup = () => {
