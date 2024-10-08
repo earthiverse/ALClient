@@ -354,7 +354,7 @@ export class Character extends Observer {
    */
   public countItems(item: Partial<ItemInfo>): number {
     return this.locateItems(item).reduce(
-      (a, b) => ((this.items[a] as ItemInfo).q ?? 1) + ((this.items[b] as ItemInfo).q ?? 1),
+      (count, index) => count + ((this.items[index] as ItemInfo).q ?? 1),
       0,
     );
   }
