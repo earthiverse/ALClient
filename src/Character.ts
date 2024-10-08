@@ -342,15 +342,45 @@ export class Character extends Observer {
     return true;
   }
 
+  /**
+   * Returns a count of how many of the given item you have in your inventory.
+   * For stacks of items, it uses the `.q`.
+   *
+   * If you wish to know how many inventory slots are being taken up,
+   * try `character.locaateItems(item).length` instead.
+   *
+   * @param item all the properties the item needs to match
+   * @returns
+   */
+  public countItems(item: Partial<ItemInfo>): number {
+    return this.locateItems(item).reduce(
+      (a, b) => ((this.items[a] as ItemInfo).q ?? 1) + ((this.items[b] as ItemInfo).q ?? 1),
+      0,
+    );
+  }
+
+  /**
+   * Returns the number of ms before the skill is available for use
+   *
+   * @param skill
+   * @returns
+   */
   public getTimeout(skill: SkillKey): number {
     const ms = this.nextSkill.get(skill);
     return ms === undefined ? 0 : Math.max(0, ms - Date.now());
   }
 
+  /**
+   * Returns the index of the first item that matches all properties,
+   * or undefined if no item is found
+   *
+   * @param item all the properties the item needs to match
+   * @returns
+   */
   public locateItem(item: Partial<ItemInfo>): number | undefined {
     for (let index = 0; index < this.items.length; index++) {
       const i = this.items[index];
-      if (i === null) continue;
+      if (!i) continue;
 
       let match = true;
       for (const prop in i) {
@@ -365,11 +395,46 @@ export class Character extends Observer {
     return undefined;
   }
 
+  /**
+   * Returns an array of indices of items matching all of the specified properties.
+   *
+   * @param item all the properties the items need to match
+   * @returns
+   */
+  public locateItems(item: Partial<ItemInfo>): number[] {
+    const items: number[] = [];
+
+    for (let index = 0; index < this.items.length; index++) {
+      const i = this.items[index];
+      if (!i) continue;
+
+      let match = true;
+      for (const prop in i) {
+        if (item[prop as keyof ItemInfo] !== i[prop as keyof ItemInfo]) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) items.push(index);
+    }
+
+    return items;
+  }
+
+  /**
+   * Checks if the given skill is on cooldown
+   *
+   * @param skill
+   * @returns
+   */
   public isOnCooldown(skill: SkillKey): boolean {
     return this.getTimeout(skill) > 0;
   }
 
   /**
+   * Sets the time the next skill can be used at.
+   *
    * @param skill
    * @param when The time that the skill will be available again
    * @param emit Whether to emit the `next_skill_set` event.
@@ -380,6 +445,8 @@ export class Character extends Observer {
   }
 
   /**
+   * Accepts a party request that you have received
+   *
    * @param name ID of character who requested an invite to your party
    * @returns
    */
@@ -415,6 +482,14 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Performs a basic attack.
+   *
+   * Analogous to `attack()` in the vanilla game client.
+   *
+   * @param id
+   * @returns
+   */
   public basicAttack(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
@@ -474,6 +549,7 @@ export class Character extends Observer {
   }
 
   /**
+   * Destroys the item at the given index
    *
    * @param num Index of item in inventory
    * @param q If the item is stackable, we will destroy this many
@@ -514,6 +590,15 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Moves your character to the given x,y coordinates.
+   *
+   * NOTE: Currently does not check walls!
+   *
+   * @param x
+   * @param y
+   * @returns
+   */
   public move(x: number, y: number): Promise<void> {
     const s = this.socket;
 
@@ -531,8 +616,6 @@ export class Character extends Observer {
 
   /**
    * Opens a chest with the given ID
-   *
-   * See also {@see this.openChest}
    *
    * @param id
    * @returns
@@ -574,6 +657,10 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Regenerates a small amount of HP without using an item
+   * @returns
+   */
   public regenHp(): Promise<void> {
     const s = this.socket;
 
@@ -606,6 +693,10 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Regenerates a small amount of MP without using an item
+   * @returns 
+   */
   public regenMp(): Promise<void> {
     const s = this.socket;
 
