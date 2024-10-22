@@ -353,10 +353,7 @@ export class Character extends Observer {
    * @returns
    */
   public countItems(item: Partial<ItemInfo>): number {
-    return this.locateItems(item).reduce(
-      (count, index) => count + ((this.items[index] as ItemInfo).q ?? 1),
-      0,
-    );
+    return this.locateItems(item).reduce((count, index) => count + ((this.items[index] as ItemInfo).q ?? 1), 0);
   }
 
   /**
@@ -695,7 +692,7 @@ export class Character extends Observer {
 
   /**
    * Regenerates a small amount of MP without using an item
-   * @returns 
+   * @returns
    */
   public regenMp(): Promise<void> {
     const s = this.socket;

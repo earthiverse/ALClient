@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "format": "prettier --write .",
     "lint": "eslint",
     "test": "jest --maxWorkers=2 --coverage"
   },
