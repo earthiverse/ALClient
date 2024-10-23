@@ -105,9 +105,6 @@ export class Observer extends Entity {
    */
   public async start(serverRegion: ServerRegion, serverId: ServerIdentifier, options?: { secret?: string }) {
     if (this._socket) {
-      if (!this.server) {
-        throw new Error("This Observer has already started"); // This shouldn't happen
-      }
       throw new Error(`This Observer has already started (${this.server.region}${this.server.name})`);
     }
 
@@ -145,7 +142,6 @@ export class Observer extends Entity {
     });
 
     s.on("death", (data) => {
-      if (!this.monsters) return;
       const monster = this.monsters.get(data.id);
       if (!monster) return;
 
@@ -178,7 +174,7 @@ export class Observer extends Entity {
     });
 
     s.on("hit", (data) => {
-      if (data.pid) this.projectiles.delete(data.pid);
+      if (data.pid !== undefined) this.projectiles.delete(data.pid);
       if (data.damage === 0) return;
 
       // TODO: Are data.hid & data.id always set?
@@ -186,12 +182,12 @@ export class Observer extends Entity {
         data.id === this.id ? this : (this.monsters.get(data.id as string) ?? this.characters.get(data.id as string));
 
       if (target) {
-        if (data.kill) {
+        if (data.kill === true) {
           // NOTE: Removal of entity happens in s.on("death")
           target.updateData({ hp: 0, rip: true }, false);
-        } else if (data.damage) {
+        } else if (data.damage !== undefined && data.damage > 0) {
           target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp - data.damage }, false);
-        } else if (data.heal) {
+        } else if (data.heal !== undefined && data.heal > 0) {
           target.updateData({ hp: (target as EntityCharacter | EntityMonster).hp + data.heal }, false);
         }
       }

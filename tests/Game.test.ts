@@ -35,7 +35,14 @@ test("`login()` with valid credentials returns a `Player` object", async () => {
   const email = process.env.TEST_VALID_EMAIL;
   const password = process.env.TEST_VALID_PASSWORD;
   const numCharacters = process.env.TEST_VALID_EMAIL_CHARACTERS;
-  if (!email || !password || !numCharacters) {
+  if (
+    email === undefined ||
+    email === "" ||
+    password === undefined ||
+    password === "" ||
+    numCharacters === undefined ||
+    numCharacters === ""
+  ) {
     throw new Error("Environment variables not set");
   }
 

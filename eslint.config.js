@@ -7,7 +7,7 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
-    ignores: ["dist/**/*"],
+    ignores: ["coverage/**/*", "dist/**/*"],
   },
   {
     languageOptions: {
@@ -19,6 +19,7 @@ export default tseslint.config(
   },
   {
     rules: {
+      "@typescript-eslint/strict-boolean-expressions": "error",
       "@typescript-eslint/switch-exhaustiveness-check": "error",
     },
   },

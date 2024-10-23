@@ -86,7 +86,7 @@ export class Game {
    */
   public constructor(options?: Partial<GameOptions>) {
     // Override defaults if set
-    if (options?.url) this.options.url = options.url;
+    if (options?.url !== undefined) this.options.url = options.url;
     if (options?.G) this._G = options.G;
     if (options?.servers) this._servers = options.servers;
 
@@ -139,7 +139,7 @@ export class Game {
           for (const result of entry.html.matchAll(regex)) {
             if (result.groups) {
               const { name, id, type } = result.groups;
-              if (name && id && type)
+              if (name !== undefined && id !== undefined && type !== undefined)
                 characters.push({
                   id: id,
                   name: name,
@@ -153,14 +153,14 @@ export class Game {
           // Parse the cookie to get User ID and auth
           for (const cookie of loginResponse.headers.getSetCookie()) {
             const result = /^auth=(.+?);/.exec(cookie);
-            if (result && result[1]) {
+            if (result && result[1] !== undefined) {
               [userId, userAuth] = result[1].split("-");
             }
           }
         }
       }
 
-      if (userAuth && userId) {
+      if (userAuth !== undefined && userId !== undefined) {
         return new Player(this, userId, userAuth, characters);
       }
 
@@ -213,7 +213,7 @@ export class Game {
       }
 
       const result = text.match(/X\.servers=(.+?);?$/m);
-      if (!result || !result[1]) {
+      if (!result || result[1] === undefined) {
         throw new Error("Could not find server data", { cause: text });
       }
 

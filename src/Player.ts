@@ -115,7 +115,7 @@ export class Player {
 
       const [updateJson] = (await updateResponse.json()) as ServersAndCharactersApiResponse;
 
-      if (!updateJson.characters || !updateJson.servers) {
+      if (updateJson.characters === undefined || updateJson.servers === undefined) {
         throw new Error(JSON.stringify(updateJson));
       }
 

@@ -149,7 +149,7 @@ export class Character extends Observer {
 
   protected _rip?: boolean;
   public get rip(): boolean {
-    return !!this._rip;
+    return Boolean(this._rip);
   }
 
   protected _s?: StatusInfo;
@@ -331,13 +331,11 @@ export class Character extends Observer {
 
   public canMove(): boolean {
     if (this.rip) return false;
-    if (this.s) {
-      if (this.s.deepfreezed) return false;
-      if (this.s.fingered) return false;
-      if (this.s.sleeping) return false;
-      if (this.s.stoned) return false;
-      if (this.s.stunned) return false;
-    }
+    if (this.s.deepfreezed) return false;
+    if (this.s.fingered) return false;
+    if (this.s.sleeping) return false;
+    if (this.s.stoned) return false;
+    if (this.s.stunned) return false;
 
     return true;
   }
@@ -516,7 +514,7 @@ export class Character extends Observer {
         cleanup();
 
         if (
-          (data as ProjectileSkillGRDataObject).failed ||
+          (data as ProjectileSkillGRDataObject).failed === true ||
           (data as AttackFailedGRDataObject).response === "attack_failed"
         )
           reject(new Error((data as ProjectileSkillGRDataObject).reason ?? (data as CooldownGRDataObject).response));

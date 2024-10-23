@@ -59,7 +59,7 @@ export class EntityCharacter extends Entity {
   // TODO: Can this really be a number?
   protected _rip: boolean | number | undefined;
   public get rip(): boolean {
-    return !!this._rip;
+    return Boolean(this._rip);
   }
 
   constructor(game: Game, mapAndInstance: { map: MapKey; in: string }, data: ServerToClient_entities_players) {
@@ -68,7 +68,7 @@ export class EntityCharacter extends Entity {
     this._ctype = data.ctype;
     this._npc = data.npc;
 
-    if (!data.moving) {
+    if (data.moving !== true) {
       this._going_x = data.x;
       this._going_y = data.y;
     }

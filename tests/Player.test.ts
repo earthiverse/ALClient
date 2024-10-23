@@ -9,7 +9,7 @@ beforeAll(async () => {
 
   const email = process.env.TEST_VALID_EMAIL;
   const password = process.env.TEST_VALID_PASSWORD;
-  if (!email || !password) {
+  if (email === undefined || email === "" || password === undefined || password === "") {
     throw new Error("Environment variables not set");
   }
   player = await game.login(email, password);
@@ -31,7 +31,7 @@ test("`updateCharacters()` works", async () => {
   const characters = await player.updateCharacters();
 
   const numCharacters = process.env.TEST_VALID_EMAIL_CHARACTERS;
-  if (!numCharacters) {
+  if (numCharacters === undefined || numCharacters === "") {
     throw new Error("Environment variables not set");
   }
 

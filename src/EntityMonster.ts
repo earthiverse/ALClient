@@ -44,7 +44,7 @@ export class EntityMonster extends Entity {
     this._level = data.level ?? 1;
     this._max_hp = data.max_hp ?? gMonster.hp;
 
-    if (!data.moving) {
+    if (data.moving !== true) {
       this._going_x = data.x;
       this._going_y = data.y;
     }

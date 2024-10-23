@@ -40,7 +40,7 @@ export abstract class Entity implements EntityData, Location, Movement {
   protected _in?: string;
   /** Current instance */
   public get in(): string {
-    if (!this._in) throw new Error("Missing instance data");
+    if (this._in === undefined) throw new Error("Missing instance data");
     return this._in;
   }
 
@@ -114,7 +114,8 @@ export abstract class Entity implements EntityData, Location, Movement {
       this._y === undefined ||
       this._going_x === undefined ||
       this.going_y === undefined ||
-      !this._speed
+      this._speed === undefined ||
+      this._speed === 0
     )
       return; // No positional data, or not moving
 
