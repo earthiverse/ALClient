@@ -1,11 +1,13 @@
 import type EventEmitter from "node:events";
 import type {
   AttackFailedGRDataObject,
+  BuySuccessGRDataObject,
   ClassKey,
   CooldownGRDataObject,
   DestroyGRDataObject,
   GoldReceivedGRDataObject,
   ItemInfo,
+  ItemKey,
   NotReadyGRDataObject,
   ProjectileSkillGRDataObject,
   ServerIdentifier,
@@ -540,6 +542,40 @@ export class Character extends Observer {
 
     s.emit("attack", { id });
 
+    return promise;
+  }
+
+  public buy(name: ItemKey, quantity = 1): Promise<BuySuccessGRDataObject> {
+    const s = this.socket;
+
+    const promise = new Promise<BuySuccessGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        // TODO: Improve typing
+        if ((data as BuySuccessGRDataObject).place !== "buy") return; // Not a buy response
+        if ((data as BuySuccessGRDataObject).name !== name) return; // Response for buying a different item
+        if ((data as BuySuccessGRDataObject).q !== quantity) return; // Response for buying a different item
+        cleanup();
+        if ((data as BuySuccessGRDataObject).success) {
+          resolve(data as BuySuccessGRDataObject);
+        } else {
+          reject(new Error((data as DestroyGRDataObject).response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("buy", { name, quantity });
     return promise;
   }
 
