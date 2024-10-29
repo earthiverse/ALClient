@@ -62,7 +62,7 @@
         "cross-var": "^1.1.0",
         "delaunator": "^5.0.1",
         "is-number": "^7.0.0",
-        "lru-cache": "^10.2.2",
+        "lru-cache": "^10.4.3",
         "mongoose": "^7.8.0",
         "ngraph.graph": "^20.0.1",
         "ngraph.path": "^1.5.0",
