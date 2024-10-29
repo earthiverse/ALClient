@@ -3537,8 +3537,12 @@ export class Character extends Observer implements CharacterData {
 
     public getPlayers(filters: GetPlayersFilters = {}): Player[] {
         const players: Player[] = []
-
-        for (const [, player] of this.players) {
+        filterCheck: for (const [, player] of this.players) {
+            if (filters.ignoreIDs !== undefined) {
+                for (const id of filters.ignoreIDs) {
+                    if (id == player.id) continue filterCheck
+                }
+            }
             if (filters.ctype !== undefined && player.ctype !== filters.ctype) continue
             if (filters.isDead !== undefined) {
                 const rip = player.rip
@@ -3564,11 +3568,6 @@ export class Character extends Observer implements CharacterData {
                 const partyMember = player.party == this.party
                 if (filters.isPartyMember && !partyMember) continue
                 if (!filters.isPartyMember && partyMember) continue
-            }
-            if (filters.ignoreIDs !== undefined) {
-                for (const id in filters.ignoreIDs) {
-                    if (id == player.id) continue
-                }
             }
             if (filters.targetingMe !== undefined) {
                 if (filters.targetingMe) {
