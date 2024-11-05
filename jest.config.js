@@ -12,7 +12,7 @@ export default {
     "^.+.tsx?$": ["ts-jest", { tsconfig: "./tsconfig.jest.json" }],
   },
   moduleNameMapper: {
-    "(.+)\\.js": "$1",
+    "^(\\.{1,2}/.*)\\.js": "$1",
   },
   setupFilesAfterEnv: ["dotenv/config"],
 };
