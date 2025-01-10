@@ -72,7 +72,7 @@ export class Player {
    */
   public createCharacter<T extends Character>(name: string): T {
     const character = this.characters.find((c) => c.name === name);
-    if (!character) {
+    if (character === undefined) {
       throw new Error(`No character with the name '${name}' belongs to this Player`);
     }
 
