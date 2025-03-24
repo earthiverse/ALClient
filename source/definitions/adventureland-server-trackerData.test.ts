@@ -69,11 +69,11 @@ test("TrackerData type validation", async () => {
                     [0.000001, "angelwings"],
                 ],
                 arena: [[0.00008, "gem0"]],
-                maintest: [
-                    [0.001, "ringsj"],
-                    [0.0007, "hpamulet"],
-                    [0.0007, "hpbelt"],
-                ],
+                // maintest: [
+                //     [0.001, "ringsj"],
+                //     [0.0007, "hpamulet"],
+                //     [0.0007, "hpbelt"],
+                // ],
                 cave: [
                     [0.0001, "wattire"],
                     [0.0001, "wgloves"],

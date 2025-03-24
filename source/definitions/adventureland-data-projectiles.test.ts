@@ -43,9 +43,14 @@ test("G.projectiles type validation", async () => {
                 hit_animation: "curse_new",
                 speed: 240,
             },
+            dartgun: {
+                animation: "gold",
+                hit_animation: "slash1",
+                speed: 320,
+            },
             firearrow: {
                 animation: "firearrow",
-                hit_animation: "firearrow",
+                hit_animation: "arrow_hit",
                 speed: 460,
             },
             fireball: {

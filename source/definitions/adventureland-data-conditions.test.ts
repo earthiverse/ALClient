@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 749 (2022-08-29)
+ * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
  * It is used to confirm type correctness
  */
 
@@ -34,8 +34,8 @@ test("G.conditions type validation", async () => {
                 skin: "condition_neutral",
             },
             burned: {
-                bad: true,
                 debuff: true,
+                defense: "firesistance",
                 interval: 210,
                 name: "Burned",
                 skin: "fireblade",
@@ -56,14 +56,15 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             cursed: {
-                bad: true,
                 debuff: true,
                 duration: 5000,
+                incdmgamp: 20,
                 name: "Cursed",
+                output: -20,
                 skin: "condition_bad",
+                speed: -20,
             },
             dampened: {
-                bad: true,
                 debuff: true,
                 duration: 300,
                 explanation: "Can't blink or teleport",
@@ -85,9 +86,9 @@ test("G.conditions type validation", async () => {
                 skin: "condition_positive",
             },
             deepfreezed: {
-                bad: true,
                 blocked: true,
                 debuff: true,
+                defense: "fzresistance",
                 duration: 12000,
                 name: "Deepfreezed",
                 skin: "condition_bad",
@@ -103,7 +104,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             eburn: {
-                bad: true,
                 damage: 50,
                 debuff: true,
                 duration: 12000,
@@ -132,7 +132,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             fingered: {
-                bad: true,
                 blocked: true,
                 debuff: true,
                 evasion: 96,
@@ -149,8 +148,8 @@ test("G.conditions type validation", async () => {
                 skin: "skill_fishing",
             },
             frozen: {
-                bad: true,
                 debuff: true,
+                defense: "fzresistance",
                 duration: 5000,
                 name: "Frozen",
                 skin: "frostbow",
@@ -166,12 +165,10 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             fullguardx: {
-                armor: 10000,
+                avoidance: 99,
                 buff: true,
-                miss: 99,
                 name: "Full Guard",
                 persistent: true,
-                resistance: 10000,
                 skin: "fullguard",
                 ui: true,
             },
@@ -268,6 +265,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 duration: 10000,
                 explanation: "Marked by a ranger for death. Receive 10% more damage and can't stealth.",
+                incdmgamp: 10,
                 name: "Marked",
                 skin: "skill_huntersmark",
                 ui: true,
@@ -371,7 +369,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             penalty_cd: {
-                bad: true,
                 debuff: true,
                 explanation:
                     "The remaining duration of this condition is added any skill you use. Teleporting adds 3s, magiporting adds around 800ms, some item operations add 100-200ms.",
@@ -388,9 +385,17 @@ test("G.conditions type validation", async () => {
                 speed: -16,
                 ui: true,
             },
+            pickpocket: {
+                channel: true,
+                duration: 2200,
+                duration_min: 200,
+                explanation: "Pickpocket in progress",
+                name: "Pickpocket",
+                skin: "skill_pickpocket",
+            },
             poisoned: {
-                bad: true,
                 debuff: true,
+                defense: "pnresistance",
                 duration: 5000,
                 frequencym: 0.8,
                 healm: 0.25,
@@ -453,7 +458,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             shocked: {
-                bad: true,
                 debuff: true,
                 duration: 1600,
                 explanation: "Imminent magical damage",
@@ -468,7 +472,6 @@ test("G.conditions type validation", async () => {
                 name: "Sleeping",
             },
             slowness: {
-                bad: true,
                 debuff: true,
                 explanation: "Things like spiderwebs cause you to slow down.",
                 name: "Slowness",
@@ -483,7 +486,6 @@ test("G.conditions type validation", async () => {
                 skin: "skill_stack",
             },
             stoned: {
-                bad: true,
                 blocked: true,
                 debuff: true,
                 duration: 4000,
@@ -491,9 +493,9 @@ test("G.conditions type validation", async () => {
                 skin: "condition_neutral",
             },
             stunned: {
-                bad: true,
                 blocked: true,
                 debuff: true,
+                defense: "phresistance",
                 duration: 3200,
                 name: "Stunned",
                 skin: "condition_bad",
@@ -509,7 +511,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             tangled: {
-                bad: true,
                 debuff: true,
                 duration: 12000,
                 name: "Tangled",
@@ -537,7 +538,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             weakness: {
-                bad: true,
                 debuff: true,
                 dex: -10,
                 duration: 20000,
@@ -548,7 +548,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             withdrawal: {
-                bad: true,
                 debuff: true,
                 dex: -20,
                 duration: 10800000,
@@ -562,8 +561,8 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             woven: {
-                bad: true,
                 debuff: true,
+                duration: 1000,
                 explanation: "Slowed down from all the spider silk sticking around.",
                 name: "Woven",
                 skin: "spidersilk",
@@ -580,7 +579,6 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             xshotted: {
-                bad: true,
                 debuff: true,
                 duration: 43200000,
                 explanation: "Good luck trying to find a tavern to play in.",

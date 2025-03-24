@@ -2,7 +2,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 758 (2022-11-23)
+ * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
  * It is used to confirm type correctness
  */
 
@@ -283,26 +283,31 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-396, -594, 8, -328],
                         count: 6,
+                        grow: true,
                         type: "bat",
                     },
                     {
                         boundary: [182, -1282, 465, -932],
                         count: 7,
+                        grow: true,
                         type: "bat",
                     },
                     {
                         boundary: [1018, -940, 1385, -624],
                         count: 8,
+                        grow: true,
                         type: "bat",
                     },
                     {
                         boundary: [1066, -132, 1420, 78],
                         count: 5,
+                        grow: true,
                         type: "bat",
                     },
                     {
                         boundary: [964, 11, 1252, 107],
                         count: 2,
+                        grow: true,
                         type: "bat",
                     },
                     {
@@ -463,117 +468,8 @@ test("G.maps type validation", async () => {
                     [0, -671],
                 ],
             },
-            d_a1: {
-                doors: [
-                    [0.21, 79.75, 54.39, 66.5, "d_b1", 1, 0],
-                    [254.82, -916.88, 61.73, 99, "d_a2", 0, 1],
-                ],
-                key: "jayson_pvpDungeon_a1",
-                monsters: [],
-                name: "Dungeon",
-                npcs: [],
-                quirks: [],
-                spawns: [
-                    [-2.2, 1.48, 3],
-                    [255.6, -905.1],
-                ],
-                world: "dungeon",
-            },
-            d_a2: {
-                doors: [[0.6, 77.16, 56.2, 64.21, "d_a1", 1, 0]],
-                key: "jayson_pvpDungeon_a2",
-                monsters: [],
-                name: "Dungeon",
-                npcs: [],
-                quirks: [],
-                spawns: [[-2.12, -0.39, 3]],
-                world: "dungeon",
-            },
-            d_b1: {
-                doors: [
-                    [0.09, 83.59, 66.6, 63.26, "d_g", 1, 0],
-                    [-192.9, -1666.24, 59.7, 45.23, "d_a1", 0, 1],
-                ],
-                key: "jayson_pvpDungeon_b1",
-                monsters: [],
-                name: "Dungeon",
-                npcs: [],
-                quirks: [[190.54, -1628.83, 59.88, 85.03, "log", "The passage is blocked"]],
-                spawns: [
-                    [-0.28, 10.19, 3],
-                    [-192.16, -1655.63],
-                ],
-                traps: [
-                    {
-                        polygon: [
-                            [-336, -1136],
-                            [-192, -1136],
-                            [-192, -1160],
-                            [-168, -1160],
-                            [-168, -1152],
-                            [-120, -1152],
-                            [-120, -1168],
-                            [-112, -1168],
-                            [-112, -1240],
-                            [-72, -1240],
-                            [-72, -1256],
-                            [-56, -1256],
-                            [-56, -1288],
-                            [0, -1288],
-                            [0, -1272],
-                            [16, -1272],
-                            [16, -1208],
-                            [88, -1208],
-                            [88, -1088],
-                            [200, -1088],
-                            [200, -1128],
-                            [336, -1128],
-                            [336, -1368],
-                            [240, -1368],
-                            [240, -1336],
-                            [216, -1336],
-                            [216, -1320],
-                            [160, -1320],
-                            [160, -1400],
-                            [128, -1400],
-                            [128, -1448],
-                            [144, -1448],
-                            [144, -1512],
-                            [88, -1512],
-                            [88, -1496],
-                            [64, -1496],
-                            [64, -1440],
-                            [40, -1440],
-                            [40, -1432],
-                            [0, -1432],
-                            [0, -1464],
-                            [-40, -1464],
-                            [-40, -1480],
-                            [-64, -1480],
-                            [-64, -1512],
-                            [-144, -1512],
-                            [-144, -1560],
-                            [-176, -1560],
-                            [-176, -1576],
-                            [-216, -1576],
-                            [-216, -1544],
-                            [-264, -1544],
-                            [-264, -1480],
-                            [-288, -1480],
-                            [-288, -1456],
-                            [-296, -1456],
-                            [-296, -1432],
-                            [-328, -1432],
-                            [-328, -1152],
-                            [-336, -1152],
-                        ],
-                        type: "debuff",
-                    },
-                ],
-                world: "dungeon",
-            },
             d_e: {
-                doors: [[-0.15, -299.63, 35.39, 51.17, "d_g", 0, 1]],
+                doors: [],
                 fx: "storm",
                 key: "jayson_pvpDungeon_entrance",
                 monsters: [],
@@ -593,22 +489,6 @@ test("G.maps type validation", async () => {
                 weather: "rain",
                 world: "dungeon",
             },
-            d_g: {
-                doors: [
-                    [0.14, 47.88, 46.19, 36.62, "d_e", 1, 0],
-                    [-320.6, -39.93, 64.22, 59.29, "d_b1", 0, 1],
-                ],
-                key: "jayson_pvpDungeon_gateway",
-                monsters: [],
-                name: "Dungeon [Gateway]",
-                npcs: [],
-                quirks: [[-320.64, -213.45, 67.59, 82.61, "log", "The passage is blocked"]],
-                spawns: [
-                    [0.03, 1.13, 3],
-                    [-319.17, -102.09, 3],
-                ],
-                world: "dungeon",
-            },
             desertland: {
                 burn_multiplier: 1.6,
                 doors: [[600, -2383, 40, 40, "level2s", 1, 2]],
@@ -619,11 +499,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-1013, -472, -575, -130],
                         count: 4,
+                        grow: true,
                         type: "plantoid",
                     },
                     {
                         boundary: [-1013, -624, -762, -137],
                         count: 4,
+                        grow: true,
                         type: "plantoid",
                     },
                     {
@@ -640,17 +522,20 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [91, -952, 353, -702],
                         count: 4,
+                        grow: true,
                         type: "fireroamer",
                     },
                     {
                         boundary: [161, -868, 453, -697],
                         count: 2,
+                        grow: true,
                         type: "fireroamer",
                     },
                     {
                         boundary: [220.31, -1569.2, 561.04, -1275.72],
                         count: 6,
-                        type: "scorpion",
+                        grow: true,
+                        type: "gscorpion",
                     },
                     {
                         boundary: [-522.44, -1340.19, -295.2, -1183.31],
@@ -667,6 +552,10 @@ test("G.maps type validation", async () => {
                     {
                         id: "locksmith",
                         position: [316, -270],
+                    },
+                    {
+                        id: "scrollsmith",
+                        position: [606, -1590],
                     },
                 ],
                 outside: true,
@@ -713,6 +602,28 @@ test("G.maps type validation", async () => {
                 on_death: ["dungeon0", 0],
                 pvp: true,
                 spawns: [[0, 0]],
+            },
+            gateway: {
+                doors: [
+                    [0, 47, 46, 36, "main", 19, 0],
+                    [-321, -40, 62, 60, "ucliffs", 1, 1],
+                    [319, -249, 62, 46, "uhills", 0, 2],
+                    [-321, -213, 68, 83, "spider_instance", 0, 3, "key", "spiderkey"],
+                ],
+                drop_norm: 1000,
+                key: "jayson_pvpDungeon_gateway",
+                lux: 0.4,
+                monsters: [],
+                name: "Underground [Gateway]",
+                npcs: [],
+                quirks: [],
+                spawns: [
+                    [0, 0],
+                    [-320, -102],
+                    [320, -240],
+                    [-320, -202],
+                ],
+                unlist: true,
             },
             goobrawl: {
                 code: "join('goobrawl')",
@@ -785,6 +696,7 @@ test("G.maps type validation", async () => {
                     [784, -1085, 80, 40, "spookytown", 1, 2],
                     [-1071, -1496, 40, 40, "level1", 2, 3],
                     [1212, 150, 200, 36, "main", 15, 4],
+                    [-560, -1004, 28, 32, "mforest", 0, 0],
                 ],
                 drop_norm: 4000,
                 key: "jayson_SpookyForestV2.2",
@@ -818,14 +730,15 @@ test("G.maps type validation", async () => {
                         type: "minimush",
                     },
                     {
-                        boundary: [-671, 571, -300, 800],
+                        boundary: [-671, 571, -320, 800],
                         count: 1,
                         special: true,
                         type: "mrpumpkin",
                     },
                     {
-                        boundary: [-671, 571, -300, 800],
+                        boundary: [-671, 571, -320, 800],
                         count: 6,
+                        grow: true,
                         type: "xscorpion",
                     },
                     {
@@ -847,11 +760,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [284, -1351, 446, -1189],
                         count: 5,
+                        grow: true,
                         type: "ghost",
                     },
                     {
                         boundary: [54, -1277, 237, -1078],
                         count: 5,
+                        grow: true,
                         type: "ghost",
                     },
                     {
@@ -862,6 +777,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-664, -1808, -147, -1477],
                         count: 9,
+                        grow: true,
                         type: "ghost",
                     },
                 ],
@@ -906,6 +822,7 @@ test("G.maps type validation", async () => {
                     [784, -1060],
                     [-1071, -1485],
                     [1212, 101, 3],
+                    [-560, -990],
                 ],
             },
             hut: {
@@ -956,11 +873,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-86, 17, 64, 212],
                         count: 5,
+                        grow: true,
                         type: "prat",
                     },
                     {
                         boundary: [-308, 629, 0, 762],
                         count: 5,
+                        grow: true,
                         type: "prat",
                     },
                 ],
@@ -1025,6 +944,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [344, -96, 608, 328],
                         count: 3,
+                        grow: true,
                         polygon: [
                             [384, -96],
                             [464, -96],
@@ -1066,11 +986,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-621, -241, -234, -65],
                         count: 6,
+                        grow: true,
                         type: "pppompom",
                     },
                     {
                         boundary: [153, -303, 432, -75],
                         count: 7,
+                        grow: true,
                         type: "pppompom",
                     },
                 ],
@@ -1097,6 +1019,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-52.5, 359.33, 120.29, 646.25],
                         count: 8,
+                        grow: true,
                         type: "cgoo",
                     },
                 ],
@@ -1123,6 +1046,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-447, 9, -208, 323],
                         count: 5,
+                        grow: true,
                         type: "oneeye",
                     },
                     {
@@ -1180,6 +1104,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-366.74, -395.74, -109.59, -152.68],
                         count: 6,
+                        grow: true,
                         type: "cgoo",
                     },
                     {
@@ -1219,6 +1144,7 @@ test("G.maps type validation", async () => {
                     [312, -335, 32, 32, "mtunnel", 0, 16],
                     [967, -584, 32, 32, "mtunnel", 1, 17],
                     [1472, -434, 32, 32, "mtunnel", 2, 18],
+                    [888, -670, 24, 32, "gateway", 0, 19],
                 ],
                 drop_norm: 1000,
                 key: "jayson_ALMap2_v2",
@@ -1238,11 +1164,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-1353, 126, -998, 718],
                         count: 2,
+                        grow: true,
                         type: "squigtoad",
                     },
                     {
                         boundary: [-1353, 720, -896, 1516],
                         count: 6,
+                        grow: true,
                         type: "tortoise",
                     },
                     {
@@ -1358,6 +1286,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [1100, 160, 1586, 336],
                         count: 5,
+                        grow: true,
                         type: "bigbird",
                     },
                     {
@@ -1604,6 +1533,7 @@ test("G.maps type validation", async () => {
                     [294, -347, 1],
                     [968, -577],
                     [1471, -424],
+                    [888, -660],
                 ],
                 traps: [
                     {
@@ -1686,36 +1616,43 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-217, -272, 200, -24],
                         count: 5,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [-408, -102, -158, 27],
                         count: 3,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [160, -97, 402, 29],
                         count: 3,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [-388, -610, -282, -197],
                         count: 3,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [-388, -610, -282, -197],
                         count: 3,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [283, -604, 382, -200],
                         count: 3,
+                        grow: true,
                         type: "rat",
                     },
                     {
                         boundary: [-240, -487, 249, -401],
                         count: 4,
+                        grow: true,
                         type: "rat",
                     },
                 ],
@@ -1737,6 +1674,46 @@ test("G.maps type validation", async () => {
                     [0, -21, 3],
                     [-0.18, -481.98],
                 ],
+            },
+            mforest: {
+                doors: [[1, -32, 40, 49, "halloween", 5, 0]],
+                drop_norm: 5000,
+                key: "jayson_undergroundjungle",
+                lux: 0.6,
+                monsters: [
+                    {
+                        boundary: [-292, -498, -168, -366],
+                        count: 1,
+                        type: "bluefairy",
+                    },
+                    {
+                        boundary: [-432, 317, -342, 450],
+                        count: 1,
+                        type: "greenfairy",
+                    },
+                    {
+                        boundary: [313, 590, 393, 848],
+                        count: 1,
+                        type: "redfairy",
+                    },
+                    {
+                        boundary: [282, -502, 524, -192],
+                        count: 6,
+                        grow: true,
+                        type: "dryad",
+                    },
+                    {
+                        boundary: [-99, 534, 132, 856],
+                        count: 7,
+                        grow: true,
+                        type: "odino",
+                    },
+                ],
+                name: "Mystical Forest",
+                npcs: [],
+                quirks: [],
+                spawns: [[0, 0]],
+                unlist: true,
             },
             mtunnel: {
                 doors: [
@@ -2135,6 +2112,114 @@ test("G.maps type validation", async () => {
                 quirks: [],
                 spawns: [[0, 0]],
             },
+            spider_instance: {
+                doors: [[0, 84, 67, 63, "gateway", 3, 0]],
+                instance: true,
+                key: "jayson_pvpDungeon_b1",
+                monsters: [
+                    {
+                        boundary: [0, -1515, 1, -1516],
+                        count: 1,
+                        rage: [-320, -1700, 320, -1150],
+                        type: "spiderr",
+                    },
+                    {
+                        boundary: [-192, -1515, -191, -1516],
+                        count: 1,
+                        rage: [-320, -1700, 320, -1150],
+                        type: "spiderbl",
+                    },
+                    {
+                        boundary: [192, -1515, 191, -1516],
+                        count: 1,
+                        rage: [-320, -1700, 320, -1150],
+                        type: "spiderbr",
+                    },
+                    {
+                        boundary: [-255, -880, -120, -600],
+                        count: 3,
+                        type: "spider",
+                    },
+                    {
+                        boundary: [120, -880, 255, -600],
+                        count: 3,
+                        type: "spider",
+                    },
+                ],
+                name: "The Spider Den",
+                npcs: [],
+                on_death: ["gateway", 3],
+                on_exit: ["gateway", 3],
+                quirks: [[190, -1628, 60, 85, "log", "The passage is blocked"]],
+                spawns: [[0, 10]],
+                traps: [
+                    {
+                        polygon: [
+                            [-336, -1136],
+                            [-192, -1136],
+                            [-192, -1160],
+                            [-168, -1160],
+                            [-168, -1152],
+                            [-120, -1152],
+                            [-120, -1168],
+                            [-112, -1168],
+                            [-112, -1240],
+                            [-72, -1240],
+                            [-72, -1256],
+                            [-56, -1256],
+                            [-56, -1288],
+                            [0, -1288],
+                            [0, -1272],
+                            [16, -1272],
+                            [16, -1208],
+                            [88, -1208],
+                            [88, -1088],
+                            [200, -1088],
+                            [200, -1128],
+                            [336, -1128],
+                            [336, -1368],
+                            [240, -1368],
+                            [240, -1336],
+                            [216, -1336],
+                            [216, -1320],
+                            [160, -1320],
+                            [160, -1400],
+                            [128, -1400],
+                            [128, -1448],
+                            [144, -1448],
+                            [144, -1512],
+                            [88, -1512],
+                            [88, -1496],
+                            [64, -1496],
+                            [64, -1440],
+                            [40, -1440],
+                            [40, -1432],
+                            [0, -1432],
+                            [0, -1464],
+                            [-40, -1464],
+                            [-40, -1480],
+                            [-64, -1480],
+                            [-64, -1512],
+                            [-144, -1512],
+                            [-144, -1560],
+                            [-176, -1560],
+                            [-176, -1576],
+                            [-216, -1576],
+                            [-216, -1544],
+                            [-264, -1544],
+                            [-264, -1480],
+                            [-288, -1480],
+                            [-288, -1456],
+                            [-296, -1456],
+                            [-296, -1432],
+                            [-328, -1432],
+                            [-328, -1152],
+                            [-336, -1152],
+                        ],
+                        type: "debuff",
+                    },
+                ],
+            },
             spookytown: {
                 doors: [
                     [34, 1449, 80, 30, "halloween", 2, 1],
@@ -2147,23 +2232,33 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [31, -1571, 480, -1293],
                         count: 9,
+                        grow: true,
                         rage: [-124, -1631, 614, -1130],
                         type: "mummy",
                     },
                     {
                         boundary: [286, -842, 544, -562],
                         count: 5,
+                        grow: true,
                         rage: [286, -842, 544, -562],
+                        type: "booboo",
+                    },
+                    {
+                        boundary: [-820, -940, -570, -630],
+                        count: 4,
+                        rage: [-820, -940, -570, -630],
                         type: "booboo",
                     },
                     {
                         boundary: [501, 61, 852, 197],
                         count: 4,
+                        grow: true,
                         type: "stoneworm",
                     },
                     {
                         boundary: [773, -198, 1216, -68],
                         count: 4,
+                        grow: true,
                         type: "stoneworm",
                     },
                     {
@@ -2351,11 +2446,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-210, -1291, 238, -853],
                         count: 8,
+                        grow: true,
                         type: "mole",
                     },
                     {
                         boundary: [-238, -638, 207, -21],
                         count: 7,
+                        grow: true,
                         type: "mole",
                     },
                 ],
@@ -2428,6 +2525,51 @@ test("G.maps type validation", async () => {
                     },
                 ],
             },
+            ucliffs: {
+                doors: [[255, -917, 62, 99, "gateway", 1, 1]],
+                drop_norm: 5000,
+                key: "jayson_pvpDungeon_a1",
+                lux: 0.4,
+                monsters: [],
+                name: "Underground [Cliffs]",
+                npcs: [],
+                quirks: [],
+                spawns: [
+                    [0, 0],
+                    [256, -905],
+                    [-513, -697],
+                ],
+                unlist: true,
+            },
+            uhills: {
+                doors: [[0, 77, 56, 64, "gateway", 2, 0]],
+                drop_norm: 5000,
+                key: "jayson_pvpDungeon_a2",
+                lux: 0.4,
+                monsters: [
+                    {
+                        boundary: [-734, -394, -416, -157],
+                        count: 4,
+                        grow: true,
+                        type: "sparkbot",
+                    },
+                    {
+                        boundary: [-672, -394, -416, -120],
+                        count: 4,
+                        grow: true,
+                        type: "targetron",
+                    },
+                ],
+                name: "Underground [Hills]",
+                npcs: [],
+                quirks: [],
+                spawns: [
+                    [0, 0],
+                    [720, -310],
+                    [0, -691],
+                ],
+                unlist: true,
+            },
             winter_cave: {
                 doors: [
                     [3, 41, 36, 20, "winterland", 3, 0],
@@ -2440,11 +2582,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-234, -300, 336, -28],
                         count: 6,
+                        grow: true,
                         type: "bbpompom",
                     },
                     {
                         boundary: [-318, -1112, 153, -786],
                         count: 7,
+                        grow: true,
                         type: "bbpompom",
                     },
                 ],
@@ -2465,6 +2609,7 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-3.38, -398.22, 273.25, -223.83],
                         count: 5,
+                        grow: true,
                         random: true,
                         roam: true,
                         type: "harpy",
@@ -2597,7 +2742,13 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [30, -2954, 836, -2536],
                         count: 7,
+                        grow: true,
                         type: "wolf",
+                    },
+                    {
+                        boundary: [1065, -1598, 1418, -1449],
+                        count: 1,
+                        type: "rudolph",
                     },
                     {
                         boundary: [682, -967, 1482, -779],
@@ -2608,26 +2759,31 @@ test("G.maps type validation", async () => {
                     {
                         boundary: [-367, -2234, 29, -1819],
                         count: 4,
+                        grow: true,
                         type: "wolfie",
                     },
                     {
                         boundary: [236, -2232, 460, -1847],
                         count: 3,
+                        grow: true,
                         type: "wolfie",
                     },
                     {
                         boundary: [-173, -1488, 212, -730],
                         count: 8,
+                        grow: true,
                         type: "boar",
                     },
                     {
                         boundary: [550, -240, 1097, 149],
                         count: 5,
+                        grow: true,
                         type: "iceroamer",
                     },
                     {
                         boundary: [1335, -71, 1689, 278],
                         count: 4,
+                        grow: true,
                         type: "iceroamer",
                     },
                     {

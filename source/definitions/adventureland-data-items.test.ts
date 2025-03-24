@@ -2,7 +2,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 771 (2023-03-20)
+ * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
  * It is used to confirm type correctness
  */
 
@@ -30,6 +30,27 @@ test("G.items type validation", async () => {
                 speed: -6,
                 str: 24,
                 type: "elixir",
+            },
+            alloyquiver: {
+                a: true,
+                armor: 15,
+                dex: 2,
+                explosion: 2,
+                g: 112000,
+                grades: [0, 5, 10, 12],
+                name: "Alloy Quiver",
+                range: 20,
+                resistance: 12,
+                skin: "alloyquiver",
+                tier: 2,
+                type: "quiver",
+                upgrade: {
+                    armor: 3.5,
+                    dex: 1.25,
+                    explosion: 1.5,
+                    range: 3.5,
+                    resistance: 3,
+                },
             },
             amuletofm: {
                 a: true,
@@ -297,7 +318,7 @@ test("G.items type validation", async () => {
                 g: 5000000,
                 name: "The Bank Key",
                 onclick: "socket.emit('activate',{num:locate_item('bkey')})",
-                s: 5,
+                s: 50,
                 skin: "bkey",
                 type: "bank_key",
                 unlocks: "bank_b",
@@ -339,7 +360,7 @@ test("G.items type validation", async () => {
                 type: "xp",
             },
             bow: {
-                attack: 20,
+                attack: 25,
                 cx: {
                     accent: "#AF2131",
                 },
@@ -353,13 +374,13 @@ test("G.items type validation", async () => {
                 tier: 1,
                 type: "weapon",
                 upgrade: {
-                    attack: 4,
+                    attack: 5,
                     range: 7.666666666666666,
                 },
                 wtype: "bow",
             },
             bow4: {
-                attack: 38,
+                attack: 47.5,
                 cx: {
                     accent: "#E4B81D",
                 },
@@ -374,14 +395,14 @@ test("G.items type validation", async () => {
                 tier: 4,
                 type: "weapon",
                 upgrade: {
-                    attack: 6.4,
+                    attack: 8,
                     range: 9.666666666666668,
                 },
                 wtype: "bow",
             },
             bowofthedead: {
                 a: true,
-                attack: 28.4,
+                attack: 35.5,
                 crit: 1,
                 cx: {
                     accent: "#D87F0E",
@@ -399,7 +420,7 @@ test("G.items type validation", async () => {
                 tier: 2.4,
                 type: "weapon",
                 upgrade: {
-                    attack: 5.12,
+                    attack: 6.4,
                     crit: 0.2,
                     range: 8.6,
                 },
@@ -605,6 +626,7 @@ test("G.items type validation", async () => {
                 a: true,
                 ability: "sugarrush",
                 attack: 21,
+                attr0: 0.25,
                 damage_type: "physical",
                 g: 72000,
                 grades: [0, 8, 10, 12],
@@ -855,7 +877,7 @@ test("G.items type validation", async () => {
                 type: "material",
             },
             computer: {
-                explanation: "Networks you to NPC's and extends the CODE capabilities.",
+                explanation: "Networks you to NPCs and extends the CODE capabilities.",
                 g: 64000000,
                 name: "Ancient Computer",
                 skin: "ancientcomputer",
@@ -867,7 +889,7 @@ test("G.items type validation", async () => {
                 action: "THROW!",
                 explanation: "To celebrate good times",
                 g: 20,
-                name: "Pack of Confetti's",
+                name: "Pack of Confetti",
                 onclick:
                     "socket.emit('throw',{num:locate_item('confetti'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
                 s: 9999,
@@ -965,7 +987,7 @@ test("G.items type validation", async () => {
                 type: "pscroll",
             },
             crossbow: {
-                attack: 37,
+                attack: 46.25,
                 damage_type: "physical",
                 g: 480000,
                 grades: [0, 7, 10, 12],
@@ -976,7 +998,7 @@ test("G.items type validation", async () => {
                 tier: 2,
                 type: "weapon",
                 upgrade: {
-                    attack: 6.3,
+                    attack: 7.875,
                     range: 10.733333333333334,
                 },
                 wtype: "crossbow",
@@ -986,7 +1008,7 @@ test("G.items type validation", async () => {
                 g: 50000,
                 name: "The Crypt Key",
                 opens: "crypt",
-                s: 10,
+                s: 50,
                 skin: "cryptkey",
                 type: "dungeon_key",
             },
@@ -1068,7 +1090,7 @@ test("G.items type validation", async () => {
             },
             cupid: {
                 a: true,
-                attack: 29,
+                attack: 36.25,
                 cx: {
                     accent: "#DB2A86",
                 },
@@ -1083,7 +1105,7 @@ test("G.items type validation", async () => {
                 tier: 2.5,
                 type: "weapon",
                 upgrade: {
-                    attack: 5.2,
+                    attack: 6.5,
                     range: 8.666666666666668,
                     vit: 2,
                 },
@@ -1207,11 +1229,11 @@ test("G.items type validation", async () => {
                 },
                 damage_type: "physical",
                 explanation:
-                    "Don't let the looks fool you. It's a solid weapon with most components forged from gold. The barrel and trigger mechanism is a platinum alloy. Can shoot anything that fits it's barrel, like actual gold.",
+                    "Don't let the looks fool you. It's a solid weapon with most components forged from gold. The barrel and trigger mechanism is a platinum alloy. Can shoot anything that fits its barrel, like actual gold.",
                 g: 20000000,
                 grades: [0, 0, 9, 10],
                 name: "Golden Dart Gun",
-                projectile: "stone",
+                projectile: "dartgun",
                 range: 50,
                 skin: "dartgun",
                 tier: 3,
@@ -1296,7 +1318,7 @@ test("G.items type validation", async () => {
                 g: 72000000,
                 name: "Diamond Key",
                 onclick: "socket.emit('activate',{num:locate_item('dkey')})",
-                s: 2,
+                s: 50,
                 skin: "dkey",
                 type: "bank_key",
             },
@@ -1764,7 +1786,7 @@ test("G.items type validation", async () => {
             },
             essenceofgreed: {
                 explanation: "A peculiar material.",
-                g: 13,
+                g: 13441344,
                 name: "Essence of Greed",
                 s: 9999,
                 skin: "essenceofgreed",
@@ -1787,9 +1809,9 @@ test("G.items type validation", async () => {
                 type: "material",
             },
             evasionscroll: {
-                evasion: 2,
                 explanation: "Adds Evasion to an armor with a Special Stat attribute.",
                 g: 8000,
+                multiplier: 0.325,
                 name: "Evasion Scroll",
                 s: 9999,
                 skin: "evasionscroll",
@@ -1804,7 +1826,7 @@ test("G.items type validation", async () => {
                 },
                 cx: {},
                 explanation:
-                    "It does more than just enhance your natural movements, almost like has a mind of it's own",
+                    "It does more than just enhance your natural movements, almost like it has a mind of its own.",
                 g: 48000000,
                 grades: [0, 0, 6, 7],
                 int: 20,
@@ -1895,7 +1917,7 @@ test("G.items type validation", async () => {
                 g: 800,
                 name: "Harpy Feather",
                 s: 9999,
-                skin: "feather0",
+                skin: "feather1",
                 type: "material",
             },
             fieldgen0: {
@@ -1964,7 +1986,7 @@ test("G.items type validation", async () => {
             firebow: {
                 a: true,
                 ability: "burn",
-                attack: 26,
+                attack: 32.5,
                 attr0: 2,
                 cx: {
                     accent: "#E34C25",
@@ -1972,7 +1994,7 @@ test("G.items type validation", async () => {
                 damage_type: "physical",
                 explanation: "Rains fire upon the enemy",
                 g: 178000,
-                grades: [0, 7, 10, 12],
+                grades: [0, 8, 10, 12],
                 name: "Fire Bow",
                 projectile: "firearrow",
                 range: 45,
@@ -1981,7 +2003,7 @@ test("G.items type validation", async () => {
                 tier: 2,
                 type: "weapon",
                 upgrade: {
-                    attack: 4.8,
+                    attack: 6,
                     attr0: 0.5,
                     range: 8.333333333333332,
                 },
@@ -2115,7 +2137,7 @@ test("G.items type validation", async () => {
             frostbow: {
                 a: true,
                 ability: "freeze",
-                attack: 26,
+                attack: 32.5,
                 attr0: 2,
                 cx: {
                     accent: "#2D9DE5",
@@ -2132,7 +2154,7 @@ test("G.items type validation", async () => {
                 tier: 2,
                 type: "weapon",
                 upgrade: {
-                    attack: 4.8,
+                    attack: 6,
                     attr0: 0.5,
                     range: 8.333333333333332,
                 },
@@ -2167,7 +2189,7 @@ test("G.items type validation", async () => {
                 g: 50000,
                 name: "The Frozen Cave Key",
                 opens: "winter_instance",
-                s: 10,
+                s: 50,
                 skin: "frozenkey",
                 type: "dungeon_key",
             },
@@ -2235,7 +2257,7 @@ test("G.items type validation", async () => {
                 a: true,
                 apiercing: 20,
                 armor: 10,
-                class: ["rogue", "warrior"],
+                class: ["rogue", "warrior", "ranger", "paladin"],
                 crit: 6,
                 dex: 2,
                 g: 6400000,
@@ -2262,7 +2284,7 @@ test("G.items type validation", async () => {
             },
             gbow: {
                 a: true,
-                attack: 29,
+                attack: 36.25,
                 cx: {
                     accent: "#DF6915",
                     border: 1,
@@ -2278,7 +2300,7 @@ test("G.items type validation", async () => {
                 tier: 2.5,
                 type: "weapon",
                 upgrade: {
-                    attack: 5.2,
+                    attack: 6.5,
                     range: 8.666666666666668,
                 },
                 wtype: "bow",
@@ -2401,6 +2423,7 @@ test("G.items type validation", async () => {
             glolipop: {
                 ability: "sugarrush",
                 attack: 14,
+                attr0: 0.25,
                 cx: {
                     accent: "#64B553",
                 },
@@ -2625,7 +2648,7 @@ test("G.items type validation", async () => {
                     accent: "#AF2131",
                 },
                 damage_type: "magical",
-                explanation: "[Warning] Highly volatile - might lose it's power suddenly!",
+                explanation: "[Warning] Highly volatile - might lose its power suddenly!",
                 g: 1240000,
                 grades: [0, 0, 9, 10],
                 name: "Blaster",
@@ -2737,7 +2760,7 @@ test("G.items type validation", async () => {
             },
             harpybow: {
                 a: true,
-                attack: 32,
+                attack: 40,
                 cx: {
                     accent: "#DE6F22",
                 },
@@ -2749,12 +2772,12 @@ test("G.items type validation", async () => {
                 name: "Harpy Bow",
                 projectile: "arrow",
                 range: 75,
-                skin: "t3bow",
+                skin: "harpybow",
                 speed: 2,
                 tier: 3,
                 type: "weapon",
                 upgrade: {
-                    attack: 5.6,
+                    attack: 7,
                     range: 9,
                 },
                 wtype: "bow",
@@ -2783,7 +2806,7 @@ test("G.items type validation", async () => {
             },
             hbow: {
                 apiercing: 40,
-                attack: 23,
+                attack: 28.75,
                 cx: {
                     accent: "#8B7FD6",
                 },
@@ -2798,7 +2821,7 @@ test("G.items type validation", async () => {
                 type: "weapon",
                 upgrade: {
                     apiercing: 5,
-                    attack: 4.4,
+                    attack: 5.5,
                     range: 8,
                 },
                 wtype: "bow",
@@ -3134,7 +3157,7 @@ test("G.items type validation", async () => {
             },
             kitty1: {
                 a: true,
-                explanation: "A vibrant egg, it's inhabitant seems eager to get out.",
+                explanation: "A vibrant egg, its inhabitant seems eager to get out.",
                 g: 40000,
                 grade: 0,
                 ignore: true,
@@ -3402,7 +3425,7 @@ test("G.items type validation", async () => {
             mbones: {
                 explanation: "Scattered, ugly bones.",
                 g: 16,
-                name: "Mummy Bones",
+                name: "Bones",
                 s: 9999,
                 skin: "mbones",
                 type: "material",
@@ -3544,7 +3567,7 @@ test("G.items type validation", async () => {
             mearring: {
                 a: true,
                 compound: {
-                    luck: 1,
+                    luck: 4,
                 },
                 g: 12000000,
                 grades: [0, 0, 6, 7],
@@ -3556,7 +3579,7 @@ test("G.items type validation", async () => {
             },
             merry: {
                 ability: "secondchance",
-                attack: 23,
+                attack: 28.75,
                 attr0: 10,
                 cx: {
                     accent: "#289E4D",
@@ -3572,7 +3595,7 @@ test("G.items type validation", async () => {
                 tier: 1.5,
                 type: "weapon",
                 upgrade: {
-                    attack: 4.4,
+                    attack: 5.5,
                     attr0: 2,
                     range: 8,
                 },
@@ -4392,6 +4415,7 @@ test("G.items type validation", async () => {
             ololipop: {
                 ability: "sugarrush",
                 attack: 14,
+                attr0: 0.25,
                 cx: {
                     accent: "#DB763B",
                 },
@@ -4414,9 +4438,9 @@ test("G.items type validation", async () => {
             },
             oozingterror: {
                 a: true,
-                ability: "posion",
+                ability: "poison",
                 attack: 42.5,
-                attr0: 0.1,
+                attr0: 1.5,
                 cx: {
                     accent: "#745DD6",
                 },
@@ -4436,7 +4460,7 @@ test("G.items type validation", async () => {
                 type: "weapon",
                 upgrade: {
                     attack: 5.875,
-                    attr0: 0.02,
+                    attr0: 1,
                     int: 1,
                     range: 3.875,
                     reflection: 0.25,
@@ -4649,6 +4673,32 @@ test("G.items type validation", async () => {
                     vit: 0.1,
                 },
             },
+            pclaw: {
+                a: true,
+                ability: "poison",
+                attack: 15.6,
+                attr0: 1,
+                cx: {
+                    extension: true,
+                    scale: 0.5,
+                },
+                damage_type: "physical",
+                g: 72000,
+                grades: [0, 7, 10, 12],
+                name: "Poison Claw",
+                pnresistance: 2,
+                range: 6.4,
+                skin: "pclaw",
+                tier: 2.4,
+                type: "weapon",
+                upgrade: {
+                    attack: 4.4,
+                    attr0: 0.5,
+                    pnresistance: 1,
+                    range: 1.5,
+                },
+                wtype: "fist",
+            },
             phelmet: {
                 a: 2,
                 armor: 14,
@@ -4835,7 +4885,7 @@ test("G.items type validation", async () => {
                 },
             },
             pouchbow: {
-                attack: 15.2,
+                attack: 19,
                 cx: {
                     accent: "#9D7B1B",
                 },
@@ -4851,7 +4901,7 @@ test("G.items type validation", async () => {
                 tier: 0.2,
                 type: "weapon",
                 upgrade: {
-                    attack: 3.36,
+                    attack: 4.2,
                     explosion: 2,
                     range: 7.133333333333333,
                 },
@@ -4908,7 +4958,7 @@ test("G.items type validation", async () => {
             },
             puppy1: {
                 a: true,
-                explanation: "A vibrant egg, it's inhabitant seems eager to get out.",
+                explanation: "A vibrant egg, its inhabitant seems eager to get out.",
                 g: 40000,
                 grade: 0,
                 ignore: true,
@@ -5086,7 +5136,7 @@ test("G.items type validation", async () => {
             reflectionscroll: {
                 explanation: "Adds Reflection to an armor with a Stat attribute.",
                 g: 8000,
-                multiplier: 0.125,
+                multiplier: 0.15,
                 name: "Reflection Scroll",
                 s: 9999,
                 skin: "reflectionscroll",
@@ -5443,7 +5493,7 @@ test("G.items type validation", async () => {
             },
             smoke: {
                 action: "THROW!",
-                explanation: "A pyrotechnic pouch developed for those who want to feel like Rogue's",
+                explanation: "A pyrotechnic pouch, developed for those who want to feel like a rogue.",
                 g: 20,
                 name: "Pouch of Poof",
                 onclick:
@@ -5557,6 +5607,28 @@ test("G.items type validation", async () => {
                 skin: "solitaire",
                 type: "ring",
             },
+            sparkstaff: {
+                attack: 59,
+                blast: 30,
+                cx: {
+                    accent: "#201DAD",
+                },
+                damage_type: "magical",
+                g: 224000,
+                grades: [0, 5, 10, 12],
+                name: "Spark Staff",
+                projectile: "magic",
+                range: 82,
+                skin: "sparkstaff",
+                tier: 2.5,
+                type: "weapon",
+                upgrade: {
+                    attack: 7.5,
+                    blast: 5,
+                    range: 4.5,
+                },
+                wtype: "great_staff",
+            },
             spear: {
                 a: 2,
                 apiercing: 10,
@@ -5598,6 +5670,7 @@ test("G.items type validation", async () => {
                 tier: 2.4,
                 type: "weapon",
                 upgrade: {
+                    apiercing: 5,
                     attack: 5.2299999999999995,
                     range: 2,
                 },
@@ -5613,6 +5686,15 @@ test("G.items type validation", async () => {
                 stat: "speed",
                 type: "pscroll",
             },
+            spiderkey: {
+                explanation: "A key, imbued with magical energy.",
+                g: 50000,
+                name: "The Spider Key",
+                opens: "spider_instance",
+                s: 50,
+                skin: "spiderkey",
+                type: "dungeon_key",
+            },
             spidersilk: {
                 explanation: "A durable yet sticky material",
                 g: 300,
@@ -5620,6 +5702,24 @@ test("G.items type validation", async () => {
                 s: 9999,
                 skin: "spidersilk",
                 type: "material",
+            },
+            spikedhelmet: {
+                a: 2,
+                armor: 35,
+                dreturn: 2,
+                g: 3200000,
+                grades: [0, 0, 8, 10],
+                name: "Spiked Helmet",
+                scroll: true,
+                skin: "spikedhelmet",
+                stat: 4,
+                tier: 0,
+                type: "helmet",
+                upgrade: {
+                    armor: 7.75,
+                    dreturn: 1,
+                    stat: 1,
+                },
             },
             spookyamulet: {
                 a: true,
@@ -5813,7 +5913,7 @@ test("G.items type validation", async () => {
                 vit: 10,
             },
             stealthcape: {
-                explanation: "Thanks to it's stealth capabilities, no one can track your endeavours any more.",
+                explanation: "Thanks to its stealth capabilities, no one can track your endeavours any more.",
                 g: 2000000,
                 grades: [0, 4, 10, 12],
                 name: "Stealth Cape",
@@ -5863,7 +5963,7 @@ test("G.items type validation", async () => {
                 g: 50000,
                 name: "The Stone Key",
                 opens: "therush",
-                s: 10,
+                s: 50,
                 skin: "stonekey",
                 type: "dungeon_key",
             },
@@ -5909,7 +6009,7 @@ test("G.items type validation", async () => {
             },
             stramulet: {
                 compound: {
-                    str: 2,
+                    str: 3,
                 },
                 g: 30000,
                 grades: [3, 5, 6, 7],
@@ -5979,7 +6079,7 @@ test("G.items type validation", async () => {
                 type: "ring",
             },
             supercomputer: {
-                explanation: "Networks you to NPC's, extends the CODE capabilities and tracks your encounters.",
+                explanation: "Networks you to NPCs, extends the CODE capabilities and tracks your encounters.",
                 g: 64000000,
                 name: "Super Computer",
                 skin: "ancientcomputer",
@@ -6125,7 +6225,7 @@ test("G.items type validation", async () => {
             },
             t2bow: {
                 a: true,
-                attack: 26,
+                attack: 32.5,
                 cx: {
                     accent: "#CD3F3B",
                 },
@@ -6140,7 +6240,7 @@ test("G.items type validation", async () => {
                 tier: 2,
                 type: "weapon",
                 upgrade: {
-                    attack: 4.8,
+                    attack: 6,
                     range: 8.333333333333332,
                 },
                 wtype: "bow",
@@ -6163,12 +6263,12 @@ test("G.items type validation", async () => {
                 armor: 30,
                 compound: {
                     armor: 20,
-                    int: 2,
+                    int: 3,
                 },
                 edge: -1,
                 g: 160000,
                 grades: [0, 2, 6, 7],
-                int: 5,
+                int: 6,
                 name: "Amulet of the Fierce Mage",
                 skin: "t2intamulet",
                 type: "amulet",
@@ -6202,12 +6302,12 @@ test("G.items type validation", async () => {
                 name: "Amulet of the Eager Warrior",
                 resistance: 30,
                 skin: "t2stramulet",
-                str: 5,
+                str: 6,
                 type: "amulet",
             },
             t3bow: {
                 a: true,
-                attack: 32,
+                attack: 40,
                 critdamage: 12,
                 cx: {
                     accent: "#DE6F22",
@@ -6223,7 +6323,7 @@ test("G.items type validation", async () => {
                 tier: 3,
                 type: "weapon",
                 upgrade: {
-                    attack: 5.6,
+                    attack: 7,
                     range: 9,
                 },
                 wtype: "bow",
@@ -6261,9 +6361,9 @@ test("G.items type validation", async () => {
                 type: "orb",
             },
             test_orb: {
+                ability: "poison",
+                attr0: 50,
                 compound: {},
-                firesistance: 20,
-                fzresistance: 20,
                 g: 1,
                 grades: [0, 0, 10, 12],
                 name: "Orb of Testing",
@@ -6380,7 +6480,7 @@ test("G.items type validation", async () => {
                 g: 50000,
                 name: "The Tomb Key",
                 opens: "tomb",
-                s: 10,
+                s: 50,
                 skin: "tombkey",
                 type: "dungeon_key",
             },
@@ -6464,7 +6564,7 @@ test("G.items type validation", async () => {
                 g: 120,
                 grades: [0, 6, 10, 12],
                 int: 5,
-                name: "T-Shirt",
+                name: "T-Shirt (Int)",
                 skin: "tshirt0",
                 type: "chest",
                 upgrade: {
@@ -6475,7 +6575,7 @@ test("G.items type validation", async () => {
                 dex: 5,
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (Dex)",
                 skin: "tshirt1",
                 type: "chest",
                 upgrade: {
@@ -6485,7 +6585,7 @@ test("G.items type validation", async () => {
             tshirt2: {
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (Str)",
                 skin: "tshirt2",
                 str: 5,
                 type: "chest",
@@ -6496,7 +6596,7 @@ test("G.items type validation", async () => {
             tshirt3: {
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (XP)",
                 skin: "tshirt3",
                 type: "chest",
                 upgrade: {
@@ -6507,7 +6607,7 @@ test("G.items type validation", async () => {
             tshirt4: {
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (Speed)",
                 skin: "tshirt4",
                 speed: 3,
                 type: "chest",
@@ -6518,7 +6618,7 @@ test("G.items type validation", async () => {
             tshirt6: {
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (Res. Piercing)",
                 rpiercing: 30,
                 skin: "tshirt6",
                 type: "chest",
@@ -6530,7 +6630,7 @@ test("G.items type validation", async () => {
                 apiercing: 30,
                 g: 120,
                 grades: [0, 6, 10, 12],
-                name: "T-Shirt",
+                name: "T-Shirt (Armor Piercing)",
                 skin: "tshirt7",
                 type: "chest",
                 upgrade: {
@@ -6541,7 +6641,7 @@ test("G.items type validation", async () => {
                 g: 120,
                 grades: [0, 6, 10, 12],
                 mp_cost: -5,
-                name: "T-Shirt",
+                name: "T-Shirt (Attack MP Cost)",
                 skin: "tshirt8",
                 type: "chest",
                 upgrade: {
@@ -6554,7 +6654,7 @@ test("G.items type validation", async () => {
                 grades: [0, 6, 10, 12],
                 int: 5,
                 luck: 12,
-                name: "T-Shirt",
+                name: "T-Shirt (Lucky)",
                 skin: "tshirt88",
                 speed: 3,
                 str: 5,
@@ -6570,7 +6670,7 @@ test("G.items type validation", async () => {
                 g: 120,
                 grades: [0, 6, 10, 12],
                 manasteal: 1,
-                name: "T-Shirt",
+                name: "T-Shirt (Manasteal)",
                 skin: "tshirt9",
                 type: "chest",
                 upgrade: {
@@ -6583,7 +6683,7 @@ test("G.items type validation", async () => {
                 g: 50000000,
                 name: "The Bank Key",
                 onclick: "socket.emit('activate',{num:locate_item('ukey')})",
-                s: 3,
+                s: 50,
                 skin: "ukey",
                 type: "bank_key",
                 unlocks: "bank_u",
@@ -6888,7 +6988,7 @@ test("G.items type validation", async () => {
                 charge: 1,
                 edge: 5,
                 explanation:
-                    "Warps space-time. Ancient Computer unlocks only a fraction of it's capabilities. Needs to be recharged in order to initiate a jump.",
+                    "Warps space-time. Ancient Computer unlocks only a fraction of its capabilities. Needs to be recharged in order to initiate a jump.",
                 extra_stat: 0,
                 g: 36400000,
                 grades: [0, 0, 6, 10],
@@ -7087,7 +7187,7 @@ test("G.items type validation", async () => {
             },
             weaver: {
                 ability: "weave",
-                attack: 24.5,
+                attack: 30.625,
                 attr0: 4,
                 attr1: 1,
                 cx: {
@@ -7103,7 +7203,7 @@ test("G.items type validation", async () => {
                 tier: 1.75,
                 type: "weapon",
                 upgrade: {
-                    attack: 4.6,
+                    attack: 5.75,
                     attr0: 2,
                     attr1: 0.2,
                     range: 8.166666666666668,
@@ -7145,7 +7245,7 @@ test("G.items type validation", async () => {
                 g: 5,
                 name: "White Egg",
                 onclick:
-                    "socket.emit('throw',{num:locate_item('confetti'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
+                    "socket.emit('throw',{num:locate_item('whiteegg'),x:character.real_x,y:character.real_y}); push_deferred('throw')",
                 s: 2000,
                 skin: "whiteegg",
                 throw: true,
@@ -7638,7 +7738,7 @@ test("G.items type validation", async () => {
                 name: "The Zapper",
                 resistance: 30,
                 rpiercing: 10,
-                skin: "trigger",
+                skin: "zapper",
                 str: 5,
                 type: "ring",
             },

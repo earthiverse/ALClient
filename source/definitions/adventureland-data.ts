@@ -141,6 +141,10 @@ export type GData = {
             can_move?: boolean
             /** TODO: Confirm. If this is true, attacking, moving, or using a skill will cause the condition to go away. (NOTE: You can still move if can_move is true) */
             channel?: boolean
+            /** What kind of Attribute will mitigate damage from this condition */
+            defense?: Attribute
+            /** How much extra percent damage an entity with this condition will take */
+            incdmgamp?: number
             /** If true, this will persist even when your character is logged out. */
             persistent?: boolean
             /** If set, the condition will 'proc' every this many ms. For example, 'burned' will cause damage every interval. */
@@ -222,15 +226,13 @@ export type GData = {
             x10: number
             x50: number
         }
-    } & {
         maps: {
-            [T in MapName | "global_static" | "global"]?: GDropItem[]
+            // TODO: "maintest" should be removed in game
+            [T in MapName | "global_static" | "global" | "maintest"]?: GDropItem[]
         }
-    } & {
         monsters: {
             [T in MonsterName]?: GDropItem[]
         }
-    } & {
         skins: {
             bronze: string[]
             gold: string[]
@@ -276,16 +278,7 @@ export type GData = {
     geometry: {
         [T in Exclude<
             MapName,
-            | "batcave"
-            | "d1"
-            | "d2"
-            | "d3"
-            | "frozencave"
-            | "maintest"
-            | "old_bank"
-            | "old_main"
-            | "original_main"
-            | "therush"
+            "batcave" | "d1" | "d2" | "d3" | "frozencave" | "old_bank" | "old_main" | "original_main" | "therush"
         >]: GGeometry
     }
     // TODO: Add type information
@@ -781,7 +774,7 @@ export type DoorInfo = [
     number,
     number,
     number,
-    MapName,
+    MapName | "d1" | "d3", // TODO: "d1" and "d3" should be removed in game
     number?,
     number?,
     ("key" | "protected" | "ulocked")?,
@@ -842,7 +835,7 @@ export type GItem = {
 } & {
     /** (TODO: Obsolete?) Related to 'announce'? */
     a?: boolean | number
-    ability?: "burn" | "freeze" | "posion" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
+    ability?: "burn" | "freeze" | "poison" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
     /** (GUI related) Item border accent color */
     acolor?: string
     /** TODO: ??? What is this? Is this related to special items? */
@@ -933,7 +926,8 @@ export type GItem = {
     /** TODO: Confirm. (GUI related) If set, clicking on this item will cause the given javascript to run. */
     onclick?: string
     /** TODO: Confirm. Opens the given dungeon */
-    opens?: MapName
+    // TODO: "maintest" should be removed in game
+    opens?: MapName | "therush"
     /** (GUI related) Projectile to use for weapon attacks */
     projectile?: ProjectileName
     /** TODO: ??? GUI related? */
@@ -993,7 +987,7 @@ export type GItem = {
 
 export type GDropItem =
     /** The drop is an item [chance, item name, item quantity] */
-    | [number, ItemName, number?]
+    | [number, ItemName, (number | null)?, null?, TitleName?]
     /** The drop is a cosmetic */
     | [number, "cx" | "cxbundle", string]
     | [number, "cxjar", number, string]
@@ -1667,6 +1661,7 @@ export type ConditionName =
     | "notverified"
     | "penalty_cd"
     | "phasedout"
+    | "pickpocket"
     | "poisoned"
     | "poisonous"
     | "power"
@@ -1695,6 +1690,7 @@ export type DamageType = "heal" | "magical" | "none" | "physical" | "pure"
 export type DropName =
     | "5bucks"
     | "abtesting"
+    | "abtesting_loser"
     | "apologybox"
     | "armorbox"
     | "armorx"
@@ -1716,8 +1712,8 @@ export type DropName =
     | "eastereggs"
     | "f1"
     | "gem0"
-    | "gem1_old"
     | "gem1"
+    | "gem1_old"
     | "gemfragment"
     | "gift0"
     | "gift1"
@@ -1727,6 +1723,7 @@ export type DropName =
     | "jewellerybox"
     | "konami"
     | "leather"
+    | "lglitch"
     | "lightmage"
     | "lostearring0"
     | "lostearring1"
@@ -1734,14 +1731,16 @@ export type DropName =
     | "lostearring3"
     | "lostearring4"
     | "m1"
+    | "m2"
     | "mistletoe"
     | "mysterybox"
     | "ornament"
     | "quiver"
     | "redenvelope"
-    | "redenvelopev2_shouldhavebeen"
     | "redenvelopev2"
+    | "redenvelopev2_shouldhavebeen"
     | "redenvelopev3"
+    | "redenvelopev4"
     | "seashell"
     | "statamulet"
     | "statbelt"
@@ -1751,8 +1750,8 @@ export type DropName =
     | "troll"
     | "weaponbox"
     | "weaponofthedead"
-    | "xbox"
     | "xN"
+    | "xbox"
 
 export type EmotionName = "drop_egg" | "hearts_single"
 
@@ -1764,6 +1763,7 @@ export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
 export type ItemName =
     | "5bucks"
     | "ale"
+    | "alloyquiver"
     | "amuletofm"
     | "angelwings"
     | "apiercingscroll"
@@ -2078,6 +2078,7 @@ export type ItemName =
     | "pants"
     | "pants1"
     | "partyhat"
+    | "pclaw"
     | "phelmet"
     | "pickaxe"
     | "pico"
@@ -2144,10 +2145,13 @@ export type ItemName =
     | "snowflakes"
     | "snring"
     | "solitaire"
+    | "sparkstaff"
     | "spear"
     | "spearofthedead"
     | "speedscroll"
+    | "spiderkey"
     | "spidersilk"
+    | "spikedhelmet"
     | "spookyamulet"
     | "spores"
     | "sshield"
@@ -2281,26 +2285,20 @@ export type ItemName =
 export type MapName =
     | "abtesting"
     | "arena"
+    | "bank"
     | "bank_b"
     | "bank_u"
-    | "bank"
     | "batcave"
     | "cave"
     | "cgallery"
     | "crypt"
     | "cyberland"
-    | "d_a1"
-    | "d_a2"
-    | "d_b1"
-    | "d_e"
-    | "d_g"
-    | "d1"
     | "d2"
-    | "d3"
+    | "d_e"
     | "desertland"
     | "duelland"
     | "dungeon0"
-    | "frozencave"
+    | "gateway"
     | "goobrawl"
     | "halloween"
     | "hut"
@@ -2314,26 +2312,28 @@ export type MapName =
     | "level3"
     | "level4"
     | "main"
-    | "maintest"
     | "mansion"
+    | "mforest"
     | "mtunnel"
     | "old_bank"
     | "old_main"
     | "original_main"
-    | "resort_e"
     | "resort"
+    | "resort_e"
     | "shellsisland"
     | "ship0"
+    | "spider_instance"
     | "spookytown"
     | "tavern"
     | "test"
-    | "therush"
     | "tomb"
     | "tunnel"
+    | "ucliffs"
+    | "uhills"
     | "winter_cave"
     | "winter_cove"
-    | "winter_inn_rooms"
     | "winter_inn"
+    | "winter_inn_rooms"
     | "winter_instance"
     | "winterland"
     | "woffice"
@@ -2372,6 +2372,7 @@ export type MonsterName =
     | "d_wiz"
     | "dknight2"
     | "dragold"
+    | "dryad"
     | "eelemental"
     | "ent"
     | "felemental"
@@ -2385,6 +2386,7 @@ export type MonsterName =
     | "ghost"
     | "goblin"
     | "goldenbat"
+    | "goldenbot"
     | "goo"
     | "gpurplepro"
     | "gredpro"
@@ -2413,6 +2415,7 @@ export type MonsterName =
     | "nelemental"
     | "nerfedbat"
     | "nerfedmummy"
+    | "odino"
     | "oneeye"
     | "osnake"
     | "phoenix"
@@ -2438,7 +2441,11 @@ export type MonsterName =
     | "slenderman"
     | "snake"
     | "snowman"
+    | "sparkbot"
     | "spider"
+    | "spiderbl"
+    | "spiderbr"
+    | "spiderr"
     | "squig"
     | "squigtoad"
     | "stompy"
@@ -2450,6 +2457,7 @@ export type MonsterName =
     | "target_ar900"
     | "target_r500"
     | "target_r750"
+    | "targetron"
     | "tiger"
     | "tinyp"
     | "tortoise"
@@ -2474,6 +2482,13 @@ export type NPCName =
     | "bouncer"
     | "citizen0"
     | "citizen1"
+    | "citizen10"
+    | "citizen11"
+    | "citizen12"
+    | "citizen13"
+    | "citizen14"
+    | "citizen15"
+    | "citizen16"
     | "citizen2"
     | "citizen3"
     | "citizen4"
@@ -2482,13 +2497,6 @@ export type NPCName =
     | "citizen7"
     | "citizen8"
     | "citizen9"
-    | "citizen10"
-    | "citizen11"
-    | "citizen12"
-    | "citizen13"
-    | "citizen14"
-    | "citizen15"
-    | "citizen16"
     | "compound"
     | "craftsman"
     | "exchange"
@@ -2509,14 +2517,6 @@ export type NPCName =
     | "holo5"
     | "items0"
     | "items1"
-    | "items2"
-    | "items3"
-    | "items4"
-    | "items5"
-    | "items6"
-    | "items7"
-    | "items8"
-    | "items9"
     | "items10"
     | "items11"
     | "items12"
@@ -2527,6 +2527,7 @@ export type NPCName =
     | "items17"
     | "items18"
     | "items19"
+    | "items2"
     | "items20"
     | "items21"
     | "items22"
@@ -2537,6 +2538,7 @@ export type NPCName =
     | "items27"
     | "items28"
     | "items29"
+    | "items3"
     | "items30"
     | "items31"
     | "items32"
@@ -2547,6 +2549,7 @@ export type NPCName =
     | "items37"
     | "items38"
     | "items39"
+    | "items4"
     | "items40"
     | "items41"
     | "items42"
@@ -2555,6 +2558,11 @@ export type NPCName =
     | "items45"
     | "items46"
     | "items47"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
     | "jailer"
     | "leathermerchant"
     | "lichteaser"
@@ -2578,6 +2586,7 @@ export type NPCName =
     | "rewards"
     | "santa"
     | "scrolls"
+    | "scrollsmith"
     | "secondhands"
     | "shellsguy"
     | "ship"
@@ -2605,6 +2614,7 @@ export type ProjectileName =
     | "crossbowarrow"
     | "cupid"
     | "curse"
+    | "dartgun"
     | "firearrow"
     | "fireball"
     | "frostarrow"
@@ -2715,8 +2725,8 @@ export type SkillName =
     | "partyheal"
     | "pcoat"
     | "phaseout"
-    | "piercingshot"
     | "pickpocket"
+    | "piercingshot"
     | "poisonarrow"
     | "portal"
     | "power"

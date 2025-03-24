@@ -495,7 +495,7 @@ export class Pathfinder {
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
-                const toDoor = this.addNodeToGraph(door[4], spawn2[0], spawn2[1])
+                const toDoor = this.addNodeToGraph(door[4] as MapName, spawn2[0], spawn2[1])
                 if (door[7] == "key") {
                     this.addLinkToGraph(fromNode, toDoor, {
                         key: door[8] as ItemName,
@@ -895,7 +895,7 @@ export class Pathfinder {
 
                 // Add the connected maps
                 for (const door of this.G.maps[map].doors) {
-                    if (!options.maps.includes(door[4])) options.maps.push(door[4])
+                    if (!options.maps.includes(door[4] as MapName)) options.maps.push(door[4] as MapName)
                 }
             }
 

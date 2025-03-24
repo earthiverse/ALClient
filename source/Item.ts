@@ -1,13 +1,5 @@
 import type { ItemType, WeaponType } from "./definitions/adventureland.js"
-import type {
-    Attribute,
-    CharacterType,
-    GData,
-    GItem,
-    ItemName,
-    SkillName,
-    TitleName,
-} from "./definitions/adventureland-data.js"
+import type { Attribute, CharacterType, GData, GItem, ItemName, TitleName } from "./definitions/adventureland-data.js"
 import type { ItemData } from "./definitions/adventureland-server.js"
 
 export class Item implements ItemData, GItem {
@@ -27,16 +19,7 @@ export class Item implements ItemData, GItem {
     public type: ItemType
 
     // Optional
-    public ability?:
-        | SkillName
-        | "burn"
-        | "freeze"
-        | "poke"
-        | "posion"
-        | "restore_mp"
-        | "secondchance"
-        | "sugarrush"
-        | "weave"
+    public ability?: GItem["ability"]
     public armor = 0
     public attack = 0
     public dex = 0
@@ -49,9 +32,9 @@ export class Item implements ItemData, GItem {
     public stat = 0
     public str = 0
     public class?: CharacterType[]
-    public compound?: { [T in Attribute]?: number }
+    public compound?: GItem["compound"]
     public e?: number
-    public upgrade?: { [T in Attribute]?: number }
+    public upgrade?: GItem["upgrade"]
     public v?: string
     /** Set if `type` is `weapon` */
     public wtype?: WeaponType

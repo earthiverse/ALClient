@@ -2,7 +2,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 758 (2022-11-23)
+ * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
  * It is used to confirm type correctness
  */
 
@@ -724,7 +724,7 @@ test("G.npcs type validation", async () => {
             firstc: {
                 id: "firstc",
                 role: "companion",
-                says: ["I've heard Goo's drop Amulets.", "I'm strictly on a goo-only diet."],
+                says: ["I've heard goos drop amulets.", "I'm strictly on a goo-only diet."],
                 skin: "lady1",
                 type: "fullstatic",
             },
@@ -1723,6 +1723,14 @@ test("G.npcs type validation", async () => {
                 role: "merchant",
                 says: "Good Luck",
                 skin: "scrolls",
+            },
+            scrollsmith: {
+                id: "scrollsmith",
+                name: "Sir Bob",
+                role: "scrollsmith",
+                says: "X",
+                skin: "bsoldier",
+                type: "fullstatic",
             },
             secondhands: {
                 color: "#7E65D3",
