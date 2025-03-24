@@ -439,7 +439,7 @@ export class Pathfinder {
         const doors: DoorInfo[] = []
         for (const door of this.G.maps[map].doors) {
             // TODO: Figure out how to know if we have access to a locked door
-            if (door[7] == "complicated") continue
+            // if (door[8] == "complicated") continue
 
             // From
             const spawn = this.G.maps[map].spawns[door[6]]
