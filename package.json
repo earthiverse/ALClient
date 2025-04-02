@@ -1,6 +1,6 @@
 {
     "name": "alclient",
-    "version": "0.22.0",
+    "version": "0.22.1",
     "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
     "files": [
         "build/**/*",
@@ -58,7 +58,7 @@
     },
     "dependencies": {
         "axios": "^1.8.2",
-        "bitset": "^5.2.0",
+        "bitset": "^5.2.3",
         "cross-var": "^1.1.0",
         "delaunator": "^5.0.1",
         "is-number": "^7.0.0",
