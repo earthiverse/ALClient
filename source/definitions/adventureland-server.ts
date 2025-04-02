@@ -755,7 +755,7 @@ export type EquipSuccessGRDataObject = {
 export type EquipFailedGRDataObject = {
     ms?: number
     response: "cant_equip" | "not_ready"
-    place: "equip"
+    place: "equip" | "use"
     failed: true
 }
 export type ExchangeNotEnoughGRDataObject = {
