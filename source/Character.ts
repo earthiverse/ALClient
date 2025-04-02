@@ -4275,10 +4275,10 @@ export class Character extends Observer implements CharacterData {
 
             const failCheck = (data: DisappearingTextData) => {
                 if (data.id == this.id && data.message == "NOT READY") {
-                    this.socket.off("eval", regenCheck)
-                    this.socket.off("disappearing_text", failCheck)
-                    reject(new Error("regenHP is on cooldown"))
-                }
+                this.socket.off("eval", regenCheck)
+                this.socket.off("disappearing_text", failCheck)
+                reject(new Error("regenHP is on cooldown"))
+}
             }
 
             setTimeout(() => {
@@ -5706,6 +5706,11 @@ export class Character extends Observer implements CharacterData {
                         data.place == "equip" &&
                         data.failed
                     ) {
+                        if (data.ms) {
+                            const next = new Date(Date.now() + data.ms)
+                            this.setNextSkill("regen_hp", next)
+                            this.setNextSkill("regen_mp", next)
+                        }
                         cleanup()
                         reject(new Error(`Failed to use Potion (${data.response})`))
                     }
