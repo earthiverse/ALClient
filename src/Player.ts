@@ -113,9 +113,9 @@ export class Player {
         throw new Error(await updateResponse.text());
       }
 
-      const [updateJson] = (await updateResponse.json()) as ServersAndCharactersApiResponse;
+      const [updateJson] = (await updateResponse.json()) as ServersAndCharactersApiResponse[];
 
-      if (updateJson.characters === undefined || updateJson.servers === undefined) {
+      if (updateJson?.characters === undefined || updateJson.servers === undefined) {
         throw new Error(JSON.stringify(updateJson));
       }
 
