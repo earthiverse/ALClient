@@ -19,13 +19,14 @@ import { EntityCharacter } from "./EntityCharacter.js";
 import { EntityMonster } from "./EntityMonster.js";
 import { EntityProjectile } from "./EntityProjectile.js";
 import EventBus from "./EventBus.js";
-import type { Game } from "./Game.js";
+import { Game } from "./Game.js";
 
 export interface ObserverEventMap {
   character_disappear: [Observer, EntityCharacter];
   entities_updated: [Observer, EntityMonster[], EntityCharacter[]];
   monster_death: [Observer, EntityMonster];
   monster_disappear: [Observer, EntityMonster];
+  version_mismatch: [Observer, number];
   observer_created: [Observer];
   observer_started: [Observer, XServerInfos];
   observer_stopped: [Observer];
@@ -219,6 +220,8 @@ export class Observer extends Entity {
         this._characters = new Map();
         this._monsters = new Map();
         this._projectiles = new Map();
+
+        if (this.game.version !== data.version) ObserverEventBus.emit("version_mismatch", this, data.version);
 
         this._map = data.map;
         this._in = data.in;
