@@ -34,40 +34,31 @@ export class Tools {
         a: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
         b: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
     ): number {
-        if (!a || !b) return Number.MAX_VALUE // No data for one of the objects
-        if (a.map && b.map && a.map !== b.map) return Number.MAX_VALUE // Different map
-        if (a.in && b.in && a.in !== b.in) return Number.MAX_VALUE // Different instance
+        // Inifinity if on a different map, instance, or we don't have data
+        if (!a || !b) return Infinity
+        if (a.map && b.map && a.map !== b.map) return Infinity
+        if (a.in && b.in && a.in !== b.in) return Infinity
 
-        const a_w2 = (a.width ?? 0) / 2
-        const a_h = a.height ?? 0
-        const b_w2 = (b.width ?? 0) / 2
-        const b_h = b.height ?? 0
+        const aHalfWidth = (a.width ?? 0) / 2
+        const aHeight = a.height ?? 0
+        const bHalfWidth = (b.width ?? 0) / 2
+        const bHeight = b.height ?? 0
 
-        // Check if they're just 2 points
-        if (a_w2 == 0 && a_h == 0 && b_w2 == 0 && b_h == 0) return Math.hypot(a.x - b.x, a.y - b.y)
+        // Compute bounds of each rectangle
+        const aLeft = a.x - aHalfWidth
+        const aRight = a.x + aHalfWidth
+        const aTop = a.y - aHeight
+        const aBottom = a.y
 
-        // Check overlap
-        if (a.x - a_w2 <= b.x + b_w2 && a.x + a_w2 >= b.x - b_w2 && a.y >= b.y - b_h && a.y - a_h <= b.y) return 0
+        const bLeft = b.x - bHalfWidth
+        const bRight = b.x + bHalfWidth
+        const bTop = b.y - bHeight
+        const bBottom = b.y
 
-        // Compare the 4 corners + base point to each other
-        let min = Number.MAX_VALUE
-        for (const a_c of [
-            { x: a.x + a_w2, y: a.y - a_h },
-            { x: a.x + a_w2, y: a.y },
-            { x: a.x - a_w2, y: a.y - a_h },
-            { x: a.x - a_w2, y: a.y },
-        ]) {
-            for (const b_c of [
-                { x: b.x + b_w2, y: b.y - b_h },
-                { x: b.x + b_w2, y: b.y },
-                { x: b.x - b_w2, y: b.y - b_h },
-                { x: b.x - b_w2, y: b.y },
-            ]) {
-                const d = Math.hypot(a_c.x - b_c.x, a_c.y - b_c.y)
-                if (d < min) min = d
-            }
-        }
-        return min
+        const dx = Math.max(bLeft - aRight, aLeft - bRight, 0)
+        const dy = Math.max(bTop - aBottom, aTop - bBottom, 0)
+
+        return Math.hypot(dx, dy)
     }
 
     /**
@@ -82,40 +73,31 @@ export class Tools {
         a: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
         b: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
     ): number {
-        if (!a || !b) return Number.MAX_VALUE // No data for one of the objects
-        if (a.map && b.map && a.map !== b.map) return Number.MAX_VALUE // Different map
-        if (a.in && b.in && a.in !== b.in) return Number.MAX_VALUE // Different instance
+        // Inifinity if on a different map, instance, or we don't have data
+        if (!a || !b) return Infinity
+        if (a.map && b.map && a.map !== b.map) return Infinity
+        if (a.in && b.in && a.in !== b.in) return Infinity
 
-        const a_w2 = (a.width ?? 0) / 2
-        const a_h = a.height ?? 0
-        const b_w2 = (b.width ?? 0) / 2
-        const b_h = b.height ?? 0
+        const aHalfWidth = (a.width ?? 0) / 2
+        const aHeight = a.height ?? 0
+        const bHalfWidth = (b.width ?? 0) / 2
+        const bHeight = b.height ?? 0
 
-        // Check if they're just 2 points
-        if (a_w2 == 0 && a_h == 0 && b_w2 == 0 && b_h == 0) return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
+        // Compute bounds of each rectangle
+        const aLeft = a.x - aHalfWidth
+        const aRight = a.x + aHalfWidth
+        const aTop = a.y - aHeight
+        const aBottom = a.y
 
-        // Check overlap
-        if (a.x - a_w2 <= b.x + b_w2 && a.x + a_w2 >= b.x - b_w2 && a.y >= b.y - b_h && a.y - a_h <= b.y) return 0
+        const bLeft = b.x - bHalfWidth
+        const bRight = b.x + bHalfWidth
+        const bTop = b.y - bHeight
+        const bBottom = b.y
 
-        // Compare the 4 corners + base point to each other
-        let min = Number.MAX_VALUE
-        for (const a_c of [
-            { x: a.x + a_w2, y: a.y - a_h },
-            { x: a.x + a_w2, y: a.y },
-            { x: a.x - a_w2, y: a.y - a_h },
-            { x: a.x - a_w2, y: a.y },
-        ]) {
-            for (const b_c of [
-                { x: b.x + b_w2, y: b.y - b_h },
-                { x: b.x + b_w2, y: b.y },
-                { x: b.x - b_w2, y: b.y - b_h },
-                { x: b.x - b_w2, y: b.y },
-            ]) {
-                const d = (a_c.x - b_c.x) * (a_c.x - b_c.x) + (a_c.y - b_c.y) * (a_c.y - b_c.y)
-                if (d < min) min = d
-            }
-        }
-        return min
+        const dx = Math.max(bLeft - aRight, aLeft - bRight, 0)
+        const dy = Math.max(bTop - aBottom, aTop - bBottom, 0)
+
+        return dx * dx + dy * dy
     }
 
     /**
