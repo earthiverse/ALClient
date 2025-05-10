@@ -1,4 +1,4 @@
-import { GData, XServerInfos } from "typed-adventureland";
+import type { GData, XServerInfos } from "typed-adventureland";
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
 import Player from "../src/Player.js";

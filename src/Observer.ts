@@ -19,14 +19,19 @@ import { EntityCharacter } from "./EntityCharacter.js";
 import { EntityMonster } from "./EntityMonster.js";
 import { EntityProjectile } from "./EntityProjectile.js";
 import EventBus from "./EventBus.js";
-import { Game } from "./Game.js";
+import type { Game } from "./Game.js";
 
 export interface ObserverEventMap {
   character_disappear: [Observer, EntityCharacter];
   entities_updated: [Observer, EntityMonster[], EntityCharacter[]];
   monster_death: [Observer, EntityMonster];
   monster_disappear: [Observer, EntityMonster];
-  version_mismatch: [Observer, number];
+  /**
+   * Emitted when starting a character that is using Game with outdated G data
+   * @param observer The Observer that is running with an outdated version of G
+   * @param newVersion The Game version the server is running
+   */
+  version_mismatch: [observer: Observer, newVersion: number];
   observer_created: [Observer];
   observer_started: [Observer, XServerInfos];
   observer_stopped: [Observer];

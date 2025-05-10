@@ -1,6 +1,6 @@
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
-import Player from "../src/Player.js";
+import type Player from "../src/Player.js";
 
 let game: Game;
 let player: Player;
