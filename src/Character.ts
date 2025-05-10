@@ -1,6 +1,5 @@
 import type EventEmitter from "node:events";
 import type {
-  AttackFailedGRDataObject,
   BuySuccessGRDataObject,
   ClassKey,
   CooldownGRDataObject,
@@ -9,7 +8,6 @@ import type {
   ItemInfo,
   ItemKey,
   NotReadyGRDataObject,
-  ProjectileSkillGRDataObject,
   ServerIdentifier,
   ServerRegion,
   ServerToClient_chest_opened,
@@ -35,6 +33,7 @@ import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
+import { isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
 
 export interface CharacterEventMap {
   character_created: [Character];
@@ -347,7 +346,7 @@ export class Character extends Observer {
    * For stacks of items, it uses the `.q`.
    *
    * If you wish to know how many inventory slots are being taken up,
-   * try `character.locaateItems(item).length` instead.
+   * try `character.locateItems(item).length` instead.
    *
    * @param item all the properties the item needs to match
    * @returns
@@ -457,14 +456,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        // TODO: Improve typing
-        if ((data as { place: string }).place !== "party") return; // Not a party response
-        cleanup();
-        if ((data as { success: boolean }).success) {
+        if (!isRelevantGameResponse(data, "party")) return;
+        // TODO: Is this actually the party we requested?
+        if (isSuccessGameResponse(data)) {
           resolve();
         } else {
-          reject(new Error((data as { response: string }).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -511,24 +510,22 @@ export class Character extends Observer {
       };
 
       const attackHandler = (data: ServerToClient_game_response) => {
-        if ((data as ProjectileSkillGRDataObject).place !== "attack") return; // Different skill
+        if(!isRelevantGameResponse(data, "attack")) return;
 
+        // TODO: Entity check?
+
+        if(isSuccessGameResponse(data)) {
+          resolve(data as unknown as SkillSuccessGRDataObject)
+        } else {
+          reject(new Error(data.response));
+        }
         cleanup();
-
-        if (
-          (data as ProjectileSkillGRDataObject).failed === true ||
-          (data as AttackFailedGRDataObject).response === "attack_failed"
-        )
-          reject(new Error((data as ProjectileSkillGRDataObject).reason ?? (data as CooldownGRDataObject).response));
-
-        resolve(data as SkillSuccessGRDataObject);
       };
 
       const disappearHandler = (data: ServerToClient_disappear) => {
         if (data.id !== id) return; // Different entity
-        if (data.reason !== "not_there") return;
-        cleanup();
         reject(new Error("not_there"));
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -555,21 +552,20 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        // TODO: Improve typing
-        if ((data as BuySuccessGRDataObject).place !== "buy") return; // Not a buy response
-        if ((data as BuySuccessGRDataObject).name !== name) return; // Response for buying a different item
-        if ((data as BuySuccessGRDataObject).q !== quantity) return; // Response for buying a different item
-        cleanup();
-        if ((data as BuySuccessGRDataObject).success) {
+        if (!isRelevantGameResponse(data, "buy")) return;
+        if (isSuccessGameResponse(data)) {
+          if ((data as BuySuccessGRDataObject).name !== name) return; // Response is for a different item
+          if ((data as BuySuccessGRDataObject).q !== quantity) return; // Response is for a different item
           resolve(data as BuySuccessGRDataObject);
         } else {
-          reject(new Error((data as DestroyGRDataObject).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
-        cleanup();
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+        cleanup();
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
       s.on("game_response", responseHandler);
@@ -598,15 +594,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        // TODO: Improve typing
-        if ((data as DestroyGRDataObject).place !== "destroy") return; // Not a destroy response
-        if ((data as DestroyGRDataObject).num !== num) return; // Response for destroying a different item
-        cleanup();
-        if ((data as DestroyGRDataObject).success) {
+        if (!isRelevantGameResponse(data, "destroy")) return;
+        if ((data as DestroyGRDataObject).num !== num) return; // Response is for a different item
+        if (isSuccessGameResponse(data)) {
           resolve(data as DestroyGRDataObject);
         } else {
           reject(new Error((data as DestroyGRDataObject).response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -668,10 +663,9 @@ export class Character extends Observer {
       };
 
       const gameResponseHandler = (data: ServerToClient_game_response) => {
-        if (data == "loot_no_space" || data == "loot_failed") {
-          cleanup();
-          reject(new Error(data));
-        }
+        if (!isRelevantGameResponse(data, "open_chest")) return;
+        reject(new Error(data.response)); // NOTE: open_chest only has failed responses
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -702,13 +696,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
-        cleanup();
-        if ((data as SkillSuccessGRDataObject).success) {
+        if (!isRelevantGameResponse(data, "use")) return; // Different skill
+        // TODO: The game can't differentiate between hp and mp regen using the game_response
+        if (isSuccessGameResponse(data)) {
           resolve();
         } else {
-          reject(new Error((data as NotReadyGRDataObject).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -738,13 +733,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        if ((data as NotReadyGRDataObject).place !== "use") return; // Different skill
-        cleanup();
-        if ((data as SkillSuccessGRDataObject).success) {
+        if (!isRelevantGameResponse(data, "use")) return; // Different skill
+        // TODO: The game can't differentiate between hp and mp regen using the game_response
+        if (isSuccessGameResponse(data)) {
           resolve();
         } else {
-          reject(new Error((data as NotReadyGRDataObject).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -779,14 +775,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        // TODO: Improve typing
-        if ((data as { place: string }).place !== "sell") return; // Not a sell response
-        cleanup();
-        if ((data as { success: boolean }).success) {
+        if (!isRelevantGameResponse(data, "sell")) return;
+        // TODO: Is this actually the item we sold?
+        if (isSuccessGameResponse(data)) {
           resolve(data as GoldReceivedGRDataObject);
         } else {
-          reject(new Error((data as { response: string }).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -817,14 +813,14 @@ export class Character extends Observer {
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
-        // TODO: Improve typing
-        if ((data as { place: string }).place !== "party") return; // Not a party response
-        cleanup();
-        if ((data as { success: boolean }).success) {
+        if (!isRelevantGameResponse(data, "party")) return;
+        // TODO: Was the request actually sent to the party we requested?
+        if (isSuccessGameResponse(data)) {
           resolve();
         } else {
-          reject(new Error((data as { response: string }).response));
+          reject(new Error(data.response));
         }
+        cleanup();
       };
 
       const timeout = setTimeout(() => {
