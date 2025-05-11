@@ -36,8 +36,8 @@ import type { Player } from "./Player.js";
 import { isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
 
 export interface CharacterEventMap {
-  character_created: [Character];
-  character_started: [Character, XServerInfos];
+  character_created: [character: Character];
+  character_started: [character: Character, serverInfo: XServerInfos];
   chest_dropped: [Character, ServerToClient_drop];
   chest_opened: [Character, ServerToClient_chest_opened];
   conditions_set: [Character, StatusInfo];
@@ -245,8 +245,8 @@ export class Character extends Observer {
 
       const timeout = setTimeout(() => {
         this.stop();
-        reject(new Error(`Failed to start within ${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms`));
-      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+        reject(new Error(`Failed to start within ${Configuration.CONNECT_TIMEOUT_MS}ms`));
+      }, Configuration.CONNECT_TIMEOUT_MS);
 
       const startHandler = (data: ServerToClient_start) => {
         cleanup();
