@@ -26,6 +26,7 @@ export interface ObserverEventMap {
   entities_updated: [Observer, EntityMonster[], EntityCharacter[]];
   monster_death: [Observer, EntityMonster];
   monster_disappear: [Observer, EntityMonster];
+  new_projectile: [Observer, EntityProjectile];
   /**
    * Emitted when starting a character that is using Game with outdated G data
    * @param observer The Observer that is running with an outdated version of G
@@ -141,10 +142,9 @@ export class Observer extends Entity {
 
       if (!attacker && !target) return; // We don't see either entity!?
 
-      this.projectiles.set(
-        data.pid,
-        new EntityProjectile(this.game, data as ServerToClient_action_projectile, attacker, target),
-      );
+      const projectile = new EntityProjectile(this.game, data as ServerToClient_action_projectile, attacker, target);
+      ObserverEventBus.emit("new_projectile", this, projectile);
+      this.projectiles.set(data.pid, projectile);
     });
 
     s.on("death", (data) => {

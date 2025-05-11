@@ -45,4 +45,6 @@ export class EntityProjectile extends Entity {
     this._going_x = target?.x ?? data.x;
     this._going_y = target?.y ?? data.y;
   }
+
+  // TODO: Function that will return probability of killing the target
 }
