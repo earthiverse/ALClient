@@ -14,6 +14,7 @@ import type {
 } from "./definitions/adventureland-data.js"
 import type { Grids, Grid, LinkData, NodeData, PathfinderOptions } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
+import { Tools } from "./Tools.js"
 import BitSet from "bitset"
 
 const UNKNOWN = 2
@@ -24,60 +25,12 @@ export class Pathfinder {
     protected static G: GData
 
     protected static FIRST_MAP: MapName = "main"
-    protected static TRANSPORT_COST = 250
-    protected static TOWN_COST = 450
-    protected static ENTER_COST = 1000
+    protected static TRANSPORT_COST = 75000
+    protected static TOWN_COST = 200000
+    protected static ENTER_COST = 1000000
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
-
-    /**
-     * Calculates the squared distance to a door. Used for optimizing movements to doors
-     * @param a The position to check the distance to the door
-     * @param b The door's information (G.maps[mapName].doors[doorNum])
-     */
-    public static doorDistanceSquared(a: { x: number; y: number; map?: MapName }, b: DoorInfo): number {
-        const b_x = b[0]
-        const b_y = b[1]
-        const halfWidth = b[2] / 2
-        const height = b[3]
-
-        if (a.x >= b_x) {
-            if (a.y >= b_y - height / 2) {
-                // Check inside door
-                if (a.x <= b_x + halfWidth && a.y <= b_y) return 0
-
-                // Check top right
-                return (a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth)) + (a.y - b_y) * (a.y - b_y)
-            } else {
-                // Check inside door
-                if (a.x <= b_x + halfWidth && a.y >= b_y) return 0
-
-                // Check bottom right
-                return (
-                    (a.x - (b_x + halfWidth)) * (a.x - (b_x + halfWidth)) +
-                    (a.y - (b_y - height)) * (a.y - (b_y - height))
-                )
-            }
-        } else {
-            if (a.y >= b_y - height / 2) {
-                // Check inside door
-                if (a.x >= b_x - halfWidth && a.y <= b_y) return 0
-
-                // Check top left
-                return (a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth)) + (a.y - b_y) * (a.y - b_y)
-            } else {
-                // Check inside door
-                if (a.x >= b_x - halfWidth && a.y >= b_y) return 0
-
-                // Check bottom left
-                return (
-                    (a.x - (b_x - halfWidth)) * (a.x - (b_x - halfWidth)) +
-                    (a.y - (b_y - height)) * (a.y - (b_y - height))
-                )
-            }
-        }
-    }
 
     protected static addLinkToGraph(from: Node<NodeData>, to: Node<NodeData>, data?: LinkData): Link<LinkData> {
         return this.graph.addLink(from.id, to.id, data)
@@ -209,22 +162,22 @@ export class Pathfinder {
     public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
         if (options?.avoidMaps?.includes(link?.map) || options?.avoidMaps?.includes(to?.map)) {
             // We want to avoid this map
-            return 999999
+            return 1000000000000
         } else if (link?.type == "leave" || link?.type == "transport") {
             // We are using the transporter
-            if (link.map === "bank" || link.map === "bank_u") return 1000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
+            if (link.map === "bank" || link.map === "bank_u") return 1000000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
             return options?.costs?.transport !== undefined ? options.costs.transport : Pathfinder.TRANSPORT_COST
         } else if (link?.type == "enter") {
             // We are entering a crypt
             return options?.costs?.enter !== undefined ? options.costs.enter : Pathfinder.ENTER_COST
         } else if (link?.type == "town") {
             // We are warping to town
-            if (options?.avoidTownWarps) return 999999
+            if (options?.avoidTownWarps) return 1000000000000
             else return options?.costs?.town !== undefined ? options.costs.town : Pathfinder.TOWN_COST
         }
 
         // We are walking
-        if (from.map == to.map) return Math.hypot(from.x - to.x, from.y - to.y)
+        if (from.map == to.map) return (from.x - to.x) ** 2 + (from.y - to.y) ** 2
     }
 
     public static computePathCost(
@@ -491,7 +444,11 @@ export class Pathfinder {
         for (const fromNode of walkableNodes) {
             // Check if we can reach a door
             for (const door of doors) {
-                if (this.doorDistanceSquared(fromNode.data, door) >= Constants.DOOR_REACH_DISTANCE_SQUARED) continue // Door is too far away
+                if (
+                    Tools.squaredDistance(fromNode.data, { x: door[0], y: door[1], width: door[2], height: door[3] }) >=
+                    Constants.DOOR_REACH_DISTANCE_SQUARED
+                )
+                    continue // Door is too far away
 
                 // To
                 const spawn2 = this.G.maps[door[4]].spawns[door[5]]
@@ -639,7 +596,7 @@ export class Pathfinder {
         if (
             from.map == to.map &&
             this.canWalkPath(from, to) &&
-            Math.hypot(from.x - to.x, from.y - to.y) < (options?.costs?.town ?? this.TOWN_COST)
+            (from.x - to.x) ** 2 + (from.y - to.y) ** 2 < (options?.costs?.town ?? this.TOWN_COST)
         ) {
             // Return a straight line to the destination
             return [

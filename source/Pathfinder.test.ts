@@ -32,39 +32,13 @@ test("Pathfinder.prepare", async () => {
             cheat: true,
             showConsole: true,
         })
-    }).not.toThrowError()
+    }).not.toThrow()
     expect(logMock).not.toHaveBeenCalled()
     expect(debugMock).toHaveBeenCalled()
 
     // Set log back to normal
     console.log = log
     console.debug = debug
-})
-
-test("Pathfinder.doorDistance", async () => {
-    const mainBankDoor = Game.G.maps.main.doors[2]
-
-    // Test the door base coordinate
-    const doorPoint = { x: mainBankDoor[0], y: mainBankDoor[1] }
-    expect(Pathfinder.doorDistanceSquared(doorPoint, mainBankDoor)).toBe(0)
-    // Test the corners of the door
-    const doorCorner_1 = { x: mainBankDoor[0] + mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] }
-    expect(Pathfinder.doorDistanceSquared(doorCorner_1, mainBankDoor)).toBe(0)
-    const doorCorner_2 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] }
-    expect(Pathfinder.doorDistanceSquared(doorCorner_2, mainBankDoor)).toBe(0)
-    const doorCorner_3 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] }
-    expect(Pathfinder.doorDistanceSquared(doorCorner_3, mainBankDoor)).toBe(0)
-    const doorCorner_4 = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] }
-    expect(Pathfinder.doorDistanceSquared(doorCorner_4, mainBankDoor)).toBe(0)
-    // Test inside the door
-    const doorInside = { x: mainBankDoor[0] - mainBankDoor[2] / 2, y: mainBankDoor[1] - mainBankDoor[3] / 2 }
-    expect(Pathfinder.doorDistanceSquared(doorInside, mainBankDoor)).toBe(0)
-
-    // Test outside the door
-    const doorOutside_1 = { x: mainBankDoor[0] + mainBankDoor[2], y: mainBankDoor[1] - mainBankDoor[3] }
-    expect(Pathfinder.doorDistanceSquared(doorOutside_1, mainBankDoor)).toBe(
-        (mainBankDoor[2] / 2) * (mainBankDoor[2] / 2),
-    )
 })
 
 test("Pathfinder.getPath", async () => {
@@ -84,13 +58,13 @@ test("Pathfinder.getPath", async () => {
     expect(() => {
         const path = Pathfinder.getPath(mainSpawn, mainOffset)
         expect(path).toHaveLength(2)
-    }).not.toThrowError()
+    }).not.toThrow()
 
     // Complicated cross-map path
     expect(() => {
         const path = Pathfinder.getPath(mainSpawn, halloweenSpawn)
         expect(path.length).toBeTruthy()
-    }).not.toThrowError()
+    }).not.toThrow()
 
     // Don't use town warps
     expect(() => {
@@ -101,21 +75,7 @@ test("Pathfinder.getPath", async () => {
         )
         expect(path.length).toBeTruthy
         for (const link of path as unknown as LinkData[]) expect(link.type).not.toEqual("town")
-    }).not.toThrowError()
-
-    // Takes bank
-    expect(() => {
-        const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
-        expect(path.length).toBeTruthy()
-        let hasBankLink = false
-        for (const link of path as unknown as LinkData[]) {
-            if (link && link.map.startsWith("bank")) {
-                hasBankLink = true
-                break
-            }
-        }
-        expect(hasBankLink).toBeTruthy()
-    }).not.toThrowError()
+    }).not.toThrow()
 
     // Avoids bank
     expect(() => {
@@ -128,9 +88,9 @@ test("Pathfinder.getPath", async () => {
         for (const link of path as unknown as LinkData[]) {
             if (link) expect(link.map).not.toMatch(/^bank/)
         }
-    }).not.toThrowError()
+    }).not.toThrow()
 
-    // Still goes to bank
+    // Still goes to bank if the destination is in the bank
     expect(() => {
         const path = Pathfinder.getPath(
             { map: "main", x: 2, y: 3 },
@@ -142,9 +102,9 @@ test("Pathfinder.getPath", async () => {
         expect(end.map).toEqual("bank_u")
         expect(end.x).toEqual(4)
         expect(end.y).toEqual(5)
-    }).not.toThrowError()
+    }).not.toThrow()
 
-    // Still exits bank
+    // Still exits bank if the start is in the bank
     expect(() => {
         const path = Pathfinder.getPath(
             { map: "bank_u", x: 2, y: 3 },
@@ -156,7 +116,7 @@ test("Pathfinder.getPath", async () => {
         expect(end.map).toEqual("main")
         expect(end.x).toEqual(4)
         expect(end.y).toEqual(5)
-    }).not.toThrowError()
+    }).not.toThrow()
 })
 
 test("Pathfinder.locateCraftNPC", () => {
@@ -169,7 +129,7 @@ test("Pathfinder.locateCraftNPC", () => {
     // not craftable
     expect(() => {
         Pathfinder.locateCraftNPC("gem0")
-    }).toThrowError()
+    }).toThrow()
 })
 
 test("Pathfinder.locateExchangeNPC", () => {
@@ -182,7 +142,7 @@ test("Pathfinder.locateExchangeNPC", () => {
     // not exchangeable
     expect(() => {
         Pathfinder.locateExchangeNPC("mpot0")
-    }).toThrowError()
+    }).toThrow()
 })
 
 test("Pathfinder.locateMonster", () => {

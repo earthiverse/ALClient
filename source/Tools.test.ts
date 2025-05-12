@@ -1,4 +1,9 @@
+import { Game } from "./Game"
 import { Tools } from "./Tools"
+
+beforeAll(async () => {
+    await Game.getGData(true, false)
+}, 60000)
 
 test("Tools.distance && Tools.squaredDistance", async () => {
     const x0_y0 = { x: 0, y: 0 }
@@ -43,4 +48,29 @@ test("Tools.distance && Tools.squaredDistance", async () => {
     const zero_width = { height: 10, width: 0, x: 0, y: 50 }
     expect(Tools.distance(x0_y0, zero_width)).toBe(40) // The top of the line should be 40 pixels below point 1
     expect(Tools.squaredDistance(x0_y0, zero_width)).toBe(40 * 40) // The top of the line should be 40 pixels below point 1
+})
+
+test("Pathfinder.doorDistance", async () => {
+    const door = Game.G.maps.main.doors[2]
+    const doorPoint = { x: door[0], y: door[1] }
+    const doorRectangle = { x: door[0], y: door[1], width: door[2], height: door[3] }
+
+    // Test the door base coordinate
+    expect(Tools.squaredDistance(doorPoint, doorRectangle)).toBe(0)
+    // Test the corners of the door
+    const doorCorner_1 = { x: door[0] + door[2] / 2, y: door[1] - door[3] }
+    expect(Tools.squaredDistance(doorCorner_1, doorRectangle)).toBe(0)
+    const doorCorner_2 = { x: door[0] - door[2] / 2, y: door[1] - door[3] }
+    expect(Tools.squaredDistance(doorCorner_2, doorRectangle)).toBe(0)
+    const doorCorner_3 = { x: door[0] - door[2] / 2, y: door[1] }
+    expect(Tools.squaredDistance(doorCorner_3, doorRectangle)).toBe(0)
+    const doorCorner_4 = { x: door[0] - door[2] / 2, y: door[1] }
+    expect(Tools.squaredDistance(doorCorner_4, doorRectangle)).toBe(0)
+    // Test inside the door
+    const doorInside = { x: door[0] - door[2] / 2, y: door[1] - door[3] / 2 }
+    expect(Tools.squaredDistance(doorInside, doorRectangle)).toBe(0)
+
+    // Test outside the door
+    const doorOutside_1 = { x: door[0] + door[2], y: door[1] - door[3] }
+    expect(Tools.squaredDistance(doorOutside_1, doorRectangle)).toBe((door[2] / 2) * (door[2] / 2))
 })

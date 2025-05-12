@@ -2721,9 +2721,8 @@ export class Character extends Observer implements CharacterData {
         for (const d of (this.G.maps[this.map] as GMap).doors) {
             if (d[4] !== map) continue
             found = true
-            distance = Pathfinder.doorDistanceSquared(this, d)
-            if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED) continue
-            break
+            distance = Tools.squaredDistance(this, { x: d[0], y: d[1], width: d[2], height: d[3] })
+            if (distance <= Constants.DOOR_REACH_DISTANCE_SQUARED) break
         }
         if (!found) throw new Error(`There is no door to ${map} from ${this.map}.`)
         if (distance > Constants.DOOR_REACH_DISTANCE_SQUARED)
