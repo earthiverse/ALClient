@@ -18,7 +18,7 @@
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && node node_modules/madge/bin/cli.js --warning --circular --extensions js ./",
         "prepare": "npm run clean && npm run build && npm run cleanTests",
         "prepublishOnly": "npm run lint && npm test",
-        "postpublish": "cross-var git tag v$npm_package_version",
+        "postpublish": "cross-env git tag v$npm_package_version",
         "preversion": "npm run lint",
         "version": "git add -A source"
     },
@@ -59,7 +59,6 @@
     "dependencies": {
         "axios": "^1.8.2",
         "bitset": "^5.2.3",
-        "cross-var": "^1.1.0",
         "delaunator": "^5.0.1",
         "is-number": "^7.0.0",
         "lru-cache": "^10.4.3",
