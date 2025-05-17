@@ -60,7 +60,7 @@ export class Pathfinder {
         try {
             const grid = this.getGrid(location.map)
             if (grid.get(y * width + x) == WALKABLE) return true
-        } catch (e) {
+        } catch {
             return false
         }
 

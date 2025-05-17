@@ -90,7 +90,7 @@ export class Game {
             // Check if there's cached data
             this.G = JSON.parse(fs.readFileSync(gFile, "utf8")) as GData
             return this.G
-        } catch (e) {
+        } catch {
             // There's no cached data, download it
             console.debug("Updating 'G' data...")
             const response = await axios.get<string>(`${this.url}/data.js`)
@@ -294,7 +294,7 @@ export class Game {
         let fileData: string
         try {
             fileData = fs.readFileSync(path, "utf8")
-        } catch (e) {
+        } catch {
             throw new Error(`Could not locate '${path}'.`)
         }
         const data: { email: string; password: string; mongo: string; userAuth?: string; userID?: string } =
@@ -311,7 +311,7 @@ export class Game {
 
         try {
             await this.login(data.email, data.password, data.mongo, secure)
-        } catch (e) {
+        } catch {
             if (data.userID && data.userAuth) {
                 // Delete the userAuth and userID, and try again
                 delete data.userAuth
