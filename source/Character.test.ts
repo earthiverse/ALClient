@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 import { Game } from "./Game"
 import { Character } from "./Character"
 import type { ServerData } from "./definitions/adventureland-server"

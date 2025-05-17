@@ -119,7 +119,7 @@ export class Observer {
         // Update database when characters move around the map by transporting
         this.socket.on("disappear", (data: DisappearData) => {
             // Remove them from their list
-            this.players.delete(data.id) || this.deleteEntity(data.id)
+            if (!this.players.delete(data.id)) this.deleteEntity(data.id)
 
             this.updatePositions()
 
@@ -205,11 +205,7 @@ export class Observer {
                     y: data.y,
                 }
 
-                this.S[data.name] = {
-                    ...monsterData,
-                    live: true,
-                    max_hp: monsterData.hp,
-                }
+                this.S[data.name] = { ...monsterData, live: true, max_hp: monsterData.hp }
 
                 if (Database.connection) {
                     EntityModel.updateOne(
@@ -219,9 +215,7 @@ export class Observer {
                             type: data.name,
                         },
                         monsterData,
-                        {
-                            upsert: true,
-                        },
+                        { upsert: true },
                     )
                         .lean()
                         .exec()
@@ -343,18 +337,8 @@ export class Observer {
                         x: goodData.x,
                         y: goodData.y,
                     }
-                    databaseEntityUpdates.push({
-                        updateOne: {
-                            filter: filter,
-                            update: update,
-                            upsert: true,
-                        },
-                    })
-                    databaseRespawnUpdates.push({
-                        deleteOne: {
-                            filter: filter,
-                        },
-                    })
+                    databaseEntityUpdates.push({ updateOne: { filter: filter, update: update, upsert: true } })
+                    databaseRespawnUpdates.push({ deleteOne: { filter: filter } })
                     Database.nextUpdate.set(updateKey, Date.now() + Constants.MONGO_UPDATE_MS)
                 }
             }
@@ -436,12 +420,7 @@ export class Observer {
                             ),
                         )
                     } else {
-                        this.socket.emit("loaded", {
-                            height: 1080,
-                            scale: 2,
-                            success: 1,
-                            width: 1920,
-                        } as LoadedData)
+                        this.socket.emit("loaded", { height: 1080, scale: 2, success: 1, width: 1920 } as LoadedData)
                         resolve()
                     }
                 })
@@ -485,15 +464,9 @@ export class Observer {
                                 serverRegion: this.serverData.region,
                             },
                             {
-                                $inc: {
-                                    [`killed.${entity.type}`]: 1,
-                                },
-                                $max: {
-                                    lastEntered: now,
-                                },
-                                $min: {
-                                    firstEntered: now,
-                                },
+                                $inc: { [`killed.${entity.type}`]: 1 },
+                                $max: { lastEntered: now },
+                                $min: { firstEntered: now },
                             },
                             { upsert: true },
                         )
@@ -519,9 +492,7 @@ export class Observer {
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region,
                             },
-                            {
-                                estimatedRespawn: Date.now() + monsterRespawn,
-                            },
+                            { estimatedRespawn: Date.now() + monsterRespawn },
                             { upsert: true },
                         )
                             .lean()
@@ -744,13 +715,7 @@ export class Observer {
                             updateData["slots.trade30"] = p.slots.trade30
                         }
                         if (p.owner) updateData.owner = p.owner
-                        playerUpdates.push({
-                            updateOne: {
-                                filter: { name: p.id },
-                                update: updateData,
-                                upsert: true,
-                            },
-                        })
+                        playerUpdates.push({ updateOne: { filter: { name: p.id }, update: updateData, upsert: true } })
                     }
                     Database.nextUpdate.set(
                         `${this.serverData.name}${this.serverData.region}${p.id}`,
@@ -797,13 +762,7 @@ export class Observer {
                             },
                         },
                     },
-                    {
-                        $match: {
-                            distance: {
-                                $lt: Constants.MAX_VISIBLE_RANGE / 2,
-                            },
-                        },
-                    },
+                    { $match: { distance: { $lt: Constants.MAX_VISIBLE_RANGE / 2 } } },
                 ])
                     .exec()
                     .then((toDeletes) => {
@@ -850,14 +809,7 @@ export class Observer {
                     serverIdentifier: this.serverData.name,
                     serverRegion: this.serverData.region,
                 },
-                {
-                    $max: {
-                        lastEntered: now,
-                    },
-                    $min: {
-                        firstEntered: now,
-                    },
-                },
+                { $max: { lastEntered: now }, $min: { firstEntered: now } },
                 { upsert: true },
             )
                 .lean()

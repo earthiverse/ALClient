@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 import type { GData } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Game } from "./Game"

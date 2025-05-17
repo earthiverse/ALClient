@@ -32,17 +32,9 @@ import type {
     TitleName,
 } from "./adventureland-data.js"
 
-export type AchievementProgressData =
-    | AchievementProgressDataFirehazard
-    | {
-          name: string
-      }
+export type AchievementProgressData = AchievementProgressDataFirehazard | { name: string }
 
-export type AchievementProgressDataFirehazard = {
-    name: "firehazard"
-    count: number
-    needed: number
-}
+export type AchievementProgressDataFirehazard = { name: "firehazard"; count: number; needed: number }
 
 export type ActionDataBase = {
     attacker: string
@@ -58,12 +50,8 @@ export type ActionDataBase = {
     x: number
     y: number
 }
-export type ActionDataProjectile = ActionDataBase & {
-    projectile: ProjectileName
-}
-export type ActionDataRay = ActionDataBase & {
-    instant: boolean
-}
+export type ActionDataProjectile = ActionDataBase & { projectile: ProjectileName }
+export type ActionDataRay = ActionDataBase & { instant: boolean }
 export type ActionData = ActionDataProjectile | ActionDataRay
 
 export type AuthData = {
@@ -176,9 +164,7 @@ export type CharacterData = PlayerData & {
     crit: number
     critdamage: number
     dreturn: number
-    emx?: {
-        [T in EmotionName]?: number
-    }
+    emx?: { [T in EmotionName]?: number }
     tax: number
     xrange: number
     items: (ItemData | null)[]
@@ -235,20 +221,12 @@ export type ChestLootData = {
     id: string
     gold: number
     goldm: number
-    items: {
-        name: string
-        q?: number
-        level?: number
-        looter: string
-    }[]
+    items: { name: string; q?: number; level?: number; looter: string }[]
     opener: string
     party: boolean
 }
 
-export type ChestGoneData = {
-    id: string
-    gone: true
-}
+export type ChestGoneData = { id: string; gone: true }
 
 export type CMData = {
     /** The name of the player that sent the CM */
@@ -286,17 +264,11 @@ export type DeathData = {
     luckm?: number
     place?: string | "attack"
     /** For cooperative monsters, this will have a list of the points per character that decided the drops */
-    points?: {
-        [T in string]: number
-    }
+    points?: { [T in string]: number }
 }
 
 export type DiceData =
-    | {
-          state: "bets"
-          hex: string
-          algorithm: "hmac-sha256"
-      }
+    | { state: "bets"; hex: string; algorithm: "hmac-sha256" }
     | {
           state: "lock"
           key: string
@@ -305,9 +277,7 @@ export type DiceData =
           /** If you compute the HMAC-SHA256 of this string, with the key provided, you can confirm that it matches the hex from the `bets` state */
           text: string
       }
-    | {
-          state: "roll"
-      }
+    | { state: "roll" }
 
 export type DisappearData =
     /** Character used 'blink' */
@@ -341,10 +311,7 @@ export type DisappearInvisData = {
     invis: true
     reason: "invis"
 }
-export type DisappearDisconnectData = {
-    id: string
-    reason: "disconnect"
-}
+export type DisappearDisconnectData = { id: string; reason: "disconnect" }
 export type DisappearMagiportData = {
     effect: "magiport"
     id: string
@@ -381,34 +348,14 @@ export type DisappearingTextData = {
     x: number
     y: number
     id: string
-    args:
-        | {
-              c: string
-              s: string
-          }
-        | {
-              color: string
-              size: string
-          }
+    args: { c: string; s: string } | { color: string; size: string }
 }
 
 export type DisconnectCharacterResponse =
-    | {
-          message: "You don't own that character."
-          type: "ui_error"
-      }
-    | {
-          message: "No character with that name."
-          type: "ui_error"
-      }
-    | {
-          message: "Sent the disconnect signal to the server"
-          type: "message"
-      }
-    | {
-          message: "Character is not in game."
-          type: "ui_error"
-      }
+    | { message: "You don't own that character."; type: "ui_error" }
+    | { message: "No character with that name."; type: "ui_error" }
+    | { message: "Sent the disconnect signal to the server"; type: "message" }
+    | { message: "Character is not in game."; type: "ui_error" }
 
 export type DisconnectReasonData = "limitdc"
 
@@ -447,10 +394,7 @@ export type FriendData =
           /** The name of the player who sent you a friend request */
           name: string
       }
-    | {
-          event: "update"
-          friends: string[]
-      }
+    | { event: "update"; friends: string[] }
 
 export type MonsterData = {
     id: string
@@ -484,30 +428,12 @@ export type MonsterData = {
     xp?: number
 }
 
-export type EvalData = {
-    code: string
-}
+export type EvalData = { code: string }
 
 export type LoginData = LoginDataItem[]
-export type LoginDataItem =
-    | {
-          code: string
-          type: string
-      }
-    | {
-          message: string
-          type: string
-      }
-    | {
-          html: string
-      }
+export type LoginDataItem = { code: string; type: string } | { message: string; type: string } | { html: string }
 
-export type GameEventData = {
-    name: MonsterName
-    map: MapName
-    x: number
-    y: number
-}
+export type GameEventData = { name: MonsterName; map: MapName; x: number; y: number }
 
 export type GameLogData = GameLogDataString | { color: string; message: GameLogDataString }
 export type GameLogDataString =
@@ -532,11 +458,7 @@ export type GameResponseDataUpgradeChance = {
     grace: number
 }
 
-export type AttackFailedGRDataObject = {
-    response: "attack_failed"
-    place: "attack"
-    id: string
-}
+export type AttackFailedGRDataObject = { response: "attack_failed"; place: "attack"; id: string }
 export type BankOperationGRDataObject = {
     response: "data" | "storage_full" | "bank_unavailable"
     place: "bank"
@@ -552,10 +474,7 @@ export type BankOPXGRDataObject = {
     name: string
     reason: "mounted"
 }
-export type BankRestrictionsGRDataObject = {
-    response: "bank_restrictions"
-    place: string
-}
+export type BankRestrictionsGRDataObject = { response: "bank_restrictions"; place: string }
 export type BuySuccessGRDataObject = {
     cevent: "buy"
     response: "buy_success"
@@ -576,10 +495,7 @@ export type CooldownGRDataObject = {
     place: SkillName
     ms: number
 }
-export type CraftGRDataObject = {
-    response: "craft"
-    name: ItemName
-}
+export type CraftGRDataObject = { response: "craft"; name: ItemName }
 export type DestroyGRDataObject = {
     response: "destroyed"
     place: "destroy"
@@ -603,27 +519,10 @@ export type ProjectileSkillGRDataObject = {
     id?: string
 } & Partial<ActionDataProjectile>
 export type SetHomeGRDataObject =
-    | {
-          home: string
-          place: "set_home"
-          response: "home_set"
-          success: true
-      }
-    | {
-          hours: number
-          place: "set_home"
-          response: "sh_time"
-          failed: true
-      }
-export type DefeatedByMonsterGRDataObject = {
-    response: "defeated_by_a_monster"
-    xp: number
-    monster: MonsterName
-}
-export type DisabledGRDataObject = {
-    response: "disabled"
-    place: SkillName
-}
+    | { home: string; place: "set_home"; response: "home_set"; success: true }
+    | { hours: number; place: "set_home"; response: "sh_time"; failed: true }
+export type DefeatedByMonsterGRDataObject = { response: "defeated_by_a_monster"; xp: number; monster: MonsterName }
+export type DisabledGRDataObject = { response: "disabled"; place: SkillName }
 export type DismantleGRDataObject = {
     response: "dismantle"
     /** TODO: Name of item dismantled or name of item received? */
@@ -633,34 +532,17 @@ export type DismantleGRDataObject = {
  * donation < 100k ➡️ low
  * 100k <= donation < 1m ➡️ gum
  * donation >= 1m ➡️ ability to see lost and found */
-export type DonateGRDataObject = {
-    response: "donate_gum" | "donate_low" | "donate_thx"
-    gold: number
-    xprate: number
-}
+export type DonateGRDataObject = { response: "donate_gum" | "donate_low" | "donate_thx"; gold: number; xprate: number }
 /** Called when a condition expires */
-export type CondExpGRDataObject = {
-    response: "ex_condition"
-    name: SkillName
-}
+export type CondExpGRDataObject = { response: "ex_condition"; name: SkillName }
 export type EnterGRDataObject = {
     success: false
     response: "transport_cant_item" | "transport_cant_invalid"
     place: "enter"
 }
-export type GetCloserGRDataObject = {
-    response: "get_closer"
-    place: "upgrade"
-}
-export type GoldSentGRDataObject = {
-    response: "gold_sent"
-    name: string
-    gold: number
-}
-export type ItemLockedGRDataObject = {
-    response: "item_locked"
-    place: "upgrade"
-}
+export type GetCloserGRDataObject = { response: "get_closer"; place: "upgrade" }
+export type GoldSentGRDataObject = { response: "gold_sent"; name: string; gold: number }
+export type ItemLockedGRDataObject = { response: "item_locked"; place: "upgrade" }
 export type ItemSentGRDataObject = {
     response: "item_sent"
     name: string
@@ -668,76 +550,26 @@ export type ItemSentGRDataObject = {
     /** TODO: Verify that q is required for all ItemSent responses */
     q: number
 }
-export type LostFoundInfoGRDataObject = {
-    response: "lostandfound_info"
-    gold: number
-}
-export type MagiportGRDataObject = {
-    response: "magiport_failed" | "magiport_sent"
-    id: string
-}
-export type TakeMailItemGRDataObject = {
-    response: "mail_item_taken"
-}
-export type NoMPGRDataObject = {
-    response: "no_mp"
-    place: SkillName
-    failed: true
-}
-export type NoItemGRDataObject = {
-    response: "no_item"
-    place: "upgrade" | "compound"
-    failed: true
-}
+export type LostFoundInfoGRDataObject = { response: "lostandfound_info"; gold: number }
+export type MagiportGRDataObject = { response: "magiport_failed" | "magiport_sent"; id: string }
+export type TakeMailItemGRDataObject = { response: "mail_item_taken" }
+export type NoMPGRDataObject = { response: "no_mp"; place: SkillName; failed: true }
+export type NoItemGRDataObject = { response: "no_item"; place: "upgrade" | "compound"; failed: true }
 export type NoTargetGRDataObject = {
     response: "no_target"
     /** TODO: See what else gets returned */
 }
-export type SeashellGRDataObject = {
-    response: "seashell_success"
-    suffix: string | ""
-}
-export type SkillStatusGRDataObject = {
-    response: "skill_fail" | "skill_success"
-    name: SkillName
-}
-export type TargetLockGRDataObject = {
-    response: "target_lock"
-    monster: MonsterName
-}
-export type TooFarGRDataObject = {
-    response: "too_far"
-    place: SkillName
-    id: string
-    dist: number
-}
+export type SeashellGRDataObject = { response: "seashell_success"; suffix: string | "" }
+export type SkillStatusGRDataObject = { response: "skill_fail" | "skill_success"; name: SkillName }
+export type TargetLockGRDataObject = { response: "target_lock"; monster: MonsterName }
+export type TooFarGRDataObject = { response: "too_far"; place: SkillName; id: string; dist: number }
 export type TownGRDataObject =
-    | {
-          success: false
-          in_progress: true
-          response: "data"
-          place: "town"
-      }
-    | {
-          success: false
-          response: "cant_escape"
-          place: "town"
-      }
+    | { success: false; in_progress: true; response: "data"; place: "town" }
+    | { success: false; response: "cant_escape"; place: "town" }
 export type TransportGRDataObject =
-    | {
-          success: true
-          response: "data"
-          place: "transport"
-      }
-    | {
-          success: false
-          response: "cant_escape"
-          place: "transport"
-      }
-export type UnfriendFailedGRDataObject = {
-    response: "unfriend_failed"
-    reason: "bank" | "coms failure" | "nouser"
-}
+    | { success: true; response: "data"; place: "transport" }
+    | { success: false; response: "cant_escape"; place: "transport" }
+export type UnfriendFailedGRDataObject = { response: "unfriend_failed"; reason: "bank" | "coms failure" | "nouser" }
 export type GoldReceivedGRDataObject = {
     /** TODO: Separate these into separate objects */
     response: "gold_received" | "item_placeholder" | "item_received"
@@ -745,24 +577,14 @@ export type GoldReceivedGRDataObject = {
     name: string
 }
 export type EquipGRDataObject = EquipSuccessGRDataObject | EquipFailedGRDataObject
-export type EquipSuccessGRDataObject = {
-    response: "data"
-    place: "equip"
-    success: true
-    slot: SlotType
-    num: number
-}
+export type EquipSuccessGRDataObject = { response: "data"; place: "equip"; success: true; slot: SlotType; num: number }
 export type EquipFailedGRDataObject = {
     ms?: number
     response: "cant_equip" | "not_ready"
     place: "equip" | "use"
     failed: true
 }
-export type ExchangeNotEnoughGRDataObject = {
-    response: "exchange_notenough"
-    place: "exchange_buy"
-    failed: true
-}
+export type ExchangeNotEnoughGRDataObject = { response: "exchange_notenough"; place: "exchange_buy"; failed: true }
 export type UpgradeCompoundGRDataObject = {
     response: "upgrade_success" | "upgrade_fail" | "compound_success" | "compound_fail"
     /** the level attempted */
@@ -1014,9 +836,7 @@ export type ItemData = {
     /** The quantity of the item for stackable items */
     q?: number
     /** A list of players that participated in the giveaway for this item. */
-    registry?: {
-        [T in string]: string
-    }
+    registry?: { [T in string]: string }
     /** If the item has a scroll applied to it, the scroll provides this attribute */
     stat_type?: Attribute
     /** If set, the item is PVP marked until the given date. If you die to another player, there is a chance to lose this item to them. */
@@ -1093,14 +913,8 @@ export type MailData = {
 }
 
 export type MailDeleteResponse =
-    | {
-          message: "Mail deleted."
-          type: "message"
-      }
-    | {
-          message: "Can't delete."
-          type: "ui_error"
-      }
+    | { message: "Mail deleted."; type: "message" }
+    | { message: "Can't delete."; type: "ui_error" }
 
 export type MailMessageData = {
     /** The mail's ID */
@@ -1121,18 +935,9 @@ export type MailMessageData = {
     taken?: boolean
 }
 
-export type MapInfo =
-    | {
-          dice: "bets" | "roll" | "lock"
-          num?: string
-          seconds: number
-      }
-    | Record<string, never>
+export type MapInfo = { dice: "bets" | "roll" | "lock"; num?: string; seconds: number } | Record<string, never>
 
-export type PullMerchantsData = {
-    type: "merchants"
-    chars: PullMerchantsCharData[]
-}
+export type PullMerchantsData = { type: "merchants"; chars: PullMerchantsCharData[] }
 
 export type PullMerchantsCharData = {
     cx: CXData
@@ -1166,14 +971,9 @@ export type NewMapData = {
 }
 
 // TODO: Is this real? How does this happen?
-export type NotThereData = {
-    place: "attack"
-}
+export type NotThereData = { place: "attack" }
 
-export type OnlineData = {
-    name: string
-    server: string
-}
+export type OnlineData = { name: string; server: string }
 
 export type PartyData = {
     list: string[]
@@ -1300,14 +1100,7 @@ export type QInfo = {
         num: number
         nums: number[]
     }
-    exchange?: {
-        ms: number
-        len: number
-        name: ItemName
-        id: ItemName
-        q: number
-        num: number
-    }
+    exchange?: { ms: number; len: number; name: ItemName; id: ItemName; q: number; num: number }
     upgrade?: {
         /** How long the process will take from start to finish */
         len: number
@@ -1318,12 +1111,7 @@ export type QInfo = {
     }
 }
 
-export type ScheduleData = {
-    dailies: number[]
-    night: boolean
-    nightlies: number[]
-    time_offset: number
-}
+export type ScheduleData = { dailies: number[]; night: boolean; nightlies: number[]; time_offset: number }
 
 export type ServerData = {
     addr: string
@@ -1339,17 +1127,13 @@ export type ServerData = {
 
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
-} & {
-    schedule?: ScheduleData
-} & {
+} & { schedule?: ScheduleData } & {
     egghunt?: boolean
     halloween?: boolean
     holidayseason?: boolean
     lunarnewyear?: boolean
     valentines?: boolean
-} & {
-    goobrawl?: ServerInfoDataEvent
-} & {
+} & { goobrawl?: ServerInfoDataEvent } & {
     abtesting?:
         | ServerInfoDataEvent
         | {
@@ -1386,22 +1170,10 @@ export type ServerInfoDataNotLive = {
 }
 
 export type ServerMessageData =
-    | {
-          color: string
-          discord: string
-          message: string
-      }
-    | {
-          color: string
-          event: boolean
-          message: string
-      }
+    | { color: string; discord: string; message: string }
+    | { color: string; event: boolean; message: string }
 
-export type SkillTimeoutData = {
-    name: SkillName
-    ms: number
-    penalty: number
-}
+export type SkillTimeoutData = { name: SkillName; ms: number; penalty: number }
 
 export type StartData = CharacterData & {
     info?: MapInfo
@@ -1409,9 +1181,7 @@ export type StartData = CharacterData & {
     code_version: number
     /** The home server for this character, formatted as <REGION><IDENTIFIER> (e.g.: ASIAI) */
     home: string
-    base_gold: {
-        [T in MonsterName]?: { [T in string]?: number }
-    }
+    base_gold: { [T in MonsterName]?: { [T in string]?: number } }
     s_info: ServerInfoData
     entities: EntitiesData
 }
@@ -1427,25 +1197,15 @@ export type TavernEventData = {
 
 export type TrackerData = {
     /** How many points you have for each monster for the given character */
-    monsters: {
-        [T in MonsterName]?: number
-    }
+    monsters: { [T in MonsterName]?: number }
     /** How many points behind this character is from your character that has the most points for this monster */
-    monsters_diff: {
-        [T in MonsterName]?: number
-    }
+    monsters_diff: { [T in MonsterName]?: number }
     /** How many exchanges this character has done for the various given items */
-    exchanges: {
-        // TODO
-    }
+    exchanges: unknown // TODO
     /** Contains drop information */
-    maps: {
-        [T in MapName | "global_static" | "global"]?: GDropItem[]
-    }
+    maps: { [T in MapName | "global_static" | "global"]?: GDropItem[] }
     /** For the "open" items in maps, this table has a list of the drops that could occur */
-    tables: {
-        [T in ItemName | string]?: GDropItem[]
-    }
+    tables: { [T in ItemName | string]?: GDropItem[] }
     /** Contains information about your characters with the max points */
     max: {
         monsters: {
@@ -1453,9 +1213,7 @@ export type TrackerData = {
             [T in MonsterName]?: [number, string]
         }
     }
-    drops: {
-        [T in MonsterName]?: GDropItem[]
-    }
+    drops: { [T in MonsterName]?: GDropItem[] }
     // TODO: What's the difference between the global here, and the one in 'maps'?
     global: [number, "open", string][] | [number, ItemName][]
     // TODO: What's the difference between the global_static here, and the one in 'maps'?
@@ -1469,10 +1227,7 @@ export type UIDataBuySell = {
     type: "-$" | "+$"
     id: string | "basics" | "scrolls"
     name: string
-    item: {
-        name: ItemName
-        q: number
-    }
+    item: { name: ItemName; q: number }
     num?: string
 }
 export type UIDataTrade = {
@@ -1489,25 +1244,10 @@ export type UIDataFishingMining = {
     name?: string
     direction?: number
 }
-export type UIDataMassProduction = {
-    type: "massproduction"
-    name: string
-}
-export type UIDataMLuck = {
-    type: "mluck"
-    from: string
-    to: string
-}
-export type UIDataRspeed = {
-    type: "rspeed"
-    from: string
-    to: string
-}
-export type UIDataAOE = {
-    type: "stomp" | "agitate" | "scare"
-    name: string
-    ids: string[]
-}
+export type UIDataMassProduction = { type: "massproduction"; name: string }
+export type UIDataMLuck = { type: "mluck"; from: string; to: string }
+export type UIDataRspeed = { type: "rspeed"; from: string; to: string }
+export type UIDataAOE = { type: "stomp" | "agitate" | "scare"; name: string; ids: string[] }
 
 export type UIData =
     | UIDataBuySell

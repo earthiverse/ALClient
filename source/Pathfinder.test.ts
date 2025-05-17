@@ -73,7 +73,7 @@ test("Pathfinder.getPath", async () => {
             { map: "main", x: 17, y: -152 },
             { avoidTownWarps: true },
         )
-        expect(path.length).toBeTruthy
+        expect(path.length).toBeTruthy()
         for (const link of path as unknown as LinkData[]) expect(link.type).not.toEqual("town")
     }).not.toThrow()
 
