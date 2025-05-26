@@ -57,6 +57,12 @@ export class Character extends Observer {
   protected readonly nextSkill = new Map<SkillKey, number>();
   public readonly chests = new Map<string, ServerToClient_drop>();
 
+  protected _apiercing?: number;
+  public get apiercing(): number {
+    if (this._apiercing === undefined) throw new Error("No player data");
+    return this._apiercing;
+  }
+
   protected _attack?: number;
   public get attack(): number {
     if (this._attack === undefined) throw new Error("No player data");
@@ -111,7 +117,19 @@ export class Character extends Observer {
     return this._level;
   }
 
+  protected _lifesteal?: number;
+  public get lifesteal(): number {
+    if (this._lifesteal === undefined) throw new Error("No player data");
+    return this._lifesteal;
+  }
+
   protected _m: number = 0;
+
+  protected _manasteal?: number;
+  public get manasteal(): number {
+    if (this._manasteal === undefined) throw new Error("No player data");
+    return this._manasteal;
+  }
 
   protected _max_hp?: number;
   public get max_hp(): number {
@@ -151,6 +169,12 @@ export class Character extends Observer {
   protected _rip?: boolean;
   public get rip(): boolean {
     return Boolean(this._rip);
+  }
+
+  protected _rpiercing?: number;
+  public get rpiercing(): number {
+    if (this._rpiercing === undefined) throw new Error("No player data");
+    return this._rpiercing;
   }
 
   protected _s?: StatusInfo;
@@ -304,6 +328,9 @@ export class Character extends Observer {
   public override updateData(data: Partial<ServerToClient_start | ServerToClient_player>, setLastUpdate = true): void {
     super.updateData(data, setLastUpdate);
 
+    // TODO: Add more attributes
+
+    if (data.apiercing !== undefined) this._apiercing = data.apiercing;
     if (data.attack !== undefined) this._attack = data.attack;
     if (data.c !== undefined) this._c = data.c;
     if (data.cash !== undefined) this._cash = data.cash;
@@ -313,7 +340,9 @@ export class Character extends Observer {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.items !== undefined) this._items = data.items;
     if (data.level !== undefined) this._level = data.level;
+    if (data.lifesteal !== undefined) this._lifesteal = data.lifesteal;
     if (data.m !== undefined) this._m = data.m;
+    if (data.manasteal !== undefined) this._manasteal = data.manasteal;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.max_mp !== undefined) this._max_mp = data.max_mp;
     if (data.mp !== undefined) this._mp = data.mp;
@@ -323,6 +352,7 @@ export class Character extends Observer {
       CharacterEventBus.emit("progress_set", this, data.q);
     }
     if (data.range !== undefined) this._range = data.range;
+    if (data.rpiercing !== undefined) this._rpiercing = data.rpiercing;
     if (data.s !== undefined) {
       this._s = data.s;
       CharacterEventBus.emit("conditions_set", this, data.s);

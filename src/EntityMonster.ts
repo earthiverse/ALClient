@@ -8,6 +8,11 @@ export class EntityMonster extends Entity {
     return this._type;
   }
 
+  protected _attack: number;
+  public get attack(): number {
+    return this._attack;
+  }
+
   protected _hp: number;
   public get hp(): number {
     return this._hp;
@@ -27,6 +32,22 @@ export class EntityMonster extends Entity {
     return this.hp === 0;
   }
 
+  public get apiercing(): number {
+    return this.game.G.monsters[this._type].apiercing ?? 0;
+  }
+
+  public get armor(): number {
+    return this.game.G.monsters[this._type].armor ?? 0;
+  }
+
+  public get rpiercing(): number {
+    return this.game.G.monsters[this._type].rpiercing ?? 0;
+  }
+
+  public get resistance(): number {
+    return this.game.G.monsters[this._type].resistance ?? 0;
+  }
+
   public override get speed(): number {
     return this._speed ?? this.game.G.monsters[this._type].speed;
   }
@@ -43,6 +64,7 @@ export class EntityMonster extends Entity {
 
     this._type = data.type;
 
+    this._attack = data.attack ?? gMonster.attack;
     this._hp = data.hp ?? gMonster.hp;
     this._level = data.level ?? 1;
     this._max_hp = data.max_hp ?? gMonster.hp;
@@ -60,9 +82,10 @@ export class EntityMonster extends Entity {
   public override updateData(data: Partial<ServerToClient_entities_monsters>, setLastUpdate = true): void {
     super.updateData(data, setLastUpdate);
 
+    if (data.attack !== undefined) this._attack = data.attack;
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
-    if (typeof data.target === "string") this._target = data.target;
+    data.target = typeof data.target === "string" ? data.target : undefined;
   }
 }
