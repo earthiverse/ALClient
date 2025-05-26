@@ -122,7 +122,7 @@ export abstract class Entity implements EntityData, Location, Movement {
     const distanceTraveled = (this.speed * msSinceLastUpdate) / 1000;
     const yToGoal = this.going_y - this.y;
     const xToGoal = this.going_x - this.x;
-    const distanceToGoal = Math.hypot(xToGoal, yToGoal);
+    const distanceToGoal = Math.sqrt(xToGoal * xToGoal + yToGoal * yToGoal);
     if (distanceTraveled >= distanceToGoal) {
       this._x = this.going_x;
       this._y = this.going_y;
@@ -142,6 +142,8 @@ export abstract class Entity implements EntityData, Location, Movement {
   public getDistanceTo(to: Location): number {
     if (to.map !== this.map) return Number.POSITIVE_INFINITY; // Different map
     if (to.in !== this.in) return Number.POSITIVE_INFINITY; // Different instance
-    return Math.hypot(to.x - this.x, to.y - this.y);
+    const dx = to.x - this.x;
+    const dy = to.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 }
