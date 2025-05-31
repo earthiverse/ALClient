@@ -68,6 +68,19 @@ export abstract class Entity implements EntityData, Location, Movement {
     return this._speed;
   }
 
+  public get going(): Location {
+    if (!this._map) throw new Error("Missing map data");
+    if (this._in === undefined) throw new Error("Missing instance data");
+    if (this._going_x === undefined) throw new Error("Missing position data");
+    if (this._going_y === undefined) throw new Error("Missing position data");
+    return {
+      map: this._map,
+      in: this._in,
+      x: this._going_x,
+      y: this.going_y,
+    };
+  }
+
   protected _going_x?: number;
   public get going_x(): number {
     if (this._going_x === undefined) throw new Error("Missing position data");
