@@ -51,6 +51,6 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "socket.io-client": "^4.7.5",
-    "typed-adventureland": "file:../typed-adventureland/typed-adventureland-0.0.46.tgz"
+    "typed-adventureland": "^0.0.46"
   }
 }
