@@ -1,6 +1,6 @@
 {
     "name": "alclient",
-    "version": "0.22.5",
+    "version": "0.22.6",
     "description": "A node client for interacting with Adventure Land - The Code MMORPG. This package extends the functionality of 'alclient' by managing a mongo database.",
     "files": [
         "build/**/*",
@@ -15,10 +15,10 @@
         "cleanTests": "rimraf --glob build/**/*.test.*",
         "lint": "eslint source && prettier -c .",
         "fix": "eslint --fix source && prettier --write .",
-        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && node node_modules/madge/bin/cli.js --warning --circular --extensions js ./",
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && madge --warning --circular --extensions js ./",
         "prepare": "npm run clean && npm run build && npm run cleanTests",
         "prepublishOnly": "npm run lint && npm test",
-        "postpublish": "cross-env git tag v$npm_package_version",
+        "postpublish": "node -e \"require('child_process').execSync(`git tag v${process.env.npm_package_version}`)\"",
         "preversion": "npm run lint",
         "version": "git add -A source"
     },
