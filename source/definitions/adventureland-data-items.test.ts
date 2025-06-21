@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
+ * The following is from http://adventure.land/data.js, version 822 (2025-06-21)
  * It is used to confirm type correctness
  */
 
@@ -4467,6 +4467,23 @@ test("G.items type validation", async () => {
                 vit: -30,
                 wtype: "staff",
             },
+            orba: {
+                compound: {
+                    firesistance: 5,
+                    fzresistance: 5,
+                    phresistance: 5,
+                    pnresistance: 5,
+                },
+                firesistance: 15,
+                fzresistance: 15,
+                g: 240000,
+                grades: [0, 2, 6, 7],
+                name: "Orb of Adventures",
+                phresistance: 15,
+                pnresistance: 15,
+                skin: "orba",
+                type: "orb",
+            },
             orbg: {
                 compound: {
                     dex: 1,
@@ -4494,6 +4511,28 @@ test("G.items type validation", async () => {
                 skin: "orbofdex",
                 type: "orb",
             },
+            orboffire: {
+                compound: {
+                    firesistance: 5,
+                },
+                firesistance: 15,
+                g: 60000,
+                grades: [0, 3, 6, 7],
+                name: "Orb of Fire",
+                skin: "orboffire",
+                type: "orb",
+            },
+            orboffrost: {
+                compound: {
+                    fzresistance: 5,
+                },
+                fzresistance: 15,
+                g: 60000,
+                grades: [0, 3, 6, 7],
+                name: "Orb of Frost",
+                skin: "orboffrost",
+                type: "orb",
+            },
             orbofint: {
                 compound: {
                     int: 3,
@@ -4504,6 +4543,28 @@ test("G.items type validation", async () => {
                 int: 4,
                 name: "Orb of Intelligence",
                 skin: "orbofint",
+                type: "orb",
+            },
+            orbofplague: {
+                compound: {
+                    pnresistance: 5,
+                },
+                g: 60000,
+                grades: [0, 3, 6, 7],
+                name: "Orb of Plague",
+                pnresistance: 15,
+                skin: "orbofplague",
+                type: "orb",
+            },
+            orbofresolve: {
+                compound: {
+                    phresistance: 5,
+                },
+                g: 60000,
+                grades: [0, 3, 6, 7],
+                name: "Orb of Resolve",
+                phresistance: 15,
+                skin: "orbofresolve",
                 type: "orb",
             },
             orbofsc: {
