@@ -31,7 +31,10 @@ export class EntityMonster extends Entity {
     return this._speed ?? this.game.G.monsters[this._type].speed;
   }
 
-  // TODO: Add more monster stuff
+  protected _target?: string;
+  public get target(): string | undefined {
+    return this._target;
+  }
 
   constructor(game: Game, mapAndInstance: { map: MapKey; in: string }, data: ServerToClient_entities_monsters) {
     super(game, data.id);
@@ -60,5 +63,6 @@ export class EntityMonster extends Entity {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
+    if (typeof data.target === "string") this._target = data.target;
   }
 }

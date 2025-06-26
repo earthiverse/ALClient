@@ -9,7 +9,7 @@ export class EntityCharacter extends Entity {
   }
 
   // TODO: Is this really not on all characters in the entities event?
-  protected _attack: number | undefined;
+  protected _attack?: number;
   public get attack(): number {
     return this._attack ?? 0;
   }
@@ -62,6 +62,11 @@ export class EntityCharacter extends Entity {
     return Boolean(this._rip);
   }
 
+  protected _target?: string;
+  public get target(): string | undefined {
+    return this._target;
+  }
+
   constructor(game: Game, mapAndInstance: { map: MapKey; in: string }, data: ServerToClient_entities_players) {
     super(game, data.id);
 
@@ -90,5 +95,6 @@ export class EntityCharacter extends Entity {
     if (data.range !== undefined) this._range = data.range;
     if (data.resistance !== undefined) this._resistance = data.resistance;
     if (data.rip !== undefined) this._rip = data.rip;
+    if (typeof data.target === "string") this._target = data.target;
   }
 }

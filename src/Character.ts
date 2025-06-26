@@ -165,6 +165,11 @@ export class Character extends Observer {
     return this.slots;
   }
 
+  protected _target?: string;
+  public get target(): string | undefined {
+    return this._target;
+  }
+
   constructor(player: Player, characterId: string, id: string) {
     super(player.game, false, id);
 
@@ -323,6 +328,7 @@ export class Character extends Observer {
       CharacterEventBus.emit("conditions_set", this, data.s);
     }
     if (data.slots !== undefined) this._slots = data.slots;
+    if (data.target !== undefined) this._target = data.target;
   }
 
   protected override updatePositions(): void {
@@ -510,12 +516,12 @@ export class Character extends Observer {
       };
 
       const attackHandler = (data: ServerToClient_game_response) => {
-        if(!isRelevantGameResponse(data, "attack")) return;
+        if (!isRelevantGameResponse(data, "attack")) return;
 
         // TODO: Entity check?
 
-        if(isSuccessGameResponse(data)) {
-          resolve(data as unknown as SkillSuccessGRDataObject)
+        if (isSuccessGameResponse(data)) {
+          resolve(data as unknown as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
         }
