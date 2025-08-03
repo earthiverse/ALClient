@@ -1,5 +1,7 @@
 import type { ProjectileKey, ServerToClient_action_projectile } from "typed-adventureland";
 import { Entity } from "./Entity.js";
+import { EntityCharacter } from "./EntityCharacter.js";
+import { EntityMonster } from "./EntityMonster.js";
 import type { Game } from "./Game.js";
 
 export class EntityProjectile extends Entity {
@@ -12,6 +14,9 @@ export class EntityProjectile extends Entity {
   public get attacker(): string {
     return this._attacker;
   }
+
+  protected _attackerEntity?: Entity;
+  protected _targetEntity?: Entity;
 
   protected _target: string;
   public get target(): string {
@@ -31,6 +36,9 @@ export class EntityProjectile extends Entity {
     this._x = data.x;
     this._y = data.y;
 
+    this._attackerEntity = attacker;
+    this._targetEntity = target;
+
     const attackerOrTarget = attacker ?? target;
     if (attackerOrTarget) {
       this._map = attackerOrTarget.map;
@@ -47,4 +55,12 @@ export class EntityProjectile extends Entity {
   }
 
   // TODO: Function that will return probability of killing the target
+  public chanceToKillTarget(): number | undefined {
+    const attacker = this._attackerEntity;
+    const target = this._targetEntity;
+
+    // If we can't find the target, we don't know how much damage it can do
+    if (!(attacker instanceof EntityCharacter) && !(attacker instanceof EntityMonster)) return undefined;
+    if (!(target instanceof EntityCharacter) && !(target instanceof EntityMonster)) return undefined;
+  }
 }
