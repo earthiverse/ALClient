@@ -43,6 +43,7 @@ export interface ObserverEventMap {
     Map<string, EntityMonster>,
     Map<string, EntityProjectile>,
   ];
+  server_info_updated: [Observer, ServerToClient_server_info];
   socket_in: [Observer, keyof ServerToClientEvents, ServerToClientEvents[keyof ServerToClientEvents]];
   socket_out: [Observer, keyof ClientToServerEvents, ClientToServerEvents[keyof ClientToServerEvents]];
 }
@@ -208,6 +209,7 @@ export class Observer extends Entity {
 
     s.on("server_info", (data) => {
       this._S = data;
+      ObserverEventBus.emit("server_info_updated", this, data);
     });
 
     // Set up the connection
@@ -233,6 +235,7 @@ export class Observer extends Entity {
         this._x = data.x;
         this._y = data.y;
         this._S = data.S;
+        ObserverEventBus.emit("server_info_updated", this, data.S);
 
         clearTimeout(timeout);
         s.emit("loaded", {}); // Tell the server we're ready
