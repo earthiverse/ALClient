@@ -1,9 +1,12 @@
 import type EventEmitter from "node:events";
 import type {
   BuySuccessGRDataObject,
+  CharacterEntityQInfos,
+  CharacterEntitySlotsInfos,
   ClassKey,
   CooldownGRDataObject,
   DestroyGRDataObject,
+  EntityChannelInfos,
   GoldReceivedGRDataObject,
   ItemInfo,
   ItemKey,
@@ -23,11 +26,6 @@ import type {
   StatusInfo,
   XServerInfos,
 } from "typed-adventureland";
-import type { EntityChannelInfos } from "typed-adventureland/dist/src/entities/base-entity.js";
-import type {
-  CharacterEntityQInfos,
-  CharacterEntitySlotsInfos,
-} from "typed-adventureland/dist/src/entities/character-entity.js";
 import Configuration from "./Configuration.js";
 import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
@@ -184,9 +182,9 @@ export class Character extends Observer {
   }
 
   protected _slots?: CharacterEntitySlotsInfos;
-  public get slots(): StatusInfo {
-    if (this.slots === undefined) throw new Error("No player data");
-    return this.slots;
+  public get slots(): CharacterEntitySlotsInfos {
+    if (this._slots === undefined) throw new Error("No player data");
+    return this._slots;
   }
 
   protected _target?: string;

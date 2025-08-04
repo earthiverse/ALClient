@@ -1,4 +1,10 @@
-import type { ClassKey, MapKey, NpcKey, ServerToClient_entities_players } from "typed-adventureland";
+import type {
+  CharacterEntitySlotsInfos,
+  ClassKey,
+  MapKey,
+  NpcKey,
+  ServerToClient_entities_players,
+} from "typed-adventureland";
 import { Entity } from "./Entity.js";
 import type { Game } from "./Game.js";
 
@@ -62,6 +68,11 @@ export class EntityCharacter extends Entity {
     return Boolean(this._rip);
   }
 
+  protected _slots?: CharacterEntitySlotsInfos;
+  public get slots(): CharacterEntitySlotsInfos | undefined {
+    return this._slots;
+  }
+
   protected _target?: string;
   public get target(): string | undefined {
     return this._target;
@@ -95,6 +106,7 @@ export class EntityCharacter extends Entity {
     if (data.range !== undefined) this._range = data.range;
     if (data.resistance !== undefined) this._resistance = data.resistance;
     if (data.rip !== undefined) this._rip = data.rip;
+    if (data.slots !== undefined) this._slots = data.slots;
     if (typeof data.target === "string") this._target = data.target;
   }
 }

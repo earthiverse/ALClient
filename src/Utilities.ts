@@ -29,13 +29,13 @@ export class Utilities {
     serverRegion: ServerRegion;
     serverIdentifier: ServerIdentifier;
   } {
-    const match = /^(US|EU|ASIA)(I|II|III|PVP)$/
-    const result = match.exec(serverKey)
-    if(result === null) throw new Error(`Unable to parse server key ${serverKey}`)
-  
+    const match = /^(US|EU|ASIA)(I|II|III|PVP)$/;
+    const result = match.exec(serverKey);
+    if (result === null) throw new Error(`Unable to parse server key ${serverKey}`);
+
     return {
       serverRegion: result[1] as ServerRegion,
-      serverIdentifier: result[2] as ServerIdentifier
+      serverIdentifier: result[2] as ServerIdentifier,
     };
   }
 }

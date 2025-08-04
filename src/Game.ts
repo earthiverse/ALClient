@@ -42,9 +42,7 @@ export class Game {
   private _G?: GData;
   public get G(): GData {
     if (this._G === undefined)
-      throw new Error(
-        "No G data. Call `updateG()` after creating `Game`, or include G data when creating `Game`.",
-      );
+      throw new Error("No G data. Call `updateG()` after creating `Game`, or include G data when creating `Game`.");
     return this._G;
   }
 

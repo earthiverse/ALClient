@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "rm -r dist && rm ./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "format": "prettier --write .",
     "lint": "eslint",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=2 --coverage"
@@ -51,6 +52,6 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "socket.io-client": "^4.7.5",
-    "typed-adventureland": "^0.0.46"
+    "typed-adventureland": "^0.0.47"
   }
 }
