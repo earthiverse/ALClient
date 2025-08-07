@@ -609,6 +609,59 @@ export class Character extends Observer {
     return promise;
   }
 
+  public craft(name: ItemKey, itemPositions?: number[]): Promise<unknown> {
+    const s = this.socket;
+
+    const gCraft = this.game.G.craft[name];
+    if (!gCraft) throw new Error(`Item ${name} is not craftable`);
+
+    if (this.gold < gCraft.cost) throw new Error(`Not enough gold to craft ${name} (${this.gold}/${gCraft.cost})`);
+
+    if (itemPositions === undefined || itemPositions.length === 0) {
+      // TODO: Get item positions
+      throw new Error("Item positions not provided (and finding them is not implemented yet)");
+    } else {
+      for (let i = 0; i < itemPositions.length; i++) {
+        const pos = itemPositions[i] as number;
+        if (pos < 0 || pos >= this.items.length) throw new Error(`Item position ${pos} is out of bounds`);
+
+        const item = this.items[pos];
+        if (!item) throw new Error(`No item at position ${pos}`);
+        if (item.name !== gCraft.items[i]?.[1])
+          throw new Error(`Item at position ${pos} is not ${gCraft.items[i]?.[1]} (${item.name})`);
+      }
+    }
+
+    const promise = new Promise<CraftSuccessResponse>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "craft")) return;
+        if (isSuccessGameResponse(data)) {
+          if ((data as CraftSuccessResponse).name !== name) return; // Response is for a different item
+          resolve(data as CraftSuccessResponse);
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+        cleanup();
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    const items: [number, number][] = itemPositions.map((value, index) => [index, value]);
+    s.emit("craft", { items });
+    return promise;
+  }
+
   /**
    * Destroys the item at the given index
    *
