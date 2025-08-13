@@ -87,6 +87,12 @@ export class Character extends Observer {
     return this._ctype;
   }
 
+  protected _esize?: number;
+  public get esize(): number {
+    if (this._esize === undefined) throw new Error("No player data");
+    return this._esize;
+  }
+
   protected _frequency?: number;
   public get frequency(): number {
     if (this._frequency === undefined) throw new Error("No player data");
@@ -335,6 +341,7 @@ export class Character extends Observer {
     if (data.c !== undefined) this._c = data.c;
     if (data.cash !== undefined) this._cash = data.cash;
     if (data.ctype !== undefined) this._ctype = data.ctype;
+    if (data.esize !== undefined) this._esize = data.esize;
     if (data.frequency !== undefined) this._frequency = data.frequency;
     if (data.gold !== undefined) this._gold = data.gold;
     if (data.hp !== undefined) this._hp = data.hp;
