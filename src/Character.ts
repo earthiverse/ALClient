@@ -7,6 +7,7 @@ import type {
   CooldownGRDataObject,
   DestroyGRDataObject,
   EntityChannelInfos,
+  ExchangeInProgressGRDataObject,
   GoldReceivedGRDataObject,
   ItemInfo,
   ItemKey,
@@ -18,6 +19,7 @@ import type {
   ServerToClient_disconnect_reason,
   ServerToClient_drop,
   ServerToClient_game_error,
+  ServerToClient_game_log,
   ServerToClient_game_response,
   ServerToClient_player,
   ServerToClient_start,
@@ -701,6 +703,82 @@ export class Character extends Observer {
 
     s.emit("destroy", { num, q, statue: true });
     return promise;
+  }
+
+  public async exchange(itemPosition: number): Promise<string> {
+    const s = this.socket;
+
+    if (Configuration.CHECK_COOLDOWN_BEFORE_EMIT && this.q.exchange)
+      throw new Error("An exchange is already in progress");
+
+    if (itemPosition === undefined || itemPosition < 0 || itemPosition >= this.items.length)
+      throw new Error(`Item position ${itemPosition} is out of bounds`);
+
+    const item = this.items[itemPosition];
+    if (!item) throw new Error(`No item at position ${itemPosition}`);
+
+    const gItem = this.game.G.items[item.name];
+    if (gItem?.e === undefined) throw new Error(`Item ${item.name} is not exchangeable`);
+    if (gItem.e > (item.q ?? 1)) throw new Error(`Insufficient quantity to exchange (${item.q}/${gItem.e})`);
+
+    const startedPromise = new Promise<ExchangeInProgressGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "exchange")) return;
+        // NOTE: `data.success` is false
+        if ((data as ExchangeInProgressGRDataObject).in_progress) {
+          resolve(data as ExchangeInProgressGRDataObject);
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+        cleanup();
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("exchange", { item_num: itemPosition });
+    await startedPromise;
+    if (this.q.exchange?.ms === undefined) throw new Error("Missing `q.exchange`");
+
+    const finishedPromise = new Promise<string>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_log", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_log) => {
+        let message: string | undefined = undefined;
+        if (typeof data === "string") {
+          if (data === "Didn't receive anything") message = data;
+        } else {
+          if (data.message.startsWith("Received")) message = data.message;
+        }
+        if (message !== undefined) {
+          resolve(message);
+          cleanup();
+        }
+      };
+
+      const timeoutMs = this.q.exchange!.ms + Configuration.SOCKET_EMIT_TIMEOUT_MS;
+      const timeout = setTimeout(() => {
+        reject(new Error(`Timeout (${timeoutMs}ms)`));
+        cleanup();
+      }, timeoutMs);
+
+      s.on("game_log", responseHandler);
+    });
+
+    return finishedPromise;
   }
 
   /**
