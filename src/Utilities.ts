@@ -39,3 +39,5 @@ export class Utilities {
     };
   }
 }
+
+export default Utilities;
