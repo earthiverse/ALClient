@@ -1,6 +1,19 @@
-import type { ServerIdentifier, ServerKey, ServerRegion } from "typed-adventureland";
+import type { GData, ItemInfo, ServerIdentifier, ServerKey, ServerRegion } from "typed-adventureland";
 
 export class Utilities {
+  /**
+   * From Adventureland's common_functions.js
+   * @param item 
+   * @param g 
+   * @returns 
+   */
+  public static calculate_item_value(item: ItemInfo, g: GData): number {
+    if (item.gift) return 1;
+
+    const gItem = g.items[item.name];
+    if (gItem === undefined) throw new Error(`Item ${item.name} not found in G data`);
+  }
+
   /**
    * From Adventureland's common_functions.js
    * @static
