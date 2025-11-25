@@ -78,21 +78,21 @@ export class Player {
 
     switch (character.type) {
       case "mage":
-        return new Mage(this, character.id, name) as T;
+        return new Mage(this, character.id, name) as unknown as T;
       case "merchant":
-        return new Merchant(this, character.id, name) as T;
+        return new Merchant(this, character.id, name) as unknown as T;
       case "paladin":
-        return new Paladin(this, character.id, name) as T;
+        return new Paladin(this, character.id, name) as unknown as T;
       case "priest":
-        return new Priest(this, character.id, name) as T;
+        return new Priest(this, character.id, name) as unknown as T;
       case "ranger":
-        return new Ranger(this, character.id, name) as T;
+        return new Ranger(this, character.id, name) as unknown as T;
       case "rogue":
-        return new Rogue(this, character.id, name) as T;
+        return new Rogue(this, character.id, name) as unknown as T;
       case "warrior":
-        return new Warrior(this, character.id, name) as T;
+        return new Warrior(this, character.id, name) as unknown as T;
       // default:
-      //   return new Character(this, character.id, name) as T;
+      //   return new Character(this, character.id, name) as unknown as T;
     }
   }
 
