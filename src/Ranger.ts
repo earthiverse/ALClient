@@ -27,6 +27,8 @@ export class Ranger extends Character {
     if (id2 instanceof Entity) id2 = id2.id;
     if (id3 instanceof Entity) id3 = id3.id;
 
+    this.checkCooldown("3shot");
+
     const projectiles: string[] = [];
     const getProjectiles = (data: ServerToClient_action) => {
       if (
@@ -96,6 +98,8 @@ export class Ranger extends Character {
     if (id3 instanceof Entity) id3 = id3.id;
     if (id4 instanceof Entity) id4 = id4.id;
     if (id5 instanceof Entity) id5 = id5.id;
+
+    this.checkCooldown("5shot");
 
     const projectiles: string[] = [];
     const getProjectiles = (data: ServerToClient_action) => {

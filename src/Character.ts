@@ -373,6 +373,11 @@ export class Character extends Observer {
     super.updatePositions();
   }
 
+  protected checkCooldown(skill: SkillKey): void {
+    if (!Configuration.CHECK_COOLDOWN_BEFORE_EMIT) return; // Not checking
+    if (this.isOnCooldown(skill)) throw new Error(`${skill} is on cooldown`);
+  }
+
   public canMove(): boolean {
     if (this.rip) return false;
     if (this.s.deepfreezed) return false;
@@ -535,10 +540,7 @@ export class Character extends Observer {
     if (id instanceof Entity) id = id.id;
     if (!id) throw new Error("`id` not provided");
 
-    // TODO: Add configuration for check cooldown before emit
-    // if(Configuration.CHECK_COOLDOWN_BEFORE_EMIT) {
-
-    // }
+    this.checkCooldown("attack");
 
     // TODO: Add merchant check
     // if(this.ctype === "merchant") {
@@ -859,6 +861,8 @@ export class Character extends Observer {
    * @returns
    */
   public regenHp(): Promise<void> {
+    this.checkCooldown("regen_hp");
+
     const s = this.socket;
 
     const promise = new Promise<void>((resolve, reject) => {
@@ -896,6 +900,8 @@ export class Character extends Observer {
    * @returns
    */
   public regenMp(): Promise<void> {
+    this.checkCooldown("regen_mp");
+
     const s = this.socket;
 
     const promise = new Promise<void>((resolve, reject) => {
