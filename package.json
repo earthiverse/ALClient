@@ -37,11 +37,12 @@
     "@eslint/js": "^9.25.1",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/eslint__js": "^8.42.3",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^22.15.2",
-    "dotenv": "^16.5.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.3",
     "eslint": "^9.25.1",
-    "jest": "^29.7.0",
+    "jest": "^30.2.0",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.0.0",
     "ts-jest": "^29.3.2",
@@ -50,8 +51,7 @@
     "typescript-eslint": "^8.31.0"
   },
   "dependencies": {
-    "cross-env": "^7.0.3",
     "socket.io-client": "^4.7.5",
-    "typed-adventureland": "^0.0.48"
+    "typed-adventureland": "^0.0.50"
   }
 }
