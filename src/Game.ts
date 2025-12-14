@@ -140,14 +140,15 @@ export class Game {
           // Parse the HTML to get character data
           // TODO: We can grab more information with a better regex
           const regex =
-            /observe_character\('(?<name>.+?)'\)\)\s+log_in\(user_id,'(?<id>\d+)'.+?<span class="gray".+?>(?<type>.+?)<\/span>/gms;
+            /observe_character\('(?<name>.+?)'\)\)\s+log_in\(user_id,'(?<id>\d+)'.+?Lv\.(?<level>\d+)\s+<span class="gray".+?>(?<type>.+?)<\/span>/gms;
           for (const result of entry.html.matchAll(regex)) {
             if (result.groups) {
-              const { name, id, type } = result.groups;
-              if (name !== undefined && id !== undefined && type !== undefined)
+              const { name, id, level, type } = result.groups;
+              if (name !== undefined && id !== undefined && level !== undefined && type !== undefined)
                 characters.push({
                   id: id,
                   name: name,
+                  level: Number.parseInt(level),
                   type: type.toLowerCase() as ClassKey,
                 } as XOnlineCharacter);
             }
