@@ -61,6 +61,26 @@ test("`.G` throws error when missing", () => {
   expect(() => game.G).toThrow();
 });
 
+test("`preparePathfinder()` works", async () => {
+  const game = new Game();
+  await game.updateG();
+  game.preparePathfinder();
+  const pathfinder = game.pathfinder;
+
+  // Should be able to check if points are walkable
+  expect(pathfinder.isWalkable("main", 0, 0)).toBe(true);
+  expect(pathfinder.isWalkable("main", 200, 20)).toBe(false);
+
+  // Should be able to check if lines are walkable
+  expect(pathfinder.canWalkPath("main", -11, -124, 7, 886)).toBe(true);
+  expect(pathfinder.canWalkPath("main", 81, -100, 291, 94)).toBe(false);
+
+  // Should be able to get path across maps
+  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 100)).toBeTruthy();
+  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 1)).toBeTruthy();
+});
+
+
 test("`updateG()` works", async () => {
   const game = new Game();
 

@@ -11,6 +11,8 @@ import type {
   GoldReceivedGRDataObject,
   ItemInfo,
   ItemKey,
+  MapKey,
+  MonsterKey,
   NotReadyGRDataObject,
   ServerIdentifier,
   ServerRegion,
@@ -21,6 +23,7 @@ import type {
   ServerToClient_game_error,
   ServerToClient_game_log,
   ServerToClient_game_response,
+  ServerToClient_new_map,
   ServerToClient_player,
   ServerToClient_start,
   SkillKey,
@@ -815,6 +818,68 @@ export class Character extends Observer {
   }
 
   /**
+   * Moves your character to the nearest monster of the given type
+   *
+   * @param monster
+   */
+  public async smartMove(monster: MonsterKey, map?: MapKey): Promise<void>;
+  /**
+   * Moves your character to the given position.
+   *
+   * @param map
+   * @param x
+   * @param y
+   */
+  public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
+  public async smartMove(arg1: MonsterKey | MapKey, x?: number | MapKey, y?: number) {
+    if (this.game.G.monsters[arg1 as MonsterKey] !== undefined) {
+      // TODO: Get nearest monster position
+      throw new Error("TODO: Smart move based on monster");
+    }
+
+    const pathfinder = this.game.pathfinder;
+    const path = pathfinder.getPath(this.map, this.x, this.y, arg1, x as number, y as number, this.speed) as {
+      map: MapKey;
+      x: number;
+      y: number;
+      method: "door" | "move" | "town" | "transport";
+      spawn?: number;
+    }[];
+
+    for (let i = 0; i < path.length; i++) {
+      const segment = path[i];
+      if (segment === undefined) return;
+
+      // TODO: Pre-emptive use of town if we're going to be town warping soon
+
+      // TODO: Walk to the next node if we can
+
+      // TODO: Blink usage
+
+      if (this.ctype === "mage") {
+        // await (this as Mage).blink()
+      }
+
+      if (segment.method === "move") {
+        if (segment.map !== this.map) throw new Error(`Expected map ${segment.map}, currently on ${this.map}`);
+        await this.move(segment.x, segment.y);
+        continue;
+      }
+
+      if (segment.method === "door" || segment.method === "transport") {
+        await this.transport(segment.map, segment.spawn as number);
+        continue;
+      }
+
+      if (segment.method === "town") {
+        // TODO: Pathfind to town by walking, too, so if it gets interrupted, we are still advancing
+
+        await this.warpToTown();
+      }
+    }
+  }
+
+  /**
    * Opens a chest with the given ID
    *
    * @param id
@@ -1011,6 +1076,110 @@ export class Character extends Observer {
 
     s.emit("party", { name, event: "request" });
     return promise;
+  }
+
+  public async transport(map: MapKey, spawn: number) {
+    const s = this.socket;
+
+    if (this.game.G.maps?.[map]?.spawns?.[spawn] === undefined)
+      throw new Error(`${map} does not have a spawn ${spawn}`);
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "transport")) return;
+
+        if (isSuccessGameResponse(data)) {
+          resolve();
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("transport", { s: spawn, to: map });
+    return promise;
+  }
+
+  public async warpToTown(
+    options: {
+      resolveOn: "start" | "finish";
+    } = { resolveOn: "finish" },
+  ): Promise<void> {
+    const s = this.socket;
+
+    const warpStarted = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "town")) return;
+
+        if (isSuccessGameResponse(data)) {
+          resolve();
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("town");
+    if (options.resolveOn === "start") return warpStarted;
+    await warpStarted;
+
+    const warpFinished = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("new_map", newMapHandler);
+        s.off("player", playerHandler);
+      };
+
+      const newMapHandler = (data: ServerToClient_new_map) => {
+        if (data.effect === 1) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (!data.s.town) {
+          cleanup();
+          reject(new Error("interupted"));
+        }
+      };
+
+      const timeoutMs = (this.game.G.conditions.town.duration as number) + Configuration.SOCKET_EMIT_TIMEOUT_MS;
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${timeoutMs}ms)`));
+      }, timeoutMs);
+
+      s.on("new_map", newMapHandler);
+      s.on("player", playerHandler);
+    });
+    return warpFinished;
   }
 }
 

@@ -1,3 +1,4 @@
+import * as ALPathfinder from "alpathfinder";
 import type { EventEmitter } from "node:events";
 import type {
   ClassKey,
@@ -44,6 +45,12 @@ export class Game {
     if (this._G === undefined)
       throw new Error("No G data. Call `updateG()` after creating `Game`, or include G data when creating `Game`.");
     return this._G;
+  }
+
+  private _pathfinder?: typeof ALPathfinder;
+  public get pathfinder(): typeof ALPathfinder {
+    if (this._pathfinder === undefined) throw new Error("Pathfinder is not prepared. Call `preparePathfinder()`");
+    return this._pathfinder;
   }
 
   public get apiUrl(): string {
@@ -168,6 +175,13 @@ export class Game {
       GameEventBus.emit("login_failed", this, error);
       throw error;
     }
+  }
+
+  public preparePathfinder(): typeof ALPathfinder {
+    if (this._pathfinder !== undefined) return this._pathfinder;
+    ALPathfinder.prepare(this.G);
+    this._pathfinder = ALPathfinder;
+    return ALPathfinder;
   }
 
   /**
