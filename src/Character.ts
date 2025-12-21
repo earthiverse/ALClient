@@ -36,7 +36,8 @@ import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
-import { isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
+import { isMapKey, isMonsterKey, isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
+import Utilities from "./Utilities.js";
 
 export interface CharacterEventMap {
   character_created: [character: Character];
@@ -824,7 +825,8 @@ export class Character extends Observer {
   /**
    * Moves your character to the nearest monster of the given type
    *
-   * @param monster
+   * @param monster The monster we want to move to
+   * @param map Optional. If set, we will only consider spawns on this map.
    */
   public async smartMove(monster: MonsterKey, map?: MapKey): Promise<void>;
   /**
@@ -835,7 +837,7 @@ export class Character extends Observer {
    * @param y
    */
   public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
-  public async smartMove(arg1: MonsterKey | MapKey, x?: number | MapKey, y?: number) {
+  public async smartMove(arg1: MonsterKey | MapKey, arg2?: number | MapKey, y?: number) {
     const pathfinder = this.game.pathfinder;
 
     // TODO: Is there a way to add this typing to the pathfinder itself?
@@ -855,6 +857,7 @@ export class Character extends Observer {
       let bestSpawn = undefined;
       for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i]!;
+        if (typeof arg2 === "string" && isMapKey(arg2, this.game.G) && spawn.map === arg2) continue; // Not the map we want
         if (spawn.map === this.map) bestSpawn = spawn;
         // TODO: Return cost from pathfinder
         path = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y) as typeof path;
@@ -862,14 +865,19 @@ export class Character extends Observer {
         bestSpawn = spawn;
         break; // TODO: Calculate path cost
       }
-      if (bestSpawn === undefined)
+      if (bestSpawn === undefined) {
+        if (typeof arg2 === "string")
+          throw new Error(
+            `Unable to find path from ${character.map},${character.x},${character.y} to ${arg1} on ${arg2}`,
+          );
         throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${arg1}`);
-      ({ map, x, y } = bestSpawn);
+      }
+      ({ map, x: arg2, y } = bestSpawn);
     }
 
-    path ??= pathfinder.getPath(this.map, this.x, this.y, map, x as number, y as number, this.speed);
+    path ??= pathfinder.getPath(this.map, this.x, this.y, map, arg2 as number, y as number, this.speed);
     if (!Array.isArray(path))
-      throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${x},${y}`);
+      throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${arg2},${y}`);
 
     for (let i = 0; i < path.length; i++) {
       const segment = path[i]!;

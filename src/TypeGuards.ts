@@ -1,4 +1,4 @@
-import type { GData, MonsterKey } from "typed-adventureland";
+import type { GData, MapKey, MonsterKey } from "typed-adventureland";
 
 export type SuccessGameResponse<Place extends string> = {
   response: string;
@@ -29,6 +29,10 @@ export function isSuccessGameResponse(data: unknown): data is SuccessGameRespons
 export function isFailedGameResponse(data: unknown): data is FailedGameResponse<string> {
   if (typeof data !== "object" || data === null || data === undefined) return false;
   return (data as FailedGameResponse<string>).failed === true;
+}
+
+export function isMapKey(key: string, g: GData): key is MapKey {
+  return g.maps[key as MapKey] !== undefined;
 }
 
 export function isMonsterKey(key: string, g: GData): key is MonsterKey {
