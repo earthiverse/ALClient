@@ -836,27 +836,40 @@ export class Character extends Observer {
    */
   public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
   public async smartMove(arg1: MonsterKey | MapKey, x?: number | MapKey, y?: number) {
+    const pathfinder = this.game.pathfinder;
+
+    // TODO: Is there a way to add this typing to the pathfinder itself?
+    let path:
+      | {
+          map: MapKey;
+          x: number;
+          y: number;
+          method: "door" | "move" | "town" | "transport";
+          spawn?: number;
+        }[]
+      | undefined = undefined;
+    let map: MapKey = arg1 as MapKey;
+
     if (isMonsterKey(arg1, this.game.G)) {
       const spawns = Utilities.getMonsterSpawns(this.game.G, arg1);
-      let bestSpawn = spawns[0]!;
-      for (let i = 1; i < spawns.length; i++) {
+      let bestSpawn = undefined;
+      for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i]!;
         if (spawn.map === this.map) bestSpawn = spawn;
+        // TODO: Return cost from pathfinder
+        path = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y) as typeof path;
+        if (!Array.isArray(path)) continue; // Couldn't find path
+        bestSpawn = spawn;
         break; // TODO: Calculate path cost
       }
-      ({ map: arg1, x, y } = bestSpawn);
+      if (bestSpawn === undefined)
+        throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${arg1}`);
+      ({ map, x, y } = bestSpawn);
     }
 
-    const pathfinder = this.game.pathfinder;
-    // TODO: Is there a way to add this typing to the pathfinder itself?
-    // TODO: Return path and cost
-    const path = pathfinder.getPath(this.map, this.x, this.y, arg1, x as number, y as number, this.speed) as {
-      map: MapKey;
-      x: number;
-      y: number;
-      method: "door" | "move" | "town" | "transport";
-      spawn?: number;
-    }[];
+    path ??= pathfinder.getPath(this.map, this.x, this.y, map, x as number, y as number, this.speed);
+    if (!Array.isArray(path))
+      throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${x},${y}`);
 
     for (let i = 0; i < path.length; i++) {
       const segment = path[i]!;
