@@ -1,4 +1,12 @@
-import type { ServerIdentifier, ServerKey, ServerRegion } from "typed-adventureland";
+import type {
+  GData,
+  IPosition,
+  MapKey,
+  MonsterKey,
+  ServerIdentifier,
+  ServerKey,
+  ServerRegion,
+} from "typed-adventureland";
 
 export class Utilities {
   /**
@@ -37,6 +45,30 @@ export class Utilities {
       serverRegion: result[1] as ServerRegion,
       serverIdentifier: result[2] as ServerIdentifier,
     };
+  }
+
+  /**
+   * Returns spawn data for the given monster
+   *
+   * @param g
+   * @param monster
+   * @returns
+   */
+  public static getMonsterSpawns(g: GData, monster: MonsterKey): Required<IPosition>[] {
+    const spawns: Required<IPosition>[] = [];
+    for (const [mapKey, gMap] of Object.entries(g.maps)) {
+      if (gMap.ignore !== undefined && gMap.ignore) continue; // Ignore map
+      if (gMap.monsters === undefined) continue; // No monsters on map
+      for (const mapMonster of gMap.monsters) {
+        if (mapMonster.type !== monster) continue; // Different monster
+        for (const [map, x1, y1, x2, y2] of mapMonster.boundaries ?? [
+          [mapKey as MapKey, ...(mapMonster.boundary as [number, number, number, number])],
+        ]) {
+          spawns.push({ map, x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
+        }
+      }
+    }
+    return spawns;
   }
 }
 
