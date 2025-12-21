@@ -8,7 +8,7 @@ export class Utilities {
    * @return {*}  {number}
    * @memberof Tools
    */
-  public static damage_multiplier(defense: number): number {
+  public static damageMultiplier(defense: number): number {
     if (defense <= -980) return 1.32;
     if (defense <= -150) return 1.1125 - (defense + 150) * 0.00025;
     if (defense > -150 && defense <= -100) return 1.0875 - (defense + 100) * 0.0005;
