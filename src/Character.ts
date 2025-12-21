@@ -393,10 +393,6 @@ export class Character extends Observer {
     return true;
   }
 
-  public canMoveTo(x: number, y: number): boolean {
-    return this.game.pathfinder.canWalkPath(this.map, this.x, this.y, x, y);
-  }
-
   /**
    * Returns a count of how many of the given item you have in your inventory.
    * For stacks of items, it uses the `.q`.

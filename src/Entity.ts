@@ -149,6 +149,28 @@ export abstract class Entity implements EntityData, Location, Movement {
   }
 
   /**
+   * Returns wether this Entity can move to the given Entity in a straight line
+   *
+   * @param entity
+   */
+  public canMoveTo(entity: Entity): boolean;
+  /**
+   * Returns wether this Entity can move to the given location in a straight line
+   *
+   * @param x
+   * @param y
+   * @returns
+   */
+  public canMoveTo(x: number, y: number): boolean;
+  public canMoveTo(x: number | Entity, y?: number): boolean {
+    if (x instanceof Entity) {
+      const entity = x;
+      return this.game.pathfinder.canWalkPath(this.map, this.x, this.y, entity.x, entity.y);
+    }
+    return this.game.pathfinder.canWalkPath(this.map, this.x, this.y, x, y as number);
+  }
+
+  /**
    * @param to
    * @returns Distance between this entity and the given location
    */
