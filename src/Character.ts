@@ -566,7 +566,7 @@ export class Character extends Observer {
 
         // TODO: Entity check?
 
-        if (isSuccessGameResponse(data)) {
+        if (isSuccessGameResponse(data) || data.response === "data") {
           resolve(data as unknown as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
