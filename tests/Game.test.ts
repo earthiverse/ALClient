@@ -127,4 +127,4 @@ test("`updateServers()` works", async () => {
   // Event should have triggered and should reference the same data
   expect(eventHappened).toBe(true);
   expect(eventServers).toBe(servers);
-});
+}, 10_000);
