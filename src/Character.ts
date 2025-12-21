@@ -836,12 +836,20 @@ export class Character extends Observer {
    */
   public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
   public async smartMove(arg1: MonsterKey | MapKey, x?: number | MapKey, y?: number) {
-    if (this.game.G.monsters[arg1 as MonsterKey] !== undefined) {
-      // TODO: Get nearest monster position
-      throw new Error("TODO: Smart move based on monster");
+    if (isMonsterKey(arg1, this.game.G)) {
+      const spawns = Utilities.getMonsterSpawns(this.game.G, arg1);
+      let bestSpawn = spawns[0]!;
+      for (let i = 1; i < spawns.length; i++) {
+        const spawn = spawns[i]!;
+        if (spawn.map === this.map) bestSpawn = spawn;
+        break; // TODO: Calculate path cost
+      }
+      ({ map: arg1, x, y } = bestSpawn);
     }
 
     const pathfinder = this.game.pathfinder;
+    // TODO: Is there a way to add this typing to the pathfinder itself?
+    // TODO: Return path and cost
     const path = pathfinder.getPath(this.map, this.x, this.y, arg1, x as number, y as number, this.speed) as {
       map: MapKey;
       x: number;
@@ -851,8 +859,7 @@ export class Character extends Observer {
     }[];
 
     for (let i = 0; i < path.length; i++) {
-      const segment = path[i];
-      if (segment === undefined) return;
+      const segment = path[i]!;
 
       // TODO: Pre-emptive use of town if we're going to be town warping soon
 
