@@ -823,6 +823,12 @@ export class Character extends Observer {
   }
 
   /**
+   * Moves your character to the entity
+   *
+   * @param entity
+   */
+  public async smartMove(entity: Entity): Promise<void>;
+  /**
    * Moves your character to the nearest monster of the given type
    *
    * @param monster The monster we want to move to
@@ -837,7 +843,7 @@ export class Character extends Observer {
    * @param y
    */
   public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
-  public async smartMove(arg1: MonsterKey | MapKey, arg2?: number | MapKey, y?: number) {
+  public async smartMove(arg1: MonsterKey | MapKey | Entity, arg2?: number | MapKey, arg3?: number) {
     const pathfinder = this.game.pathfinder;
 
     // TODO: Is there a way to add this typing to the pathfinder itself?
@@ -851,8 +857,12 @@ export class Character extends Observer {
         }[]
       | undefined = undefined;
     let map: MapKey = arg1 as MapKey;
+    let x: number = arg2 as number;
+    let y: number = arg3 as number;
 
-    if (isMonsterKey(arg1, this.game.G)) {
+    if (arg1 instanceof Entity) {
+      ({ map, x, y } = arg1);
+    } else if (isMonsterKey(arg1, this.game.G)) {
       const spawns = Utilities.getMonsterSpawns(this.game.G, arg1);
       let bestSpawn = undefined;
       for (let i = 0; i < spawns.length; i++) {
@@ -872,10 +882,10 @@ export class Character extends Observer {
           );
         throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${arg1}`);
       }
-      ({ map, x: arg2, y } = bestSpawn);
+      ({ map, x, y } = bestSpawn);
     }
 
-    path ??= pathfinder.getPath(this.map, this.x, this.y, map, arg2 as number, y as number, this.speed);
+    path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
     if (!Array.isArray(path))
       throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${arg2},${y}`);
 
