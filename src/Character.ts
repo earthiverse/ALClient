@@ -67,6 +67,12 @@ export class Character extends Observer {
     return this._apiercing;
   }
 
+  protected _armor?: number;
+  public get armor(): number {
+    if (this._armor === undefined) throw new Error("No player data");
+    return this._armor;
+  }
+
   protected _attack?: number;
   public get attack(): number {
     if (this._attack === undefined) throw new Error("No player data");
@@ -85,16 +91,46 @@ export class Character extends Observer {
     return this._cash;
   }
 
+  protected _crit?: number;
+  public get crit(): number {
+    if (this._crit === undefined) throw new Error("No player data");
+    return this._crit;
+  }
+
   protected _ctype?: ClassKey;
   public get ctype(): ClassKey {
     if (this._ctype === undefined) throw new Error("No player data");
     return this._ctype;
   }
 
+  protected _dex?: number;
+  public get dex(): number {
+    if (this._dex === undefined) throw new Error("No player data");
+    return this._dex;
+  }
+
+  protected _dreturn?: number;
+  public get dreturn(): number {
+    if (this._dreturn === undefined) throw new Error("No player data");
+    return this._dreturn;
+  }
+
   protected _esize?: number;
   public get esize(): number {
     if (this._esize === undefined) throw new Error("No player data");
     return this._esize;
+  }
+
+  protected _evasion?: number;
+  public get evasion(): number {
+    if (this._evasion === undefined) throw new Error("No player data");
+    return this._evasion;
+  }
+
+  protected _for?: number;
+  public get for(): number {
+    if (this._for === undefined) throw new Error("No player data");
+    return this._for;
   }
 
   protected _frequency?: number;
@@ -113,6 +149,23 @@ export class Character extends Observer {
   public get hp(): number {
     if (this._hp === undefined) throw new Error("No player data");
     return this._hp;
+  }
+
+  public get luck(): number {
+    if (this._luckm === undefined) throw new Error("No player data");
+    return 100 * this._luckm;
+  }
+
+  protected _luckm?: number;
+  public get luckm(): number {
+    if (this._luckm === undefined) throw new Error("No player data");
+    return this._luckm;
+  }
+
+  protected _int?: number;
+  public get int(): number {
+    if (this._int === undefined) throw new Error("No player data");
+    return this._int;
   }
 
   protected _items?: Array<ItemInfo | null>;
@@ -159,6 +212,18 @@ export class Character extends Observer {
     return this._mp;
   }
 
+  protected _mp_cost?: number;
+  public get mp_cost(): number {
+    if (this._mp_cost === undefined) throw new Error("No player data");
+    return this._mp_cost;
+  }
+
+  protected _mp_reduction?: number;
+  public get mp_reduction(): number {
+    if (this._mp_reduction === undefined) throw new Error("No player data");
+    return this._mp_reduction;
+  }
+
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
@@ -174,6 +239,18 @@ export class Character extends Observer {
   public get range(): number {
     if (this._range === undefined) throw new Error("No player data");
     return this._range;
+  }
+
+  protected _reflection?: number;
+  public get reflection(): number {
+    if (this._reflection === undefined) throw new Error("No player data");
+    return this._reflection;
+  }
+
+  protected _resistance?: number;
+  public get resistance(): number {
+    if (this._resistance === undefined) throw new Error("No player data");
+    return this._resistance;
   }
 
   protected _rip?: boolean;
@@ -199,9 +276,27 @@ export class Character extends Observer {
     return this._slots;
   }
 
+  protected _str?: number;
+  public get str(): number {
+    if (this._str === undefined) throw new Error("No player data");
+    return this._str;
+  }
+
   protected _target?: string;
   public get target(): string | undefined {
     return this._target;
+  }
+
+  protected _vit?: number;
+  public get vit(): number {
+    if (this._vit === undefined) throw new Error("No player data");
+    return this._vit;
+  }
+
+  protected _xp?: number;
+  public get xp(): number {
+    if (this._xp === undefined) throw new Error("No player data");
+    return this._xp;
   }
 
   constructor(player: Player, characterId: string, id: string) {
@@ -341,14 +436,22 @@ export class Character extends Observer {
     // TODO: Add more attributes
 
     if (data.apiercing !== undefined) this._apiercing = data.apiercing;
+    if (data.armor !== undefined) this._armor = data.armor;
     if (data.attack !== undefined) this._attack = data.attack;
     if (data.c !== undefined) this._c = data.c;
     if (data.cash !== undefined) this._cash = data.cash;
+    if (data.crit !== undefined) this._crit = data.crit;
     if (data.ctype !== undefined) this._ctype = data.ctype;
+    if (data.dex !== undefined) this._dex = data.dex;
+    if (data.dreturn !== undefined) this._dreturn = data.dreturn;
     if (data.esize !== undefined) this._esize = data.esize;
+    if (data.evasion !== undefined) this._evasion = data.evasion;
+    if (data.for !== undefined) this._for = data.for;
     if (data.frequency !== undefined) this._frequency = data.frequency;
     if (data.gold !== undefined) this._gold = data.gold;
     if (data.hp !== undefined) this._hp = data.hp;
+    if (data.luckm !== undefined) this._luckm = data.luckm;
+    if (data.int !== undefined) this._int = data.int;
     if (data.items !== undefined) this._items = data.items;
     if (data.level !== undefined) this._level = data.level;
     if (data.lifesteal !== undefined) this._lifesteal = data.lifesteal;
@@ -357,19 +460,27 @@ export class Character extends Observer {
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.max_mp !== undefined) this._max_mp = data.max_mp;
     if (data.mp !== undefined) this._mp = data.mp;
+    if (data.mp_cost !== undefined) this._mp_cost = data.mp_cost;
+    if (data.mp_reduction !== undefined) this._mp_reduction = data.mp_reduction;
     if (data.party !== undefined) this._party = data.party;
     if (data.q !== undefined) {
       this._q = data.q;
       CharacterEventBus.emit("progress_set", this, data.q);
     }
     if (data.range !== undefined) this._range = data.range;
+    if (data.reflection !== undefined) this._reflection = data.reflection;
+    if (data.resistance !== undefined) this._resistance = data.resistance;
+    if (data.rip !== undefined) this._rip = data.rip;
     if (data.rpiercing !== undefined) this._rpiercing = data.rpiercing;
     if (data.s !== undefined) {
       this._s = data.s;
       CharacterEventBus.emit("conditions_set", this, data.s);
     }
     if (data.slots !== undefined) this._slots = data.slots;
+    if (data.str !== undefined) this._str = data.str;
     if (data.target !== undefined) this._target = data.target;
+    if (data.vit !== undefined) this._vit = data.vit;
+    if (data.xp !== undefined) this._xp = data.xp;
   }
 
   protected override updatePositions(): void {
