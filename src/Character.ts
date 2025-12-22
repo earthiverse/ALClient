@@ -36,7 +36,7 @@ import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
-import { isMapKey, isMonsterKey, isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
+import { isConditionKey, isMapKey, isMonsterKey, isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
 
 export interface CharacterEventMap {
@@ -495,11 +495,8 @@ export class Character extends Observer {
 
   public canMove(): boolean {
     if (this.rip) return false;
-    if (this.s.deepfreezed) return false;
-    if (this.s.fingered) return false;
+    if (this.isBlocked()) return false;
     if (this.s.sleeping) return false;
-    if (this.s.stoned) return false;
-    if (this.s.stunned) return false;
 
     return true;
   }
@@ -527,6 +524,10 @@ export class Character extends Observer {
   public getTimeout(skill: SkillKey): number {
     const ms = this.nextSkill.get(skill);
     return ms === undefined ? 0 : Math.max(0, ms - Date.now());
+  }
+
+  public hasItem(item: Partial<ItemInfo>): boolean {
+    return this.locateItem(item) !== undefined;
   }
 
   /**
@@ -579,6 +580,15 @@ export class Character extends Observer {
     }
 
     return items;
+  }
+
+  public isBlocked(): boolean {
+    for (const key in this.s) {
+      if (!isConditionKey(key, this.game.G)) continue;
+      const condition = this.game.G.conditions[key];
+      if (condition.blocked === true) return true;
+    }
+    return false;
   }
 
   /**
@@ -926,7 +936,7 @@ export class Character extends Observer {
     const distance = this.getDistanceTo({ x, y, map: this.map, in: this.in });
 
     s.emit("move", { x: this.x, y: this.y, going_x: this.going_x, going_y: this.going_y, m: this._m });
-    return new Promise<void>((resolve) => setTimeout(resolve, (1000 * distance) / this.speed));
+    return new Promise<void>((resolve) => setTimeout(resolve, Math.ceil((1000 * distance) / this.speed)));
   }
 
   /**
@@ -952,6 +962,8 @@ export class Character extends Observer {
   public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
   public async smartMove(arg1: MonsterKey | MapKey | Entity, arg2?: number | MapKey, arg3?: number) {
     const pathfinder = this.game.pathfinder;
+
+    // TODO: Add smartMove options
 
     // TODO: Is there a way to add this typing to the pathfinder itself?
     let path:
@@ -991,6 +1003,8 @@ export class Character extends Observer {
       }
       ({ map, x, y } = bestSpawn);
     }
+    // TODO: NPC Key
+    // TODO: Item Key -- find npc that sells it
 
     path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
     if (!Array.isArray(path))
