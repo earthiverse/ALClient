@@ -25,9 +25,9 @@ export class Pathfinder {
     protected static G: GData
 
     protected static FIRST_MAP: MapName = "main"
-    protected static TRANSPORT_COST = 75000
-    protected static TOWN_COST = 200000
-    protected static ENTER_COST = 1000000
+    protected static TRANSPORT_COST = 75_000
+    protected static TOWN_COST = 200_000
+    protected static ENTER_COST = 1_000_000
 
     protected static grids: Grids = {}
     protected static graph: Graph<NodeData, LinkData> = createGraph({ multigraph: true })
@@ -162,17 +162,17 @@ export class Pathfinder {
     public static computeLinkCost(from: NodeData, to: NodeData, link?: LinkData, options?: PathfinderOptions): number {
         if (options?.avoidMaps?.includes(link?.map) || options?.avoidMaps?.includes(to?.map)) {
             // We want to avoid this map
-            return 1000000000000
+            return 1_000_000_000_000
         } else if (link?.type == "leave" || link?.type == "transport") {
             // We are using the transporter
-            if (link.map === "bank" || link.map === "bank_u") return 1000000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
+            if (link.map === "bank" || link.map === "bank_u") return 1_000_000 // The bank only lets one character in at a time, add a higher cost for it so we don't try to use it as a shortcut
             return options?.costs?.transport !== undefined ? options.costs.transport : Pathfinder.TRANSPORT_COST
         } else if (link?.type == "enter") {
             // We are entering a crypt
             return options?.costs?.enter !== undefined ? options.costs.enter : Pathfinder.ENTER_COST
         } else if (link?.type == "town") {
             // We are warping to town
-            if (options?.avoidTownWarps) return 1000000000000
+            if (options?.avoidTownWarps) return 1_000_000_000_000
             else return options?.costs?.town !== undefined ? options.costs.town : Pathfinder.TOWN_COST
         }
 
