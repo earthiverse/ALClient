@@ -28,6 +28,8 @@ import type {
   ServerToClient_start,
   SkillKey,
   SkillSuccessGRDataObject,
+  SlotType,
+  StatType,
   StatusInfo,
   XServerInfos,
 } from "typed-adventureland";
@@ -224,6 +226,12 @@ export class Character extends Observer {
     return this._mp_reduction;
   }
 
+  private get output(): number {
+    // TODO: Implement. Not exposed, but we could figure it out through equipment.
+    // TODO: Change to public when implemented
+    throw new Error("Not yet implemented");
+  }
+
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
@@ -274,6 +282,12 @@ export class Character extends Observer {
   public get slots(): CharacterEntitySlotsInfos {
     if (this._slots === undefined) throw new Error("No player data");
     return this._slots;
+  }
+
+  private get stat(): number {
+    // TODO: Implement. Not exposed, but we could figure it out through equipment.
+    // TODO: Change to public when implemented
+    throw new Error("Not yet implemented");
   }
 
   protected _str?: number;
@@ -498,6 +512,69 @@ export class Character extends Observer {
     if (this.isBlocked()) return false;
     if (this.s.sleeping) return false;
 
+    return true;
+  }
+
+  public canUse(
+    skill: SkillKey,
+    options: {
+      ignoreCooldown?: true;
+      ignoreEquipped?: true;
+      ignoreLocation?: true;
+      ignoreMp?: true;
+    } = {},
+  ): boolean {
+    if (this.rip) return false;
+    if (this.isBlocked()) return false;
+    if (options.ignoreCooldown === undefined && this.isOnCooldown(skill)) return false;
+    const gSkill = this.game.G.skills[skill];
+    if (options.ignoreLocation === undefined && gSkill.hostile === true && this.game.G.maps[this.map].safe === true)
+      return false; // Can't use a hostile skill in a safe place
+    if (options.ignoreMp === undefined && gSkill.mp !== undefined && this.mp < gSkill.mp) return false; // Not enough MP
+    if (options.ignoreMp === undefined && skill == "attack" && this.mp < this.mp_cost) return false; // Not enough MP (attack)
+    if (gSkill.level !== undefined && this.level < gSkill.level) return false; // Not a high enough level
+    if (options.ignoreEquipped && gSkill.wtype !== undefined) {
+      // The skill requires a certain weapon type
+      if (!this.slots.mainhand) return false; // We don't have any weapon equipped
+      const gItem = this.game.G.items[this.slots.mainhand.name];
+      const acceptableTypes = Array.isArray(gSkill.wtype) ? gSkill.wtype : [gSkill.wtype];
+      if (!acceptableTypes.includes(gItem.wtype!)) return false; // We don't have that weapon type equipped
+    }
+    if (options.ignoreEquipped === undefined && gSkill.consume !== undefined && !this.hasItem({ name: gSkill.consume }))
+      return false; // We don't have the required consumable
+    if (
+      options.ignoreEquipped === undefined &&
+      gSkill.inventory !== undefined &&
+      !gSkill.inventory.every((name) => this.hasItem({ name }))
+    )
+      return false; // We don't have the required item in our inventory
+    if (
+      options.ignoreEquipped === undefined &&
+      gSkill.slot !== undefined &&
+      !gSkill.slot.some(([slot, item]) => this.slots[slot as SlotType]?.name === item) // TODO: slot should be typed better
+    )
+      return false; // We don't have anything equipped that lets us use this skill
+    if (gSkill.class !== undefined && gSkill.class.some((c) => c === this.ctype)) return false; // We're not the right class to use this skill
+    if (
+      gSkill.requirements !== undefined &&
+      !Object.entries(gSkill.requirements).every(([stat, amount]) => this[stat as StatType] >= amount)
+    )
+      return false; // We don't have every stat requirement
+
+    // Special circumstance -- fishing and mining can only be done in certain locations
+    // TODO: Check fishing and mining zone
+    // TODO: Include `!options.ignoreLocation`
+
+    // Special circumstance -- we can't use blink if we're being dampened
+    if (this.s.dampened) {
+      if (skill == "blink") return false;
+    }
+
+    // Special circumstance -- merchants can't attack unless they have a dartgun
+    if (this.ctype == "merchant" && skill == "attack") {
+      if (this.slots.mainhand?.name !== "dartgun") return false; // Wrong weapon
+      if (this.gold < 100) return false; // Not enough gold to shoot
+    }
     return true;
   }
 
