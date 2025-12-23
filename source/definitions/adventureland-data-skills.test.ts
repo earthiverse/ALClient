@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 768 (2023-02-28)
+ * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
  * It is used to confirm type correctness
  */
 
@@ -192,6 +192,7 @@ test("G.skills type validation", async () => {
                 slot: [["orb", "charmer"]],
                 target: "monster",
                 type: "skill",
+                use_range: true,
             },
             cleave: {
                 class: ["warrior"],
@@ -220,6 +221,7 @@ test("G.skills type validation", async () => {
                 mp: 400,
                 name: "Curse",
                 projectile: "curse",
+                range: 200,
                 skin: "skill_curse",
                 target: true,
                 type: "skill",
@@ -405,9 +407,12 @@ test("G.skills type validation", async () => {
                 hostile: true,
                 mp: 240,
                 name: "Hunter's Mark",
+                range_bonus: 20,
+                range_multiplier: 3,
                 skin: "skill_huntersmark",
                 target: true,
                 type: "skill",
+                use_range: true,
             },
             interact: {
                 explanation: "Interact with the nearest game entity, a door, doorway, or NPC.",
@@ -506,6 +511,7 @@ test("G.skills type validation", async () => {
                 skin: "skill_mentalburst",
                 target: true,
                 type: "skill",
+                use_range: true,
                 warning: "Highly unbalanced skill, could get nerfed or modified",
             },
             mfrenzy: {
@@ -956,11 +962,11 @@ test("G.skills type validation", async () => {
             },
             snowball: {
                 condition: "frozen",
+                consume: "snowball",
                 cooldown: 180,
                 damage: 1,
                 duration: 5000,
                 explanation: "Throw a snowball at someone!",
-                inventory: ["snowball"],
                 merchant_use: true,
                 mp: 120,
                 name: "Snowball",
@@ -1020,10 +1026,12 @@ test("G.skills type validation", async () => {
                 name: "Supershot",
                 pierces_immunity: true,
                 procs: true,
+                range_bonus: 20,
                 range_multiplier: 3,
                 skin: "skill_supershot",
                 target: true,
                 type: "skill",
+                use_range: true,
                 wtype: ["bow", "crossbow"],
             },
             tangle: {
@@ -1032,6 +1040,7 @@ test("G.skills type validation", async () => {
                 hostile: true,
                 mp: 40,
                 name: "Tangle",
+                range_multiplier: 2,
                 skin: "heartwood",
                 slot: [
                     ["mainhand", "heartwood"],
@@ -1039,6 +1048,7 @@ test("G.skills type validation", async () => {
                 ],
                 target: true,
                 type: "skill",
+                use_range: true,
             },
             taunt: {
                 class: ["warrior"],
@@ -1053,6 +1063,15 @@ test("G.skills type validation", async () => {
                 range: 200,
                 skin: "skill_taunt",
                 target: true,
+                type: "skill",
+            },
+            temporalsurge: {
+                cooldown: 60000,
+                explanation: "Hasten nearby spawns 15% by tapping into temporal forces!",
+                mp: 1000,
+                name: "Temporal Surge",
+                skin: "orboftemporal",
+                slot: [["orb", "orboftemporal"]],
                 type: "skill",
             },
             throw: {

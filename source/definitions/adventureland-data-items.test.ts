@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 822 (2025-06-21)
+ * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
  * It is used to confirm type correctness
  */
 
@@ -617,6 +617,7 @@ test("G.items type validation", async () => {
                 explanation: "The old man in Winterland was looking for sweets.",
                 g: 24000,
                 name: "Candy Cane",
+                quest: "candycane",
                 s: 9999,
                 skin: "candycane",
                 type: "gem",
@@ -3606,6 +3607,7 @@ test("G.items type validation", async () => {
                 explanation: "Maybe someone could give you a kiss in exchange...",
                 g: 20000,
                 name: "Mistletoe",
+                quest: "mistletoe",
                 s: 9999,
                 skin: "mistletoe",
                 type: "gem",
@@ -4474,6 +4476,7 @@ test("G.items type validation", async () => {
                     phresistance: 5,
                     pnresistance: 5,
                 },
+                edge: -2,
                 firesistance: 15,
                 fzresistance: 15,
                 g: 240000,
@@ -4515,6 +4518,7 @@ test("G.items type validation", async () => {
                 compound: {
                     firesistance: 5,
                 },
+                edge: -2,
                 firesistance: 15,
                 g: 60000,
                 grades: [0, 3, 6, 7],
@@ -4526,6 +4530,7 @@ test("G.items type validation", async () => {
                 compound: {
                     fzresistance: 5,
                 },
+                edge: -2,
                 fzresistance: 15,
                 g: 60000,
                 grades: [0, 3, 6, 7],
@@ -4549,6 +4554,7 @@ test("G.items type validation", async () => {
                 compound: {
                     pnresistance: 5,
                 },
+                edge: -2,
                 g: 60000,
                 grades: [0, 3, 6, 7],
                 name: "Orb of Plague",
@@ -4560,6 +4566,7 @@ test("G.items type validation", async () => {
                 compound: {
                     phresistance: 5,
                 },
+                edge: -2,
                 g: 60000,
                 grades: [0, 3, 6, 7],
                 name: "Orb of Resolve",
@@ -4603,6 +4610,20 @@ test("G.items type validation", async () => {
                 str: 4,
                 type: "orb",
             },
+            orboftemporal: {
+                a: true,
+                ability: "temporalsurge",
+                compound: {
+                    evasion: 4,
+                },
+                evasion: 5,
+                g: 1200000,
+                grades: [0, 0, 6, 7],
+                name: "Orb of Temporal Forces",
+                set: "holidays",
+                skin: "orboftemporal",
+                type: "orb",
+            },
             orbofvit: {
                 compound: {
                     vit: 4,
@@ -4620,6 +4641,7 @@ test("G.items type validation", async () => {
                 explanation: "A beautiful ornament. A bunch of these could decorate the trees of Winterland.",
                 g: 3000,
                 name: "Xmas Ornament",
+                quest: "ornament",
                 s: 9999,
                 skin: "ornament",
                 type: "quest",
@@ -5313,7 +5335,7 @@ test("G.items type validation", async () => {
                 type: "pscroll",
             },
             sanguine: {
-                attr0: 1,
+                attr0: 2,
                 aura: "sanguine",
                 compound: {
                     attr0: 0.5,
@@ -5783,10 +5805,17 @@ test("G.items type validation", async () => {
             },
             spookyamulet: {
                 a: true,
+                compound: {
+                    evasion: 0.625,
+                    gold: 0.25,
+                    luck: 0.25,
+                    reflection: 0.25,
+                    xp: 0.25,
+                },
                 evasion: 5,
                 g: 320000,
                 gold: 2,
-                grades: [3, 5, 10, 12],
+                grades: [0, 3, 6, 7],
                 luck: 2,
                 name: "Amulet of Spooks",
                 reflection: 2,

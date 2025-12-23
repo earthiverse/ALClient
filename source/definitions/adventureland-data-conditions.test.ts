@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
+ * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
  * It is used to confirm type correctness
  */
 
@@ -11,7 +11,7 @@ test("G.conditions type validation", async () => {
             authfail: {
                 debuff: true,
                 explanation:
-                    "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land",
+                    "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land.",
                 gold: -85,
                 luck: -85,
                 name: "Authorization Failure",
@@ -36,6 +36,7 @@ test("G.conditions type validation", async () => {
             burned: {
                 debuff: true,
                 defense: "firesistance",
+                explanation: "Burns the target for damage equal to its intensity per second.",
                 interval: 210,
                 name: "Burned",
                 skin: "fireblade",
@@ -43,6 +44,7 @@ test("G.conditions type validation", async () => {
             },
             charging: {
                 duration: 3200,
+                explanation: "A short burst of speed.",
                 name: "Charging",
                 skin: "condition_positive",
                 speed: 30,
@@ -50,7 +52,7 @@ test("G.conditions type validation", async () => {
             charmed: {
                 debuff: true,
                 duration: 30000,
-                explanation: "Mellow like a warm kitty",
+                explanation: "Mellow like a warm kitty.",
                 name: "Charmed",
                 skin: "charmer",
                 ui: true,
@@ -58,6 +60,7 @@ test("G.conditions type validation", async () => {
             cursed: {
                 debuff: true,
                 duration: 5000,
+                explanation: "Reduces damage output and speed by 20%. Increases damage taken by 20%.",
                 incdmgamp: 20,
                 name: "Cursed",
                 output: -20,
@@ -67,13 +70,14 @@ test("G.conditions type validation", async () => {
             dampened: {
                 debuff: true,
                 duration: 300,
-                explanation: "Can't blink or teleport",
+                explanation: "Can't blink or teleport.",
                 name: "Dampened",
                 skin: "dampened",
             },
             darkblessing: {
                 buff: true,
                 duration: 8000,
+                explanation: "Increases damage output.",
                 name: "Dark Blessing",
                 output: 25,
                 skin: "skill_dbuff",
@@ -90,6 +94,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 defense: "fzresistance",
                 duration: 12000,
+                explanation: "Cannot move, attack, heal, or use skills.",
                 name: "Deepfreezed",
                 skin: "condition_bad",
                 ui: true,
@@ -97,6 +102,7 @@ test("G.conditions type validation", async () => {
             easterluck: {
                 buff: true,
                 duration: 86400000,
+                explanation: "Luck is greatly increased.",
                 luck: 100,
                 name: "Easter Luck",
                 persistent: true,
@@ -107,6 +113,7 @@ test("G.conditions type validation", async () => {
                 damage: 50,
                 debuff: true,
                 duration: 12000,
+                explanation: "Burns the target with fire essence, dealing damage over time.",
                 intensity: "burnd",
                 interval: 200,
                 name: "Burn",
@@ -117,6 +124,7 @@ test("G.conditions type validation", async () => {
             eheal: {
                 buff: true,
                 duration: 4000,
+                explanation: "Heals the target over time using life essence.",
                 heal: 200,
                 interval: 320,
                 name: "Rejuvenate",
@@ -126,6 +134,7 @@ test("G.conditions type validation", async () => {
             energized: {
                 buff: true,
                 duration: 800,
+                explanation: "Gives a brief burst of attack speed.",
                 frequency: 80,
                 name: "Energized",
                 skin: "skill_energize",
@@ -135,6 +144,7 @@ test("G.conditions type validation", async () => {
                 blocked: true,
                 debuff: true,
                 evasion: 96,
+                explanation: "Stunned for the duration.",
                 name: "Deep Meditation",
                 resistance: 1600,
                 skin: "condition_neutral",
@@ -143,7 +153,7 @@ test("G.conditions type validation", async () => {
                 channel: true,
                 duration: 15000,
                 duration_min: 5000,
-                explanation: "Fishing in progress",
+                explanation: "Fishing in progress.",
                 name: "Fishing",
                 skin: "skill_fishing",
             },
@@ -151,13 +161,17 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 defense: "fzresistance",
                 duration: 5000,
+                explanation: "Reduces speed by 40 and frequency by 70%.",
+                frequencym: 0.3,
                 name: "Frozen",
                 skin: "frostbow",
+                speed: -40,
                 ui: true,
             },
             fullguard: {
                 armor: 10000,
                 buff: true,
+                explanation: "Providing maximum resistance and armor.",
                 name: "Full Guard",
                 persistent: true,
                 resistance: 10000,
@@ -167,6 +181,7 @@ test("G.conditions type validation", async () => {
             fullguardx: {
                 avoidance: 99,
                 buff: true,
+                explanation: "Increasing avoidance to near perfect.",
                 name: "Full Guard",
                 persistent: true,
                 skin: "fullguard",
@@ -175,6 +190,7 @@ test("G.conditions type validation", async () => {
             halloween0: {
                 buff: true,
                 duration: 172800000,
+                explanation: "A full-on Halloween blast with tons of XP to haunt your day.",
                 gold: 5,
                 luck: 5,
                 name: "Halloween Spirit",
@@ -186,6 +202,7 @@ test("G.conditions type validation", async () => {
             halloween1: {
                 buff: true,
                 duration: 86400000,
+                explanation: "A nice spooky boost to luck and XP.",
                 gold: 5,
                 luck: 5,
                 name: "Halloween Spirit",
@@ -198,6 +215,7 @@ test("G.conditions type validation", async () => {
             halloween2: {
                 buff: true,
                 duration: 28800000,
+                explanation: "A quick touch of Halloween magic to boost luck and gold.",
                 gold: 5,
                 luck: 5,
                 name: "Halloween Spirit",
@@ -211,6 +229,7 @@ test("G.conditions type validation", async () => {
                 armor: 800,
                 buff: true,
                 duration: 8000,
+                explanation: "Greatly increases armor but limits maximum speed to 10.",
                 name: "Hard Shell",
                 set_speed: 10,
                 skin: "skill_hardshell",
@@ -218,6 +237,7 @@ test("G.conditions type validation", async () => {
             holidayspirit: {
                 buff: true,
                 duration: 86400000,
+                explanation: "Feel the festive vibes luck, gold, and XP boosted!",
                 gold: 20,
                 luck: 20,
                 name: "Holiday Spirit",
@@ -250,13 +270,13 @@ test("G.conditions type validation", async () => {
             },
             invis: {
                 buff: true,
-                explanation: "Hidden from everyone else until you attack",
+                explanation: "Hidden from everyone else until you attack.",
                 name: "Invisible",
                 skin: "skill_invis",
             },
             licenced: {
                 buff: true,
-                explanation: "A special, temporary immunity",
+                explanation: "A special, temporary immunity.",
                 name: "Licenced to Kill",
                 skin: "licence",
                 ui: true,
@@ -273,7 +293,7 @@ test("G.conditions type validation", async () => {
             massproduction: {
                 buff: true,
                 duration: 10000,
-                explanation: "Speeds up the next upgrade or compound 50%",
+                explanation: "Reduces the time of your next upgrade or compound by 50%.",
                 name: "Mass Production",
                 skin: "skill_massproduction",
                 ui: true,
@@ -281,7 +301,7 @@ test("G.conditions type validation", async () => {
             massproductionpp: {
                 buff: true,
                 duration: 10000,
-                explanation: "Speeds up the next upgrade or compound 90%",
+                explanation: "Reduces the time of your next upgrade or compound by 90%.",
                 name: "Mass Production++",
                 skin: "skill_massproductionpp",
                 ui: true,
@@ -291,6 +311,7 @@ test("G.conditions type validation", async () => {
                 courage: 5,
                 duration: 10000,
                 evasion: 40,
+                explanation: "Increases speed, evasion, and all types of courage.",
                 mcourage: 5,
                 name: "Merchant's Courage",
                 pcourage: 5,
@@ -301,6 +322,7 @@ test("G.conditions type validation", async () => {
             mfrenzy: {
                 buff: true,
                 duration: 5000,
+                explanation: "Greatly boosts attack speed and output while lowering mana cost.",
                 frequency: 800,
                 mp_cost: -20,
                 name: "Merchant's Frenzy",
@@ -312,13 +334,14 @@ test("G.conditions type validation", async () => {
                 channel: true,
                 duration: 15000,
                 duration_min: 5000,
-                explanation: "Mining in progress",
+                explanation: "Mining in progress.",
                 name: "Mining",
                 skin: "skill_mining",
             },
             mlifesteal: {
                 buff: true,
                 duration: 3600000,
+                explanation: "Fresh from vampire slaying.",
                 lifesteal: 2.5,
                 name: "Lifesteal",
                 skin: "lifestealscroll",
@@ -327,6 +350,7 @@ test("G.conditions type validation", async () => {
             mluck: {
                 buff: true,
                 duration: 3600000,
+                explanation: "Lucked!",
                 luck: 12,
                 name: "Good Luck",
                 persistent: true,
@@ -335,6 +359,7 @@ test("G.conditions type validation", async () => {
             },
             monsterhunt: {
                 duration: 1800000,
+                explanation: "Tracking a target.",
                 name: "On The Hunt",
                 persistent: true,
                 skin: "quest_monsterhunt",
@@ -342,6 +367,7 @@ test("G.conditions type validation", async () => {
             },
             mshield: {
                 buff: true,
+                explanation: "Mana absorbs damage before health.",
                 name: "Mana Shield",
                 skin: "skill_mshield",
                 ui: true,
@@ -349,6 +375,7 @@ test("G.conditions type validation", async () => {
             newcomersblessing: {
                 aura: true,
                 duration: 1800000,
+                explanation: "Increases luck, gold gain, and experience earned.",
                 gold: 10,
                 luck: 10,
                 name: "Newcomers' Blessing",
@@ -368,6 +395,18 @@ test("G.conditions type validation", async () => {
                 technical: true,
                 ui: true,
             },
+            patronsgrace: {
+                buff: true,
+                duration: 120000,
+                explanation: "This server has been graced by a patron's support!",
+                gold: 20,
+                luck: 5,
+                name: "Patron's Grace",
+                skin: "patronsgrace",
+                speed: 1,
+                ui: true,
+                xp: 25,
+            },
             penalty_cd: {
                 debuff: true,
                 explanation:
@@ -379,6 +418,7 @@ test("G.conditions type validation", async () => {
                 buff: true,
                 duration: 5000,
                 evasion: 64,
+                explanation: "Decreases attack and movement speed but greatly increases evasion.",
                 frequency: -40,
                 name: "Phased Out",
                 skin: "skill_phaseout",
@@ -389,7 +429,7 @@ test("G.conditions type validation", async () => {
                 channel: true,
                 duration: 2200,
                 duration_min: 200,
-                explanation: "Pickpocket in progress",
+                explanation: "Pickpocket in progress.",
                 name: "Pickpocket",
                 skin: "skill_pickpocket",
             },
@@ -397,7 +437,9 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 defense: "pnresistance",
                 duration: 5000,
-                frequencym: 0.8,
+                explanation:
+                    "Reduces attack speed by 10%. All potions are 50% less effective. Healing effects are 75% less effective.",
+                frequencym: 0.9,
                 healm: 0.25,
                 name: "Poison",
                 potionsm: 0.5,
@@ -406,6 +448,7 @@ test("G.conditions type validation", async () => {
             poisonous: {
                 buff: true,
                 duration: 5000,
+                explanation: "Your attacks apply Poison.",
                 name: "Poisonous",
                 skin: "skill_pcoat",
                 ui: true,
@@ -413,6 +456,7 @@ test("G.conditions type validation", async () => {
             power: {
                 buff: true,
                 duration: 4000,
+                explanation: "Increases attack speed and reduces mana cost.",
                 frequency: 360,
                 mp_cost: -200,
                 name: "Power",
@@ -422,6 +466,7 @@ test("G.conditions type validation", async () => {
             purifier: {
                 buff: true,
                 duration: 8000,
+                explanation: "Boosts attack speed, damage output, and strength.",
                 frequency: 20,
                 name: "Purifier",
                 output: 20,
@@ -433,6 +478,7 @@ test("G.conditions type validation", async () => {
                 buff: true,
                 cap_reflection: 50,
                 duration: 5000,
+                explanation: "Increases your chance to reflect attacks.",
                 name: "Reflective Shield",
                 reflection: 20,
                 skin: "buff_reflection",
@@ -441,6 +487,7 @@ test("G.conditions type validation", async () => {
             rspeed: {
                 buff: true,
                 duration: 2700000,
+                explanation: "Increases movement speed and attack speed.",
                 frequency: 8,
                 name: "Rogue Swiftness",
                 skin: "buff_speed",
@@ -452,7 +499,7 @@ test("G.conditions type validation", async () => {
                 aura: true,
                 buff: true,
                 duration: 30000,
-                lifesteal: 1,
+                explanation: "Bite back with every hit.",
                 name: "Vampiric Aura",
                 skin: "sanguine",
                 ui: true,
@@ -460,7 +507,7 @@ test("G.conditions type validation", async () => {
             shocked: {
                 debuff: true,
                 duration: 1600,
-                explanation: "Imminent magical damage",
+                explanation: "Imminent magical damage.",
                 name: "Shocked",
                 skin: "essenceofthunder",
                 ui: true,
@@ -481,7 +528,7 @@ test("G.conditions type validation", async () => {
             },
             stack: {
                 debuff: true,
-                explanation: "Bonus damage for each rogue attack",
+                explanation: "Bonus damage for each rogue attack.",
                 name: "Pure Damage",
                 skin: "skill_stack",
             },
@@ -489,6 +536,7 @@ test("G.conditions type validation", async () => {
                 blocked: true,
                 debuff: true,
                 duration: 4000,
+                explanation: "Cannot move, attack, heal, or use skills.",
                 name: "Stoned",
                 skin: "condition_neutral",
             },
@@ -497,6 +545,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 defense: "phresistance",
                 duration: 3200,
+                explanation: "Cannot move, attack, heal, or use skills.",
                 name: "Stunned",
                 skin: "condition_bad",
                 ui: true,
@@ -504,6 +553,7 @@ test("G.conditions type validation", async () => {
             sugarrush: {
                 buff: true,
                 duration: 10000,
+                explanation: "Greatly increases attack speed and reduces mana cost of attacks.",
                 frequency: 240,
                 mp_cost: -200,
                 name: "Sugar Rush",
@@ -513,6 +563,7 @@ test("G.conditions type validation", async () => {
             tangled: {
                 debuff: true,
                 duration: 12000,
+                explanation: "Sets maximum speed to 24.",
                 name: "Tangled",
                 set_speed: 24,
                 skin: "condition_bad",
@@ -522,7 +573,7 @@ test("G.conditions type validation", async () => {
                 can_move: true,
                 channel: true,
                 duration: 3000,
-                explanation: "Town in progress",
+                explanation: "Town in progress.",
                 name: "Town",
                 skin: "condition_positive",
             },
@@ -530,6 +581,7 @@ test("G.conditions type validation", async () => {
                 armor: 160,
                 buff: true,
                 duration: 8000,
+                explanation: "Boosts attack speed, movement speed, armor, and resistance.",
                 frequency: 10,
                 name: "War Cry",
                 resistance: 160,
@@ -541,6 +593,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 dex: -10,
                 duration: 20000,
+                explanation: "Reduces speed, dexterity, and strength.",
                 name: "Weakness",
                 skin: "condition_bad",
                 speed: -30,
@@ -551,6 +604,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 dex: -20,
                 duration: 10800000,
+                explanation: "Reduced stats.",
                 frequency: -30,
                 mp: -300,
                 name: "Withdrawal",
@@ -563,7 +617,7 @@ test("G.conditions type validation", async () => {
             woven: {
                 debuff: true,
                 duration: 1000,
-                explanation: "Slowed down from all the spider silk sticking around.",
+                explanation: "Reduces speed by 3 per stack. Stacks up to 20 on monsters, capped at 5 for players.",
                 name: "Woven",
                 skin: "spidersilk",
                 speed: -10,
@@ -572,6 +626,7 @@ test("G.conditions type validation", async () => {
             xpower: {
                 buff: true,
                 duration: 6000,
+                explanation: "Greatly increases attack speed and lowers mana cost.",
                 frequency: 480,
                 mp_cost: -300,
                 name: "Power",

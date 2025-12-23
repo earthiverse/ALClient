@@ -233,6 +233,9 @@ export type GData = {
         monsters: {
             [T in MonsterName]?: GDropItem[]
         }
+        monsters_home_server: {
+            [T in MonsterName]?: GDropItem[]
+        }
         skins: {
             bronze: string[]
             gold: string[]
@@ -1259,8 +1262,8 @@ export type GMonster = {
     skin: string
     /** (GUI?) TODO: Confirm that this only affects the look of the monster. It will look like it's holding these weapons. */
     slots?: Partial<SlotInfo>
-    /** If set, this monster will spawn more monsters [ms between spawns, monster to spawn] */
-    spawns?: [number, MonsterName][]
+    /** If set, this monster will spawn more monsters [ms between spawns or condition to spawn, monster to spawn, how many to spawn] */
+    spawns?: [number | string, MonsterName, number?][]
     special?: boolean
     speed: number
     /** If set, this monster will not move */
@@ -1493,6 +1496,7 @@ export type AnimationName =
     | "curse_new"
     | "curse_projectile"
     | "dampened"
+    | "egg"
     | "exchange"
     | "explode_a"
     | "explode_b"
@@ -1659,6 +1663,7 @@ export type ConditionName =
     | "mshield"
     | "newcomersblessing"
     | "notverified"
+    | "patronsgrace"
     | "penalty_cd"
     | "phasedout"
     | "pickpocket"
@@ -2075,6 +2080,7 @@ export type ItemName =
     | "orbofresolve"
     | "orbofsc"
     | "orbofstr"
+    | "orboftemporal"
     | "orbofvit"
     | "ornament"
     | "ornamentstaff"
@@ -2758,6 +2764,7 @@ export type SkillName =
     | "supershot"
     | "tangle"
     | "taunt"
+    | "temporalsurge"
     | "throw"
     | "toggle_character"
     | "toggle_code"

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
+ * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
  * It is used to confirm type correctness
  */
 
@@ -42,7 +42,7 @@ test("G.animations type validation", async () => {
                 directional: true,
                 file: "/images/sprites/animations/CArrow.png",
                 frames: 3,
-                speed: 500,
+                speed: 700,
             },
             confetti: {
                 alpha: 0.4,
@@ -89,6 +89,10 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/Dampen.png",
                 frames: 6,
                 proportional: true,
+            },
+            egg: {
+                file: "/images/sprites/animations/egg_splash.png",
+                frames: 3,
             },
             exchange: {
                 file: "/images/sprites/animations/Consume2.png",
@@ -186,7 +190,7 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/gold.png",
                 frames: 1,
                 front: true,
-                speed: 160,
+                speed: 320,
             },
             gold_anim: {
                 file: "/images/sprites/animations/gold_anim.png",
@@ -359,7 +363,7 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/slash.png",
                 frames: 3,
                 front: true,
-                speed: 320,
+                speed: 420,
             },
             slash0: {
                 file: "/images/sprites/animations/Slash0.png",

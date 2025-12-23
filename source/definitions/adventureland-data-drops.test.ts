@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 817 (2025-03-24)
+ * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
  * It is used to confirm type correctness
  */
 
@@ -1050,6 +1050,12 @@ test("G.drops type validation", async () => {
                 [1, "orbofint"],
                 [1, "orbofstr"],
                 [1, "orbofdex"],
+                [1, "orboffire"],
+                [1, "orboffrost"],
+                [1, "orbofplague"],
+                [1, "orbofresolve"],
+                [1, "orba"],
+                [0.25, "orboftemporal"],
                 [0.25, "orbofsc"],
                 [1, "charmer"],
                 [0.25, "rabbitsfoot"],
@@ -1573,6 +1579,12 @@ test("G.drops type validation", async () => {
                 [0.1, "orbofint"],
                 [0.1, "orbofstr"],
                 [0.1, "orbofdex"],
+                [0.1, "orboffire"],
+                [0.1, "orboffrost"],
+                [0.1, "orbofplague"],
+                [0.1, "orbofresolve"],
+                [0.1, "orba"],
+                [0.1, "orboftemporal"],
                 [0.1, "orbofsc"],
                 [0.1, "charmer"],
                 [0.1, "rabbitsfoot"],
@@ -1893,6 +1905,7 @@ test("G.drops type validation", async () => {
                 ],
                 franky: [
                     [30, "cryptkey"],
+                    [30, "tombkey"],
                     [20, "candy0"],
                     [20, "candy0"],
                     [20, "candy0"],
@@ -1922,10 +1935,12 @@ test("G.drops type validation", async () => {
                     [0.00002, "sanguine"],
                 ],
                 gbluepro: [
+                    [1, "orboffrost"],
                     [0.04, "spikedhelmet"],
                     [0.00005, "tombkey"],
                 ],
                 ggreenpro: [
+                    [1, "orbofplague"],
                     [0.04, "spikedhelmet"],
                     [0.00005, "tombkey"],
                 ],
@@ -1949,10 +1964,12 @@ test("G.drops type validation", async () => {
                     [0.001, "gslime"],
                 ],
                 gpurplepro: [
+                    [1, "orbofresolve"],
                     [0.04, "spikedhelmet"],
                     [0.00005, "tombkey"],
                 ],
                 gredpro: [
+                    [1, "orboffire"],
                     [0.04, "spikedhelmet"],
                     [0.00005, "tombkey"],
                 ],
@@ -2020,16 +2037,16 @@ test("G.drops type validation", async () => {
                     [0.00002, "molesteeth"],
                 ],
                 mrgreen: [
-                    [100, "candy0"],
-                    [100, "candy1"],
+                    [100, "candy0", 5],
+                    [100, "candy1", 10],
                     [100, "candy1"],
                     [10, "gphelmet"],
                     [0.00015, "cxjar", 1, "bathat"],
                     [0.01, "hdagger"],
                 ],
                 mrpumpkin: [
-                    [100, "candy0"],
-                    [100, "candy1"],
+                    [100, "candy0", 5],
+                    [100, "candy1", 10],
                     [100, "candy1"],
                     [10, "phelmet"],
                     [0.0001, "cxjar", 1, "gcandle"],
@@ -2051,8 +2068,8 @@ test("G.drops type validation", async () => {
                 ],
                 odino: [
                     [0.0025, "mbones"],
-                    [0.0001, "sshield"],
-                    [0.00002, "tombkey"],
+                    [0.00016666666666666666, "sshield"],
+                    [0.0001, "tombkey"],
                 ],
                 oneeye: [
                     [0.000002, "amuletofm"],
@@ -2162,15 +2179,15 @@ test("G.drops type validation", async () => {
                     [0.000125, "sparkstaff"],
                     [0.000005, "platinumingot"],
                     [0.00004, "platinumnugget"],
-                    [0.00011111111111111112, "goldingot"],
-                    [0.001, "goldnugget"],
-                    [0.00025, "bronzeingot"],
-                    [0.0025, "bronzenugget"],
+                    [0.00010526315789473685, "goldingot"],
+                    [0.0008333333333333334, "goldnugget"],
+                    [0.00016666666666666666, "bronzeingot"],
+                    [0.0014285714285714286, "bronzenugget"],
                 ],
                 spider: [
                     [0.001, "spidersilk"],
-                    [0.000002, "offeringp"],
-                    [0.000013333333333333333, "spiderkey"],
+                    [0.0002, "offeringp"],
+                    [0.0001, "spiderkey"],
                 ],
                 spiderbl: [
                     [1, "cocoon"],
@@ -2223,10 +2240,10 @@ test("G.drops type validation", async () => {
                     [0.00025, "alloyquiver"],
                     [0.000005, "platinumingot"],
                     [0.00004, "platinumnugget"],
-                    [0.00011111111111111112, "goldingot"],
-                    [0.001, "goldnugget"],
-                    [0.00025, "bronzeingot"],
-                    [0.0025, "bronzenugget"],
+                    [0.00010526315789473685, "goldingot"],
+                    [0.0008333333333333334, "goldnugget"],
+                    [0.00016666666666666666, "bronzeingot"],
+                    [0.0014285714285714286, "bronzenugget"],
                 ],
                 tiger: [
                     [0.1, "tigerhelmet"],
@@ -2278,6 +2295,22 @@ test("G.drops type validation", async () => {
                     [0.00008, "svenom"],
                 ],
             },
+            monsters_home_server: {
+                mrgreen: [
+                    [0.01, "fallen"],
+                    [1, "candy0", 7],
+                    [1, "candy1", 14],
+                    [0.342857, "candy0", 6],
+                    [0.342857, "candy1", 12],
+                ],
+                mrpumpkin: [
+                    [0.01, "fallen"],
+                    [1, "candy0", 6],
+                    [1, "candy1", 12],
+                    [0.285714, "candy0", 4],
+                    [0.285714, "candy1", 8],
+                ],
+            },
             mysterybox: [
                 [70, "open", "armorx"],
                 [20, "scroll3"],
@@ -2303,6 +2336,7 @@ test("G.drops type validation", async () => {
                 [0.8, "mittens"],
                 [0.02, "angelwings"],
                 [0.012, "supermittens"],
+                [0.001, "orboftemporal"],
                 [3.6, "open", "gem0"],
             ],
             quiver: [
@@ -2436,6 +2470,7 @@ test("G.drops type validation", async () => {
                 [1, "open", "armorx"],
                 [1, "harbringer"],
                 [1, "t2quiver"],
+                [0.1, "orboftemporal"],
                 [0.1, "exoarm"],
                 [0.06, "fury"],
                 [0.12, "starkillers"],
