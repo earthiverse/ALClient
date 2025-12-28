@@ -68,7 +68,6 @@ export class Ranger extends Character {
       name: "3shot",
       ids: [id1, id2, id3],
     });
-    s.off("action", getProjectiles);
 
     if (options.returnProjectiles) {
       try {
