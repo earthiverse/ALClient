@@ -70,6 +70,45 @@ export class Utilities {
     }
     return spawns;
   }
+
+  /**
+   * Generates offset positions in a spiral by steps of step distance until the maxRadius is reached
+   * @param step
+   * @param maxRadius
+   */
+  public static *getSpiralOffsets(step: number, maxRadius: number): Generator<[number, number]> {
+    let x = 0;
+    let y = 0;
+    let dx = step;
+    let dy = 0;
+    let segmentLength = 1;
+    let segmentPassed = 0;
+    let directionChanges = 0;
+
+    yield [0, 0];
+
+    while (true) {
+      x += dx;
+      y += dy;
+
+      if (Math.max(Math.abs(x), Math.abs(y)) > maxRadius) break; // Over limit
+
+      yield [x, y];
+
+      segmentPassed++;
+      if (segmentPassed === segmentLength) {
+        segmentPassed = 0;
+
+        // Rotate clockwise
+        [dx, dy] = [-dy, dx];
+        directionChanges++;
+
+        if (directionChanges % 2 === 0) {
+          segmentLength++;
+        }
+      }
+    }
+  }
 }
 
 export default Utilities;
