@@ -35,6 +35,7 @@ import type {
 import Configuration from "./Configuration.js";
 import { Entity } from "./Entity.js";
 import EventBus from "./EventBus.js";
+import type Mage from "./Mage.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
 import { isConditionKey, isMapKey, isMonsterKey, isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
@@ -1087,17 +1088,35 @@ export class Character extends Observer {
       throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${arg2},${y}`);
 
     for (let i = 0; i < path.length; i++) {
+      // Check if we can take a shortcut
+      // TODO: Make configurable with option
+      const furthestIndex = path.findLastIndex((node) => node.map === this.map && this.canMoveTo(node.x, node.y));
+      if (furthestIndex !== undefined && furthestIndex > i) i = furthestIndex;
+
       const segment = path[i]!;
 
-      // TODO: Pre-emptive use of town if we're going to be town warping soon
-
-      // TODO: Walk to the next node if we can
-
       // TODO: Blink usage
-
       if (this.ctype === "mage") {
-        // await (this as Mage).blink()
+        // TODO: Change to cost instead of # of nodes & move to options
+        const lastNodeIndexOnMap = path.findLastIndex((node) => node.map === this.map);
+        if (lastNodeIndexOnMap - i >= 5) {
+          const lastNode = path[lastNodeIndexOnMap]!;
+          if (this.canUse("blink")) {
+            try {
+              // TODO: We could check for a blink to a known good position around the door
+              //       and skip the move
+              await (this as unknown as Mage).blink(lastNode.x, lastNode.y);
+              await this.move(lastNode.x, lastNode.y);
+            } catch {
+              // Suppress blink failure
+            }
+          } else {
+            // TODO: Add a listener or something that can check if we can start using blink
+          }
+        }
       }
+
+      // TODO: Pre-emptive use of town if we're going to be town warping soon
 
       if (segment.method === "move") {
         if (segment.map !== this.map) throw new Error(`Expected map ${segment.map}, currently on ${this.map}`);
