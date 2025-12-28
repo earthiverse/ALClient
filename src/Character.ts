@@ -28,7 +28,6 @@ import type {
   ServerToClient_start,
   SkillKey,
   SkillSuccessGRDataObject,
-  SlotType,
   StatType,
   StatusInfo,
   XServerInfos,
@@ -551,7 +550,7 @@ export class Character extends Observer {
     if (
       options.ignoreEquipped === undefined &&
       gSkill.slot !== undefined &&
-      !gSkill.slot.some(([slot, item]) => this.slots[slot as SlotType]?.name === item) // TODO: slot should be typed better
+      !gSkill.slot.some(([slot, item]) => this.slots[slot]?.name === item)
     )
       return false; // We don't have anything equipped that lets us use this skill
     if (gSkill.class !== undefined && gSkill.class.some((c) => c === this.ctype)) return false; // We're not the right class to use this skill
