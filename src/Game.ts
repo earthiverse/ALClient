@@ -40,6 +40,7 @@ export class Game {
     url: "https://adventure.land",
   };
 
+  private _updatingG: Promise<GData> | null = null;
   private _G?: GData;
   public get G(): GData {
     if (this._G === undefined)
@@ -189,27 +190,30 @@ export class Game {
    * Updates `G`
    */
   public async updateG(): Promise<GData> {
-    try {
-      const dataResponse = await fetch(`${this.options.url}/data.js`);
+    if (this._updatingG) return this._updatingG;
+    return (this._updatingG = (async () => {
+      try {
+        const dataResponse = await fetch(`${this.options.url}/data.js`);
 
-      let text = (await dataResponse.text()).trim();
-      if (!dataResponse.ok) {
-        throw new Error(text);
+        let text = (await dataResponse.text()).trim();
+        if (!dataResponse.ok) {
+          throw new Error(text);
+        }
+
+        // Remove the Javascript specific stuff so it's just a large JSON object
+        if (text.startsWith("var G=")) text = text.slice(6);
+        if (text.endsWith(";")) text = text.slice(0, text.length - 1);
+
+        const g = JSON.parse(text) as GData;
+        GameEventBus.emit("g_updated", this, g);
+        this._G = g;
+        return g;
+      } catch (e) {
+        const error = new Error("Failed updating G", { cause: e });
+        GameEventBus.emit("update_g_failed", this, error);
+        throw error;
       }
-
-      // Remove the Javascript specific stuff so it's just a large JSON object
-      if (text.startsWith("var G=")) text = text.slice(6);
-      if (text.endsWith(";")) text = text.slice(0, text.length - 1);
-
-      const g = JSON.parse(text) as GData;
-      GameEventBus.emit("g_updated", this, g);
-      this._G = g;
-      return g;
-    } catch (e) {
-      const error = new Error("Failed updating G", { cause: e });
-      GameEventBus.emit("update_g_failed", this, error);
-      throw error;
-    }
+    })());
   }
 
   /**
