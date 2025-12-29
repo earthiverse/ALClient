@@ -80,7 +80,6 @@ test("`preparePathfinder()` works", async () => {
   expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 1)).toBeTruthy();
 });
 
-
 test("`updateG()` works", async () => {
   const game = new Game();
 

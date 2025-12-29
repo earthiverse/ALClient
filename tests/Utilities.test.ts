@@ -55,7 +55,7 @@ test("getSpiralOffsets() returns expected values", () => {
     [1, -2],
     [2, -2],
   ]);
-  
+
   offsets = [...Utilities.getSpiralOffsets(5, 5)];
   expect(offsets).toEqual([
     [0, 0],
