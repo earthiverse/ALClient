@@ -1040,6 +1040,8 @@ export class Character extends Observer {
   public async smartMove(arg1: MonsterKey | MapKey | Entity, arg2?: number | MapKey, arg3?: number) {
     const pathfinder = this.game.pathfinder;
 
+    if (!pathfinder.isWalkable(this.map, this.x, this.y)) await this.warpToTown(); // We're stuck
+
     // TODO: Add smartMove options
 
     // TODO: Is there a way to add this typing to the pathfinder itself?
@@ -1073,9 +1075,7 @@ export class Character extends Observer {
       }
       if (bestSpawn === undefined) {
         if (typeof arg2 === "string")
-          throw new Error(
-            `Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${arg2}`,
-          );
+          throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${arg2}`);
         throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
       }
       ({ map, x, y } = bestSpawn);
