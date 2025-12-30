@@ -1074,9 +1074,9 @@ export class Character extends Observer {
       if (bestSpawn === undefined) {
         if (typeof arg2 === "string")
           throw new Error(
-            `Unable to find path from ${character.map},${character.x},${character.y} to ${arg1} on ${arg2}`,
+            `Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${arg2}`,
           );
-        throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${arg1}`);
+        throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
       }
       ({ map, x, y } = bestSpawn);
     }
@@ -1085,7 +1085,7 @@ export class Character extends Observer {
 
     path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
     if (!Array.isArray(path))
-      throw new Error(`Unable to find path from ${character.map},${character.x},${character.y} to ${map},${arg2},${y}`);
+      throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${map},${arg2},${y}`);
 
     for (let i = 0; i < path.length; i++) {
       // Check if we can take a shortcut
