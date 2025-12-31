@@ -635,7 +635,7 @@ export class Character extends Observer {
    * @returns
    */
   public countItems(item: Partial<ItemInfo>): number {
-    return this.locateItems(item).reduce((count, index) => count + ((this.items[index] as ItemInfo).q ?? 1), 0);
+    return this.locateItems(item).reduce((count, index) => count + ((this._items![index] as ItemInfo).q ?? 1), 0);
   }
 
   /**
@@ -661,8 +661,8 @@ export class Character extends Observer {
    * @returns
    */
   public locateItem(item: Partial<ItemInfo>): number | undefined {
-    for (let index = 0; index < this.items.length; index++) {
-      const i = this.items[index];
+    for (let index = 0; index < this._items!.length; index++) {
+      const i = this._items![index];
       if (!i) continue;
 
       let match = true;
@@ -687,8 +687,8 @@ export class Character extends Observer {
   public locateItems(item: Partial<ItemInfo>): number[] {
     const items: number[] = [];
 
-    for (let index = 0; index < this.items.length; index++) {
-      const i = this.items[index];
+    for (let index = 0; index < this._items!.length; index++) {
+      const i = this._items![index];
       if (!i) continue;
 
       let match = true;
@@ -882,9 +882,9 @@ export class Character extends Observer {
     } else {
       for (let i = 0; i < itemPositions.length; i++) {
         const pos = itemPositions[i] as number;
-        if (pos < 0 || pos >= this.items.length) throw new Error(`Item position ${pos} is out of bounds`);
+        if (pos < 0 || pos >= this._items!.length) throw new Error(`Item position ${pos} is out of bounds`);
 
-        const item = this.items[pos];
+        const item = this._items![pos];
         if (!item) throw new Error(`No item at position ${pos}`);
         if (item.name !== gCraft.items[i]?.[1])
           throw new Error(`Item at position ${pos} is not ${gCraft.items[i]?.[1]} (${item.name})`);
@@ -968,10 +968,10 @@ export class Character extends Observer {
     if (Configuration.CHECK_COOLDOWN_BEFORE_EMIT && this.q.exchange)
       throw new Error("An exchange is already in progress");
 
-    if (itemPosition === undefined || itemPosition < 0 || itemPosition >= this.items.length)
+    if (itemPosition === undefined || itemPosition < 0 || itemPosition >= this._items!.length)
       throw new Error(`Item position ${itemPosition} is out of bounds`);
 
-    const item = this.items[itemPosition];
+    const item = this._items![itemPosition];
     if (!item) throw new Error(`No item at position ${itemPosition}`);
 
     const gItem = this.game.G.items[item.name];
