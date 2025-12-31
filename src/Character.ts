@@ -1433,7 +1433,7 @@ export class Character extends Observer {
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "town")) return;
 
-        if (isSuccessGameResponse(data)) {
+        if (isSuccessGameResponse(data) || data.response === "data") {
           resolve();
         } else {
           reject(new Error(data.response));
