@@ -1,4 +1,4 @@
-import type { ConditionKey, GData, MapKey, MonsterKey } from "typed-adventureland";
+import type { ConditionKey, GData, ItemKey, MapKey, MonsterKey } from "typed-adventureland";
 
 export type SuccessGameResponse<Place extends string> = {
   response: string;
@@ -33,6 +33,10 @@ export function isFailedGameResponse(data: unknown): data is FailedGameResponse<
 
 export function isConditionKey(key: string, g: GData): key is ConditionKey {
   return g.conditions[key as ConditionKey] !== undefined;
+}
+
+export function isItemKey(key: string, g: GData): key is ItemKey {
+  return g.items[key as ItemKey] !== undefined;
 }
 
 export function isMapKey(key: string, g: GData): key is MapKey {

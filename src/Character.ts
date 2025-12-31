@@ -579,6 +579,52 @@ export class Character extends Observer {
   }
 
   /**
+   * Consumes (uses) an item
+   *
+   * @param num Position of the item in inventory
+   * @returns
+   */
+  public async consumeItem(num: number): Promise<void> {
+    const s = this.socket;
+
+    const item = this._items![num];
+    if (!item) throw new Error(`No item at position ${num}`);
+
+    const gItem = this.game.G.items[item.name];
+
+    if (gItem.gives !== undefined) this.checkCooldown("use_hp");
+
+    const usedItem = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "equip")) return;
+
+        if (isSuccessGameResponse(data)) {
+          if (data.num !== num) return; // Different item
+          resolve();
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("equip", { consume: true, num });
+    return usedItem;
+  }
+
+  /**
    * Returns a count of how many of the given item you have in your inventory.
    * For stacks of items, it uses the `.q`.
    *

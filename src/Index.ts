@@ -14,5 +14,6 @@ export * from "./Player.js";
 export * from "./Priest.js";
 export * from "./Ranger.js";
 export * from "./Rogue.js";
+export * from "./TypeGuards.js";
 export { default as Utilities } from "./Utilities.js";
 export * from "./Warrior.js";
