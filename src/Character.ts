@@ -666,7 +666,7 @@ export class Character extends Observer {
       if (!i) continue;
 
       let match = true;
-      for (const prop in i) {
+      for (const prop in item) {
         if (item[prop as keyof ItemInfo] !== i[prop as keyof ItemInfo]) {
           match = false;
           break;
@@ -692,7 +692,7 @@ export class Character extends Observer {
       if (!i) continue;
 
       let match = true;
-      for (const prop in i) {
+      for (const prop in item) {
         if (item[prop as keyof ItemInfo] !== i[prop as keyof ItemInfo]) {
           match = false;
           break;
