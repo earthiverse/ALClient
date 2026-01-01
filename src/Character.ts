@@ -507,12 +507,84 @@ export class Character extends Observer {
     if (this.isOnCooldown(skill)) throw new Error(`${skill} is on cooldown`);
   }
 
+  /**
+   * @param item Item to check if we can buy
+   * @param options
+   * @returns whether we can buy the given item from where we are standing
+   */
+  public canBuy(
+    item: ItemKey,
+    options: {
+      ignoreLocation?: true;
+      quantity?: number;
+    } = {},
+  ): boolean {
+    if (options.quantity === undefined) options.quantity = 1;
+    if (options.quantity <= 0) throw new Error("Quantity must be >= 1");
+    if (
+      options.ignoreLocation !== true &&
+      this._items!.some((i) => i?.name === "computer" || i?.name === "supercomputer")
+    )
+      options.ignoreLocation = true; // We have a computer, we can ignore the location
+
+    const gItem = this.game.G.items[item];
+    if (this._esize! <= 0) {
+      if (gItem.s === undefined) return false; // No space, can't stack
+      if (this._items?.some((i) => i?.name === item && i.q! <= gItem.s! - options.quantity!) === true) return true; // We can stack it
+      return false;
+    }
+
+    if (this.gold < gItem.g * (gItem.markup ?? 1) * options.quantity) return false; // We can't afford it
+
+    // Check if we are near the NPC that sells this item
+    for (const map of Object.keys(this.game.G.maps) as MapKey[]) {
+      if (!options.ignoreLocation && map !== this.map) continue; // Not close
+      const gMap = this.game.G.maps[map];
+      if (gMap.ignore === true) continue; // Map is not accessible
+      for (const npc of gMap.npcs) {
+        const gNpc = this.game.G.npcs[npc.id];
+        if (!Array.isArray(gNpc.items)) continue; // NPC doesn't sell items
+        if (!gNpc.items.some((i) => i === item)) continue; // NPC doesn't sell the item we're looking for
+        // TODO: Handle NPCs with multiple positions
+        if (
+          !options.ignoreLocation &&
+          this.getDistanceTo({ map, in: this.in, x: npc.position![0], y: npc.position![1] }) > 400
+        )
+          continue; // Too far
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public canMove(): boolean {
     if (this.rip) return false;
     if (this.isBlocked()) return false;
     if (this.s.sleeping) return false;
 
     return true;
+  }
+
+  /**
+   * @returns wether we can sell items from where we are standing
+   */
+  public canSell(): boolean {
+    if (this._map?.startsWith("bank") === true) return false; // Can't sell in the bank
+    if (this._items!.some((i) => i?.name === "computer" || i?.name === "supercomputer")) return true; // We can sell almost anywhere with a computer
+
+    // Check if we're near an NPC merchant
+    for (const npc of this.game.G.maps[this._map!].npcs) {
+      const gNpc = this.game.G.npcs[npc.id];
+      if (!gNpc.items) continue; // This NPC isn't a merchant
+      // TODO: Handle NPCs with multiple positions
+      if (this.getDistanceTo({ map: this._map!, in: this._in!, x: npc.position![0], y: npc.position![1] }) > 400)
+        continue; // Too far away
+
+      return true;
+    }
+
+    return false;
   }
 
   public canUse(
