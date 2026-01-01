@@ -4,6 +4,7 @@ import type {
   CharacterEntityQInfos,
   CharacterEntitySlotsInfos,
   ClassKey,
+  ClientToServer_upgrade,
   CooldownGRDataObject,
   DestroyGRDataObject,
   EntityChannelInfos,
@@ -38,7 +39,14 @@ import EventBus from "./EventBus.js";
 import type Mage from "./Mage.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
-import { isConditionKey, isMapKey, isMonsterKey, isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
+import {
+  isConditionKey,
+  isFailedGameResponse,
+  isMapKey,
+  isMonsterKey,
+  isRelevantGameResponse,
+  isSuccessGameResponse,
+} from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
 
 export interface CharacterEventMap {
@@ -355,7 +363,6 @@ export class Character extends Observer {
       if ((data as NotReadyGRDataObject).response === "not_ready") {
         // "not_ready" is used for cooldown on regen and potions
         const ms = (data as NotReadyGRDataObject).ms;
-        if (ms === undefined) return; // TODO: https://github.com/kaansoral/adventureland/pull/154 will guarantee this is always defined
         const futureMs = Date.now() + ms;
         this.setNextSkill("use_hp", futureMs, true);
         this.setNextSkill("use_mp", futureMs, true);
@@ -1034,6 +1041,7 @@ export class Character extends Observer {
     return promise;
   }
 
+  // TODO: Add option to resolve on start or finish
   public async exchange(itemPosition: number): Promise<string> {
     const s = this.socket;
 
@@ -1487,6 +1495,108 @@ export class Character extends Observer {
 
     s.emit("transport", { s: spawn, to: map });
     return promise;
+  }
+
+  public async upgrade(
+    item_num: number,
+    scroll_num?: number,
+    offering_num?: number,
+    options: {
+      resolveOn: "start" | "finish";
+    } = { resolveOn: "finish" },
+  ): Promise<unknown> {
+    if (this.q.upgrade) throw new Error("An upgrade is already in progress");
+
+    const s = this.socket;
+
+    if (scroll_num === undefined && offering_num === undefined)
+      throw new Error("At least a scroll or an offering must be provided");
+
+    const item = this._items![item_num];
+    if (!item) throw new Error(`No item in position ${item_num}`);
+    const gItem = this.game.G.items[item.name];
+    if (gItem.upgrade === undefined) throw new Error(`${item.name} is not upgradable`);
+
+    if (scroll_num !== undefined && !this._items![scroll_num]) throw new Error(`No scroll in position ${scroll_num}`);
+    if (offering_num !== undefined && !this._items![offering_num])
+      throw new Error(`No offering in position ${offering_num}`);
+
+    const upgradeStarted = new Promise<unknown>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+        s.off("player", playerHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "upgrade")) return;
+        if (isFailedGameResponse(data)) {
+          reject(new Error(data.response));
+          cleanup();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.q.upgrade) {
+          cleanup();
+          resolve(data.q);
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+      s.on("player", playerHandler);
+    });
+
+    s.emit("upgrade", {
+      clevel: item.level ?? 0,
+      item_num,
+      scroll_num,
+      offering_num,
+    } as ClientToServer_upgrade);
+
+    if (options.resolveOn === "start") return upgradeStarted;
+    await upgradeStarted;
+
+    const upgradeFinished = new Promise<unknown>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.hitchhikers === undefined) return;
+        for (const [hitchHikerEvent, hitchHikerData] of data.hitchhikers) {
+          if (hitchHikerEvent !== "game_response") continue;
+          if (typeof hitchHikerData !== "object") continue;
+          // TODO: Improve typing of hitchhiker data
+          if (
+            ["upgrade_offering_success", "upgrade_success", "upgrade_success_stat"].includes(
+              (hitchHikerData as { response: string }).response,
+            )
+          ) {
+            cleanup();
+            resolve(hitchHikerData);
+          } else if ((hitchHikerData as { response: string }).response == "upgrade_fail") {
+            cleanup();
+            resolve(hitchHikerData);
+          }
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+    });
+
+    return upgradeFinished;
   }
 
   public async warpToTown(
