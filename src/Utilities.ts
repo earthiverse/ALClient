@@ -1,6 +1,7 @@
 import type {
   GData,
   IPosition,
+  ItemInfo,
   MapKey,
   MonsterKey,
   ServerIdentifier,
@@ -69,6 +70,13 @@ export class Utilities {
       }
     }
     return spawns;
+  }
+
+  public static getItemGrade(item: ItemInfo, g: GData): number | undefined {
+    if (item.level === undefined) return; // No level
+    const gInfo = g.items[item.name];
+    if (!gInfo.grades) return undefined; // No grades
+    return gInfo.grades.findLastIndex(level => item.level! >= level) + 1;
   }
 
   /**
