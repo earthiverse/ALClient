@@ -57,6 +57,7 @@ export interface CharacterEventMap {
   chest_dropped: [Character, ServerToClient_drop];
   chest_opened: [Character, ServerToClient_chest_opened];
   conditions_set: [Character, StatusInfo];
+  items_updated: [character: Character, items: Character["items"]]
   next_skill_set: [Character, SkillKey, number];
   party_request_received: [Character, string];
   progress_set: [Character, CharacterEntityQInfos];
@@ -481,7 +482,10 @@ export class Character extends Observer {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.luckm !== undefined) this._luckm = data.luckm;
     if (data.int !== undefined) this._int = data.int;
-    if (data.items !== undefined) this._items = data.items;
+    if (data.items !== undefined) {
+      this._items = data.items;
+      CharacterEventBus.emit("items_updated", this, data.items);
+    }
     if (data.level !== undefined) this._level = data.level;
     if (data.lifesteal !== undefined) this._lifesteal = data.lifesteal;
     if (data.m !== undefined) this._m = data.m;
