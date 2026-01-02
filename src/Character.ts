@@ -1,6 +1,7 @@
 import type EventEmitter from "node:events";
 import type {
   BuySuccessGRDataObject,
+  CharacterBankInfos,
   CharacterEntityQInfos,
   CharacterEntitySlotsInfos,
   ClassKey,
@@ -50,6 +51,7 @@ import {
 import Utilities from "./Utilities.js";
 
 export interface CharacterEventMap {
+  bank_updated: [character: Character, bank: CharacterBankInfos];
   character_created: [character: Character];
   character_started: [character: Character, serverInfo: XServerInfos];
   chest_dropped: [Character, ServerToClient_drop];
@@ -87,6 +89,12 @@ export class Character extends Observer {
   public get attack(): number {
     if (this._attack === undefined) throw new Error("No player data");
     return this._attack;
+  }
+
+  protected _bank?: CharacterBankInfos;
+  public get bank(): CharacterBankInfos {
+    if (this._bank === undefined) throw new Error("No player data");
+    return this._bank;
   }
 
   protected _c?: EntityChannelInfos;
@@ -500,6 +508,10 @@ export class Character extends Observer {
     if (data.slots !== undefined) this._slots = data.slots;
     if (data.str !== undefined) this._str = data.str;
     if (data.target !== undefined) this._target = data.target;
+    if (data.user !== undefined) {
+      this._bank = data.user;
+      CharacterEventBus.emit("bank_updated", this, data.user);
+    }
     if (data.vit !== undefined) this._vit = data.vit;
     if (data.xp !== undefined) this._xp = data.xp;
   }
