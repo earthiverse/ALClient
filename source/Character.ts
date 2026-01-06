@@ -5614,16 +5614,23 @@ export class Character extends Observer implements CharacterData {
      * @param offeringPos The position of the offering to use to upgrade the item in your inventory
      * @returns
      */
-    public async upgrade(itemPos: number, scrollPos: number, offeringPos?: number): Promise<boolean> {
+    public async upgrade(itemPos: number, scrollPos?: number, offeringPos?: number): Promise<boolean> {
         if (!this.ready) throw new Error("We aren't ready yet [upgrade].")
         if (this.G.maps[this.map].mount) throw new Error("We can't upgrade things in the bank.")
         if (this.q.upgrade) throw new Error("We are already upgrading")
 
         const itemInfo = this.items[itemPos]
-        const scrollInfo = this.items[scrollPos]
         if (!itemInfo) throw new Error(`There is no item in inventory slot ${itemPos}.`)
         if (this.G.items[itemInfo.name].upgrade == undefined) throw new Error("This item is not upgradable.")
-        if (!scrollInfo) throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
+
+        if (scrollPos === undefined && offeringPos === undefined)
+            throw new Error("You need at least a scroll or an offering to upgrade")
+
+        if (scrollPos !== undefined) {
+            const scrollInfo = this.items[scrollPos]
+            if (!scrollInfo) throw new Error(`There is no scroll in inventory slot ${scrollPos}.`)
+        }
+
         if (offeringPos !== undefined) {
             const offeringInfo = this.items[offeringPos]
             if (!offeringInfo) throw new Error(`There is no item in inventory slot ${offeringPos} (offering).`)
