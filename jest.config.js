@@ -1,9 +1,4 @@
 export default {
-    globals: {
-        "ts-jest": {
-            useESM: true,
-        },
-    },
     moduleDirectories: ["node_modules", "source"],
     moduleNameMapper: {
         "^(\\.{1,2}/.*)\\.js$": "$1",
@@ -13,6 +8,6 @@ export default {
     testEnvironment: "node",
     testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
     transform: {
-        "^.+\\.(ts|tsx)$": "ts-jest",
+        "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
     },
 }
