@@ -562,6 +562,7 @@ export type NoTargetGRDataObject = {
 export type SeashellGRDataObject = { response: "seashell_success"; suffix: string | "" }
 export type SkillStatusGRDataObject = { response: "skill_fail" | "skill_success"; name: SkillName }
 export type TargetLockGRDataObject = { response: "target_lock"; monster: MonsterName }
+export type TemporalSurgeGRDataObject = { response: "temporalsurge"; count: number; times: number[] }
 export type TooFarGRDataObject = { response: "too_far"; place: SkillName; id: string; dist: number }
 export type TownGRDataObject =
     | { success: false; in_progress: true; response: "data"; place: "town" }
@@ -626,6 +627,7 @@ export type GameResponseDataObject =
     | TooFarGRDataObject
     | UnfriendFailedGRDataObject
     | GoldReceivedGRDataObject
+    | TemporalSurgeGRDataObject
     | TownGRDataObject
     | TransportGRDataObject
     | EquipGRDataObject
@@ -697,6 +699,8 @@ export type GameResponseDataString =
     | "skill_too_far"
     /** When you try to list an item for sale/purchase in a slot that already has something listed */
     | "slot_occupied"
+    /** When you temporal surge, but hit no targets */
+    | "temporalsurge_none"
     /** When you try to sell an item to another merchant, but there's no space on that merchant */
     | "trade_bspace"
     | "trade_get_closer"
@@ -1354,6 +1358,7 @@ export type ClientToServerSkillData =
               | "scare"
               | "selfheal"
               | "stomp"
+              | "temporalsurge"
               | "warcry"
           >
       }

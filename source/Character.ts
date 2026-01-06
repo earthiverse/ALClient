@@ -5380,6 +5380,29 @@ export class Character extends Observer implements CharacterData {
         return itemReceived
     }
 
+    /**
+     * @returns array of new respawn times for affected monsters
+     */
+    public async temporalSurge(): Promise<number[]> {
+        if (!this.ready) throw new Error("We aren't ready yet [temporalSurge].")
+
+        let respawnTimes: number[] = []
+        const getRespawnTimes = (data: GameResponseData) => {
+            if (typeof data === "object" && data.response === "temporalsurge") respawnTimes = data.times
+        }
+        this.socket.on("game_response", getRespawnTimes)
+
+        try {
+            const response = this.getResponsePromise("temporalsurge")
+            this.socket.emit("skill", { name: "temporalsurge" })
+            await response
+        } finally {
+            this.socket.off("game_response", getRespawnTimes)
+        }
+
+        return respawnTimes
+    }
+
     public async throwSnowball(target: string, snowball = this.locateItem("snowball")): Promise<string> {
         if (!this.ready) throw new Error("We aren't ready yet [throwSnowball].")
         if (this.G.skills.snowball.mp > this.mp) throw new Error("Not enough MP to throw a snowball.")
