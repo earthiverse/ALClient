@@ -10,6 +10,9 @@ const RespawnSchema = new Schema({
     serverIdentifier: String,
     serverRegion: String,
     type: String,
+    map: String,
+    x: Number,
+    y: Number,
 })
 
 RespawnSchema.index({ type: 1 })
