@@ -492,7 +492,12 @@ export class Observer {
                                 serverIdentifier: this.serverData.name,
                                 serverRegion: this.serverData.region,
                             },
-                            { estimatedRespawn: Date.now() + monsterRespawn },
+                            {
+                                estimatedRespawn: Date.now() + monsterRespawn,
+                                map: entity.map,
+                                x: entity.x,
+                                y: entity.y,
+                            },
                             { upsert: true },
                         )
                             .lean()

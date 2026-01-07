@@ -1,12 +1,15 @@
 import type { Document, Model } from "mongoose"
 import type { ServerRegion, ServerIdentifier } from "../../definitions/adventureland.js"
-import type { MonsterName } from "../../definitions/adventureland-data.js"
+import type { MapName, MonsterName } from "../../definitions/adventureland-data.js"
 
 export interface IRespawn {
     estimatedRespawn: number
     serverRegion: ServerRegion
     serverIdentifier: ServerIdentifier
     type: MonsterName
+    map?: MapName
+    x?: number
+    y?: number
 }
 
 export interface IRespawnDocument extends IRespawn, Document {}
