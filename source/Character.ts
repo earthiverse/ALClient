@@ -451,8 +451,10 @@ export class Character extends Observer implements CharacterData {
         super.parseEntities(data)
     }
 
-    protected parseEval(data: EvalData): void {
-        if (typeof data === "string") return // UI
+    protected async parseEval(data: EvalData): Promise<boolean> {
+        if (await super.parseEval(data)) return true // Handled in Observer
+
+        if (typeof data === "string") return true // UI
 
         // Skill timeouts (like attack) are sent via eval
         const skillReg1 = /^skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
@@ -468,7 +470,7 @@ export class Character extends Observer implements CharacterData {
                 const next = new Date(Date.now() + Math.ceil(cooldown))
                 this.setNextSkill(skill, next)
             }
-            return
+            return true
         }
 
         // Potion timeouts are sent via eval
@@ -478,7 +480,7 @@ export class Character extends Observer implements CharacterData {
             const next = new Date(Date.now() + Math.ceil(cooldown))
             this.setNextSkill("regen_hp", next)
             this.setNextSkill("regen_mp", next)
-            return
+            return true
         }
 
         // Skills that move your character (e.g.: dash) are sent via eval
@@ -488,16 +490,17 @@ export class Character extends Observer implements CharacterData {
             const y = Number.parseFloat(uiMoveReg[2])
             this.x = x
             this.y = y
-            return
+            return true
         }
 
         // TODO: Handle pvp_timeout
         const pvpTimeoutReg = /^pvp_timeout\s*\(\s*3600\s*,?\s*\d*\s*\)/.exec(data.code)
         if (pvpTimeoutReg) {
-            return // do nothing because pvp_timeout is handled serverside
+            return true // do nothing because pvp_timeout is handled serverside
         }
 
         console.error(`Unhandled 'eval': ${JSON.stringify(data)}`)
+        return false
     }
 
     protected parseGameResponse(data: GameResponseData): void {
@@ -661,10 +664,6 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("drop", (data: ChestData) => {
             this.chests.set(data.id, data)
-        })
-
-        this.socket.on("eval", (data: EvalData) => {
-            this.parseEval(data)
         })
 
         this.socket.on("game_error", (data: string | { message: string }) => {
