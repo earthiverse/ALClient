@@ -428,7 +428,7 @@ export type MonsterData = {
     xp?: number
 }
 
-export type EvalData = { code: string }
+export type EvalData = string | { code: string }
 
 export type LoginData = LoginDataItem[]
 export type LoginDataItem = { code: string; type: string } | { message: string; type: string } | { html: string }
@@ -742,6 +742,7 @@ export type HitData = {
     id?: string
     /** Did the entity die from this hit? */
     kill?: boolean
+    goldsteal?: number
     lifesteal?: number
     manasteal?: number
     miss?: boolean

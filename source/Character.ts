@@ -452,6 +452,8 @@ export class Character extends Observer implements CharacterData {
     }
 
     protected parseEval(data: EvalData): void {
+        if (typeof data === "string") return // UI
+
         // Skill timeouts (like attack) are sent via eval
         const skillReg1 = /^skill_timeout\s*\(\s*['"](.+?)['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.exec(data.code)
         if (skillReg1) {
@@ -4265,6 +4267,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [regenHP].")
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
+                if (typeof data === "string") return
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", regenCheck)
                     this.socket.off("game_response", failCheck)
@@ -4301,6 +4304,7 @@ export class Character extends Observer implements CharacterData {
         if (!this.ready) throw new Error("We aren't ready yet [regenMP].")
         const regenReceived = new Promise<void>((resolve, reject) => {
             const regenCheck = (data: EvalData) => {
+                if (typeof data === "string") return
                 if (data.code && data.code.includes("pot_timeout")) {
                     this.socket.off("eval", regenCheck)
                     this.socket.off("game_response", failCheck)
@@ -5418,6 +5422,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             const cooldownCheck = (data: EvalData) => {
+                if (typeof data === "string") return
                 if (/skill_timeout\s*\(\s*['"]snowball['"]\s*,?\s*(\d+\.?\d+?)?\s*\)/.test(data.code)) {
                     this.socket.off("action", attackCheck)
                     this.socket.off("eval", cooldownCheck)
@@ -5728,6 +5733,7 @@ export class Character extends Observer implements CharacterData {
             }
 
             const healCheck = (data: EvalData) => {
+                if (typeof data === "string") return
                 if (data.code && data.code.includes("pot_timeout")) {
                     cleanup()
                     resolve()
