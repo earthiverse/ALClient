@@ -200,9 +200,12 @@ export class Observer {
         this.socket.on("game_event", (data: GameEventData) => {
             if (this.G.monsters[data.name]) {
                 // The event is a monster
+
+                const now = Date.now()
+
                 const monsterData = {
                     hp: this.G.monsters[data.name].hp,
-                    lastSeen: Date.now(),
+                    lastSeen: now,
                     level: 1,
                     map: data.map,
                     s: this.G.monsters[data.name].s,
@@ -219,7 +222,18 @@ export class Observer {
                             serverRegion: this.serverData.region,
                             type: data.name,
                         },
-                        monsterData,
+                        {
+                            $set: {
+                                hp: monsterData.hp,
+                                level: monsterData.level,
+                                map: monsterData.map,
+                                s: monsterData.s,
+                                x: monsterData.x,
+                                y: monsterData.y,
+                            },
+                            $min: { firstSeen: now },
+                            $max: { lastSeen: now },
+                        },
                         { upsert: true },
                     )
                         .lean()
@@ -328,19 +342,22 @@ export class Observer {
                 if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
                     const updateKey = `${this.serverData.name}${this.serverData.region}${mN}`
                     const nextUpdate = Database.nextUpdate.get(updateKey)
-                    if (nextUpdate && Date.now() < nextUpdate) continue // We've updated this monster recently
+                    if (nextUpdate && now < nextUpdate) continue // We've updated this monster recently
                     const filter = {
                         serverIdentifier: this.serverData.name,
                         serverRegion: this.serverData.region,
                         type: mN,
                     }
                     const update = {
-                        hp: goodData.hp,
-                        lastSeen: now,
-                        map: goodData.map,
-                        target: goodData.target,
-                        x: goodData.x,
-                        y: goodData.y,
+                        $set: {
+                            hp: goodData.hp,
+                            map: goodData.map,
+                            target: goodData.target,
+                            x: goodData.x,
+                            y: goodData.y,
+                        },
+                        $max: { lastSeen: now },
+                        $min: { firstSeen: now },
                     }
                     databaseEntityUpdates.push({ updateOne: { filter: filter, update: update, upsert: true } })
                     databaseRespawnUpdates.push({ deleteOne: { filter: filter } })
