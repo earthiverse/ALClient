@@ -76,7 +76,7 @@ export class Utilities {
     if (item.level === undefined) return; // No level
     const gInfo = g.items[item.name];
     if (!gInfo.grades) return undefined; // No grades
-    return gInfo.grades.findLastIndex(level => item.level! >= level) + 1;
+    return gInfo.grades.findLastIndex((level) => item.level! >= level) + 1;
   }
 
   /**

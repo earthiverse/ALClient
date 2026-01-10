@@ -1,4 +1,11 @@
-import type { ConditionKey, GData, ItemKey, MapKey, MonsterKey } from "typed-adventureland";
+import type {
+  ConditionKey,
+  GameResponseDataUpgradeChance,
+  GData,
+  ItemKey,
+  MapKey,
+  MonsterKey,
+} from "typed-adventureland";
 
 export type SuccessGameResponse<Place extends string> = {
   response: string;
@@ -18,6 +25,17 @@ export function isRelevantGameResponse<Place extends string>(
 ): data is SuccessGameResponse<Place> | FailedGameResponse<Place> {
   if (typeof data !== "object" || data === null || data === undefined) return false;
   if ((data as SuccessGameResponse<Place>).place !== place) return false;
+  return true;
+}
+
+export function isUpgradeChanceResponse(data: unknown): data is GameResponseDataUpgradeChance {
+  if (typeof data !== "object" || data === null || data === undefined) return false;
+  if ((data as SuccessGameResponse<"upgrade">).place !== "upgrade") return false;
+  if (
+    (data as SuccessGameResponse<"upgrade">).response !== "compound_chance" &&
+    (data as SuccessGameResponse<"upgrade">).response !== "upgrade_chance"
+  )
+    return false;
   return true;
 }
 

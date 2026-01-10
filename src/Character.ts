@@ -10,6 +10,7 @@ import type {
   DestroyGRDataObject,
   EntityChannelInfos,
   ExchangeInProgressGRDataObject,
+  GameResponseDataUpgradeChance,
   GoldReceivedGRDataObject,
   ItemInfo,
   ItemKey,
@@ -47,6 +48,7 @@ import {
   isMonsterKey,
   isRelevantGameResponse,
   isSuccessGameResponse,
+  isUpgradeChanceResponse,
 } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
 
@@ -57,7 +59,7 @@ export interface CharacterEventMap {
   chest_dropped: [Character, ServerToClient_drop];
   chest_opened: [Character, ServerToClient_chest_opened];
   conditions_set: [Character, StatusInfo];
-  items_updated: [character: Character, items: Character["items"]]
+  items_updated: [character: Character, items: Character["items"]];
   next_skill_set: [Character, SkillKey, number];
   party_request_received: [Character, string];
   progress_set: [Character, CharacterEntityQInfos];
@@ -354,6 +356,11 @@ export class Character extends Observer {
     });
 
     s.on("eval", (data) => {
+      if (!data.code) {
+        console.error("DEBUG");
+        console.error(data);
+        return;
+      }
       if (data.code.startsWith("pot_timeout")) {
         // potion cooldown still uses eval
         const match = data.code.match(/[\d.]+/);
@@ -1513,13 +1520,25 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Calculate
+   */
+  public async upgrade(
+    item_num: number,
+    scroll_num: number | undefined,
+    offering_num: number | undefined,
+    options: {
+      calculate: true;
+    },
+  ): Promise<GameResponseDataUpgradeChance>;
   public async upgrade(
     item_num: number,
     scroll_num?: number,
     offering_num?: number,
     options: {
-      resolveOn: "start" | "finish";
-    } = { resolveOn: "finish" },
+      calculate?: true;
+      resolveOnStart?: true;
+    } = {},
   ): Promise<unknown> {
     if (this.q.upgrade) throw new Error("An upgrade is already in progress");
 
@@ -1546,7 +1565,10 @@ export class Character extends Observer {
 
       const gameResponseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "upgrade")) return;
-        if (isFailedGameResponse(data)) {
+        if (options.calculate && isUpgradeChanceResponse(data)) {
+          if (item.name !== data.item.name || item.level !== data.item.level) return; // Different item
+          cleanup();
+        } else if (isFailedGameResponse(data)) {
           reject(new Error(data.response));
           cleanup();
         }
@@ -1573,9 +1595,10 @@ export class Character extends Observer {
       item_num,
       scroll_num,
       offering_num,
+      calculate: options.calculate,
     } as ClientToServer_upgrade);
 
-    if (options.resolveOn === "start") return upgradeStarted;
+    if (options.calculate || options.resolveOnStart) return upgradeStarted;
     await upgradeStarted;
 
     const upgradeFinished = new Promise<unknown>((resolve, reject) => {
