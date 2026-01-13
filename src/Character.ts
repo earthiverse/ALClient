@@ -1521,7 +1521,7 @@ export class Character extends Observer {
   }
 
   /**
-   * Calculate
+   * Calculates the next upgrade chance
    */
   public async upgrade(
     item_num: number,
@@ -1531,6 +1531,17 @@ export class Character extends Observer {
       calculate: true;
     },
   ): Promise<GameResponseDataUpgradeChance>;
+  /**
+   * Upgrades an item
+   */
+  public async upgrade(
+    item_num: number,
+    scroll_num?: number,
+    offering_num?: number,
+    options?: {
+      resolveOnStart?: true;
+    },
+  ): Promise<unknown>;
   public async upgrade(
     item_num: number,
     scroll_num?: number,
