@@ -1,12 +1,16 @@
 import type {
+  DamageType,
   GData,
   IPosition,
   ItemInfo,
   MapKey,
+  MonsterEntity,
   MonsterKey,
   ServerIdentifier,
   ServerKey,
   ServerRegion,
+  SkillKey,
+  StatType,
 } from "typed-adventureland";
 
 export class Utilities {
@@ -32,6 +36,49 @@ export class Utilities {
     if (defense > 700 && defense <= 800) return 0.403 - (defense - 700) * 0.0005;
     if (defense > 800 && defense <= 1557.5) return 0.353 - (defense - 800) * 0.0004;
     return 0.05;
+  }
+
+  // TODO: This is mostly garbage, finish it from ALClient original version
+  public static damageRange(
+    attacker: MonsterEntity | Character,
+    target: MonsterEntity | Character,
+    g: GData,
+    options?: {
+      skill: SkillKey
+    } = {
+      skill: "attack"
+    }
+  ): { min: number; max: number; avg: number } {
+    const gSkill = g.skills[options.skill];
+
+    if(target.immune === true) {
+
+    let defenseType: StatType;
+    let piercingType: StatType;
+    switch (damageType ?? attacker.damage_type) {
+      case "heal":
+      case "magical":
+        defenseType = "resistance";
+        piercingType = "rpiercing";
+        break;
+      case "physical":
+        defenseType = "armor";
+        piercingType = "apiercing";
+        break;
+      case undefined:
+      default:
+        throw new Error(`Unknown damage type ${attacker.damage_type}`);
+    }
+
+    let damageMultiplier;
+    if (target["1hp"] === true) {
+      // TODO: Consider crit
+      return { min: 1, max: 1, avg: 1 };
+    }
+
+    let damageMultiplier = this.damageMultiplier((target[defenseType] ?? 0) - (attacker[piercingType] ?? 0));
+
+    let min = 0.9;
   }
 
   public static parseServerKey(serverKey: ServerKey): {

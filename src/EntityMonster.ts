@@ -8,6 +8,10 @@ export class EntityMonster extends Entity {
     return this._type;
   }
 
+  public get "1hp"(): boolean {
+    return Boolean(this.game.G.monsters[this._type]["1hp"]);
+  }
+
   protected _attack: number;
   public get attack(): number {
     return this._attack;
@@ -38,6 +42,10 @@ export class EntityMonster extends Entity {
 
   public get armor(): number {
     return this.game.G.monsters[this._type].armor ?? 0;
+  }
+
+  public get immune(): boolean {
+    return Boolean(this.game.G.monsters[this._type].immune);
   }
 
   public get rpiercing(): number {
