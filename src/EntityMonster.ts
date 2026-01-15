@@ -1,11 +1,10 @@
-import type { MapKey, MonsterKey, ServerToClient_entities_monsters } from "typed-adventureland";
+import type { DamageType, MapKey, MonsterKey, ServerToClient_entities_monsters } from "typed-adventureland";
 import { Entity } from "./Entity.js";
 import type { Game } from "./Game.js";
 
 export class EntityMonster extends Entity {
-  protected _type: MonsterKey;
-  public get type(): MonsterKey {
-    return this._type;
+  public get "1hp"(): boolean {
+    return Boolean(this.game.G.monsters[this._type]["1hp"]);
   }
 
   protected _attack: number;
@@ -13,9 +12,37 @@ export class EntityMonster extends Entity {
     return this._attack;
   }
 
+  public get avoidance(): number {
+    return this.game.G.monsters[this._type].avoidance ?? 0;
+  }
+
+  public get apiercing(): number {
+    return this.game.G.monsters[this._type].apiercing ?? 0;
+  }
+
+  public get armor(): number {
+    return this.game.G.monsters[this._type].armor ?? 0;
+  }
+
+  public get crit(): number {
+    return this.game.G.monsters[this._type].crit ?? 0;
+  }
+
+  public get damageType(): DamageType {
+    return this.game.G.monsters[this._type].damage_type;
+  }
+
+  public get evasion(): number {
+    return this.game.G.monsters[this._type].evasion ?? 0;
+  }
+
   protected _hp: number;
   public get hp(): number {
     return this._hp;
+  }
+
+  public get immune(): boolean {
+    return Boolean(this.game.G.monsters[this._type].immune);
   }
 
   protected _level: number;
@@ -28,24 +55,20 @@ export class EntityMonster extends Entity {
     return this._max_hp;
   }
 
-  public get rip(): boolean {
-    return this.hp === 0;
-  }
-
-  public get apiercing(): number {
-    return this.game.G.monsters[this._type].apiercing ?? 0;
-  }
-
-  public get armor(): number {
-    return this.game.G.monsters[this._type].armor ?? 0;
-  }
-
   public get rpiercing(): number {
     return this.game.G.monsters[this._type].rpiercing ?? 0;
   }
 
+  public get reflection(): number {
+    return this.game.G.monsters[this._type].reflection ?? 0;
+  }
+
   public get resistance(): number {
     return this.game.G.monsters[this._type].resistance ?? 0;
+  }
+
+  public get rip(): boolean {
+    return this.hp === 0;
   }
 
   public override get speed(): number {
@@ -55,6 +78,11 @@ export class EntityMonster extends Entity {
   protected _target?: string;
   public get target(): string | undefined {
     return this._target;
+  }
+
+  protected _type: MonsterKey;
+  public get type(): MonsterKey {
+    return this._type;
   }
 
   constructor(game: Game, mapAndInstance: { map: MapKey; in: string }, data: ServerToClient_entities_monsters) {

@@ -7,7 +7,11 @@ import type {
   ServerIdentifier,
   ServerKey,
   ServerRegion,
+  SkillKey,
 } from "typed-adventureland";
+import type { Character } from "./Character.js";
+import type { EntityCharacter } from "./EntityCharacter.js";
+import type { EntityMonster } from "./EntityMonster.js";
 
 export class Utilities {
   /**
@@ -32,6 +36,44 @@ export class Utilities {
     if (defense > 700 && defense <= 800) return 0.403 - (defense - 700) * 0.0005;
     if (defense > 800 && defense <= 1557.5) return 0.353 - (defense - 800) * 0.0004;
     return 0.05;
+  }
+
+  // TODO: This is mostly garbage, finish it from ALClient original version
+  public static damageRange(
+    attacker: Character | EntityCharacter | EntityMonster,
+    target: Character | EntityCharacter | EntityMonster,
+    g: GData,
+    options?: {
+      skill: SkillKey;
+    } = {
+      skill: "attack",
+    },
+  ): { min: number; max: number; avg: number } {
+    const gSkill = g.skills[options.skill];
+
+    // If the entity is immune, most skills won't do damage
+    if ((target as EntityMonster).immune && gSkill.pierces_immunity !== true) return { min: 0, max: 0, avg: 0 };
+
+    // Check if target could avoid attack
+    let avoidChance = 0;
+    if (attacker.damageType === "magical" && target.reflection) avoidChance = Math.min(1, target.reflection / 100);
+    else if (attacker.damageType === "physical" && target.evasion) avoidChance = Math.min(1, target.evasion / 100);
+    if (target.avoidance) avoidChance = Math.min(1, avoidChance + (1 - avoidChance) * (target.avoidance / 100));
+
+    if (avoidChance >= 1) return { min: 0, max: 0, avg: 0 }; // Target can fully avoid our attack
+
+    const critChance = attacker.crit / 100;
+
+    if ((target as EntityMonster)["1hp"] === true) {
+      return {
+        min: 1,
+        max: critChance > 0 ? 2 : 1,
+        avg: (1 + critChance) * (1 - avoidChance),
+      };
+    }
+
+    let damage: number;
+    if (gSkill.damage !== undefined) damage = gSkill.damage;
   }
 
   public static parseServerKey(serverKey: ServerKey): {

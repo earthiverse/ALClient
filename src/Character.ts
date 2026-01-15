@@ -7,6 +7,7 @@ import type {
   ClassKey,
   ClientToServer_upgrade,
   CooldownGRDataObject,
+  DamageType,
   DestroyGRDataObject,
   EntityChannelInfos,
   ExchangeInProgressGRDataObject,
@@ -94,6 +95,10 @@ export class Character extends Observer {
     return this._attack;
   }
 
+  public get avoidance(): number {
+    return 0; // TODO: I don't think players can get avoidance, need to confirm
+  }
+
   protected _bank?: CharacterBankInfos;
   public get bank(): CharacterBankInfos {
     if (this._bank === undefined) throw new Error("No player data");
@@ -122,6 +127,20 @@ export class Character extends Observer {
   public get ctype(): ClassKey {
     if (this._ctype === undefined) throw new Error("No player data");
     return this._ctype;
+  }
+
+  /**
+   * NOTE: If using a skill that does damage, and the skill has a damage type, that will take priority
+   */
+  public get damageType(): DamageType {
+    if (this._ctype === undefined || this._slots === undefined) throw new Error("No player data");
+    const mainhand = this._slots.mainhand?.name;
+    if (mainhand) {
+      const gMainhand = this.game.G.items[mainhand];
+      if (gMainhand.damage_type !== undefined) return gMainhand.damage_type;
+    }
+
+    return this.game.G.classes[this._ctype].damage_type;
   }
 
   protected _dex?: number;

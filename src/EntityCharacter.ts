@@ -1,6 +1,7 @@
 import type {
   CharacterEntitySlotsInfos,
   ClassKey,
+  DamageType,
   MapKey,
   NpcKey,
   ServerToClient_entities_players,
@@ -19,10 +20,35 @@ export class EntityCharacter extends Entity {
   public get attack(): number {
     return this._attack ?? 0;
   }
+  
+  public get avoidance(): number {
+    return 0; // TODO: I don't think players can get avoidance, need to confirm
+  }
+
+  public get crit(): number {
+    return 0; // TODO: Calculate an estimate of crit based on items equipped
+  }
 
   protected _ctype: ClassKey;
   public get ctype(): ClassKey {
     return this._ctype;
+  }
+
+  /**
+   * NOTE: If using a skill that does damage, and the skill has a damage type, that will take priority
+   */
+  public get damageType(): DamageType {
+    const mainhand = this._slots?.mainhand?.name;
+    if (mainhand) {
+      const gMainhand = this.game.G.items[mainhand];
+      if (gMainhand.damage_type !== undefined) return gMainhand.damage_type;
+    }
+
+    return this.game.G.classes[this._ctype].damage_type;
+  }
+
+  public get evasion(): number {
+    return 0; // TODO: Calculate an estimate of evasion based on items equipped
   }
 
   protected _hp!: number;
@@ -54,6 +80,10 @@ export class EntityCharacter extends Entity {
   protected _range: number | undefined;
   public get range(): number {
     return this._range ?? 0;
+  }
+
+  public get reflection(): number {
+    return 0; // TODO: Calculate an estimate of reflection based on items equipped
   }
 
   protected _resistance: number | undefined; // NOTE: Resistance is missing on (some?) NPCs
