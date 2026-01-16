@@ -1352,6 +1352,8 @@ export type ClientToServerSkillData =
               | "light"
               | "massproduction"
               | "massproductionpp"
+              | "massexchange"
+              | "massexchangepp"
               | "mcourage"
               | "mining"
               | "mshield"

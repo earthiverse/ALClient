@@ -1100,6 +1100,12 @@ test("NewMapData type validation", async () => {
                         massproductionpp: {
                             ms: 1973,
                         },
+                        massexchange: {
+                            ms: 1639,
+                        },
+                        massexchangepp: {
+                            ms: 1839,
+                        },
                         mluck: {
                             f: "earthMer",
                             ms: 3570766,

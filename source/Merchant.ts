@@ -397,4 +397,22 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "massproductionpp" })
         return response
     }
+
+    public async massExchange(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [massExchange].")
+        if (this.s.massexchange) return // We already have it active
+
+        const response = this.getResponsePromise("massexchange")
+        this.socket.emit("skill", { name: "massexchange" })
+        return response
+    }
+
+    public async massExchangePP(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [massExchangePP].")
+        if (this.s.massexchangepp) return // We already have it active
+
+        const response = this.getResponsePromise("massexchangepp")
+        this.socket.emit("skill", { name: "massexchangepp" })
+        return response
+    }
 }
