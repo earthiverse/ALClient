@@ -500,8 +500,8 @@ test("G.skills type validation", async () => {
                 duration: 10000,
                 explanation:
                     "Adds a 1-time use buff that speeds up the next exchange by 90%. The buff expires in 10 seconds if not used.",
-                level: 40,
-                mp: 30,
+                level: 70,
+                mp: 200,
                 name: "Mass Exchange++",
                 skin: "skill_massexchangepp",
                 type: "skill",
