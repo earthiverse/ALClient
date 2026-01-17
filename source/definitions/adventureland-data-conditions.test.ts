@@ -306,6 +306,22 @@ test("G.conditions type validation", async () => {
                 skin: "skill_massproductionpp",
                 ui: true,
             },
+            massexchange: {
+                buff: true,
+                duration: 10000,
+                explanation: "Adds a 1-time use buff that speeds up the next exchange by 50%. The buff expires in 10 seconds if not used",
+                name: "Mass Exchange",
+                skin: "skill_massexchange",
+                ui: true,
+            },
+            massexchangepp: {
+                buff: true,
+                duration: 10000,
+                explanation: "Adds a 1-time use buff that speeds up the next exchange by 90%. The buff expires in 10 seconds if not used.",
+                name: "Mass Exchange++",
+                skin: "skill_massexchangepp",
+                ui: true,
+            },
             mcourage: {
                 buff: true,
                 courage: 5,

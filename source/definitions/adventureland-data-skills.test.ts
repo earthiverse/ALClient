@@ -480,6 +480,32 @@ test("G.skills type validation", async () => {
                 skin: "skill_massproductionpp",
                 type: "skill",
             },
+            massexchange: {
+                class: ["merchant"],
+                condition: "massexchange",
+                cooldown: 50,
+                duration: 10000,
+                explanation:
+                    "Adds a 1-time use buff that speeds up the next exchange by 50%. The buff expires in 10 seconds if not used.",
+                level: 40,
+                mp: 30,
+                name: "Mass Exchange",
+                skin: "skill_massexchange",
+                type: "skill",
+            },
+            massexchangepp: {
+                class: ["merchant"],
+                condition: "massexchangepp",
+                cooldown: 50,
+                duration: 10000,
+                explanation:
+                    "Adds a 1-time use buff that speeds up the next exchange by 90%. The buff expires in 10 seconds if not used.",
+                level: 70,
+                mp: 200,
+                name: "Mass Exchange++",
+                skin: "skill_massexchangepp",
+                type: "skill",
+            },
             mcourage: {
                 class: ["merchant"],
                 condition: "mcourage",
