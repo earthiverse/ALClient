@@ -453,7 +453,9 @@ export type GameResponseDataUpgradeChance = {
     /** The item being compounded/upgraded */
     item: ItemData
     /** The scroll used for the compound/upgrade calculation */
-    scroll: ItemName
+    scroll?: ItemName
+    /** The offering used for the compound/upgrade calculation */
+    offering?: ItemName
     /** Related to compound/upgrade chance, the higher this number, the higher your chance of success is (there's a limit, though) */
     grace: number
 }
