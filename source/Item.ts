@@ -253,7 +253,7 @@ export class Item implements ItemData, GItem {
      * @memberof Item
      */
     public isLocked(): boolean {
-        return this.l == "l"
+        return this.l !== undefined
     }
 
     /**
