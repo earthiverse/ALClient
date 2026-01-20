@@ -626,11 +626,9 @@ export class Character extends Observer {
     for (const npc of this.game.G.maps[this._map!].npcs) {
       const gNpc = this.game.G.npcs[npc.id];
       if (!gNpc.items) continue; // This NPC isn't a merchant
-      // TODO: Handle NPCs with multiple positions
-      if (this.getDistanceTo({ map: this._map!, in: this._in!, x: npc.position![0], y: npc.position![1] }) > 400)
-        continue; // Too far away
-
-      return true;
+      for (const [x, y] of npc.positions ?? [[...(npc.position as [number, number])]]) {
+        if (this.getDistanceTo({ map: this._map!, in: this._in!, x, y }) <= 400) return true; // Nearby
+      }
     }
 
     return false;
