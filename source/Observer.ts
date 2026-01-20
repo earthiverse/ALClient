@@ -818,43 +818,44 @@ export class Observer {
         if (typeof data === "string") {
             if (Database.connection) return true // Don't need to update DB
 
-            const temporalSurgeReg = /^assassin_smoke\(([\d.]+),([\d.]+),'icecrack/.exec(data)
-            if (temporalSurgeReg) {
-                // Reduce respawn times for the closest mob
-                const x = parseFloat(temporalSurgeReg[1])
-                const y = parseFloat(temporalSurgeReg[2])
-                const now = Date.now()
+            // TODO: We need to check when it was last updated, or we may decrease the time too much
+            // const temporalSurgeReg = /^assassin_smoke\((-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),'icecrack/.exec(data)
+            // if (temporalSurgeReg) {
+            //     // Reduce respawn times for the closest mob
+            //     const x = parseFloat(temporalSurgeReg[1])
+            //     const y = parseFloat(temporalSurgeReg[2])
+            //     const now = Date.now()
 
-                const nearbyRespawns = await RespawnModel.find({
-                    serverIdentifier: this.serverData.name,
-                    serverRegion: this.serverData.region,
-                    map: this.map,
-                    x: { $gte: x - 100, $lte: x + 100 },
-                    y: { $gte: y - 100, $lte: y + 100 },
-                    estimatedRespawn: { $gt: Date.now() },
-                })
-                    .lean()
-                    .exec()
+            //     const nearbyRespawns = await RespawnModel.find({
+            //         serverIdentifier: this.serverData.name,
+            //         serverRegion: this.serverData.region,
+            //         map: this.map,
+            //         x: { $gte: x - 100, $lte: x + 100 },
+            //         y: { $gte: y - 100, $lte: y + 100 },
+            //         estimatedRespawn: { $gt: Date.now() },
+            //     })
+            //         .lean()
+            //         .exec()
 
-                const closest = nearbyRespawns
-                    .map((r) => ({
-                        ...r,
-                        distance: Math.sqrt(Math.pow(r.x - x, 2) + Math.pow(r.y - y, 2)),
-                    }))
-                    .sort((a, b) => a.distance - b.distance)[0]
+            //     const closest = nearbyRespawns
+            //         .map((r) => ({
+            //             ...r,
+            //             distance: Math.sqrt(Math.pow(r.x - x, 2) + Math.pow(r.y - y, 2)),
+            //         }))
+            //         .sort((a, b) => a.distance - b.distance)[0]
 
-                // Update time, and the actual position where they died
-                await RespawnModel.updateOne(
-                    { _id: closest._id },
-                    {
-                        estimatedRespawn: Math.max(now, now + (closest.estimatedRespawn - now) * 0.85 - 1000),
-                        x,
-                        y,
-                    },
-                )
-                    .lean()
-                    .exec()
-            }
+            //     // Update time, and the actual position where they died
+            //     await RespawnModel.updateOne(
+            //         { _id: closest._id },
+            //         {
+            //             estimatedRespawn: Math.max(now, now + (closest.estimatedRespawn - now) * 0.85 - 1000),
+            //             x,
+            //             y,
+            //         },
+            //     )
+            //         .lean()
+            //         .exec()
+            // }
 
             return true // UI (confetti, egg splash, etc.)
         }

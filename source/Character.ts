@@ -5392,6 +5392,7 @@ export class Character extends Observer implements CharacterData {
         let respawnTimes: number[] = []
         const getRespawnTimes = (data: GameResponseData) => {
             if (typeof data === "object" && data.response === "temporalsurge") respawnTimes = data.times
+            // TODO: Update respawn times
         }
         this.socket.on("game_response", getRespawnTimes)
 
