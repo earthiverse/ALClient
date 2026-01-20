@@ -4,6 +4,7 @@ import type {
   ItemInfo,
   MapKey,
   MonsterKey,
+  NpcKey,
   ServerIdentifier,
   ServerKey,
   ServerRegion,
@@ -91,7 +92,7 @@ export class Utilities {
   }
 
   /**
-   * Returns spawn data for the given monster
+   * Returns the center of spawns for the given monster
    *
    * @param g
    * @param monster
@@ -112,6 +113,29 @@ export class Utilities {
       }
     }
     return spawns;
+  }
+
+  /**
+   * Returns the positions you can find the given NPC
+   *
+   * @param g
+   * @param npcKey
+   * @param options
+   * @returns
+   */
+  public static getNpcPositions(g: GData, npcKey: NpcKey, options: { map?: MapKey } = {}): Required<IPosition>[] {
+    const positions: Required<IPosition>[] = [];
+    for (const [mapKey, gMap] of Object.entries(g.maps)) {
+      if (options.map === mapKey) continue; // We're looking for a specific map
+      if (gMap.ignore !== undefined && gMap.ignore) continue; // Ignore map
+      for (const npc of gMap.npcs) {
+        if (npc.id !== npcKey) continue; // Different NPC
+        for (const [x, y] of npc.positions ?? [[...(npc.position as [number, number])]]) {
+          positions.push({ map: mapKey as MapKey, x, y });
+        }
+      }
+    }
+    return positions;
   }
 
   public static getItemGrade(item: ItemInfo, g: GData): number | undefined {
