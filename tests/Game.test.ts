@@ -12,7 +12,8 @@ test("`login()` with invalid credentials throws an error", async () => {
 
   // Set up EventBus to listen for update
   let eventHappened = false;
-  EventBus.once("login_failed", () => {
+  EventBus.once("login_failed", (ev_game) => {
+    if (game !== ev_game) return; // Different test
     eventHappened = true;
   });
 
@@ -28,7 +29,8 @@ test("`login()` with valid credentials returns a `Player` object", async () => {
 
   // Set up EventBus to listen for update
   let eventHappened = false;
-  EventBus.once("player_created", () => {
+  EventBus.once("player_created", (player) => {
+    if (player.game !== game) return; // Different test
     eventHappened = true;
   });
 
@@ -94,7 +96,8 @@ test("`updateG()` works", async () => {
   // Set up EventBus to listen for update
   let eventHappened = false;
   let eventG: GData | undefined = undefined;
-  EventBus.once("g_updated", (game, g) => {
+  EventBus.once("g_updated", (ev_game, g) => {
+    if (ev_game !== game) return; // Different test
     eventHappened = true;
     eventG = g;
   });
@@ -121,7 +124,8 @@ test("`updateServers()` works", async () => {
   // Set up EventBus to listen for update
   let eventHappened = false;
   let eventServers: XServerInfos[] | undefined = undefined;
-  EventBus.once("servers_updated", (game, servers) => {
+  EventBus.once("servers_updated", (ev_game, servers) => {
+    if (game !== ev_game) return; // Different test
     eventHappened = true;
     eventServers = servers;
   });

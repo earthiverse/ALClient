@@ -15,7 +15,8 @@ beforeEach(() => {
 test("`start()` works", async () => {
   // Set up EventBus to listen for update
   let eventHappened = false;
-  EventBus.once("observer_created", () => {
+  EventBus.once("observer_created", (observer) => {
+    if (game !== observer.game) return; // Different test
     eventHappened = true;
   });
 
@@ -25,7 +26,8 @@ test("`start()` works", async () => {
 
   // Set up EventBus to listen for update
   eventHappened = false;
-  EventBus.once("observer_started", () => {
+  EventBus.once("observer_started", (observer) => {
+    if (game !== observer.game) return; // Different test
     eventHappened = true;
   });
 

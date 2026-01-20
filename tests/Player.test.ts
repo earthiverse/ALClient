@@ -23,7 +23,8 @@ test("`updateCharacters()` works", async () => {
   // Set up EventBus to listen for update
   let eventHappened = false;
   let eventCharacters: Player["characters"] | undefined = undefined;
-  EventBus.once("characters_updated", (game, characters) => {
+  EventBus.once("characters_updated", (player, characters) => {
+    if (game !== player.game) return; // Different test
     eventHappened = true;
     eventCharacters = characters;
   });
