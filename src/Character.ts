@@ -620,7 +620,7 @@ export class Character extends Observer {
    */
   public canSell(): boolean {
     if (this._map?.startsWith("bank") === true) return false; // Can't sell in the bank
-    if (this._items!.some((i) => i?.name === "computer" || i?.name === "supercomputer")) return true; // We can sell almost anywhere with a computer
+    if (this._items!.some((i) => i?.name.endsWith("computer") === true)) return true; // We can sell almost anywhere with a computer
 
     // Check if we're near an NPC merchant
     for (const npc of this.game.G.maps[this._map!].npcs) {
@@ -632,6 +632,18 @@ export class Character extends Observer {
     }
 
     return false;
+  }
+
+  /**
+   * @returns whether we can upgrade or compound items from where we are standing
+   */
+  public canUpgrade(): boolean {
+    if (this._map?.startsWith("bank") === true) return false; // Can't upgrade in the bank
+    if (this._items!.some((i) => i?.name.endsWith("computer") === true)) return true; // We can upgrade almost anywhere with a computer
+
+    // Check if we're close to the upgrade NPC
+    const [x, y] = this.game.G.maps.main.npcs.find((npc) => npc.id === "newupgrade")!.position as [number, number];
+    return this.getDistanceTo({ map: "main", in: "main", x, y }) <= 400;
   }
 
   public canUse(
