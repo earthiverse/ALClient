@@ -1,4 +1,4 @@
-import type { DamageType, MapKey, MonsterKey, ServerToClient_entities_monsters } from "typed-adventureland";
+import type { DamageType, MapKey, MonsterKey, ServerToClient_entities_monsters, StatusInfo } from "typed-adventureland";
 import { Entity } from "./Entity.js";
 import type { Game } from "./Game.js";
 
@@ -71,6 +71,11 @@ export class EntityMonster extends Entity {
     return this.hp === 0;
   }
 
+  protected _s?: StatusInfo;
+  public get s(): StatusInfo {
+    return this._s ?? {};
+  }
+
   public override get speed(): number {
     return this._speed ?? this.game.G.monsters[this._type].speed;
   }
@@ -114,6 +119,7 @@ export class EntityMonster extends Entity {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
+    if (data.s !== undefined) this._s = data.s;
     data.target = typeof data.target === "string" ? data.target : undefined;
   }
 }

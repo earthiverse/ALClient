@@ -1,4 +1,5 @@
 import type {
+  ConditionKey,
   GData,
   IPosition,
   ItemInfo,
@@ -39,12 +40,20 @@ export class Utilities {
     return 0.05;
   }
 
-  // TODO: This is mostly garbage, finish it from ALClient original version
+  /**
+   * TODO: Doesn't return correct numbers with heal
+   *
+   * @param attacker
+   * @param target
+   * @param g
+   * @param options
+   * @returns
+   */
   public static damageRange(
     attacker: Character | EntityCharacter | EntityMonster,
     target: Character | EntityCharacter | EntityMonster,
     g: GData,
-    options?: {
+    options: {
       skill: SkillKey;
     } = {
       skill: "attack",
@@ -57,8 +66,9 @@ export class Utilities {
 
     // Check if target could avoid attack
     let avoidChance = 0;
-    if (attacker.damageType === "magical" && target.reflection) avoidChance = Math.min(1, target.reflection / 100);
-    else if (attacker.damageType === "physical" && target.evasion) avoidChance = Math.min(1, target.evasion / 100);
+    const damageType = gSkill.damage_type ?? attacker.damageType;
+    if (damageType === "magical" && target.reflection) avoidChance = Math.min(1, target.reflection / 100);
+    else if (damageType === "physical" && target.evasion) avoidChance = Math.min(1, target.evasion / 100);
     if (target.avoidance) avoidChance = Math.min(1, avoidChance + (1 - avoidChance) * (target.avoidance / 100));
 
     if (avoidChance >= 1) return { min: 0, max: 0, avg: 0 }; // Target can fully avoid our attack
@@ -67,14 +77,34 @@ export class Utilities {
 
     if ((target as EntityMonster)["1hp"] === true) {
       return {
-        min: 1,
+        min: avoidChance > 0 ? 0 : 1,
         max: critChance > 0 ? 2 : 1,
         avg: (1 + critChance) * (1 - avoidChance),
       };
     }
 
-    let damage: number;
+    let damage: number = attacker.attack;
     if (gSkill.damage !== undefined) damage = gSkill.damage;
+    for (const conditionKey in target.s) {
+      const condition = g.conditions[conditionKey as ConditionKey];
+      if (condition === undefined) continue; // Possibly NPC condition, but none of them currently affect damage
+      if (condition.incdmgamp !== undefined) damage *= 1 + condition.incdmgamp / 100;
+    }
+
+    if (damageType === "physical")
+      damage *= Utilities.damageMultiplier(target.armor - attacker.apiercing - (gSkill.apiercing ?? 0));
+    else if (damageType === "magical") damage *= Utilities.damageMultiplier(target.resistance - attacker.rpiercing); // NOTE: No skill currently has rpiercing
+
+    if (gSkill.damage_multiplier !== undefined) damage *= gSkill.damage_multiplier;
+
+    const lowerLimit = options.skill === "cleave" ? 0.1 : 0.9;
+    const upperLimit = options.skill === "cleave" ? 0.9 : 1.1;
+
+    return {
+      min: avoidChance > 0 ? 0 : lowerLimit * damage,
+      max: upperLimit * damage * (critChance > 0 ? 2 : 1),
+      avg: ((upperLimit + lowerLimit) / 2) * damage * (1 + critChance) * (1 - avoidChance),
+    };
   }
 
   public static parseServerKey(serverKey: ServerKey): {

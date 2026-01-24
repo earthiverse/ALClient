@@ -5,11 +5,16 @@ import type {
   MapKey,
   NpcKey,
   ServerToClient_entities_players,
+  StatusInfo,
 } from "typed-adventureland";
 import { Entity } from "./Entity.js";
 import type { Game } from "./Game.js";
 
 export class EntityCharacter extends Entity {
+  public get apiercing(): number {
+    return 0; // TODO: Calculate an estimate of apiercing based on items equipped
+  }
+
   protected _armor!: number;
   public get armor(): number {
     return this._armor;
@@ -20,7 +25,7 @@ export class EntityCharacter extends Entity {
   public get attack(): number {
     return this._attack ?? 0;
   }
-  
+
   public get avoidance(): number {
     return 0; // TODO: I don't think players can get avoidance, need to confirm
   }
@@ -97,6 +102,15 @@ export class EntityCharacter extends Entity {
   public get rip(): boolean {
     return Boolean(this._rip);
   }
+  
+  public get rpiercing(): number {
+    return 0; // TODO: Calculate an estimate of apiercing based on items equipped
+  }
+
+  protected _s?: StatusInfo;
+  public get s(): StatusInfo {
+    return this._s ?? {};
+  }
 
   protected _slots?: CharacterEntitySlotsInfos;
   public get slots(): CharacterEntitySlotsInfos | undefined {
@@ -136,6 +150,7 @@ export class EntityCharacter extends Entity {
     if (data.range !== undefined) this._range = data.range;
     if (data.resistance !== undefined) this._resistance = data.resistance;
     if (data.rip !== undefined) this._rip = data.rip;
+    if (data.s !== undefined) this._s = data.s;
     if (data.slots !== undefined) this._slots = data.slots;
     if (typeof data.target === "string") this._target = data.target;
   }
