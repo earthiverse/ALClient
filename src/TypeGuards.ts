@@ -31,11 +31,14 @@ export function isRelevantGameResponse<Place extends string>(
 export function isUpgradeChanceResponse(data: unknown): data is GameResponseDataUpgradeChance {
   if (typeof data !== "object" || data === null || data === undefined) return false;
   if ((data as SuccessGameResponse<"upgrade">).place !== "upgrade") return false;
-  if (
-    (data as SuccessGameResponse<"upgrade">).response !== "compound_chance" &&
-    (data as SuccessGameResponse<"upgrade">).response !== "upgrade_chance"
-  )
-    return false;
+  if ((data as SuccessGameResponse<"upgrade">).response !== "upgrade_chance") return false;
+  return true;
+}
+
+export function isCompoundChanceResponse(data: unknown): data is GameResponseDataUpgradeChance {
+  if (typeof data !== "object" || data === null || data === undefined) return false;
+  if ((data as SuccessGameResponse<"compound">).place !== "compound") return false;
+  if ((data as SuccessGameResponse<"compound">).response !== "compound_chance") return false;
   return true;
 }
 

@@ -43,6 +43,7 @@ import type Mage from "./Mage.js";
 import { Observer } from "./Observer.js";
 import type { Player } from "./Player.js";
 import {
+  isCompoundChanceResponse,
   isConditionKey,
   isFailedGameResponse,
   isMapKey,
@@ -1008,6 +1009,139 @@ export class Character extends Observer {
     return promise;
   }
 
+  /**
+   * Calculates the compound chance
+   */
+  public async compound(
+    item_nums: [number, number, number],
+    scroll_num: number | undefined,
+    offering_num: number | undefined,
+    options: {
+      calculate: true;
+    },
+  ): Promise<GameResponseDataUpgradeChance>;
+  /**
+   * Compounds items
+   */
+  public async compound(
+    item_nums: [number, number, number],
+    scroll_num: number,
+    offering_num?: number,
+    options?: {
+      resolveOnStart?: true;
+    },
+  ): Promise<unknown>;
+  public async compound(
+    item_nums: [number, number, number],
+    scroll_num: number,
+    offering_num?: number,
+    options: {
+      calculate?: true;
+      resolveOnStart?: true;
+    } = {},
+  ): Promise<unknown> {
+    if (this.q.compound) throw new Error("A compound is already in progress");
+    if (new Set(item_nums).size !== item_nums.length) throw new Error("Item positions must be unique");
+
+    const s = this.socket;
+
+    const items: ItemInfo[] = [];
+    for (const itemNum of item_nums) {
+      const item = this._items![itemNum];
+      if (!item) throw new Error(`No item in position ${itemNum}`);
+      if (items.length > 0) {
+        if (item.name !== items[0]?.name) throw new Error("Items must be of the same type to compound");
+        if ((item.level ?? 0) !== (items[0]?.level ?? 0))
+          throw new Error("Items must be of the same level to compound");
+        if (item.l !== undefined) throw new Error("Locked items cannot be compounded");
+      } else {
+        if (this.game.G.items[item.name].compound === undefined) throw new Error(`${item.name} is not compoundable`);
+      }
+      items.push(item);
+    }
+
+    if (scroll_num !== undefined && !this._items![scroll_num]) throw new Error(`No scroll in position ${scroll_num}`);
+    if (offering_num !== undefined && !this._items![offering_num])
+      throw new Error(`No offering in position ${offering_num}`);
+
+    const compoundStarted = new Promise<unknown>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+        s.off("player", playerHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "compound")) return;
+        if (options.calculate && isCompoundChanceResponse(data)) {
+          if (items[0]!.name !== data.item.name || (items[0]!.level ?? 0) !== data.item.level) return; // Different item
+          cleanup();
+        } else if (isFailedGameResponse(data)) {
+          reject(new Error(data.response));
+          cleanup();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.q.upgrade) {
+          cleanup();
+          resolve(data.q);
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+      s.on("player", playerHandler);
+    });
+
+    s.emit("compound", {
+      items: item_nums,
+      clevel: items[0]!.level ?? 0,
+      scroll_num,
+      offering_num,
+      calculate: options.calculate,
+    });
+
+    if (options.calculate || options.resolveOnStart) return compoundStarted;
+    await compoundStarted;
+
+    const compoundFinished = new Promise<unknown>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.hitchhikers === undefined) return;
+        for (const [hitchHikerEvent, hitchHikerData] of data.hitchhikers) {
+          if (hitchHikerEvent !== "game_response") continue;
+          if (typeof hitchHikerData !== "object") continue;
+          // TODO: Improve typing of hitchhiker data
+          if (["compound_success"].includes((hitchHikerData as { response: string }).response)) {
+            cleanup();
+            resolve(hitchHikerData);
+          } else if ((hitchHikerData as { response: string }).response == "compound_fail") {
+            cleanup();
+            resolve(hitchHikerData);
+          }
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+    });
+
+    return compoundFinished;
+  }
+
   public craft(name: ItemKey, itemPositions?: number[]): Promise<unknown> {
     const s = this.socket;
 
@@ -1559,7 +1693,7 @@ export class Character extends Observer {
   }
 
   /**
-   * Calculates the next upgrade chance
+   * Calculates the upgrade chance
    */
   public async upgrade(
     item_num: number,
@@ -1598,6 +1732,7 @@ export class Character extends Observer {
 
     const item = this._items![item_num];
     if (!item) throw new Error(`No item in position ${item_num}`);
+    if (item.l !== undefined) throw new Error("Locked items cannot be upgraded");
     const gItem = this.game.G.items[item.name];
     if (gItem.upgrade === undefined) throw new Error(`${item.name} is not upgradable`);
 
@@ -1615,7 +1750,7 @@ export class Character extends Observer {
       const gameResponseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "upgrade")) return;
         if (options.calculate && isUpgradeChanceResponse(data)) {
-          if (item.name !== data.item.name || item.level !== data.item.level) return; // Different item
+          if (item.name !== data.item.name || (item.level ?? 0) !== data.item.level) return; // Different item
           cleanup();
         } else if (isFailedGameResponse(data)) {
           reject(new Error(data.response));
