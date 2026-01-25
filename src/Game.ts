@@ -212,6 +212,8 @@ export class Game {
         const error = new Error("Failed updating G", { cause: e });
         GameEventBus.emit("update_g_failed", this, error);
         throw error;
+      } finally {
+        this._updatingG = null;
       }
     })());
   }
