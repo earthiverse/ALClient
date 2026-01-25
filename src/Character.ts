@@ -64,6 +64,7 @@ export interface CharacterEventMap {
   next_skill_set: [Character, SkillKey, number];
   party_request_received: [Character, string];
   progress_set: [Character, CharacterEntityQInfos];
+  received_stacked_damage: [Character, ids: string[], damage: number];
 }
 
 // Typescript will enforce only CharacterEventMap events to be allowed
@@ -410,6 +411,14 @@ export class Character extends Observer {
         const futureMs = Date.now() + (data as CooldownGRDataObject).ms;
         this.setNextSkill((data as CooldownGRDataObject).place, futureMs, true);
         return;
+      }
+    });
+
+    s.on("hit", (data) => {
+      if (data.id === this.id) {
+        if (data.stacked !== undefined) {
+          EventBus.emit("received_stacked_damage", this, data.stacked, data.damage as number);
+        }
       }
     });
 
