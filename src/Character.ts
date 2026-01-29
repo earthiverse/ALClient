@@ -424,6 +424,7 @@ export class Character extends Observer {
     });
 
     s.on("player", (data) => {
+      data.party ??= "";
       this.updateData(data);
     });
 
@@ -451,8 +452,9 @@ export class Character extends Observer {
       const startHandler = (data: ServerToClient_start) => {
         cleanup();
         this._S = data.s_info;
-        this._going_x = data.x;
-        this._going_y = data.y;
+        data.going_x ??= data.x;
+        data.going_y ??= data.y;
+        data.party ??= "";
         this.updateData(data);
         this.parseEntities(data.entities);
         resolve();
