@@ -61,7 +61,7 @@
         "delaunator": "^5.0.1",
         "is-number": "^7.0.0",
         "lru-cache": "^11.1.0",
-        "mongoose": "^8.15.0",
+        "mongoose": "^8.21.0",
         "ngraph.graph": "^20.0.1",
         "ngraph.path": "^1.5.0",
         "socket.io-client": "^4.8.1"
