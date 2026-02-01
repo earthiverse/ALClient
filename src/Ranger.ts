@@ -51,7 +51,7 @@ export class Ranger extends Character {
         if (!isRelevantGameResponse(data, "3shot")) return;
 
         if (isSuccessGameResponse(data)) {
-          resolve(data as unknown as SkillSuccessGRDataObject);
+          resolve(data as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
         }
@@ -122,7 +122,7 @@ export class Ranger extends Character {
         if (!isRelevantGameResponse(data, "5shot")) return;
 
         if (isSuccessGameResponse(data)) {
-          resolve(data as unknown as SkillSuccessGRDataObject);
+          resolve(data as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
         }
