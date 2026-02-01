@@ -13,6 +13,7 @@ export class Rogue extends Character {
     return "rogue";
   }
 
+  // TDOO: Untested
   public quickPunch(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
@@ -59,6 +60,7 @@ export class Rogue extends Character {
     return promise;
   }
 
+  // TDOO: Untested
   public quickStab(id: Entity | string): Promise<SkillSuccessGRDataObject> {
     const s = this.socket;
 
