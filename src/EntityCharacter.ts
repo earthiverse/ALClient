@@ -76,6 +76,11 @@ export class EntityCharacter extends Entity {
     return this._npc ? this._npc : false;
   }
 
+  protected _owner?: string;
+  public get owner(): string | undefined {
+    return this._owner;
+  }
+
   protected _party?: string;
   public get party(): string | undefined {
     return this._party;
@@ -102,7 +107,7 @@ export class EntityCharacter extends Entity {
   public get rip(): boolean {
     return Boolean(this._rip);
   }
-  
+
   public get rpiercing(): number {
     return 0; // TODO: Calculate an estimate of apiercing based on items equipped
   }
@@ -146,7 +151,8 @@ export class EntityCharacter extends Entity {
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
-    if (data.party !== undefined) this._party = data.party;
+    if (data.owner !== undefined) this._owner = data.owner;
+    if (data.party !== undefined) this._party = data.party; // TODO: Is this correct? What if they leave a party?
     if (data.range !== undefined) this._range = data.range;
     if (data.resistance !== undefined) this._resistance = data.resistance;
     if (data.rip !== undefined) this._rip = data.rip;
