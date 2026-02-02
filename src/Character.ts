@@ -272,6 +272,11 @@ export class Character extends Observer {
     throw new Error("Not yet implemented");
   }
 
+  protected _owner?: string;
+  public get owner(): string | undefined {
+    return this._owner;
+  }
+
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
@@ -533,6 +538,7 @@ export class Character extends Observer {
     if (data.mp !== undefined) this._mp = data.mp;
     if (data.mp_cost !== undefined) this._mp_cost = data.mp_cost;
     if (data.mp_reduction !== undefined) this._mp_reduction = data.mp_reduction;
+    if (data.owner !== undefined) this._owner = data.owner;
     if (data.party !== undefined) this._party = data.party;
     if (data.q !== undefined) {
       this._q = data.q;
