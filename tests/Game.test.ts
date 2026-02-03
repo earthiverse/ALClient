@@ -86,6 +86,9 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.getPath("main", -1324, 19, "mforest", 0, 0, 50)).toBeTruthy();
   expect(pathfinder.getPath("main", -152, -137, "winterland", 0, 0, 50)).toBeTruthy();
 
+  // Should be able to escape islands
+  expect(pathfinder.getPath("winterland", 865, 430, "main", 0, 0, 50)).toBeTruthy();
+
   // These paths was recommended by Crown
   expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeTruthy();
 });
