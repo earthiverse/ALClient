@@ -13,8 +13,10 @@ import type {
   ExchangeInProgressGRDataObject,
   GameResponseDataUpgradeChance,
   GoldReceivedGRDataObject,
+  GoldSentGRDataObject,
   ItemInfo,
   ItemKey,
+  ItemSentGRDataObject,
   MapKey,
   MonsterKey,
   NotReadyGRDataObject,
@@ -1625,6 +1627,109 @@ export class Character extends Observer {
 
     s.emit("sell", { num, quantity });
     return promise;
+  }
+
+  // TODO: Untested
+  /**
+   * Send gold to another character
+   *
+   * NOTE: If sending to a different player, 2.5% will be taxed!
+   *
+   * @param name Character to send the gold to
+   * @param gold Amount of gold to send
+   * @returns Amount of gold received by the other player
+   */
+  public sendGold(name: string, gold: number): Promise<number> {
+    if (this.gold < gold) throw new Error(`We have ${this.gold} gold, but you want to send ${gold}.`);
+    if (gold <= 0) throw new Error("You must send a positive amount of gold.");
+
+    const character = this.characters.get(name);
+    if (!character) throw new Error(`We can't see ${name} nearby to send gold.`);
+    if (this.getDistanceTo(character) > 400) throw new Error(`We are too far away from ${name} to send gold.`);
+
+    const s = this.socket;
+
+    const goldSent: Promise<number> = new Promise<number>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", sentCheck);
+      };
+
+      const sentCheck = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "send")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+          // TODO: Improve typing
+        } else if (data.response === "gold_sent" && (data as GoldSentGRDataObject).name === name) {
+          cleanup();
+          resolve((data as GoldSentGRDataObject).gold);
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`sendGold timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", sentCheck);
+    });
+
+    s.emit("send", { gold, name });
+    return goldSent;
+  }
+
+  // TODO: Untested
+  /**
+   * Send an item to another character
+   *
+   * @param name Character to send the item to
+   * @param num Position of the item in your inventory
+   * @param q Quantity of the item (if stackable) to send
+   */
+  public sendItem(name: string, num: number, q = 1): Promise<void> {
+    const character = this.characters.get(name);
+    if (!character) throw new Error(`${name} is not nearby`);
+    if (this.getDistanceTo(character) > 400) throw new Error(`We are too far away from ${name} to send gold.`);
+    const item = this._items![num];
+    if (!item) throw new Error(`No item in slot ${num}`);
+    if ((item.q ?? 1) < q) throw new Error(`Insufficient quantity (${item.q ?? 1}/${q})`);
+
+    const s = this.socket;
+
+    const itemSent = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", sentCheck);
+      };
+
+      const sentCheck = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "send")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        } else if (
+          data.response === "item_sent" &&
+          // TODO: Improve typing
+          (data as ItemSentGRDataObject).name === name &&
+          (data as ItemSentGRDataObject).item === item.name &&
+          (data as ItemSentGRDataObject).q === q
+        ) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`sendItem timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", sentCheck);
+    });
+
+    s.emit("send", { name, num, q });
+    return itemSent;
   }
 
   /**
