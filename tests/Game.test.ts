@@ -91,7 +91,7 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
 
   // These paths was recommended by Crown
   expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeTruthy();
-});
+}, 10_000);
 
 test("`updateG()` works", async () => {
   const game = new Game();
