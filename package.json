@@ -52,7 +52,7 @@
     "typescript-eslint": "^8.31.0"
   },
   "dependencies": {
-    "alpathfinder": "^0.2.6",
+    "alpathfinder": "^0.2.7",
     "socket.io-client": "^4.7.5",
     "typed-adventureland": "^0.0.53"
   }

@@ -13,7 +13,7 @@ beforeAll(async () => {
     throw new Error("Environment variables not set");
   }
   player = await game.login(email, password);
-});
+}, 10_000);
 
 beforeEach(() => {
   EventBus.removeAllListeners();
@@ -46,4 +46,4 @@ test("`updateCharacters()` works", async () => {
   // Event should have triggered and should reference the same data
   expect(eventHappened).toBe(true);
   expect(eventCharacters).toBe(characters);
-}, 10000);
+}, 10_000);

@@ -179,9 +179,9 @@ export class Game {
     }
   }
 
-  public preparePathfinder(): typeof ALPathfinder {
+  public preparePathfinder(ignoreMaps?: string[]): typeof ALPathfinder {
     if (this._pathfinder !== undefined) return this._pathfinder;
-    ALPathfinder.prepare(this.G);
+    ALPathfinder.prepare(this.G, ignoreMaps);
     this._pathfinder = ALPathfinder;
     return ALPathfinder;
   }
