@@ -189,6 +189,12 @@ export class Character extends Observer {
     return this._gold;
   }
 
+  protected _goldm?: number;
+  public get goldm(): number {
+    if (this._goldm === undefined) throw new Error("No player data");
+    return this._goldm;
+  }
+
   protected _hp?: number;
   public get hp(): number {
     if (this._hp === undefined) throw new Error("No player data");
@@ -524,6 +530,7 @@ export class Character extends Observer {
     if (data.for !== undefined) this._for = data.for;
     if (data.frequency !== undefined) this._frequency = data.frequency;
     if (data.gold !== undefined) this._gold = data.gold;
+    if (data.goldm !== undefined) this._goldm = data.goldm;
     if (data.hp !== undefined) this._hp = data.hp;
     if (data.luckm !== undefined) this._luckm = data.luckm;
     if (data.int !== undefined) this._int = data.int;
