@@ -1,5 +1,6 @@
 import type EventEmitter from "node:events";
 import type {
+  BankPackTypeItemsOnly,
   BuySuccessGRDataObject,
   CharacterBankInfos,
   CharacterEntityQInfos,
@@ -794,6 +795,127 @@ export class Character extends Observer {
    */
   public countItems(item: Partial<ItemInfo>): number {
     return this.locateItems(item).reduce((count, index) => count + ((this._items![index] as ItemInfo).q ?? 1), 0);
+  }
+
+  // TODO: Untested
+  /**
+   * Deposits an item in the bank
+   *
+   * @param inv Position of item in inventory
+   * @param pack Bank pack to store the item in. If undefined, we will find a pack to store it.
+   * @param str Position if item in bank pack. If undefined, we will find a slot to store it.
+   */
+  public async depositItem(
+    inv: number,
+    pack: BankPackTypeItemsOnly | undefined = undefined,
+    str: number | undefined = undefined,
+  ): Promise<void> {
+    if (!this.map.startsWith("bank")) throw new Error("Not in bank");
+    if (str !== undefined && (str < 0 || str > 41)) throw new Error(`str must be between 0-41`);
+
+    const item = this._items![inv];
+    if (!item) throw new Error(`No item at position ${inv}`);
+
+    for (let i = 0; i < 20; i++) {
+      if (this._bank) break; // Bank data is available
+      await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
+    }
+    if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
+
+    let bankPackNum: number | undefined = undefined;
+    if (pack) {
+      bankPackNum = Number.parseInt(pack.substring(5, 7));
+      if (
+        (this.map == "bank" && bankPackNum > 7) ||
+        (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23)) ||
+        (this.map == "bank_u" && bankPackNum < 24)
+      )
+        throw new Error(`We can't access ${pack} on ${this.map}.`);
+    }
+
+    // Look for a pack
+    let packFrom: number;
+    let packTo: number;
+    if (bankPackNum !== undefined) {
+      packFrom = bankPackNum;
+      packTo = bankPackNum;
+    } else if (this.map == "bank") {
+      packFrom = 0;
+      packTo = 7;
+    } else if (this.map == "bank_b") {
+      packFrom = 8;
+      packTo = 23;
+    } else if (this.map == "bank_u") {
+      packFrom = 24;
+      packTo = 47;
+    } else {
+      throw new Error(`Unknown bank map: ${this.map}`);
+    }
+
+    const numStackable = this.game.G.items[item.name].s;
+
+    packSearch: for (let packNum = packFrom; packNum <= packTo; packNum++) {
+      const packName = `items${packNum}` as BankPackTypeItemsOnly;
+      const packItems = this.bank[packName];
+      if (packItems === undefined) continue; // Not unlocked
+
+      for (let slotNum = 0; slotNum < packItems.length; slotNum++) {
+        const packItem = packItems[slotNum];
+        if (packItem && packItem.name !== item.name) continue; // Occupied by a different item
+
+        if (!packItem) {
+          // Empty bank slot, this is acceptable
+          pack = packName;
+          str = slotNum;
+          if (numStackable === undefined) {
+            break packSearch; // Our item is not stackable (we found a good spot)
+          }
+          continue;
+        }
+
+        if (numStackable !== undefined && (packItem.q ?? 1) + (item.q ?? 1) < numStackable) {
+          // Same item, and we can stack on top of it (we found a good spot)
+          pack = packName;
+          str = slotNum;
+          break packSearch;
+        }
+      }
+    }
+
+    if (pack === undefined || str === undefined)
+      throw new Error(`Bank is full. There is nowhere to place '${item.name}'.`);
+
+    const s = this.socket;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "bank")) return;
+        if (
+          isSuccessGameResponse(data) &&
+          data.operation === "swap" &&
+          data.pack === pack &&
+          data.inv === inv &&
+          data.str === str
+        ) {
+          resolve();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("bank", { inv, pack, str, operation: "swap" });
+    return promise;
   }
 
   /**
