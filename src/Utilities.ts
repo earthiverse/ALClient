@@ -138,7 +138,7 @@ export class Utilities {
         for (const [map, x1, y1, x2, y2] of mapMonster.boundaries ?? [
           [mapKey as MapKey, ...(mapMonster.boundary as [number, number, number, number])],
         ]) {
-          spawns.push({ map, x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
+          spawns.push({ map, in: map, x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
         }
       }
     }
@@ -161,7 +161,7 @@ export class Utilities {
       for (const npc of gMap.npcs) {
         if (npc.id !== npcKey) continue; // Different NPC
         for (const [x, y] of npc.positions ?? [[...(npc.position as [number, number])]]) {
-          positions.push({ map: mapKey as MapKey, x, y });
+          positions.push({ map: mapKey as MapKey, in: mapKey, x, y });
         }
       }
     }

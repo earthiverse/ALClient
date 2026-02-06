@@ -54,6 +54,6 @@
   "dependencies": {
     "alpathfinder": "^0.2.7",
     "socket.io-client": "^4.7.5",
-    "typed-adventureland": "^0.0.53"
+    "typed-adventureland": "^0.0.54"
   }
 }
