@@ -607,9 +607,9 @@ export class Character extends Observer {
 
     const gItem = this.game.G.items[item];
     if (this._esize! <= 0) {
-      if (gItem.s === undefined) return false; // No space, can't stack
-      if (this._items?.some((i) => i?.name === item && i.q! <= gItem.s! - options.quantity!) === true) return true; // We can stack it
-      return false;
+      // No space in our inventory
+      if (gItem.s === undefined) return false; // Item isn't stackable
+      if (!this._items!.some((i) => i?.name === item && options.quantity! + i.q! <= gItem.s!)) return false; // No items to stack it on in our inventory
     }
 
     if (this.gold < gItem.g * (gItem.markup ?? 1) * options.quantity) return false; // We can't afford it
