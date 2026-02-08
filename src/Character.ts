@@ -1,5 +1,6 @@
 import type EventEmitter from "node:events";
 import type {
+  BankOperationGRDataObject,
   BankPackTypeItemsOnly,
   BuySuccessGRDataObject,
   CharacterBankInfos,
@@ -799,6 +800,49 @@ export class Character extends Observer {
 
   // TODO: Untested
   /**
+   * Deposit gold in the bank
+   * @param amount
+   * @returns
+   */
+  public async depositGold(amount: number): Promise<void> {
+    if (!this.map.startsWith("bank")) throw new Error("Not in bank");
+    if (amount < 0) throw new Error("Amount must be positive");
+    if (amount > this.gold) throw new Error("Insufficient gold");
+
+    const s = this.socket;
+
+    const depositedGold = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "bank")) return;
+        if (
+          // TODO: https://github.com/kaansoral/adventureland/pull/229
+          isSuccessGameResponse(data) &&
+          data.response === "data" &&
+          (data as BankOperationGRDataObject).gold === amount
+        ) {
+          resolve();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("bank", { operation: "deposit", amount });
+    return depositedGold;
+  }
+
+  // TODO: Untested
+  /**
    * Deposits an item in the bank
    *
    * @param inv Position of item in inventory
@@ -887,7 +931,7 @@ export class Character extends Observer {
 
     const s = this.socket;
 
-    const promise = new Promise<void>((resolve, reject) => {
+    const depositedItem = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_response", gameResponseHandler);
@@ -915,7 +959,7 @@ export class Character extends Observer {
     });
 
     s.emit("bank", { inv, pack, str, operation: "swap" });
-    return promise;
+    return depositedItem;
   }
 
   /**
@@ -2131,6 +2175,49 @@ export class Character extends Observer {
       s.on("player", playerHandler);
     });
     return warpFinished;
+  }
+
+  // TODO: Untested
+  /**
+   * Withdraw gold from the bank
+   * @param amount
+   * @returns
+   */
+  public async withdrawGold(amount: number): Promise<void> {
+    if (!this.map.startsWith("bank")) throw new Error("Not in bank");
+    if (amount < 0) throw new Error("Amount must be positive");
+    if (amount > this.gold) throw new Error("Insufficient gold");
+
+    const s = this.socket;
+
+    const withdrewGold = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "bank")) return;
+        if (
+          // TODO: https://github.com/kaansoral/adventureland/pull/229
+          isSuccessGameResponse(data) &&
+          data.response === "data" &&
+          (data as BankOperationGRDataObject).gold === amount
+        ) {
+          resolve();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("bank", { operation: "withdraw", amount });
+    return withdrewGold;
   }
 }
 
