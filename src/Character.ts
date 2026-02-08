@@ -2219,6 +2219,94 @@ export class Character extends Observer {
     s.emit("bank", { operation: "withdraw", amount });
     return withdrewGold;
   }
+
+  /**
+   * Withdraws an item from the bank
+   *
+   * @param pack Bank pack to withdraw the item from.
+   * @param str Position of item in bank pack.
+   * @param inv Position in inventory to store the item. If undefined, we will find a slot to store it.
+   */
+  public async withdrawItem(
+    pack: BankPackTypeItemsOnly,
+    str: number,
+    inv: number | undefined = undefined,
+  ): Promise<void> {
+    if (!this.map.startsWith("bank")) throw new Error("Not in bank");
+    if (str < 0 || str > 41) throw new Error(`str must be between 0-41`);
+
+    for (let i = 0; i < 20; i++) {
+      if (this._bank) break; // Bank data is available
+      await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
+    }
+    if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
+
+    const bankPackNum = Number.parseInt(pack.substring(5, 7));
+    if (
+      (this.map == "bank" && bankPackNum > 7) ||
+      (this.map == "bank_b" && (bankPackNum < 8 || bankPackNum > 23)) ||
+      (this.map == "bank_u" && bankPackNum < 24)
+    )
+      throw new Error(`We can't access ${pack} on ${this.map}.`);
+
+    const packItems = this.bank[pack];
+    if (packItems === undefined) throw new Error(`Bank pack ${pack} is not available.`);
+    const item = packItems[str];
+    if (!item) throw new Error(`No item at ${pack} slot ${str}`);
+
+    if (inv === undefined) {
+      // Find a slot in inventory
+      const numStackable = this.game.G.items[item.name].s;
+
+      if (numStackable !== undefined) {
+        // Look for a stack
+        const stackIndex = this._items!.findIndex(
+          (i) => i !== null && i.name === item.name && (i.q ?? 1) + (item.q ?? 1) <= numStackable,
+        );
+        if (stackIndex !== -1) inv = stackIndex;
+      }
+
+      if (inv === undefined) {
+        // Check for an empty slot
+        const emptyIndex = this._items!.findIndex((i) => i === null);
+        if (emptyIndex !== -1) inv = emptyIndex;
+      }
+
+      if (inv === undefined) throw new Error("Inventory is full.");
+    }
+
+    const s = this.socket;
+
+    const withdrewItem = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "bank")) return;
+        if (
+          isSuccessGameResponse(data) &&
+          data.operation === "swap" &&
+          data.pack === pack &&
+          data.inv === inv &&
+          data.str === str
+        ) {
+          resolve();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("bank", { inv, pack, str, operation: "swap" });
+    return withdrewItem;
+  }
 }
 
 export default Character;
