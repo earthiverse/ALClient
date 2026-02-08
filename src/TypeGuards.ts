@@ -2,6 +2,7 @@ import type {
   ConditionKey,
   GameResponseDataUpgradeChance,
   GData,
+  IPosition,
   ItemKey,
   MapKey,
   MonsterKey,
@@ -52,18 +53,26 @@ export function isFailedGameResponse(data: unknown): data is FailedGameResponse<
   return (data as FailedGameResponse<string>).failed === true;
 }
 
-export function isConditionKey(key: string, g: GData): key is ConditionKey {
+export function isConditionKey(key: unknown, g: GData): key is ConditionKey {
   return g.conditions[key as ConditionKey] !== undefined;
 }
 
-export function isItemKey(key: string, g: GData): key is ItemKey {
+export function isIPosition(data: unknown, g: GData): data is IPosition {
+  if (typeof data !== "object" || !data) return false;
+  if (!isMapKey((data as IPosition).map, g)) return false;
+  if (typeof (data as IPosition).x !== "number") return false;
+  if (typeof (data as IPosition).y !== "number") return false;
+  return true;
+}
+
+export function isItemKey(key: unknown, g: GData): key is ItemKey {
   return g.items[key as ItemKey] !== undefined;
 }
 
-export function isMapKey(key: string, g: GData): key is MapKey {
+export function isMapKey(key: unknown, g: GData): key is MapKey {
   return g.maps[key as MapKey] !== undefined;
 }
 
-export function isMonsterKey(key: string, g: GData): key is MonsterKey {
+export function isMonsterKey(key: unknown, g: GData): key is MonsterKey {
   return g.monsters[key as MonsterKey] !== undefined;
 }
