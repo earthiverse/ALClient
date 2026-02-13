@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 837 (2026-02-13)
  * It is used to confirm type correctness
  */
 
@@ -473,6 +473,17 @@ test("G.items type validation", async () => {
                 skin: "brownegg",
                 type: "material",
             },
+            brownenvelope: {
+                a: true,
+                e: 1,
+                event: true,
+                explanation: "Congratulations and prosperity",
+                g: 24000,
+                name: "Brown Envelope",
+                s: 9999,
+                skin: "brownenvelope",
+                type: "gem",
+            },
             btusk: {
                 g: 50000,
                 name: "Boar Tusk",
@@ -617,7 +628,6 @@ test("G.items type validation", async () => {
                 explanation: "The old man in Winterland was looking for sweets.",
                 g: 24000,
                 name: "Candy Cane",
-                quest: "candycane",
                 s: 9999,
                 skin: "candycane",
                 type: "gem",
@@ -2954,6 +2964,40 @@ test("G.items type validation", async () => {
                     stat: 1,
                 },
             },
+            horsecape: {
+                armor: 10,
+                g: 1600000,
+                grades: [0, 5, 10, 12],
+                name: "Horse Leather Cape",
+                skin: "horsecape",
+                speed: 1,
+                stat: 5,
+                type: "cape",
+                upgrade: {
+                    armor: 2,
+                    resistance: 2,
+                    speed: 0.1,
+                    stat: 0.1,
+                },
+            },
+            horsecapeg: {
+                armor: 10,
+                g: 1600000,
+                gold: 3,
+                grades: [0, 0, 10, 12],
+                name: "Horse Leather Cape",
+                skin: "horsecapeg",
+                speed: 1,
+                stat: 5,
+                type: "cape",
+                upgrade: {
+                    armor: 2,
+                    gold: 0.5,
+                    resistance: 2,
+                    speed: 0.1,
+                    stat: 0.1,
+                },
+            },
             hotchocolate: {
                 armor: 30,
                 duration: 1,
@@ -3607,7 +3651,6 @@ test("G.items type validation", async () => {
                 explanation: "Maybe someone could give you a kiss in exchange...",
                 g: 20000,
                 name: "Mistletoe",
-                quest: "mistletoe",
                 s: 9999,
                 skin: "mistletoe",
                 type: "gem",
@@ -4641,7 +4684,6 @@ test("G.items type validation", async () => {
                 explanation: "A beautiful ornament. A bunch of these could decorate the trees of Winterland.",
                 g: 3000,
                 name: "Xmas Ornament",
-                quest: "ornament",
                 s: 9999,
                 skin: "ornament",
                 type: "quest",
