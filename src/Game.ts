@@ -3,6 +3,7 @@ import type { EventEmitter } from "node:events";
 import type {
   ClassKey,
   GData,
+  MapKey,
   ServerIdentifier,
   ServerRegion,
   XOnlineCharacter,
@@ -179,7 +180,7 @@ export class Game {
     }
   }
 
-  public preparePathfinder(ignoreMaps?: string[]): typeof ALPathfinder {
+  public preparePathfinder(ignoreMaps?: MapKey[]): typeof ALPathfinder {
     if (this._pathfinder !== undefined) return this._pathfinder;
     ALPathfinder.prepare(this.G, ignoreMaps);
     this._pathfinder = ALPathfinder;
