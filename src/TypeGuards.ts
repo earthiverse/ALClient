@@ -2,11 +2,11 @@ import type {
   ConditionKey,
   GameResponseDataUpgradeChance,
   GData,
-  IPosition,
   ItemKey,
   MapKey,
   MonsterKey,
 } from "typed-adventureland";
+import type { Location } from "./Entity.js";
 
 export type SuccessGameResponse<Place extends string> = {
   response: string;
@@ -57,11 +57,12 @@ export function isConditionKey(key: unknown, g: GData): key is ConditionKey {
   return g.conditions[key as ConditionKey] !== undefined;
 }
 
-export function isIPosition(data: unknown, g: GData): data is IPosition {
+export function isLocation(data: unknown, g: GData): data is Location {
   if (typeof data !== "object" || !data) return false;
-  if (!isMapKey((data as IPosition).map, g)) return false;
-  if (typeof (data as IPosition).x !== "number") return false;
-  if (typeof (data as IPosition).y !== "number") return false;
+  if (!isMapKey((data as Location).map, g)) return false;
+  if (typeof (data as Location).in !== "string") return false;
+  if (typeof (data as Location).x !== "number") return false;
+  if (typeof (data as Location).y !== "number") return false;
   return true;
 }
 
