@@ -1,3 +1,4 @@
+import type { PathNode } from "alpathfinder";
 import type {
   ConditionKey,
   GData,
@@ -16,6 +17,47 @@ import type { EntityCharacter } from "./EntityCharacter.js";
 import type { EntityMonster } from "./EntityMonster.js";
 
 export class Utilities {
+  /**
+   * Returns the cost of
+   * @param path
+   * @param speed how fast your character can move
+   * @returns An estimate how long it would take to walk the given path
+   */
+  public static calculatePathCost(path: PathNode[], speed: number = 50.0): number {
+    let cost = 0;
+    for (let i = 0; i < path.length - 1; ) {
+      const node = path[i]!;
+      switch (node.method) {
+        case "move": {
+          if (i === 0) continue; // First movement
+          const previousNode = path[i - 1]!;
+          cost += Math.hypot(node.x - previousNode.x, node.y - previousNode.y) / speed;
+          continue;
+        }
+        case "town": {
+          cost += 3.812; // 3s for channel + 812ms penalty_cd
+          continue;
+        }
+        case "door": {
+          cost += 0.812; // 812ms penalty_cd
+          continue;
+        }
+        case "transport": {
+          cost += 3.2; // 3.2s penalty_cd
+          continue;
+        }
+        case "enter": {
+          cost += 0.812; // 812ms penalty_cd
+          continue;
+        }
+        case "unknown": {
+          return Number.POSITIVE_INFINITY;
+        }
+      }
+    }
+    return cost;
+  }
+
   /**
    * From Adventureland's common_functions.js
    * @static
