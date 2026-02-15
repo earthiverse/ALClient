@@ -5,6 +5,7 @@ import type {
   ItemKey,
   MapKey,
   MonsterKey,
+  NpcKey,
 } from "typed-adventureland";
 import type { Location } from "./Entity.js";
 
@@ -76,4 +77,8 @@ export function isMapKey(key: unknown, g: GData): key is MapKey {
 
 export function isMonsterKey(key: unknown, g: GData): key is MonsterKey {
   return g.monsters[key as MonsterKey] !== undefined;
+}
+
+export function isNpcKey(key: unknown, g: GData): key is NpcKey {
+  return g.npcs[key as NpcKey] !== undefined;
 }
