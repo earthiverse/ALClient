@@ -128,9 +128,10 @@ export class Utilities {
    * @param monster
    * @returns
    */
-  public static getMonsterSpawns(g: GData, monster: MonsterKey): Required<IPosition>[] {
+  public static getMonsterSpawns(g: GData, monster: MonsterKey, options: { map?: MapKey } = {}): Required<IPosition>[] {
     const spawns: Required<IPosition>[] = [];
     for (const [mapKey, gMap] of Object.entries(g.maps)) {
+      if (options.map !== undefined && mapKey !== options.map) continue; // We're looking for a specific map
       if (gMap.ignore !== undefined && gMap.ignore) continue; // Ignore map
       if (gMap.monsters === undefined) continue; // No monsters on map
       for (const mapMonster of gMap.monsters) {
