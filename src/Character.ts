@@ -22,6 +22,7 @@ import type {
   MapKey,
   MonsterKey,
   NotReadyGRDataObject,
+  NpcKey,
   ServerIdentifier,
   ServerRegion,
   ServerToClient_chest_opened,
@@ -41,7 +42,7 @@ import type {
   XServerInfos,
 } from "typed-adventureland";
 import Configuration from "./Configuration.js";
-import { Entity } from "./Entity.js";
+import { Entity, type Location } from "./Entity.js";
 import EventBus from "./EventBus.js";
 import type Mage from "./Mage.js";
 import { Observer } from "./Observer.js";
@@ -50,13 +51,16 @@ import {
   isCompoundChanceResponse,
   isConditionKey,
   isFailedGameResponse,
+  isLocation,
   isMapKey,
   isMonsterKey,
+  isNpcKey,
   isRelevantGameResponse,
   isSuccessGameResponse,
   isUpgradeChanceResponse,
 } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
+import type { PathNode } from "alpathfinder";
 
 export interface CharacterEventMap {
   bank_updated: [character: Character, bank: CharacterBankInfos];
@@ -1525,7 +1529,7 @@ export class Character extends Observer {
    *
    * @param entity
    */
-  public async smartMove(entity: Entity): Promise<void>;
+  public async smartMove(location: Location): Promise<void>;
   /**
    * Moves your character to the nearest monster of the given type
    *
@@ -1533,43 +1537,37 @@ export class Character extends Observer {
    * @param map Optional. If set, we will only consider spawns on this map.
    */
   public async smartMove(monster: MonsterKey, map?: MapKey): Promise<void>;
+  public async smartMove(npc: NpcKey, map?: MapKey): Promise<void>;
   /**
    * Moves your character to the given position.
    *
    * @param map
    * @param x
    * @param y
+   * @param instance
    */
-  public async smartMove(map: MapKey, x: number, y: number): Promise<void>;
-  public async smartMove(arg1: MonsterKey | MapKey | Entity, arg2?: number | MapKey, arg3?: number) {
+  public async smartMove(map: MapKey, x: number, y: number, instance?: string): Promise<void>;
+  public async smartMove(arg1: MonsterKey | MapKey | NpcKey | Location, arg2?: number | MapKey, arg3?: number, arg4?: string) {
     const pathfinder = this.game.pathfinder;
 
     if (!pathfinder.isWalkable(this.map, this.x, this.y)) await this.warpToTown(); // We're stuck
 
     // TODO: Add smartMove options
 
-    // TODO: Is there a way to add this typing to the pathfinder itself?
-    let path:
-      | {
-          map: MapKey;
-          x: number;
-          y: number;
-          method: "door" | "move" | "town" | "transport";
-          spawn?: number;
-        }[]
-      | undefined = undefined;
+    let path: PathNode[] | null = null;
     let map: MapKey = arg1 as MapKey;
     let x: number = arg2 as number;
     let y: number = arg3 as number;
+    let instance: string | undefined = arg4;
 
-    if (arg1 instanceof Entity) {
-      ({ map, x, y } = arg1);
+    if (isLocation(arg1, this.game.G)) {
+      ({ map, x, y, in: instance } = arg1);
     } else if (isMonsterKey(arg1, this.game.G)) {
-      const spawns = Utilities.getMonsterSpawns(this.game.G, arg1);
+      const map2 = isMapKey(arg2, this.game.G) ? arg2 : undefined;
+      const spawns = Utilities.getMonsterSpawns(this.game.G, arg1, { map: map2 });
       let bestSpawn = undefined;
       for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i]!;
-        if (typeof arg2 === "string" && isMapKey(arg2, this.game.G) && spawn.map === arg2) continue; // Not the map we want
         if (spawn.map === this.map) bestSpawn = spawn;
         // TODO: Return cost from pathfinder
         path = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y) as typeof path;
@@ -1578,13 +1576,31 @@ export class Character extends Observer {
         break; // TODO: Calculate path cost
       }
       if (bestSpawn === undefined) {
-        if (typeof arg2 === "string")
-          throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${arg2}`);
+        if (map2 !== undefined)
+          throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${map2}`);
         throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
       }
       ({ map, x, y } = bestSpawn);
+    } else if (isNpcKey(arg1, this.game.G)) {
+      const map2 = isMapKey(arg2, this.game.G) ? arg2 : undefined;
+      const locations = Utilities.getNpcPositions(this.game.G, arg1, { map: arg2 as MapKey });
+      let bestLocation = undefined;
+      for (let i = 0; i < locations.length; i++) {
+        const location = locations[i]!;
+        if (location.map === this.map) bestLocation = location;
+        // TODO: Return cost from pathfinder
+        path = pathfinder.getPath(this.map, this.x, this.y, location.map, location.x, location.y) as typeof path;
+        if (!Array.isArray(path)) continue; // Couldn't find path
+        bestLocation = location;
+        break; // TODO: Calculate path cost
+      }
+      if (bestLocation === undefined) {
+        if (map2 !== undefined)
+          throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${map2}`);
+        throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
+      }
+      ({ map, x, y } = bestLocation);
     }
-    // TODO: NPC Key
     // TODO: Item Key -- find npc that sells it
 
     path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
@@ -1633,11 +1649,19 @@ export class Character extends Observer {
         continue;
       }
 
+      if (segment.method === "enter") {
+        // TODO: Enter instance
+        continue;
+      }
+
       if (segment.method === "town") {
         // TODO: Pathfind to town by walking, too, so if it gets interrupted, we are still advancing
 
         await this.warpToTown();
+        continue;
       }
+
+      // TODO: Throw error
     }
   }
 
