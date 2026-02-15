@@ -1,3 +1,4 @@
+import type { PathNode } from "alpathfinder";
 import type EventEmitter from "node:events";
 import type {
   BankOperationGRDataObject,
@@ -60,7 +61,6 @@ import {
   isUpgradeChanceResponse,
 } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
-import type { PathNode } from "alpathfinder";
 
 export interface CharacterEventMap {
   bank_updated: [character: Character, bank: CharacterBankInfos];
@@ -793,7 +793,7 @@ export class Character extends Observer {
    * For stacks of items, it uses the `.q`.
    *
    * If you wish to know how many inventory slots are being taken up,
-   * try `character.locateItems(item).length` instead.
+   * try `.locateItems(item).length` instead.
    *
    * @param item all the properties the item needs to match
    * @returns
@@ -1547,7 +1547,12 @@ export class Character extends Observer {
    * @param instance
    */
   public async smartMove(map: MapKey, x: number, y: number, instance?: string): Promise<void>;
-  public async smartMove(arg1: MonsterKey | MapKey | NpcKey | Location, arg2?: number | MapKey, arg3?: number, arg4?: string) {
+  public async smartMove(
+    arg1: MonsterKey | MapKey | NpcKey | Location,
+    arg2?: number | MapKey,
+    arg3?: number,
+    arg4?: string,
+  ) {
     const pathfinder = this.game.pathfinder;
 
     if (!pathfinder.isWalkable(this.map, this.x, this.y)) await this.warpToTown(); // We're stuck
@@ -1565,41 +1570,43 @@ export class Character extends Observer {
     } else if (isMonsterKey(arg1, this.game.G)) {
       const map2 = isMapKey(arg2, this.game.G) ? arg2 : undefined;
       const spawns = Utilities.getMonsterSpawns(this.game.G, arg1, { map: map2 });
-      let bestSpawn = undefined;
+      let bestSpawnPath = undefined;
+      let bestSpawnCost = Number.POSITIVE_INFINITY;
       for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i]!;
-        if (spawn.map === this.map) bestSpawn = spawn;
-        // TODO: Return cost from pathfinder
-        path = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y) as typeof path;
-        if (!Array.isArray(path)) continue; // Couldn't find path
-        bestSpawn = spawn;
-        break; // TODO: Calculate path cost
+        const spawnPath = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y);
+        if (!Array.isArray(spawnPath)) continue; // Couldn't find path
+        const cost = Utilities.calculatePathCost(spawnPath, this.speed);
+        if (cost >= bestSpawnCost) continue;
+        bestSpawnPath = spawnPath;
+        bestSpawnCost = cost;
       }
-      if (bestSpawn === undefined) {
+      if (bestSpawnPath === undefined) {
         if (map2 !== undefined)
           throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${map2}`);
         throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
       }
-      ({ map, x, y } = bestSpawn);
+      path = bestSpawnPath;
     } else if (isNpcKey(arg1, this.game.G)) {
       const map2 = isMapKey(arg2, this.game.G) ? arg2 : undefined;
       const locations = Utilities.getNpcPositions(this.game.G, arg1, { map: arg2 as MapKey });
-      let bestLocation = undefined;
+      let bestLocationPath = undefined;
+      let bestLocationCost = Number.POSITIVE_INFINITY;
       for (let i = 0; i < locations.length; i++) {
         const location = locations[i]!;
-        if (location.map === this.map) bestLocation = location;
-        // TODO: Return cost from pathfinder
-        path = pathfinder.getPath(this.map, this.x, this.y, location.map, location.x, location.y) as typeof path;
-        if (!Array.isArray(path)) continue; // Couldn't find path
-        bestLocation = location;
-        break; // TODO: Calculate path cost
+        const locationPath = pathfinder.getPath(this.map, this.x, this.y, location.map, location.x, location.y);
+        if (!Array.isArray(locationPath)) continue; // Couldn't find path
+        const cost = Utilities.calculatePathCost(locationPath, this.speed);
+        if (cost >= bestLocationCost) continue;
+        bestLocationPath = locationPath;
+        bestLocationCost = cost;
       }
-      if (bestLocation === undefined) {
+      if (bestLocationPath === undefined) {
         if (map2 !== undefined)
           throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1} on ${map2}`);
         throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${arg1}`);
       }
-      ({ map, x, y } = bestLocation);
+      path = bestLocationPath;
     }
     // TODO: Item Key -- find npc that sells it
 
