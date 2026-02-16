@@ -868,7 +868,7 @@ export class Character extends Observer {
       if (this._bank) break; // Bank data is available
       await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
     }
-    if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
+    if (!this._bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
 
     let bankPackNum: number | undefined = undefined;
     if (pack) {
@@ -904,7 +904,7 @@ export class Character extends Observer {
 
     packSearch: for (let packNum = packFrom; packNum <= packTo; packNum++) {
       const packName = `items${packNum}` as BankPackTypeItemsOnly;
-      const packItems = this.bank[packName];
+      const packItems = this._bank[packName];
       if (packItems === undefined) continue; // Not unlocked
 
       for (let slotNum = 0; slotNum < packItems.length; slotNum++) {
@@ -2217,7 +2217,13 @@ export class Character extends Observer {
   public async withdrawGold(amount: number): Promise<void> {
     if (!this.map.startsWith("bank")) throw new Error("Not in bank");
     if (amount < 0) throw new Error("Amount must be positive");
-    if (amount > this.gold) throw new Error("Insufficient gold");
+    
+    for (let i = 0; i < 20; i++) {
+      if (this._bank) break; // Bank data is available
+      await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
+    }
+    if (!this._bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
+    if (amount > this._bank.gold) throw new Error("Insufficient gold");
 
     const s = this.socket;
 
@@ -2270,7 +2276,7 @@ export class Character extends Observer {
       if (this._bank) break; // Bank data is available
       await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
     }
-    if (!this.bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
+    if (!this._bank) throw new Error("We don't have bank information yet. Please try again in a bit.");
 
     const bankPackNum = Number.parseInt(pack.substring(5, 7));
     if (
@@ -2280,7 +2286,7 @@ export class Character extends Observer {
     )
       throw new Error(`We can't access ${pack} on ${this.map}.`);
 
-    const packItems = this.bank[pack];
+    const packItems = this._bank[pack];
     if (packItems === undefined) throw new Error(`Bank pack ${pack} is not available.`);
     const item = packItems[str];
     if (!item) throw new Error(`No item at ${pack} slot ${str}`);
