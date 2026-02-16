@@ -22,13 +22,17 @@ export class Item implements ItemData, GItem {
     public ability?: GItem["ability"]
     public armor = 0
     public attack = 0
+    public apiercing = 0
     public dex = 0
     public gift = 0
+    public gold = 0
     public int = 0
+    public luck = 0
     public p?: TitleName
     public q?: number
     public range = 0
     public resistance = 0
+    public rpiercing = 0
     public stat = 0
     public str = 0
     public class?: CharacterType[]
