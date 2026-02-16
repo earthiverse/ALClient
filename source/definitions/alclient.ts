@@ -82,6 +82,7 @@ export type GetPlayerFilters = GetPlayersFilters & {
     returnHighestHP?: boolean
     returnLowestHP?: boolean
     returnNearest?: boolean
+    id?: string
 }
 
 /** Filters for returning a list of items */

@@ -622,7 +622,9 @@ test("G.drops type validation", async () => {
                 [0.25, "test_orb"],
                 [1, "stealthcape"],
                 [1, "cape"],
+                [1, "horsecape"],
                 [0.25, "fcape"],
+                [0.25, "horsecapeg"],
                 [1, "ecape"],
                 [1, "gcape"],
                 [1, "angelwings"],
@@ -944,6 +946,7 @@ test("G.drops type validation", async () => {
                 [1, "redenvelopev3"],
                 [1, "redenvelopev4"],
                 [1, "greenenvelope"],
+                [1, "brownenvelope"],
                 [1, "essenceoffrost"],
                 [1, "essenceoffire"],
                 [1, "essenceofether"],
@@ -1133,6 +1136,17 @@ test("G.drops type validation", async () => {
                 [1, "oxhelmet", null, null, "lucky"],
                 [0.1, "cdragon", null, null, "lucky"],
                 [0.1, "snakeoil"],
+            ],
+            brownenvelope: [
+                [2000, "gold", 50000],
+                [1, "gold", 10000000],
+                [300, "firecrackers"],
+                [0.1, "dragondagger", null, null, "lucky"],
+                [0.3, "lmace", null, null, "lucky"],
+                [1, "oxhelmet", null, null, "lucky"],
+                [0.1, "cdragon", null, null, "lucky"],
+                [0.1, "snakeoil"],
+                [0.3, "horsecapeg", null, null, "lucky"],
             ],
             jewellerybox: [
                 [1, "hpamulet"],
@@ -1473,6 +1487,7 @@ test("G.drops type validation", async () => {
                 [1, "redenvelopev3"],
                 [1, "redenvelopev4"],
                 [1, "greenenvelope"],
+                [1, "brownenvelope"],
                 [1, "essenceoffrost"],
                 [1, "essenceoffire"],
                 [1, "essenceofether"],
@@ -1885,6 +1900,7 @@ test("G.drops type validation", async () => {
                     [0.5, "lmace"],
                     [5e-7, "cxjar", 1, "hat400"],
                     [3.333333333333333e-7, "chrysalis0"],
+                    [1, "horsecapeg"]
                 ],
                 dryad: [
                     [0.0002, "pclaw"],
@@ -2092,7 +2108,10 @@ test("G.drops type validation", async () => {
                     [0.0016666666666666668, "offeringp"],
                     [1.5625e-8, "cxjar", 1, "hairdo606"],
                 ],
-                pinkgoblin: [[0.000041666666666666665, "bkey"]],
+                pinkgoblin: [
+                    [0.000041666666666666665, "bkey"],
+                    [0.1, "horsecape"]
+                ],
                 pinkgoo: [
                     [0.3, "cupid"],
                     [0.001, "emptyheart"],

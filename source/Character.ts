@@ -3490,12 +3490,17 @@ export class Character extends Observer implements CharacterData {
         if (filters.returnHighestHP) numReturnOptions++
         if (filters.returnLowestHP) numReturnOptions++
         if (filters.returnNearest) numReturnOptions++
+        if (filters.id) numReturnOptions++
         if (numReturnOptions > 1)
             console.warn(
                 "You supplied getPlayer with more than one returnX option. This function may not return the player you want.",
             )
 
         if (players.length <= 1 || numReturnOptions == 0) return players[0]
+
+        if(filters.id) {
+            return players.find( e=> e.id == filters.id)
+        }
 
         if (filters.returnHighestHP) {
             let highest: Player

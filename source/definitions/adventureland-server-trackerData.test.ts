@@ -150,6 +150,7 @@ test("TrackerData type validation", async () => {
                     [0.25, "hdagger"],
                     [1, "gum"],
                     [0.25, "fcape"],
+                    [0.25, "horsecapeg"],
                     [0.25, "vsword"],
                     [1, "gloves"],
                     [1, "mcgloves"],
@@ -362,6 +363,7 @@ test("TrackerData type validation", async () => {
                     [1, "elixirfzres"],
                     [1, "ringsj"],
                     [1, "cape"],
+                    [1, "horsecape"],
                     [1, "cryptkey"],
                     [1, "ectoplasm"],
                     [1, "gem3"],
@@ -519,6 +521,7 @@ test("TrackerData type validation", async () => {
                     [0.25, "exoarm"],
                     [1, "elixirfires"],
                     [1, "greenenvelope"],
+                    [1, "brownenvelope"],
                     [1, "bfur"],
                     [1, "essenceoflife"],
                     [1, "wbasher"],
@@ -1279,6 +1282,16 @@ test("TrackerData type validation", async () => {
                     [1, "oxhelmet"],
                     [0.1, "cdragon"],
                 ],
+                brownenvelope: [
+                    [2000, "gold", 50000],
+                    [1, "gold", 10000000],
+                    [300, "firecrackers"],
+                    [0.1, "dragondagger"],
+                    [0.3, "lmace"],
+                    [1, "oxhelmet"],
+                    [0.1, "cdragon"],
+                    [0.3, "horsecapeg"],
+                ],
                 gemfragment: [
                     [0.5, "gem0"],
                     [0.00001, "fury"],
@@ -1650,6 +1663,7 @@ test("TrackerData type validation", async () => {
                     [0.3, "lmace"],
                     [2.5e-7, "cxjar", 1, "hat400"],
                     [1.6666666666666665e-7, "chrysalis0"],
+                    [1, "horsecapeg"]
                 ],
                 jr: [
                     [0.1, "candy0"],
@@ -1796,7 +1810,10 @@ test("TrackerData type validation", async () => {
                     [0.0005, "cxjar", 1, "hairdo608"],
                     [0.001, "vblood"],
                 ],
-                pinkgoblin: [[0.000041666666666666665, "bkey"]],
+                pinkgoblin: [
+                    [0.000041666666666666665, "bkey"],
+                    [0.1, "horsecape"]
+                ],
                 minimush: [
                     [0.016666666666666666, "spores"],
                     [0.0002, "mushroomstaff"],
