@@ -2676,7 +2676,7 @@ test("G.items type validation", async () => {
                 event: true,
                 explanation: "Congratulations and prosperity",
                 g: 24000,
-                name: "Green Envelope",
+                name: "Brown Envelope",
                 s: 9999,
                 skin: "brownenvelope",
                 type: "gem",
