@@ -60,7 +60,8 @@ export type GetPlayersFilters = {
     ctype?: CharacterType
     hpGreaterThan?: number
     hpLessThan?: number
-    ignoreIDs?: Iterable<string>
+    ids?: Iterable<string>,
+    ignoreIDs?: Iterable<string>,
     isDead?: boolean
     isDisabled?: boolean
     isFriendly?: boolean
@@ -82,6 +83,7 @@ export type GetPlayerFilters = GetPlayersFilters & {
     returnHighestHP?: boolean
     returnLowestHP?: boolean
     returnNearest?: boolean
+    id?: string
 }
 
 /** Filters for returning a list of items */

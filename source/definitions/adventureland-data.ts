@@ -1703,6 +1703,7 @@ export type DropName =
     | "armorx"
     | "basicelixir"
     | "basketofeggs"
+    | "brownenvelope"
     | "bugbountybox"
     | "candy0"
     | "candy0v2"

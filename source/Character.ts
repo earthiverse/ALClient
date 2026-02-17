@@ -3490,12 +3490,17 @@ export class Character extends Observer implements CharacterData {
         if (filters.returnHighestHP) numReturnOptions++
         if (filters.returnLowestHP) numReturnOptions++
         if (filters.returnNearest) numReturnOptions++
+        if (filters.id) numReturnOptions++
         if (numReturnOptions > 1)
             console.warn(
                 "You supplied getPlayer with more than one returnX option. This function may not return the player you want.",
             )
 
         if (players.length <= 1 || numReturnOptions == 0) return players[0]
+
+        if (filters.id) {
+            return players.find((e) => e.id === filters.id)
+        }
 
         if (filters.returnHighestHP) {
             let highest: Player
@@ -3538,6 +3543,11 @@ export class Character extends Observer implements CharacterData {
     public getPlayers(filters: GetPlayersFilters = {}): Player[] {
         const players: Player[] = []
         filterCheck: for (const [, player] of this.players) {
+            if (filters.ids !== undefined) {
+                for (const id of filters.ids) {
+                    if (id !== player.id) continue filterCheck
+                }
+            }
             if (filters.ignoreIDs !== undefined) {
                 for (const id of filters.ignoreIDs) {
                     if (id == player.id) continue filterCheck
