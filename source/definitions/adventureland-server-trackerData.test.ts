@@ -1663,7 +1663,7 @@ test("TrackerData type validation", async () => {
                     [0.3, "lmace"],
                     [2.5e-7, "cxjar", 1, "hat400"],
                     [1.6666666666666665e-7, "chrysalis0"],
-                    [1, "horsecapeg"]
+                    [1, "horsecapeg"],
                 ],
                 jr: [
                     [0.1, "candy0"],
@@ -1812,7 +1812,7 @@ test("TrackerData type validation", async () => {
                 ],
                 pinkgoblin: [
                     [0.000041666666666666665, "bkey"],
-                    [0.1, "horsecape"]
+                    [0.1, "horsecape"],
                 ],
                 minimush: [
                     [0.016666666666666666, "spores"],

@@ -60,8 +60,8 @@ export type GetPlayersFilters = {
     ctype?: CharacterType
     hpGreaterThan?: number
     hpLessThan?: number
-    ids?: Iterable<string>,
-    ignoreIDs?: Iterable<string>,
+    ids?: Iterable<string>
+    ignoreIDs?: Iterable<string>
     isDead?: boolean
     isDisabled?: boolean
     isFriendly?: boolean
