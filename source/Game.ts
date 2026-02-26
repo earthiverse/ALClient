@@ -14,6 +14,8 @@ import type {
     LoginData,
     MailDeleteResponse,
     DisconnectCharacterResponse,
+    LoginDataSuccess,
+    LoginDataFailed,
 } from "./definitions/adventureland-server.js"
 import { Paladin } from "./Paladin.js"
 import { Mage } from "./Mage.js"
@@ -249,41 +251,21 @@ export class Game {
         if (!this.user) {
             // Login and save the auth
             console.debug("Logging in...")
-            const params = new url.URLSearchParams()
-            params.append("method", "signup_or_login")
-            params.append("arguments", JSON.stringify({ email: email, only_login: true, password: password }))
-            const login = await axios.post<LoginData>(`${this.url}/api/signup_or_login`, params.toString())
-            let loginResult
-            for (const datum of login.data) {
-                if (datum["message"]) {
-                    loginResult = datum
-                    break
-                }
+            const login = await axios.post<LoginData>(`${this.url}/api/signup_or_login`, {
+                email,
+                only_login: true,
+                password,
+            })
+
+            if ((login.data as LoginDataSuccess).success !== true) {
+                throw new Error((login.data as LoginDataFailed).reason || "Failed logging in")
             }
-            if (loginResult && loginResult.message == "Logged In!") {
-                console.debug("Logged in!")
-                // We successfully logged in
-                // Find the auth cookie and save it
-                for (const cookie of login.headers["set-cookie"]) {
-                    const result = /^auth=(.+?);/.exec(cookie)
-                    if (result) {
-                        // Save our data to the database
-                        this.user = {
-                            secure: secure,
-                            userAuth: result[1].split("-")[1],
-                            userID: result[1].split("-")[0],
-                        }
-                        break
-                    }
-                }
-            } else if (loginResult && loginResult.message) {
-                // We failed logging in, and we have a reason from the server
-                console.error(loginResult.message)
-                throw new Error(loginResult.message)
-            } else {
-                // We failed logging in, but we don't know what went wrong
-                console.error(login.data)
-                throw new Error("Failed logging in.")
+
+            console.debug("Logged in!")
+            this.user = {
+                secure,
+                userAuth: (login.data as LoginDataSuccess).auth,
+                userID: (login.data as LoginDataSuccess).user,
             }
         }
 
@@ -527,28 +509,27 @@ export class Game {
         if (!this.user) throw new Error("You must login first.")
         const data = await axios.post(
             `${this.url}/api/servers_and_characters`,
-            "method=servers_and_characters&arguments={}",
-            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+            {},
+            { headers: { cookie: `auth_staging=${this.user.userID}-${this.user.userAuth}` } }, // TODO: Drop _staging
         )
 
-        if (data.status == 200) {
-            // Populate server information
-            for (const serverData of data.data[0].servers as ServerData[]) {
-                if (!this.servers[serverData.region]) this.servers[serverData.region] = {}
-                this.servers[serverData.region][serverData.name] = serverData
-                this.servers[serverData.region][serverData.name].secure = this.user.secure
-            }
-
-            // Populate character information
-            for (const characterData of data.data[0].characters as CharacterListData[]) {
-                this.characters[characterData.name] = characterData
-            }
-
-            return true
-        } else {
+        if (data.status != 200) {
             console.error(data)
+            throw new Error(`Error fetching ${this.url}/api/servers_and_characters`)
         }
 
-        throw new Error(`Error fetching ${this.url}/api/servers_and_characters`)
+        // Populate server information
+        for (const serverData of data.data.infs[0].servers as ServerData[]) {
+            this.servers[serverData.region] ??= {}
+            this.servers[serverData.region][serverData.name] = serverData
+            this.servers[serverData.region][serverData.name].secure = this.user.secure
+        }
+
+        // Populate character information
+        for (const characterData of data.data.infs[0].characters as CharacterListData[]) {
+            this.characters[characterData.name] = characterData
+        }
+
+        return true
     }
 }

@@ -430,8 +430,20 @@ export type MonsterData = {
 
 export type EvalData = string | { code: string }
 
-export type LoginData = LoginDataItem[]
-export type LoginDataItem = { code: string; type: string } | { message: string; type: string } | { html: string }
+export type LoginDataSuccess = {
+    success: true
+    user: string
+    auth: string
+    infs: LoginDataItem
+}
+export type LoginDataFailed = {
+    failed: true
+    reason: string
+}
+export type LoginData = LoginDataSuccess | LoginDataFailed
+export type LoginDataContent = { html: string; type: "content" }
+export type LoginDataMessage = { message: string; type: "message" }
+export type LoginDataItem = LoginDataContent | LoginDataMessage
 
 export type GameEventData = { name: MonsterName; map: MapName; x: number; y: number }
 
@@ -1121,8 +1133,8 @@ export type QInfo = {
 export type ScheduleData = { dailies: number[]; night: boolean; nightlies: number[]; time_offset: number }
 
 export type ServerData = {
-    addr: string
-    port: number
+    address: string
+    path: string
     region: ServerRegion
     name: ServerIdentifier
     players: number
