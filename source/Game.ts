@@ -1,6 +1,5 @@
 import axios from "axios"
 import fs from "fs"
-import url from "url"
 import { Database, PlayerModel } from "./database/Database.js"
 import type { ServerRegion, ServerIdentifier } from "./definitions/adventureland.js"
 import type { GData, GGeometry, GMonster, ItemName, MapName, MonsterName } from "./definitions/adventureland-data.js"
@@ -13,7 +12,6 @@ import type {
     PullMerchantsData,
     LoginData,
     MailDeleteResponse,
-    DisconnectCharacterResponse,
     LoginDataSuccess,
     LoginDataFailed,
 } from "./definitions/adventureland-server.js"
@@ -46,6 +44,11 @@ export class Game {
         }
     }
 
+    protected static get authHeader() {
+        // TODO: Drop _staging
+        return { headers: { cookie: `auth_staging=${this.user.userID}-${this.user.userAuth}` } }
+    }
+
     protected constructor() {
         // Private to force static methods
     }
@@ -59,27 +62,25 @@ export class Game {
 
     static async deleteMail(mailID: string): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post<MailDeleteResponse[]>(
+        const response = await axios.post<{ infs: [MailDeleteResponse] }>(
             `${this.url}/api/delete_mail`,
-            `method=delete_mail&arguments={"mid":"${mailID}"}`,
-            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+            { mid: mailID },
+            this.authHeader,
         )
-        const data = response.data[0]
+        const data = response.data.infs[0]
         if (data.message == "Mail deleted.") return true
         return false
     }
 
     static async disconnectCharacter(characterName: string): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post<DisconnectCharacterResponse[]>(
+        const response = await axios.post(
             `${this.url}/api/disconnect_character`,
-            `method=disconnect_character&arguments={"name":"${characterName}"}`,
-            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+            { name: characterName },
+            this.authHeader,
         )
-        const data = response.data[0]
-        if (data.message == "Sent the disconnect signal to the server" || data.message == "Character is not in game.")
-            return true
-        return false
+        const data = response.data.infs[0]
+        return data.success === true || data.reason === "character_not_in_game"
     }
 
     static async getGData(cache = false, optimize = false): Promise<GData> {
@@ -117,20 +118,18 @@ export class Game {
 
     static async getMail(all = true): Promise<MailMessageData[]> {
         if (!this.user) throw new Error("You must login first.")
-        let response = await axios.post<MailData[]>(`${this.url}/api/pull_mail`, "method=pull_mail&arguments={}", {
-            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
-        })
+        let response = await axios.post<{ infs: [MailData] }>(`${this.url}/api/pull_mail`, {}, this.authHeader)
         const mail: MailMessageData[] = []
 
-        while (response.data.length > 0) {
+        while (response.data.infs[0].mail.length > 0) {
             mail.push(...response.data[0].mail)
 
             if (all && response.data[0].more) {
                 // Get more mail
                 response = await axios.post(
                     `${this.url}/api/pull_mail`,
-                    `method=pull_mail&arguments={"cursor":"${response.data[0].cursor}"}`,
-                    { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
+                    { cursor: response.data.infs[0].cursor },
+                    this.authHeader,
                 )
             } else {
                 break
@@ -145,10 +144,12 @@ export class Game {
         //const merchants: PullMerchantsData[] = []
         const merchants: PullMerchantsCharData[] = []
 
-        const data = await axios.post<PullMerchantsData[]>(`${this.url}/api/pull_merchants`, "method=pull_merchants", {
-            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
-        })
-        for (const datum of data.data) {
+        const data = await axios.post<{ infs: [PullMerchantsData] }>(
+            `${this.url}/api/pull_merchants`,
+            {},
+            this.authHeader,
+        )
+        for (const datum of data.data.infs) {
             if (datum.type == "merchants") {
                 for (const char of datum.chars) {
                     merchants.push(char)
@@ -236,12 +237,8 @@ export class Game {
      */
     static async markMailAsRead(mailID: string): Promise<void> {
         if (!this.user) throw new Error("You must login first.")
-        const response = await axios.post(
-            `${this.url}/api/read_mail`,
-            `method=read_mail&arguments={"mail": "${mailID}"}`,
-            { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } },
-        )
-        return response.data[0]
+        const response = await axios.post(`${this.url}/api/read_mail`, { mail: mailID }, this.authHeader)
+        return response.data.infs[0]
     }
 
     static async login(email: string, password?: string, mongo?: string, secure = true): Promise<boolean> {
@@ -317,9 +314,7 @@ export class Game {
     static async logoutEverywhere(): Promise<unknown> {
         if (!this.user) throw new Error("You must login first.")
 
-        const response = await axios.post<unknown>(`${this.url}/api/logout_everywhere`, "method=logout_everywhere", {
-            headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` },
-        })
+        const response = await axios.post<unknown>(`${this.url}/api/logout_everywhere`, {}, this.authHeader)
         delete this.user
 
         return response.data
@@ -507,11 +502,7 @@ export class Game {
      */
     static async updateServersAndCharacters(): Promise<boolean> {
         if (!this.user) throw new Error("You must login first.")
-        const data = await axios.post(
-            `${this.url}/api/servers_and_characters`,
-            {},
-            { headers: { cookie: `auth_staging=${this.user.userID}-${this.user.userAuth}` } }, // TODO: Drop _staging
-        )
+        const data = await axios.post(`${this.url}/api/servers_and_characters`, {}, this.authHeader)
 
         if (data.status != 200) {
             console.error(data)

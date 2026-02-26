@@ -351,12 +351,6 @@ export type DisappearingTextData = {
     args: { c: string; s: string } | { color: string; size: string }
 }
 
-export type DisconnectCharacterResponse =
-    | { message: "You don't own that character."; type: "ui_error" }
-    | { message: "No character with that name."; type: "ui_error" }
-    | { message: "Sent the disconnect signal to the server"; type: "message" }
-    | { message: "Character is not in game."; type: "ui_error" }
-
 export type DisconnectReasonData = "limitdc"
 
 export type EmotionData = {
