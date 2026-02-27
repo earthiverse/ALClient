@@ -8,7 +8,7 @@ import type { IPosition } from "./definitions/adventureland"
 
 let priest: Character
 let warrior: Character
-const serverData: ServerData = { region: "ASIA", name: "I", addr: "test", port: 0, players: 0, key: "ASIAI" }
+const serverData: ServerData = { region: "ASIA", name: "I", address: "test", path: "/test", players: 0, key: "ASIAI" }
 beforeAll(async () => {
     await Game.getGData(true, false)
     await Pathfinder.prepare(Game.G)

@@ -13,8 +13,8 @@ beforeAll(async () => {
     character = new Character("12345", undefined, undefined, G, {
         region: "ASIA",
         name: "I",
-        addr: "test",
-        port: 0,
+        address: "test",
+        path: "/test",
         players: 0,
         key: "ASIAI",
     })

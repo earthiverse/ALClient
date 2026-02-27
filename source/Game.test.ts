@@ -4,7 +4,7 @@ test("Game.login", async () => {
     try {
         await Game.login("hyprkookeez@gmail.com", "thisIsNotMyRealPasswordLOL")
     } catch (e) {
-        expect(e.message).toMatch("Wrong Password")
+        expect(e.message).toMatch("wrong_password")
     }
 
     try {
@@ -16,7 +16,7 @@ test("Game.login", async () => {
     try {
         await Game.loginJSONFile("credentials.json.sample")
     } catch (e) {
-        expect(e.message).toMatch("Wrong Password")
+        expect(e.message).toMatch("wrong_password")
     }
 
     expect(await Game.loginJSONFile("credentials.json")).toBe(true)
