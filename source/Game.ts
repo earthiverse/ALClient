@@ -45,8 +45,7 @@ export class Game {
     }
 
     protected static get authHeader() {
-        // TODO: Drop _staging
-        return { headers: { cookie: `auth_staging=${this.user.userID}-${this.user.userAuth}` } }
+        return { headers: { cookie: `auth=${this.user.userID}-${this.user.userAuth}` } }
     }
 
     protected constructor() {
@@ -79,8 +78,8 @@ export class Game {
             { name: characterName },
             this.authHeader,
         )
-        const data = response.data.infs[0]
-        return data.success === true || data.reason === "character_not_in_game"
+
+        return response.data.success === true || response.data.reason === "character_not_in_game"
     }
 
     static async getGData(cache = false, optimize = false): Promise<GData> {
