@@ -24,13 +24,18 @@ export class Item implements ItemData, GItem {
     public attack = 0
     public apiercing = 0
     public dex = 0
+    public evasion = 0
+    public firesistance = 0
+    public fzresistance = 0
     public gift = 0
     public gold = 0
     public int = 0
     public luck = 0
     public p?: TitleName
+    public pnresistance = 0
     public q?: number
     public range = 0
+    public reflection = 0
     public resistance = 0
     public rpiercing = 0
     public stat = 0
