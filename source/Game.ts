@@ -121,9 +121,9 @@ export class Game {
         const mail: MailMessageData[] = []
 
         while (response.data.infs[0].mail.length > 0) {
-            mail.push(...response.data[0].mail)
+            mail.push(...response.data.infs[0].mail)
 
-            if (all && response.data[0].more) {
+            if (all && response.data.infs[0].more) {
                 // Get more mail
                 response = await axios.post(
                     `${this.url}/api/pull_mail`,
