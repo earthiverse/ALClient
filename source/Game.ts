@@ -24,6 +24,7 @@ import { Priest } from "./Priest.js"
 import { Ranger } from "./Ranger.js"
 import { Rogue } from "./Rogue.js"
 import { Warrior } from "./Warrior.js"
+import { Tools } from "./Tools.js"
 
 export class Game {
     public static user: { userID: string; userAuth: string; secure: boolean }
@@ -162,15 +163,15 @@ export class Game {
             // Update the database with the merchant's information
             const promises: Promise<unknown>[] = []
             for (const merchant of merchants) {
-                const server = merchant.server.split(" ")
+                const { region, identifier } = Tools.parseServerKey(merchant.server)
                 promises.push(
                     PlayerModel.updateOne(
                         { lastSeen: { $lt: informationDate }, name: merchant.name },
                         {
                             lastSeen: informationDate,
                             map: merchant.map,
-                            serverIdentifier: server[1] as ServerIdentifier,
-                            serverRegion: server[0] as ServerRegion,
+                            serverRegion: region,
+                            serverIdentifier: identifier,
                             // We have to update all of the trade slots individually so we don't overwrite what they have equipped
                             "slots.trade1": merchant.slots.trade1 ?? null,
                             "slots.trade2": merchant.slots.trade2 ?? null,
@@ -486,11 +487,9 @@ export class Game {
         if (!cData.online) throw new Error(`The character '${cName}' is not online`)
         if (!this.G) await this.getGData()
 
-        const server = /(US|EU|ASIA)([MDCLXVI]+|PVP)/.exec(cData.server)
-        const serverRegion: ServerRegion = server[1] as ServerRegion
-        const serverIdentifier: ServerIdentifier = server[2] as ServerIdentifier
+        const { region, identifier } = Tools.parseServerKey(cData.server)
 
-        const observer = new Observer(this.servers[serverRegion][serverIdentifier], this.G, cData.secret)
+        const observer = new Observer(this.servers[region][identifier], this.G, cData.secret)
         await observer.connect(true)
         return observer
     }

@@ -1,4 +1,5 @@
 import type { MapName } from "./definitions/adventureland-data.js"
+import type { ServerIdentifier, ServerRegion } from "./definitions/adventureland.js"
 
 export class Tools {
     /**
@@ -114,5 +115,19 @@ export class Tools {
             firstSeen -= Math.pow(2, (level_from - 1) * 0.3) * Math.max(180_000, 30 * hp_from)
         }
         return firstSeen
+    }
+
+    /**
+     * Parses a server key to return the server region and identifier
+     * @param serverKey
+     * @returns
+     */
+    public static parseServerKey(serverKey: string): { region: ServerRegion; identifier: ServerIdentifier } {
+        const server = /(US|EU|ASIA)([I]+|PVP)/.exec(serverKey)
+        if (!server) throw new Error(`Invalid server key: ${serverKey}`)
+        return {
+            region: server[1] as ServerRegion,
+            identifier: server[2] as ServerIdentifier,
+        }
     }
 }
