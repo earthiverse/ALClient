@@ -109,16 +109,15 @@ export class Game {
    */
   public async login(email: string, password: string): Promise<Player> {
     try {
-      const loginResponse = await fetch(this.apiUrl, {
+      const loginResponse = await fetch(`${this.apiUrl}/signup_or_login`, {
         method: "POST",
-        credentials: "include",
-        body: new URLSearchParams({
-          method: "signup_or_login",
-          arguments: JSON.stringify({
-            only_login: true,
-            email: email,
-            password: password,
-          }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          only_login: true,
+          email: email,
+          password: password,
         }),
       });
 
@@ -126,23 +125,28 @@ export class Game {
         throw new Error(await loginResponse.text());
       }
 
-      const loginJson = (await loginResponse.json()) as (
-        | { type: "content"; html: string }
-        | { type: "message"; message: string }
-        | { type: "ui_error"; message: string }
-      )[];
+      // TODO: Move typing to typed-adventureland
+      const loginJson = (await loginResponse.json()) as {
+        success: true;
+        user: string;
+        auth: string;
+        infs: ({ type: "message"; message: string } | { type: "content"; html: string })[];
+      };
 
-      let userId: string | undefined;
-      let userAuth: string | undefined;
+      // TODO: Throw just the error message
+      if (!loginJson.success) throw new Error(JSON.stringify(loginJson));
+
+      const userId = loginJson.user;
+      const userAuth = loginJson.auth;
       const characters: Player["characters"] = [];
-      for (const entry of loginJson) {
-        if (entry.type === "ui_error") throw new Error(entry.message);
-
+      for (const entry of loginJson.infs) {
         if (entry.type === "content") {
+          // console.error(entry.html);
+
           // Parse the HTML to get character data
           // TODO: We can grab more information with a better regex
           const regex =
-            /observe_character\('(?<name>.+?)'\)\)\s+log_in\(user_id,'(?<id>\d+)'.+?Lv\.(?<level>\d+)\s+<span class="gray".+?>(?<type>.+?)<\/span>/gms;
+            /observe_character\('(?<name>.+?)'\)\)\s+log_in\(user_id,'(?<id>CH_\d+)'.+?Lv\.(?<level>\d+)\s+<span class="gray".+?>(?<type>.+?)<\/span>/gms;
           for (const result of entry.html.matchAll(regex)) {
             if (result.groups) {
               const { name, id, level, type } = result.groups;
@@ -156,23 +160,9 @@ export class Game {
             }
           }
         }
-
-        if (entry.type === "message" && entry.message === "Logged In!") {
-          // Parse the cookie to get User ID and auth
-          for (const cookie of loginResponse.headers.getSetCookie()) {
-            const result = /^auth=(.+?);/.exec(cookie);
-            if (result && result[1] !== undefined) {
-              [userId, userAuth] = result[1].split("-");
-            }
-          }
-        }
       }
 
-      if (userAuth !== undefined && userId !== undefined) {
-        return new Player(this, userId, userAuth, characters);
-      }
-
-      throw new Error(JSON.stringify(loginJson));
+      return new Player(this, userId, userAuth, characters);
     } catch (e) {
       const error = new Error("Failed logging in", { cause: e });
       GameEventBus.emit("login_failed", this, error);

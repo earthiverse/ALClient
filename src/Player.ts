@@ -101,27 +101,23 @@ export class Player {
    */
   public async updateCharacters(): Promise<Player["characters"]> {
     try {
-      const updateResponse = await fetch(this.game.apiUrl, {
+      const updateResponse = await fetch(`${this.game.apiUrl}/servers_and_characters`, {
         method: "POST",
         headers: this.apiHeaders,
-        body: new URLSearchParams({
-          method: "servers_and_characters",
-        }),
       });
 
       if (!updateResponse.ok) {
         throw new Error(await updateResponse.text());
       }
 
-      const [updateJson] = (await updateResponse.json()) as ServersAndCharactersApiResponse[];
+      const updateJson = (await updateResponse.json()) as ServersAndCharactersApiResponse;
 
-      if (updateJson?.characters === undefined || updateJson.servers === undefined) {
-        throw new Error(JSON.stringify(updateJson));
-      }
+      // TODO: Throw just the error message
+      if (!updateJson.success) throw new Error(JSON.stringify(updateJson));
 
-      this.characters = updateJson.characters;
+      this.characters = updateJson.infs[0].characters;
       EventBus.emit("characters_updated", this, this.characters);
-      this.game._servers = updateJson.servers;
+      this.game._servers = updateJson.infs[0].servers;
       EventBus.emit("servers_updated", this.game, this.game.servers);
       return this.characters;
     } catch (e) {

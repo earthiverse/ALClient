@@ -118,19 +118,19 @@ export class Observer extends Entity {
 
     const server = this.game.getServer(serverRegion, serverId);
 
-    const s: Observer["socket"] = socket(
-      `ws${this.game.url.startsWith("https") ? "s" : ""}://${server.addr}:${server.port}`,
-      {
-        autoConnect: false, // We will set up listeners first
-        query: {
-          secret: options?.secret,
-        },
-        reconnection: true,
-        reconnectionDelay: Configuration.SOCKET_RECONNECT_DELAY_MS,
-        randomizationFactor: Configuration.SOCKET_RANDOMIZATION_FACTOR,
-        transports: ["websocket"],
+    const secure = this.game.url.startsWith("https")
+    const s: Observer["socket"] = socket(`ws${secure ? "s" : ""}://${server.address}`, {
+      autoConnect: false, // We will set up listeners first
+      path: server.path,
+      query: {
+        secret: options?.secret,
       },
-    );
+      reconnection: true,
+      reconnectionDelay: Configuration.SOCKET_RECONNECT_DELAY_MS,
+      randomizationFactor: Configuration.SOCKET_RANDOMIZATION_FACTOR,
+      secure,
+      transports: ["websocket"],
+    });
     this._socket = s;
 
     s.on("action", (data) => {
