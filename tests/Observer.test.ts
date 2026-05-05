@@ -1,3 +1,4 @@
+import { afterEach, beforeAll, expect, test } from "bun:test";
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
 import Observer from "../src/Observer.js";
@@ -6,9 +7,10 @@ let game: Game;
 beforeAll(async () => {
   game = new Game();
   await Promise.all([game.updateG(), game.updateServers()]);
-}, 30_000);
+});
 
-beforeEach(() => {
+afterEach(() => {
+  // Clear listeners
   EventBus.removeAllListeners();
 });
 
@@ -46,7 +48,7 @@ test("`start` throws error if already started", async () => {
   await observer.start("US", "I");
 
   // Should throw, and the error message should contain the server we're currently running
-  await expect(observer.start("EU", "PVP")).rejects.toThrow(/USI/);
+  expect(observer.start("EU", "PVP")).rejects.toThrow(/USI/);
 
   observer.stop();
 }, 10_000);

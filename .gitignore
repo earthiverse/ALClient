@@ -11,4 +11,5 @@ dist
 coverage
 
 # Environment variables (secrets)
-*.env
+.env*
+!.env*.dist

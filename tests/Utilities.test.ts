@@ -1,3 +1,4 @@
+import { beforeAll, expect, test } from "bun:test";
 import Game from "../src/Game.js";
 import Utilities from "../src/Utilities.js";
 
@@ -5,7 +6,7 @@ let game: Game;
 beforeAll(async () => {
   game = new Game();
   await Promise.all([game.updateG(), game.updateServers()]);
-}, 30_000);
+});
 
 test("getMonsterSpawns() returns expected values", () => {
   const gooSpawns = Utilities.getMonsterSpawns(game.G, "goo");

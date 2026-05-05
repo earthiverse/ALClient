@@ -1,6 +1,8 @@
+import { afterEach, beforeAll, expect, test } from "bun:test";
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
 import type Player from "../src/Player.js";
+import type { XOnlineCharacter } from "typed-adventureland";
 
 let game: Game;
 let player: Player;
@@ -13,16 +15,17 @@ beforeAll(async () => {
     throw new Error("Environment variables not set");
   }
   player = await game.login(email, password);
-}, 10_000);
+});
 
-beforeEach(() => {
+afterEach(() => {
+  // Clear listeners
   EventBus.removeAllListeners();
 });
 
 test("`updateCharacters()` works", async () => {
   // Set up EventBus to listen for update
   let eventHappened = false;
-  let eventCharacters: Player["characters"] | undefined = undefined;
+  let eventCharacters: XOnlineCharacter[] | undefined = undefined;
   EventBus.once("characters_updated", (player, characters) => {
     if (game !== player.game) return; // Different test
     eventHappened = true;
@@ -45,5 +48,6 @@ test("`updateCharacters()` works", async () => {
 
   // Event should have triggered and should reference the same data
   expect(eventHappened).toBe(true);
-  expect(eventCharacters).toBe(characters);
+  expect(eventCharacters).toBeDefined();
+  expect(eventCharacters!).toBe(characters);
 }, 10_000);

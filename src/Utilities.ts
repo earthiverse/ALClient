@@ -153,7 +153,7 @@ export class Utilities {
     serverRegion: ServerRegion;
     serverIdentifier: ServerIdentifier;
   } {
-    const match = /^(US|EU|ASIA)(I|II|III|PVP)$/;
+    const match = /^(?:SR_)?(US|EU|ASIA)(I|II|III|PVP)$/;
     const result = match.exec(serverKey);
     if (result === null) throw new Error(`Unable to parse server key ${serverKey}`);
 

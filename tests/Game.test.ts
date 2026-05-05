@@ -1,13 +1,15 @@
+import { afterEach, expect, test } from "bun:test";
 import type { GData, XServerInfos } from "typed-adventureland";
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
 import Player from "../src/Player.js";
 
-beforeEach(() => {
+afterEach(() => {
+  // Clear listeners
   EventBus.removeAllListeners();
 });
 
-test("`login()` with invalid credentials throws an error", async () => {
+test("`login()` with invalid credentials throws an error", () => {
   const game = new Game();
 
   // Set up EventBus to listen for update
@@ -18,7 +20,7 @@ test("`login()` with invalid credentials throws an error", async () => {
   });
 
   // Bad login
-  await expect(game.login("hyprkookeez+test@gmail.com", "this_is_not_my_real_password")).rejects.toThrow();
+  expect(game.login("hyprkookeez+test@gmail.com", "this_is_not_my_real_password")).rejects.toThrow();
 
   // Event should have triggered
   expect(eventHappened).toBe(true);
@@ -86,6 +88,9 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.getPath("main", -1324, 19, "mforest", 0, 0, 50)).toBeTruthy();
   expect(pathfinder.getPath("main", -152, -137, "winterland", 0, 0, 50)).toBeTruthy();
 
+  // TODO: This door was problematic, but I'm not sure how to test it without actually running a character
+  // pathfinder.getPath("main", 0, 0, "tunnel", -7, 5)
+
   // Should be able to escape islands
   expect(pathfinder.getPath("winterland", 865, 430, "main", 0, 0, 50)).toBeTruthy();
 
@@ -93,8 +98,11 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeTruthy();
 
   // TODO: Test leaving from jail (should use `leave`)
+  expect(pathfinder.getPath("jail", 0, 0, "main", 0, 0)).toBeTruthy();
 
   // TODO: Test to instance (should use `enter`)
+  const caveToCrypt = pathfinder.getPath("cave", -200, -1300, "crypt", 0, 0);
+  console.error(caveToCrypt);
 }, 10_000);
 
 test("`updateG()` works", async () => {
@@ -122,7 +130,8 @@ test("`updateG()` works", async () => {
 
   // Event should have triggered and should reference the same data
   expect(eventHappened).toBe(true);
-  expect(eventG).toBe(g);
+  expect(eventG).toBeDefined();
+  expect(eventG!).toBe(g);
 }, 10_000);
 
 test("`updateServers()` works", async () => {
@@ -144,5 +153,6 @@ test("`updateServers()` works", async () => {
 
   // Event should have triggered and should reference the same data
   expect(eventHappened).toBe(true);
-  expect(eventServers).toBe(servers);
+  expect(eventServers).toBeDefined();
+  expect(eventServers!).toBe(servers);
 }, 10_000);

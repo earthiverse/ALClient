@@ -1,7 +1,6 @@
 // @ts-check
 
 import eslint from "@eslint/js";
-import jest from "eslint-plugin-jest";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
@@ -14,18 +13,9 @@ export default defineConfig(
   {
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.json", "./tsconfig.jest.json"],
+        project: ["./tsconfig.json"],
         tsconfigRootDir: import.meta.dirname,
       },
-    },
-  },
-  {
-    files: ["tests/**/*.test.ts"],
-    plugins: {
-      jest,
-    },
-    rules: {
-      ...jest.configs.recommended.rules,
     },
   },
   {

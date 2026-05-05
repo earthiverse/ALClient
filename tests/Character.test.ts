@@ -1,3 +1,4 @@
+import { beforeAll, expect, test } from "bun:test";
 import Character from "../src/Character.js";
 import Game from "../src/Game.js";
 import Player from "../src/Player.js";
@@ -6,7 +7,7 @@ let game: Game;
 beforeAll(async () => {
   game = new Game();
   await Promise.all([game.updateG(), game.updateServers()]);
-}, 30_000);
+});
 
 test("canSell() returns true when expected", () => {
   // Mock a character
