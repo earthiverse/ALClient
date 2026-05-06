@@ -183,8 +183,12 @@ export class Game {
   public async updateG(): Promise<GData> {
     if (this._updatingG) return this._updatingG;
     return (this._updatingG = (async () => {
+      // Set up a 10 second timeout
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10_000);
+
       try {
-        const dataResponse = await fetch(`${this.options.url}/data.js`);
+        const dataResponse = await fetch(`${this.options.url}/data.js`, { signal: controller.signal });
 
         let text = (await dataResponse.text()).trim();
         if (!dataResponse.ok) {
@@ -204,6 +208,7 @@ export class Game {
         GameEventBus.emit("update_g_failed", this, error);
         throw error;
       } finally {
+        clearTimeout(timeout);
         this._updatingG = null;
       }
     })());
