@@ -8,6 +8,27 @@ beforeAll(async () => {
   await Promise.all([game.updateG(), game.updateServers()]);
 });
 
+test("calculatePathCost() returns expected values", () => {
+  expect(
+    Utilities.calculatePathCost([
+      {
+        map: "main",
+        x: 0,
+        y: 0,
+        method: "move",
+      },
+      {
+        map: "main",
+        x: 100,
+        y: 0,
+        method: "move",
+      },
+    ]),
+  ).toBe(2);
+
+  // TODO: More paths, with different methods
+});
+
 test("getMonsterSpawns() returns expected values", () => {
   const gooSpawns = Utilities.getMonsterSpawns(game.G, "goo");
   expect(gooSpawns).toBeTruthy();

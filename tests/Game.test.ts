@@ -97,12 +97,15 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   // These paths was recommended by Crown
   expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeTruthy();
 
-  // TODO: Test leaving from jail (should use `leave`)
-  expect(pathfinder.getPath("jail", 0, 0, "main", 0, 0)).toBeTruthy();
+  // Test leaving from jail (should use `leave`)
+  const jailToMain = pathfinder.getPath("jail", 0, 0, "main", 0, 0);
+  expect(jailToMain).toBeTruthy();
+  expect(jailToMain!.some(node => node.method === "leave")).toBe(true);
 
-  // TODO: Test to instance (should use `enter`)
+  // Test entering instance (should use `enter`)
   const caveToCrypt = pathfinder.getPath("cave", -200, -1300, "crypt", 0, 0);
-  console.error(caveToCrypt);
+  expect(caveToCrypt).toBeTruthy();
+  expect(caveToCrypt!.some(node => node.method === "enter")).toBe(true);
 }, 10_000);
 
 test("`updateG()` works", async () => {
