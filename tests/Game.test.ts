@@ -78,6 +78,12 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.canWalkPath("main", -11, -124, 7, 886)).toBe(true);
   expect(pathfinder.canWalkPath("main", 81, -100, 291, 94)).toBe(false);
 
+  // This line incorrectly returned that it was walkable
+  expect(pathfinder.isWalkable("main", 399, 1277)).toBe(true);
+  expect(pathfinder.isWalkable("main", 399, 1536)).toBe(true);
+  expect(pathfinder.canWalkPath("main", 399, 1277, 399, 1300)).toBe(true);
+  expect(pathfinder.canWalkPath("main", 399, 1277, 399, 1536)).toBe(false);
+
   // Should be able to get path across maps
   expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 100)).toBeTruthy();
   expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 1)).toBeTruthy();
@@ -88,8 +94,13 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.getPath("main", -1324, 19, "mforest", 0, 0, 50)).toBeTruthy();
   expect(pathfinder.getPath("main", -152, -137, "winterland", 0, 0, 50)).toBeTruthy();
 
-  // TODO: This door was problematic, but I'm not sure how to test it without actually running a character
-  // pathfinder.getPath("main", 0, 0, "tunnel", -7, 5)
+  // This path didn't get close enough to the tunnel door
+  const mainToTunnel = pathfinder.getPath("main", 0, 0, "tunnel", -7, 5);
+  expect(mainToTunnel).toBeTruthy();
+  const mainToTunnelDoorNode = mainToTunnel![mainToTunnel!.findIndex((node) => node.method === "door") - 1];
+  expect(mainToTunnelDoorNode).toBeTruthy();
+  const mainToTunnelDoorNodeDistance = Math.hypot(mainToTunnelDoorNode!.x - 535, mainToTunnelDoorNode!.y - 1677);
+  expect(mainToTunnelDoorNodeDistance).toBeLessThan(112);
 
   // Should be able to escape islands
   expect(pathfinder.getPath("winterland", 865, 430, "main", 0, 0, 50)).toBeTruthy();
@@ -100,12 +111,21 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   // Test leaving from jail (should use `leave`)
   const jailToMain = pathfinder.getPath("jail", 0, 0, "main", 0, 0);
   expect(jailToMain).toBeTruthy();
-  expect(jailToMain!.some(node => node.method === "leave")).toBe(true);
+  expect(jailToMain!.some((node) => node.method === "leave")).toBe(true);
 
   // Test entering instance (should use `enter`)
   const caveToCrypt = pathfinder.getPath("cave", -200, -1300, "crypt", 0, 0);
   expect(caveToCrypt).toBeTruthy();
-  expect(caveToCrypt!.some(node => node.method === "enter")).toBe(true);
+  expect(caveToCrypt!.some((node) => node.method === "enter")).toBe(true);
+
+  // Final destination should be moved to
+  const mainMovement = pathfinder.getPath("main", 0, 0, "main", 99, 9);
+  expect(mainMovement).toBeTruthy();
+  expect(mainMovement!.at(-1)!.x).toBe(99);
+  expect(mainMovement!.at(-1)!.y).toBe(9);
+
+  // Movement should be optimal
+  expect(mainMovement).toHaveLength(1);
 }, 10_000);
 
 test("`updateG()` works", async () => {
