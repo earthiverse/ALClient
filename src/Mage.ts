@@ -43,8 +43,8 @@ export class Mage extends Character {
         const pathfinder = this.game.pathfinder;
         let canWalk = false;
         for (const [dx, dy] of Utilities.getSpiralOffsets(10, options.checkMax)) {
-          const testX = blinkX + dx!;
-          const testY = blinkY + dy!;
+          const testX = blinkX + dx;
+          const testY = blinkY + dy;
 
           if (pathfinder.isWalkable(this.map, testX, testY)) {
             blinkX = testX;

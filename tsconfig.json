@@ -5,11 +5,8 @@
     "lib": ["ES2023"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "noEmit": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "stripInternal": true,
     "target": "es2023",
     "types": ["bun", "node"]
   },
-  "include": ["tests/**/*.ts", "*.config.js"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "*.config.js"]
 }

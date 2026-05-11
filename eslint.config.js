@@ -20,6 +20,7 @@ export default defineConfig(
   },
   {
     rules: {
+      "no-unmodified-loop-condition": "error",
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/strict-boolean-expressions": "error",
       "@typescript-eslint/switch-exhaustiveness-check": "error",

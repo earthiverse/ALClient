@@ -118,7 +118,7 @@ export class Observer extends Entity {
 
     const server = this.game.getServer(serverRegion, serverId);
 
-    const secure = this.game.url.startsWith("https")
+    const secure = this.game.url.startsWith("https");
     const s: Observer["socket"] = socket(`ws${secure ? "s" : ""}://${server.address}`, {
       autoConnect: false, // We will set up listeners first
       path: server.path,

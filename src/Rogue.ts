@@ -108,5 +108,4 @@ export class Rogue extends Character {
   }
 }
 
-
 export default Rogue;

@@ -1,8 +1,8 @@
 import { afterEach, beforeAll, expect, test } from "bun:test";
+import type { XOnlineCharacter } from "typed-adventureland";
 import EventBus from "../src/EventBus.js";
 import Game from "../src/Game.js";
 import type Player from "../src/Player.js";
-import type { XOnlineCharacter } from "typed-adventureland";
 
 let game: Game;
 let player: Player;
