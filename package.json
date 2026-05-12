@@ -10,7 +10,7 @@
   ],
   "main": "dist/Index.js",
   "engines": {
-    "node": ">=21"
+    "node": ">=24"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

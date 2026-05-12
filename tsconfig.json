@@ -2,10 +2,10 @@
   "extends": "@total-typescript/tsconfig/tsc/no-dom/library",
   "compilerOptions": {
     "incremental": true,
-    "lib": ["ES2023"],
+    "lib": ["ES2025"],
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "noEmit": true,
-    "target": "es2023",
+    "target": "es2025",
     "types": ["bun", "node"]
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "*.config.js"]
