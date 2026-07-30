@@ -44,6 +44,11 @@ export function isCompoundChanceResponse(data: unknown): data is GameResponseDat
   return true;
 }
 
+export function isInProgressGameResponse(data: unknown): data is { in_progress: true } {
+  if (typeof data !== "object" || data === null || data === undefined) return false;
+  return (data as { in_progress: true }).in_progress === true;
+}
+
 export function isSuccessGameResponse(data: unknown): data is SuccessGameResponse<string> {
   if (typeof data !== "object" || data === null || data === undefined) return false;
   return (data as SuccessGameResponse<string>).success === true;

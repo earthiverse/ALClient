@@ -52,6 +52,7 @@ import {
   isCompoundChanceResponse,
   isConditionKey,
   isFailedGameResponse,
+  isInProgressGameResponse,
   isLocation,
   isMapKey,
   isMonsterKey,
@@ -981,6 +982,38 @@ export class Character extends Observer {
     return this.locateItem(item) !== undefined;
   }
 
+  public async leave(): Promise<void> {
+    const s = this.socket;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "leave")) return;
+
+        if (isSuccessGameResponse(data)) {
+          resolve();
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("leave");
+    return promise;
+  }
+
   /**
    * Returns the index of the first item that matches all properties,
    * or undefined if no item is found
@@ -1402,11 +1435,11 @@ export class Character extends Observer {
 
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "destroy")) return;
-        if ((data as DestroyGRDataObject).num !== num) return; // Response is for a different item
+        if (data.num !== num) return; // Response is for a different item
         if (isSuccessGameResponse(data)) {
-          resolve(data as DestroyGRDataObject);
+          resolve(data);
         } else {
-          reject(new Error((data as DestroyGRDataObject).response));
+          reject(new Error(data.response));
         }
         cleanup();
       };
@@ -1658,6 +1691,11 @@ export class Character extends Observer {
 
       if (segment.method === "enter") {
         // TODO: Enter instance
+        continue;
+      }
+
+      if (segment.method === "leave") {
+        await this.leave();
         continue;
       }
 
