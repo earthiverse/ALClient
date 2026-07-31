@@ -1700,9 +1700,18 @@ export class Character extends Observer {
       }
 
       if (segment.method === "town") {
-        // TODO: Pathfind to town by walking, too, so if it gets interrupted, we are still advancing
-
         await this.warpToTown();
+
+        // Town warps can spawn you near the point, but not actually at the point
+        const nextSegment = path[i + 1];
+        if (nextSegment && nextSegment.map === this.map) {
+          const closest = Utilities.getClosestPointOnSegment(
+            { x: this.x, y: this.y },
+            { x: segment.x, y: segment.y },
+            { x: nextSegment.x, y: nextSegment.y },
+          );
+          await this.move(closest.x, closest.y);
+        }
         continue;
       }
 

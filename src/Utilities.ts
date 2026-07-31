@@ -254,6 +254,34 @@ export class Utilities {
       }
     }
   }
+
+  /**
+   * Returns the closest point on the line segment `from` to `to`, to point `currrent`.
+   *
+   * @param currrent Current position {x, y}
+   * @param from From position {x, y}
+   * @param to To position {x, y}
+   */
+  public static getClosestPointOnSegment(
+    currrent: { x: number; y: number },
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+  ): { x: number; y: number } {
+    const abX = to.x - from.x;
+    const abY = to.y - from.y;
+    const abSq = abX * abX + abY * abY;
+    if (abSq === 0) return { x: from.x, y: from.y };
+
+    const apX = currrent.x - from.x;
+    const apY = currrent.y - from.y;
+    const u = apX * abX + apY * abY;
+    const t = Math.max(0, Math.min(1, u / abSq));
+
+    return {
+      x: from.x + t * abX,
+      y: from.y + t * abY,
+    };
+  }
 }
 
 export default Utilities;
