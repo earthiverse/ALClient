@@ -2022,10 +2022,12 @@ export class Character extends Observer {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_response", responseHandler);
+        s.off("player", responseHandler2);
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "transport")) return;
+        if (isInProgressGameResponse(data)) return; // Moving to bank, let the other handler deal with it
 
         if (isSuccessGameResponse(data)) {
           resolve();
@@ -2035,12 +2037,19 @@ export class Character extends Observer {
         cleanup();
       };
 
+      const responseHandler2 = (data: ServerToClient_player) => {
+        if (data.map !== map) return;
+        resolve();
+        cleanup();
+      };
+
       const timeout = setTimeout(() => {
         cleanup();
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
       s.on("game_response", responseHandler);
+      s.on("player", responseHandler2);
     });
 
     s.emit("transport", { s: spawn, to: map });
@@ -2255,7 +2264,7 @@ export class Character extends Observer {
   public async withdrawGold(amount: number): Promise<void> {
     if (!this.map.startsWith("bank")) throw new Error("Not in bank");
     if (amount < 0) throw new Error("Amount must be positive");
-    
+
     for (let i = 0; i < 20; i++) {
       if (this._bank) break; // Bank data is available
       await new Promise((resolve) => setTimeout(resolve, 250)); // Wait a bit for the bank data to arrive
