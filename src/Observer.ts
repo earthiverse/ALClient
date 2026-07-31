@@ -203,6 +203,8 @@ export class Observer extends Entity {
     s.on("new_map", (data) => {
       this._x = data.x;
       this._y = data.y;
+      this._going_x = data.x;
+      this._going_y = data.y;
 
       this.parseEntities(data.entities);
     });
