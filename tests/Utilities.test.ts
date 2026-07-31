@@ -148,3 +148,26 @@ test("getSpiralOffsets() returns expected values", () => {
     [10, -10],
   ]);
 });
+
+test("getClosestPointOnSegment() returns expected values", () => {
+  // Half way between (0,0) -> (100,0)
+  expect(Utilities.getClosestPointOnSegment({ x: 50, y: 20 }, { x: 0, y: 0 }, { x: 100, y: 0 })).toEqual({
+    x: 50,
+    y: 0,
+  });
+
+  // Before starting point (should go to start)
+  expect(Utilities.getClosestPointOnSegment({ x: -20, y: 10 }, { x: 0, y: 0 }, { x: 100, y: 0 })).toEqual({
+    x: 0,
+    y: 0,
+  });
+
+  // Past ending point (should go to end)
+  expect(Utilities.getClosestPointOnSegment({ x: 120, y: 10 }, { x: 0, y: 0 }, { x: 100, y: 0 })).toEqual({
+    x: 100,
+    y: 0,
+  });
+
+  // Start and end are the same point
+  expect(Utilities.getClosestPointOnSegment({ x: 10, y: 10 }, { x: 0, y: 0 }, { x: 0, y: 0 })).toEqual({ x: 0, y: 0 });
+});
