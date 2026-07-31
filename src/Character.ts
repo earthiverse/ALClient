@@ -443,6 +443,10 @@ export class Character extends Observer {
       }
     });
 
+    s.on("new_map", (data) => {
+      this._m = data.m;
+    });
+
     s.on("player", (data) => {
       data.party ??= "";
       this.updateData(data);
