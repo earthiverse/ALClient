@@ -1300,9 +1300,10 @@ export class Character extends Observer {
         if (options.calculate && isCompoundChanceResponse(data)) {
           if (items[0]!.name !== data.item.name || (items[0]!.level ?? 0) !== data.item.level) return; // Different item
           cleanup();
+          resolve(data);
         } else if (isFailedGameResponse(data)) {
-          reject(new Error(data.response));
           cleanup();
+          reject(new Error(data.response));
         }
       };
 
@@ -2129,6 +2130,7 @@ export class Character extends Observer {
         if (options.calculate && isUpgradeChanceResponse(data)) {
           if (item.name !== data.item.name || (item.level ?? 0) !== data.item.level) return; // Different item
           cleanup();
+          resolve(data);
         } else if (isFailedGameResponse(data)) {
           reject(new Error(data.response));
           cleanup();
