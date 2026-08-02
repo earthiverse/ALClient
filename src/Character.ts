@@ -1710,7 +1710,7 @@ export class Character extends Observer {
       let bestSpawnCost = Number.POSITIVE_INFINITY;
       for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i]!;
-        const spawnPath = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y);
+        const spawnPath = pathfinder.getPath(this.map, this.x, this.y, spawn.map, spawn.x, spawn.y, this.speed);
         if (!Array.isArray(spawnPath)) continue; // Couldn't find path
         const cost = Utilities.calculatePathCost(spawnPath, this.speed);
         if (cost >= bestSpawnCost) continue;
@@ -1730,7 +1730,15 @@ export class Character extends Observer {
       let bestLocationCost = Number.POSITIVE_INFINITY;
       for (let i = 0; i < locations.length; i++) {
         const location = locations[i]!;
-        const locationPath = pathfinder.getPath(this.map, this.x, this.y, location.map, location.x, location.y);
+        const locationPath = pathfinder.getPath(
+this.map,
+this.x,
+this.y,
+location.map,
+location.x,
+location.y,
+          this.speed,
+);
         if (!Array.isArray(locationPath)) continue; // Couldn't find path
         const cost = Utilities.calculatePathCost(locationPath, this.speed);
         if (cost >= bestLocationCost) continue;
