@@ -21,6 +21,7 @@ import type {
   ItemKey,
   ItemSentGRDataObject,
   MapKey,
+  MonsterHuntStatusInfo,
   MonsterKey,
   NotReadyGRDataObject,
   NpcKey,
@@ -1536,6 +1537,103 @@ export class Character extends Observer {
     });
 
     return finishedPromise;
+  }
+
+  /**
+   * Finishes the current monster hunt quest
+   *
+   * NOTE: You must be near the monster hunt NPC
+   *
+   * TODO: Untested
+   */
+  public async finishMonsterHuntQuest(): Promise<void> {
+    const s = this.socket;
+
+    if (this.s.monsterhunt === undefined) throw new Error("No active monster hunt quest");
+    if (this.s.monsterhunt.c > 0)
+      throw new Error(`Monster hunt quest not finished (${this.s.monsterhunt.c} remaining)`);
+
+    const currentSn = `${this.server.region} ${this.server.name}`;
+    if (this.s.monsterhunt.sn !== currentSn)
+      throw new Error(`The monster hunt is for '${this.s.monsterhunt.sn}', but we are on '${currentSn}'`);
+
+    // TODO: Distance check
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.s.monsterhunt === undefined) {
+          resolve();
+          cleanup();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+    });
+
+    s.emit("monsterhunt");
+    return promise;
+  }
+
+  /**
+   * Gets a new monster hunt quest
+   *
+   * NOTE: You must be near the monster hunt NPC
+   *
+   * TODO: Untested
+   */
+  public async getMonsterHuntQuest(): Promise<MonsterHuntStatusInfo> {
+    const s = this.socket;
+
+    if (this.s.monsterhunt) {
+      if (this.s.monsterhunt.c <= 0) await this.finishMonsterHuntQuest();
+      else throw new Error("A monster hunt quest is already in progress");
+    }
+    if (this.ctype === "merchant") throw new Error("Merchants cannot get monster hunt quests");
+
+    // TODO: Check if close
+
+    const promise = new Promise<MonsterHuntStatusInfo>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "monsterhunt")) return;
+        if (!isSuccessGameResponse(data)) {
+          reject(new Error(data.response));
+          cleanup();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.s.monsterhunt) {
+          resolve(data.s.monsterhunt);
+          cleanup();
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+      s.on("player", playerHandler);
+    });
+
+    s.emit("monsterhunt");
+    return promise;
   }
 
   /**
