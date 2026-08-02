@@ -62,6 +62,8 @@ export class Ranger extends Character {
         cleanup();
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", attackHandler);
     });
 
     s.emit("skill", {
@@ -105,7 +107,11 @@ export class Ranger extends Character {
       if (
         data.attacker == this.id &&
         data.type == "5shot" &&
-        (data.target == id1 || data.target == id2 || data.target == id3)
+        (data.target == id1 ||
+          data.target == id2 ||
+          data.target == id3 ||
+          data.target == id4 ||
+          data.target == id5)
       ) {
         projectiles.push(data.pid);
       }
@@ -133,6 +139,8 @@ export class Ranger extends Character {
         cleanup();
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", attackHandler);
     });
 
     s.emit("skill", {
