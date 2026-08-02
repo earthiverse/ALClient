@@ -1731,14 +1731,14 @@ export class Character extends Observer {
       for (let i = 0; i < locations.length; i++) {
         const location = locations[i]!;
         const locationPath = pathfinder.getPath(
-this.map,
-this.x,
-this.y,
-location.map,
-location.x,
-location.y,
+          this.map,
+          this.x,
+          this.y,
+          location.map,
+          location.x,
+          location.y,
           this.speed,
-);
+        );
         if (!Array.isArray(locationPath)) continue; // Couldn't find path
         const cost = Utilities.calculatePathCost(locationPath, this.speed);
         if (cost >= bestLocationCost) continue;
@@ -1811,7 +1811,43 @@ location.y,
       }
 
       if (segment.method === "town") {
-        await this.warpToTown();
+        // Attempt to warp to town
+        const warpPromise = this.warpToTown();
+        let warpFinished = false;
+        const markFinished = () => {
+          warpFinished = true;
+        };
+        warpPromise.then(markFinished, markFinished);
+
+        // Walk a path to spawn incase we get interrupted during the warp
+        const spawnPath = pathfinder.getPath(
+          this.map,
+          this.x,
+          this.y,
+          segment.map,
+          segment.x,
+          segment.y,
+          1_000_000_000, // Large speed to prevent town warps
+        );
+
+        if (Array.isArray(spawnPath)) {
+          for (const spawnSegment of spawnPath) {
+            if (warpFinished || this.map !== segment.map) break;
+            if (spawnSegment.method === "move") {
+              try {
+                await Promise.race([this.move(spawnSegment.x, spawnSegment.y), warpPromise]);
+              } catch {
+                // Ignore movement interruption if warp completes or fails
+              }
+            }
+          }
+        }
+
+        try {
+          await warpPromise;
+        } catch {
+          // Suppress warp interruption error as we walked towards spawn while warping
+        }
 
         // Town warps can spawn you near the point, but not actually at the point
         const nextSegment = path[i + 1];
