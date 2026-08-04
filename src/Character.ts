@@ -703,7 +703,7 @@ export class Character extends Observer {
     if (options.ignoreMp === undefined && gSkill.mp !== undefined && this.mp < gSkill.mp) return false; // Not enough MP
     if (options.ignoreMp === undefined && skill == "attack" && this.mp < this.mp_cost) return false; // Not enough MP (attack)
     if (gSkill.level !== undefined && this.level < gSkill.level) return false; // Not a high enough level
-    if (options.ignoreEquipped && gSkill.wtype !== undefined) {
+    if (options.ignoreEquipped !== undefined && gSkill.wtype !== undefined) {
       // The skill requires a certain weapon type
       if (!this.slots.mainhand) return false; // We don't have any weapon equipped
       const gItem = this.game.G.items[this.slots.mainhand.name];
@@ -724,7 +724,7 @@ export class Character extends Observer {
       !gSkill.slot.some(([slot, item]) => this.slots[slot]?.name === item)
     )
       return false; // We don't have anything equipped that lets us use this skill
-    if (gSkill.class !== undefined && gSkill.class.some((c) => c === this.ctype)) return false; // We're not the right class to use this skill
+    if (gSkill.class !== undefined && !gSkill.class.some((c) => c === this.ctype)) return false; // We're not the right class to use this skill
     if (
       gSkill.requirements !== undefined &&
       !Object.entries(gSkill.requirements).every(([stat, amount]) => this[stat as StatType] >= amount)

@@ -69,7 +69,7 @@ export class Mage extends Character {
         if (!isRelevantGameResponse(data, "blink")) return;
 
         if (isSuccessGameResponse(data)) {
-          resolve(data as unknown as SkillSuccessGRDataObject);
+          resolve(data as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
         }
