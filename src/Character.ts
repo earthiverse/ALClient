@@ -2213,6 +2213,45 @@ export class Character extends Observer {
   }
 
   /**
+   * If you are dead, you can call this function to respawn.
+   *
+   * @param safe If set, you will spawn in Wizard's cave instead of near the goos.
+   */
+  public async respawn(safe: boolean = false): Promise<void> {
+    if (!this.rip) throw new Error("We are not dead");
+
+    const s = this.socket;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", gameResponseHandler);
+      };
+
+      const gameResponseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "respawn")) return;
+        if (isSuccessGameResponse(data)) {
+          resolve();
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`respawn timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", gameResponseHandler);
+    });
+
+    s.emit("respawn", { safe });
+
+    return promise;
+  }
+
+  /**
    * Calculates the upgrade chance
    */
   public async upgrade(
