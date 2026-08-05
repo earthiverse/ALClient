@@ -392,6 +392,13 @@ export class Character extends Observer {
       CharacterEventBus.emit("chest_opened", this, data);
     });
 
+    s.on("correction", (data) => {
+      this._x = data.x;
+      this._y = data.y;
+      this._going_x = data.x;
+      this._going_y = data.y;
+    });
+
     s.on("drop", (data) => {
       this.chests.set(data.id, data);
       CharacterEventBus.emit("chest_dropped", this, data);
