@@ -2442,7 +2442,7 @@ try {
       };
 
       const playerHandler = (data: ServerToClient_player) => {
-        if (!data.s.town) {
+        if (!data.c.town) {
           cleanup();
           reject(new Error("interupted"));
         }
