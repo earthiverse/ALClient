@@ -1841,24 +1841,26 @@ export class Character extends Observer {
           for (const spawnSegment of spawnPath) {
             if (warpFinished || this.map !== segment.map) break;
             if (spawnSegment.method === "move") {
+let movePromise;
               try {
-                await Promise.race([this.move(spawnSegment.x, spawnSegment.y), warpPromise]);
+                movePromise = this.move(spawnSegment.x, spawnSegment.y);
+                await Promise.race([movePromise, warpPromise]);
               } catch {
-                // Ignore movement interruption if warp completes or fails
+try {
+                  await movePromise;
+                } catch {
+                // Ignore
+                }
               }
             }
           }
         }
 
-        try {
-          await warpPromise;
-        } catch {
-          // Suppress warp interruption error as we walked towards spawn while warping
-        }
-
+                  await warpPromise;
+        
         // Town warps can spawn you near the point, but not actually at the point
-        const nextSegment = path[i + 1];
-        if (nextSegment && nextSegment.map === this.map) {
+        const nextSegment = path[i + 1] ?? segment;
+        if (nextSegment.map === this.map) {
           const closest = Utilities.getClosestPointOnSegment(
             { x: this.x, y: this.y },
             { x: segment.x, y: segment.y },
