@@ -59,6 +59,40 @@ export class Priest extends Character {
 
     return promise;
   }
+
+  public partyHeal(): Promise<SkillSuccessGRDataObject> {
+    const s = this.socket;
+
+    this.checkCooldown("partyheal");
+
+    const promise = new Promise<SkillSuccessGRDataObject>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("game_response", responseHandler);
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "partyheal")) return;
+
+        if (isSuccessGameResponse(data)) {
+          resolve(data as SkillSuccessGRDataObject);
+        } else {
+          reject(new Error(data.response));
+        }
+        cleanup();
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("skill", { name: "partyheal" });
+    return promise;
+  }
 }
 
 export default Priest;

@@ -1469,8 +1469,12 @@ export class Character extends Observer {
     return promise;
   }
 
-  // TODO: Add option to resolve on start or finish
-  public async exchange(itemPosition: number): Promise<string> {
+  public async exchange(itemPosition: number, options?: { resolveOn?: "finish" }): Promise<string>;
+  public async exchange(itemPosition: number, options: { resolveOn: "start" }): Promise<ExchangeInProgressGRDataObject>;
+  public async exchange(
+    itemPosition: number,
+    options: { resolveOn?: "start" | "finish" } = { resolveOn: "finish" },
+  ): Promise<string | ExchangeInProgressGRDataObject> {
     const s = this.socket;
 
     if (Configuration.CHECK_COOLDOWN_BEFORE_EMIT && this.q.exchange)
@@ -1512,7 +1516,8 @@ export class Character extends Observer {
     });
 
     s.emit("exchange", { item_num: itemPosition });
-    await startedPromise;
+    if (options.resolveOn === "start") return startedPromise;
+
     if (this.q.exchange?.ms === undefined) throw new Error("Missing `q.exchange`");
 
     const finishedPromise = new Promise<string>((resolve, reject) => {
@@ -1841,23 +1846,23 @@ export class Character extends Observer {
           for (const spawnSegment of spawnPath) {
             if (warpFinished || this.map !== segment.map) break;
             if (spawnSegment.method === "move") {
-let movePromise;
+              let movePromise;
               try {
                 movePromise = this.move(spawnSegment.x, spawnSegment.y);
                 await Promise.race([movePromise, warpPromise]);
               } catch {
-try {
+                try {
                   await movePromise;
                 } catch {
-                // Ignore
+                  // Ignore
                 }
               }
             }
           }
         }
 
-                  await warpPromise;
-        
+        await warpPromise;
+
         // Town warps can spawn you near the point, but not actually at the point
         const nextSegment = path[i + 1] ?? segment;
         if (nextSegment.map === this.map) {

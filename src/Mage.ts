@@ -1,4 +1,4 @@
-import type { ServerToClient_game_response, SkillSuccessGRDataObject } from "typed-adventureland";
+import type { ServerToClient_game_response, ServerToClient_new_map, ServerToClient_player } from "typed-adventureland";
 import { Character } from "./Character.js";
 import Configuration from "./Configuration.js";
 import { isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
@@ -22,11 +22,13 @@ export class Mage extends Character {
        * MUST be divisible by 10.
        */
       checkMax: number;
+      resolveOn: "start" | "finish";
     } = {
       checkBeforeEmit: true,
       checkMax: 30,
+      resolveOn: "finish",
     },
-  ): Promise<SkillSuccessGRDataObject> {
+  ): Promise<void> {
     this.checkCooldown("blink");
 
     const s = this.socket;
@@ -39,9 +41,10 @@ export class Mage extends Character {
       if (options.checkMax % 10 !== 0) throw new Error("checkMax must be divisible by 10");
 
       // If the pathfinder is prepared, check if the blink would work before actually blinking
+      let canWalk = true;
       try {
         const pathfinder = this.game.pathfinder;
-        let canWalk = false;
+        canWalk = false;
         for (const [dx, dy] of Utilities.getSpiralOffsets(10, options.checkMax)) {
           const testX = blinkX + dx;
           const testY = blinkY + dy;
@@ -53,13 +56,13 @@ export class Mage extends Character {
             break;
           }
         }
-        if (!canWalk) throw new Error(`Cannot blink to ${this.map},${x},${y}`);
       } catch {
         // Suppress No Pathfinder Error
       }
+      if (!canWalk) throw new Error(`Cannot blink to ${this.map},${x},${y}`);
     }
 
-    const promise = new Promise<SkillSuccessGRDataObject>((resolve, reject) => {
+    const blinkStarted = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_response", responseHandler);
@@ -69,7 +72,7 @@ export class Mage extends Character {
         if (!isRelevantGameResponse(data, "blink")) return;
 
         if (isSuccessGameResponse(data)) {
-          resolve(data as SkillSuccessGRDataObject);
+          resolve();
         } else {
           reject(new Error(data.response));
         }
@@ -85,7 +88,39 @@ export class Mage extends Character {
     });
 
     s.emit("skill", { name: "blink", x: blinkX, y: blinkY });
-    return promise;
+    if (options.resolveOn === "start") return blinkStarted;
+
+    const blinkFinished = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("new_map", newMapHandler);
+        s.off("player", playerHandler);
+      };
+
+      const newMapHandler = (data: ServerToClient_new_map) => {
+        if (data.effect === "blink") {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (!data.s.blink) {
+          cleanup();
+          reject(new Error("interupted"));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("new_map", newMapHandler);
+      s.on("player", playerHandler);
+    });
+
+    return blinkFinished;
   }
 }
 

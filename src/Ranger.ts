@@ -107,11 +107,7 @@ export class Ranger extends Character {
       if (
         data.attacker == this.id &&
         data.type == "5shot" &&
-        (data.target == id1 ||
-          data.target == id2 ||
-          data.target == id3 ||
-          data.target == id4 ||
-          data.target == id5)
+        (data.target == id1 || data.target == id2 || data.target == id3 || data.target == id4 || data.target == id5)
       ) {
         projectiles.push(data.pid);
       }
