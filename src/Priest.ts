@@ -32,7 +32,7 @@ export class Priest extends Character {
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "heal")) return;
 
-        if (isSuccessGameResponse(data)) {
+        if (isSuccessGameResponse(data) || data.response === "data") {
           resolve(data as unknown as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
