@@ -384,6 +384,12 @@ export class Character extends Observer {
     return this._target;
   }
 
+  protected _targets?: number;
+  public get targets(): number {
+    if (this._targets === undefined) throw new Error("No player data");
+    return this._targets;
+  }
+
   protected _vit?: number;
   public get vit(): number {
     if (this._vit === undefined) throw new Error("No player data");
@@ -609,6 +615,7 @@ export class Character extends Observer {
     if (data.slots !== undefined) this._slots = data.slots;
     if (data.str !== undefined) this._str = data.str;
     if (data.target !== undefined) this._target = data.target;
+    if (data.targets !== undefined) this._targets = data.targets;
     if (data.user !== undefined) {
       this._bank = data.user;
       CharacterEventBus.emit("bank_updated", this, data.user);
