@@ -282,6 +282,10 @@ export class Character extends Observer {
     return this._mp_reduction;
   }
 
+  public get npc(): false {
+    return false;
+  }
+
   private get output(): number {
     // TODO: Implement. Not exposed, but we could figure it out through equipment.
     // TODO: Change to public when implemented
