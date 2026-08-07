@@ -1,7 +1,7 @@
 import type { ServerToClient_game_response, ServerToClient_new_map, ServerToClient_player } from "typed-adventureland";
 import { Character } from "./Character.js";
 import Configuration from "./Configuration.js";
-import { isRelevantGameResponse, isSuccessGameResponse } from "./TypeGuards.js";
+import { isFailedGameResponse, isRelevantGameResponse } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
 
 export class Mage extends Character {
@@ -66,14 +66,19 @@ export class Mage extends Character {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_response", responseHandler);
+        s.off("player", playerHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.s.blink) {
+          cleanup();
+          resolve();
+        }
       };
 
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "blink")) return;
-
-        if (isSuccessGameResponse(data)) {
-          resolve();
-        } else {
+        if (isFailedGameResponse(data)) {
           reject(new Error(data.response));
         }
         cleanup();
@@ -85,6 +90,7 @@ export class Mage extends Character {
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
       s.on("game_response", responseHandler);
+      s.on("player", playerHandler);
     });
 
     s.emit("skill", { name: "blink", x: blinkX, y: blinkY });
@@ -94,7 +100,6 @@ export class Mage extends Character {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("new_map", newMapHandler);
-        s.off("player", playerHandler);
       };
 
       const newMapHandler = (data: ServerToClient_new_map) => {
@@ -104,10 +109,11 @@ export class Mage extends Character {
         }
       };
 
-      const playerHandler = (data: ServerToClient_player) => {
-        if (!data.s.blink) {
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "blink")) return;
+        if (isFailedGameResponse(data)) {
           cleanup();
-          reject(new Error("interupted"));
+          reject(new Error(data.response));
         }
       };
 
@@ -116,8 +122,8 @@ export class Mage extends Character {
         reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
       }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
+      s.on("game_response", responseHandler);
       s.on("new_map", newMapHandler);
-      s.on("player", playerHandler);
     });
 
     return blinkFinished;
