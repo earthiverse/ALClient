@@ -1850,22 +1850,21 @@ export class Character extends Observer {
           for (const spawnSegment of spawnPath) {
             if (warpFinished || this.map !== segment.map) break;
             if (spawnSegment.method === "move") {
-              let movePromise;
               try {
-                movePromise = this.move(spawnSegment.x, spawnSegment.y);
-                await Promise.race([movePromise, warpPromise]);
+                await this.move(spawnSegment.x, spawnSegment.y);
               } catch {
-                try {
-                  await movePromise;
-                } catch {
-                  // Ignore
-                }
+                break;
               }
             }
           }
         }
 
-        await warpPromise;
+        try {
+          await warpPromise;
+        } catch {
+          if (this.map !== segment.map || !pathfinder.canWalkPath(this.map, this.x, this.y, segment.x, segment.y))
+            throw new Error(`Unable to warp to town (${segment.map},${segment.x},${segment.y})`);
+        }
 
         // Town warps can spawn you near the point, but not actually at the point
         const nextSegment = path[i + 1] ?? segment;
