@@ -129,6 +129,12 @@ export class Character extends Observer {
     return this._cash;
   }
 
+  protected _courage?: number;
+  public get courage(): number {
+    if (this._courage === undefined) throw new Error("No player data");
+    return this._courage;
+  }
+
   protected _crit?: number;
   public get crit(): number {
     if (this._crit === undefined) throw new Error("No player data");
@@ -264,6 +270,12 @@ export class Character extends Observer {
     return this._max_mp;
   }
 
+  protected _mcourage?: number;
+  public get mcourage(): number {
+    if (this._mcourage === undefined) throw new Error("No player data");
+    return this._mcourage;
+  }
+
   protected _mp?: number;
   public get mp(): number {
     if (this._mp === undefined) throw new Error("No player data");
@@ -300,6 +312,12 @@ export class Character extends Observer {
   protected _party: string = "";
   public get party(): string | undefined {
     return this._party ? this._party : undefined;
+  }
+
+  protected _pcourage?: number;
+  public get pcourage(): number {
+    if (this._pcourage === undefined) throw new Error("No player data");
+    return this._pcourage;
   }
 
   protected _q?: CharacterEntityQInfos;
@@ -544,6 +562,7 @@ export class Character extends Observer {
     if (data.attack !== undefined) this._attack = data.attack;
     if (data.c !== undefined) this._c = data.c;
     if (data.cash !== undefined) this._cash = data.cash;
+    if (data.courage !== undefined) this._courage = data.courage;
     if (data.crit !== undefined) this._crit = data.crit;
     if (data.ctype !== undefined) this._ctype = data.ctype;
     if (data.dex !== undefined) this._dex = data.dex;
@@ -567,11 +586,13 @@ export class Character extends Observer {
     if (data.manasteal !== undefined) this._manasteal = data.manasteal;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.max_mp !== undefined) this._max_mp = data.max_mp;
+    if (data.mcourage !== undefined) this._mcourage = data.mcourage;
     if (data.mp !== undefined) this._mp = data.mp;
     if (data.mp_cost !== undefined) this._mp_cost = data.mp_cost;
     if (data.mp_reduction !== undefined) this._mp_reduction = data.mp_reduction;
     if (data.owner !== undefined) this._owner = data.owner;
     if (data.party !== undefined) this._party = data.party;
+    if (data.pcourage !== undefined) this._pcourage = data.pcourage;
     if (data.q !== undefined) {
       this._q = data.q;
       CharacterEventBus.emit("progress_set", this, data.q);
