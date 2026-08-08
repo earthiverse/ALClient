@@ -50,7 +50,7 @@ export class Ranger extends Character {
       const attackHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "3shot")) return;
 
-        if (isSuccessGameResponse(data)) {
+        if (isSuccessGameResponse(data) || data.response === "data") {
           resolve(data as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
@@ -123,7 +123,7 @@ export class Ranger extends Character {
       const attackHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "5shot")) return;
 
-        if (isSuccessGameResponse(data)) {
+        if (isSuccessGameResponse(data) || data.response === "data") {
           resolve(data as SkillSuccessGRDataObject);
         } else {
           reject(new Error(data.response));
