@@ -85,42 +85,53 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   expect(pathfinder.canWalkPath("main", 399, 1277, 399, 1536)).toBe(false);
 
   // Should be able to get path across maps
-  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 100)).toBeTruthy();
-  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 1)).toBeTruthy();
+  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 100)).toBeArray();
+  expect(pathfinder.getPath("main", 0, 0, "spookytown", 0, 0, 1)).toBeArray();
 
   // These paths were problematic for mrdiamond12312
   expect(pathfinder.canWalkPath("main", -145, -153, 16, -153)).toBe(false);
-  expect(pathfinder.getPath("winterland", 420, -2777, "main", 0, 0, 50)).toBeTruthy();
-  expect(pathfinder.getPath("main", -1324, 19, "mforest", 0, 0, 50)).toBeTruthy();
-  expect(pathfinder.getPath("main", -152, -137, "winterland", 0, 0, 50)).toBeTruthy();
+  expect(pathfinder.getPath("winterland", 420, -2777, "main", 0, 0, 50)).toBeArray();
+  expect(pathfinder.getPath("main", -1324, 19, "mforest", 0, 0, 50)).toBeArray();
+  expect(pathfinder.getPath("main", -152, -137, "winterland", 0, 0, 50)).toBeArray();
 
   // This path didn't get close enough to the tunnel door
   const mainToTunnel = pathfinder.getPath("main", 0, 0, "tunnel", -7, 5);
-  expect(mainToTunnel).toBeTruthy();
+  expect(mainToTunnel).toBeArray();
   const mainToTunnelDoorNode = mainToTunnel![mainToTunnel!.findIndex((node) => node.method === "door") - 1];
   expect(mainToTunnelDoorNode).toBeTruthy();
   const mainToTunnelDoorNodeDistance = Math.hypot(mainToTunnelDoorNode!.x - 535, mainToTunnelDoorNode!.y - 1677);
   expect(mainToTunnelDoorNodeDistance).toBeLessThan(112);
 
+  // This path tried to walk through walls
+  expect(pathfinder.canWalkPath("main", 671, 1128, 977, 1101)).toBe(false);
+  const beeToBee = pathfinder.getPath("main", 671, 1128, "main", 977, 1101);
+  expect(beeToBee).toBeArray();
+  expect(beeToBee!.length).toBeGreaterThan(1);
+  for (let i = 1; i < beeToBee!.length; i++) {
+    const fromNode = beeToBee![i - 1]!;
+    const toNode = beeToBee![i]!;
+    expect(pathfinder.canWalkPath(fromNode.map, fromNode.x, fromNode.y, toNode.x, toNode.y)).toBe(true);
+  }
+
   // Should be able to escape islands
-  expect(pathfinder.getPath("winterland", 865, 430, "main", 0, 0, 50)).toBeTruthy();
+  expect(pathfinder.getPath("winterland", 865, 430, "main", 0, 0, 50)).toBeArray();
 
   // These paths was recommended by Crown
-  expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeTruthy();
+  expect(pathfinder.getPath("main", 0, 0, "resort_e", 0, 0, 50)).toBeArray();
 
   // Test leaving from jail (should use `leave`)
   const jailToMain = pathfinder.getPath("jail", 0, 0, "main", 0, 0);
-  expect(jailToMain).toBeTruthy();
+  expect(jailToMain).toBeArray();
   expect(jailToMain!.some((node) => node.method === "leave")).toBe(true);
 
   // Test entering instance (should use `enter`)
   const caveToCrypt = pathfinder.getPath("cave", -200, -1300, "crypt", 0, 0);
-  expect(caveToCrypt).toBeTruthy();
+  expect(caveToCrypt).toBeArray();
   expect(caveToCrypt!.some((node) => node.method === "enter")).toBe(true);
 
   // Final destination should be moved to
   const mainMovement = pathfinder.getPath("main", 0, 0, "main", 99, 9);
-  expect(mainMovement).toBeTruthy();
+  expect(mainMovement).toBeArray();
   expect(mainMovement!.at(-1)!.x).toBe(99);
   expect(mainMovement!.at(-1)!.y).toBe(9);
 
