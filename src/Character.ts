@@ -1701,7 +1701,29 @@ export class Character extends Observer {
     const distance = this.getDistanceTo({ x, y, map: this.map, in: this.in });
 
     s.emit("move", { x: this.x, y: this.y, going_x: this.going_x, going_y: this.going_y, m: this._m });
-    return new Promise<void>((resolve) => setTimeout(resolve, Math.ceil((1000 * distance) / this.speed)));
+    return new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("new_map", problemHandler);
+        s.off("correction", problemHandler);
+      };
+
+      const problemHandler = () => {
+        cleanup();
+        reject(new Error("Move was cancelled"));
+      };
+
+      const timeout = setTimeout(
+        () => {
+          cleanup();
+          resolve();
+        },
+        Math.ceil((1000 * distance) / this.speed),
+      );
+
+      s.on("new_map", problemHandler);
+      s.on("correction", problemHandler);
+    });
   }
 
   /**
