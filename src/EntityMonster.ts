@@ -120,6 +120,6 @@ export class EntityMonster extends Entity {
     if (data.level !== undefined) this._level = data.level;
     if (data.max_hp !== undefined) this._max_hp = data.max_hp;
     if (data.s !== undefined) this._s = data.s;
-    data.target = typeof data.target === "string" ? data.target : undefined;
+    if (data.target !== undefined) this._target = typeof data.target === "string" ? data.target : undefined;
   }
 }
