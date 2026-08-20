@@ -1995,6 +1995,111 @@ export class Character extends Observer {
   }
 
   /**
+   * Closes your merchant stand
+   */
+  public async closeMerchantStand(): Promise<void> {
+    if (this.stand === undefined) return; // Stand is already closed
+
+    const s = this.socket;
+
+    const closed = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.stand === undefined || data.stand === false) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "merchant")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("merchant", { close: 1 });
+    return closed;
+  }
+
+  /**
+   * Opens your merchant stand
+   *
+   * @param num Position of the stand in your inventory. If not provided, it will locate a stand item automatically.
+   */
+  public async openMerchantStand(num?: number): Promise<void> {
+    if (this.stand !== undefined) return; // Stand is already open
+
+    if (num === undefined) {
+      for (const itemName of ["supercomputer", "computer", "stand1", "stand0"] as ItemKey[]) {
+        const found = this.locateItem({ name: itemName });
+        if (found !== undefined) {
+          num = found;
+          break;
+        }
+      }
+    }
+
+    if (num === undefined) {
+      throw new Error("Could not find a merchant stand in inventory.");
+    }
+
+    if (!this._items?.[num]) {
+      throw new Error(`No item in inventory position ${num}`);
+    }
+
+    const s = this.socket;
+
+    const opened = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (typeof data.stand !== "string") return;
+        cleanup();
+        resolve();
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "merchant")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("merchant", { num });
+    return opened;
+  }
+
+  /**
    * Regenerates a small amount of HP without using an item
    * @returns
    */
