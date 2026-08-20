@@ -6,6 +6,7 @@ import type {
   MapKey,
   MonsterKey,
   NpcKey,
+  TradeItemInfo,
 } from "typed-adventureland";
 import type { Location } from "./Entity.js";
 
@@ -86,4 +87,17 @@ export function isMonsterKey(key: unknown, g: GData): key is MonsterKey {
 
 export function isNpcKey(key: unknown, g: GData): key is NpcKey {
   return g.npcs[key as NpcKey] !== undefined;
+}
+
+export function isTradeItem(data: unknown): data is TradeItemInfo {
+  if (typeof data !== "object" || data === null || data === undefined) return false;
+  return typeof (data as TradeItemInfo).price === "number" && typeof (data as TradeItemInfo).rid === "string";
+}
+
+export function isTradeWishlistItem(data: unknown): data is TradeItemInfo & { b: true } {
+  return isTradeItem(data) && data.b === true;
+}
+
+export function isTradeSellItem(data: unknown): data is TradeItemInfo & { b?: false | undefined } {
+  return isTradeItem(data) && data.b !== true;
 }

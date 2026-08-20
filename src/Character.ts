@@ -43,7 +43,6 @@ import type {
   StandKey,
   StatType,
   StatusInfo,
-  TradeItemInfo,
   TradeSlotType,
   XServerInfos,
 } from "typed-adventureland";
@@ -64,6 +63,8 @@ import {
   isNpcKey,
   isRelevantGameResponse,
   isSuccessGameResponse,
+  isTradeSellItem,
+  isTradeWishlistItem,
   isUpgradeChanceResponse,
 } from "./TypeGuards.js";
 import Utilities from "./Utilities.js";
@@ -1126,6 +1127,209 @@ export class Character extends Observer {
     }
 
     return items;
+  }
+
+  /**
+   * Adds an item that you want to purchase to your trade listing (wishlist).
+   *
+   * @param name Name of the item you want to buy
+   * @param price Price you are willing to pay for each item
+   * @param tradeSlot Trade slot to place the request in. If not provided, finds the first empty trade slot.
+   * @param quantity Number of items you want to buy (default: 1)
+   * @param level Level of the item you wish to buy (optional)
+   */
+  public async listForPurchase(
+    name: ItemKey,
+    price: number,
+    tradeSlot?: TradeSlotType,
+    quantity = 1,
+    level?: number,
+  ): Promise<void> {
+    if (price <= 0) throw new Error("Price must be greater than 0.");
+    if (quantity <= 0) throw new Error("Quantity must be greater than 0.");
+
+    if (!tradeSlot) {
+      for (let i = 1; i <= 30; i++) {
+        const slotName = `trade${i}` as TradeSlotType;
+        const slotInfo = this.slots[slotName];
+        if (slotInfo === null || slotInfo === undefined) {
+          tradeSlot = slotName;
+          break;
+        }
+      }
+      if (!tradeSlot) throw new Error("No empty trade slot available to wishlist the item.");
+    } else {
+      if (this.slots[tradeSlot]) {
+        throw new Error(`We already have something listed in '${tradeSlot}'.`);
+      }
+    }
+
+    const s = this.socket;
+
+    const wishListed = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        const newTradeSlot = data.slots?.[tradeSlot];
+        if (
+          isTradeWishlistItem(newTradeSlot) &&
+          newTradeSlot.name === name &&
+          (newTradeSlot.q ?? 1) === quantity &&
+          newTradeSlot.price === price &&
+          (level === undefined || newTradeSlot.level === level)
+        ) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "trade_wishlist")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("trade_wishlist", {
+      level,
+      name,
+      price,
+      q: quantity,
+      slot: tradeSlot,
+    });
+
+    return wishListed;
+  }
+
+  /**
+   * Lists an item for sale in a trade slot.
+   *
+   * @param itemPos Position of the item in your inventory
+   * @param price Price to sell the item for
+   * @param tradeSlot Trade slot to list the item in. If not provided, it will find an existing stackable trade slot or an empty one.
+   * @param quantity Number of items to sell (default: 1)
+   */
+  public async listForSale(itemPos: number, price: number, tradeSlot?: TradeSlotType, quantity = 1): Promise<void> {
+    const itemInfo = this._items?.[itemPos];
+    if (!itemInfo) throw new Error(`No item in inventory position ${itemPos}`);
+    if (price <= 0) throw new Error("Price must be greater than 0.");
+    if (quantity <= 0) throw new Error("Quantity must be greater than 0.");
+    if ((itemInfo.q ?? 1) < quantity) {
+      throw new Error(`Insufficient quantity in slot ${itemPos} (${itemInfo.q ?? 1}/${quantity})`);
+    }
+
+    const gInfo = this.game.G.items[itemInfo.name];
+
+    if (!tradeSlot && itemInfo.q !== undefined) {
+      // Look for an existing item to stack for sale
+      for (const slotName in this.slots) {
+        if (!slotName.startsWith("trade")) continue;
+        const slotInfo = this.slots[slotName as TradeSlotType];
+        if (!isTradeSellItem(slotInfo)) continue;
+
+        if (slotInfo.name !== itemInfo.name) continue;
+        if (slotInfo.p !== itemInfo.p) continue;
+        if (price !== slotInfo.price) continue;
+        if (gInfo.s !== undefined && quantity + (slotInfo.q ?? 1) > gInfo.s) continue;
+
+        tradeSlot = slotName as TradeSlotType;
+        break;
+      }
+    }
+
+    if (!tradeSlot) {
+      // Find the first empty trade slot
+      for (let i = 1; i <= 30; i++) {
+        const slotName = `trade${i}` as TradeSlotType;
+        const slotInfo = this.slots[slotName];
+        if (slotInfo === null || slotInfo === undefined) {
+          tradeSlot = slotName;
+          break;
+        }
+      }
+      if (!tradeSlot) throw new Error("No empty trade slot available to list the item for sale.");
+    }
+
+    const slotInfo = this.slots[tradeSlot];
+    if (slotInfo) {
+      if (
+        isTradeSellItem(slotInfo) &&
+        slotInfo.name === itemInfo.name &&
+        slotInfo.p === itemInfo.p &&
+        price === slotInfo.price &&
+        gInfo.s !== undefined &&
+        quantity + (slotInfo.q ?? 1) <= gInfo.s &&
+        this.esize > 0
+      ) {
+        // Unequip to combine into inventory, then list the combined quantity
+        await this.unequip(tradeSlot);
+        quantity += slotInfo.q ?? 1;
+      } else {
+        throw new Error(`We are already trading something in ${tradeSlot}.`);
+      }
+    }
+
+    const s = this.socket;
+
+    const listed = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        const newTradeSlot = data.slots?.[tradeSlot];
+        if (
+          isTradeSellItem(newTradeSlot) &&
+          newTradeSlot.name === itemInfo.name &&
+          (newTradeSlot.q ?? 1) === quantity &&
+          newTradeSlot.price === price
+        ) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "equip")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("equip", {
+      num: itemPos,
+      price,
+      q: quantity,
+      slot: tradeSlot,
+    });
+
+    return listed;
   }
 
   public isBlocked(): boolean {
@@ -2347,8 +2551,6 @@ export class Character extends Observer {
       };
 
       const playerHandler = (data: ServerToClient_player) => {
-        if (!data.items) return;
-
         // Check if items have swapped or stacked
         if (aItem && !bItem) {
           if (data.items[b]?.name === aItem.name && !data.items[a]) {
@@ -2362,10 +2564,7 @@ export class Character extends Observer {
           }
         } else if (aItem && bItem) {
           // If items were stacked into slot b
-          if (
-            aItem.name === bItem.name &&
-            (!data.items[a] || data.items[b]?.q === (aItem.q ?? 1) + (bItem.q ?? 1))
-          ) {
+          if (aItem.name === bItem.name && (!data.items[a] || data.items[b]?.q === (aItem.q ?? 1) + (bItem.q ?? 1))) {
             cleanup();
             resolve();
           } else if (data.items[a]?.name === bItem.name && data.items[b]?.name === aItem.name) {
@@ -2660,7 +2859,7 @@ export class Character extends Observer {
       throw new Error(`Slot ${slot} is empty; nothing to unequip.`);
     }
 
-    if ((currentSlot as TradeItemInfo).b !== true && this.esize <= 0) {
+    if (!isTradeWishlistItem(currentSlot) && this.esize <= 0) {
       const gItem = this.game.G.items[currentSlot.name];
       const canStack =
         gItem.s !== undefined &&
