@@ -2458,6 +2458,76 @@ export class Character extends Observer {
     return upgradeFinished;
   }
 
+  /**
+   * Unequips the item in the given equipment or trade slot.
+   *
+   * @param slot The slot to unequip (e.g. "mainhand", "trade1")
+   * @returns The position of the unequipped item in inventory, or -1 if no item was added (e.g. wishlist removed)
+   */
+  public async unequip(slot: SlotType | TradeSlotType): Promise<number> {
+    const currentSlot = this.slots[slot];
+    if (currentSlot === null || currentSlot === undefined) {
+      throw new Error(`Slot ${slot} is empty; nothing to unequip.`);
+    }
+
+    if ((currentSlot as TradeItemInfo).b !== true && this.esize <= 0) {
+      const gItem = this.game.G.items[currentSlot.name];
+      const canStack =
+        gItem.s !== undefined &&
+        this._items!.some(
+          (i) => i !== null && i.name === currentSlot.name && (i.q ?? 1) + (currentSlot.q ?? 1) <= gItem.s!,
+        );
+      if (!canStack) {
+        throw new Error(`Our inventory is full. We cannot unequip ${slot}.`);
+      }
+    }
+
+    const s = this.socket;
+    const previousItems = this._items ? [...this._items] : [];
+
+    const unequipped = new Promise<number>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.slots?.[slot] === null || data.slots?.[slot] === undefined) {
+          cleanup();
+          for (let i = 0; i < data.items.length; i++) {
+            const newItem = data.items[i];
+            const prevItem = previousItems[i];
+            if (newItem && (!prevItem || prevItem.name !== newItem.name || (prevItem.q ?? 1) !== (newItem.q ?? 1))) {
+              resolve(i);
+              return;
+            }
+          }
+          resolve(-1);
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "unequip")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("unequip", { slot });
+    return unequipped;
+  }
+
   public async warpToTown(
     options: {
       resolveOn: "start" | "finish";
