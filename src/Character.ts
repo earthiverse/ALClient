@@ -634,6 +634,14 @@ export class Character extends Observer {
     if (this.isOnCooldown(skill)) throw new Error(`${skill} is on cooldown`);
   }
 
+  public canExchange(): boolean {
+    if (this._map?.startsWith("bank") === true) return false; // Can't exchange in the bank
+
+    // Check if we're close to the exchange NPC
+    const [x, y] = this.game.G.maps.main.npcs.find((npc) => npc.id === "exchange")!.position as [number, number];
+    return this.getDistanceTo({ map: "main", in: "main", x, y }) <= 400;
+  }
+
   /**
    * @param item Item to check if we can buy
    * @param options
@@ -1821,6 +1829,7 @@ export class Character extends Observer {
     // TODO: Item Key -- find npc that sells it
 
     path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
+
     if (!Array.isArray(path))
       throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${map},${arg2},${y}`);
 
