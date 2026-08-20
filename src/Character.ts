@@ -2322,6 +2322,81 @@ export class Character extends Observer {
   }
 
   /**
+   * Swaps items between two inventory positions.
+   *
+   * @param a First inventory slot position
+   * @param b Second inventory slot position
+   */
+  public async swapItems(a: number, b: number): Promise<void> {
+    if (a === b) return; // Same slot
+
+    if (a < 0 || a >= this._items!.length) throw new Error(`Invalid inventory position ${a}`);
+    if (b < 0 || b >= this._items!.length) throw new Error(`Invalid inventory position ${b}`);
+
+    const aItem = this._items![a];
+    const bItem = this._items![b];
+    if (!aItem && !bItem) return; // Nothing in either slot
+
+    const s = this.socket;
+
+    const swapped = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("player", playerHandler);
+        s.off("game_response", responseHandler);
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (!data.items) return;
+
+        // Check if items have swapped or stacked
+        if (aItem && !bItem) {
+          if (data.items[b]?.name === aItem.name && !data.items[a]) {
+            cleanup();
+            resolve();
+          }
+        } else if (!aItem && bItem) {
+          if (data.items[a]?.name === bItem.name && !data.items[b]) {
+            cleanup();
+            resolve();
+          }
+        } else if (aItem && bItem) {
+          // If items were stacked into slot b
+          if (
+            aItem.name === bItem.name &&
+            (!data.items[a] || data.items[b]?.q === (aItem.q ?? 1) + (bItem.q ?? 1))
+          ) {
+            cleanup();
+            resolve();
+          } else if (data.items[a]?.name === bItem.name && data.items[b]?.name === aItem.name) {
+            cleanup();
+            resolve();
+          }
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        if (!isRelevantGameResponse(data, "imove")) return;
+        if (isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("player", playerHandler);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("imove", { a, b });
+    return swapped;
+  }
+
+  /**
    * NOTE: This function will return a successful promise if the request was successfully sent, NOT if we successfully joined the party.
    *
    * @param name ID of character whose party you wish to join
