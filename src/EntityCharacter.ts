@@ -5,6 +5,7 @@ import type {
   MapKey,
   NpcKey,
   ServerToClient_entities_players,
+  StandKey,
   StatusInfo,
 } from "typed-adventureland";
 import { Entity } from "./Entity.js";
@@ -122,6 +123,11 @@ export class EntityCharacter extends Entity {
     return this._slots;
   }
 
+  protected _stand?: StandKey | "cstand";
+  public get stand(): StandKey | "cstand" | undefined {
+    return this._stand;
+  }
+
   protected _target?: string;
   public get target(): string | undefined {
     return this._target;
@@ -158,6 +164,7 @@ export class EntityCharacter extends Entity {
     if (data.rip !== undefined) this._rip = data.rip;
     if (data.s !== undefined) this._s = data.s;
     if (data.slots !== undefined) this._slots = data.slots;
+    if (data.stand !== undefined) this._stand = typeof data.stand === "string" ? data.stand : undefined;
     if (typeof data.target === "string") this._target = data.target;
   }
 }

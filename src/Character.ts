@@ -39,8 +39,12 @@ import type {
   ServerToClient_start,
   SkillKey,
   SkillSuccessGRDataObject,
+  SlotType,
+  StandKey,
   StatType,
   StatusInfo,
+  TradeItemInfo,
+  TradeSlotType,
   XServerInfos,
 } from "typed-adventureland";
 import Configuration from "./Configuration.js";
@@ -367,6 +371,11 @@ export class Character extends Observer {
     return this._slots;
   }
 
+  protected _stand?: StandKey | "cstand";
+  public get stand(): StandKey | "cstand" | undefined {
+    return this._stand;
+  }
+
   private get stat(): number {
     // TODO: Implement. Not exposed, but we could figure it out through equipment.
     // TODO: Change to public when implemented
@@ -613,6 +622,7 @@ export class Character extends Observer {
       CharacterEventBus.emit("conditions_set", this, data.s);
     }
     if (data.slots !== undefined) this._slots = data.slots;
+    if (data.stand !== undefined) this._stand = typeof data.stand === "string" ? data.stand : undefined;
     if (data.str !== undefined) this._str = data.str;
     if (data.target !== undefined) this._target = data.target;
     if (data.targets !== undefined) this._targets = data.targets;
