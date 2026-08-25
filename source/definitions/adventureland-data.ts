@@ -1505,8 +1505,8 @@ export type AchievementName =
  */
 export type AnimationName =
     | "acid"
-    | "arrow1"
     | "arrow_hit"
+    | "arrow1"
     | "block"
     | "burst"
     | "carrow"
@@ -1677,10 +1677,10 @@ export type ConditionName =
     | "invis"
     | "licenced"
     | "marked"
-    | "massproduction"
-    | "massproductionpp"
     | "massexchange"
     | "massexchangepp"
+    | "massproduction"
+    | "massproductionpp"
     | "mcourage"
     | "mfrenzy"
     | "mining"
@@ -1792,7 +1792,7 @@ export type EmotionName = "drop_egg" | "hearts_single"
 
 export type EventName = "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
 
-export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
+export type ImageSetName = "community" | "custom" | "items40" | "pack_1a" | "pack_20" | "rawitems" | "skills"
 /**
  * Generate with:
  * { const is = []; for(const i in G.items) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
@@ -2386,8 +2386,8 @@ export type MapName =
     | "cgallery"
     | "crypt"
     | "cyberland"
-    | "d2"
     | "d_e"
+    | "d2"
     | "desertland"
     | "duelland"
     | "dungeon0"
@@ -2889,8 +2889,8 @@ export type TilesetName =
     | "ash"
     | "beach"
     | "castle"
-    | "custom_a"
     | "custom"
+    | "custom_a"
     | "custom2"
     | "dark"
     | "doors"

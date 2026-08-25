@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 5202 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -630,13 +630,10 @@ test("G.skills type validation", async () => {
             mirrordance: {
                 cooldown: 120000,
                 emote: "mirrordance",
-                explanation: "Two steps. One beat.",
+                explanation: "One dancer. Every light.",
                 mp: 250,
                 name: "Mirror Disco",
-                no_self: true,
-                range: 200,
                 skin: "emote_mirrordance",
-                target: "player",
                 type: "skill",
             },
             mlight: {
@@ -829,12 +826,10 @@ test("G.skills type validation", async () => {
             pocketstorm: {
                 cooldown: 60000,
                 emote: "pocketstorm",
-                explanation: "A little weather follows.",
+                explanation: "Bring your own weather.",
                 mp: 100,
                 name: "Pocket Storm",
-                range: 240,
                 skin: "emote_pocketstorm",
-                target: "player",
                 type: "skill",
             },
             poisonarrow: {
