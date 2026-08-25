@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -536,6 +536,25 @@ test("G.drops type validation", async () => {
                 [0.08333333333333333, "cx", "hat400"],
                 [0.08333333333333333, "cx", "hat405"],
             ],
+            cosmo5: [
+                [1, "cx", "gravestonea"],
+                [1, "cx", "xgravestone0"],
+                [1, "cx", "xgravestone1"],
+                [0.1, "cx", "xgravestone2"],
+                [1, "cx", "xgravestone3"],
+                [1, "cx", "xgravestone4"],
+                [0.2, "cx", "fart"],
+                [1, "cx", "wiggle"],
+                [1, "cx", "headwiggle"],
+                [1, "cx", "joy"],
+                [1, "cx", "jump"],
+                [0.1, "cx", "superjump"],
+                [1, "cx", "highfive"],
+                [1, "cx", "boop"],
+                [0.35, "cx", "spotlight"],
+                [0.5, "cx", "pocketstorm"],
+                [0.1, "cx", "mirrordance"],
+            ],
             eastereggs: [
                 [1, "egg0"],
                 [1, "egg1"],
@@ -931,6 +950,7 @@ test("G.drops type validation", async () => {
                 [1, "cosmo2"],
                 [1, "cosmo3"],
                 [1, "cosmo4"],
+                [1, "cosmo5"],
                 [1, "xptome"],
                 [1, "licence"],
                 [1, "xpbooster"],
@@ -1125,14 +1145,16 @@ test("G.drops type validation", async () => {
                 [1, "spidersilk"],
                 [1, "flute"],
                 [1, "puppyer"],
+                [1, "ashleaf"],
+                [1, "reefglass"],
+                [1, "stormfeather"],
+                [1, "voidthread"],
+                [1, "embercore"],
+                [1, "frostcore"],
+                [1, "verdantcore"],
                 [5, "glitch", 2],
             ],
-            gold: {
-                base: 0.64,
-                random: 0.8,
-                x10: 0.03125,
-                x50: 0.0020833333333333333,
-            },
+            gold: { base: 0.64, random: 0.8, x10: 0.03125, x50: 0.0020833333333333333 },
             goldenegg: [
                 [100, "gold", 1000000],
                 [10, "gold", 10000000],
@@ -1460,9 +1482,10 @@ test("G.drops type validation", async () => {
                 [0.01, "offeringx"],
                 [0.01, "cosmo0"],
                 [0.01, "cosmo1"],
-                [0.01, "cosmo2"],
+                [0.1, "cosmo2"],
                 [0.01, "cosmo3"],
                 [0.01, "cosmo4"],
+                [0.01, "cosmo5"],
                 [0.1, "xptome"],
                 [0.01, "licence"],
                 [0.01, "xpbooster"],
@@ -1657,6 +1680,13 @@ test("G.drops type validation", async () => {
                 [1, "spidersilk"],
                 [0.01, "flute"],
                 [1, "puppyer"],
+                [1, "ashleaf"],
+                [1, "reefglass"],
+                [1, "stormfeather"],
+                [1, "voidthread"],
+                [0.1, "embercore"],
+                [0.1, "frostcore"],
+                [0.1, "verdantcore"],
             ],
             lightmage: [
                 [1, "hpot0"],
@@ -1818,6 +1848,7 @@ test("G.drops type validation", async () => {
                 arcticbee: [
                     [0.00005, "essenceoffrost"],
                     [0.001, "bfur"],
+                    [0.0004, "frostcore"],
                 ],
                 armadillo: [
                     [0.00005, "sshield"],
@@ -1826,6 +1857,7 @@ test("G.drops type validation", async () => {
                 bat: [
                     [0.004, "wbook0"],
                     [0.005, "bwing"],
+                    [0.0005, "voidthread"],
                     [1e-8, "cxjar", 1, "wings102"],
                 ],
                 bbpompom: [
@@ -1839,7 +1871,10 @@ test("G.drops type validation", async () => {
                     [0.00016666666666666666, "stinger"],
                 ],
                 bgoo: [[0.25, "funtoken"]],
-                bigbird: [[0.05, "feather0"]],
+                bigbird: [
+                    [0.05, "feather0"],
+                    [0.01, "stormfeather"],
+                ],
                 bluefairy: [[1, "stick"]],
                 boar: [
                     [0.01, "leather"],
@@ -1859,11 +1894,13 @@ test("G.drops type validation", async () => {
                     [2e-7, "suckerpunch"],
                     [0.005, "seashell"],
                     [0.001, "crabclaw"],
+                    [0.004, "reefglass"],
                     [0.00005, "cclaw"],
                 ],
                 crabx: [
                     [4e-7, "suckerpunch"],
                     [0.02, "seashell"],
+                    [0.04, "reefglass"],
                     [0.002, "cclaw"],
                     [0.0001, "cshell"],
                 ],
@@ -1898,6 +1935,7 @@ test("G.drops type validation", async () => {
                     [20, "essenceoffire"],
                     [10, "essenceoffire"],
                     [10, "essenceoffire"],
+                    [1, "embercore", 5],
                     [0.2, "offering"],
                     [0.5, "lmace"],
                     [5e-7, "cxjar", 1, "hat400"],
@@ -1912,6 +1950,9 @@ test("G.drops type validation", async () => {
                 ],
                 ent: [
                     [1, "essenceofnature"],
+                    [1, "ashleaf", 20],
+                    [1, "verdantcore", 2],
+                    [0.0001, "sapstone"],
                     [0.02, "woodensword"],
                     [0.00001, "stick"],
                     [0.000005, "nheart"],
@@ -1951,6 +1992,7 @@ test("G.drops type validation", async () => {
                     [0.000005, "cxjar", 1, "catbatg"],
                     [0.025, "offeringp"],
                     [0.00002, "sanguine"],
+                    [0.1, "voidthread"],
                 ],
                 gbluepro: [
                     [1, "orboffrost"],
@@ -1997,6 +2039,7 @@ test("G.drops type validation", async () => {
                     [0.1, "candy1"],
                     [0.001, "bcandle"],
                     [0.001, "hdagger"],
+                    [1, "ashleaf", 10],
                     [1, "glolipop"],
                 ],
                 grinch: [
@@ -2025,6 +2068,7 @@ test("G.drops type validation", async () => {
                 icegolem: [
                     [5, "frozenkey"],
                     [10, "essenceoffrost"],
+                    [1, "frostcore", 5],
                 ],
                 iceroamer: [
                     [0.0001, "essenceoffrost"],
@@ -2083,6 +2127,7 @@ test("G.drops type validation", async () => {
                     [0.01, "forscroll"],
                     [0.0000025, "cxjar", 1, "coolblueg"],
                     [0.0000125, "sanguine"],
+                    [0.1, "voidthread"],
                 ],
                 odino: [
                     [0.0025, "mbones"],
@@ -2106,7 +2151,9 @@ test("G.drops type validation", async () => {
                     [0.04, "firestaff"],
                     [0.04, "firebow"],
                     [0.04, "fireblade"],
-                    [0.000008333333333333334, "fcape"],
+                    [1, "stormfeather", 3],
+                    [0.02, "embercore"],
+                    [0.000025, "fcape"],
                     [0.0016666666666666668, "offeringp"],
                     [1.5625e-8, "cxjar", 1, "hairdo606"],
                 ],
@@ -2121,6 +2168,8 @@ test("G.drops type validation", async () => {
                 ],
                 plantoid: [
                     [0.004, "essenceofnature"],
+                    [0.02, "ashleaf"],
+                    [0.0003333333333333333, "verdantcore"],
                     [7e-7, "ringofluck"],
                 ],
                 poisio: [
@@ -2276,6 +2325,7 @@ test("G.drops type validation", async () => {
                 tortoise: [
                     [0.0002, "shield"],
                     [0.001, "seashell"],
+                    [0.01, "reefglass"],
                 ],
                 vbat: [
                     [0.5, "cearring"],
@@ -2300,6 +2350,9 @@ test("G.drops type validation", async () => {
                 ],
                 wolf: [[0.025, "leather"]],
                 wolfie: [[0.02, "leather"]],
+                xmagefi: [[1, "voidthread", 3]],
+                xmagefz: [[1, "voidthread", 3]],
+                xmagen: [[1, "voidthread", 3]],
                 xmagex: [
                     [0.02, "zapper"],
                     [0.0002, "trigger"],
@@ -2308,6 +2361,7 @@ test("G.drops type validation", async () => {
                     [0.000005, "warpvest"],
                     [0.002, "starkillers"],
                     [0.01, "sbelt"],
+                    [1, "voidthread", 6],
                 ],
                 xscorpion: [
                     [0.0024, "quiver"],
@@ -2403,12 +2457,7 @@ test("G.drops type validation", async () => {
                 [1, "open", "basicelixir"],
                 [0.00002, "fury"],
             ],
-            skins: {
-                bronze: [],
-                gold: [],
-                normal: [],
-                silver: ["mwarrior_cool", "mnwarrior"],
-            },
+            skins: { bronze: [], gold: [], normal: [], silver: ["mwarrior_cool", "mnwarrior"] },
             statamulet: [
                 [1, "intamulet"],
                 [1, "stramulet"],
@@ -2476,6 +2525,16 @@ test("G.drops type validation", async () => {
                 [1, "staffofthedead"],
                 [1, "daggerofthedead"],
             ],
+            xbox: [
+                [1, "open", "armorx"],
+                [1, "harbringer"],
+                [1, "t2quiver"],
+                [0.1, "orboftemporal"],
+                [0.1, "exoarm"],
+                [0.06, "fury"],
+                [0.12, "starkillers"],
+                [0.01, "northstar"],
+            ],
             xN: [
                 [1, "x0"],
                 [1, "x1"],
@@ -2486,16 +2545,6 @@ test("G.drops type validation", async () => {
                 [1, "x6"],
                 [1, "x7"],
                 [1, "x8"],
-            ],
-            xbox: [
-                [1, "open", "armorx"],
-                [1, "harbringer"],
-                [1, "t2quiver"],
-                [0.1, "orboftemporal"],
-                [0.1, "exoarm"],
-                [0.06, "fury"],
-                [0.12, "starkillers"],
-                [0.01, "northstar"],
             ],
         },
     }

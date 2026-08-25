@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 

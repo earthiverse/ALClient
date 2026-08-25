@@ -205,7 +205,13 @@ export type GData = {
     }
     dimensions: {
         /** TODO: Figure out these. [width, height, ???, base_w, base_w] */
-        [T in MonsterName | "default_character"]?: [number, number, number?, number?, number?]
+        [T in MonsterName | "default_character" | `goo${number | "D"}` | "harpy_fly" | "rharpy_fly"]?: [
+            number,
+            number,
+            number?,
+            number?,
+            number?,
+        ]
     }
     dismantle: {
         [T in ItemName]?: {
@@ -252,10 +258,16 @@ export type GData = {
         }
     }
     events: {
-        [T in MapName | MonsterName]?: {
-            daily: boolean
+        [T in MapName | MonsterName | EventName]?: {
             duration: number
-            join: boolean
+            /** If set, you can warp to the event location (hopsickness, and some other things will block, though) */
+            join?: true
+            /** (GUI) modal to show for event */
+            modal: string
+            /** Event name */
+            name: string
+            sprite: string // TODO: SpriteKey?
+            type: "daily" | "seasonal" | "nightly"
         }
     }
     games: {
@@ -539,6 +551,8 @@ export type GData = {
             duration?: number
             duration_min?: number
             duration_max?: number
+            /** TODO: Why are these in skills? Why are these not emotions? */
+            emote?: string
             /** An exlpanation of what this skill does */
             explanation?: string
             global?: true
@@ -553,6 +567,8 @@ export type GData = {
             /** If set, the skill requires a list of targets */
             list?: boolean
             max?: number
+            /** If multi is true, and this is set, it's the maximum number of targets */
+            max_targets?: number
             merchant_use?: true
             /** Can we use this skill on monsters? */
             monsters?: boolean
@@ -562,6 +578,8 @@ export type GData = {
             /** The name of the skill */
             name: string
             negative?: ItemName[]
+            /** For emotes */
+            no_self?: true
             nprop?: Attribute[]
             /** For skills that get better with level, this is how much the default does */
             output?: number
@@ -633,7 +651,7 @@ export type GData = {
             /** The URL that contains the sprites in the matrix */
             file: string
             /** List of sprites in the given file */
-            matrix: string[][]
+            matrix: (string | null)[][]
             rskip?: boolean
             size?: "large" | "normal" | "small" | "xsmall" | "xxsmall"
             /** If set to true, the game will not load the sprite sheet. */
@@ -679,7 +697,7 @@ export type GData = {
     tokens: {
         [T in TokenType]: {
             /** For the ItemName, it costs this many tokens */
-            [T in ItemName]?: number
+            [T in ItemName | `${ItemName}-${string}`]?: number
         }
     }
     /** Version number for this data. */
@@ -883,7 +901,7 @@ export type GItem = {
     e?: number
     /** If true, this item is related to an event */
     event?: boolean
-    /** TODO: ??? What is this? */
+    /** TODO: Might mean that it's only meant to be craftable */
     exclusive?: boolean
     /** Human readable flavor text for the item */
     explanation?: string
@@ -1363,8 +1381,10 @@ export type Attribute =
     | "awesomeness"
     /** TODO: Confirm. Deals % AoE damage around the target */
     | "blast"
-    /** TODO: ??? Joke stat? */
+    /** Bling, can increase monster's aggro (opposite of cuteness) */
     | "bling"
+    /** Black Magic Resistance (currently unused as of 2026-08-25) */
+    | "bmresistance"
     /** Chance for the item to break on use */
     | "breaks"
     /** Run speed when the entity is targeting something. */
@@ -1377,7 +1397,7 @@ export type Attribute =
     | "crit"
     /** Critical damage increase (% damage increase) */
     | "critdamage"
-    /** TODO: ??? Joke stat? */
+    /** Cuteness, can decrease monster's aggro (opposite of bling) */
     | "cuteness"
     /** Dexterity (increases attack speed, run speed) */
     | "dex"
@@ -1463,6 +1483,7 @@ export type Attribute =
 export type AchievementName =
     | "100boss"
     | "1000boss"
+    | "abtesting"
     | "discoverlair"
     | "festive"
     | "firehazard"
@@ -1504,6 +1525,8 @@ export type AnimationName =
     | "explode_p"
     | "explode_up"
     | "failure"
+    | "fanknife"
+    | "fanknife_hit"
     | "firearrow"
     | "fireball"
     | "flare_blue"
@@ -1563,6 +1586,8 @@ export type AnimationName =
     | "transport"
     | "typing"
     | "wandy"
+    | "worldroot_impact"
+    | "worldroot_projectile"
     | "wslash"
 
 export type BankPackName =
@@ -1676,6 +1701,7 @@ export type ConditionName =
     | "reflection"
     | "rspeed"
     | "sanguine"
+    | "sheltered"
     | "shocked"
     | "sleeping"
     | "slowness"
@@ -1717,6 +1743,7 @@ export type DropName =
     | "cosmo1"
     | "cosmo2"
     | "cosmo3"
+    | "cosmo5"
     | "eastereggs"
     | "f1"
     | "gem0"
@@ -1758,10 +1785,12 @@ export type DropName =
     | "troll"
     | "weaponbox"
     | "weaponofthedead"
-    | "xN"
     | "xbox"
+    | "xN"
 
 export type EmotionName = "drop_egg" | "hearts_single"
+
+export type EventName = "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
 
 export type ImageSetName = "skills" | "custom" | "pack_20" | "pack_1a"
 /**
@@ -1773,6 +1802,7 @@ export type ItemName =
     | "ale"
     | "alloyquiver"
     | "amuletofm"
+    | "anchorbelt"
     | "angelwings"
     | "apiercingscroll"
     | "apologybox"
@@ -1780,6 +1810,7 @@ export type ItemName =
     | "armorring"
     | "armorscroll"
     | "ascale"
+    | "ashleaf"
     | "axe3"
     | "bandages"
     | "basher"
@@ -1787,6 +1818,7 @@ export type ItemName =
     | "bataxe"
     | "bcandle"
     | "bcape"
+    | "beastmantle"
     | "beewings"
     | "bfang"
     | "bfangamulet"
@@ -1794,10 +1826,13 @@ export type ItemName =
     | "bkey"
     | "blade"
     | "blue"
+    | "bogcrown"
+    | "bogwalkers"
     | "bottleofxp"
     | "bow"
     | "bow4"
     | "bowofthedead"
+    | "brinefang"
     | "bronzeingot"
     | "bronzenugget"
     | "broom"
@@ -1827,7 +1862,10 @@ export type ItemName =
     | "cearring"
     | "charmer"
     | "chrysalis0"
+    | "cinderboots"
+    | "cinderwand"
     | "claw"
+    | "cloverstud"
     | "coal"
     | "coat"
     | "coat1"
@@ -1839,6 +1877,7 @@ export type ItemName =
     | "cosmo2"
     | "cosmo3"
     | "cosmo4"
+    | "cosmo5"
     | "crabclaw"
     | "cring"
     | "critscroll"
@@ -1899,6 +1938,9 @@ export type ItemName =
     | "elixirvit0"
     | "elixirvit1"
     | "elixirvit2"
+    | "embercore"
+    | "emberhood"
+    | "emberseal"
     | "emotionjar"
     | "emptyheart"
     | "emptyjar"
@@ -1933,6 +1975,7 @@ export type ItemName =
     | "friendtoken"
     | "frogt"
     | "frostbow"
+    | "frostcore"
     | "froststaff"
     | "frozenkey"
     | "frozenstone"
@@ -1951,7 +1994,9 @@ export type ItemName =
     | "ghatp"
     | "gift0"
     | "gift1"
+    | "glacierseal"
     | "glitch"
+    | "gloampendant"
     | "glolipop"
     | "gloves"
     | "gloves1"
@@ -2001,7 +2046,9 @@ export type ItemName =
     | "jacko"
     | "jewellerybox"
     | "kitty1"
+    | "knifebelt"
     | "lantern"
+    | "lanternshield"
     | "lbelt"
     | "leather"
     | "ledger"
@@ -2035,9 +2082,12 @@ export type ItemName =
     | "mmhat"
     | "mmpants"
     | "mmshoes"
+    | "molehook"
     | "molesteeth"
     | "monsterbox"
     | "monstertoken"
+    | "moonshardearring"
+    | "mossheart"
     | "mparmor"
     | "mpcostscroll"
     | "mpgloves"
@@ -2109,6 +2159,7 @@ export type ItemName =
     | "pmaceofthedead"
     | "poison"
     | "poker"
+    | "pollenbow"
     | "pouchbow"
     | "powerglove"
     | "pstem"
@@ -2121,25 +2172,35 @@ export type ItemName =
     | "quiver"
     | "rabbitsfoot"
     | "rapier"
+    | "ratkingbuckler"
     | "rattail"
+    | "ratworkcoat"
     | "redenvelope"
     | "redenvelopev2"
     | "redenvelopev3"
     | "redenvelopev4"
     | "rednose"
+    | "reedpants"
+    | "reefglass"
+    | "reefvest"
     | "reflectionscroll"
     | "resistancering"
     | "resistancescroll"
     | "rfangs"
     | "rfur"
+    | "rimeboots"
+    | "rimeknuckles"
     | "ringhs"
     | "ringofluck"
     | "ringsj"
     | "rod"
     | "rpiercingscroll"
+    | "saffronloop"
     | "sanguine"
     | "santasbelt"
+    | "sapstone"
     | "sbelt"
+    | "scribeorb"
     | "scroll0"
     | "scroll1"
     | "scroll2"
@@ -2151,6 +2212,7 @@ export type ItemName =
     | "shield"
     | "shoes"
     | "shoes1"
+    | "silkgrips"
     | "skullamulet"
     | "slimestaff"
     | "smoke"
@@ -2161,6 +2223,7 @@ export type ItemName =
     | "snowboots"
     | "snowflakes"
     | "snring"
+    | "softstepgloves"
     | "solitaire"
     | "sparkstaff"
     | "spear"
@@ -2180,6 +2243,7 @@ export type ItemName =
     | "staffofthedead"
     | "stand0"
     | "stand1"
+    | "starcloak"
     | "starkillers"
     | "stealthcape"
     | "stick"
@@ -2189,6 +2253,8 @@ export type ItemName =
     | "stoneofluck"
     | "stoneofxp"
     | "storagebox"
+    | "stormfeather"
+    | "stormquiver"
     | "stramulet"
     | "strbelt"
     | "strearring"
@@ -2211,9 +2277,12 @@ export type ItemName =
     | "t3bow"
     | "talkingskull"
     | "test"
-    | "test2"
     | "test_orb"
+    | "test2"
+    | "thistlequiver"
+    | "threadneedle"
     | "throwingstars"
+    | "thundergrips"
     | "tigercape"
     | "tigerhelmet"
     | "tigershield"
@@ -2233,19 +2302,24 @@ export type ItemName =
     | "tshirt6"
     | "tshirt7"
     | "tshirt8"
-    | "tshirt88"
     | "tshirt9"
+    | "tshirt88"
+    | "turtleshard"
     | "ukey"
+    | "valourdirk"
     | "vattire"
     | "vblood"
     | "vboots"
     | "vcape"
     | "vdagger"
+    | "venomband"
+    | "verdantcore"
     | "vgloves"
     | "vhammer"
     | "vitearring"
     | "vitring"
     | "vitscroll"
+    | "voidthread"
     | "vorb"
     | "vring"
     | "vstaff"
@@ -2267,9 +2341,11 @@ export type ItemName =
     | "wgloves"
     | "whiskey"
     | "whiteegg"
+    | "windbelt"
     | "wine"
     | "wingedboots"
     | "woodensword"
+    | "worldrootcrook"
     | "wshield"
     | "wshoes"
     | "x0"
@@ -2499,13 +2575,6 @@ export type NPCName =
     | "bouncer"
     | "citizen0"
     | "citizen1"
-    | "citizen10"
-    | "citizen11"
-    | "citizen12"
-    | "citizen13"
-    | "citizen14"
-    | "citizen15"
-    | "citizen16"
     | "citizen2"
     | "citizen3"
     | "citizen4"
@@ -2514,10 +2583,18 @@ export type NPCName =
     | "citizen7"
     | "citizen8"
     | "citizen9"
+    | "citizen10"
+    | "citizen11"
+    | "citizen12"
+    | "citizen13"
+    | "citizen14"
+    | "citizen15"
+    | "citizen16"
     | "compound"
     | "craftsman"
     | "exchange"
     | "fancypots"
+    | "favors"
     | "firstc"
     | "fisherman"
     | "friendtokens"
@@ -2534,6 +2611,14 @@ export type NPCName =
     | "holo5"
     | "items0"
     | "items1"
+    | "items2"
+    | "items3"
+    | "items4"
+    | "items5"
+    | "items6"
+    | "items7"
+    | "items8"
+    | "items9"
     | "items10"
     | "items11"
     | "items12"
@@ -2544,7 +2629,6 @@ export type NPCName =
     | "items17"
     | "items18"
     | "items19"
-    | "items2"
     | "items20"
     | "items21"
     | "items22"
@@ -2555,7 +2639,6 @@ export type NPCName =
     | "items27"
     | "items28"
     | "items29"
-    | "items3"
     | "items30"
     | "items31"
     | "items32"
@@ -2566,7 +2649,6 @@ export type NPCName =
     | "items37"
     | "items38"
     | "items39"
-    | "items4"
     | "items40"
     | "items41"
     | "items42"
@@ -2575,11 +2657,6 @@ export type NPCName =
     | "items45"
     | "items46"
     | "items47"
-    | "items5"
-    | "items6"
-    | "items7"
-    | "items8"
-    | "items9"
     | "jailer"
     | "leathermerchant"
     | "lichteaser"
@@ -2632,6 +2709,7 @@ export type ProjectileName =
     | "cupid"
     | "curse"
     | "dartgun"
+    | "fanofknives"
     | "firearrow"
     | "fireball"
     | "frostarrow"
@@ -2661,9 +2739,10 @@ export type ProjectileName =
     | "supershot"
     | "wandy"
     | "wmomentum"
+    | "worldroot"
 
 export type SetName =
-    | "easter"
+    | "bunny"
     | "fury"
     | "holidays"
     | "legends"
@@ -2676,6 +2755,7 @@ export type SetName =
     | "mwarrior"
     | "rugged"
     | "swift"
+    | "tiger"
     | "vampires"
     | "wanderers"
     | "wt3"
@@ -2695,6 +2775,7 @@ export type SkillName =
     | "anger"
     | "attack"
     | "blink"
+    | "boop"
     | "burst"
     | "cburst"
     | "charge"
@@ -2710,26 +2791,33 @@ export type SkillName =
     | "energize"
     | "entangle"
     | "esc"
+    | "fanofknives"
+    | "fart"
     | "fireball"
     | "fishing"
     | "frostball"
     | "gm"
     | "hardshell"
+    | "headwiggle"
     | "heal"
     | "healing"
+    | "highfive"
     | "huntersmark"
     | "interact"
     | "invis"
+    | "joy"
+    | "jump"
     | "light"
     | "magiport"
-    | "massproduction"
-    | "massproductionpp"
     | "massexchange"
     | "massexchangepp"
+    | "massproduction"
+    | "massproductionpp"
     | "mcourage"
     | "mentalburst"
     | "mfrenzy"
     | "mining"
+    | "mirrordance"
     | "mlight"
     | "mluck"
     | "move_down"
@@ -2746,6 +2834,7 @@ export type SkillName =
     | "phaseout"
     | "pickpocket"
     | "piercingshot"
+    | "pocketstorm"
     | "poisonarrow"
     | "portal"
     | "power"
@@ -2762,13 +2851,16 @@ export type SkillName =
     | "self_healing"
     | "selfheal"
     | "shadowstrike"
+    | "shelter"
     | "smash"
     | "snippet"
     | "snowball"
+    | "spotlight"
     | "stack"
     | "stomp"
     | "stone"
     | "stop"
+    | "superjump"
     | "supershot"
     | "tangle"
     | "taunt"
@@ -2788,6 +2880,7 @@ export type SkillName =
     | "warp"
     | "warpstomp"
     | "weakness_aura"
+    | "wiggle"
     | "xpower"
     | "zap"
     | "zapperzap"
@@ -2819,6 +2912,7 @@ export type TilesetName =
     | "winter"
 
 export type TitleName =
+    | "abtesting"
     | "critmonger"
     | "fast"
     | "festive"

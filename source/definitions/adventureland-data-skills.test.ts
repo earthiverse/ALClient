@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -110,12 +110,7 @@ test("G.skills type validation", async () => {
                 type: "skill",
                 variance: 0.2,
             },
-            anger: {
-                explanation: "Randomly targets someone",
-                hostile: true,
-                name: "Anger",
-                type: "monster",
-            },
+            anger: { explanation: "Randomly targets someone", hostile: true, name: "Anger", type: "monster" },
             attack: {
                 explanation: "Attack the target",
                 hostile: true,
@@ -135,6 +130,17 @@ test("G.skills type validation", async () => {
                 mp: 1600,
                 name: "Blink",
                 skin: "skill_blink",
+                type: "skill",
+            },
+            boop: {
+                cooldown: 15000,
+                emote: "boop",
+                explanation: "A tiny hello, right on the nose.",
+                mp: 20,
+                name: "Boop",
+                range: 120,
+                skin: "emote_boop",
+                target: "player",
                 type: "skill",
             },
             burst: {
@@ -324,6 +330,35 @@ test("G.skills type validation", async () => {
                 type: "utility",
                 ui: false,
             },
+            fanofknives: {
+                class: ["rogue"],
+                cooldown_multiplier: 1,
+                damage_multiplier: 0.85,
+                damage_type: "physical",
+                explanation: "Send five knives searching for nearby trouble. Each deals 0.85X damage.",
+                hostile: true,
+                level: 65,
+                max_targets: 5,
+                mp: 180,
+                multi: true,
+                name: "Fan of Knives",
+                procs: false,
+                projectile: "fanofknives",
+                range: 160,
+                share: "attack",
+                skin: "fanofknives",
+                slot: [["belt", "knifebelt"]],
+                type: "skill",
+            },
+            fart: {
+                cooldown: 2000,
+                emote: "fart",
+                explanation: "A suspicious little cloud.",
+                mp: 20,
+                name: "Fart",
+                skin: "emote_fart",
+                type: "skill",
+            },
             fireball: {
                 damage: 4000,
                 damage_type: "magical",
@@ -357,12 +392,7 @@ test("G.skills type validation", async () => {
                 projectile: "frostball",
                 type: "monster",
             },
-            gm: {
-                explanation: "Jump, Jail, Mute, Use Any Skill",
-                name: "GM Abilities",
-                skin: "gm",
-                type: "gm",
-            },
+            gm: { explanation: "Jump, Jail, Mute, Use Any Skill", name: "GM Abilities", skin: "gm", type: "gm" },
             hardshell: {
                 class: ["warrior"],
                 condition: "hardshell",
@@ -374,6 +404,14 @@ test("G.skills type validation", async () => {
                 mp: 480,
                 name: "Hard Shell",
                 skin: "skill_hardshell",
+                type: "skill",
+            },
+            headwiggle: {
+                cooldown: 2000,
+                emote: "headwiggle",
+                explanation: "No. Yes. Maybe.",
+                name: "Head Wiggle",
+                skin: "emote_headwiggle",
                 type: "skill",
             },
             heal: {
@@ -392,10 +430,18 @@ test("G.skills type validation", async () => {
                 type: "ability",
                 use_range: true,
             },
-            healing: {
-                explanation: "Heals an ally or self",
-                name: "Healing",
-                type: "monster",
+            healing: { explanation: "Heals an ally or self", name: "Healing", type: "monster" },
+            highfive: {
+                cooldown: 20000,
+                emote: "highfive",
+                explanation: "Meet in the middle.",
+                mp: 30,
+                name: "High Five",
+                no_self: true,
+                range: 80,
+                skin: "emote_highfive",
+                target: "player",
+                type: "skill",
             },
             huntersmark: {
                 class: ["ranger"],
@@ -430,6 +476,22 @@ test("G.skills type validation", async () => {
                 skin: "skill_invis",
                 type: "skill",
             },
+            joy: {
+                cooldown: 25000,
+                emote: "joy",
+                explanation: "Too happy to stand still.",
+                name: "Joy",
+                skin: "emote_joy",
+                type: "skill",
+            },
+            jump: {
+                cooldown: 4000,
+                emote: "jump",
+                explanation: "Up you go!",
+                name: "Jump",
+                skin: "emote_jump",
+                type: "skill",
+            },
             light: {
                 class: ["mage"],
                 cooldown: 0,
@@ -452,32 +514,6 @@ test("G.skills type validation", async () => {
                 name: "Magiport",
                 skin: "skill_teleport",
                 target: "player",
-                type: "skill",
-            },
-            massproduction: {
-                class: ["merchant"],
-                condition: "massproduction",
-                cooldown: 50,
-                duration: 10000,
-                explanation:
-                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 50%. The buff expires in 10 seconds if not used.",
-                level: 30,
-                mp: 20,
-                name: "Mass Production",
-                skin: "skill_massproduction",
-                type: "skill",
-            },
-            massproductionpp: {
-                class: ["merchant"],
-                condition: "massproductionpp",
-                cooldown: 50,
-                duration: 10000,
-                explanation:
-                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 90%. The buff expires in 10 seconds if not used.",
-                level: 60,
-                mp: 200,
-                name: "Mass Production++",
-                skin: "skill_massproductionpp",
                 type: "skill",
             },
             massexchange: {
@@ -506,6 +542,32 @@ test("G.skills type validation", async () => {
                 skin: "skill_massexchangepp",
                 type: "skill",
             },
+            massproduction: {
+                class: ["merchant"],
+                condition: "massproduction",
+                cooldown: 50,
+                duration: 10000,
+                explanation:
+                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 50%. The buff expires in 10 seconds if not used.",
+                level: 30,
+                mp: 20,
+                name: "Mass Production",
+                skin: "skill_massproduction",
+                type: "skill",
+            },
+            massproductionpp: {
+                class: ["merchant"],
+                condition: "massproductionpp",
+                cooldown: 50,
+                duration: 10000,
+                explanation:
+                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 90%. The buff expires in 10 seconds if not used.",
+                level: 60,
+                mp: 200,
+                name: "Mass Production++",
+                skin: "skill_massproductionpp",
+                type: "skill",
+            },
             mcourage: {
                 class: ["merchant"],
                 condition: "mcourage",
@@ -531,9 +593,7 @@ test("G.skills type validation", async () => {
                 projectile: "mentalburst",
                 range_bonus: 32,
                 range_multiplier: 1.2,
-                requirements: {
-                    int: 64,
-                },
+                requirements: { int: 64 },
                 skin: "skill_mentalburst",
                 target: true,
                 type: "skill",
@@ -566,6 +626,18 @@ test("G.skills type validation", async () => {
                 skin: "skill_mining",
                 type: "skill",
                 wtype: ["pickaxe"],
+            },
+            mirrordance: {
+                cooldown: 120000,
+                emote: "mirrordance",
+                explanation: "Two steps. One beat.",
+                mp: 250,
+                name: "Mirror Disco",
+                no_self: true,
+                range: 200,
+                skin: "emote_mirrordance",
+                target: "player",
+                type: "skill",
             },
             mlight: {
                 explanation:
@@ -678,7 +750,7 @@ test("G.skills type validation", async () => {
                 explanation: "Heals all the party members.",
                 heal: true,
                 levels: [
-                    [0, 500],
+                    [0, 400],
                     [60, 600],
                     [72, 720],
                     [80, 800],
@@ -754,6 +826,17 @@ test("G.skills type validation", async () => {
                 use_range: true,
                 wtype: ["bow", "crossbow"],
             },
+            pocketstorm: {
+                cooldown: 60000,
+                emote: "pocketstorm",
+                explanation: "A little weather follows.",
+                mp: 100,
+                name: "Pocket Storm",
+                range: 240,
+                skin: "emote_pocketstorm",
+                target: "player",
+                type: "skill",
+            },
             poisonarrow: {
                 class: ["ranger"],
                 condition: "poisoned",
@@ -774,11 +857,7 @@ test("G.skills type validation", async () => {
                 use_range: true,
                 wtype: ["bow", "crossbow"],
             },
-            portal: {
-                explanation: "Open a portal to different maps and instances",
-                name: "Portal",
-                type: "monster",
-            },
+            portal: { explanation: "Open a portal to different maps and instances", name: "Portal", type: "monster" },
             power: {
                 condition: "power",
                 cooldown: 500,
@@ -920,11 +999,7 @@ test("G.skills type validation", async () => {
                 slot: [["orb", "jacko"]],
                 type: "skill",
             },
-            self_healing: {
-                explanation: "Periodical self healing",
-                name: "Healing",
-                type: "monster",
-            },
+            self_healing: { explanation: "Periodical self healing", name: "Healing", type: "monster" },
             selfheal: {
                 action: "heal",
                 class: ["paladin"],
@@ -933,7 +1008,7 @@ test("G.skills type validation", async () => {
                 explanation: "Heal yourself",
                 heal: true,
                 levels: [
-                    [0, 500],
+                    [0, 400],
                     [60, 600],
                     [72, 720],
                     [80, 800],
@@ -957,6 +1032,17 @@ test("G.skills type validation", async () => {
                 name: "Shadow Strike",
                 range: 360,
                 skin: "skill_shadowstrike",
+                type: "skill",
+            },
+            shelter: {
+                condition: "sheltered",
+                cooldown: 60000,
+                duration: 6000,
+                explanation: "Raise the lantern and shelter behind its flame.",
+                mp: 240,
+                name: "Shelter",
+                skin: "lanternshield",
+                slot: [["offhand", "lanternshield"]],
                 type: "skill",
             },
             smash: {
@@ -991,6 +1077,7 @@ test("G.skills type validation", async () => {
                 consume: "snowball",
                 cooldown: 180,
                 damage: 1,
+                damage_type: "pure",
                 duration: 5000,
                 explanation: "Throw a snowball at someone!",
                 merchant_use: true,
@@ -1000,6 +1087,17 @@ test("G.skills type validation", async () => {
                 range: 720,
                 skin: "snowball",
                 target: true,
+                type: "skill",
+            },
+            spotlight: {
+                cooldown: 90000,
+                emote: "spotlight",
+                explanation: "The stage knows its star.",
+                mp: 150,
+                name: "Spotlight",
+                range: 240,
+                skin: "emote_spotlight",
+                target: "player",
                 type: "skill",
             },
             stack: {
@@ -1040,6 +1138,15 @@ test("G.skills type validation", async () => {
                 name: "Stop",
                 skin: "stop_g",
                 type: "ability",
+            },
+            superjump: {
+                cooldown: 10000,
+                emote: "superjump",
+                explanation: "Way up you go!",
+                mp: 10,
+                name: "Super Jump",
+                skin: "emote_superjump",
+                type: "skill",
             },
             supershot: {
                 class: ["ranger"],
@@ -1126,11 +1233,7 @@ test("G.skills type validation", async () => {
                 type: "utility",
                 ui: false,
             },
-            toggle_code: {
-                name: "Toggle Code",
-                skin: "code",
-                ui: false,
-            },
+            toggle_code: { name: "Toggle Code", skin: "code", ui: false },
             toggle_inventory: {
                 explanation: "Toggles the inventory",
                 name: "Toggle Inventory",
@@ -1138,11 +1241,7 @@ test("G.skills type validation", async () => {
                 type: "utility",
                 ui: false,
             },
-            toggle_run_code: {
-                name: "Engage/Disengage Code",
-                skin: "run_code",
-                ui: false,
-            },
+            toggle_run_code: { name: "Engage/Disengage Code", skin: "run_code", ui: false },
             toggle_stats: {
                 explanation: "Toggles the character sheet",
                 name: "Toggle Stats",
@@ -1160,12 +1259,7 @@ test("G.skills type validation", async () => {
                 skin: "skill_track",
                 type: "skill",
             },
-            travel: {
-                explanation: "Where would you like to visit?",
-                name: "Travel!",
-                skin: "travel",
-                type: "ability",
-            },
+            travel: { explanation: "Where would you like to visit?", name: "Travel!", skin: "travel", type: "ability" },
             use_hp: {
                 cooldown: 2000,
                 explanation:
@@ -1227,6 +1321,14 @@ test("G.skills type validation", async () => {
                 passive: true,
                 skin: "condition_bad",
                 type: "monster",
+            },
+            wiggle: {
+                cooldown: 2000,
+                emote: "wiggle",
+                explanation: "Shake it off.",
+                name: "Wiggle",
+                skin: "emote_wiggle",
+                type: "skill",
             },
             xpower: {
                 condition: "xpower",

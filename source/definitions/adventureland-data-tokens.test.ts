@@ -1,14 +1,14 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 749 (2022-08-28)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
 test("G.tokens type validation", async () => {
     const G_tokens: Pick<GData, "tokens"> = {
         tokens: {
-            friendtoken: {},
+            friendtoken: { "cxjar-xgravestone2": 4 },
             funtoken: {
                 confetti: 0.01,
                 exoarm: 999,
@@ -56,14 +56,7 @@ test("G.tokens type validation", async () => {
                 tracker: 4,
                 troll: 14,
             },
-            pvptoken: {
-                armorbox: 1,
-                hammer: 120,
-                harbringer: 25,
-                spear: 1,
-                t2bow: 1,
-                weaponbox: 1,
-            },
+            pvptoken: { armorbox: 1, hammer: 120, harbringer: 25, spear: 1, t2bow: 1, valourdirk: 25, weaponbox: 1 },
         },
     }
     expect(G_tokens).toBeDefined()

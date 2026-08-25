@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -9,6 +9,13 @@ test("G.monsters type validation", async () => {
     const G_monsters: Pick<GData, "monsters"> = {
         monsters: {
             a1: {
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "vit", 2],
+                    [5000, "stat", "gold", 0.25],
+                    [100000, "stat", "courage", 1],
+                ],
                 aggro: 1,
                 armor: 120,
                 attack: 4240,
@@ -27,23 +34,19 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a1",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "vstaff",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "vstaff" } },
                 spawns: [[200, "nerfedbat"]],
                 speed: 32,
                 xp: 32000000,
             },
             a2: {
-                abilities: {
-                    anger: {
-                        cooldown: 8000,
-                        radius: 300,
-                    },
-                },
+                abilities: { anger: { cooldown: 8000, radius: 300 } },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "evasion", 1],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 220,
                 attack: 2240,
@@ -63,26 +66,18 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a2",
-                slots: {
-                    mainhand: {
-                        level: 9,
-                        name: "vdagger",
-                    },
-                    offhand: {
-                        level: 10,
-                        name: "vdagger",
-                    },
-                },
+                slots: { mainhand: { level: 9, name: "vdagger" }, offhand: { level: 10, name: "vdagger" } },
                 speed: 32,
                 xp: 1200000,
             },
             a3: {
-                abilities: {
-                    anger: {
-                        cooldown: 8000,
-                        radius: 300,
-                    },
-                },
+                abilities: { anger: { cooldown: 8000, radius: 300 } },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "vit", 2],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 220,
                 attack: 1520,
@@ -102,20 +97,17 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a3",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "vhammer",
-                    },
-                    offhand: {
-                        level: 10,
-                        name: "vhammer",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "vhammer" }, offhand: { level: 10, name: "vhammer" } },
                 speed: 32,
                 xp: 9600000,
             },
             a4: {
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "reflection", 1],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 320,
                 attack: 720,
@@ -134,23 +126,19 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a4",
-                slots: {
-                    mainhand: {
-                        level: 9,
-                        name: "scythe",
-                    },
-                },
+                slots: { mainhand: { level: 9, name: "scythe" } },
                 spawns: [[1600, "zapper0"]],
                 speed: 42,
                 xp: 1600000,
             },
             a5: {
-                abilities: {
-                    healing: {
-                        cooldown: 800,
-                        heal: 66000,
-                    },
-                },
+                abilities: { healing: { cooldown: 800, heal: 66000 } },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "vit", 2],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 60,
                 attack: 240,
@@ -169,25 +157,19 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a5",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "lmace",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "lmace" } },
                 speed: 32,
                 supporter: true,
                 xp: 1200000,
             },
             a6: {
-                abilities: {
-                    weakness_aura: {
-                        aura: true,
-                        condition: "weakness",
-                        cooldown: 4000,
-                        radius: 100,
-                    },
-                },
+                abilities: { weakness_aura: { aura: true, condition: "weakness", cooldown: 4000, radius: 100 } },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "speed", 1],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 220,
                 attack: 8960,
@@ -206,27 +188,21 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a6",
-                slots: {
-                    mainhand: {
-                        level: 9,
-                        name: "scythe",
-                    },
-                },
+                slots: { mainhand: { level: 9, name: "scythe" } },
                 speed: 32,
                 xp: 880000,
             },
             a7: {
                 abilities: {
-                    dampening_aura: {
-                        aura: true,
-                        condition: "dampened",
-                        cooldown: 180,
-                        radius: 300,
-                    },
-                    mlight: {
-                        cooldown: 3000,
-                    },
+                    dampening_aura: { aura: true, condition: "dampened", cooldown: 180, radius: 300 },
+                    mlight: { cooldown: 3000 },
                 },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "vit", 2],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 50,
                 attack: 910,
@@ -245,24 +221,18 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a7",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "oozingterror",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "oozingterror" } },
                 speed: 32,
                 xp: 1200000,
             },
             a8: {
-                abilities: {
-                    curse_aura: {
-                        aura: true,
-                        condition: "cursed",
-                        cooldown: 4000,
-                        radius: 300,
-                    },
-                },
+                abilities: { curse_aura: { aura: true, condition: "cursed", cooldown: 4000, radius: 300 } },
+                achievements: [
+                    [10, "stat", "hp", 50],
+                    [100, "stat", "lifesteal", 0.125],
+                    [1000, "stat", "output", 1],
+                    [5000, "stat", "gold", 0.25],
+                ],
                 aggro: 1,
                 armor: 220,
                 attack: 2680,
@@ -281,16 +251,7 @@ test("G.monsters type validation", async () => {
                 respawn: -1,
                 roam: true,
                 skin: "a8",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "pinkie",
-                    },
-                    offhand: {
-                        level: 10,
-                        name: "pinkie",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "pinkie" }, offhand: { level: 10, name: "pinkie" } },
                 speed: 32,
                 xp: 1200000,
             },
@@ -551,14 +512,7 @@ test("G.monsters type validation", async () => {
                 xp: 12000,
             },
             bscorpion: {
-                abilities: {
-                    weakness_aura: {
-                        aura: true,
-                        condition: "weakness",
-                        cooldown: 4000,
-                        radius: 100,
-                    },
-                },
+                abilities: { weakness_aura: { aura: true, condition: "weakness", cooldown: 4000, radius: 100 } },
                 achievements: [
                     [10, "stat", "mp", 10],
                     [100, "stat", "mp", 10],
@@ -760,12 +714,7 @@ test("G.monsters type validation", async () => {
                 xp: 400,
             },
             d_wiz: {
-                abilities: {
-                    self_healing: {
-                        cooldown: 2000,
-                        heal: 4800,
-                    },
-                },
+                abilities: { self_healing: { cooldown: 2000, heal: 4800 } },
                 aggro: 1,
                 armor: 560,
                 attack: 5200,
@@ -780,12 +729,7 @@ test("G.monsters type validation", async () => {
                 resistance: 920,
                 respawn: 6000,
                 skin: "shadow",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "oozingterror",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "oozingterror" } },
                 speed: 12,
                 unlist: true,
                 xp: 10000,
@@ -809,12 +753,7 @@ test("G.monsters type validation", async () => {
                 xp: 72000,
             },
             dragold: {
-                abilities: {
-                    multi_burn: {
-                        cooldown: 24000,
-                        damage: 4000,
-                    },
-                },
+                abilities: { multi_burn: { cooldown: 24000, damage: 4000 } },
                 achievements: [
                     [1, "stat", "gold", 1],
                     [10, "stat", "for", 0.5],
@@ -836,22 +775,14 @@ test("G.monsters type validation", async () => {
                 range: 320,
                 resistance: 320,
                 respawn: 10800,
-                s: {
-                    fullguardx: {
-                        ms: 120000,
-                    },
-                },
+                s: { fullguardx: { ms: 120000 } },
                 skin: "dragold",
                 special: true,
                 speed: 22,
                 xp: 24000000,
             },
             dryad: {
-                abilities: {
-                    mtangle: {
-                        cooldown: 5000,
-                    },
-                },
+                abilities: { mtangle: { cooldown: 5000 } },
                 achievements: [
                     [1, "stat", "mp", 20],
                     [100, "stat", "vit", 1],
@@ -895,11 +826,7 @@ test("G.monsters type validation", async () => {
                 xp: 10,
             },
             ent: {
-                abilities: {
-                    mtangle: {
-                        cooldown: 3200,
-                    },
-                },
+                abilities: { mtangle: { cooldown: 3200 } },
                 achievements: [
                     [1, "stat", "hp", 10],
                     [10, "stat", "hp", 30],
@@ -946,16 +873,8 @@ test("G.monsters type validation", async () => {
             fieldgen0: {
                 aa: 1,
                 abilities: {
-                    dampening_aura: {
-                        aura: true,
-                        condition: "dampened",
-                        cooldown: 180,
-                        radius: 300,
-                    },
-                    degen: {
-                        amount: 60,
-                        cooldown: 200,
-                    },
+                    dampening_aura: { aura: true, condition: "dampened", cooldown: 180, radius: 300 },
+                    degen: { amount: 60, cooldown: 200 },
                 },
                 aggro: 0,
                 armor: 2200,
@@ -976,12 +895,7 @@ test("G.monsters type validation", async () => {
                 xp: 0,
             },
             fireroamer: {
-                abilities: {
-                    burn: {
-                        attr0: 100,
-                        unlimited: true,
-                    },
-                },
+                abilities: { burn: { attr0: 100, unlimited: true } },
                 achievements: [
                     [10, "stat", "mp", 10],
                     [100, "stat", "mp", 10],
@@ -1100,12 +1014,13 @@ test("G.monsters type validation", async () => {
                 xp: 200000,
             },
             gbluepro: {
-                abilities: {
-                    multi_freeze: {
-                        cooldown: 4000,
-                        damage: 800,
-                    },
-                },
+                abilities: { multi_freeze: { cooldown: 4000, damage: 800 } },
+                achievements: [
+                    [1, "stat", "fzresistance", 1],
+                    [10, "stat", "fzresistance", 1],
+                    [100, "stat", "fzresistance", 1],
+                    [1000, "stat", "fzresistance", 2],
+                ],
                 aggro: 1,
                 attack: 820,
                 charge: 84,
@@ -1119,25 +1034,18 @@ test("G.monsters type validation", async () => {
                 range: 948,
                 respawn: -1,
                 skin: "gbluepro",
-                slots: {
-                    mainhand: {
-                        level: 12,
-                        name: "froststaff",
-                    },
-                },
+                slots: { mainhand: { level: 12, name: "froststaff" } },
                 speed: 24,
                 xp: 3600000,
             },
             ggreenpro: {
-                abilities: {
-                    self_healing: {
-                        cooldown: 2000,
-                        heal: 2400,
-                    },
-                    tangle: {
-                        cooldown: 1600,
-                    },
-                },
+                abilities: { self_healing: { cooldown: 2000, heal: 2400 }, tangle: { cooldown: 1600 } },
+                achievements: [
+                    [1, "stat", "pnresistance", 1],
+                    [10, "stat", "pnresistance", 1],
+                    [100, "stat", "pnresistance", 1],
+                    [1000, "stat", "pnresistance", 2],
+                ],
                 aggro: 1,
                 attack: 1220,
                 charge: 84,
@@ -1151,12 +1059,7 @@ test("G.monsters type validation", async () => {
                 range: 948,
                 respawn: -1,
                 skin: "ggreenpro",
-                slots: {
-                    mainhand: {
-                        level: 12,
-                        name: "woodensword",
-                    },
-                },
+                slots: { mainhand: { level: 12, name: "woodensword" } },
                 speed: 24,
                 xp: 10800000,
             },
@@ -1296,16 +1199,15 @@ test("G.monsters type validation", async () => {
             },
             gpurplepro: {
                 abilities: {
-                    anger: {
-                        cooldown: 12000,
-                        radius: 300,
-                    },
-                    warpstomp: {
-                        cooldown: 8000,
-                        radius: 100,
-                        stun: 1000,
-                    },
+                    anger: { cooldown: 12000, radius: 300 },
+                    warpstomp: { cooldown: 8000, radius: 100, stun: 1000 },
                 },
+                achievements: [
+                    [1, "stat", "phresistance", 1],
+                    [10, "stat", "phresistance", 1],
+                    [100, "stat", "phresistance", 1],
+                    [1000, "stat", "phresistance", 2],
+                ],
                 aggro: 1,
                 attack: 5320,
                 charge: 84,
@@ -1320,22 +1222,18 @@ test("G.monsters type validation", async () => {
                 range: 948,
                 respawn: -1,
                 skin: "gpurplepro",
-                slots: {
-                    mainhand: {
-                        level: 12,
-                        name: "oozingterror",
-                    },
-                },
+                slots: { mainhand: { level: 12, name: "oozingterror" } },
                 speed: 48,
                 xp: 14400000,
             },
             gredpro: {
-                abilities: {
-                    burn: {
-                        attr0: 100,
-                        unlimited: true,
-                    },
-                },
+                abilities: { burn: { attr0: 100, unlimited: true } },
+                achievements: [
+                    [1, "stat", "firesistance", 1],
+                    [10, "stat", "firesistance", 1],
+                    [100, "stat", "firesistance", 1],
+                    [1000, "stat", "firesistance", 2],
+                ],
                 aggro: 1,
                 attack: 1120,
                 charge: 84,
@@ -1349,12 +1247,7 @@ test("G.monsters type validation", async () => {
                 range: 948,
                 respawn: -1,
                 skin: "gredpro",
-                slots: {
-                    mainhand: {
-                        level: 12,
-                        name: "firestaff",
-                    },
-                },
+                slots: { mainhand: { level: 12, name: "firestaff" } },
                 speed: 24,
                 xp: 720000,
             },
@@ -1414,15 +1307,7 @@ test("G.monsters type validation", async () => {
                 xp: 120000,
             },
             grinch: {
-                abilities: {
-                    portal: {
-                        cooldown: 0,
-                    },
-                    self_healing: {
-                        cooldown: 8008,
-                        heal: 8008,
-                    },
-                },
+                abilities: { portal: { cooldown: 0 }, self_healing: { cooldown: 8008, heal: 8008 } },
                 achievements: [
                     [1, "stat", "hp", 20],
                     [100, "stat", "fzresistance", 1],
@@ -1449,12 +1334,7 @@ test("G.monsters type validation", async () => {
                 resistance: 150,
                 respawn: 43200,
                 skin: "grinch",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "ornamentstaff",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "ornamentstaff" } },
                 special: true,
                 speed: 40,
                 xp: 12000,
@@ -1485,12 +1365,7 @@ test("G.monsters type validation", async () => {
                 xp: 48000,
             },
             harpy: {
-                abilities: {
-                    warp_on_hit: {
-                        attr0: 0.08,
-                        unlimited: true,
-                    },
-                },
+                abilities: { warp_on_hit: { attr0: 0.08, unlimited: true } },
                 achievements: [
                     [10, "stat", "hp", 10],
                     [1000, "stat", "fzresistance", 0.5],
@@ -1517,12 +1392,7 @@ test("G.monsters type validation", async () => {
                 respawn: 4,
                 rpiercing: 160,
                 skin: "harpy",
-                slots: {
-                    mainhand: {
-                        level: 6,
-                        name: "harbringer",
-                    },
-                },
+                slots: { mainhand: { level: 6, name: "harbringer" } },
                 speed: 12,
                 xp: 192000,
             },
@@ -1544,12 +1414,7 @@ test("G.monsters type validation", async () => {
                 xp: 10,
             },
             icegolem: {
-                abilities: {
-                    multi_freeze: {
-                        cooldown: 2000,
-                        damage: 2000,
-                    },
-                },
+                abilities: { multi_freeze: { cooldown: 2000, damage: 2000 } },
                 achievements: [
                     [1, "stat", "hp", 10],
                     [10, "stat", "hp", 30],
@@ -1747,11 +1612,7 @@ test("G.monsters type validation", async () => {
                 xp: 120000,
             },
             mechagnome: {
-                abilities: {
-                    portal: {
-                        cooldown: 0,
-                    },
-                },
+                abilities: { portal: { cooldown: 0 } },
                 achievements: [
                     [1, "stat", "hp", 10],
                     [10, "stat", "hp", 20],
@@ -1863,12 +1724,7 @@ test("G.monsters type validation", async () => {
                 resistance: 900,
                 respawn: 5640,
                 skin: "mrgreen",
-                slots: {
-                    mainhand: {
-                        level: 10,
-                        name: "gbow",
-                    },
-                },
+                slots: { mainhand: { level: 10, name: "gbow" } },
                 spawns: [
                     ["hp:0.75", "greenjr", 5],
                     ["hp:0.50", "greenjr", 5],
@@ -1907,12 +1763,7 @@ test("G.monsters type validation", async () => {
                 range: 520,
                 respawn: 3240,
                 skin: "mrpumpkin",
-                slots: {
-                    mainhand: {
-                        level: 8,
-                        name: "oozingterror",
-                    },
-                },
+                slots: { mainhand: { level: 8, name: "oozingterror" } },
                 spawns: [
                     ["hp:0.75", "jr", 5],
                     ["hp:0.50", "jr", 5],
@@ -2070,11 +1921,7 @@ test("G.monsters type validation", async () => {
                 xp: 140000,
             },
             oneeye: {
-                abilities: {
-                    stone: {
-                        cooldown: 6400,
-                    },
-                },
+                abilities: { stone: { cooldown: 6400 } },
                 achievements: [
                     [1, "stat", "for", 1],
                     [100, "stat", "mp", 25],
@@ -2158,12 +2005,7 @@ test("G.monsters type validation", async () => {
                 xp: 180000,
             },
             pinkgoblin: {
-                abilities: {
-                    self_healing: {
-                        cooldown: 4000,
-                        heal: 96000,
-                    },
-                },
+                abilities: { self_healing: { cooldown: 4000, heal: 96000 } },
                 achievements: [
                     [1000, "stat", "mp", 10],
                     [2000, "stat", "vit", 1],
@@ -2188,12 +2030,7 @@ test("G.monsters type validation", async () => {
                 resistance: 350,
                 respawn: 40,
                 skin: "pinkgoblin",
-                slots: {
-                    mainhand: {
-                        level: 8,
-                        name: "pmace",
-                    },
-                },
+                slots: { mainhand: { level: 8, name: "pmace" } },
                 speed: 40,
                 xp: 460000,
             },
@@ -2374,15 +2211,7 @@ test("G.monsters type validation", async () => {
                     chatter: [20, 100],
                     courage: [80, 100],
                     exponential: true,
-                    level: {
-                        armor: 20,
-                        attack: 40,
-                        charge: 3,
-                        evasion: 5,
-                        hp: 300,
-                        resistance: 30,
-                        speed: 2,
-                    },
+                    level: { armor: 20, attack: 40, charge: 3, evasion: 5, hp: 300, resistance: 30, speed: 2 },
                     obedience: [0, 50],
                     passion: [50, 100],
                     xp: 1000,
@@ -2411,15 +2240,7 @@ test("G.monsters type validation", async () => {
                     chatter: [20, 100],
                     courage: [80, 100],
                     exponential: true,
-                    level: {
-                        armor: 20,
-                        attack: 40,
-                        charge: 3,
-                        evasion: 5,
-                        hp: 300,
-                        resistance: 30,
-                        speed: 2,
-                    },
+                    level: { armor: 20, attack: 40, charge: 3, evasion: 5, hp: 300, resistance: 30, speed: 2 },
                     obedience: [0, 50],
                     passion: [50, 100],
                     xp: 1000,
@@ -2448,15 +2269,7 @@ test("G.monsters type validation", async () => {
                     chatter: [20, 100],
                     courage: [80, 100],
                     exponential: true,
-                    level: {
-                        armor: 20,
-                        attack: 40,
-                        charge: 3,
-                        evasion: 5,
-                        hp: 300,
-                        resistance: 30,
-                        speed: 2,
-                    },
+                    level: { armor: 20, attack: 40, charge: 3, evasion: 5, hp: 300, resistance: 30, speed: 2 },
                     obedience: [0, 50],
                     passion: [50, 100],
                     xp: 1000,
@@ -2513,12 +2326,7 @@ test("G.monsters type validation", async () => {
             },
             redfairy: {
                 aa: 1,
-                abilities: {
-                    heal: {
-                        cooldown: 1000,
-                        heal: 20000,
-                    },
-                },
+                abilities: { heal: { cooldown: 1000, heal: 20000 } },
                 achievements: [[10, "stat", "gold", 2]],
                 aggro: 0,
                 attack: 4000,
@@ -2589,12 +2397,7 @@ test("G.monsters type validation", async () => {
                 resistance: 240,
                 respawn: 400,
                 skin: "rharpy",
-                slots: {
-                    mainhand: {
-                        level: 9,
-                        name: "basher",
-                    },
-                },
+                slots: { mainhand: { level: 9, name: "basher" } },
                 speed: 18,
                 xp: 332000,
             },
@@ -2684,12 +2487,7 @@ test("G.monsters type validation", async () => {
                 range: 80,
                 respawn: 960,
                 skin: "skeletor",
-                slots: {
-                    mainhand: {
-                        level: 8,
-                        name: "scythe",
-                    },
-                },
+                slots: { mainhand: { level: 8, name: "scythe" } },
                 speed: 40,
                 xp: 120000,
             },
@@ -2771,11 +2569,7 @@ test("G.monsters type validation", async () => {
                 rage: 0,
                 range: 20,
                 respawn: 3600,
-                s: {
-                    fullguardx: {
-                        ms: 300000,
-                    },
-                },
+                s: { fullguardx: { ms: 300000 } },
                 skin: "snowman",
                 special: true,
                 speed: 8,
@@ -3060,12 +2854,7 @@ test("G.monsters type validation", async () => {
                 xp: 1000,
             },
             target_ar500red: {
-                abilities: {
-                    self_healing: {
-                        cooldown: 10000,
-                        heal: 100000,
-                    },
-                },
+                abilities: { self_healing: { cooldown: 10000, heal: 100000 } },
                 achievements: [[10000, "stat", "for", 1]],
                 aggro: 0,
                 armor: 500,
@@ -3134,11 +2923,7 @@ test("G.monsters type validation", async () => {
                 xp: 1000,
             },
             target_r750: {
-                abilities: {
-                    portal: {
-                        cooldown: 0,
-                    },
-                },
+                abilities: { portal: { cooldown: 0 } },
                 aggro: 0,
                 attack: 0,
                 damage_type: "physical",
@@ -3218,12 +3003,7 @@ test("G.monsters type validation", async () => {
             },
             tinyp: {
                 aa: 1,
-                abilities: {
-                    self_healing: {
-                        cooldown: 10,
-                        heal: 1200,
-                    },
-                },
+                abilities: { self_healing: { cooldown: 10, heal: 1200 } },
                 achievements: [
                     [1, "stat", "for", 0.25],
                     [10, "stat", "luck", 0.5],
@@ -3319,11 +3099,7 @@ test("G.monsters type validation", async () => {
                 rbuff: "easterluck",
                 resistance: 180,
                 respawn: 3600,
-                s: {
-                    fullguard: {
-                        ms: 300000,
-                    },
-                },
+                s: { fullguard: { ms: 300000 } },
                 skin: "wabbit",
                 special: true,
                 speed: 60,
@@ -3400,16 +3176,7 @@ test("G.monsters type validation", async () => {
                 xp: 16400,
             },
             xmagefi: {
-                abilities: {
-                    anger: {
-                        cooldown: 8000,
-                        radius: 300,
-                    },
-                    multi_burn: {
-                        cooldown: 4000,
-                        damage: 4000,
-                    },
-                },
+                abilities: { anger: { cooldown: 8000, radius: 300 }, multi_burn: { cooldown: 4000, damage: 4000 } },
                 aggro: 1.8,
                 armor: 220,
                 attack: 2240,
@@ -3430,22 +3197,12 @@ test("G.monsters type validation", async () => {
                 respawn: 0,
                 respawn_as: "xmagen",
                 skin: "xmagefi",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "firestaff",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "firestaff" } },
                 speed: 24,
-                xp: 1440000,
+                xp: 14400000,
             },
             xmagefz: {
-                abilities: {
-                    deepfreeze: {
-                        cooldown: 6000,
-                        radius: 300,
-                    },
-                },
+                abilities: { deepfreeze: { cooldown: 6000, radius: 300 } },
                 aggro: 1.8,
                 armor: 120,
                 attack: 1640,
@@ -3466,25 +3223,12 @@ test("G.monsters type validation", async () => {
                 respawn: 0,
                 respawn_as: "xmagefi",
                 skin: "xmagefz",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "vstaff",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "vstaff" } },
                 speed: 24,
                 xp: 7200000,
             },
             xmagen: {
-                abilities: {
-                    mtangle: {
-                        cooldown: 3200,
-                    },
-                    self_healing: {
-                        cooldown: 2000,
-                        heal: 4800,
-                    },
-                },
+                abilities: { mtangle: { cooldown: 3200 }, self_healing: { cooldown: 2000, heal: 4800 } },
                 aggro: 1.8,
                 armor: 320,
                 attack: 2440,
@@ -3507,26 +3251,14 @@ test("G.monsters type validation", async () => {
                 respawn: 0,
                 respawn_as: "xmagex",
                 skin: "xmagen",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "mushroomstaff",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "mushroomstaff" } },
                 speed: 24,
                 xp: 21600000,
             },
             xmagex: {
                 abilities: {
-                    anger: {
-                        cooldown: 8000,
-                        radius: 300,
-                    },
-                    warpstomp: {
-                        cooldown: 4000,
-                        radius: 160,
-                        stun: 1500,
-                    },
+                    anger: { cooldown: 8000, radius: 300 },
+                    warpstomp: { cooldown: 4000, radius: 160, stun: 1500 },
                 },
                 achievements: [
                     [1, "stat", "fzresistance", 1],
@@ -3554,12 +3286,7 @@ test("G.monsters type validation", async () => {
                 resistance: 420,
                 respawn: -1,
                 skin: "xmagex",
-                slots: {
-                    mainhand: {
-                        level: 13,
-                        name: "oozingterror",
-                    },
-                },
+                slots: { mainhand: { level: 13, name: "oozingterror" } },
                 speed: 24,
                 xp: 28800000,
             },
@@ -3591,16 +3318,8 @@ test("G.monsters type validation", async () => {
             zapper0: {
                 aa: 1,
                 abilities: {
-                    degen: {
-                        amount: 20,
-                        cooldown: 200,
-                    },
-                    zap: {
-                        amount: 1200,
-                        cooldown: 1000,
-                        pure: true,
-                        radius: 300,
-                    },
+                    degen: { amount: 20, cooldown: 200 },
+                    zap: { amount: 1200, cooldown: 1000, pure: true, radius: 300 },
                 },
                 aggro: 0,
                 armor: 2200,

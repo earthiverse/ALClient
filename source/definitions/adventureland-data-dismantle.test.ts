@@ -1,92 +1,40 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
 test("G.dismantle type validation", async () => {
     const G_dismantle: Pick<GData, "dismantle"> = {
         dismantle: {
-            molesteeth: {
-                items: [[0.1, "platinumnugget"]],
-                cost: 100000,
-            },
-            goldingot: {
-                items: [[12, "goldnugget"]],
-                cost: 1200000,
-            },
-            essenceoffrost: {
-                items: [[1, "emptyjar"]],
-                cost: 10,
-            },
-            platinumingot: {
-                items: [[8, "platinumnugget"]],
-                cost: 12000000,
-            },
-            essenceofnature: {
-                items: [[1, "emptyjar"]],
-                cost: 10,
-            },
-            bowofthedead: {
-                items: [[1, "mbones"]],
-                cost: 40,
-            },
-            lostearring: {
-                items: [[0.12, "goldnugget"]],
-                cost: 36000,
-            },
-            swordofthedead: {
-                items: [[1, "mbones"]],
-                cost: 40,
-            },
-            staffofthedead: {
-                items: [[1, "mbones"]],
-                cost: 40,
-            },
-            essenceoffire: {
-                items: [[1, "emptyjar"]],
-                cost: 10,
-            },
-            maceofthedead: {
-                items: [[1, "mbones"]],
-                cost: 40,
-            },
-            bronzeingot: {
-                items: [[16, "bronzenugget"]],
-                cost: 120000,
-            },
-            fireblade: {
-                items: [[1, "essenceoffire"]],
-                cost: 10000,
-            },
-            essenceoflife: {
-                items: [[1, "emptyjar"]],
-                cost: 10,
-            },
-            firestars: {
-                items: [[1, "essenceoffire"]],
-                cost: 10000,
-            },
-            daggerofthedead: {
-                items: [[1, "mbones"]],
-                cost: 40,
-            },
+            bowofthedead: { cost: 40, items: [[1, "mbones"]] },
+            bronzeingot: { cost: 120000, items: [[16, "bronzenugget"]] },
+            daggerofthedead: { cost: 40, items: [[1, "mbones"]] },
+            essenceoffire: { cost: 10, items: [[1, "emptyjar"]] },
+            essenceoffrost: { cost: 10, items: [[1, "emptyjar"]] },
+            essenceoflife: { cost: 10, items: [[1, "emptyjar"]] },
+            essenceofnature: { cost: 10, items: [[1, "emptyjar"]] },
+            fireblade: { cost: 10000, items: [[1, "essenceoffire"]] },
+            firebow: { cost: 10000, items: [[1, "essenceoffire"]] },
+            firestaff: { cost: 10000, items: [[1, "essenceoffire"]] },
+            firestars: { cost: 10000, items: [[1, "essenceoffire"]] },
             goldenegg: {
+                cost: 120000,
                 items: [
                     [1, "goldnugget"],
                     [0.5, "goldnugget"],
                 ],
-                cost: 120000,
             },
-            spearofthedead: {
-                items: [[2, "mbones"]],
-                cost: 40,
-            },
-            firestaff: {
-                items: [[1, "essenceoffire"]],
-                cost: 10000,
-            },
+            goldingot: { cost: 1200000, items: [[12, "goldnugget"]] },
+            lostearring: { cost: 36000, items: [[0.12, "goldnugget"]] },
+            maceofthedead: { cost: 40, items: [[1, "mbones"]] },
+            molesteeth: { cost: 100000, items: [[0.1, "platinumnugget"]] },
+            platinumingot: { cost: 12000000, items: [[8, "platinumnugget"]] },
+            pmaceofthedead: { cost: 40, items: [[1, "mbones"]] },
+            spearofthedead: { cost: 40, items: [[2, "mbones"]] },
+            staffofthedead: { cost: 40, items: [[1, "mbones"]] },
+            swordofthedead: { cost: 40, items: [[1, "mbones"]] },
         },
     }
     expect(G_dismantle).toBeDefined()

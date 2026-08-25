@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -11,7 +11,7 @@ test("G.conditions type validation", async () => {
             authfail: {
                 debuff: true,
                 explanation:
-                    "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. So just opening the non-web game client once, starting one character, hanging 1-2 minutes on a server and logging out will be enough to correct this mistake. If it persists unexpectedly email hello@adventure.land.",
+                    "Your account has failed an internal authorization routine. This might've happened if you haven't logged on from Steam or Mac App Store since this new system was implemented. Just visit the bank with a game client and the issue should resolve. If it persists unexpectedly email hello@adventure.land.",
                 gold: -85,
                 luck: -85,
                 name: "Authorization Failure",
@@ -21,11 +21,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
                 xp: -20,
             },
-            blink: {
-                explanation: "Blink in progress",
-                name: "Blinking",
-                skin: "condition_positive",
-            },
+            blink: { explanation: "Blink in progress", name: "Blinking", skin: "condition_positive" },
             block: {
                 debuff: true,
                 explanation: "After engaging in PVP, blocked from safely leaving!",
@@ -83,12 +79,7 @@ test("G.conditions type validation", async () => {
                 skin: "skill_dbuff",
                 ui: true,
             },
-            dash: {
-                name: "Dashing",
-                persistent: true,
-                set_speed: 500,
-                skin: "condition_positive",
-            },
+            dash: { name: "Dashing", persistent: true, set_speed: 500, skin: "condition_positive" },
             deepfreezed: {
                 blocked: true,
                 debuff: true,
@@ -290,6 +281,22 @@ test("G.conditions type validation", async () => {
                 skin: "skill_huntersmark",
                 ui: true,
             },
+            massexchange: {
+                buff: true,
+                duration: 10000,
+                explanation: "Reduces the time of your next exchange by 50%.",
+                name: "Mass exchange",
+                skin: "skill_massexchange",
+                ui: true,
+            },
+            massexchangepp: {
+                buff: true,
+                duration: 10000,
+                explanation: "Reduces the time of your next exchange by 90%.",
+                name: "Mass exchange++",
+                skin: "skill_massexchangepp",
+                ui: true,
+            },
             massproduction: {
                 buff: true,
                 duration: 10000,
@@ -304,24 +311,6 @@ test("G.conditions type validation", async () => {
                 explanation: "Reduces the time of your next upgrade or compound by 90%.",
                 name: "Mass Production++",
                 skin: "skill_massproductionpp",
-                ui: true,
-            },
-            massexchange: {
-                buff: true,
-                duration: 10000,
-                explanation:
-                    "Adds a 1-time use buff that speeds up the next exchange by 50%. The buff expires in 10 seconds if not used",
-                name: "Mass Exchange",
-                skin: "skill_massexchange",
-                ui: true,
-            },
-            massexchangepp: {
-                buff: true,
-                duration: 10000,
-                explanation:
-                    "Adds a 1-time use buff that speeds up the next exchange by 90%. The buff expires in 10 seconds if not used.",
-                name: "Mass Exchange++",
-                skin: "skill_massexchangepp",
                 ui: true,
             },
             mcourage: {
@@ -522,6 +511,16 @@ test("G.conditions type validation", async () => {
                 skin: "sanguine",
                 ui: true,
             },
+            sheltered: {
+                armor: 480,
+                buff: true,
+                duration: 6000,
+                explanation: "Greatly increases armor and resistance but limits maximum speed to 10.",
+                name: "Sheltered",
+                resistance: 320,
+                set_speed: 10,
+                skin: "lanternshield",
+            },
             shocked: {
                 debuff: true,
                 duration: 1600,
@@ -530,12 +529,7 @@ test("G.conditions type validation", async () => {
                 skin: "essenceofthunder",
                 ui: true,
             },
-            sleeping: {
-                debuff: true,
-                duration: 8000,
-                duration_min: 3000,
-                name: "Sleeping",
-            },
+            sleeping: { debuff: true, duration: 8000, duration_min: 3000, name: "Sleeping" },
             slowness: {
                 debuff: true,
                 explanation: "Things like spiderwebs cause you to slow down.",

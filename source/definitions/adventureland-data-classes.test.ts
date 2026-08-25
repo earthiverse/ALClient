@@ -1,739 +1,288 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 683 (2021-07-28)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
 test("G.classes type validation", async () => {
     const G_classes: Pick<GData, "classes"> = {
         classes: {
-            merchant: {
-                resistance: 20,
-                frequency: 0.2,
-                damage_type: "none",
-                mcourage: 0,
-                speed: 55,
-                doublehand: {
-                    pickaxe: {
-                        speed: -20,
-                    },
-                    rod: {
-                        speed: -20,
-                    },
-                    basher: {
-                        speed: -26,
-                    },
-                    axe: {
-                        speed: -20,
-                    },
-                },
-                stats: {
-                    dex: 4,
-                    int: 12,
-                    vit: 1,
-                    str: 1,
-                    for: 0,
-                },
-                armor: 20,
-                range: 20,
-                attack: 1,
-                lstats: {
-                    dex: 0.4,
-                    int: 1,
-                    vit: 0.25,
-                    str: 0.1,
-                    for: 0,
-                },
-                description:
-                    "While your main characters are out there adventuring, merchants can wait in town and market your loots. Server and character limits don't apply to merchants. They gain experience when they sell or buy something.",
-                offhand: {
-                    source: {},
-                    quiver: {
-                        speed: -2,
-                    },
-                    shield: {
-                        speed: -8,
-                    },
-                    misc_offhand: {
-                        speed: -3,
-                    },
-                },
-                hp: 40,
-                courage: 1,
-                pcourage: 0,
-                mainhand: {
-                    mace: {
-                        speed: -10,
-                    },
-                    dagger: {
-                        speed: -3,
-                    },
-                    fist: {
-                        speed: -2,
-                    },
-                    spear: {
-                        speed: -5,
-                    },
-                    short_sword: {
-                        speed: -5,
-                    },
-                    bow: {
-                        speed: -6,
-                    },
-                    dartgun: {},
-                    staff: {
-                        speed: -4,
-                    },
-                },
-                mp_cost: 10,
-                base_slots: {
-                    mainhand: {
-                        name: "staff",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                mp: 200,
-                projectile: "momentum",
-                main_stat: "int",
-                looks: [
-                    [
-                        "marmor12a",
-                        {
-                            hair: "hairdo521",
-                            head: "makeup117",
-                            hat: "hat404",
-                        },
-                    ],
-                    [
-                        "marmor12b",
-                        {
-                            hair: "hairdo520",
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "marmor12a",
-                        {
-                            hair: "hairdo521",
-                            head: "makeup105",
-                            hat: "hat404",
-                        },
-                    ],
-                    [
-                        "marmor12b",
-                        {
-                            hair: "hairdo520",
-                            head: "fmakeup03",
-                        },
-                    ],
-                ],
-            },
-            warrior: {
-                brave: true,
-                resistance: 2,
-                frequency: 0.5,
-                damage_type: "physical",
-                mcourage: 2,
-                xcx: [],
-                speed: 55,
-                doublehand: {
-                    rapier: {
-                        mp_cost: 4,
-                        frequency: 60,
-                        miss: 2,
-                    },
-                    great_sword: {
-                        mp_cost: 6,
-                        frequency: -8,
-                        speed: -5,
-                    },
-                    bow: {
-                        speed: -12,
-                        frequency: -40,
-                        miss: 50,
-                    },
-                    scythe: {
-                        mp_cost: 8,
-                        frequency: -11,
-                        speed: -6,
-                    },
-                    basher: {
-                        mp_cost: 12,
-                        frequency: -12,
-                        speed: -12,
-                    },
-                    axe: {
-                        mp_cost: 6,
-                        frequency: -10,
-                        speed: -7,
-                    },
-                },
-                stats: {
-                    dex: 2,
-                    int: 2,
-                    vit: 4,
-                    str: 10,
-                    for: 2,
-                },
-                armor: 20,
-                range: 18,
-                attack: 60,
-                lstats: {
-                    dex: 0.25,
-                    int: 0.25,
-                    vit: 0.4,
-                    str: 1,
-                    for: 0.025,
-                },
-                description:
-                    "Warriors are strong melee characters. Ideal for both PVE and PVP. Can't go wrong with a warrior.",
-                offhand: {
-                    shield: {
-                        speed: -2,
-                    },
-                    sword: {
-                        speed: -5,
-                    },
-                    misc_offhand: {
-                        frequency: -12,
-                        speed: -8,
-                    },
-                    short_sword: {
-                        speed: -5,
-                    },
-                    mace: {
-                        frequency: -6,
-                        speed: -5,
-                    },
-                    fist: {
-                        frequency: 6,
-                    },
-                },
-                hp: 200,
-                base_slots: {
-                    mainhand: {
-                        name: "blade",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                pcourage: 2,
-                mainhand: {
-                    mace: {
-                        frequency: -8,
-                        speed: -4,
-                    },
-                    fist: {
-                        frequency: 6,
-                    },
-                    sword: {
-                        speed: -5,
-                    },
-                    spear: {
-                        speed: -2,
-                    },
-                    short_sword: {},
-                },
-                mp_cost: 1,
-                courage: 5,
-                mp: 20,
-                projectile: "momentum",
-                main_stat: "str",
-                looks: [
-                    [
-                        "marmor6d",
-                        {
-                            hair: "hairdo105",
-                            head: "makeup117",
-                        },
-                    ],
-                    [
-                        "sarmor2d",
-                        {
-                            hair: "hairdo120",
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "marmor6d",
-                        {
-                            hair: "hairdo105",
-                            head: "makeup105",
-                        },
-                    ],
-                    [
-                        "sarmor2d",
-                        {
-                            hair: "hairdo120",
-                            head: "fmakeup03",
-                        },
-                    ],
-                ],
-            },
-            paladin: {
-                resistance: 2,
-                frequency: 0.4,
-                damage_type: "physical",
-                mcourage: 4,
-                speed: 45,
-                doublehand: {},
-                stats: {
-                    dex: 2,
-                    int: 10,
-                    vit: 4,
-                    str: 10,
-                    for: 5,
-                },
-                armor: 20,
-                range: 15,
-                attack: 60,
-                lstats: {
-                    dex: 0.05,
-                    int: 1,
-                    vit: 0.4,
-                    str: 1,
-                    for: 0.2,
-                },
-                description:
-                    "Work in progress! Pick a paladin if you are an established player or just too adventerous. Paladins don't even have a starter weapon yet!",
-                offhand: {
-                    source: {},
-                    shield: {
-                        speed: -3,
-                    },
-                    misc_offhand: {},
-                },
-                hp: 300,
-                courage: 2,
-                side_stat: "int",
-                pcourage: 5,
-                mainhand: {
-                    mace: {},
-                    sword: {
-                        output: -5,
-                        frequency: -5,
-                        speed: -7,
-                    },
-                    short_sword: {
-                        output: -5,
-                        speed: -3,
-                    },
-                },
-                mp_cost: 2,
-                base_slots: {
-                    mainhand: {
-                        name: "mace",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                mp: 50,
-                projectile: "momentum",
-                main_stat: "str",
-                looks: [
-                    [
-                        "marmor4b",
-                        {
-                            hair: "hairdo515",
-                            head: "makeup117",
-                        },
-                    ],
-                    [
-                        "marmor4b",
-                        {
-                            hair: "hairdo405",
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "marmor4b",
-                        {
-                            hair: "hairdo515",
-                            head: "makeup105",
-                        },
-                    ],
-                    [
-                        "marmor4b",
-                        {
-                            hair: "hairdo405",
-                            head: "fmakeup03",
-                        },
-                    ],
-                ],
-            },
-            priest: {
-                resistance: 5,
-                frequency: 0.35,
-                damage_type: "magical",
-                mcourage: 5,
-                xcx: ["marmor12e", "mbody5g", "hairdo402"],
-                speed: 45,
-                doublehand: {
-                    wand: {
-                        frequency: 40,
-                    },
-                },
-                stats: {
-                    dex: 3,
-                    int: 10,
-                    vit: 4,
-                    str: 2,
-                    for: 3,
-                },
-                armor: 2,
-                healing_projectile: "plight",
-                range: 120,
-                attack: 30,
-                lstats: {
-                    dex: 0.2,
-                    int: 1,
-                    vit: 0.4,
-                    str: 0.2,
-                    for: 0.025,
-                },
-                description:
-                    "Priest's are the healers of the realm. They are not ideal for beginners or solo players. They can't inflict a lot of damage. Every serious party needs at least one priest.",
-                offhand: {
-                    source: {},
-                    shield: {
-                        speed: -5,
-                    },
-                    misc_offhand: {
-                        speed: -4,
-                    },
-                },
-                hp: 70,
-                base_slots: {
-                    mainhand: {
-                        name: "staff",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                pcourage: 2,
-                mainhand: {
-                    pmace: {
-                        speed: -2,
-                    },
-                    staff: {
-                        speed: -4,
-                    },
-                },
-                mp_cost: 5,
-                courage: 2,
-                mp: 300,
-                projectile: "pmagic",
-                main_stat: "int",
-                looks: [
-                    [
-                        "marmor12c",
-                        {
-                            head: "makeup117",
-                        },
-                    ],
-                    [
-                        "mbody5e",
-                        {
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "marmor12c",
-                        {
-                            head: "makeup105",
-                        },
-                    ],
-                    [
-                        "mbody5e",
-                        {
-                            head: "fmakeup03",
-                        },
-                    ],
-                ],
-            },
-            ranger: {
-                resistance: 80,
-                frequency: 0.4,
-                damage_type: "physical",
-                mcourage: 2,
-                speed: 45,
-                doublehand: {
-                    dagger: {},
-                    fist: {},
-                },
-                stats: {
-                    dex: 10,
-                    int: 8,
-                    vit: 2,
-                    str: 3,
-                    for: 1,
-                },
-                armor: 10,
-                range: 15,
-                attack: 45,
-                lstats: {
-                    dex: 1,
-                    int: 0.25,
-                    vit: 0.3,
-                    str: 0.2,
-                    for: 0.02,
-                },
-                description:
-                    "Rangers are skilled archers. Expert trackers. Their high range makes them very suitable for beginners.",
-                offhand: {
-                    quiver: {},
-                },
-                hp: 160,
-                courage: 2,
-                pcourage: 2,
-                mainhand: {
-                    crossbow: {
-                        frequency: -36,
-                        apiercing: 120,
-                    },
-                    bow: {
-                        speed: -3,
-                    },
-                },
-                mp_cost: 2,
-                base_slots: {
-                    mainhand: {
-                        name: "bow",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                mp: 60,
-                projectile: "momentum",
-                main_stat: "dex",
-                looks: [
-                    [
-                        "marmor5a",
-                        {
-                            hair: "hairdo106",
-                            head: "makeup117",
-                        },
-                    ],
-                    [
-                        "mbody2b",
-                        {
-                            hair: "hairdo206",
-                            head: "fmakeup01",
-                            makeup: "facemakeup02",
-                        },
-                    ],
-                    [
-                        "marmor5a",
-                        {
-                            hair: "hairdo106",
-                            head: "makeup105",
-                        },
-                    ],
-                    [
-                        "mbody2b",
-                        {
-                            hair: "hairdo206",
-                            head: "fmakeup03",
-                            makeup: "facemakeup02",
-                        },
-                    ],
-                ],
-            },
-            rogue: {
-                resistance: 10,
-                frequency: 0.45,
-                damage_type: "physical",
-                mcourage: 2,
-                speed: 50,
-                doublehand: {
-                    rapier: {
-                        frequency: 70,
-                    },
-                    short_sword: {},
-                    spear: {
-                        frequency: 16,
-                        speed: -3,
-                    },
-                    bow: {
-                        speed: -10,
-                        frequency: -30,
-                        miss: 30,
-                    },
-                },
-                stats: {
-                    dex: 10,
-                    int: 3,
-                    vit: 3,
-                    str: 4,
-                    for: 2,
-                },
-                armor: 15,
-                range: 15,
-                attack: 45,
-                lstats: {
-                    dex: 1,
-                    int: 0.2,
-                    vit: 0.3,
-                    str: 0.2,
-                    for: 0.025,
-                },
-                description:
-                    "Rogue's are the ideal assassins. Their invis ability makes them super-fun for PVP. They are fast. Not ideal for beginners.",
-                offhand: {
-                    misc_offhand: {
-                        speed: -4,
-                    },
-                    dagger: {},
-                    stars: {},
-                    fist: {},
-                },
-                hp: 120,
-                courage: 2,
-                pcourage: 2,
-                mainhand: {
-                    dagger: {},
-                    stars: {
-                        frequency: 20,
-                    },
-                    fist: {},
-                },
-                mp_cost: 1,
-                base_slots: {
-                    mainhand: {
-                        name: "claw",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                mp: 30,
-                projectile: "momentum",
-                main_stat: "dex",
-                looks: [
-                    [
-                        "sbody1c",
-                        {
-                            hair: "hairdo522",
-                            head: "makeup117",
-                            chin: "beard112",
-                        },
-                    ],
-                    [
-                        "sarmor1h",
-                        {
-                            hair: "hairdo210",
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "sbody1c",
-                        {
-                            hair: "hairdo522",
-                            head: "makeup105",
-                            chin: "beard112",
-                        },
-                    ],
-                    [
-                        "sarmor1h",
-                        {
-                            hair: "hairdo210",
-                            head: "fmakeup03",
-                        },
-                    ],
-                ],
-            },
             mage: {
-                resistance: 5,
-                frequency: 0.35,
-                damage_type: "magical",
-                mcourage: 3,
-                xcx: ["marmor12f", "mbody5h", "hairdo402"],
-                speed: 45,
-                doublehand: {
-                    great_staff: {
-                        mp_cost: 160,
-                        frequency: -10,
-                        speed: -12,
-                    },
-                },
-                stats: {
-                    dex: 3,
-                    int: 10,
-                    vit: 3,
-                    str: 2,
-                    for: 2,
-                },
                 armor: 2,
-                range: 120,
                 attack: 30,
-                lstats: {
-                    dex: 0.2,
-                    int: 1,
-                    vit: 0.3,
-                    str: 0.2,
-                    for: 0.02,
-                },
+                base_slots: { mainhand: { gift: 1, level: 0, name: "staff" } },
+                courage: 2,
+                damage_type: "magical",
                 description:
                     "Mage's are the ideal characters for beginners. They are easy and fun to play. Both PVE and PVP.",
-                offhand: {
-                    source: {},
-                    misc_offhand: {
-                        speed: -4,
-                    },
-                },
+                doublehand: { great_staff: { frequency: -10, mp_cost: 160, speed: -12 } },
+                frequency: 0.35,
                 hp: 70,
-                courage: 2,
-                pcourage: 2,
-                mainhand: {
-                    wblade: {
-                        speed: -5,
-                    },
-                    wand: {
-                        mp_cost: -18,
-                        frequency: 60,
-                    },
-                    staff: {
-                        speed: -4,
-                    },
-                },
-                mp_cost: 5,
-                base_slots: {
-                    mainhand: {
-                        name: "staff",
-                        gift: 1,
-                        level: 0,
-                    },
-                },
-                mp: 300,
-                projectile: "magic",
-                main_stat: "int",
                 looks: [
-                    [
-                        "marmor12d",
-                        {
-                            head: "makeup117",
-                        },
-                    ],
-                    [
-                        "mbody5f",
-                        {
-                            head: "fmakeup01",
-                        },
-                    ],
-                    [
-                        "marmor12d",
-                        {
-                            head: "makeup105",
-                        },
-                    ],
-                    [
-                        "mbody5f",
-                        {
-                            head: "fmakeup03",
-                        },
-                    ],
+                    ["marmor12d", { head: "makeup117" }],
+                    ["mbody5f", { head: "fmakeup01" }],
+                    ["marmor12d", { head: "makeup105" }],
+                    ["mbody5f", { head: "fmakeup03" }],
                 ],
+                lstats: { dex: 0.2, for: 0.02, int: 1, str: 0.2, vit: 0.3 },
+                main_stat: "int",
+                mainhand: { staff: { speed: -4 }, wand: { frequency: 60, mp_cost: -18 }, wblade: { speed: -5 } },
+                mcourage: 3,
+                mp: 300,
+                mp_cost: 5,
+                offhand: { misc_offhand: { speed: -4 }, source: {} },
+                output: 100,
+                pcourage: 2,
+                projectile: "magic",
+                range: 120,
+                resistance: 5,
+                speed: 45,
+                stats: { dex: 3, for: 2, int: 10, str: 2, vit: 3 },
+                xcx: ["marmor12f", "mbody5h", "hairdo402"],
+            },
+            merchant: {
+                armor: 20,
+                attack: 10,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "staff" } },
+                courage: 1,
+                damage_type: "none",
+                description:
+                    "While your main characters are out there adventuring, merchants can wait in town and market your loots. Server and character limits don't apply to merchants. They gain experience when they sell or buy something.",
+                doublehand: {
+                    axe: { speed: -20 },
+                    basher: { speed: -26 },
+                    pickaxe: { speed: -20 },
+                    rod: { speed: -20 },
+                },
+                frequency: 0.05,
+                hp: 40,
+                looks: [
+                    ["marmor12a", { hair: "hairdo521", hat: "hat404", head: "makeup117" }],
+                    ["marmor12b", { hair: "hairdo520", head: "fmakeup01" }],
+                    ["marmor12a", { hair: "hairdo521", hat: "hat404", head: "makeup105" }],
+                    ["marmor12b", { hair: "hairdo520", head: "fmakeup03" }],
+                ],
+                lstats: { dex: 0.4, for: 0, int: 1, str: 0.1, vit: 0.25 },
+                main_stat: "int",
+                mainhand: {
+                    bow: { speed: -6 },
+                    dagger: { speed: -3 },
+                    dartgun: {},
+                    fist: { speed: -2 },
+                    mace: { speed: -10 },
+                    short_sword: { speed: -5 },
+                    spear: { speed: -5 },
+                    staff: { speed: -4 },
+                },
+                mcourage: 0,
+                mp: 200,
+                mp_cost: 10,
+                offhand: { misc_offhand: { speed: -3 }, quiver: { speed: -2 }, shield: { speed: -8 }, source: {} },
+                output: 10,
+                pcourage: 0,
+                projectile: "momentum",
+                range: 20,
+                resistance: 20,
+                speed: 55,
+                stats: { dex: 4, for: 0, int: 12, str: 1, vit: 1 },
+            },
+            paladin: {
+                armor: 20,
+                attack: 60,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "mace" } },
+                bmresistance: 10,
+                courage: 2,
+                damage_type: "physical",
+                description: "Paladins are an unbalanced mix-use class!",
+                doublehand: {},
+                frequency: 0.4,
+                hp: 300,
+                looks: [
+                    ["marmor4b", { hair: "hairdo515", head: "makeup117" }],
+                    ["marmor4b", { hair: "hairdo405", head: "fmakeup01" }],
+                    ["marmor4b", { hair: "hairdo515", head: "makeup105" }],
+                    ["marmor4b", { hair: "hairdo405", head: "fmakeup03" }],
+                ],
+                lstats: { dex: 0.05, for: 0.2, int: 1, str: 1, vit: 0.4 },
+                main_stat: "str",
+                mainhand: {
+                    mace: {},
+                    short_sword: { output: -5, speed: -3 },
+                    sword: { frequency: -5, output: -5, speed: -7 },
+                },
+                mcourage: 4,
+                mp: 50,
+                mp_cost: 2,
+                offhand: { misc_offhand: {}, shield: { speed: -3 }, source: {} },
+                output: 100,
+                pcourage: 5,
+                projectile: "momentum",
+                range: 15,
+                resistance: 2,
+                side_stat: "int",
+                speed: 45,
+                stats: { dex: 2, for: 5, int: 10, str: 10, vit: 4 },
+                stresistance: 10,
+            },
+            priest: {
+                armor: 2,
+                attack: 30,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "staff" } },
+                courage: 2,
+                damage_type: "magical",
+                description:
+                    "Priest's are the healers of the realm. They are not ideal for beginners or solo players. They can't inflict a lot of damage. Every serious party needs at least one priest.",
+                doublehand: { wand: { frequency: 40 } },
+                frequency: 0.35,
+                hp: 70,
+                looks: [
+                    ["marmor12c", { head: "makeup117" }],
+                    ["mbody5e", { head: "fmakeup01" }],
+                    ["marmor12c", { head: "makeup105" }],
+                    ["mbody5e", { head: "fmakeup03" }],
+                ],
+                lstats: { dex: 0.2, for: 0.025, int: 1, str: 0.2, vit: 0.4 },
+                main_stat: "int",
+                mainhand: { pmace: { speed: -2 }, staff: { speed: -4 } },
+                mcourage: 5,
+                mp: 300,
+                mp_cost: 5,
+                offhand: { misc_offhand: { speed: -4 }, shield: { speed: -5 }, source: {} },
+                output: 40,
+                pcourage: 2,
+                projectile: "pmagic",
+                range: 120,
+                resistance: 5,
+                speed: 45,
+                stats: { dex: 3, for: 3, int: 10, str: 2, vit: 4 },
+                xcx: ["marmor12e", "mbody5g", "hairdo402"],
+            },
+            ranger: {
+                armor: 10,
+                attack: 45,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "bow" } },
+                courage: 2,
+                damage_type: "physical",
+                description:
+                    "Rangers are skilled archers. Expert trackers. Their high range makes them very suitable for beginners.",
+                doublehand: { dagger: {}, fist: {} },
+                frequency: 0.4,
+                hp: 160,
+                looks: [
+                    ["marmor5a", { hair: "hairdo106", head: "makeup117" }],
+                    ["mbody2b", { hair: "hairdo206", head: "fmakeup01", makeup: "facemakeup02" }],
+                    ["marmor5a", { hair: "hairdo106", head: "makeup105" }],
+                    ["mbody2b", { hair: "hairdo206", head: "fmakeup03", makeup: "facemakeup02" }],
+                ],
+                lstats: { dex: 1, for: 0.02, int: 0.25, str: 0.2, vit: 0.3 },
+                main_stat: "dex",
+                mainhand: { bow: { speed: -3 }, crossbow: { apiercing: 120, frequency: -36 } },
+                mcourage: 2,
+                mp: 60,
+                mp_cost: 2,
+                offhand: { quiver: {} },
+                output: 100,
+                pcourage: 2,
+                pnresistance: 10,
+                projectile: "momentum",
+                range: 15,
+                resistance: 80,
+                speed: 45,
+                stats: { dex: 10, for: 1, int: 8, str: 3, vit: 2 },
+            },
+            rogue: {
+                armor: 15,
+                attack: 45,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "claw" } },
+                courage: 2,
+                damage_type: "physical",
+                description:
+                    "Rogue's are the ideal assassins. Their invis ability makes them super-fun for PVP. They are fast. Not ideal for beginners.",
+                doublehand: {
+                    bow: { frequency: -30, miss: 30, speed: -10 },
+                    rapier: { frequency: 70 },
+                    short_sword: {},
+                    spear: { frequency: 16, speed: -3 },
+                },
+                frequency: 0.45,
+                fzresistance: 10,
+                hp: 120,
+                looks: [
+                    ["sbody1c", { chin: "beard112", hair: "hairdo522", head: "makeup117" }],
+                    ["sarmor1h", { hair: "hairdo210", head: "fmakeup01" }],
+                    ["sbody1c", { chin: "beard112", hair: "hairdo522", head: "makeup105" }],
+                    ["sarmor1h", { hair: "hairdo210", head: "fmakeup03" }],
+                ],
+                lstats: { dex: 1, for: 0.025, int: 0.2, str: 0.2, vit: 0.3 },
+                main_stat: "dex",
+                mainhand: { dagger: {}, fist: {}, stars: { frequency: 20 } },
+                mcourage: 2,
+                mp: 30,
+                mp_cost: 1,
+                offhand: { dagger: {}, fist: {}, misc_offhand: { speed: -4 }, stars: {} },
+                output: 100,
+                pcourage: 2,
+                projectile: "momentum",
+                range: 15,
+                resistance: 10,
+                speed: 50,
+                stats: { dex: 10, for: 2, int: 3, str: 4, vit: 3 },
+            },
+            warrior: {
+                armor: 20,
+                attack: 60,
+                base_slots: { mainhand: { gift: 1, level: 0, name: "blade" } },
+                brave: true,
+                courage: 5,
+                damage_type: "physical",
+                description:
+                    "Warriors are strong melee characters. Ideal for both PVE and PVP. Can't go wrong with a warrior.",
+                doublehand: {
+                    axe: { frequency: -10, mp_cost: 6, speed: -7 },
+                    basher: { frequency: -12, mp_cost: 12, speed: -12 },
+                    bow: { frequency: -40, miss: 50, speed: -12 },
+                    great_sword: { frequency: -8, mp_cost: 6, speed: -5 },
+                    rapier: { frequency: 60, miss: 2, mp_cost: 4 },
+                    scythe: { frequency: -11, mp_cost: 8, speed: -6 },
+                },
+                frequency: 0.5,
+                hp: 200,
+                looks: [
+                    ["marmor6d", { hair: "hairdo105", head: "makeup117" }],
+                    ["sarmor2d", { hair: "hairdo120", head: "fmakeup01" }],
+                    ["marmor6d", { hair: "hairdo105", head: "makeup105" }],
+                    ["sarmor2d", { hair: "hairdo120", head: "fmakeup03" }],
+                ],
+                lstats: { dex: 0.25, for: 0.025, int: 0.25, str: 1, vit: 0.4 },
+                main_stat: "str",
+                mainhand: {
+                    fist: { frequency: 6 },
+                    mace: { frequency: -8, speed: -4 },
+                    short_sword: {},
+                    spear: { speed: -2 },
+                    sword: { speed: -5 },
+                },
+                mcourage: 2,
+                mp: 20,
+                mp_cost: 1,
+                offhand: {
+                    fist: { frequency: 6 },
+                    mace: { frequency: -6, speed: -5 },
+                    misc_offhand: { frequency: -12, speed: -8 },
+                    shield: { speed: -2 },
+                    short_sword: { speed: -5 },
+                    sword: { speed: -5 },
+                },
+                output: 100,
+                pcourage: 2,
+                phresistance: 10,
+                projectile: "momentum",
+                range: 18,
+                resistance: 2,
+                speed: 55,
+                stats: { dex: 2, for: 2, int: 2, str: 10, vit: 4 },
+                xcx: [],
             },
         },
     }

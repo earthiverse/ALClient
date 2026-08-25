@@ -22,6 +22,7 @@ import type {
     ConditionName,
     CXData,
     EmotionName,
+    EventName,
     GDropItem,
     ItemName,
     MapName,
@@ -1141,11 +1142,7 @@ export type ServerData = {
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
 } & { schedule?: ScheduleData } & {
-    egghunt?: boolean
-    halloween?: boolean
-    holidayseason?: boolean
-    lunarnewyear?: boolean
-    valentines?: boolean
+    [T in EventName]?: boolean
 } & { goobrawl?: ServerInfoDataEvent } & {
     abtesting?:
         | ServerInfoDataEvent

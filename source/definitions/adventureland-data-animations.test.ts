@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 831 (2025-12-23)
+ * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
  * It is used to confirm type correctness
  */
 
@@ -15,6 +15,7 @@ test("G.animations type validation", async () => {
                 scale: 0.75,
                 speed: 280,
             },
+            arrow_hit: { alpha: 0.9, file: "/images/sprites/animations/Slash0Arrow.png", frames: 7, size: 0.8 },
             arrow1: {
                 continuous: true,
                 directional: true,
@@ -22,21 +23,8 @@ test("G.animations type validation", async () => {
                 frames: 4,
                 speed: 400,
             },
-            arrow_hit: {
-                alpha: 0.9,
-                file: "/images/sprites/animations/Slash0Arrow.png",
-                frames: 7,
-                size: 0.8,
-            },
-            block: {
-                file: "/images/sprites/animations/Block.png",
-                frames: 11,
-            },
-            burst: {
-                alpha: 0.7,
-                file: "/images/sprites/animations/Electric.png",
-                frames: 6,
-            },
+            block: { file: "/images/sprites/animations/Block.png", frames: 11 },
+            burst: { alpha: 0.7, file: "/images/sprites/animations/Electric.png", frames: 6 },
             carrow: {
                 continuous: true,
                 directional: true,
@@ -44,15 +32,8 @@ test("G.animations type validation", async () => {
                 frames: 3,
                 speed: 700,
             },
-            confetti: {
-                alpha: 0.4,
-                file: "/images/sprites/animations/confetti2.png",
-                frames: 12,
-            },
-            crackle: {
-                file: "/images/sprites/animations/GlintF.png",
-                frames: 4,
-            },
+            confetti: { alpha: 0.4, file: "/images/sprites/animations/confetti2.png", frames: 12 },
+            crackle: { file: "/images/sprites/animations/GlintF.png", frames: 4 },
             cuarrow: {
                 continuous: true,
                 directional: true,
@@ -90,37 +71,26 @@ test("G.animations type validation", async () => {
                 frames: 6,
                 proportional: true,
             },
-            egg: {
-                file: "/images/sprites/animations/egg_splash.png",
+            egg: { file: "/images/sprites/animations/egg_splash.png", frames: 3 },
+            exchange: { file: "/images/sprites/animations/Consume2.png", frames: 13 },
+            explode_a: { file: "/images/sprites/animations/ExplodeA.png", frames: 12 },
+            explode_b: { file: "/images/sprites/animations/ExplodeB.png", frames: 12 },
+            explode_c: { file: "/images/sprites/animations/ExplodeC.png", frames: 12 },
+            explode_p: { file: "/images/sprites/animations/ExplodeP2.png", frames: 12 },
+            explode_up: { file: "/images/sprites/animations/ExplodeUCS.png", frames: 12 },
+            failure: { file: "/images/sprites/animations/CRed_Spark5.png", frames: 10 },
+            fanknife: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/FanKnife.png?v=1",
                 frames: 3,
+                speed: 560,
             },
-            exchange: {
-                file: "/images/sprites/animations/Consume2.png",
-                frames: 13,
-            },
-            explode_a: {
-                file: "/images/sprites/animations/ExplodeA.png",
-                frames: 12,
-            },
-            explode_b: {
-                file: "/images/sprites/animations/ExplodeB.png",
-                frames: 12,
-            },
-            explode_c: {
-                file: "/images/sprites/animations/ExplodeC.png",
-                frames: 12,
-            },
-            explode_p: {
-                file: "/images/sprites/animations/ExplodeP2.png",
-                frames: 12,
-            },
-            explode_up: {
-                file: "/images/sprites/animations/ExplodeUCS.png",
-                frames: 12,
-            },
-            failure: {
-                file: "/images/sprites/animations/CRed_Spark5.png",
-                frames: 10,
+            fanknife_hit: {
+                alpha: 0.9,
+                file: "/images/sprites/animations/Slash0FanKnife.png?v=1",
+                frames: 7,
+                size: 0.8,
             },
             firearrow: {
                 continuous: true,
@@ -137,20 +107,9 @@ test("G.animations type validation", async () => {
                 frames: 4,
                 speed: 320,
             },
-            flare_blue: {
-                alpha: 0.7,
-                file: "/images/sprites/animations/flare_effect_blue.png",
-                frames: 9,
-            },
-            flare_yellow: {
-                alpha: 0.7,
-                file: "/images/sprites/animations/flare_effect_yellow.png",
-                frames: 9,
-            },
-            fog: {
-                file: "/images/sprites/weather/fog.png",
-                frames: 2,
-            },
+            flare_blue: { alpha: 0.7, file: "/images/sprites/animations/flare_effect_blue.png", frames: 9 },
+            flare_yellow: { alpha: 0.7, file: "/images/sprites/animations/flare_effect_yellow.png", frames: 9 },
+            fog: { file: "/images/sprites/weather/fog.png", frames: 2 },
             frostarrow: {
                 continuous: true,
                 directional: true,
@@ -173,17 +132,8 @@ test("G.animations type validation", async () => {
                 frames: 4,
                 speed: 640,
             },
-            gburst: {
-                alpha: 0.7,
-                file: "/images/sprites/animations/ElectricG.png",
-                frames: 6,
-            },
-            gm: {
-                alpha: 0.8,
-                continuous: true,
-                file: "/images/sprites/animations/Shield_Invincible.png",
-                frames: 9,
-            },
+            gburst: { alpha: 0.7, file: "/images/sprites/animations/ElectricG.png", frames: 6 },
+            gm: { alpha: 0.8, continuous: true, file: "/images/sprites/animations/Shield_Invincible.png", frames: 9 },
             gold: {
                 continuous: true,
                 directional: true,
@@ -192,10 +142,7 @@ test("G.animations type validation", async () => {
                 front: true,
                 speed: 320,
             },
-            gold_anim: {
-                file: "/images/sprites/animations/gold_anim.png",
-                frames: 13,
-            },
+            gold_anim: { file: "/images/sprites/animations/gold_anim.png", frames: 13 },
             hardshell: {
                 alpha: 0.8,
                 aspeed: "slow",
@@ -203,10 +150,7 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/warrior_shield.png",
                 frames: 9,
             },
-            heal: {
-                file: "/images/sprites/animations/ConsumeP.png",
-                frames: 13,
-            },
+            heal: { file: "/images/sprites/animations/ConsumeP.png", frames: 13 },
             heal_projectile: {
                 continuous: true,
                 file: "/images/sprites/animations/healAttack.png",
@@ -221,24 +165,9 @@ test("G.animations type validation", async () => {
                 size: 2,
                 y: -10,
             },
-            icecrack: {
-                alpha: 1,
-                file: "/images/sprites/animations/crackingIce.png",
-                frames: 6,
-                size: 1,
-                y: 2,
-            },
-            invincible: {
-                alpha: 0.8,
-                continuous: true,
-                file: "/images/sprites/animations/Shield1.png",
-                frames: 9,
-            },
-            light: {
-                alpha: 0.7,
-                file: "/images/sprites/animations/Light.png",
-                frames: 11,
-            },
+            icecrack: { alpha: 1, file: "/images/sprites/animations/crackingIce.png", frames: 6, size: 1, y: 2 },
+            invincible: { alpha: 0.8, continuous: true, file: "/images/sprites/animations/Shield1.png", frames: 9 },
+            light: { alpha: 0.7, file: "/images/sprites/animations/Light.png", frames: 11 },
             magic0: {
                 continuous: true,
                 directional: true,
@@ -301,10 +230,7 @@ test("G.animations type validation", async () => {
                 frames: 3,
                 speed: 800,
             },
-            mluck: {
-                file: "/images/sprites/animations/Consume0.png",
-                frames: 13,
-            },
+            mluck: { file: "/images/sprites/animations/Consume0.png", frames: 13 },
             party_heal: {
                 alpha: 1,
                 aspeed: "slow",
@@ -335,10 +261,7 @@ test("G.animations type validation", async () => {
                 scale: 0.75,
                 speed: 300,
             },
-            rain: {
-                file: "/images/sprites/weather/wsheet_rain1_1.png",
-                frames: 4,
-            },
+            rain: { file: "/images/sprites/weather/wsheet_rain1_1.png", frames: 4 },
             reflection: {
                 alpha: 0.8,
                 aspeed: "slow",
@@ -353,10 +276,7 @@ test("G.animations type validation", async () => {
                 frames: 12,
                 speeding: true,
             },
-            rspeed: {
-                file: "/images/sprites/animations/ConsumeR.png",
-                frames: 13,
-            },
+            rspeed: { file: "/images/sprites/animations/ConsumeR.png", frames: 13 },
             slash: {
                 continuous: true,
                 directional: true,
@@ -365,14 +285,8 @@ test("G.animations type validation", async () => {
                 front: true,
                 speed: 420,
             },
-            slash0: {
-                file: "/images/sprites/animations/Slash0.png",
-                frames: 7,
-            },
-            slash1: {
-                file: "/images/sprites/animations/Slash1.png",
-                frames: 7,
-            },
+            slash0: { file: "/images/sprites/animations/Slash0.png", frames: 7 },
+            slash1: { file: "/images/sprites/animations/Slash1.png", frames: 7 },
             slash2: {
                 alpha: 0.9,
                 aspeed: "fast",
@@ -380,14 +294,8 @@ test("G.animations type validation", async () => {
                 frames: 7,
                 size: 0.75,
             },
-            slash3: {
-                file: "/images/sprites/animations/Slash3.png",
-                frames: 7,
-            },
-            snow: {
-                file: "/images/sprites/weather/wsheet_snow_1.png",
-                frames: 4,
-            },
+            slash3: { file: "/images/sprites/animations/Slash3.png", frames: 7 },
+            snow: { file: "/images/sprites/weather/wsheet_snow_1.png", frames: 4 },
             snowball: {
                 continuous: true,
                 directional: true,
@@ -404,29 +312,11 @@ test("G.animations type validation", async () => {
                 frames: 4,
                 y: -10,
             },
-            snowflake: {
-                file: "/images/sprites/animations/snowflake.png",
-                frames: 7,
-            },
-            spark0: {
-                file: "/images/sprites/animations/Spark0.png",
-                frames: 10,
-            },
-            starkiller: {
-                alpha: 0.8,
-                aspeed: "mild",
-                file: "/images/sprites/animations/attack3.png",
-                frames: 12,
-            },
-            stunned: {
-                alpha: 0.4,
-                file: "/images/sprites/animations/NuclearA1.png",
-                frames: 6,
-            },
-            success: {
-                file: "/images/sprites/animations/CGreen_Spark3.png",
-                frames: 10,
-            },
+            snowflake: { file: "/images/sprites/animations/snowflake.png", frames: 7 },
+            spark0: { file: "/images/sprites/animations/Spark0.png", frames: 10 },
+            starkiller: { alpha: 0.8, aspeed: "mild", file: "/images/sprites/animations/attack3.png", frames: 12 },
+            stunned: { alpha: 0.4, file: "/images/sprites/animations/NuclearA1.png", frames: 6 },
+            success: { file: "/images/sprites/animations/CGreen_Spark3.png", frames: 10 },
             superarrow: {
                 continuous: true,
                 directional: true,
@@ -435,11 +325,7 @@ test("G.animations type validation", async () => {
                 scale: 1.5,
                 speed: 600,
             },
-            supershot: {
-                alpha: 0.9,
-                file: "/images/sprites/animations/Slash0Super.png",
-                frames: 7,
-            },
+            supershot: { alpha: 0.9, file: "/images/sprites/animations/Slash0Super.png", frames: 7 },
             tangle: {
                 alpha: 1,
                 aspeed: "slow",
@@ -448,11 +334,7 @@ test("G.animations type validation", async () => {
                 frames: 6,
                 proportional: true,
             },
-            taunt: {
-                alpha: 1,
-                file: "/images/sprites/animations/Puff.png",
-                frames: 7,
-            },
+            taunt: { alpha: 1, file: "/images/sprites/animations/Puff.png", frames: 7 },
             tiling_burst: {
                 alpha: 1,
                 fade: true,
@@ -474,12 +356,7 @@ test("G.animations type validation", async () => {
                 frames: 1,
                 tiling: true,
             },
-            transport: {
-                alpha: 0.8,
-                continuous: true,
-                file: "/images/sprites/animations/Teleport2.png",
-                frames: 9,
-            },
+            transport: { alpha: 0.8, continuous: true, file: "/images/sprites/animations/Teleport2.png", frames: 9 },
             typing: {
                 alpha: 1,
                 aspeed: "slow",
@@ -494,6 +371,20 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/wandy.png?v=2",
                 frames: 3,
                 speed: 560,
+            },
+            worldroot_impact: {
+                alpha: 0.9,
+                aspeed: "mild",
+                file: "/images/sprites/animations/WorldrootImpact.png?v=1",
+                frames: 12,
+            },
+            worldroot_projectile: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/WorldrootProjectile.png?v=1",
+                framefps: 9,
+                frames: 4,
+                speed: 400,
             },
             wslash: {
                 continuous: true,
