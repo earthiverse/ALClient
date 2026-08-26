@@ -1744,7 +1744,7 @@ export class Character extends Observer {
     if (gItem?.e === undefined) throw new Error(`Item ${item.name} is not exchangeable`);
     if (gItem.e > (item.q ?? 1)) throw new Error(`Insufficient quantity to exchange (${item.q}/${gItem.e})`);
 
-    const startedPromise = new Promise<ExchangeInProgressGRDataObject>((resolve, reject) => {
+    const exchangeStarted = new Promise<ExchangeInProgressGRDataObject>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_response", responseHandler);
@@ -1770,11 +1770,12 @@ export class Character extends Observer {
     });
 
     s.emit("exchange", { item_num: itemPosition });
-    if (options.resolveOn === "start") return startedPromise;
+    if (options.resolveOn === "start") return exchangeStarted;
+    await exchangeStarted;
 
     if (this.q.exchange?.ms === undefined) throw new Error("Missing `q.exchange`");
 
-    const finishedPromise = new Promise<string>((resolve, reject) => {
+    const exchangeFinished = new Promise<string>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("game_log", responseHandler);
@@ -1802,7 +1803,7 @@ export class Character extends Observer {
       s.on("game_log", responseHandler);
     });
 
-    return finishedPromise;
+    return exchangeFinished;
   }
 
   /**

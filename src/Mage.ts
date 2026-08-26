@@ -95,6 +95,7 @@ export class Mage extends Character {
 
     s.emit("skill", { name: "blink", x: blinkX, y: blinkY });
     if (options.resolveOn === "start") return blinkStarted;
+    await blinkStarted;
 
     const blinkFinished = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
