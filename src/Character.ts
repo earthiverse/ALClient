@@ -37,6 +37,7 @@ import type {
   ServerToClient_new_map,
   ServerToClient_player,
   ServerToClient_start,
+  ServerToClient_ui,
   SkillKey,
   SkillSuccessGRDataObject,
   SlotType,
@@ -1496,6 +1497,107 @@ export class Character extends Observer {
   }
 
   /**
+   * Buys an item from a merchant's trade slot.
+   *
+   * @param id The character ID of the merchant
+   * @param slot The trade slot on the merchant
+   * @param rid The unique trade item ID
+   * @param quantity Number of items to buy (default: 1)
+   * @returns The item bought
+   */
+  public async buyFromMerchant(
+    id: string,
+    slot: TradeSlotType,
+    rid: string,
+    quantity = 1,
+  ): Promise<ItemInfo & { price: number }> {
+    if (quantity <= 0) throw new Error(`We can not buy a quantity of ${quantity}.`);
+
+    const merchant = this.characters.get(id);
+    if (!merchant) throw new Error(`We can not see ${id} nearby.`);
+    if (this.getDistanceTo(merchant) > 400) throw new Error(`We are too far away from ${id} to buy from.`);
+
+    const item = merchant.slots?.[slot];
+    if (!item) throw new Error(`We could not find an item in slot ${slot} on ${id}.`);
+    if (item.b === true) throw new Error("The item is not for sale, this merchant is *buying* that item.");
+    if (item.rid !== rid) throw new Error(`The RIDs do not match (item: ${item.rid}, supplied: ${rid})`);
+
+    if (item.q === undefined && quantity !== 1) {
+      console.warn("We are only going to buy 1, as there is only 1 available.");
+      quantity = 1;
+    } else if (item.q !== undefined && quantity > item.q) {
+      console.warn(`We can't buy ${quantity}, we can only buy ${item.q}, so we're doing that.`);
+      quantity = item.q;
+    }
+
+    if (this.gold < item.price * quantity) {
+      if (this.gold < item.price) {
+        throw new Error(`We don't have enough gold. It costs ${item.price}, but we only have ${this.gold}`);
+      }
+
+      // Determine how many we *can* buy.
+      const buyableQuantity = Math.floor(this.gold / item.price);
+      console.warn(
+        `We don't have enough gold to buy ${quantity}, we can only buy ${buyableQuantity}, so we're doing that.`,
+      );
+      quantity = buyableQuantity;
+    }
+
+    const s = this.socket;
+
+    const itemBought = new Promise<ItemInfo & { price: number }>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("ui", buyCheck);
+        s.off("game_response", responseHandler);
+      };
+
+      const buyCheck = (data: ServerToClient_ui) => {
+        if (data.type === "+$$" && data.seller === id && data.buyer === this.id && data.slot === slot) {
+          cleanup();
+          resolve(data.item);
+        }
+      };
+
+      const responseHandler = (data: ServerToClient_game_response) => {
+        const BUY_ERRORS: Record<string, string> = {
+          cant_in_bank: "Cannot trade while in the bank.",
+          distance: `We are too far away from ${id} to buy from.`,
+          gold_not_enough: "We don't have enough gold.",
+          hmm: "Cannot trade with yourself.",
+          insufficient_q: "Merchant does not have enough of that item.",
+          invalid: "Invalid trade slot.",
+          item_gone: "The item is no longer available.",
+          item_placeholder: "Item is a placeholder.",
+          no_space: "Our inventory is full.",
+          seller_gone: `We can no longer see ${id}.`,
+          sneaky: "The item is not available for purchase.",
+          trade_get_closer: `We are too far away from ${id} to buy from.`,
+        };
+
+        if (typeof data === "string" && BUY_ERRORS[data] !== undefined) {
+          cleanup();
+          reject(new Error(BUY_ERRORS[data]));
+        } else if (isRelevantGameResponse(data, "trade_buy") && isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("ui", buyCheck);
+      s.on("game_response", responseHandler);
+    });
+
+    s.emit("trade_buy", { id, q: quantity.toString(), rid, slot });
+    return itemBought;
+  }
+
+  /**
    * Calculates the compound chance
    */
   public async compound(
@@ -2421,6 +2523,109 @@ export class Character extends Observer {
 
     s.emit("sell", { num, quantity });
     return promise;
+  }
+
+  /**
+   * Sells an item to a merchant's trade wishlist slot.
+   *
+   * @param id The character ID of the merchant
+   * @param slot The trade slot on the merchant
+   * @param rid The unique trade item ID
+   * @param q Number of items to sell (default: 1)
+   */
+  public async sellToMerchant(id: string, slot: TradeSlotType, rid: string, q = 1): Promise<void> {
+    if (q <= 0) throw new Error(`We can not sell a quantity of ${q}.`);
+
+    // Check if the player buying the item is still valid
+    const player = this.characters.get(id);
+    if (!player) throw new Error(`${id} is not nearby.`);
+    if (this.getDistanceTo(player) > 400) throw new Error(`We are too far away from ${id} to sell to.`);
+
+    // Check if the slot is valid
+    const item = player.slots?.[slot];
+    if (!item) throw new Error(`${id} has no item in slot ${slot}.`);
+    if (item.b !== true) throw new Error(`${id}'s slot ${slot} is not a buy request.`);
+    if (item.rid !== rid) throw new Error(`The RIDs do not match (item: ${item.rid}, supplied: ${rid})`);
+
+    if (item.q !== undefined && q > item.q) {
+      console.warn(`Merchant only wants ${item.q}, so we can only sell ${item.q}.`);
+      q = item.q;
+    }
+
+    // Check if we have the item they are buying
+    const ourItemIndex = this._items?.findIndex(
+      (i) =>
+        i !== null &&
+        i !== undefined &&
+        i.name === item.name &&
+        (item.level === undefined || i.level === item.level) &&
+        i.l === undefined,
+    );
+    if (ourItemIndex === undefined || ourItemIndex === -1) {
+      throw new Error(`We do not have a ${item.name} to sell to ${id}.`);
+    }
+
+    const ourItem = this._items![ourItemIndex]!;
+    const ourQuantity = ourItem.q ?? 1;
+    if (q > ourQuantity) {
+      console.warn(`We only have ${ourQuantity}, so we're selling ${ourQuantity}.`);
+      q = ourQuantity;
+    }
+
+    const s = this.socket;
+
+    const sold = new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        clearTimeout(timeout);
+        s.off("ui", soldCheck);
+        s.off("game_response", failCheck);
+      };
+
+      const soldCheck = (data: ServerToClient_ui) => {
+        if (data.type === "+$$" && data.seller === this.id && data.buyer === id && data.slot === slot) {
+          cleanup();
+          resolve();
+        }
+      };
+
+      const failCheck = (data: ServerToClient_game_response) => {
+        const SELL_ERRORS: Record<string, string> = {
+          buyer_gold: `${id} doesn't have enough gold to buy this item.`,
+          buyer_gone: `${id} is no longer nearby.`,
+          cant_in_bank: "Cannot trade while in the bank.",
+          distance: `We are too far away from ${id} to sell to.`,
+          dont_have_enough: "Requested quantity exceeds available wishlist amount.",
+          hmm: "Cannot trade with yourself.",
+          invalid: "Invalid trade slot.",
+          item_blocked: "Item is blocked from trading.",
+          item_gone: `${id}'s buy request is no longer available.`,
+          item_placeholder: "Item is a placeholder.",
+          no_item: "We do not have the requested item.",
+          sneaky: `${id}'s slot ${slot} is not a buy request.`,
+          trade_bspace: `${id} doesn't have enough inventory space to receive the item.`,
+          trade_get_closer: `We are too far away from ${id} to sell to.`,
+        };
+
+        if (typeof data === "string" && SELL_ERRORS[data] !== undefined) {
+          cleanup();
+          reject(new Error(SELL_ERRORS[data]));
+        } else if (isRelevantGameResponse(data, "trade_sell") && isFailedGameResponse(data)) {
+          cleanup();
+          reject(new Error(data.response));
+        }
+      };
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+
+      s.on("ui", soldCheck);
+      s.on("game_response", failCheck);
+    });
+
+    s.emit("trade_sell", { id, q, rid, slot });
+    return sold;
   }
 
   // TODO: Untested
