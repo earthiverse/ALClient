@@ -946,51 +946,65 @@ export class Character extends Observer {
         throw new Error(`We can't access ${pack} on ${this.map}.`);
     }
 
-    // Look for a pack
-    let packFrom: number;
-    let packTo: number;
-    if (bankPackNum !== undefined) {
-      packFrom = bankPackNum;
-      packTo = bankPackNum;
-    } else if (this.map == "bank") {
-      packFrom = 0;
-      packTo = 7;
-    } else if (this.map == "bank_b") {
-      packFrom = 8;
-      packTo = 23;
-    } else if (this.map == "bank_u") {
-      packFrom = 24;
-      packTo = 47;
-    } else {
-      throw new Error(`Unknown bank map: ${this.map}`);
-    }
+    if (str === undefined) {
+      // Look for a pack
+      let packFrom: number;
+      let packTo: number;
+      if (bankPackNum !== undefined) {
+        packFrom = bankPackNum;
+        packTo = bankPackNum;
+      } else if (this.map == "bank") {
+        packFrom = 0;
+        packTo = 7;
+      } else if (this.map == "bank_b") {
+        packFrom = 8;
+        packTo = 23;
+      } else if (this.map == "bank_u") {
+        packFrom = 24;
+        packTo = 47;
+      } else {
+        throw new Error(`Unknown bank map: ${this.map}`);
+      }
 
-    const numStackable = this.game.G.items[item.name].s;
+      const numStackable = this.game.G.items[item.name].s;
+      let emptyPack: BankPackTypeItemsOnly | undefined = undefined;
+      let emptySlot: number | undefined = undefined;
 
-    packSearch: for (let packNum = packFrom; packNum <= packTo; packNum++) {
-      const packName = `items${packNum}` as BankPackTypeItemsOnly;
-      const packItems = this._bank[packName];
-      if (packItems === undefined) continue; // Not unlocked
+      packSearch: for (let packNum = packFrom; packNum <= packTo; packNum++) {
+        const packName = `items${packNum}` as BankPackTypeItemsOnly;
+        const packItems = this._bank[packName];
+        if (packItems === undefined) continue; // Not unlocked
 
-      for (let slotNum = 0; slotNum < packItems.length; slotNum++) {
-        const packItem = packItems[slotNum];
-        if (packItem && packItem.name !== item.name) continue; // Occupied by a different item
+        for (let slotNum = 0; slotNum < packItems.length; slotNum++) {
+          const packItem = packItems[slotNum];
 
-        if (!packItem) {
-          // Empty bank slot, this is acceptable
-          pack = packName;
-          str = slotNum;
-          if (numStackable === undefined) {
-            break packSearch; // Our item is not stackable (we found a good spot)
+          if (!packItem) {
+            if (numStackable === undefined) {
+              pack = packName;
+              str = slotNum;
+              break packSearch;
+            } else if (emptyPack === undefined && emptySlot === undefined) {
+              emptyPack = packName;
+              emptySlot = slotNum;
+            }
+          } else if (
+            numStackable !== undefined &&
+            packItem.name === item.name &&
+            (packItem.q ?? 1) + (item.q ?? 1) <= numStackable
+          ) {
+            pack = packName;
+            str = -1;
+            break packSearch;
           }
-          continue;
         }
+      }
 
-        if (numStackable !== undefined && (packItem.q ?? 1) + (item.q ?? 1) < numStackable) {
-          // Same item, and we can stack on top of it (we found a good spot)
-          pack = packName;
-          str = slotNum;
-          break packSearch;
+      if (pack === undefined || str === undefined) {
+        if (emptyPack !== undefined && emptySlot !== undefined) {
+          pack = emptyPack;
+          str = emptySlot;
+        } else {
+          throw new Error(`Bank is full. There is nowhere to place '${item.name}'.`);
         }
       }
     }
