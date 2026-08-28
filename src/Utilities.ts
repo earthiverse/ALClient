@@ -169,6 +169,20 @@ export class Utilities {
    * @returns
    */
   public static getMonsterSpawns(g: GData, monster: MonsterKey, options: { map?: MapKey } = {}): Required<IPosition>[] {
+    // Special cases for special monsters
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+    switch (monster) {
+      case "goldenbat":
+        monster = "bat";
+        break;
+      case "goldenbot":
+        monster = "sparkbot";
+        break;
+      case "snowman":
+        monster = "arcticbee";
+        break;
+    }
+
     const spawns: Required<IPosition>[] = [];
     for (const [mapKey, gMap] of Object.entries(g.maps)) {
       if (options.map !== undefined && mapKey !== options.map) continue; // We're looking for a specific map
