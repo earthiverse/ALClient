@@ -2330,7 +2330,7 @@ export class Character extends Observer {
   /**
    * Closes your merchant stand
    */
-  public async closeMerchantStand(): Promise<void> {
+  public async closeStand(): Promise<void> {
     if (this.stand === undefined) return; // Stand is already closed
 
     const s = this.socket;
@@ -2375,7 +2375,7 @@ export class Character extends Observer {
    *
    * @param num Position of the stand in your inventory. If not provided, it will locate a stand item automatically.
    */
-  public async openMerchantStand(num?: number): Promise<void> {
+  public async openStand(num?: number): Promise<void> {
     if (this.stand !== undefined) return; // Stand is already open
 
     if (num === undefined) {
