@@ -79,9 +79,9 @@ export class Mage extends Character {
       const responseHandler = (data: ServerToClient_game_response) => {
         if (!isRelevantGameResponse(data, "blink")) return;
         if (isFailedGameResponse(data)) {
+          cleanup();
           reject(new Error(data.response));
         }
-        cleanup();
       };
 
       const timeout = setTimeout(() => {
@@ -100,13 +100,22 @@ export class Mage extends Character {
     const blinkFinished = new Promise<void>((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timeout);
+        s.off("game_response", responseHandler);
         s.off("new_map", newMapHandler);
+        s.off("player", playerHandler);
       };
 
       const newMapHandler = (data: ServerToClient_new_map) => {
         if (data.effect === "blink") {
           cleanup();
           resolve();
+        }
+      };
+
+      const playerHandler = (data: ServerToClient_player) => {
+        if (!data.s.blink) {
+          cleanup();
+          reject(new Error("interrupted"));
         }
       };
 
@@ -125,6 +134,7 @@ export class Mage extends Character {
 
       s.on("game_response", responseHandler);
       s.on("new_map", newMapHandler);
+      s.on("player", playerHandler);
     });
 
     return blinkFinished;

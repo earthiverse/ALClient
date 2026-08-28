@@ -2179,6 +2179,8 @@ export class Character extends Observer {
               //       and skip the move
               await (this as unknown as Mage).blink(lastNode.x, lastNode.y);
               await this.move(lastNode.x, lastNode.y);
+              i = lastNodeIndexOnMap;
+              continue;
             } catch {
               // Suppress blink failure
             }
