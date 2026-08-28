@@ -1038,8 +1038,11 @@ export class Character extends Observer {
    * @returns
    */
   public getTimeout(skill: SkillKey): number {
-    const ms = this.nextSkill.get(skill);
-    return ms === undefined ? 0 : Math.max(0, ms - Date.now());
+    const nextSkill = this.nextSkill.get(skill) ?? 0;
+    const share = this.game.G.skills[skill]?.share;
+    const nextSharedSkill = share ? (this.nextSkill.get(share) ?? 0) : 0;
+    const next = Math.max(nextSkill, nextSharedSkill);
+    return Math.max(0, next - Date.now());
   }
 
   public hasItem(item: Partial<ItemInfo>): boolean {
@@ -1362,6 +1365,12 @@ export class Character extends Observer {
   public setNextSkill(skill: SkillKey, when: number, emit = false) {
     this.nextSkill.set(skill, when);
     if (emit) CharacterEventBus.emit("next_skill_set", this, skill, when);
+
+    const share = this.game.G.skills[skill]?.share;
+    if (share) {
+      this.nextSkill.set(share, when);
+      if (emit) CharacterEventBus.emit("next_skill_set", this, share, when);
+    }
   }
 
   /**
