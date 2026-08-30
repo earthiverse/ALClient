@@ -2041,7 +2041,7 @@ export class Character extends Observer {
   public move(x: number, y: number): Promise<void> {
     const s = this.socket;
 
-    if (this.going_x === x && this.going_y === y) return Promise.resolve(); // We're already moving there
+    if (this._going_x === x && this._going_y === y) return Promise.resolve(); // We're already moving there
     if (!this.canMove()) return Promise.reject(new Error("We can't move"));
 
     this._going_x = x;
@@ -2051,10 +2051,13 @@ export class Character extends Observer {
 
     s.emit("move", { x: this.x, y: this.y, going_x: this.going_x, going_y: this.going_y, m: this._m });
     return new Promise<void>((resolve, reject) => {
+      let timeout: ReturnType<typeof setTimeout>;
+
       const cleanup = () => {
         clearTimeout(timeout);
         s.off("new_map", problemHandler);
         s.off("correction", problemHandler);
+        s.off("player", playerHandler);
       };
 
       const problemHandler = () => {
@@ -2062,16 +2065,44 @@ export class Character extends Observer {
         reject(new Error("Move was cancelled"));
       };
 
-      const timeout = setTimeout(
+      const playerHandler = (data: ServerToClient_player) => {
+        if (data.rip) {
+          cleanup();
+          reject(new Error("Move was cancelled"));
+          return;
+        }
+
+        if (data.x === x && data.y === y) {
+          cleanup();
+          resolve();
+          return;
+        }
+
+        if (data.going_x === x && data.going_y === y) {
+          const currentSpeed = data.speed ?? this.speed;
+          const remainingDistance = Math.hypot(x - data.x, y - data.y);
+          clearTimeout(timeout);
+          timeout = setTimeout(
+            () => {
+              cleanup();
+              resolve();
+            },
+            Math.ceil((1000 * remainingDistance) / (currentSpeed || 1)),
+          );
+        }
+      };
+
+      timeout = setTimeout(
         () => {
           cleanup();
           resolve();
         },
-        Math.ceil((1000 * distance) / this.speed),
+        Math.ceil((1000 * distance) / (this.speed || 1)),
       );
 
       s.on("new_map", problemHandler);
       s.on("correction", problemHandler);
+      s.on("player", playerHandler);
     });
   }
 
