@@ -2203,7 +2203,7 @@ export class Character extends Observer {
     path ??= pathfinder.getPath(this.map, this.x, this.y, map, x, y, this.speed);
 
     if (!Array.isArray(path))
-      throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${map},${arg2},${y}`);
+      throw new Error(`Unable to find path from ${this.map},${this.x},${this.y} to ${map},${x},${y}`);
 
     for (let i = 0; i < path.length; i++) {
       // Check if we can take a shortcut
