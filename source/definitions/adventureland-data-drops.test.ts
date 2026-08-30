@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 5748 (2026-08-30)
  * It is used to confirm type correctness
  */
 
@@ -1719,7 +1719,7 @@ test("G.drops type validation", async () => {
                 [1, "bronzenugget"],
                 [0.5, "goldnugget"],
                 [0.1, "platinumnugget"],
-                [0.1, "emotionjar", 1, "hearts_single"],
+                [0.1, "cxjar", 1, "hearts_single"],
             ],
             m2: [
                 [100, "empty"],
@@ -2346,7 +2346,7 @@ test("G.drops type validation", async () => {
                     [0.2, "open", "eastereggs"],
                     [0.01, "goldenegg"],
                     [0.01, "open", "basketofeggs"],
-                    [0.001, "emotionjar", 1, "drop_egg"],
+                    [0.001, "cxjar", 1, "drop_egg"],
                 ],
                 wolf: [[0.025, "leather"]],
                 wolfie: [[0.02, "leather"]],

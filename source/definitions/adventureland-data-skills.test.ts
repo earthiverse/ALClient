@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5202 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 5748 (2026-08-30)
  * It is used to confirm type correctness
  */
 
@@ -286,9 +286,17 @@ test("G.skills type validation", async () => {
                 projectile: "burst",
                 type: "monster",
             },
+            drop_egg: {
+                cooldown: 2000,
+                emote: "drop_egg",
+                explanation: "An egg appears. Best not to ask.",
+                name: "Drop Egg",
+                skin: "whiteegg",
+                type: "skill",
+            },
             emotion: {
-                explanation: "Show a random emotion you've unlocked!",
-                name: "Emotion",
+                explanation: "Show a random Emote you've unlocked!",
+                name: "Random Emote",
                 skin: "run_emotion",
                 type: "utility",
             },
@@ -431,6 +439,14 @@ test("G.skills type validation", async () => {
                 use_range: true,
             },
             healing: { explanation: "Heals an ally or self", name: "Healing", type: "monster" },
+            hearts_single: {
+                cooldown: 2000,
+                emote: "hearts_single",
+                explanation: "A little love goes a long way.",
+                name: "Rising Hearts",
+                skin: "emptyheart",
+                type: "skill",
+            },
             highfive: {
                 cooldown: 20000,
                 emote: "highfive",

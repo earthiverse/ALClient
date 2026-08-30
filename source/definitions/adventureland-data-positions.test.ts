@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 5748 (2026-08-30)
  * It is used to confirm type correctness
  */
 
@@ -199,7 +199,6 @@ test("G.positions type validation", async () => {
             emote_spotlight: ["rawitems", 17, 0],
             emote_superjump: ["rawitems", 14, 0],
             emote_wiggle: ["rawitems", 10, 0],
-            emotionjar: ["", 9, 62],
             emptyheart: ["", 13, 39],
             emptyjar: ["", 14, 35],
             epyjamas: ["", 2, 43],

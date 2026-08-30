@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 5748 (2026-08-30)
  * It is used to confirm type correctness
  */
 
@@ -9,7 +9,7 @@ test("G.multipliers type validation", async () => {
     const G_multipliers: Pick<GData, "multipliers"> = {
         multipliers: {
             buy_to_sell: 0.6,
-            extra_shells: 20,
+            extra_shells: 0,
             lostandfound_mult: 4,
             secondhands_cash_mult: 3,
             secondhands_mult: 2,
