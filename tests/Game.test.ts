@@ -127,7 +127,7 @@ test("`preparePathfinder()` works, and pathfinder works as expected", async () =
   // Test entering instance (should use `enter`)
   const caveToCrypt = pathfinder.getPath("cave", -200, -1300, "crypt", 0, 0);
   expect(caveToCrypt).toBeArray();
-  expect(caveToCrypt!.some((node) => node.method === "enter")).toBe(true);
+  expect(caveToCrypt!.some((node) => node.method === "enter" && node.key === "cryptkey")).toBe(true);
 
   // Final destination should be moved to
   const mainMovement = pathfinder.getPath("main", 0, 0, "main", 99, 9);
