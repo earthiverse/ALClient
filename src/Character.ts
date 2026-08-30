@@ -3022,11 +3022,10 @@ export class Character extends Observer {
         }
       };
 
-      const timeoutMs = Configuration.SOCKET_EMIT_TIMEOUT_MS + this.q.upgrade!.ms;
       const timeout = setTimeout(() => {
         cleanup();
-        reject(new Error(`Timeout (${timeoutMs}ms)`));
-      }, timeoutMs);
+        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
+      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
 
       s.on("game_response", gameResponseHandler);
       s.on("player", playerHandler);
@@ -3069,10 +3068,11 @@ export class Character extends Observer {
         }
       };
 
+      const timeoutMs = Configuration.SOCKET_EMIT_TIMEOUT_MS + this.q.upgrade!.ms;
       const timeout = setTimeout(() => {
         cleanup();
-        reject(new Error(`Timeout (${Configuration.SOCKET_EMIT_TIMEOUT_MS}ms)`));
-      }, Configuration.SOCKET_EMIT_TIMEOUT_MS);
+        reject(new Error(`Timeout (${timeoutMs}ms)`));
+      }, timeoutMs);
 
       s.on("player", playerHandler);
     });
