@@ -61,6 +61,7 @@ import type {
     SkillTimeoutData,
     TavernEventData,
     BuySuccessGRDataObject,
+    EmoteSkillName,
     ProjectileSkillGRDataObject,
     GameResponseDataObject,
     ChannelInfo,
@@ -1096,6 +1097,15 @@ export class Character extends Observer implements CharacterData {
 
         const response = this.getResponsePromise("attack") as Promise<ProjectileSkillGRDataObject>
         this.socket.emit("attack", { id: id })
+        return response
+    }
+
+    // NOTE: UNTESTED
+    public async boop(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [boop].")
+
+        const response = this.getResponsePromise("boop")
+        this.socket.emit("skill", { id: target, name: "boop" })
         return response
     }
 
@@ -2654,6 +2664,52 @@ export class Character extends Observer implements CharacterData {
         return donated
     }
 
+    // NOTE: UNTESTED
+    public async dropEgg(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [dropEgg].")
+
+        const response = this.getResponsePromise("drop_egg")
+        this.socket.emit("skill", { name: "drop_egg" })
+        return response
+    }
+
+    // NOTE: UNTESTED
+    public async emote(name: EmoteSkillName, target?: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [emote].")
+
+        switch (name) {
+            case "boop":
+                if (!target) throw new Error("Target is required for boop.")
+                return this.boop(target)
+            case "drop_egg":
+                return this.dropEgg()
+            case "fart":
+                return this.fart()
+            case "headwiggle":
+                return this.headWiggle()
+            case "hearts_single":
+                return this.heartsSingle()
+            case "highfive":
+                if (!target) throw new Error("Target is required for highfive.")
+                return this.highFive(target)
+            case "joy":
+                return this.joy()
+            case "jump":
+                return this.jump()
+            case "mirrordance":
+                return this.mirrorDance()
+            case "pocketstorm":
+                return this.pocketStorm()
+            case "spotlight":
+                if (!target) throw new Error("Target is required for spotlight.")
+                return this.spotlight(target)
+            case "superjump":
+                return this.superJump()
+            case "wiggle":
+                return this.wiggle()
+        }
+    }
+
     /**
      * Use this function to enter dungeons.
      *
@@ -2876,6 +2932,15 @@ export class Character extends Observer implements CharacterData {
             this.socket.on("player", completeCheck)
             this.socket.on("game_log", logCheck)
         })
+    }
+
+    // NOTE: UNTESTED
+    public async fart(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [fart].")
+
+        const response = this.getResponsePromise("fart")
+        this.socket.emit("skill", { name: "fart" })
+        return response
     }
 
     public async finishMonsterHuntQuest(): Promise<void> {
@@ -3848,6 +3913,33 @@ export class Character extends Observer implements CharacterData {
         return gotTradeHistoryData
     }
 
+    // NOTE: UNTESTED
+    public async headWiggle(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [headWiggle].")
+
+        const response = this.getResponsePromise("headwiggle")
+        this.socket.emit("skill", { name: "headwiggle" })
+        return response
+    }
+
+    // NOTE: UNTESTED
+    public async heartsSingle(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [heartsSingle].")
+
+        const response = this.getResponsePromise("hearts_single")
+        this.socket.emit("skill", { name: "hearts_single" })
+        return response
+    }
+
+    // NOTE: UNTESTED
+    public async highFive(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [highFive].")
+
+        const response = this.getResponsePromise("highfive")
+        this.socket.emit("skill", { id: target, name: "highfive" })
+        return response
+    }
+
     /**
      * If we are disabled, we cannot move or attack
      * @returns If we are disabled
@@ -3890,6 +3982,24 @@ export class Character extends Observer implements CharacterData {
         const response = this.getResponsePromise("join")
         this.socket.emit("join", { name: eventName })
         return await response
+    }
+
+    // NOTE: UNTESTED
+    public async joy(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [joy].")
+
+        const response = this.getResponsePromise("joy")
+        this.socket.emit("skill", { name: "joy" })
+        return response
+    }
+
+    // NOTE: UNTESTED
+    public async jump(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [jump].")
+
+        const response = this.getResponsePromise("jump")
+        this.socket.emit("skill", { name: "jump" })
+        return response
     }
 
     /**
@@ -4124,6 +4234,15 @@ export class Character extends Observer implements CharacterData {
         return moveFinished
     }
 
+    // NOTE: UNTESTED
+    public async mirrorDance(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [mirrorDance].")
+
+        const response = this.getResponsePromise("mirrordance")
+        this.socket.emit("skill", { name: "mirrordance" })
+        return response
+    }
+
     public async openChest(id: string): Promise<ChestOpenedData> {
         if (!this.ready) throw new Error("We aren't ready yet [openChest].")
         if (this.s.invis) throw new Error("You can't loot chests while invisible")
@@ -4220,6 +4339,15 @@ export class Character extends Observer implements CharacterData {
         this.socket.emit("bet", { dir: dir, gold: bet, num: num, type: "dice" })
 
         return playedSlots
+    }
+
+    // NOTE: UNTESTED
+    public async pocketStorm(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [pocketStorm].")
+
+        const response = this.getResponsePromise("pocketstorm")
+        this.socket.emit("skill", { name: "pocketstorm" })
+        return response
     }
 
     public async regenHP(): Promise<void> {
@@ -5203,6 +5331,15 @@ export class Character extends Observer implements CharacterData {
         return split
     }
 
+    // NOTE: UNTESTED
+    public async spotlight(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [spotlight].")
+
+        const response = this.getResponsePromise("spotlight")
+        this.socket.emit("skill", { id: target, name: "spotlight" })
+        return response
+    }
+
     /**
      * Starts "Konami" mode.
      *
@@ -5259,6 +5396,15 @@ export class Character extends Observer implements CharacterData {
         if (!this.c.town) return // We're not warping to town
 
         this.socket.emit("stop", { action: "town" })
+    }
+
+    // NOTE: UNTESTED
+    public async superJump(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [superJump].")
+
+        const response = this.getResponsePromise("superjump")
+        this.socket.emit("skill", { name: "superjump" })
+        return response
     }
 
     /**
@@ -5808,6 +5954,15 @@ export class Character extends Observer implements CharacterData {
 
         if (!startedWarp) this.socket.emit("town")
         return warpComplete
+    }
+
+    // NOTE: UNTESTED
+    public async wiggle(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [wiggle].")
+
+        const response = this.getResponsePromise("wiggle")
+        this.socket.emit("skill", { name: "wiggle" })
+        return response
     }
 
     public async withdrawGold(gold: number): Promise<void> {

@@ -1341,6 +1341,23 @@ export type ServerToClientEvents = {
 
 export type PaladinAura = "bulwark" | "sanctuary" | "warding" | "zeal"
 
+export type EmoteSkillName = Extract<
+    SkillName,
+    | "boop"
+    | "drop_egg"
+    | "fart"
+    | "headwiggle"
+    | "hearts_single"
+    | "highfive"
+    | "joy"
+    | "jump"
+    | "mirrordance"
+    | "pocketstorm"
+    | "spotlight"
+    | "superjump"
+    | "wiggle"
+>
+
 export type ClientToServerSkillData =
     /** Skills that don't take any parameters */
     | {
@@ -1353,9 +1370,15 @@ export type ClientToServerSkillData =
               | "charge"
               | "cleave"
               | "darkblessing"
+              | "drop_egg"
+              | "fart"
               | "fishing"
               | "hardshell"
+              | "headwiggle"
+              | "hearts_single"
               | "invis"
+              | "joy"
+              | "jump"
               | "light"
               | "massproduction"
               | "massproductionpp"
@@ -1363,14 +1386,18 @@ export type ClientToServerSkillData =
               | "massexchangepp"
               | "mcourage"
               | "mining"
+              | "mirrordance"
               | "mshield"
               | "paladin_aura"
               | "partyheal"
+              | "pocketstorm"
               | "scare"
               | "selfheal"
               | "stomp"
+              | "superjump"
               | "temporalsurge"
               | "warcry"
+              | "wiggle"
           >
       }
     /** Skills that target an entity */
@@ -1380,10 +1407,12 @@ export type ClientToServerSkillData =
               | "4fingers"
               | "absorb"
               | "arcane_needle"
+              | "boop"
               | "burst"
               | "cleansing_light"
               | "curse"
               | "guardians_oath"
+              | "highfive"
               | "huntersmark"
               | "magiport"
               | "mentalburst"
@@ -1397,6 +1426,7 @@ export type ClientToServerSkillData =
               | "rspeed"
               | "shield_slam"
               | "smash"
+              | "spotlight"
               | "supershot"
               | "taunt"
               | "zapperzap"
