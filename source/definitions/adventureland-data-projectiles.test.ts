@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -9,6 +9,7 @@ test("G.projectiles type validation", async () => {
     const G_projectiles: Pick<GData, "projectiles"> = {
         projectiles: {
             acid: { animation: "acid", speed: 280 },
+            arcane_needle: { animation: "arcane_needle_projectile", hit_animation: "arcane_needle_impact", speed: 640 },
             arrow: { animation: "carrow", hit_animation: "arrow_hit", speed: 500 },
             bigmagic: { animation: "magic0", hit_animation: "explode_c", speed: 320 },
             burst: { hit_animation: "burst", instant: true, ray: "tiling_burstj" },
@@ -49,6 +50,7 @@ test("G.projectiles type validation", async () => {
             quickpunch: { animation: "slash", hit_animation: "slash2", hit_text: ["PUNCH!", "#41338B"], speed: 420 },
             quickstab: { animation: "slash", hit_animation: "slash2", hit_text: ["STAB!", "#41338B"], speed: 420 },
             sburst: { hit_animation: "burst", instant: true, ray: "tiling_burst" },
+            shield_slam: { animation: "slash", hit_animation: "slash2", hit_text: ["SLAM!", "#E5C36A"], speed: 420 },
             smash: { animation: "slash", hit_animation: "slash2", hit_text: ["SMASH!", "#CBB892"], speed: 420 },
             snowball: { animation: "snowball", hit_animation: "snowball_hit", pure: true, speed: 180 },
             stone: { animation: "pblob", hit_animation: "slash1", speed: 320 },

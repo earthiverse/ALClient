@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -20,6 +20,7 @@ test("G.tokens type validation", async () => {
             },
             monstertoken: {
                 armorbox: 5,
+                concordmace: 12,
                 fieldgen0: 100,
                 funtoken: 20,
                 mcarmor: 12,
@@ -56,7 +57,16 @@ test("G.tokens type validation", async () => {
                 tracker: 4,
                 troll: 14,
             },
-            pvptoken: { armorbox: 1, hammer: 120, harbringer: 25, spear: 1, t2bow: 1, valourdirk: 25, weaponbox: 1 },
+            pvptoken: {
+                armorbox: 1,
+                hammer: 120,
+                harbringer: 25,
+                resolutesallet: 12,
+                spear: 1,
+                t2bow: 1,
+                valourdirk: 25,
+                weaponbox: 1,
+            },
         },
     }
     expect(G_tokens).toBeDefined()

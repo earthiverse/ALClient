@@ -1612,7 +1612,7 @@ test("TrackerData type validation", async () => {
                     [0.2, "open", "eastereggs"],
                     [0.01, "goldenegg"],
                     [0.01, "open", "basketofeggs"],
-                    [0.001, "emotionjar", 1, "drop_egg"],
+                    // [0.001, "emotionjar", 1, "drop_egg"],
                 ],
                 pinkgoo: [
                     [0.3, "cupid"],

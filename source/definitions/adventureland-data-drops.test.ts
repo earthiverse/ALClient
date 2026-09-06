@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5748 (2026-08-30)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -774,6 +774,9 @@ test("G.drops type validation", async () => {
                 [1, "mcgloves"],
                 [0.25, "hgloves"],
                 [0.25, "xgloves"],
+                [1, "vowkeepergloves"],
+                [1, "oathplate"],
+                [1, "resolutesallet"],
                 [1, "claw"],
                 [1, "cclaw"],
                 [1, "throwingstars"],
@@ -847,8 +850,10 @@ test("G.drops type validation", async () => {
                 [1, "harbringer"],
                 [1, "pmace"],
                 [0.25, "lmace"],
+                [1, "concordmace"],
                 [1, "shield"],
                 [1, "tigershield"],
+                [0.25, "dawnwardaegis"],
                 [0.25, "xshield"],
                 [0.25, "mshield"],
                 [0.25, "exoarm"],
@@ -1309,6 +1314,9 @@ test("G.drops type validation", async () => {
                 [0.1, "mcgloves"],
                 [0.1, "hgloves"],
                 [0.1, "xgloves"],
+                [1, "vowkeepergloves"],
+                [0.1, "oathplate"],
+                [0.1, "resolutesallet"],
                 [1, "claw"],
                 [1, "cclaw"],
                 [0.1, "throwingstars"],
@@ -1382,8 +1390,10 @@ test("G.drops type validation", async () => {
                 [0.1, "harbringer"],
                 [0.1, "pmace"],
                 [0.1, "lmace"],
+                [0.1, "concordmace"],
                 [1, "shield"],
                 [0.1, "tigershield"],
+                [0.1, "dawnwardaegis"],
                 [0.1, "xshield"],
                 [0.1, "mshield"],
                 [0.01, "exoarm"],
@@ -1857,7 +1867,7 @@ test("G.drops type validation", async () => {
                 bat: [
                     [0.004, "wbook0"],
                     [0.005, "bwing"],
-                    [0.0005, "voidthread"],
+                    [0.000025, "voidthread"],
                     [1e-8, "cxjar", 1, "wings102"],
                 ],
                 bbpompom: [
@@ -2221,6 +2231,7 @@ test("G.drops type validation", async () => {
                     [0.02, "weaponbox"],
                     [0.05, "armorbox"],
                     [0.01, "shadowstone"],
+                    [0.02, "dawnwardaegis"],
                     [0.0002, "scythe"],
                 ],
                 slenderman: [
@@ -2371,6 +2382,19 @@ test("G.drops type validation", async () => {
                 ],
             },
             monsters_home_server: {
+                crabxx: [[1, "reefglass", 3]],
+                dragold: [
+                    [1, "essenceoffire"],
+                    [0.005, "embercore"],
+                ],
+                franky: [
+                    [1, "bandages", 10],
+                    [0.005, "ectoplasm"],
+                ],
+                icegolem: [
+                    [1, "essenceoffrost", 2],
+                    [0.05, "frostcore"],
+                ],
                 mrgreen: [
                     [0.01, "fallen"],
                     [1, "candy0", 7],
@@ -2384,6 +2408,14 @@ test("G.drops type validation", async () => {
                     [1, "candy1", 12],
                     [0.285714, "candy0", 4],
                     [0.285714, "candy1", 8],
+                ],
+                phoenix: [
+                    [0.5, "stormfeather"],
+                    [0.005, "embercore"],
+                ],
+                rharpy: [
+                    [0.05, "feather1"],
+                    [0.2, "essenceoffrost"],
                 ],
             },
             mysterybox: [

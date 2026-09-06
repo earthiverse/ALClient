@@ -26,6 +26,7 @@ export type GData = {
     }
     animations: {
         [T in AnimationName]: {
+            above?: true
             aspeed?: "fast" | "mild" | "slow"
             alpha?: number
             bubble?: boolean
@@ -141,6 +142,8 @@ export type GData = {
             can_move?: boolean
             /** TODO: Confirm. If this is true, attacking, moving, or using a skill will cause the condition to go away. (NOTE: You can still move if can_move is true) */
             channel?: boolean
+            /** Whether certain skills can cleanse this condition TODO: Confirm */
+            cleansable?: boolean
             /** What kind of Attribute will mitigate damage from this condition */
             defense?: Attribute
             /** How much extra percent damage an entity with this condition will take */
@@ -249,14 +252,6 @@ export type GData = {
             silver: string[]
         }
     }
-    emotions: {
-        [T in EmotionName]?: {
-            /** How long you have to wait to use an emotion again after using this emotion */
-            cooldown: number
-            /** The emotion name */
-            fx: EmotionName
-        }
-    }
     events: {
         [T in MapName | MonsterName | EventName]?: {
             duration: number
@@ -354,10 +349,15 @@ export type GData = {
             aura?: {
                 [T in Attribute]?: number
             }
+            /** TODO: ??? What is this? GUI related? */
+            citizen_behavior?: string
+            /** TODO: ??? What is this? GUI related? */
+            citizen_lamp_stops?: [number, number][]
             /** The character type the NPC is based on */
             class?: CharacterType
             /** TODO: ??? What is this? GUI related? */
             color?: string
+            cosmetic_head_y?: number
             /** Appearance related. Look & accessories. */
             cx?: CXData
             /** TODO: ??? What is this? GUI related? */
@@ -534,7 +534,8 @@ export type GData = {
     skills: {
         [T in SkillName]: {
             action?: string
-            apiercing?: number
+            armor_cap?: number
+            armor_multiplier?: number
             aura?: boolean
             class?: CharacterType[]
             code?: boolean | string
@@ -547,16 +548,22 @@ export type GData = {
             damage?: number
             damage_multiplier?: number
             damage_type?: DamageType
+            /** Related to state, the skill is toggleable between different states */
+            default_state?: string
             /** How long the condition lasts */
             duration?: number
             duration_min?: number
             duration_max?: number
             /** TODO: Why are these in skills? Why are these not emotions? */
             emote?: string
+            /** Condition that prevents this skill from being used. TODO: Confirm */
+            exclusive_condition?: ConditionName
             /** An exlpanation of what this skill does */
             explanation?: string
+            /** TODO: Why? Isn't the default to have a fixed range? */
+            fixed_range?: true
             global?: true
-            heal?: boolean
+            heal?: true
             /** If true, we can't use this skill in a safe zone */
             hostile?: boolean
             /** Items that this we need to use the skill */
@@ -564,6 +571,8 @@ export type GData = {
             kill_buff?: ConditionName
             level?: number
             levels?: [number, number][]
+            /** TODO: What is this? Related to fixed_range? */
+            link_range?: number
             /** If set, the skill requires a list of targets */
             list?: boolean
             max?: number
@@ -574,13 +583,19 @@ export type GData = {
             monsters?: boolean
             /** MP Cost for skill */
             mp?: number
+            /** [level, mp_return] TODO: What is mp_return? */
+            mp_return_levels?: [number, number][]
             multi?: boolean
             /** The name of the skill */
             name: string
             negative?: ItemName[]
+            /** If set, this skill cannot be reflected */
+            no_reflection?: true
             /** For emotes */
             no_self?: true
             nprop?: Attribute[]
+            /** TODO: Why? Isn't the shield only equippable in the offhand? */
+            offhand_type?: WeaponType
             /** For skills that get better with level, this is how much the default does */
             output?: number
             /** If this is set, this skill will affect all party members */
@@ -596,6 +611,8 @@ export type GData = {
             range?: number
             range_bonus?: number
             range_multiplier?: number
+            /** Related to states, which level is required for each level in the state. */
+            rank_levels?: number[]
             /** For MP use skills on the mage, 1 mp will equal this much damage */
             ratio?: number
             /** Requirements for using the skill */
@@ -608,6 +625,14 @@ export type GData = {
             skins?: string[]
             /** The item(s) required to use this skill */
             slot?: [SlotType, ItemName][]
+            states?: {
+                [T in string]: {
+                    condition: ConditionName
+                    /** Human readable name for the state */
+                    name: string
+                    values: { [T in Attribute]?: number[] }
+                }
+            }
             /** Does this skill require a single target? (Don't use an array) */
             target?: true | "monster" | "player"
             /** Does this skill require multiple targets? (Use an array) */
@@ -622,7 +647,7 @@ export type GData = {
             wtype?: WeaponType | WeaponType[]
             /** How much percent to vary the output by (random chance) */
             variance?: number
-        }
+        } & { [T in Exclude<Attribute, "heal">]?: number }
     }
     // TODO: Add type information
     sprites: {
@@ -762,6 +787,7 @@ export type DocsTask =
     | "x"
 
 export type CXData = {
+    back?: string
     chin?: string
     face?: string
     hair?: string
@@ -913,6 +939,7 @@ export type GItem = {
     gain?: Attribute
     /** For potions, it specifies what will be recovered when used */
     gives?: [[Attribute, number]]
+    gold_reward?: number
     /** TODO: Confirm. Upgrade/compound scroll grade */
     grade?: number
     /** What level the item increases grade at [high, rare, legendary, exalted] */
@@ -1012,8 +1039,6 @@ export type GDropItem =
     /** The drop is a cosmetic */
     | [number, "cx" | "cxbundle", string]
     | [number, "cxjar", number, string]
-    /** The drop is an emotion */
-    | [number, "emotionjar", number, EmotionName]
     /** The drop is nothing */
     | [number, "empty"]
     /** The drop is gold, or shells [chance, gold/shells, number of gold/shells] */
@@ -1505,11 +1530,15 @@ export type AchievementName =
  */
 export type AnimationName =
     | "acid"
+    | "arcane_needle_impact"
+    | "arcane_needle_projectile"
     | "arrow_hit"
     | "arrow1"
+    | "beacon_of_resolve"
     | "block"
     | "burst"
     | "carrow"
+    | "cleansing_light"
     | "confetti"
     | "crackle"
     | "cuarrow"
@@ -1539,6 +1568,7 @@ export type AnimationName =
     | "gm"
     | "gold"
     | "gold_anim"
+    | "guardians_oath"
     | "hardshell"
     | "heal"
     | "heal_projectile"
@@ -1647,7 +1677,9 @@ export type CharacterType = "mage" | "merchant" | "paladin" | "priest" | "ranger
  * { const is = []; for(const i in G.conditions) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
  */
 export type ConditionName =
+    | "aether_shield"
     | "authfail"
+    | "beacon_of_resolve"
     | "blink"
     | "block"
     | "burned"
@@ -1667,6 +1699,7 @@ export type ConditionName =
     | "frozen"
     | "fullguard"
     | "fullguardx"
+    | "guardians_oath"
     | "halloween0"
     | "halloween1"
     | "halloween2"
@@ -1690,6 +1723,10 @@ export type ConditionName =
     | "mshield"
     | "newcomersblessing"
     | "notverified"
+    | "paladin_aura_bulwark"
+    | "paladin_aura_sanctuary"
+    | "paladin_aura_warding"
+    | "paladin_aura_zeal"
     | "patronsgrace"
     | "penalty_cd"
     | "phasedout"
@@ -1698,6 +1735,7 @@ export type ConditionName =
     | "poisonous"
     | "power"
     | "purifier"
+    | "realmfatigue"
     | "reflection"
     | "rspeed"
     | "sanguine"
@@ -1788,8 +1826,6 @@ export type DropName =
     | "xbox"
     | "xN"
 
-export type EmotionName = "drop_egg" | "hearts_single"
-
 export type EventName = "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
 
 export type ImageSetName = "community" | "custom" | "items40" | "pack_1a" | "pack_20" | "rawitems" | "skills"
@@ -1871,6 +1907,7 @@ export type ItemName =
     | "coat1"
     | "cocoon"
     | "computer"
+    | "concordmace"
     | "confetti"
     | "cosmo0"
     | "cosmo1"
@@ -1897,6 +1934,7 @@ export type ItemName =
     | "daggerofthedead"
     | "darktristone"
     | "dartgun"
+    | "dawnwardaegis"
     | "dexamulet"
     | "dexbelt"
     | "dexearring"
@@ -2120,6 +2158,7 @@ export type ItemName =
     | "networkcard"
     | "nheart"
     | "northstar"
+    | "oathplate"
     | "offering"
     | "offeringp"
     | "offeringx"
@@ -2185,6 +2224,7 @@ export type ItemName =
     | "reflectionscroll"
     | "resistancering"
     | "resistancescroll"
+    | "resolutesallet"
     | "rfangs"
     | "rfur"
     | "rimeboots"
@@ -2320,6 +2360,7 @@ export type ItemName =
     | "vitscroll"
     | "voidthread"
     | "vorb"
+    | "vowkeepergloves"
     | "vring"
     | "vstaff"
     | "vsword"
@@ -2589,6 +2630,11 @@ export type NPCName =
     | "citizen14"
     | "citizen15"
     | "citizen16"
+    | "citizen17"
+    | "citizen18"
+    | "citizen19"
+    | "citizen20"
+    | "citizen21"
     | "compound"
     | "craftsman"
     | "exchange"
@@ -2701,6 +2747,7 @@ export type NPCName =
  */
 export type ProjectileName =
     | "acid"
+    | "arcane_needle"
     | "arrow"
     | "bigmagic"
     | "burst"
@@ -2731,6 +2778,7 @@ export type ProjectileName =
     | "quickpunch"
     | "quickstab"
     | "sburst"
+    | "shield_slam"
     | "smash"
     | "snowball"
     | "stone"
@@ -2752,6 +2800,7 @@ export type SetName =
     | "mranger"
     | "mrogue"
     | "mwarrior"
+    | "oathkeeper"
     | "rugged"
     | "swift"
     | "tiger"
@@ -2769,16 +2818,20 @@ export type SkillName =
     | "4fingers"
     | "5shot"
     | "absorb"
+    | "aether_shield"
     | "agitate"
     | "alchemy"
     | "anger"
+    | "arcane_needle"
     | "attack"
+    | "beacon_of_resolve"
     | "blink"
     | "boop"
     | "burst"
     | "cburst"
     | "charge"
     | "charm"
+    | "cleansing_light"
     | "cleave"
     | "curse"
     | "curse_aura"
@@ -2797,6 +2850,7 @@ export type SkillName =
     | "fishing"
     | "frostball"
     | "gm"
+    | "guardians_oath"
     | "hardshell"
     | "headwiggle"
     | "heal"
@@ -2830,6 +2884,7 @@ export type SkillName =
     | "multi_burn"
     | "multi_freeze"
     | "open_snippet"
+    | "paladin_aura"
     | "partyheal"
     | "pcoat"
     | "phaseout"
@@ -2853,6 +2908,7 @@ export type SkillName =
     | "selfheal"
     | "shadowstrike"
     | "shelter"
+    | "shield_slam"
     | "smash"
     | "snippet"
     | "snowball"
@@ -2889,6 +2945,7 @@ export type SkillName =
 export type TilesetName =
     | "ash"
     | "beach"
+    | "biocaves"
     | "castle"
     | "custom"
     | "custom_a"

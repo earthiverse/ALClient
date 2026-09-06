@@ -21,7 +21,6 @@ import type {
     CharacterType,
     ConditionName,
     CXData,
-    EmotionName,
     EventName,
     GDropItem,
     ItemName,
@@ -165,7 +164,6 @@ export type CharacterData = PlayerData & {
     crit: number
     critdamage: number
     dreturn: number
-    emx?: { [T in EmotionName]?: number }
     tax: number
     xrange: number
     items: (ItemData | null)[]
@@ -355,9 +353,9 @@ export type DisappearingTextData = {
 export type DisconnectReasonData = "limitdc"
 
 export type EmotionData = {
-    /** emotion name */
-    name: EmotionName
-    /** character name that did the emotion */
+    /** Emotion name */
+    name: SkillName
+    /** Character name that performed the emotion */
     player: string
 }
 
@@ -1439,7 +1437,6 @@ export type ClientToServerEvents = {
     destroy: (data: { num: number; q: number; statue: true }) => void
     dismantle: (data: { num: number }) => void
     donate: (donation: { gold: number }) => void
-    emotion: (data: { name: EmotionName }) => void
     enter: (data: { name: string; place: MapName }) => void
     equip: (
         data:

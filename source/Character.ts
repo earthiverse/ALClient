@@ -19,7 +19,6 @@ import type {
     ConditionName,
     CXData,
     DamageType,
-    EmotionName,
     GData,
     GMap,
     ItemName,
@@ -49,7 +48,6 @@ import type {
     UpgradeData,
     PQData,
     TrackerData,
-    EmotionData,
     PlayersData,
     ItemData,
     ItemDataTrade,
@@ -160,7 +158,6 @@ export class Character extends Observer implements CharacterData {
     public speed = 1
     public stand?: boolean | "cstand" | "stand0"
     public tp = false
-    public emx: { [T in EmotionName]?: number }
     explosion: number
     incdmgamp: number
     firesistance: number
@@ -2655,53 +2652,6 @@ export class Character extends Observer implements CharacterData {
         })
         this.socket.emit("donate", { gold: amount })
         return donated
-    }
-
-    /**
-     * Perform an emotion
-     *
-     * @param {EmotionName} emotionName
-     * @return {*}  {Promise<void>}
-     * @memberof Character
-     */
-    public async emote(emotionName: EmotionName): Promise<void> {
-        if (!this.ready) throw new Error("We aren't ready yet [emote].")
-        if (!this.emx[emotionName]) throw new Error(`We don't have the emotion '${emotionName}'`)
-
-        const emoted = new Promise<void>((resolve, reject) => {
-            const failCheck = (data: GameResponseData) => {
-                if (typeof data == "string") {
-                    if (data == "emotion_cooldown") {
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("emotion", successCheck)
-                        reject(new Error("Emotion is on cooldown."))
-                    } else if (data == "emotion_cant") {
-                        this.socket.off("game_response", failCheck)
-                        this.socket.off("emotion", successCheck)
-                        reject(new Error("Can't use emotion (invalid or unavailable)."))
-                    }
-                }
-            }
-
-            const successCheck = (data: EmotionData) => {
-                if (data.name == emotionName && data.player == this.id) {
-                    this.socket.off("game_response", failCheck)
-                    this.socket.off("emotion", successCheck)
-                    resolve()
-                }
-            }
-
-            setTimeout(() => {
-                this.socket.off("game_response", failCheck)
-                this.socket.off("emotion", successCheck)
-                reject(new Error(`emote timeout (${Constants.TIMEOUT}ms)`))
-            }, Constants.TIMEOUT)
-            this.socket.on("game_response", failCheck)
-            this.socket.on("emotion", successCheck)
-        })
-
-        this.socket.emit("emotion", { name: emotionName })
-        return emoted
     }
 
     /**

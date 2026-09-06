@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -94,7 +94,8 @@ test("G.classes type validation", async () => {
                 bmresistance: 10,
                 courage: 2,
                 damage_type: "physical",
-                description: "Paladins are an unbalanced mix-use class!",
+                description:
+                    "Paladins protect nearby allies with oaths and auras, wield maces, and draw strength from magic endured.",
                 doublehand: {},
                 frequency: 0.4,
                 hp: 300,

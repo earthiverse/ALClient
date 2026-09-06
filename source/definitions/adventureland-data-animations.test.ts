@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -15,6 +15,15 @@ test("G.animations type validation", async () => {
                 scale: 0.75,
                 speed: 280,
             },
+            arcane_needle_impact: { alpha: 0.7, file: "/images/sprites/animations/Electric.png?v=1", frames: 6 },
+            arcane_needle_projectile: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/magic3.png?v=1",
+                framefps: 9,
+                frames: 4,
+                speed: 640,
+            },
             arrow_hit: { alpha: 0.9, file: "/images/sprites/animations/Slash0Arrow.png", frames: 7, size: 0.8 },
             arrow1: {
                 continuous: true,
@@ -22,6 +31,15 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/arrow1.png",
                 frames: 4,
                 speed: 400,
+            },
+            beacon_of_resolve: {
+                above: true,
+                alpha: 1,
+                aspeed: "slow",
+                exact: true,
+                file: "/images/sprites/animations/beacon_of_resolve.png?v=1",
+                frames: 5,
+                y: 6,
             },
             block: { file: "/images/sprites/animations/Block.png", frames: 11 },
             burst: { alpha: 0.7, file: "/images/sprites/animations/Electric.png", frames: 6 },
@@ -31,6 +49,15 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/CArrow.png",
                 frames: 3,
                 speed: 700,
+            },
+            cleansing_light: {
+                above: true,
+                alpha: 1,
+                aspeed: "slow",
+                exact: true,
+                file: "/images/sprites/animations/cleansing_light.png?v=1",
+                frames: 5,
+                y: 6,
             },
             confetti: { alpha: 0.4, file: "/images/sprites/animations/confetti2.png", frames: 12 },
             crackle: { file: "/images/sprites/animations/GlintF.png", frames: 4 },
@@ -143,6 +170,15 @@ test("G.animations type validation", async () => {
                 speed: 320,
             },
             gold_anim: { file: "/images/sprites/animations/gold_anim.png", frames: 13 },
+            guardians_oath: {
+                above: true,
+                alpha: 1,
+                aspeed: "slow",
+                exact: true,
+                file: "/images/sprites/animations/guardians_oath.png?v=1",
+                frames: 5,
+                y: 6,
+            },
             hardshell: {
                 alpha: 0.8,
                 aspeed: "slow",

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -304,10 +304,10 @@ test("G.craft type validation", async () => {
                 ],
             },
             gloampendant: {
-                cost: 420000,
+                cost: 6400000,
                 items: [
                     [1, "dexamulet", 2],
-                    [12, "voidthread"],
+                    [30, "voidthread"],
                     [80, "bwing"],
                     [6, "essenceofether"],
                 ],
@@ -415,6 +415,15 @@ test("G.craft type validation", async () => {
                 items: [
                     [1, "staff"],
                     [2, "smush"],
+                ],
+            },
+            oathplate: {
+                cost: 180000,
+                items: [
+                    [1, "coat1"],
+                    [4, "pleather"],
+                    [2, "ascale"],
+                    [20, "spores"],
                 ],
             },
             offeringx: {
@@ -536,6 +545,14 @@ test("G.craft type validation", async () => {
                     [1, "vitring", 2],
                 ],
                 quest: "mcollector",
+            },
+            resolutesallet: {
+                cost: 240000,
+                items: [
+                    [1, "helmet1", 0],
+                    [12, "dstones"],
+                    [4, "rfangs"],
+                ],
             },
             rimeboots: {
                 cost: 280000,
@@ -708,6 +725,15 @@ test("G.craft type validation", async () => {
                     [12, "poison"],
                     [4, "snakefang"],
                 ],
+            },
+            vowkeepergloves: {
+                cost: 0,
+                items: [
+                    [60, "beewings"],
+                    [30, "spores"],
+                    [2, "crabclaw"],
+                ],
+                quest: "mcollector",
             },
             wattire: {
                 cost: 0,

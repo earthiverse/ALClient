@@ -353,7 +353,6 @@ test("StartData type validation", async () => {
         },
         dex: 281,
         dreturn: 0.5,
-        emx: {},
         entities: {
             in: "main",
             map: "main",

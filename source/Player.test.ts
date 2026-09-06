@@ -10,7 +10,7 @@ let sameParty: Player
 let randomPlayer: Player
 beforeAll(async () => {
     G = await Game.getGData(true, false)
-    character = new Character("12345", undefined, undefined, G, {
+    character = new Character("12345", "", "", G, {
         region: "ASIA",
         name: "I",
         address: "test",
@@ -42,7 +42,7 @@ beforeAll(async () => {
         cx: {},
         dex: 48,
         dreturn: 1,
-        emx: { drop_egg: 1 },
+        acx: { drop_egg: 1 },
         esize: 28,
         evasion: 3.5,
         explosion: 0,

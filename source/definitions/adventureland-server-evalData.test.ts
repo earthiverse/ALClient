@@ -18,7 +18,14 @@ test("EvalData type validation", async () => {
 
     const mock = jest.fn()
     console.error = mock
-    const character = new Character("test", "test", "test", await Game.getGData(true, false), undefined)
+    const character = new Character("test", "test", "test", await Game.getGData(true, false), {
+        address: "localhost",
+        path: "",
+        region: "US",
+        name: "I",
+        players: 0,
+        key: "",
+    })
     for (const evalData of evalDatas) {
         // Since parseEval is private, we have to do this workaround
         character["parseEval"](evalData)

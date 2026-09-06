@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -131,6 +131,16 @@ test("G.sets type validation", async () => {
                 explanation: "A set for a noble warrior who serves our realm!",
                 items: ["mwhelmet", "mwarmor", "mwgloves", "mwpants", "mwboots"],
                 name: "Monster Hunter Warrior",
+            },
+            oathkeeper: {
+                "1": {},
+                "2": { hp: 200, mp: 100 },
+                "3": { armor: 15, hp: 300, mp: 150, resistance: 15 },
+                "4": { armor: 25, for: 4, hp: 450, mp: 225, resistance: 25 },
+                "5": { armor: 35, courage: 1, for: 8, hp: 700, mcourage: 1, mp: 350, pcourage: 1, resistance: 35 },
+                explanation: "Worn by Paladins who stand between danger and their allies.",
+                items: ["vowkeepergloves", "oathplate", "concordmace", "resolutesallet", "dawnwardaegis"],
+                name: "Oathkeeper Set",
             },
             rugged: {
                 "1": {},

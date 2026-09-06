@@ -37,7 +37,7 @@ beforeAll(async () => {
         cx: {},
         dex: 48,
         dreturn: 1,
-        emx: { drop_egg: 1 },
+        acx: { drop_egg: 1 },
         esize: 28,
         evasion: 3.5,
         explosion: 0,

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
@@ -287,7 +287,7 @@ test("G.maps type validation", async () => {
                     { boundary: [18, -88, 17, -89], count: 1, type: "mechagnome" },
                 ],
                 name: "Cyberland",
-                npcs: [],
+                npcs: [{ id: "citizen18", position: [0, -136] }],
                 quirks: [[0, -100, 80, 30, "mainframe"]],
                 spawns: [
                     [0, 0, 3],
@@ -355,6 +355,7 @@ test("G.maps type validation", async () => {
                     { id: "transporter", position: [-14, -477] },
                     { id: "locksmith", position: [316, -270] },
                     { id: "scrollsmith", position: [606, -1590] },
+                    { id: "citizen17", position: [48, 24] },
                 ],
                 outside: true,
                 spawns: [
@@ -1010,7 +1011,7 @@ test("G.maps type validation", async () => {
                     { boundary: [-99, 534, 132, 856], count: 7, grow: true, type: "odino" },
                 ],
                 name: "Mystical Forest",
-                npcs: [],
+                npcs: [{ boundary: [-120, -80, 120, 160], id: "citizen19", position: [0, 48] }],
                 quirks: [],
                 spawns: [[0, 0]],
                 unlist: true,
@@ -1026,7 +1027,71 @@ test("G.maps type validation", async () => {
                 lux: 0.6,
                 monsters: [],
                 name: "Underground [Tunnel]",
-                npcs: [],
+                npcs: [
+                    {
+                        id: "citizen20",
+                        positions: [
+                            [0, 8],
+                            [272, 8],
+                            [288, -8],
+                            [336, -8],
+                            [368, -40],
+                            [384, -40],
+                            [416, -8],
+                            [464, -8],
+                            [480, -24],
+                            [496, -24],
+                            [528, -56],
+                            [576, -56],
+                            [592, -72],
+                            [608, -72],
+                            [624, -88],
+                            [632, -88],
+                            [664, -120],
+                            [680, -104],
+                            [688, -104],
+                            [720, -72],
+                            [752, -72],
+                            [768, -56],
+                            [776, -56],
+                            [856, 24],
+                            [864, 24],
+                            [880, 40],
+                            [1056, 40],
+                            [1072, 24],
+                            [1096, 24],
+                            [1168, -48],
+                            [1096, 24],
+                            [1072, 24],
+                            [1056, 40],
+                            [880, 40],
+                            [864, 24],
+                            [856, 24],
+                            [776, -56],
+                            [768, -56],
+                            [752, -72],
+                            [720, -72],
+                            [688, -104],
+                            [680, -104],
+                            [664, -120],
+                            [632, -88],
+                            [624, -88],
+                            [608, -72],
+                            [592, -72],
+                            [576, -56],
+                            [528, -56],
+                            [496, -24],
+                            [480, -24],
+                            [464, -8],
+                            [416, -8],
+                            [384, -40],
+                            [368, -40],
+                            [336, -8],
+                            [288, -8],
+                            [272, 8],
+                        ],
+                    },
+                ],
                 quirks: [],
                 spawns: [
                     [0, 8],
@@ -1390,6 +1455,7 @@ test("G.maps type validation", async () => {
                 npcs: [
                     { id: "tbartender", position: [150, -202] },
                     { id: "bouncer", position: [208, -156] },
+                    { boundary: [40, -144, 120, -80], id: "citizen21", position: [80, -120] },
                 ],
                 quirks: [
                     [

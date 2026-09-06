@@ -1,13 +1,20 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
  * It is used to confirm type correctness
  */
 
 test("G.conditions type validation", async () => {
     const G_conditions: Pick<GData, "conditions"> = {
         conditions: {
+            aether_shield: {
+                buff: true,
+                explanation: "Magical HP damage restores MP. Cannot coexist with Mana Shield.",
+                name: "Aether Shield",
+                skin: "skill_aether_shield",
+                ui: true,
+            },
             authfail: {
                 debuff: true,
                 explanation:
@@ -21,6 +28,18 @@ test("G.conditions type validation", async () => {
                 ui: true,
                 xp: -20,
             },
+            beacon_of_resolve: {
+                buff: true,
+                courage: 1,
+                duration: 8000,
+                explanation: "Increases Fortitude and every type of Courage.",
+                for: 15,
+                mcourage: 1,
+                name: "Beacon of Resolve",
+                pcourage: 1,
+                skin: "skill_beacon_of_resolve",
+                ui: true,
+            },
             blink: { explanation: "Blink in progress", name: "Blinking", skin: "condition_positive" },
             block: {
                 debuff: true,
@@ -30,6 +49,7 @@ test("G.conditions type validation", async () => {
                 skin: "condition_neutral",
             },
             burned: {
+                cleansable: true,
                 debuff: true,
                 defense: "firesistance",
                 explanation: "Burns the target for damage equal to its intensity per second.",
@@ -46,6 +66,7 @@ test("G.conditions type validation", async () => {
                 speed: 30,
             },
             charmed: {
+                cleansable: true,
                 debuff: true,
                 duration: 30000,
                 explanation: "Mellow like a warm kitty.",
@@ -54,6 +75,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             cursed: {
+                cleansable: true,
                 debuff: true,
                 duration: 5000,
                 explanation: "Reduces damage output and speed by 20%. Increases damage taken by 20%.",
@@ -64,6 +86,7 @@ test("G.conditions type validation", async () => {
                 speed: -20,
             },
             dampened: {
+                cleansable: true,
                 debuff: true,
                 duration: 300,
                 explanation: "Can't blink or teleport.",
@@ -82,6 +105,7 @@ test("G.conditions type validation", async () => {
             dash: { name: "Dashing", persistent: true, set_speed: 500, skin: "condition_positive" },
             deepfreezed: {
                 blocked: true,
+                cleansable: true,
                 debuff: true,
                 defense: "fzresistance",
                 duration: 12000,
@@ -101,6 +125,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             eburn: {
+                cleansable: true,
                 damage: 50,
                 debuff: true,
                 duration: 12000,
@@ -133,6 +158,7 @@ test("G.conditions type validation", async () => {
             },
             fingered: {
                 blocked: true,
+                cleansable: true,
                 debuff: true,
                 evasion: 96,
                 explanation: "Stunned for the duration.",
@@ -149,6 +175,7 @@ test("G.conditions type validation", async () => {
                 skin: "skill_fishing",
             },
             frozen: {
+                cleansable: true,
                 debuff: true,
                 defense: "fzresistance",
                 duration: 5000,
@@ -176,6 +203,14 @@ test("G.conditions type validation", async () => {
                 name: "Full Guard",
                 persistent: true,
                 skin: "fullguard",
+                ui: true,
+            },
+            guardians_oath: {
+                buff: true,
+                duration: 8000,
+                explanation: "A nearby Paladin takes part of your damage and regains MP from the HP they lose.",
+                name: "Guardian's Oath",
+                skin: "skill_guardians_oath",
                 ui: true,
             },
             halloween0: {
@@ -273,6 +308,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             marked: {
+                cleansable: true,
                 debuff: true,
                 duration: 10000,
                 explanation: "Marked by a ranger for death. Receive 10% more damage and can't stealth.",
@@ -402,6 +438,42 @@ test("G.conditions type validation", async () => {
                 technical: true,
                 ui: true,
             },
+            paladin_aura_bulwark: {
+                aura: true,
+                buff: true,
+                duration: 60000,
+                explanation: "Increases armor and maximum HP.",
+                name: "Aura of the Bulwark",
+                skin: "paladin_aura_bulwark",
+                ui: true,
+            },
+            paladin_aura_sanctuary: {
+                aura: true,
+                buff: true,
+                duration: 60000,
+                explanation: "Increases resistance and maximum MP.",
+                name: "Aura of Sanctuary",
+                skin: "paladin_aura_sanctuary",
+                ui: true,
+            },
+            paladin_aura_warding: {
+                aura: true,
+                buff: true,
+                duration: 60000,
+                explanation: "Resists harmful effects and reduces MP costs.",
+                name: "Aura of Warding",
+                skin: "paladin_aura_warding",
+                ui: true,
+            },
+            paladin_aura_zeal: {
+                aura: true,
+                buff: true,
+                duration: 60000,
+                explanation: "Increases damage and attack speed.",
+                name: "Aura of Zeal",
+                skin: "paladin_aura_zeal",
+                ui: true,
+            },
             patronsgrace: {
                 buff: true,
                 duration: 120000,
@@ -441,6 +513,7 @@ test("G.conditions type validation", async () => {
                 skin: "skill_pickpocket",
             },
             poisoned: {
+                cleansable: true,
                 debuff: true,
                 defense: "pnresistance",
                 duration: 5000,
@@ -479,6 +552,15 @@ test("G.conditions type validation", async () => {
                 output: 20,
                 skin: "skill_purify",
                 str: 30,
+                ui: true,
+            },
+            realmfatigue: {
+                duration: 1800000,
+                explanation:
+                    "Another non-merchant character on your account recently visited a different server. Home rewards return after you settle in; normal rewards continue.",
+                name: "Realm Fatigue",
+                persistent: true,
+                skin: "condition_bad",
                 ui: true,
             },
             reflection: {
@@ -522,6 +604,7 @@ test("G.conditions type validation", async () => {
                 skin: "lanternshield",
             },
             shocked: {
+                cleansable: true,
                 debuff: true,
                 duration: 1600,
                 explanation: "Imminent magical damage.",
@@ -529,8 +612,9 @@ test("G.conditions type validation", async () => {
                 skin: "essenceofthunder",
                 ui: true,
             },
-            sleeping: { debuff: true, duration: 8000, duration_min: 3000, name: "Sleeping" },
+            sleeping: { cleansable: true, debuff: true, duration: 8000, duration_min: 3000, name: "Sleeping" },
             slowness: {
+                cleansable: true,
                 debuff: true,
                 explanation: "Things like spiderwebs cause you to slow down.",
                 name: "Slowness",
@@ -546,6 +630,7 @@ test("G.conditions type validation", async () => {
             },
             stoned: {
                 blocked: true,
+                cleansable: true,
                 debuff: true,
                 duration: 4000,
                 explanation: "Cannot move, attack, heal, or use skills.",
@@ -554,6 +639,7 @@ test("G.conditions type validation", async () => {
             },
             stunned: {
                 blocked: true,
+                cleansable: true,
                 debuff: true,
                 defense: "phresistance",
                 duration: 3200,
@@ -573,6 +659,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             tangled: {
+                cleansable: true,
                 debuff: true,
                 duration: 12000,
                 explanation: "Sets maximum speed to 24.",
@@ -602,6 +689,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             weakness: {
+                cleansable: true,
                 debuff: true,
                 dex: -10,
                 duration: 20000,
@@ -627,6 +715,7 @@ test("G.conditions type validation", async () => {
                 ui: true,
             },
             woven: {
+                cleansable: true,
                 debuff: true,
                 duration: 1000,
                 explanation: "Reduces speed by 3 per stack. Stacks up to 20 on monsters, capped at 5 for players.",
