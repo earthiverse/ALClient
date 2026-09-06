@@ -14,6 +14,15 @@ export class Mage extends PingCompensatedCharacter {
         return response
     }
 
+    // NOTE: UNTESTED
+    public async arcaneNeedle(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [arcaneNeedle].")
+
+        const response = this.getResponsePromise("arcane_needle")
+        this.socket.emit("skill", { id: target, name: "arcane_needle" })
+        return response
+    }
+
     public async blink(x: number, y: number): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [blink].")
 

@@ -48,6 +48,19 @@ export class Priest extends PingCompensatedCharacter {
         return response
     }
 
+    // NOTE: UNTESTED
+    public async phaseOut(shadowstone = this.locateItem("shadowstone")): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [phaseOut].")
+        if (shadowstone === undefined) throw new Error("We need a shadowstone in order to phaseout.")
+
+        const response = this.getResponsePromise("phaseout")
+        this.socket.emit("skill", {
+            name: "phaseout",
+            num: shadowstone,
+        })
+        return response
+    }
+
     // NOTE: Untested. We might need to increase the timeout?
     public async revive(target: string, essenceOfLife = this.locateItem("essenceoflife")): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [revive].")

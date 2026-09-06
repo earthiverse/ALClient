@@ -519,7 +519,7 @@ export type SkillSuccessGRDataObject = {
 }
 export type ProjectileSkillGRDataObject = {
     response: "data"
-    place: Extract<SkillName, "attack" | "taunt" | "heal" | "curse" | "supershot">
+    place: Extract<SkillName, "arcane_needle" | "attack" | "curse" | "heal" | "shield_slam" | "supershot" | "taunt">
     dist?: number
     reason?: string
     failed?: boolean
@@ -1339,13 +1339,17 @@ export type ServerToClientEvents = {
     welcome: (data: WelcomeData) => void
 }
 
+export type PaladinAura = "bulwark" | "sanctuary" | "warding" | "zeal"
+
 export type ClientToServerSkillData =
     /** Skills that don't take any parameters */
     | {
           name: Extract<
               SkillName,
+              | "aether_shield"
               | "agitate"
               | "alchemy"
+              | "beacon_of_resolve"
               | "charge"
               | "cleave"
               | "darkblessing"
@@ -1360,6 +1364,7 @@ export type ClientToServerSkillData =
               | "mcourage"
               | "mining"
               | "mshield"
+              | "paladin_aura"
               | "partyheal"
               | "scare"
               | "selfheal"
@@ -1374,8 +1379,11 @@ export type ClientToServerSkillData =
               SkillName,
               | "4fingers"
               | "absorb"
+              | "arcane_needle"
               | "burst"
+              | "cleansing_light"
               | "curse"
+              | "guardians_oath"
               | "huntersmark"
               | "magiport"
               | "mentalburst"
@@ -1387,6 +1395,7 @@ export type ClientToServerSkillData =
               | "quickstab"
               | "reflection"
               | "rspeed"
+              | "shield_slam"
               | "smash"
               | "supershot"
               | "taunt"
@@ -1394,13 +1403,22 @@ export type ClientToServerSkillData =
           >
           id: string
       }
+    /** Skills that change aura */
+    | {
+          name: Extract<SkillName, "paladin_aura">
+          id?: PaladinAura
+      }
     /** Skills that use an item */
-    | { name: Extract<SkillName, "pcoat" | "shadowstrike">; num: number }
+    | { name: Extract<SkillName, "pcoat" | "phaseout" | "shadowstrike">; num: number }
     /** Skills that target an entity and use an item */
-    | { name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball">; id: string; num: number }
+    | {
+          name: Extract<SkillName, "entangle" | "poisonarrow" | "revive" | "snowball" | "throw">
+          id: string
+          num: number
+      }
     /** Other special skills */
     | { name: Extract<SkillName, "3shot">; ids: [string, string, string] }
-    | { name: Extract<SkillName, "5shot">; ids: [string, string, string, string, string] }
+    | { name: Extract<SkillName, "5shot" | "fanofknives">; ids: [string, string, string, string, string] }
     | { name: Extract<SkillName, "blink" | "dash">; x: number; y: number }
     | { name: Extract<SkillName, "cburst">; targets: [string, number][] }
     | { name: Extract<SkillName, "energize">; id: string; mp: number }

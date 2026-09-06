@@ -5,6 +5,29 @@ export class Rogue extends PingCompensatedCharacter {
     ctype: "rogue" = "rogue" as const
 
     // NOTE: UNTESTED
+    public async fanOfKnives(
+        target1: string | [string, string, string, string, string],
+        target2?: string,
+        target3?: string,
+        target4?: string,
+        target5?: string,
+    ): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [fanOfKnives].")
+
+        const ids = Array.isArray(target1) ? target1 : [target1, target2, target3, target4, target5]
+        if (ids.length !== 5 || ids.some((id) => !id)) {
+            throw new Error("We need 5 targets in order to use fanOfKnives.")
+        }
+
+        const response = this.getResponsePromise("fanofknives")
+        this.socket.emit("skill", {
+            ids: ids as [string, string, string, string, string],
+            name: "fanofknives",
+        })
+        return response
+    }
+
+    // NOTE: UNTESTED
     public async invis(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [invis].")
 

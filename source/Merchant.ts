@@ -415,4 +415,22 @@ export class Merchant extends PingCompensatedCharacter {
         this.socket.emit("skill", { name: "massexchangepp" })
         return response
     }
+
+    // NOTE: UNTESTED
+    public async throw(target: string, item: number | ItemName): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [throw].")
+
+        const inventoryPos = typeof item === "number" ? item : this.locateItem(item)
+        if (inventoryPos === undefined || !this.items[inventoryPos]) {
+            throw new Error(`We do not have ${typeof item === "number" ? `an item in slot ${item}` : item} to throw.`)
+        }
+
+        const response = this.getResponsePromise("throw")
+        this.socket.emit("skill", {
+            id: target,
+            name: "throw",
+            num: inventoryPos,
+        })
+        return response
+    }
 }
