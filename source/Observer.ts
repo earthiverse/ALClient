@@ -304,6 +304,8 @@ export class Observer {
             }
 
             for (const mtype in data) {
+                if (!this.G.monsters[mtype as MonsterName]) continue // Not a monster (e.g. anniversary event)
+
                 const mData = data[mtype as MonsterName]
                 if (typeof mData !== "object") continue // Event information, not monster information
                 if ((mData as ServerInfoDataNotLive).live == false) {
