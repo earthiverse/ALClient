@@ -332,9 +332,11 @@ export class Observer {
                 // Add soft properties to monster
                 const mN = mtype as MonsterName
                 const goodData = data[mN] as ServerInfoDataLive
+                const gMonster = this.G.monsters[mN]
+                if (!gMonster) continue // Not a monster (e.g. anniversary event)
 
-                if (goodData.hp == undefined) goodData.hp = this.G.monsters[mN].hp
-                if (goodData.max_hp == undefined) goodData.max_hp = this.G.monsters[mN].hp
+                if (goodData.hp == undefined) goodData.hp = gMonster.hp
+                if (goodData.max_hp == undefined) goodData.max_hp = gMonster.hp
 
                 data[mN] = goodData
 
