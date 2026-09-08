@@ -39,6 +39,11 @@ export type StatusInfo = {
         ms: number
     }
 } & {
+    anniversary_visit?: {
+        round: number
+        realm: `${ServerRegion} ${ServerIdentifier}`
+        expires: number
+    }
     burned?: {
         /** Damage that the burn will do per second. Damage is currently split between an attack about every 200ms (about 5 attacks/second). */
         intensity: number
