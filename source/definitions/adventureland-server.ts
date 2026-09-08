@@ -1037,6 +1037,7 @@ export type PlayerData = {
     heal?: number
     x: number
     y: number
+    guild?: string
     hp: number
     level: number
     max_hp: number
