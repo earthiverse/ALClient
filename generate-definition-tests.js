@@ -25,7 +25,6 @@ const allKeys = [
     "dimensions",
     "dismantle",
     "drops",
-    "emotions",
     "events",
     "geometry",
     "items",

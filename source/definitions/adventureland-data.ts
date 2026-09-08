@@ -167,6 +167,9 @@ export type GData = {
         }
     }
     cosmetics: {
+        back: {
+            [T in string]: number
+        }
         bundle: {
             [T in string]: string[]
         }
@@ -185,8 +188,14 @@ export type GData = {
         hat: {
             [T in string]: number
         }
+        hat_animation: {
+            [T in string]: number
+        }
         head: {
             [T in string]: [string, string, string, number?]
+        }
+        head_y: {
+            [T in string]: number
         }
         map: {
             old: string
@@ -197,13 +206,17 @@ export type GData = {
         }
     }
     craft: {
-        [T in ItemName]?: {
+        [T in ItemName | "makeawishjar"]?: {
             /** These are the items that are required to craft the given item
              *  [quantity, item name, item level (0 if not set)] */
             items: [number, ItemName, number?][]
             /** The cost to craft this item */
             cost: number
-            quest?: Extract<NPCName, "mcollector" | "witch">
+            output?: {
+                data: string
+                name: ItemName
+            }
+            quest?: QuestName
         }
     }
     dimensions: {
@@ -254,7 +267,14 @@ export type GData = {
     }
     events: {
         [T in MapName | MonsterName | EventName]?: {
-            duration: number
+            announcement?: {
+                accent: string
+                color: string
+                effect: string
+                text: string
+                title?: string
+            }
+            duration?: number
             /** If set, you can warp to the event location (hopsickness, and some other things will block, though) */
             join?: true
             /** (GUI) modal to show for event */
@@ -374,6 +394,8 @@ export type GData = {
             items?: (ItemName | null)[]
             /** NPC level? */
             level?: number
+            /** TODO: Figure this out */
+            market?: unknown
             /** TODO: ??? What is this? GUI related? */
             modal?: string
             /** NOTE: Not sure why this exists. Some NPCs which don't have this still move */
@@ -675,12 +697,15 @@ export type GData = {
                 | "v_animation"
             /** The URL that contains the sprites in the matrix */
             file: string
+            frames?: number
+            height?: number
             /** List of sprites in the given file */
             matrix: (string | null)[][]
             rskip?: boolean
             size?: "large" | "normal" | "small" | "xsmall" | "xxsmall"
             /** If set to true, the game will not load the sprite sheet. */
             skip?: number
+            width?: number
         }
     }
     tilesets: {
@@ -1145,6 +1170,12 @@ export type GMap = {
     burn_multiplier?: number
     /** If set, this map has a different freeze chance %. Multiply the freeze chance by this multiplier. */
     freeze_multiplier?: number
+    /** TODO: Figure this out */
+    seasonal_npcs?: {
+        event: EventName
+        id: NPCName
+        position: [number, number]
+    }[]
     /** A flag for the game's built-in `smart_move` function to help it pathfind */
     small_steps?: boolean
     /**
@@ -1574,6 +1605,7 @@ export type AnimationName =
     | "heal_projectile"
     | "hearts_single"
     | "icecrack"
+    | "ikissyou_fx"
     | "invincible"
     | "light"
     | "magic0"
@@ -1581,9 +1613,11 @@ export type AnimationName =
     | "magic2"
     | "magic3"
     | "magic4"
+    | "makeawish_overlay"
     | "mblob"
     | "mblob_purplish"
     | "mblob_red"
+    | "merrit_bonus"
     | "mluck"
     | "party_heal"
     | "pblob"
@@ -1591,6 +1625,8 @@ export type AnimationName =
     | "poucharrow"
     | "rain"
     | "reflection"
+    | "reunionarrow"
+    | "reunionarrow_hit"
     | "revival"
     | "rspeed"
     | "slash"
@@ -1678,6 +1714,8 @@ export type CharacterType = "mage" | "merchant" | "paladin" | "priest" | "ranger
  */
 export type ConditionName =
     | "aether_shield"
+    | "anniversary_kiss"
+    | "anniversary_visit"
     | "authfail"
     | "beacon_of_resolve"
     | "blink"
@@ -1762,6 +1800,10 @@ export type DropName =
     | "5bucks"
     | "abtesting"
     | "abtesting_loser"
+    | "anniversary_equipment"
+    | "anniversary_kiss"
+    | "anniversary_legacy"
+    | "anniversarygift"
     | "apologybox"
     | "armorbox"
     | "armorx"
@@ -1805,6 +1847,7 @@ export type DropName =
     | "lostearring4"
     | "m1"
     | "m2"
+    | "marketparcel"
     | "mistletoe"
     | "mysterybox"
     | "ornament"
@@ -1815,6 +1858,8 @@ export type DropName =
     | "redenvelopev3"
     | "redenvelopev4"
     | "seashell"
+    | "sixcake"
+    | "sixcake_bonus"
     | "statamulet"
     | "statbelt"
     | "statring"
@@ -1826,7 +1871,7 @@ export type DropName =
     | "xbox"
     | "xN"
 
-export type EventName = "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
+export type EventName = "anniversary" | "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
 
 export type ImageSetName = "community" | "custom" | "items40" | "pack_1a" | "pack_20" | "rawitems" | "skills"
 /**
@@ -1840,6 +1885,7 @@ export type ItemName =
     | "amuletofm"
     | "anchorbelt"
     | "angelwings"
+    | "anniversarygift"
     | "apiercingscroll"
     | "apologybox"
     | "armorbox"
@@ -1880,6 +1926,7 @@ export type ItemName =
     | "bunnyelixir"
     | "bwing"
     | "cake"
+    | "candleward"
     | "candy0"
     | "candy0v2"
     | "candy0v3"
@@ -1890,6 +1937,7 @@ export type ItemName =
     | "candycanesword"
     | "candypop"
     | "cape"
+    | "caravanbrigandine"
     | "carrot"
     | "carrotsword"
     | "cclaw"
@@ -1946,6 +1994,7 @@ export type ItemName =
     | "drapes"
     | "dreturnscroll"
     | "dstones"
+    | "duskweavehood"
     | "ecape"
     | "ectoplasm"
     | "eears"
@@ -2049,6 +2098,7 @@ export type ItemName =
     | "greenenvelope"
     | "gslime"
     | "gstaff"
+    | "guestbook"
     | "gum"
     | "hammer"
     | "handofmidas"
@@ -2063,6 +2113,9 @@ export type ItemName =
     | "helmet1"
     | "hgloves"
     | "hhelmet"
+    | "homecomingcape"
+    | "homecomingcoat"
+    | "homecominghelm"
     | "horsecape"
     | "horsecapeg"
     | "hotchocolate"
@@ -2080,8 +2133,10 @@ export type ItemName =
     | "intearring"
     | "intring"
     | "intscroll"
+    | "ironheelboots"
     | "jacko"
     | "jewellerybox"
+    | "keepsakependant"
     | "kitty1"
     | "knifebelt"
     | "lantern"
@@ -2089,6 +2144,7 @@ export type ItemName =
     | "lbelt"
     | "leather"
     | "ledger"
+    | "ledgerlight"
     | "licence"
     | "lifestealscroll"
     | "lmace"
@@ -2102,6 +2158,8 @@ export type ItemName =
     | "maceofthedead"
     | "mageshood"
     | "manastealscroll"
+    | "marketparcel"
+    | "marketwatch"
     | "mbelt"
     | "mbones"
     | "mcape"
@@ -2112,6 +2170,7 @@ export type ItemName =
     | "mcpants"
     | "mearring"
     | "merry"
+    | "mirrorsteelgauntlet"
     | "mistletoe"
     | "mittens"
     | "mmarmor"
@@ -2157,6 +2216,7 @@ export type ItemName =
     | "mysterybox"
     | "networkcard"
     | "nheart"
+    | "nighttill"
     | "northstar"
     | "oathplate"
     | "offering"
@@ -2182,6 +2242,7 @@ export type ItemName =
     | "oxhelmet"
     | "pants"
     | "pants1"
+    | "paradequiver"
     | "partyhat"
     | "pclaw"
     | "phelmet"
@@ -2225,6 +2286,7 @@ export type ItemName =
     | "resistancering"
     | "resistancescroll"
     | "resolutesallet"
+    | "reunionbow"
     | "rfangs"
     | "rfur"
     | "rimeboots"
@@ -2252,7 +2314,14 @@ export type ItemName =
     | "shoes"
     | "shoes1"
     | "silkgrips"
+    | "sixcake"
     | "skullamulet"
+    | "slice_blueberry"
+    | "slice_citrus"
+    | "slice_honey"
+    | "slice_mint"
+    | "slice_nightberry"
+    | "slice_strawberry"
     | "slimestaff"
     | "smoke"
     | "smush"
@@ -2302,6 +2371,7 @@ export type ItemName =
     | "suckerpunch"
     | "supercomputer"
     | "supermittens"
+    | "surety"
     | "svenom"
     | "sweaterhs"
     | "swifty"
@@ -2326,6 +2396,7 @@ export type ItemName =
     | "tigerhelmet"
     | "tigershield"
     | "tigerstone"
+    | "tollkeeperspike"
     | "tombkey"
     | "tracker"
     | "trigger"
@@ -2369,6 +2440,7 @@ export type ItemName =
     | "warpvest"
     | "watercore"
     | "wattire"
+    | "waybill"
     | "wbasher"
     | "wblade"
     | "wbook0"
@@ -2607,6 +2679,7 @@ export type MonsterName =
     | "zapper0"
 
 export type NPCName =
+    | "anniversary_baker"
     | "antip2w"
     | "appearance"
     | "armors"
@@ -2635,6 +2708,7 @@ export type NPCName =
     | "citizen19"
     | "citizen20"
     | "citizen21"
+    | "citizen22"
     | "compound"
     | "craftsman"
     | "exchange"
@@ -2777,6 +2851,7 @@ export type ProjectileName =
     | "purify"
     | "quickpunch"
     | "quickstab"
+    | "reunionarrow"
     | "sburst"
     | "shield_slam"
     | "smash"
@@ -2792,6 +2867,7 @@ export type SetName =
     | "bunny"
     | "fury"
     | "holidays"
+    | "homecoming"
     | "legends"
     | "mmage"
     | "mmerchant"
@@ -2858,12 +2934,14 @@ export type SkillName =
     | "hearts_single"
     | "highfive"
     | "huntersmark"
+    | "ikissyou"
     | "interact"
     | "invis"
     | "joy"
     | "jump"
     | "light"
     | "magiport"
+    | "makeawish"
     | "massexchange"
     | "massexchangepp"
     | "massproduction"
@@ -2986,6 +3064,7 @@ export type TitleName =
 
 export type QuestName =
     | ItemName // Not all items are quests, check with `G.items[ItemName].e` if you can exchange it
+    | "anniversary_baker"
     | "cx"
     | "mcollector"
     | "witch"

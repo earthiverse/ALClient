@@ -1,20 +1,29 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
 test("G.cosmetics type validation", async () => {
     const G_cosmetics: Pick<GData, "cosmetics"> = {
         cosmetics: {
+            back: {
+                backpacks00: 1,
+                backpacks01: 1,
+                backpacks02: 1,
+                backpacks03: 1,
+                backpacks04: 1,
+                backpacks200: 1,
+                backpacks201: 1,
+            },
             bundle: {
                 blackw: ["mbody6b", "mbody6c", "blackhead"],
                 pinkb: ["mbody2g", "mbody2h"],
                 rogueb: ["sbody1c", "sarmor1h"],
             },
             default_beard_position: 0,
-            default_face_position: 8,
+            default_face_position: 7,
             default_hair_place: 7,
             default_hat_place: 7,
             default_head_place: 7,
@@ -156,6 +165,7 @@ test("G.cosmetics type validation", async () => {
                 hairdo523: [0, 1],
             },
             hat: { hat100: 0 },
+            hat_animation: { aniv2: 160, gcandle: 180 },
             head: {
                 blackhead: ["sskin1d", "mskin1d", "lskin1d"],
                 bwhead: ["sskin1e", "mbw", "lskin1d"],
@@ -224,6 +234,7 @@ test("G.cosmetics type validation", async () => {
                 mmakeup13: ["sskin1d", "mskin1d", "lskin1d"],
                 smakeup00: ["sskin1a", "mskin1a", "lskin1a", -1],
             },
+            head_y: { mbody4b: 1 },
             map: { old: "new" },
             no_upper: [],
             prop: {

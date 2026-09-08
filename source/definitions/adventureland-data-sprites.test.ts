@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -107,6 +107,14 @@ test("G.sprites type validation", async () => {
                 ],
                 rows: 8,
                 type: "animation",
+            },
+            aniv2: {
+                columns: 1,
+                file: "/images/cosmetics/hats/aniv2_anim.png?v=1",
+                frames: 6,
+                matrix: [["aniv2"]],
+                rows: 1,
+                type: "a_hat",
             },
             automatron: {
                 columns: 4,
@@ -953,7 +961,7 @@ test("G.sprites type validation", async () => {
             },
             hats4: {
                 columns: 25,
-                file: "/images/cosmetics/hats/hats4.png?v=4",
+                file: "/images/cosmetics/hats/hats4.png?v=5",
                 matrix: [
                     [
                         "hat400",
@@ -967,9 +975,9 @@ test("G.sprites type validation", async () => {
                         "hat408",
                         "hat409",
                         "hat410",
-                        null,
-                        null,
-                        null,
+                        "aniv0",
+                        "aniv1",
+                        "aniv3",
                         null,
                         null,
                         null,
@@ -1013,6 +1021,14 @@ test("G.sprites type validation", async () => {
             },
             json: { columns: 1, file: "/images/tiles/monsters/json.png", matrix: [["json"]], rows: 1 },
             jsonx: { columns: 1, file: "/images/tiles/characters/others/jsonX.png", matrix: [["jsonx"]], rows: 1 },
+            jubchan: {
+                columns: 1,
+                file: "/images/tiles/characters/jubchan_1.png",
+                height: 144,
+                matrix: [["jubchan"]],
+                rows: 1,
+                width: 78,
+            },
             kglasses: {
                 columns: 4,
                 file: "/images/cosmetics/accessories/kglasses.png?v=3",

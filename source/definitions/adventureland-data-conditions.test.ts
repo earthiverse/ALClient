@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -13,6 +13,24 @@ test("G.conditions type validation", async () => {
                 explanation: "Magical HP damage restores MP. Cannot coexist with Mana Shield.",
                 name: "Aether Shield",
                 skin: "skill_aether_shield",
+                ui: true,
+            },
+            anniversary_kiss: {
+                buff: true,
+                duration: 1200000,
+                explanation: "A warm welcome. Increases attack speed and damage output for 20 minutes.",
+                frequency: 10,
+                name: "Anniversary Kiss",
+                output: 6,
+                skin: "emote_ikissyou",
+                ui: true,
+            },
+            anniversary_visit: {
+                duration: 300000,
+                explanation:
+                    "Find the featured player and send I Kiss You for a cake slice and an Anniversary Gift. Used up after one visit.",
+                name: "Anniversary Visit",
+                skin: "emote_ikissyou",
                 ui: true,
             },
             authfail: {

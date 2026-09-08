@@ -2692,10 +2692,15 @@ export class Character extends Observer implements CharacterData {
             case "highfive":
                 if (!target) throw new Error("Target is required for highfive.")
                 return this.highFive(target)
+            case "ikissyou":
+                if (!target) throw new Error("Target is required for ikissyou.")
+                return this.kiss(target)
             case "joy":
                 return this.joy()
             case "jump":
                 return this.jump()
+            case "makeawish":
+                return this.makeAWish()
             case "mirrordance":
                 return this.mirrorDance()
             case "pocketstorm":
@@ -4034,6 +4039,15 @@ export class Character extends Observer implements CharacterData {
         return kicked
     }
 
+    // NOTE: UNTESTED
+    public async kiss(target: string): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [kiss].")
+
+        const response = this.getResponsePromise("ikissyou")
+        this.socket.emit("skill", { id: target, name: "ikissyou" })
+        return response
+    }
+
     /**
      * For use on 'cyberland' and 'jail' to leave the map. You will be transported to the spawn on "main".
      *
@@ -4082,6 +4096,15 @@ export class Character extends Observer implements CharacterData {
     public async leaveParty(): Promise<void> {
         if (!this.ready) throw new Error("We aren't ready yet [leaveParty].")
         this.socket.emit("party", { event: "leave" })
+    }
+
+    // NOTE: UNTESTED
+    public async makeAWish(): Promise<unknown> {
+        if (!this.ready) throw new Error("We aren't ready yet [makeAWish].")
+
+        const response = this.getResponsePromise("makeawish")
+        this.socket.emit("skill", { name: "makeawish" })
+        return response
     }
 
     /**

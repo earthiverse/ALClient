@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -25,6 +25,42 @@ test("G.drops type validation", async () => {
             abtesting_loser: [
                 [1, "pvptoken"],
                 [0.5, "empty"],
+            ],
+            anniversary_equipment: [
+                [15, "candleward"],
+                [15, "paradequiver"],
+                [14, "homecominghelm"],
+                [14, "homecomingcoat"],
+                [14, "homecomingcape"],
+                [10, "guestbook"],
+                [10, "reunionbow"],
+                [8, "keepsakependant"],
+            ],
+            anniversary_kiss: [
+                [1, "cxjar", 1, "ikissyou"],
+                [999, "empty"],
+            ],
+            anniversary_legacy: [
+                [1, "open", "thrash"],
+                [0.4, "cake"],
+                [0.2, "poker"],
+                [1, "confetti"],
+                [0.8, "partyhat"],
+                [0.1, "gift0"],
+                [0.1, "open", "armorbox"],
+                [0.05, "ftrinket"],
+                [0.006, "scroll3"],
+                [0.006, "mysterybox"],
+                [0.002, "offering"],
+                [0.0003, "luckbooster"],
+            ],
+            anniversarygift: [
+                [608910, "gold", 5000],
+                [200000, "gold", 20000],
+                [190000, "open", "anniversary_legacy"],
+                [990, "open", "anniversary_equipment"],
+                [99, "cxjar", 1, "makeawish"],
+                [1, "cxjar", 1, "ikissyou"],
             ],
             apologybox: [[1, "glitch"]],
             armorbox: [
@@ -1747,7 +1783,15 @@ test("G.drops type validation", async () => {
                     [0.00008, "gem0"],
                     [0.0000016666666666666667, "cryptkey"],
                 ],
-                global: [],
+                global: [
+                    [0.0006666666666666666, "anniversarygift"],
+                    [0.00002, "slice_strawberry"],
+                    [0.00002, "slice_citrus"],
+                    [0.00002, "slice_honey"],
+                    [0.00002, "slice_mint"],
+                    [0.00002, "slice_blueberry"],
+                    [0.00002, "slice_nightberry"],
+                ],
                 global_static: [],
                 halloween: [
                     [0.0001, "wgloves"],
@@ -1784,6 +1828,22 @@ test("G.drops type validation", async () => {
                     [0.0005, "open", "statring"],
                 ],
             },
+            marketparcel: [
+                [2697000, "scroll0", 5],
+                [1977800, "cscroll0", 2],
+                [1618200, "seashell", 5],
+                [1258600, "leather", 2],
+                [899000, "scroll1", 1],
+                [359600, "gem1", 1],
+                [134850, "cscroll1", 1],
+                [35960, "offeringp", 1],
+                [8990, "gem0", 1],
+                [2000, "duskweavehood", 1],
+                [2000, "caravanbrigandine", 1],
+                [2000, "mirrorsteelgauntlet", 1],
+                [2000, "ironheelboots", 1],
+                [2000, "tollkeeperspike", 1],
+            ],
             mistletoe: [
                 [0.12, "eggnog"],
                 [1, "hotchocolate"],
@@ -2014,7 +2074,10 @@ test("G.drops type validation", async () => {
                     [0.04, "spikedhelmet"],
                     [0.00005, "tombkey"],
                 ],
-                ghost: [[0.0002, "pmace"]],
+                ghost: [
+                    [0.0002, "pmace"],
+                    [0.05, "drapes"],
+                ],
                 goldenbat: [
                     [0.8, "handofmidas"],
                     [1, "bataxe"],
@@ -2127,6 +2190,7 @@ test("G.drops type validation", async () => {
                 mummy: [
                     [0.00025, "open", "weaponofthedead"],
                     [0.002, "bandages"],
+                    [0.05, "drapes"],
                 ],
                 mvampire: [
                     [0.1, "intearring"],
@@ -2139,6 +2203,7 @@ test("G.drops type validation", async () => {
                     [0.0000125, "sanguine"],
                     [0.1, "voidthread"],
                 ],
+                nerfedmummy: [[0.01, "drapes"]],
                 odino: [
                     [0.0025, "mbones"],
                     [0.00016666666666666666, "sshield"],
@@ -2488,6 +2553,24 @@ test("G.drops type validation", async () => {
                 [0.000001, "vitscroll", 10],
                 [1, "open", "basicelixir"],
                 [0.00002, "fury"],
+            ],
+            sixcake: [
+                [14.399999999999999, "candleward"],
+                [14.399999999999999, "paradequiver"],
+                [13.44, "homecominghelm"],
+                [13.44, "homecomingcoat"],
+                [13.44, "homecomingcape"],
+                [9.6, "guestbook"],
+                [9.6, "reunionbow"],
+                [7.68, "keepsakependant"],
+                [1, "cx", "aniv0"],
+                [1, "cx", "aniv1"],
+                [1, "cx", "aniv2"],
+                [1, "cx", "aniv3"],
+            ],
+            sixcake_bonus: [
+                [1, "anniversarygift", 3],
+                [0.00001, "cxjar", 1, "ikissyou"],
             ],
             skins: { bronze: [], gold: [], normal: [], silver: ["mwarrior_cool", "mnwarrior"] },
             statamulet: [

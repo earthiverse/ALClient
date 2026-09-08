@@ -1,13 +1,25 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
 test("G.npcs type validation", async () => {
     const G_npcs: Pick<GData, "npcs"> = {
         npcs: {
+            anniversary_baker: {
+                color: "#F0B742",
+                cx: { hat: "aniv2" },
+                id: "anniversary_baker",
+                interaction: ["Six flavors? I can make something of that."],
+                name: "Mira",
+                quest: "anniversary_baker",
+                role: "anniversary_crafter",
+                says: "Six slices. One cake.",
+                skin: "jubchan",
+                type: "fullstatic",
+            },
             antip2w: {
                 id: "antip2w",
                 items: ["cosmo0", "cosmo2", "cosmo3", "cosmo5"],
@@ -647,7 +659,6 @@ test("G.npcs type validation", async () => {
             },
             citizen17: {
                 citizen_behavior: "wayfinder",
-                cosmetic_head_y: 1,
                 cx: { back: "backpacks00", hair: "hairdo219", hat: "hat202", head: "mmakeup02" },
                 delay: 6000,
                 hp: 3200,
@@ -726,6 +737,80 @@ test("G.npcs type validation", async () => {
                 says: ["Show me a flourish.", "I can follow that.", "A bow finishes it."],
                 skin: "mbody1e",
                 speed: 18,
+                type: "fullstatic",
+            },
+            citizen22: {
+                citizen_behavior: "market_patron",
+                cx: { back: "backpacks03", hair: "hairdo406", hat: "hat213", head: "mmakeup05" },
+                delay: 5000,
+                hp: 3600,
+                id: "citizen22",
+                interaction: [
+                    "Keep a stocked shop here for two minutes and leave the neighbors room. I bring parcels once an hour.",
+                ],
+                level: 48,
+                market: {
+                    anchor_tolerance: 4,
+                    areas: [
+                        [-240, -120, 240, 144],
+                        [-88, 144, 88, 360],
+                    ],
+                    chase: [
+                        "duskweavehood",
+                        "caravanbrigandine",
+                        "mirrorsteelgauntlet",
+                        "ironheelboots",
+                        "tollkeeperspike",
+                    ],
+                    exchange: [
+                        [2697000, "scroll0", 5],
+                        [1977800, "cscroll0", 2],
+                        [1618200, "seashell", 5],
+                        [1258600, "leather", 2],
+                        [899000, "scroll1", 1],
+                        [359600, "gem1", 1],
+                        [134850, "cscroll1", 1],
+                        [35960, "offeringp", 1],
+                        [8990, "gem0", 1],
+                        [2000, "duskweavehood", 1],
+                        [2000, "caravanbrigandine", 1],
+                        [2000, "mirrorsteelgauntlet", 1],
+                        [2000, "ironheelboots", 1],
+                        [2000, "tollkeeperspike", 1],
+                    ],
+                    front_clearance: 15,
+                    front_width: 10,
+                    handoff: 32,
+                    hour_ms: 3600000,
+                    max_observation_gap: 5000,
+                    npc_clearance: 40,
+                    radius: 600,
+                    settle_ms: 120000,
+                    shell_floor: 0.00001,
+                    shell_zero: 0.005,
+                    spacing_text:
+                        "No parcels within 40px of a stationary NPC or within 10px of another open stand. A stand directly in front of another, up to 15px south and 10px sideways, also receives no parcel.",
+                    stand_clearance: 10,
+                    stops: [
+                        [0, 0],
+                        [-96, 0],
+                        [-192, 104],
+                        [0, 120],
+                        [0, 320],
+                        [32, 200],
+                        [96, 104],
+                    ],
+                },
+                modal: "npc-merrit",
+                name: "Merrit",
+                role: "citizen",
+                says: [
+                    "Fresh stock? Let me have a look.",
+                    "Good to see the square busy.",
+                    "Leave your neighbors some room.",
+                ],
+                skin: "mbody4b",
+                speed: 28,
                 type: "fullstatic",
             },
             compound: { id: "compound", role: "compound", skin: "shrine2", type: "static" },

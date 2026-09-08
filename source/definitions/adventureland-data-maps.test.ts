@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -851,6 +851,7 @@ test("G.maps type validation", async () => {
                     },
                     { id: "craftsman", position: [92, 670] },
                     { id: "pete", position: [-776, 1256] },
+                    { id: "citizen22", position: [0, 0] },
                     { id: "citizen0", position: [0, 0] },
                     { id: "citizen2", position: [0, 0] },
                     { id: "citizen3", position: [0, 0] },
@@ -881,6 +882,7 @@ test("G.maps type validation", async () => {
                     [-365, 144, 20, 16, "sign", "Tavern"],
                 ],
                 ref: { c_mid: [-180, -203], cx: [-479.65, -919.23, -240.96, -697.72], u_mid: [-235, -203] },
+                seasonal_npcs: [{ event: "anniversary", id: "anniversary_baker", position: [64, -88] }],
                 spawns: [
                     [0, 0, 0, 100],
                     [-968, -163],

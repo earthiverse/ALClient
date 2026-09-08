@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -202,6 +202,7 @@ test("G.animations type validation", async () => {
                 y: -10,
             },
             icecrack: { alpha: 1, file: "/images/sprites/animations/crackingIce.png", frames: 6, size: 1, y: 2 },
+            ikissyou_fx: { alpha: 1, exact: true, file: "/images/sprites/animations/IKissYou.png?v=1", frames: 10 },
             invincible: { alpha: 0.8, continuous: true, file: "/images/sprites/animations/Shield1.png", frames: 9 },
             light: { alpha: 0.7, file: "/images/sprites/animations/Light.png", frames: 11 },
             magic0: {
@@ -244,6 +245,12 @@ test("G.animations type validation", async () => {
                 frames: 4,
                 speed: 480,
             },
+            makeawish_overlay: {
+                alpha: 1,
+                exact: true,
+                file: "/images/sprites/animations/MakeAWish.png?v=1",
+                frames: 3,
+            },
             mblob: {
                 continuous: true,
                 directional: true,
@@ -266,6 +273,7 @@ test("G.animations type validation", async () => {
                 frames: 3,
                 speed: 800,
             },
+            merrit_bonus: { alpha: 1, exact: true, file: "/images/sprites/animations/CGreen_Spark3.png", frames: 10 },
             mluck: { file: "/images/sprites/animations/Consume0.png", frames: 13 },
             party_heal: {
                 alpha: 1,
@@ -304,6 +312,19 @@ test("G.animations type validation", async () => {
                 continuous: true,
                 file: "/images/sprites/animations/reflection.png",
                 frames: 9,
+            },
+            reunionarrow: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/ReunionArrow.png?v=1",
+                frames: 3,
+                speed: 500,
+            },
+            reunionarrow_hit: {
+                alpha: 0.9,
+                file: "/images/sprites/animations/ReunionArrowHit.png?v=1",
+                frames: 7,
+                size: 0.8,
             },
             revival: {
                 alpha: 0.8,

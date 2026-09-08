@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -578,6 +578,18 @@ test("G.skills type validation", async () => {
                 type: "skill",
                 use_range: true,
             },
+            ikissyou: {
+                cooldown: 10000,
+                emote: "ikissyou",
+                explanation: "A little kiss, from me to you.",
+                mp: 0,
+                name: "I Kiss You",
+                no_self: true,
+                range: 80,
+                skin: "emote_ikissyou",
+                target: "player",
+                type: "skill",
+            },
             interact: {
                 explanation: "Interact with the nearest game entity, a door, doorway, or NPC.",
                 name: "Interact",
@@ -632,6 +644,15 @@ test("G.skills type validation", async () => {
                 name: "Magiport",
                 skin: "skill_teleport",
                 target: "player",
+                type: "skill",
+            },
+            makeawish: {
+                cooldown: 240000,
+                emote: "makeawish",
+                explanation: "Close your eyes. This one might hear you.",
+                mp: 50,
+                name: "Make a Wish",
+                skin: "emote_makeawish",
                 type: "skill",
             },
             massexchange: {

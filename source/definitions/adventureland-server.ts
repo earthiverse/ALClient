@@ -1140,7 +1140,7 @@ export type ServerData = {
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
 } & { schedule?: ScheduleData } & {
-    [T in EventName]?: boolean
+    [T in Exclude<EventName, "anniversary">]?: boolean
 } & { goobrawl?: ServerInfoDataEvent } & {
     abtesting?:
         | ServerInfoDataEvent
@@ -1154,6 +1154,23 @@ export type ServerInfoData = {
               /** The event ID. TODO: Do we need this? */
               id: string
           }
+} & {
+    anniversary?: {
+        active?: boolean
+        live?: boolean
+        next?: number
+        round?: number
+        /** When the character stops being kissable */
+        expires?: number
+        /** TODO: Same as ID? */
+        target?: string
+        /** The character that is kissable */
+        id?: string
+        /** Whether the character is near the position */
+        available?: boolean
+        skin?: string
+        cx?: CXData
+    } & Partial<IPosition>
 }
 
 export type ServerInfoDataEvent = {
@@ -1349,8 +1366,10 @@ export type EmoteSkillName = Extract<
     | "headwiggle"
     | "hearts_single"
     | "highfive"
+    | "ikissyou"
     | "joy"
     | "jump"
+    | "makeawish"
     | "mirrordance"
     | "pocketstorm"
     | "spotlight"
@@ -1380,6 +1399,7 @@ export type ClientToServerSkillData =
               | "joy"
               | "jump"
               | "light"
+              | "makeawish"
               | "massproduction"
               | "massproductionpp"
               | "massexchange"
@@ -1414,6 +1434,7 @@ export type ClientToServerSkillData =
               | "guardians_oath"
               | "highfive"
               | "huntersmark"
+              | "ikissyou"
               | "magiport"
               | "mentalburst"
               | "mluck"

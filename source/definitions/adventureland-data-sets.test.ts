@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -56,6 +56,13 @@ test("G.sets type validation", async () => {
                     "orboftemporal",
                 ],
                 name: "Holiday Spirit",
+            },
+            homecoming: {
+                "1": {},
+                "2": { armor: 5, resistance: 5 },
+                "3": { armor: 10, resistance: 10 },
+                items: ["homecominghelm", "homecomingcoat", "homecomingcape"],
+                name: "Homecoming",
             },
             legends: {
                 "1": {},

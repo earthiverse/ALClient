@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 6732 (2026-09-06)
+ * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
  * It is used to confirm type correctness
  */
 
@@ -89,6 +89,16 @@ test("G.craft type validation", async () => {
             },
             bronzeingot: { cost: 360000, items: [[16, "bronzenugget"]] },
             cake: { cost: 5, items: [[10, "whiteegg"]] },
+            candleward: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "shield", 0],
+                    [3, "bronzeingot"],
+                    [40, "leather"],
+                ],
+                quest: "anniversary_baker",
+            },
             candycanesword: {
                 cost: 480000,
                 items: [
@@ -320,6 +330,17 @@ test("G.craft type validation", async () => {
                     [1, "essenceofgreed"],
                 ],
             },
+            guestbook: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "wbook0", 0],
+                    [1, "ink"],
+                    [2, "voidthread"],
+                    [30, "drapes"],
+                ],
+                quest: "anniversary_baker",
+            },
             harpybow: {
                 cost: 1640000,
                 items: [
@@ -342,6 +363,46 @@ test("G.craft type validation", async () => {
                     [1, "woodensword", 8],
                     [1, "nheart"],
                 ],
+            },
+            homecomingcape: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "cape", 0],
+                    [4, "voidthread"],
+                    [80, "drapes"],
+                ],
+                quest: "anniversary_baker",
+            },
+            homecomingcoat: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "coat1", 0],
+                    [3, "bronzeingot"],
+                    [60, "drapes"],
+                ],
+                quest: "anniversary_baker",
+            },
+            homecominghelm: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "helmet1", 0],
+                    [2, "bronzeingot"],
+                    [20, "drapes"],
+                ],
+                quest: "anniversary_baker",
+            },
+            keepsakependant: {
+                cost: 1000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "hpamulet", 0],
+                    [1, "bronzeingot"],
+                    [20, "drapes"],
+                ],
+                quest: "anniversary_baker",
             },
             knifebelt: {
                 cost: 350000,
@@ -375,6 +436,12 @@ test("G.craft type validation", async () => {
                     [1, "mbones"],
                     [1, "wbasher"],
                 ],
+            },
+            makeawishjar: {
+                cost: 250000,
+                items: [[1, "sixcake"]],
+                output: { data: "makeawish", name: "cxjar" },
+                quest: "anniversary_baker",
             },
             merry: {
                 cost: 480000,
@@ -462,6 +529,16 @@ test("G.craft type validation", async () => {
                     [1, "ornament"],
                     [20, "confetti"],
                 ],
+            },
+            paradequiver: {
+                cost: 2000000,
+                items: [
+                    [1, "sixcake"],
+                    [1, "quiver", 0],
+                    [6, "stormfeather"],
+                    [40, "leather"],
+                ],
+                quest: "anniversary_baker",
             },
             pickaxe: {
                 cost: 100,
@@ -554,6 +631,16 @@ test("G.craft type validation", async () => {
                     [4, "rfangs"],
                 ],
             },
+            reunionbow: {
+                cost: 4000000,
+                items: [
+                    [2, "sixcake"],
+                    [1, "t2bow", 0],
+                    [20, "stormfeather"],
+                    [4, "essenceofether"],
+                ],
+                quest: "anniversary_baker",
+            },
             rimeboots: {
                 cost: 280000,
                 items: [
@@ -604,6 +691,18 @@ test("G.craft type validation", async () => {
                     [8, "voidthread"],
                     [20, "bwing"],
                 ],
+            },
+            sixcake: {
+                cost: 100000,
+                items: [
+                    [1, "slice_strawberry"],
+                    [1, "slice_citrus"],
+                    [1, "slice_honey"],
+                    [1, "slice_mint"],
+                    [1, "slice_blueberry"],
+                    [1, "slice_nightberry"],
+                ],
+                quest: "anniversary_baker",
             },
             slimestaff: {
                 cost: 24000,

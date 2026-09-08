@@ -139,6 +139,40 @@ test("ServerInfoData type validation", async () => {
                 end: "2022-08-02T04:08:00.229Z",
             },
         },
+        // anniversary event
+        {
+            schedule: {
+                time_offset: -5,
+                dailies: [13, 20],
+                nightlies: [23],
+                night: false,
+            },
+            anniversary: {
+                active: true,
+                live: false,
+                next: 1788829200000,
+            },
+        },
+        {
+            anniversary: {
+                active: true,
+                live: true,
+                next: 1788831000000,
+                round: 993794,
+                expires: 1788829500035,
+                target: "TheDroidMCH",
+                id: "TheDroidMCH",
+                available: true,
+                skin: "marmor12b",
+                cx: {
+                    head: "fmakeup01",
+                    hair: "hairdo520",
+                },
+                map: "main",
+                x: 43,
+                y: 101,
+            },
+        },
     ]
     for (const serverInfo of serverInfos) expect(serverInfo).toBeDefined()
 })
