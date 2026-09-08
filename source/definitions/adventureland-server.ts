@@ -947,6 +947,34 @@ export type MailMessageData = {
     taken?: boolean
 }
 
+export type MerritReason = {
+    code: "closed" | "cooldown" | "warming"
+    remaining_ms?: number
+}
+
+export type MerritLast = {
+    id: string
+    at: number
+    character: string
+    name: string
+    item: ItemName
+    quantity: number
+    shells: number
+    reason: string
+}
+
+export type MerritStatusData = {
+    reasons: MerritReason[]
+    next_at: number
+    last: MerritLast | null
+    server_now: number
+}
+
+export type MerritGiftData = {
+    id: string
+    receipt: MerritLast
+}
+
 export type MapInfo = { dice: "bets" | "roll" | "lock"; num?: string; seconds: number } | Record<string, never>
 
 export type PullMerchantsData = { type: "merchants"; chars: PullMerchantsCharData[] }
@@ -1335,6 +1363,8 @@ export type ServerToClientEvents = {
     limitdcreport: (data: LimitDCReportData) => void
     lostandfound: (data: ItemDataTrade[]) => void
     magiport: (data: { name: string }) => void
+    merrit_gift: (data: MerritGiftData) => void
+    merrit_status: (data: MerritStatusData) => void
     new_map: (data: NewMapData) => void
     // TODO: Is this real? How does this happen?
     notthere: (data: NotThereData) => void

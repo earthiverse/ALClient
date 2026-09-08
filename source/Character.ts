@@ -41,6 +41,7 @@ import type {
     PartyData,
     StartData,
     LoadedData,
+    MerritStatusData,
     AuthData,
     DisappearingTextData,
     GameLogData,
@@ -141,6 +142,7 @@ export class Character extends Observer implements CharacterData {
     public mp_cost: number
     public max_hp = 1
     public max_mp = 1
+    public merrit?: MerritStatusData
     public move_num: number
     public moving = false
     public mp = 1
@@ -725,6 +727,10 @@ export class Character extends Observer implements CharacterData {
 
         this.socket.on("player", (data: CharacterData) => {
             this.parseCharacter(data)
+        })
+
+        this.socket.on("merrit_status", (data: MerritStatusData) => {
+            this.merrit = data
         })
 
         this.socket.on("q_data", (data: PQData) => {
