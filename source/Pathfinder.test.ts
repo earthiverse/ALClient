@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals"
 import { Game } from "./Game"
 import { Pathfinder } from "./Pathfinder"
-import type { LinkData, NodeData } from "./definitions/pathfinder"
+import type { NodeData } from "./definitions/pathfinder"
 import type { IPosition } from "./definitions/adventureland"
 
 beforeAll(async () => {
@@ -74,29 +74,21 @@ test("Pathfinder.getPath", async () => {
             { avoidTownWarps: true },
         )
         expect(path.length).toBeTruthy()
-        for (const link of path as unknown as LinkData[]) expect(link.type).not.toEqual("town")
+        for (const node of path) expect(node.method).not.toEqual("town")
     }).not.toThrow()
 
     // Avoids bank
     expect(() => {
-        const path = Pathfinder.getPath(
-            { map: "main", x: 0, y: 0 },
-            { map: "level2w", x: 0, y: 0 },
-            { avoidMaps: ["bank", "bank_b", "bank_u"] },
-        )
+        const path = Pathfinder.getPath({ map: "main", x: 0, y: 0 }, { map: "level2w", x: 0, y: 0 })
         expect(path.length).toBeTruthy()
-        for (const link of path as unknown as LinkData[]) {
-            if (link) expect(link.map).not.toMatch(/^bank/)
+        for (const node of path) {
+            if (node) expect(node.map).not.toMatch(/^bank/)
         }
     }).not.toThrow()
 
     // Still goes to bank if the destination is in the bank
     expect(() => {
-        const path = Pathfinder.getPath(
-            { map: "main", x: 2, y: 3 },
-            { map: "bank_u", x: 4, y: 5 },
-            { avoidMaps: ["bank", "bank_b", "bank_u"] },
-        )
+        const path = Pathfinder.getPath({ map: "main", x: 2, y: 3 }, { map: "bank_u", x: 4, y: 5 })
         expect(path.length).toBeTruthy()
         const end = path[path.length - 1]
         expect(end.map).toEqual("bank_u")
@@ -106,11 +98,7 @@ test("Pathfinder.getPath", async () => {
 
     // Still exits bank if the start is in the bank
     expect(() => {
-        const path = Pathfinder.getPath(
-            { map: "bank_u", x: 2, y: 3 },
-            { map: "main", x: 4, y: 5 },
-            { avoidMaps: ["bank", "bank_b", "bank_u"] },
-        )
+        const path = Pathfinder.getPath({ map: "bank_u", x: 2, y: 3 }, { map: "main", x: 4, y: 5 })
         expect(path.length).toBeTruthy()
         const end = path[path.length - 1]
         expect(end.map).toEqual("main")

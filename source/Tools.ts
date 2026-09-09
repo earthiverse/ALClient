@@ -130,4 +130,32 @@ export class Tools {
             identifier: server[2] as ServerIdentifier,
         }
     }
+
+    /**
+     * Projects a point onto a line segment [from, to] and returns the closest point on that segment.
+     *
+     * @param current Current position {x, y}
+     * @param from From position {x, y}
+     * @param to To position {x, y}
+     */
+    public static getClosestPointOnSegment(
+        current: { x: number; y: number },
+        from: { x: number; y: number },
+        to: { x: number; y: number },
+    ): { x: number; y: number } {
+        const abX = to.x - from.x
+        const abY = to.y - from.y
+        const abSq = abX * abX + abY * abY
+        if (abSq === 0) return { x: from.x, y: from.y }
+
+        const apX = current.x - from.x
+        const apY = current.y - from.y
+        const u = apX * abX + apY * abY
+        const t = Math.max(0, Math.min(1, u / abSq))
+
+        return {
+            x: from.x + t * abX,
+            y: from.y + t * abY,
+        }
+    }
 }

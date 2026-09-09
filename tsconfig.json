@@ -15,6 +15,7 @@
         "removeComments": false,
         "rootDir": "source",
         "sourceMap": true,
+        "skipLibCheck": true,
         "types": ["jest", "mongoose", "node"]
     },
     "include": ["source"],

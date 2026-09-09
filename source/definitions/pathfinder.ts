@@ -1,8 +1,7 @@
-import type BitSet from "bitset"
-import type { ItemName, MapName } from "./adventureland-data.js"
+import type { PathNode, SafeWalkPoint } from "alpathfinder"
+import type { MapName } from "./adventureland-data.js"
 
-export type Grid = BitSet
-export type Grids = { [T in MapName]?: Grid }
+export type { PathNode, SafeWalkPoint }
 
 export type NodeData = {
     map: MapName
@@ -10,52 +9,14 @@ export type NodeData = {
     y: number
 }
 
-export type LinkData = NodeData &
-    /**
-     * Used to travel through doors
-     */
-    (| {
-              type: "transport"
-              spawn: number
-          }
-        /**
-         * Used to travel to the spawn point of the map
-         */
-        | {
-              type: "town"
-          }
-        /**
-         * Used when entering a crypt
-         */
-        | {
-              key: ItemName
-              type: "enter"
-          }
-        /**
-         * Used when leaving cyberland or jail
-         */
-        | {
-              type: "leave"
-          }
-        /**
-         * Normal movement
-         */
-        | {
-              type: "move"
-          }
-    )
-
 export type PathfinderOptions = {
-    avoidMaps?: MapName[]
     avoidTownWarps?: boolean
     getWithin?: number
     useBlink?: boolean
     costs?: {
         blink?: number
-        enter?: number
-        town?: number
-        transport?: number
     }
+    speed?: number
     /** If set, we will console.log() messages */
     showConsole?: boolean
 }

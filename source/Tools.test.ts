@@ -74,3 +74,28 @@ test("Pathfinder.doorDistance", async () => {
     const doorOutside_1 = { x: door[0] + door[2], y: door[1] - door[3] }
     expect(Tools.squaredDistance(doorOutside_1, doorRectangle)).toBe((door[2] / 2) * (door[2] / 2))
 })
+
+test("Tools.getClosestPointOnSegment", () => {
+    const from = { x: 0, y: 0 }
+    const to = { x: 100, y: 0 }
+
+    // Exactly on the segment
+    expect(Tools.getClosestPointOnSegment({ x: 50, y: 0 }, from, to)).toEqual({ x: 50, y: 0 })
+
+    // Perpendicular projection onto segment
+    expect(Tools.getClosestPointOnSegment({ x: 50, y: 20 }, from, to)).toEqual({ x: 50, y: 0 })
+
+    // Clamped to "from"
+    expect(Tools.getClosestPointOnSegment({ x: -20, y: 10 }, from, to)).toEqual({ x: 0, y: 0 })
+
+    // Clamped to "to"
+    expect(Tools.getClosestPointOnSegment({ x: 120, y: -10 }, from, to)).toEqual({ x: 100, y: 0 })
+
+    // Degenerate segment (from === to)
+    expect(Tools.getClosestPointOnSegment({ x: 25, y: 25 }, from, from)).toEqual({ x: 0, y: 0 })
+
+    // Diagonal segment
+    const diagFrom = { x: 0, y: 0 }
+    const diagTo = { x: 100, y: 100 }
+    expect(Tools.getClosestPointOnSegment({ x: 0, y: 100 }, diagFrom, diagTo)).toEqual({ x: 50, y: 50 })
+})

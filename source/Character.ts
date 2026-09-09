@@ -71,7 +71,7 @@ import type {
     TradeHistoryData,
     DestroyGRDataObject,
 } from "./definitions/adventureland-server.js"
-import type { LinkData } from "./definitions/pathfinder.js"
+import type { PathNode } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
 import type { Entity } from "./Entity.js"
 import { Item } from "./Item.js"
@@ -4913,13 +4913,12 @@ export class Character extends Observer implements CharacterData {
         }
 
         if (options == undefined) options = {}
+        if (options.speed == undefined) options.speed = this.speed
         if (options.costs == undefined) options.costs = {}
         if (options.costs.blink == undefined) options.costs.blink = this.speed * 3.2 + 250 // We can't attack for 3.2 seconds after a blink, + it uses a lot of mana
-        if (options.costs.town == undefined) options.costs.town = this.speed * (4 + this.timeout / 500) // Set it to 4s of movement, because it takes 3s to channel + it could be cancelled.
-        if (options.costs.transport == undefined) options.costs.transport = this.speed * (this.timeout / 500) // Based on how long it takes to confirm with the server
 
         let fixedTo: IPosition & { map: MapName }
-        let path: LinkData[]
+        let path: PathNode[]
         if (typeof to == "string") {
             // Check if our destination is a map name
             const gMap: GMap = this.G.maps[to]
@@ -5070,14 +5069,6 @@ export class Character extends Observer implements CharacterData {
         if (distance == 0) return fixedTo
         if (options?.getWithin >= distance) return { map: this.map, x: this.x, y: this.y }
 
-        // Avoid banks if we're not going to a bank
-        if (!Constants.BANK_MAPS.includes(fixedTo.map)) {
-            if (!options.avoidMaps) options.avoidMaps = []
-            for (const map of Constants.BANK_MAPS) {
-                if (!options.avoidMaps.includes(map)) options.avoidMaps.push(map)
-            }
-        }
-
         // If we don't have the path yet, get it
         this.smartMoving = fixedTo
         try {
@@ -5139,11 +5130,11 @@ export class Character extends Observer implements CharacterData {
             let currentMove = path[i]
 
             // Check if we can walk to a spot close to the goal if that's OK
-            if (currentMove.type == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
+            if (currentMove.method == "move" && this.map == fixedTo.map && options?.getWithin > 0) {
                 const angle = Math.atan2(this.y - fixedTo.y, this.x - fixedTo.x)
-                const potentialMove: LinkData = {
+                const potentialMove: PathNode = {
                     map: this.map,
-                    type: "move",
+                    method: "move",
                     x: fixedTo.x + Math.cos(angle) * options.getWithin,
                     y: fixedTo.y + Math.sin(angle) * options.getWithin,
                 }
@@ -5154,13 +5145,13 @@ export class Character extends Observer implements CharacterData {
             }
 
             // Shortcut check -- check if we can move to the next node
-            if (currentMove.type == "move") {
+            if (currentMove.method == "move") {
                 for (let j = i + 1; j < path.length; j++) {
                     const potentialMove = path[j]
                     if (potentialMove.map !== currentMove.map) break
-                    if (potentialMove.type == "town") break
+                    if (potentialMove.method == "town") break
 
-                    if (potentialMove.type == "move" && Pathfinder.canWalkPath(this, potentialMove)) {
+                    if (potentialMove.method == "move" && Pathfinder.canWalkPath(this, potentialMove)) {
                         i = j
                         currentMove = potentialMove
                     }
@@ -5192,10 +5183,11 @@ export class Character extends Observer implements CharacterData {
                         // Check if we can blink there
                         const roundedX = Math.round((potentialMove.x + dX) / 10) * 10
                         const roundedY = Math.round((potentialMove.y + dY) / 10) * 10
-                        if (!Pathfinder.canStand({ map: potentialMove.map, x: roundedX, y: roundedY })) continue
+                        if (!Pathfinder.canStand({ map: potentialMove.map as MapName, x: roundedX, y: roundedY }))
+                            continue
 
                         // We found a spot we can blink to
-                        roundedMove = { map: potentialMove.map, x: roundedX, y: roundedY }
+                        roundedMove = { map: potentialMove.map as MapName, x: roundedX, y: roundedY }
                         break
                     }
                     if (!roundedMove) continue // We can't blink to a location near here...
@@ -5218,28 +5210,14 @@ export class Character extends Observer implements CharacterData {
                         /* Suppress errors */
                     })
                     i = j - 1
-                    if (potentialMove.type !== "move") i -= 1 // We have more movement to do, we just warped to a door
+                    if (potentialMove.method !== "move") i -= 1 // We have more movement to do, we just warped to a door
                     blinked = true
                     break
                 }
                 if (blinked) continue
             }
 
-            // Town check -- Preemptively start the town warp
-            for (let j = i + 1; j < path.length; j++) {
-                const futureMove = path[j]
-                if (currentMove.map !== futureMove.map) break
-                if (futureMove.type == "town") {
-                    this.warpToTown()
-                        ?.then(() => {
-                            i = j - 1
-                        })
-                        ?.catch((e) => {
-                            if (options?.showConsole) console.error(e)
-                        })
-                    break
-                }
-            }
+            // TODO: Pre-emptive use of town if we're going to be town warping soon
 
             // TODO: We should probably add a check that we won't move further away if this goes off
             //       before this is actually implemented.
@@ -5264,13 +5242,13 @@ export class Character extends Observer implements CharacterData {
 
             // Perform the next movement
             try {
-                if (currentMove.type == "enter") {
-                    if (!fixedTo.in && !this.hasItem(currentMove.key))
+                if (currentMove.method == "enter") {
+                    if (!fixedTo.in && !this.hasItem(currentMove.key as ItemName))
                         throw new Error(`We need '${currentMove.key}' to enter '${currentMove.map}'.`)
-                    await this.enter(currentMove.map, fixedTo.in)
-                } else if (currentMove.type == "leave") {
+                    await this.enter(currentMove.map as MapName, fixedTo.in)
+                } else if (currentMove.method == "leave") {
                     await this.leaveMap()
-                } else if (currentMove.type == "move") {
+                } else if (currentMove.method == "move") {
                     if (currentMove.map !== this.map) {
                         throw new Error(`We are supposed to be in ${currentMove.map}, but we are in ${this.map}`)
                     }
@@ -5282,10 +5260,69 @@ export class Character extends Observer implements CharacterData {
                     } else {
                         await this.move(currentMove.x, currentMove.y, { disableSafetyCheck: true })
                     }
-                } else if (currentMove.type == "town") {
-                    await this.warpToTown()
-                } else if (currentMove.type == "transport") {
-                    await this.transport(currentMove.map, currentMove.spawn)
+                } else if (currentMove.method == "town") {
+                    // Attempt to warp to town
+                    const warpPromise = this.warpToTown()
+                    let warpFinished = false
+                    const markFinished = () => {
+                        warpFinished = true
+                    }
+                    warpPromise.then(markFinished, markFinished)
+
+                    // Walk a path to spawn in case we get interrupted during the warp
+                    let spawnPath: PathNode[]
+                    try {
+                        spawnPath = Pathfinder.getPath(this, currentMove, { avoidTownWarps: true })
+                    } catch {
+                        if (options?.showConsole) {
+                            console.error(
+                                `Unable to find path to spawn from ${this.map},${this.x},${this.y} to ${currentMove.map},${currentMove.x},${currentMove.y}`,
+                            )
+                        }
+                    }
+
+                    if (Array.isArray(spawnPath)) {
+                        for (const spawnSegment of spawnPath) {
+                            if (warpFinished || this.map !== currentMove.map) break
+                            if (spawnSegment.method === "move") {
+                                try {
+                                    await this.move(spawnSegment.x, spawnSegment.y, { disableSafetyCheck: true })
+                                } catch {
+                                    break
+                                }
+                            }
+                        }
+                    }
+
+                    try {
+                        await warpPromise
+                    } catch {
+                        if (this.map !== currentMove.map || !Pathfinder.canWalkPath(this, currentMove)) {
+                            throw new Error(
+                                `Unable to warp to town (${currentMove.map},${currentMove.x},${currentMove.y})`,
+                            )
+                        }
+                    }
+
+                    // Town warps can spawn you near the point, but not actually at the point
+                    const nextSegment = path[i + 1] ?? currentMove
+                    if (nextSegment.map === this.map) {
+                        const closest = Tools.getClosestPointOnSegment(
+                            { x: this.x, y: this.y },
+                            { x: currentMove.x, y: currentMove.y },
+                            { x: nextSegment.x, y: nextSegment.y },
+                        )
+                        if (options.resolveOnFinalMoveStart && i >= path.length - 1) {
+                            await this.move(closest.x, closest.y, {
+                                disableSafetyCheck: true,
+                                resolveOnStart: true,
+                            })
+                        } else {
+                            await this.move(closest.x, closest.y, { disableSafetyCheck: true })
+                        }
+                    }
+                } else if (currentMove.method == "transport" || currentMove.method == "door") {
+                    await this.transport(currentMove.map as MapName, currentMove.spawn)
                 }
             } catch (e) {
                 if (options?.showConsole) console.error(e)
