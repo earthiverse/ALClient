@@ -137,3 +137,12 @@ test("Pathfinder.locateMonster", () => {
     // harpy should have a lot of locations since it has a random spawn
     expect(Pathfinder.locateMonster("harpy").length).toBeGreaterThan(1)
 })
+
+test("Pathfinder.getSafeWalkTo", () => {
+    const from: IPosition = { map: "main", x: 0, y: 0 }
+    // Test precise floating point coordinates preserve precision when walkable
+    const safeTarget: IPosition = { map: "main", x: 10.123456789, y: 15.987654321 }
+    const result = Pathfinder.getSafeWalkTo(from, safeTarget)
+    expect(result.x).toBe(safeTarget.x)
+    expect(result.y).toBe(safeTarget.y)
+})

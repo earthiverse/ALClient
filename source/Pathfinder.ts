@@ -129,6 +129,9 @@ export class Pathfinder {
 
         const safe = alpathfinder.getSafeWalkTo(from.map as MapKey, from.x, from.y, to.x, to.y)
         if (safe) {
+            if (safe.x === Math.fround(to.x) && safe.y === Math.fround(to.y)) {
+                return { map: safe.map as MapName, x: to.x, y: to.y }
+            }
             return { map: safe.map as MapName, x: safe.x, y: safe.y }
         }
 
