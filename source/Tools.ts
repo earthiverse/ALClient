@@ -123,7 +123,7 @@ export class Tools {
      * @returns
      */
     public static parseServerKey(serverKey: string): { region: ServerRegion; identifier: ServerIdentifier } {
-        const server = /(US|EU|ASIA)([I]+|PVP)/.exec(serverKey)
+        const server = /(US|EU|ASIA)([IV]+|PVP)/.exec(serverKey)
         if (!server) throw new Error(`Invalid server key: ${serverKey}`)
         return {
             region: server[1] as ServerRegion,

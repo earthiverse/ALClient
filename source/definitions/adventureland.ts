@@ -323,6 +323,6 @@ export type NPCRole =
     | "witch"
 
 // TODO: Confirm that PVP is actually the identifier for PVP servers
-export type ServerIdentifier = "HARDCORE" | "I" | "II" | "III" | "PVP"
+export type ServerIdentifier = "HARDCORE" | "I" | "II" | "III" | "IV" | "PVP"
 
 export type ServerRegion = "ASIA" | "EU" | "US"
