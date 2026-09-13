@@ -5072,6 +5072,7 @@ export class Character extends Observer implements CharacterData {
         // If we don't have the path yet, get it
         this.smartMoving = fixedTo
         try {
+            if (!Pathfinder.canStand(this)) await this.warpToTown() // We're in an unwalkable position, so we need to warp to town
             if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
         } catch (e) {
             this.smartMoving = undefined
