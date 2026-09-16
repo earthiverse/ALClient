@@ -11,6 +11,7 @@ export type NodeData = {
 
 export type PathfinderOptions = {
     avoidTownWarps?: boolean
+    avoidMaps?: MapName[]
     getWithin?: number
     useBlink?: boolean
     costs?: {

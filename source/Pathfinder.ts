@@ -96,7 +96,10 @@ export class Pathfinder {
         if (!this.G || !this.prepared) throw new Error("Prepare pathfinding before querying getPath()!")
 
         const speed = options?.avoidTownWarps ? 100_000 : (options?.speed ?? 50)
-        const rawPath = alpathfinder.getPath(from.map as MapKey, from.x, from.y, to.map as MapKey, to.x, to.y, speed)
+        const rawPath = alpathfinder.getPath(from.map as MapKey, from.x, from.y, to.map as MapKey, to.x, to.y, {
+            speed,
+            avoidMaps: options?.avoidMaps ?? [],
+        })
 
         if (!rawPath || rawPath.length === 0) {
             throw new Error(
