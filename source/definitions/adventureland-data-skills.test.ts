@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -661,7 +661,7 @@ test("G.skills type validation", async () => {
                 cooldown: 50,
                 duration: 10000,
                 explanation:
-                    "Adds a 1-time use buff that speeds up the next exchange by 50%. The buff expires in 10 seconds if not used.",
+                    "Adds a 1-time use buff that reduces the time of your next exchange by 50%. The buff expires in 10 seconds if not used.",
                 level: 40,
                 mp: 30,
                 name: "Mass Exchange",
@@ -674,7 +674,7 @@ test("G.skills type validation", async () => {
                 cooldown: 50,
                 duration: 10000,
                 explanation:
-                    "Adds a 1-time use buff that speeds up the next exchange by 90%. The buff expires in 10 seconds if not used.",
+                    "Adds a 1-time use buff that reduces the time of your next exchange by 90%. The buff expires in 10 seconds if not used.",
                 level: 70,
                 mp: 200,
                 name: "Mass Exchange++",
@@ -687,7 +687,7 @@ test("G.skills type validation", async () => {
                 cooldown: 50,
                 duration: 10000,
                 explanation:
-                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 50%. The buff expires in 10 seconds if not used.",
+                    "Adds a 1-time use buff that reduces the time of your next upgrade or compound by 50%. The buff expires in 10 seconds if not used.",
                 level: 30,
                 mp: 20,
                 name: "Mass Production",
@@ -700,7 +700,7 @@ test("G.skills type validation", async () => {
                 cooldown: 50,
                 duration: 10000,
                 explanation:
-                    "Adds a 1-time use buff that speeds up the next upgrade or compound by 90%. The buff expires in 10 seconds if not used.",
+                    "Adds a 1-time use buff that reduces the time of your next upgrade or compound by 90%. The buff expires in 10 seconds if not used.",
                 level: 60,
                 mp: 200,
                 name: "Mass Production++",
@@ -1126,17 +1126,23 @@ test("G.skills type validation", async () => {
                 type: "skill",
             },
             regen_hp: {
+                cooldown_group: "potion",
                 cooldown_multiplier: 2,
-                explanation: "Regenerate 50 HP without using potions.",
+                explanation:
+                    "Restore 50 HP without a potion. Shares a cooldown with MP regeneration and HP/MP potions. Using this ability makes all four unavailable for 4 seconds.",
                 name: "Regenerate HP",
+                output: 50,
                 share: "use_hp",
                 skin: "regen_hp",
                 type: "ability",
             },
             regen_mp: {
+                cooldown_group: "potion",
                 cooldown_multiplier: 2,
-                explanation: "Regenerate 100 MP without using potions.",
+                explanation:
+                    "Restore 100 MP without a potion. Shares a cooldown with HP regeneration and HP/MP potions. Using this ability makes all four unavailable for 4 seconds.",
                 name: "Regenerate MP",
+                output: 100,
                 share: "use_mp",
                 skin: "regen_mp",
                 type: "ability",
@@ -1153,6 +1159,30 @@ test("G.skills type validation", async () => {
                 skin: "skill_revive",
                 target: "player",
                 type: "skill",
+            },
+            rimeshatter: {
+                class: [],
+                damage: 20000,
+                damage_type: "magical",
+                explanation:
+                    "Fires one large icy bolt at each of up to three contributors within 260 range. Each bolt deals 20,000 magical damage before resistance. Break the shell to stop the volley.",
+                hostile: true,
+                monster: true,
+                name: "Rime Shatter",
+                procs: false,
+                projectile: "rimeshatter",
+                range: 260,
+                skin: "rimeglass",
+                type: "monster",
+            },
+            rimeshell: {
+                class: [],
+                explanation:
+                    "At half health, the Djinn casts for 3 seconds. Deal damage equal to 5% of its maximum HP, or stun it, to break the shell and lower resistance by 160 for 5 seconds. Otherwise, it fires at up to three nearby contributors. Ordinary freezing won't interrupt it, and Purify can't dispel the shell.",
+                monster: true,
+                name: "Rime Shell",
+                skin: "rimeglass",
+                type: "monster",
             },
             rspeed: {
                 class: ["rogue"],
@@ -1463,16 +1493,18 @@ test("G.skills type validation", async () => {
             travel: { explanation: "Where would you like to visit?", name: "Travel!", skin: "travel", type: "ability" },
             use_hp: {
                 cooldown: 2000,
+                cooldown_group: "potion",
                 explanation:
-                    "Uses an HP potion from your inventory. If there are multiple potions, the last one is used. If there are no potions, your character regenerates a small amount of HP with a high cooldown.",
+                    "Use the last HP potion in your inventory. Shares a cooldown with MP potions and HP/MP regeneration. Ordinary potions make all four unavailable for 2 seconds. Without a potion, restore 50 HP and wait 4 seconds instead.",
                 name: "Use HP Potion",
                 skin: "use_hp",
                 type: "ability",
             },
             use_mp: {
                 cooldown: 2000,
+                cooldown_group: "potion",
                 explanation:
-                    "Uses an MP potion from your inventory. If there are multiple potions, the last one is used. If there are no potions, your character regenerates a small amount of MP with a high cooldown.",
+                    "Use the last MP potion in your inventory. Shares a cooldown with HP potions and HP/MP regeneration. Ordinary potions make all four unavailable for 2 seconds. Without a potion, restore 100 MP and wait 4 seconds instead.",
                 name: "Use MP Potion",
                 skin: "use_mp",
                 type: "ability",

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -249,6 +249,13 @@ test("G.sprites type validation", async () => {
                 matrix: [["cactusman"]],
                 rows: 1,
                 skip: 1,
+            },
+            cavechest: {
+                columns: 1,
+                file: "/images/tiles/items/cave-chest.png?v=1",
+                matrix: [["cavechest"]],
+                rows: 1,
+                type: "v_animation",
             },
             cbee: { columns: 1, file: "/images/tiles/monsters/cbee.png", matrix: [["cutebee"]], rows: 1 },
             chara2: {
@@ -842,7 +849,8 @@ test("G.sprites type validation", async () => {
             },
             halo: {
                 columns: 1,
-                file: "/images/cosmetics/hats/halo_anim.png",
+                file: "/images/cosmetics/hats/halo_anim.png?v=2",
+                frames: 4,
                 matrix: [["halo"]],
                 rows: 1,
                 type: "a_hat",
@@ -1063,6 +1071,14 @@ test("G.sprites type validation", async () => {
                 size: "large",
                 type: "armor",
             },
+            lavaglass: {
+                columns: 1,
+                file: "/images/cosmetics/makeup/lavaglass_anim.png?v=1",
+                frames: 8,
+                matrix: [["lavaglasshead0"]],
+                rows: 1,
+                type: "head",
+            },
             lchar1: {
                 columns: 4,
                 file: "/images/all_characters/lchar1.png",
@@ -1091,10 +1107,10 @@ test("G.sprites type validation", async () => {
             },
             lskin1: {
                 columns: 4,
-                file: "/images/cosmetics/skins/lskin1.png",
+                file: "/images/cosmetics/skins/lskin1.png?v=2",
                 matrix: [
                     ["lskin1a", "lskin1b", "lskin1c", "lskin1d"],
-                    [null, null, null, null],
+                    ["lskin1e", "lslimeskin", null, null],
                 ],
                 rows: 2,
                 size: "large",
@@ -1118,8 +1134,8 @@ test("G.sprites type validation", async () => {
                 rows: 2,
             },
             makeup1: {
-                columns: 42,
-                file: "/images/cosmetics/makeup/makeup1.png?v=6",
+                columns: 47,
+                file: "/images/cosmetics/makeup/makeup1.png?v=7",
                 matrix: [
                     [
                         "makeup100",
@@ -1164,6 +1180,11 @@ test("G.sprites type validation", async () => {
                         "makeup139",
                         "makeup140",
                         "makeup141",
+                        "cyclops0",
+                        "eyehead0",
+                        "mimichead0",
+                        "slimehead0",
+                        "lanternhead0",
                     ],
                 ],
                 rows: 1,
@@ -1572,12 +1593,13 @@ test("G.sprites type validation", async () => {
             mrpumpkin: { columns: 1, file: "/images/tiles/monsters/mr_pumpkin.png", matrix: [["mrpumpkin"]], rows: 1 },
             mskin1: {
                 columns: 4,
-                file: "/images/cosmetics/skins/mskin1.png",
+                file: "/images/cosmetics/skins/mskin1.png?v=2",
                 matrix: [
                     ["mskin1a", "mskin1b", "mskin1c", "mskin1d"],
                     ["mskin1e", "mskin1f", "mskin1g", "mskin1h"],
+                    ["mslimeskin", null, null, null],
                 ],
-                rows: 2,
+                rows: 3,
                 size: "normal",
                 type: "skin",
             },
@@ -1759,6 +1781,12 @@ test("G.sprites type validation", async () => {
                 matrix: [["rharpy_fly"]],
                 rows: 1,
             },
+            rimedjinn: {
+                columns: 1,
+                file: "/images/tiles/monsters/femaledjinn_1.png",
+                matrix: [["rimedjinn"]],
+                rows: 1,
+            },
             robots: {
                 columns: 4,
                 file: "/images/tiles/monsters/robots.png",
@@ -1854,16 +1882,25 @@ test("G.sprites type validation", async () => {
             },
             sskin1: {
                 columns: 4,
-                file: "/images/cosmetics/skins/sskin1.png",
+                file: "/images/cosmetics/skins/sskin1.png?v=2",
                 matrix: [
                     ["sskin1a", "sskin1b", "sskin1c", "sskin1d"],
                     ["sskin1e", "sskin1f", "sskin1g", "sskin1h"],
+                    ["sslimeskin", null, null, null],
                 ],
-                rows: 2,
+                rows: 3,
                 size: "small",
                 type: "skin",
             },
             stompy: { columns: 1, file: "/images/tiles/monsters/stompy3.png", matrix: [["stompy"]], rows: 1 },
+            stormhead: {
+                columns: 1,
+                file: "/images/cosmetics/makeup/stormhead_anim.png?v=1",
+                frames: 6,
+                matrix: [["stormhead0"]],
+                rows: 1,
+                type: "head",
+            },
             swa: {
                 columns: 4,
                 file: "/images/tiles/characters/sheet_winnersa.png",

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -756,7 +756,19 @@ test("G.maps type validation", async () => {
                 unlist: true,
             },
             main: {
-                animatables: { the_door: { position: "door0", x: 888, y: -672 } },
+                animatables: {
+                    dreams_gate: {
+                        collision: [
+                            [-52, 8, -28, 20],
+                            [28, 8, 52, 20],
+                        ],
+                        position: "dreams_gate",
+                        role: "dreamkeeper",
+                        x: 816,
+                        y: 1160,
+                    },
+                    the_door: { position: "door0", x: 888, y: -672 },
+                },
                 doors: [
                     [-965, -176, 24, 30, "woffice", 0, 1],
                     [536, 1665, 64, 32, "tunnel", 0, 2],
@@ -865,6 +877,7 @@ test("G.maps type validation", async () => {
                     { id: "monsterhunter", position: [126, -413] },
                     { id: "mcollector", position: [81, -283, 1] },
                     { id: "favors", position: [79, -47] },
+                    { id: "dreamkeeper", position: [816, 1200] },
                 ],
                 on_death: ["main", 5],
                 on_exit: ["main", 0],
@@ -904,6 +917,7 @@ test("G.maps type validation", async () => {
                     [968, -577],
                     [1471, -424],
                     [888, -660],
+                    [816, 1200],
                 ],
                 traps: [{ position: [-472, 286], type: "spikes" }],
                 zones: [
@@ -1451,6 +1465,7 @@ test("G.maps type validation", async () => {
                         x: -64,
                         y: -216,
                     },
+                    { frames: [[0, 416, 96, 48]], set: "custom", type: "poker", x: -168, y: -52 },
                 ],
                 monsters: [],
                 name: "The Tavern",
@@ -1635,6 +1650,7 @@ test("G.maps type validation", async () => {
                 key: "jayson_frozenCave",
                 lux: 0.5,
                 monsters: [
+                    { boundary: [-64, -1748, 96, -1620], count: 4, type: "rimedjinn" },
                     {
                         boundary: [-3.38, -398.22, 273.25, -223.83],
                         count: 5,
@@ -1788,6 +1804,10 @@ test("G.maps type validation", async () => {
                 monsters: [{ boundary: [-112, -142, 60, -16], count: 1, special: true, type: "grinch" }],
                 name: "Wizard's Crib",
                 npcs: [
+                    { id: "cavalry_paladin", position: [-172, -162, 0] },
+                    { id: "cavalry_mage", position: [-136, -162, 0] },
+                    { id: "cavalry_warrior", position: [-172, -136, 0] },
+                    { id: "cavalry_priest", position: [-136, -136, 0] },
                     { id: "lostandfound", position: [-24, -178] },
                     { id: "wnpc", position: [32, -178, 3] },
                 ],

@@ -130,6 +130,8 @@ export type GData = {
             aura?: boolean
             /** The condition name (human readable) */
             name: string
+            /** Seems to indicate whether the condition is for encouraging engagement with the game (TODO: Confirm) */
+            encouragement?: true
             /** A description of what the condition does / what caused the condition. */
             explanation?: string
             /** Is this a 'bad' condition to have? (see also: `buff`) */
@@ -164,6 +166,8 @@ export type GData = {
             special?: ItemName
             /** If true, this is related to a technical reason, e.g. not verifying your email, not from the game. */
             technical?: boolean
+            /** TODO: What are these? Luck / gold / XP? */
+            phases?: number[][]
         }
     }
     cosmetics: {
@@ -193,6 +197,9 @@ export type GData = {
         }
         head: {
             [T in string]: [string, string, string, number?]
+        }
+        head_animation: {
+            [T in string]: number
         }
         head_y: {
             [T in string]: number
@@ -267,13 +274,16 @@ export type GData = {
     }
     events: {
         [T in MapName | MonsterName | EventName]?: {
-            announcement?: {
-                accent: string
-                color: string
-                effect: string
-                text: string
-                title?: string
-            }
+            announcement?:
+                | {
+                      accent: string
+                      color: string
+                      effect: string
+                      text: string
+                      title?: string
+                  }
+                | false
+            disabled?: boolean
             duration?: number
             /** If set, you can warp to the event location (hopsickness, and some other things will block, though) */
             join?: true
@@ -283,6 +293,26 @@ export type GData = {
             name: string
             sprite: string // TODO: SpriteKey?
             type: "daily" | "seasonal" | "nightly"
+        }
+    } & {
+        dreams: {
+            /** Maximum amount of amber you can get during a run */
+            amber_limit: number
+            /** Maximum amount of gold you can get during a run */
+            gold_limit: number
+            /** What items the merchant sells, and at what price */
+            merchant_stock: [ItemName, number][]
+            /** How much time (in ms) players have to vote for options */
+            vote_ms: number
+            xp_multiplier: number
+            /** Maximum number of party members for a run */
+            party: number
+            camps: unknown // TODO: add typings
+            cast: unknown // TODO: add typings
+            encounters: unknown // TODO: add typings
+            rare: unknown // TODO: add typings
+            rewards: unknown // TODO: add typings
+            travelers: unknown[] // TODO: add typings
         }
     }
     games: {
@@ -331,6 +361,10 @@ export type GData = {
     }
     items: {
         [T in ItemName]: GItem
+    } & {
+        tracker: {
+            cavalry: unknown // TODO: Add typings
+        }
     }
     levels: {
         [T in string]?: number
@@ -364,9 +398,15 @@ export type GData = {
             /** TODO: ??? What is this? GUI related? */
             aspeed?: "slow" | "slower" | "fast"
             /** TODO: ??? What is this? GUI related? */
+            attack_motion?: true
+            /** TODO: ??? What is this? GUI related? */
             atype?: "flow" | "once"
             /** If you stand near this NPC, you will gain this aura */
             aura?: {
+                [T in Attribute]?: number
+            }
+            /** If set, this NPC is part of the "cavalry", NPCs that can be summoned with the tracktrix */
+            cavalry?: {
                 [T in Attribute]?: number
             }
             /** TODO: ??? What is this? GUI related? */
@@ -565,6 +605,8 @@ export type GData = {
             complementary?: string
             condition?: ConditionName
             consume?: ItemName
+            /** If set, this cooldown is shared with all other skills of the same group */
+            cooldown_group?: string
             cooldown?: number
             cooldown_multiplier?: number
             damage?: number
@@ -601,6 +643,8 @@ export type GData = {
             /** If multi is true, and this is set, it's the maximum number of targets */
             max_targets?: number
             merchant_use?: true
+            /** TODO: What is this? */
+            monster?: boolean
             /** Can we use this skill on monsters? */
             monsters?: boolean
             /** MP Cost for skill */
@@ -742,6 +786,8 @@ export type GData = {
             improve?: boolean
             /** TODO: ??? */
             manual?: boolean
+            /** TODO: ??? Can this title be combined with other titles? */
+            stackable?: true
         }
     }
     tokens: {
@@ -863,7 +909,7 @@ export type GGeometry = {
     /** (GUI Related) [tile index, min_x, min_y, max_x, max_y, y_disp]. These are above the player layer.
      *
      * See: https://pixijs.download/dev/docs/PIXI.Container.html */
-    groups?: ([number, number, number, null, null, 0] | [number, number, number])[][]
+    groups?: ([number, number, number, number | null, number | null, 0] | [number, number, number])[][]
     /** (GUI Related) The position of lights on the map. TODO: What do the three numbers mean? radius,x,y? */
     lights?: [number, number, number][]
     /** TODO: ??? What is this? */
@@ -1200,6 +1246,8 @@ export type GMap = {
             x: number
             y: number
             position: string
+            collision?: [number, number, number, number][]
+            role?: string
         }
     }
     event?: string
@@ -1237,7 +1285,7 @@ export type GMonster = {
     /** (GUI) If set, the sprite will continue its animation when it's standing still. (AA = Always Animate) */
     aa?: number
     /** Abilities that this monster has */
-    abilities?: GMonsterAbilities
+    abilities?: GMonsterAbilities | null
     /** Tracker achievements. [points needed, "stat", stat type, improvement] */
     achievements?: [number, "stat", Attribute, number][]
     /** The higher the number, the more likely the monster will attack you if you're near it */
@@ -1284,7 +1332,7 @@ export type GMonster = {
     immune?: boolean
     /** TODO: More information. Wizard: "Acts as a gold multiplier" */
     lucrativeness?: number
-    mp: number
+    mp?: number
     /** Human readable name for the monster. */
     name: string
     /** TODO: ??? What is this? */
@@ -1315,7 +1363,7 @@ export type GMonster = {
     /** (GUI) Projectile sprite */
     projectile?: string
     /** The higher the rage, the more likely the monster is to attack (and target) you if you are near it */
-    rage: number
+    rage?: number
     range: number
     /** If you kill this monster (TODO: Confirm you have to kill this monster), this condition will be applied to you */
     rbuff?: ConditionName
@@ -1337,7 +1385,7 @@ export type GMonster = {
     /** (GUI?) TODO: Confirm that this only affects the look of the monster. It will look like it's holding these weapons. */
     slots?: Partial<SlotInfo>
     /** If set, this monster will spawn more monsters [ms between spawns or condition to spawn, monster to spawn, how many to spawn] */
-    spawns?: [number | string, MonsterName, number?][]
+    spawns?: [number | string, MonsterName, number?][] | null
     special?: boolean
     speed: number
     /** If set, this monster will not move */
@@ -1391,6 +1439,15 @@ export type GMonsterAbilities = {
     putrid?: {
         curse: boolean
         poison: boolean
+    }
+} & {
+    rimeshell?: {
+        break_fraction: number
+        duration: number
+        exposed_duration: number
+        range: number
+        targets: number
+        threshold: number
     }
 } & {
     self_healing?: {
@@ -1622,12 +1679,17 @@ export type AnimationName =
     | "party_heal"
     | "pblob"
     | "pinky"
+    | "poker_win"
     | "poucharrow"
     | "rain"
     | "reflection"
     | "reunionarrow"
     | "reunionarrow_hit"
     | "revival"
+    | "rimehelix_impact"
+    | "rimehelix_travel"
+    | "rimeshatter_travel"
+    | "rimeshell_cast"
     | "rspeed"
     | "slash"
     | "slash0"
@@ -1731,6 +1793,9 @@ export type ConditionName =
     | "easterluck"
     | "eburn"
     | "eheal"
+    | "encouragement_lonewolf"
+    | "encouragement_new"
+    | "encouragement_returning"
     | "energized"
     | "fingered"
     | "fishing"
@@ -1775,6 +1840,8 @@ export type ConditionName =
     | "purifier"
     | "realmfatigue"
     | "reflection"
+    | "rimeexposed"
+    | "rimeshell"
     | "rspeed"
     | "sanguine"
     | "sheltered"
@@ -1819,10 +1886,24 @@ export type DropName =
     | "candy1v3"
     | "candycane"
     | "candypop"
+    | "cave_boss"
+    | "cave_darkmage"
+    | "cave_farm"
+    | "cave_finish"
+    | "cave_finish_bonus"
+    | "cave_parcel"
+    | "cave_rescue"
+    | "cave_rogue_weapon"
     | "cosmo0"
     | "cosmo1"
     | "cosmo2"
     | "cosmo3"
+    | "cosmo4"
+    | "cosmo4_back"
+    | "cosmo4_chin"
+    | "cosmo4_face"
+    | "cosmo4_makeup"
+    | "cosmo4_tail"
     | "cosmo5"
     | "eastereggs"
     | "f1"
@@ -1871,9 +1952,24 @@ export type DropName =
     | "xbox"
     | "xN"
 
-export type EventName = "anniversary" | "egghunt" | "halloween" | "holidayseason" | "lunarnewyear" | "valentines"
+export type EventName =
+    | "anniversary"
+    | "dreams"
+    | "egghunt"
+    | "halloween"
+    | "holidayseason"
+    | "lunarnewyear"
+    | "valentines"
 
-export type ImageSetName = "community" | "custom" | "items40" | "pack_1a" | "pack_20" | "rawitems" | "skills"
+export type ImageSetName =
+    | "community"
+    | "custom"
+    | "items40"
+    | "pack_1a"
+    | "pack_20"
+    | "rawitems"
+    | "skills"
+    | "teasers"
 /**
  * Generate with:
  * { const is = []; for(const i in G.items) { is.push(i) }; is.sort(); console.log(`"${is.join('" | "')}"`) }
@@ -1940,6 +2036,17 @@ export type ItemName =
     | "caravanbrigandine"
     | "carrot"
     | "carrotsword"
+    | "cave_amber"
+    | "cave_ambercoat"
+    | "cave_backstabber"
+    | "cave_blackstaff"
+    | "cave_counterweight"
+    | "cave_deepaxe"
+    | "cave_loaded_die"
+    | "cave_locktooth"
+    | "cave_mothsteps"
+    | "cave_reedscythe"
+    | "cave_tunnelaxe"
     | "cclaw"
     | "cdarktristone"
     | "cdragon"
@@ -1963,6 +2070,7 @@ export type ItemName =
     | "cosmo3"
     | "cosmo4"
     | "cosmo5"
+    | "covemantle"
     | "crabclaw"
     | "cring"
     | "critscroll"
@@ -1989,6 +2097,7 @@ export type ItemName =
     | "dexearringx"
     | "dexring"
     | "dexscroll"
+    | "djinncrown"
     | "dkey"
     | "dragondagger"
     | "drapes"
@@ -2290,6 +2399,7 @@ export type ItemName =
     | "rfangs"
     | "rfur"
     | "rimeboots"
+    | "rimeglass"
     | "rimeknuckles"
     | "ringhs"
     | "ringofluck"
@@ -2355,6 +2465,7 @@ export type ItemName =
     | "starkillers"
     | "stealthcape"
     | "stick"
+    | "stillwaterlens"
     | "stinger"
     | "stonekey"
     | "stoneofgold"
@@ -2440,6 +2551,7 @@ export type ItemName =
     | "warpvest"
     | "watercore"
     | "wattire"
+    | "waxe"
     | "waybill"
     | "wbasher"
     | "wblade"
@@ -2567,6 +2679,21 @@ export type MonsterName =
     | "boar"
     | "booboo"
     | "bscorpion"
+    | "cave_bat"
+    | "cave_broodmother"
+    | "cave_crab"
+    | "cave_darkmage"
+    | "cave_guard"
+    | "cave_lockbreaker"
+    | "cave_mothkeeper"
+    | "cave_npc"
+    | "cave_rat"
+    | "cave_rogue"
+    | "cave_scorpion"
+    | "cave_sentinel"
+    | "cave_snake"
+    | "cave_spider"
+    | "cave_wolf"
     | "cgoo"
     | "chestm"
     | "crab"
@@ -2639,6 +2766,7 @@ export type MonsterName =
     | "redfairy"
     | "rgoo"
     | "rharpy"
+    | "rimedjinn"
     | "rooster"
     | "rudolph"
     | "scorpion"
@@ -2686,6 +2814,10 @@ export type NPCName =
     | "basics"
     | "bean"
     | "bouncer"
+    | "cavalry_mage"
+    | "cavalry_paladin"
+    | "cavalry_priest"
+    | "cavalry_warrior"
     | "citizen0"
     | "citizen1"
     | "citizen2"
@@ -2711,6 +2843,7 @@ export type NPCName =
     | "citizen22"
     | "compound"
     | "craftsman"
+    | "dreamkeeper"
     | "exchange"
     | "fancypots"
     | "favors"
@@ -2852,6 +2985,8 @@ export type ProjectileName =
     | "quickpunch"
     | "quickstab"
     | "reunionarrow"
+    | "rimehelix"
+    | "rimeshatter"
     | "sburst"
     | "shield_slam"
     | "smash"
@@ -2980,6 +3115,8 @@ export type SkillName =
     | "regen_hp"
     | "regen_mp"
     | "revive"
+    | "rimeshatter"
+    | "rimeshell"
     | "rspeed"
     | "scare"
     | "self_healing"
@@ -3030,6 +3167,7 @@ export type TilesetName =
     | "custom2"
     | "dark"
     | "doors"
+    | "dreamsv3"
     | "dungeon"
     | "fort"
     | "house"
@@ -3049,6 +3187,7 @@ export type TilesetName =
 
 export type TitleName =
     | "abtesting"
+    | "cavefound"
     | "critmonger"
     | "fast"
     | "festive"

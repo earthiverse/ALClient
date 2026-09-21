@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -37,6 +37,14 @@ test("G.craft type validation", async () => {
                     [1, "egg6"],
                     [1, "egg7"],
                     [1, "egg8"],
+                ],
+            },
+            bataxe: {
+                cost: 120000,
+                items: [
+                    [1, "cryptkey"],
+                    [1, "wbasher", 7],
+                    [1, "essenceoflife"],
                 ],
             },
             beastmantle: {
@@ -113,6 +121,72 @@ test("G.craft type validation", async () => {
                     [1, "carrot"],
                 ],
             },
+            cave_ambercoat: {
+                cost: 360000,
+                items: [
+                    [300, "cave_amber"],
+                    [1, "coat", 0],
+                    [30, "spidersilk"],
+                    [20, "cscale"],
+                ],
+            },
+            cave_counterweight: {
+                cost: 12000,
+                items: [
+                    [8, "cave_amber"],
+                    [1, "wshield", 0],
+                    [1, "dstones"],
+                ],
+            },
+            cave_deepaxe: {
+                cost: 480000,
+                items: [
+                    [400, "cave_amber"],
+                    [1, "cave_tunnelaxe", 0],
+                    [10, "gemfragment"],
+                    [20, "leather"],
+                ],
+            },
+            cave_loaded_die: {
+                cost: 16000,
+                items: [
+                    [10, "cave_amber"],
+                    [8, "seashell"],
+                    [2, "reefglass"],
+                ],
+            },
+            cave_locktooth: {
+                cost: 8000,
+                items: [
+                    [6, "cave_amber"],
+                    [1, "blade", 0],
+                    [2, "reefglass"],
+                ],
+            },
+            cave_mothsteps: {
+                cost: 12000,
+                items: [
+                    [6, "cave_amber"],
+                    [1, "shoes", 0],
+                    [2, "beewings"],
+                ],
+            },
+            cave_reedscythe: {
+                cost: 500,
+                items: [
+                    [1, "wbasher", 0],
+                    [1, "blade", 0],
+                    [1, "spidersilk"],
+                ],
+            },
+            cave_tunnelaxe: {
+                cost: 12000,
+                items: [
+                    [8, "cave_amber"],
+                    [1, "blade", 0],
+                    [1, "wbasher", 0],
+                ],
+            },
             cclaw: {
                 cost: 24000,
                 items: [
@@ -167,6 +241,15 @@ test("G.craft type validation", async () => {
                     [100, "electronics"],
                 ],
             },
+            covemantle: {
+                cost: 400000,
+                items: [
+                    [120, "rimeglass"],
+                    [12, "spidersilk"],
+                    [4, "feather1"],
+                    [1, "cape", 0],
+                ],
+            },
             ctristone: {
                 cost: 20000,
                 items: [
@@ -190,6 +273,15 @@ test("G.craft type validation", async () => {
                     [12, "qubics"],
                     [4, "platinumnugget"],
                     [20, "goldnugget"],
+                ],
+            },
+            djinncrown: {
+                cost: 400000,
+                items: [
+                    [80, "rimeglass"],
+                    [8, "lspores"],
+                    [2, "essenceoffrost"],
+                    [1, "helmet", 0],
                 ],
             },
             elixirdex1: { cost: 1000, items: [[10, "elixirdex0"]] },
@@ -756,6 +848,15 @@ test("G.craft type validation", async () => {
                     [5, "shadowstone"],
                     [200, "essenceofnature"],
                     [1000, "cscale"],
+                ],
+            },
+            stillwaterlens: {
+                cost: 800000,
+                items: [
+                    [240, "rimeglass"],
+                    [6, "gemfragment"],
+                    [8, "seashell"],
+                    [1, "orbofint", 0],
                 ],
             },
             stinger: { cost: 0, items: [[12, "feather0"]], quest: "mcollector" },

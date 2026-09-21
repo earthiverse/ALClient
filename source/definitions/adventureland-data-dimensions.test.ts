@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -16,6 +16,10 @@ test("G.dimensions type validation", async () => {
             bigbird: [58, 54],
             boar: [42, 36, -4],
             bscorpion: [30, 30],
+            cave_bat: [38, 36, -1],
+            cave_rat: [30, 22, -1],
+            cave_sentinel: [30, 24, -1],
+            cave_wolf: [60, 48, -3],
             cgoo: [23, 22, -3],
             crabx: [36, 26, -1],
             croc: [45, 32, -3],
@@ -67,6 +71,7 @@ test("G.dimensions type validation", async () => {
             rat: [30, 22, -1],
             rharpy: [44, 32, 2],
             rharpy_fly: [44, 32, 2],
+            rimedjinn: [42, 49, 0],
             rooster: [20, 20],
             rudolph: [60, 64, -3],
             scorpion: [30, 30, 1.5],

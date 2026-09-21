@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import prettier from "prettier"
 
-const gFile = process.argv[2] || "G_5140.json"
+const gFile = process.argv[2] || "G_17120.json"
 const targetTypes = process.argv.slice(3)
 const gPath = path.resolve(process.cwd(), gFile)
 const dataFilePath = path.resolve(process.cwd(), "source/definitions/adventureland-data.ts")

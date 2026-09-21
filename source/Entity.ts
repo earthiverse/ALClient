@@ -43,7 +43,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public attack: number
     public frequency: number
     public hp: number
-    public mp: number
+    public mp = 0
     public range: number
     public speed: number
 
@@ -60,6 +60,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public explosion = 0
     public lifesteal = 0
     public mcourage = 0
+    public rage = 0
     public reflection = 0
     public resistance = 0
     public rpiercing = 0
@@ -67,7 +68,6 @@ export class Entity implements MonsterData, Partial<GMonster> {
     // GMonster properties (required)
     public aggro: number
     public name: string
-    public rage: number
     public respawn: number
     public skin: string
 

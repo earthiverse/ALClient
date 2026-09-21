@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -297,6 +297,7 @@ test("G.animations type validation", async () => {
                 frames: 3,
                 speed: 460,
             },
+            poker_win: { file: "/images/sprites/animations/poker_win.png?v=1", frames: 8 },
             poucharrow: {
                 continuous: true,
                 directional: true,
@@ -332,6 +333,39 @@ test("G.animations type validation", async () => {
                 file: "/images/sprites/animations/Teleport1P.png",
                 frames: 12,
                 speeding: true,
+            },
+            rimehelix_impact: {
+                alpha: 1,
+                aspeed: "slow",
+                exact: true,
+                file: "/images/sprites/animations/rimehelix_impact.png?v=rime1",
+                frames: 6,
+                y: 8,
+            },
+            rimehelix_travel: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/rimehelix_travel.png?v=rime1",
+                framefps: 90,
+                frames: 4,
+                speed: 360,
+            },
+            rimeshatter_travel: {
+                continuous: true,
+                directional: true,
+                file: "/images/sprites/animations/rimehelix_travel.png?v=rime1",
+                framefps: 90,
+                frames: 4,
+                scale: 2,
+                speed: 360,
+            },
+            rimeshell_cast: {
+                alpha: 1,
+                aspeed: "slow",
+                continuous: true,
+                exact: true,
+                file: "/images/sprites/animations/rimeshell-cast.png?v=rime1",
+                frames: 4,
             },
             rspeed: { file: "/images/sprites/animations/ConsumeR.png", frames: 13 },
             slash: {

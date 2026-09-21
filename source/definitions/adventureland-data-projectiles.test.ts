@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -50,6 +50,8 @@ test("G.projectiles type validation", async () => {
             quickpunch: { animation: "slash", hit_animation: "slash2", hit_text: ["PUNCH!", "#41338B"], speed: 420 },
             quickstab: { animation: "slash", hit_animation: "slash2", hit_text: ["STAB!", "#41338B"], speed: 420 },
             reunionarrow: { animation: "reunionarrow", hit_animation: "reunionarrow_hit", speed: 500 },
+            rimehelix: { animation: "rimehelix_travel", hit_animation: "rimehelix_impact", speed: 360 },
+            rimeshatter: { animation: "rimeshatter_travel", hit_animation: "rimehelix_impact", speed: 360 },
             sburst: { hit_animation: "burst", instant: true, ray: "tiling_burst" },
             shield_slam: { animation: "slash", hit_animation: "slash2", hit_text: ["SLAM!", "#E5C36A"], speed: 420 },
             smash: { animation: "slash", hit_animation: "slash2", hit_text: ["SMASH!", "#CBB892"], speed: 420 },

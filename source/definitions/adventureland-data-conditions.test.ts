@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -96,7 +96,7 @@ test("G.conditions type validation", async () => {
                 cleansable: true,
                 debuff: true,
                 duration: 5000,
-                explanation: "Reduces damage output and speed by 20%. Increases damage taken by 20%.",
+                explanation: "Reduces damage output by 20% and movement speed by 20. Increases damage taken by 20%.",
                 incdmgamp: 20,
                 name: "Cursed",
                 output: -20,
@@ -163,6 +163,36 @@ test("G.conditions type validation", async () => {
                 interval: 320,
                 name: "Rejuvenate",
                 skin: "essenceoflife",
+                ui: true,
+            },
+            encouragement_lonewolf: {
+                encouragement: true,
+                explanation:
+                    "3× Gold, XP and Luck while you run one non-merchant character. Merchants may stay online. Extra rewards follow your contribution.",
+                name: "Lone Wolf",
+                skin: "encouragement_lonewolf",
+                ui: true,
+            },
+            encouragement_new: {
+                encouragement: true,
+                explanation:
+                    "A helping hand for your first 40 days. New Player XP ends at level 80. Extra rewards follow your contribution.",
+                name: "New Player",
+                phases: [
+                    [5, 5, 5],
+                    [2, 4, 4],
+                    [2, 2, 3],
+                    [1.5, 1.5, 1.5],
+                ],
+                skin: "encouragement_new",
+                ui: true,
+            },
+            encouragement_returning: {
+                encouragement: true,
+                explanation:
+                    "Welcome back. There's more to discover. 3× Gold, XP and Luck below level 80; 2× from level 80. Extra rewards follow your contribution.",
+                name: "Welcome Back",
+                skin: "encouragement_returning",
                 ui: true,
             },
             energized: {
@@ -293,7 +323,8 @@ test("G.conditions type validation", async () => {
             hopsickness: {
                 debuff: true,
                 duration: 720000,
-                explanation: "You are not in your home server! Go see Bean in Mainland square for a change.",
+                explanation:
+                    "Leaving home for another non-PvP server at level 60 or above causes this condition. It lasts up to 12 minutes of online play and blocks kiss rewards. Returning to your saved home clears it immediately. Bean in Mainland can change your home.",
                 gold: -80,
                 luck: -80,
                 name: "Hop Sickness",
@@ -575,7 +606,7 @@ test("G.conditions type validation", async () => {
             realmfatigue: {
                 duration: 1800000,
                 explanation:
-                    "Another non-merchant character on your account recently visited a different server. Home rewards return after you settle in; normal rewards continue.",
+                    "Another non-merchant character on your account was recently on a different server. Home bonuses and kiss rewards are blocked for 30 minutes; activity elsewhere extends the timer. Returning home won't clear it. Keep your non-merchant characters on one server.",
                 name: "Realm Fatigue",
                 persistent: true,
                 skin: "condition_bad",
@@ -589,6 +620,25 @@ test("G.conditions type validation", async () => {
                 name: "Reflective Shield",
                 reflection: 20,
                 skin: "buff_reflection",
+                ui: true,
+            },
+            rimeexposed: {
+                debuff: true,
+                duration: 5000,
+                explanation: "Resistance is reduced by 160 for 5 seconds.",
+                name: "Cracked Shell",
+                resistance: -160,
+                skin: "rimeglass",
+                ui: true,
+            },
+            rimeshell: {
+                buff: true,
+                duration: 3000,
+                explanation:
+                    "Deal damage equal to 5% of the Djinn’s maximum HP within 3 seconds, or stun it, to break the shell. Ordinary freezing won't interrupt it, and Purify can't dispel it.",
+                name: "Rime Shell",
+                persistent: true,
+                skin: "rimeglass",
                 ui: true,
             },
             rspeed: {

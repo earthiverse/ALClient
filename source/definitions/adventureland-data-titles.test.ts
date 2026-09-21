@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 5140 (2026-08-25)
+ * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
  * It is used to confirm type correctness
  */
 
@@ -9,6 +9,14 @@ test("G.titles type validation", async () => {
     const G_titles: Pick<GData, "titles"> = {
         titles: {
             abtesting: { achievement: "abtesting", for: 1, title: "Tester's", type: "orb" },
+            cavefound: {
+                manual: true,
+                misc: true,
+                source: "dreams",
+                stackable: true,
+                title: "Cave-found",
+                type: "all_items",
+            },
             critmonger: { str: 2, title: "Monger's", type: "mainhand" },
             fast: { frequency: 10, misc: true, source: "upgrade", title: "Fast", type: "weapon" },
             festive: { achievement: "festive", luck: 1, title: "Festive", type: "cape" },
