@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -12,7 +12,7 @@ test("G.tilesets type validation", async () => {
             beach: { file: "/images/tiles/map/beach_v2.png" },
             biocaves: { file: "/images/tiles/map/biocaves.png?v=2" },
             castle: { file: "/images/tiles/map/castle.png?v=2" },
-            custom: { file: "/images/tiles/map/custom.png?v=16" },
+            custom: { file: "/images/tiles/map/custom.png?v=17" },
             custom_a: { file: "/images/tiles/map/custom_a.png?v=5", frame_width: 16, frames: 3 },
             custom2: { file: "/images/tiles/map/custom2.png?v=14" },
             dark: { file: "/images/tiles/map/dark_dimension.png?v=0" },

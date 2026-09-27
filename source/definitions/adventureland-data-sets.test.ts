@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 8535 (2026-09-07)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -198,6 +198,13 @@ test("G.sets type validation", async () => {
                     "Wanderer was a curious adventurer. Traveling from place to place. The items he left over make up a very lucky set when they are combined.",
                 items: ["wcap", "wattire", "wbreeches", "wgloves", "wshoes"],
                 name: "Wanderer's Set",
+            },
+            watchers: {
+                "1": {},
+                "2": { evasion: 2, range: 15, stresistance: 15 },
+                explanation: "Two watching eyes miss very little.",
+                items: ["watchersearring", "watchersearring"],
+                name: "Watcher's Eyes",
             },
             wt3: {
                 "1": { for: 2 },

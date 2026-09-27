@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -2117,7 +2117,10 @@ test("G.drops type validation", async () => {
                     [0.005, "essenceofether"],
                     [0.00005, "ectoplasm"],
                 ],
-                bscorpion: [[0.05, "offeringp"]],
+                bscorpion: [
+                    [0.05, "offeringp"],
+                    [0.000014285714285714285, "canopener"],
+                ],
                 cave_bat: [[0.08, "cave_amber", 1]],
                 cave_broodmother: [
                     [1, "cave_amber", 1],
@@ -2201,6 +2204,7 @@ test("G.drops type validation", async () => {
                     [0.002, "essenceofnature"],
                     [0.0018181818181818182, "gem0"],
                     [0.00004, "elixirpnres"],
+                    [0.000002564102564102564, "heartwoodlocket"],
                 ],
                 ent: [
                     [1, "essenceofnature"],
@@ -2261,6 +2265,7 @@ test("G.drops type validation", async () => {
                 ghost: [
                     [0.0002, "pmace"],
                     [0.05, "drapes"],
+                    [0.000003125, "graveglass"],
                 ],
                 goldenbat: [
                     [0.8, "handofmidas"],
@@ -2317,6 +2322,7 @@ test("G.drops type validation", async () => {
                     [0.000016666666666666667, "harpybow"],
                     [0.1, "essenceoffrost"],
                     [0.0005, "harbringer"],
+                    [0.0000045454545454545455, "harpyecho"],
                 ],
                 hen: [
                     [1, "whiteegg"],
@@ -2338,12 +2344,33 @@ test("G.drops type validation", async () => {
                     [0.001, "hdagger"],
                     [1, "ololipop"],
                 ],
+                kobold: [
+                    [0.000011904761904761905, "koboldbelt"],
+                    [0.05, "gemfragment"],
+                    [0.002857142857142857, "bronzenugget"],
+                    [0.0016666666666666668, "goldnugget"],
+                    [0.00008, "platinumnugget"],
+                ],
+                manyeye: [
+                    [0.058823529411764705, "watchersearring"],
+                    [1, "gemfragment", 3],
+                    [0.25, "platinumnugget"],
+                ],
                 mechagnome: [
                     [0.2, "electronics"],
                     [0.2, "electronics"],
                     [0.2, "electronics"],
                     [0.00001, "networkcard"],
                     [1e-7, "mpxamulet"],
+                    [0.00002380952380952381, "gnomecap"],
+                ],
+                mimic: [
+                    [0.05263157894736842, "mimicgrin"],
+                    [1, "goldnugget"],
+                    [0.25, "platinumnugget"],
+                    [1, "gemfragment", 5],
+                    [0.5, "open", "armorbox"],
+                    [0.5, "open", "weaponbox"],
                 ],
                 minimush: [
                     [0.016666666666666666, "spores"],
@@ -2375,6 +2402,7 @@ test("G.drops type validation", async () => {
                     [0.00025, "open", "weaponofthedead"],
                     [0.002, "bandages"],
                     [0.05, "drapes"],
+                    [0.0000034482758620689654, "mummyhex"],
                 ],
                 mvampire: [
                     [0.1, "intearring"],
@@ -2396,10 +2424,17 @@ test("G.drops type validation", async () => {
                 oneeye: [
                     [0.000002, "amuletofm"],
                     [3.3333333333333335e-7, "mpxbelt"],
+                    [0.000004, "stonegaze"],
                 ],
                 osnake: [
                     [0.0001, "snakeoil"],
                     [0.0005, "snakefang"],
+                ],
+                paledino: [
+                    [0.03333333333333333, "paleclaw"],
+                    [1, "mbones", 5],
+                    [0.5, "essenceofnature", 3],
+                    [0.05, "sshield"],
                 ],
                 phoenix: [
                     [0.7, "vitscroll"],
@@ -2442,6 +2477,7 @@ test("G.drops type validation", async () => {
                 pppompom: [
                     [0.001, "orbofint"],
                     [0.001, "orbofvit"],
+                    [0.0000023809523809523808, "blightcap"],
                 ],
                 prat: [
                     [0.000008, "platinumnugget"],
@@ -2521,6 +2557,7 @@ test("G.drops type validation", async () => {
                     [0.0008333333333333334, "goldnugget"],
                     [0.00016666666666666666, "bronzeingot"],
                     [0.0014285714285714286, "bronzenugget"],
+                    [0.0000023809523809523808, "groundingstrap"],
                 ],
                 spider: [
                     [0.001, "spidersilk"],
@@ -2616,7 +2653,10 @@ test("G.drops type validation", async () => {
                     [0.01, "open", "basketofeggs"],
                     [0.001, "cxjar", 1, "drop_egg"],
                 ],
-                wolf: [[0.025, "leather"]],
+                wolf: [
+                    [0.025, "leather"],
+                    [0.0000017857142857142857, "frostfang"],
+                ],
                 wolfie: [[0.02, "leather"]],
                 xmagefi: [[1, "voidthread", 3]],
                 xmagefz: [[1, "voidthread", 3]],
@@ -2636,6 +2676,7 @@ test("G.drops type validation", async () => {
                     [0.00024, "vitscroll"],
                     [0.000002, "glitch"],
                     [0.00008, "svenom"],
+                    [0.0000035714285714285714, "scorpionseal"],
                 ],
             },
             monsters_home_server: {

@@ -533,6 +533,21 @@ export type GData = {
             type?: "full" | "fullstatic" | "static" | CharacterType
         }
     } & {
+        pokerdealer: {
+            /** (GUI) set phrases */
+            allin: string[]
+            /** (GUI) set phrases */
+            deal: string[]
+            /** (GUI) set phrases */
+            idle: string[]
+            /** (GUI) set phrases */
+            invite: string[]
+            /** (GUI) set phrases */
+            split: string[]
+            /** (GUI) set phrases */
+            win: string[]
+        }
+    } & {
         transporter: {
             /** Places that the transporter can take you */
             places?: {
@@ -1797,8 +1812,10 @@ export type ConditionName =
     | "encouragement_new"
     | "encouragement_returning"
     | "energized"
+    | "exposed"
     | "fingered"
     | "fishing"
+    | "frenzied"
     | "frozen"
     | "fullguard"
     | "fullguardx"
@@ -1849,9 +1866,11 @@ export type ConditionName =
     | "sleeping"
     | "slowness"
     | "stack"
+    | "stonebreak"
     | "stoned"
     | "stunned"
     | "sugarrush"
+    | "sundered"
     | "tangled"
     | "town"
     | "warcry"
@@ -2003,6 +2022,7 @@ export type ItemName =
     | "bfur"
     | "bkey"
     | "blade"
+    | "blightcap"
     | "blue"
     | "bogcrown"
     | "bogwalkers"
@@ -2032,6 +2052,7 @@ export type ItemName =
     | "candycane"
     | "candycanesword"
     | "candypop"
+    | "canopener"
     | "cape"
     | "caravanbrigandine"
     | "carrot"
@@ -2171,6 +2192,7 @@ export type ItemName =
     | "frogt"
     | "frostbow"
     | "frostcore"
+    | "frostfang"
     | "froststaff"
     | "frozenkey"
     | "frozenstone"
@@ -2195,6 +2217,7 @@ export type ItemName =
     | "glolipop"
     | "gloves"
     | "gloves1"
+    | "gnomecap"
     | "goldbooster"
     | "goldenegg"
     | "goldenpowerglove"
@@ -2203,8 +2226,10 @@ export type ItemName =
     | "goldring"
     | "goldscroll"
     | "gphelmet"
+    | "graveglass"
     | "greenbomb"
     | "greenenvelope"
+    | "groundingstrap"
     | "gslime"
     | "gstaff"
     | "guestbook"
@@ -2214,10 +2239,12 @@ export type ItemName =
     | "harbringer"
     | "harmor"
     | "harpybow"
+    | "harpyecho"
     | "hboots"
     | "hbow"
     | "hdagger"
     | "heartwood"
+    | "heartwoodlocket"
     | "helmet"
     | "helmet1"
     | "hgloves"
@@ -2248,6 +2275,7 @@ export type ItemName =
     | "keepsakependant"
     | "kitty1"
     | "knifebelt"
+    | "koboldbelt"
     | "lantern"
     | "lanternshield"
     | "lbelt"
@@ -2279,6 +2307,7 @@ export type ItemName =
     | "mcpants"
     | "mearring"
     | "merry"
+    | "mimicgrin"
     | "mirrorsteelgauntlet"
     | "mistletoe"
     | "mittens"
@@ -2316,6 +2345,7 @@ export type ItemName =
     | "mrnpants"
     | "mrpants"
     | "mshield"
+    | "mummyhex"
     | "mushroomstaff"
     | "mwarmor"
     | "mwboots"
@@ -2349,6 +2379,7 @@ export type ItemName =
     | "ornamentstaff"
     | "outputscroll"
     | "oxhelmet"
+    | "paleclaw"
     | "pants"
     | "pants1"
     | "paradequiver"
@@ -2411,6 +2442,7 @@ export type ItemName =
     | "santasbelt"
     | "sapstone"
     | "sbelt"
+    | "scorpionseal"
     | "scribeorb"
     | "scroll0"
     | "scroll1"
@@ -2467,6 +2499,7 @@ export type ItemName =
     | "stick"
     | "stillwaterlens"
     | "stinger"
+    | "stonegaze"
     | "stonekey"
     | "stoneofgold"
     | "stoneofluck"
@@ -2549,6 +2582,7 @@ export type ItemName =
     | "wand"
     | "warmscarf"
     | "warpvest"
+    | "watchersearring"
     | "watercore"
     | "wattire"
     | "waxe"
@@ -2736,8 +2770,11 @@ export type MonsterName =
     | "kitty2"
     | "kitty3"
     | "kitty4"
+    | "kobold"
     | "ligerx"
+    | "manyeye"
     | "mechagnome"
+    | "mimic"
     | "minimush"
     | "mole"
     | "mrgreen"
@@ -2750,6 +2787,7 @@ export type MonsterName =
     | "odino"
     | "oneeye"
     | "osnake"
+    | "paledino"
     | "phoenix"
     | "pinkgoblin"
     | "pinkgoo"
@@ -2922,6 +2960,7 @@ export type NPCName =
     | "newyear_tree"
     | "ornaments"
     | "pete"
+    | "pokerdealer"
     | "pots"
     | "premium"
     | "princess"
@@ -3017,6 +3056,7 @@ export type SetName =
     | "tiger"
     | "vampires"
     | "wanderers"
+    | "watchers"
     | "wt3"
     | "wt4"
 

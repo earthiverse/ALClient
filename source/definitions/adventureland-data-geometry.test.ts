@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -60177,6 +60177,8 @@ test("G.geometry type validation", async () => {
                     [[978, -240, 224]],
                     [[978, -144, 224]],
                     [[813, 320, -400]],
+                    [[1002, -112, 624]],
+                    [[1003, 912, 1164]],
                 ],
                 lights: [
                     [996, 12, -198],
@@ -72071,6 +72073,8 @@ test("G.geometry type validation", async () => {
                     ["lights", 96, 0, 16],
                     ["lights", 112, 0, 16],
                     ["lights", 128, 0, 16],
+                    ["custom", 288, 0, 16, 16],
+                    ["custom", 304, 0, 16, 16],
                 ],
                 x_lines: [
                     [-1608, 464, 584],

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -1738,6 +1738,32 @@ test("G.npcs type validation", async () => {
                 says: "Purr",
                 skin: "lionsuit",
                 type: "fullstatic",
+            },
+            pokerdealer: {
+                allin: ["All in. No turning back.", "Everything's on the felt."],
+                citizen_behavior: "poker_dealer",
+                color: "#E6B16B",
+                cx: { hair: "hairdo311", hat: "hat214", head: "mmakeup01" },
+                deal: ["Cards are in the air.", "Here we go."],
+                id: "pokerdealer",
+                idle: [
+                    "Five seats, no heroes.",
+                    "These cards look lonely.",
+                    "Pick a card. Kidding.",
+                    "Still got all fifty-two.",
+                    "Watch this one closely.",
+                    "Empty chairs tell no tales.",
+                    "I can shuffle all day.",
+                    "The river misses you.",
+                ],
+                invite: ["One more makes a game.", "Got room for company.", "One chair taken. Who's next?"],
+                name: "Venn",
+                role: "pokerdealer",
+                says: ["Take a seat, partner.", "Cards are waiting.", "Fancy a hand?"],
+                skin: "mbody4h",
+                split: ["Split pot. Share nicely."],
+                type: "fullstatic",
+                win: ["Pot goes to {name}.", "{name} takes the pot."],
             },
             pots: {
                 atype: "once",

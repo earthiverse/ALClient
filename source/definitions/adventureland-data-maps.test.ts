@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -234,6 +234,7 @@ test("G.maps type validation", async () => {
                 quirks: [
                     [-192, -1309, 48, 64, "log", "Is this a gateway?"],
                     [-193.41, -1295.83, 0, 0, "info", "crypt"],
+                    [0, 0, 0, 0, "goldenbat_info"],
                 ],
                 spawns: [
                     [0, 0, 3],
@@ -708,7 +709,7 @@ test("G.maps type validation", async () => {
                 ],
                 name: "Underground [West]",
                 npcs: [],
-                quirks: [],
+                quirks: [[16, 9, 0, 0, "manyeye_info"]],
                 spawns: [
                     [16, 9, 1],
                     [-96, -184],
@@ -893,6 +894,9 @@ test("G.maps type validation", async () => {
                     [65, 544, 20, 16, "sign", "Welcome to The New Town!"],
                     [-150, 154, 20, 16, "sign", "Town Square"],
                     [-365, 144, 20, 16, "sign", "Tavern"],
+                    [-32, 787, 0, 0, "cutebee_info"],
+                    [-104, 640, 20, 16, "comic", "lore"],
+                    [920, 1180, 20, 16, "comic", "cave-story"],
                 ],
                 ref: { c_mid: [-180, -203], cx: [-479.65, -919.23, -240.96, -697.72], u_mid: [-235, -203] },
                 seasonal_npcs: [{ event: "anniversary", id: "anniversary_baker", position: [64, -88] }],
@@ -1028,7 +1032,7 @@ test("G.maps type validation", async () => {
                 ],
                 name: "Mystical Forest",
                 npcs: [{ boundary: [-120, -80, 120, 160], id: "citizen19", position: [0, 48] }],
-                quirks: [],
+                quirks: [[0, 0, 0, 0, "paledino_info"]],
                 spawns: [[0, 0]],
                 unlist: true,
             },
@@ -1473,6 +1477,7 @@ test("G.maps type validation", async () => {
                     { id: "tbartender", position: [150, -202] },
                     { id: "bouncer", position: [208, -156] },
                     { boundary: [40, -144, 120, -80], id: "citizen21", position: [80, -120] },
+                    { id: "pokerdealer", position: [-168, -103] },
                 ],
                 quirks: [
                     [
@@ -1594,10 +1599,13 @@ test("G.maps type validation", async () => {
                 drop_norm: 5000,
                 key: "jayson_pvpDungeon_a1",
                 lux: 0.4,
-                monsters: [],
+                monsters: [
+                    { boundary: [586, -844, 915, -589], count: 2, grow: true, roam: true, type: "kobold" },
+                    { boundary: [-455, -1126, -189, -898], count: 2, grow: true, roam: true, type: "kobold" },
+                ],
                 name: "Underground [Cliffs]",
                 npcs: [],
-                quirks: [],
+                quirks: [[256, -905, 0, 0, "mimic_info"]],
                 spawns: [
                     [0, 0],
                     [256, -905],
@@ -1616,7 +1624,7 @@ test("G.maps type validation", async () => {
                 ],
                 name: "Underground [Hills]",
                 npcs: [],
-                quirks: [],
+                quirks: [[0, 0, 0, 0, "goldenbot_info"]],
                 spawns: [
                     [0, 0],
                     [720, -310],

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -369,7 +369,7 @@ test("G.sprites type validation", async () => {
                 columns: 4,
                 file: "/images/tiles/monsters/creatures2.png",
                 matrix: [
-                    ["oneeye", null, null, null],
+                    ["oneeye", "manyeye", null, null],
                     [null, null, null, null],
                 ],
                 rows: 2,

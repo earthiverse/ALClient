@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -100,8 +100,9 @@ test("G.conditions type validation", async () => {
                 incdmgamp: 20,
                 name: "Cursed",
                 output: -20,
-                skin: "condition_bad",
+                skin: "skill_curse",
                 speed: -20,
+                ui: true,
             },
             dampened: {
                 cleansable: true,
@@ -204,6 +205,16 @@ test("G.conditions type validation", async () => {
                 skin: "skill_energize",
                 ui: true,
             },
+            exposed: {
+                cleansable: true,
+                debuff: true,
+                duration: 5000,
+                explanation: "Resistance is reduced by 240 for 5 seconds.",
+                name: "Exposed",
+                resistance: -240,
+                skin: "condition_exposed",
+                ui: true,
+            },
             fingered: {
                 blocked: true,
                 cleansable: true,
@@ -221,6 +232,15 @@ test("G.conditions type validation", async () => {
                 explanation: "Fishing in progress.",
                 name: "Fishing",
                 skin: "skill_fishing",
+            },
+            frenzied: {
+                buff: true,
+                duration: 6000,
+                explanation: "Attack speed is increased by 40 for 6 seconds.",
+                frequency: 40,
+                name: "Primal Frenzy",
+                skin: "condition_frenzied",
+                ui: true,
             },
             frozen: {
                 cleansable: true,
@@ -696,6 +716,12 @@ test("G.conditions type validation", async () => {
                 name: "Pure Damage",
                 skin: "skill_stack",
             },
+            stonebreak: {
+                duration: 14000,
+                explanation: "Recently turned to stone. It can't be petrified again until this fades.",
+                name: "Crumbling",
+                skin: "condition_stoned",
+            },
             stoned: {
                 blocked: true,
                 cleansable: true,
@@ -703,7 +729,8 @@ test("G.conditions type validation", async () => {
                 duration: 4000,
                 explanation: "Cannot move, attack, heal, or use skills.",
                 name: "Stoned",
-                skin: "condition_neutral",
+                skin: "condition_stoned",
+                ui: true,
             },
             stunned: {
                 blocked: true,
@@ -724,6 +751,16 @@ test("G.conditions type validation", async () => {
                 mp_cost: -200,
                 name: "Sugar Rush",
                 skin: "candycanesword",
+                ui: true,
+            },
+            sundered: {
+                armor: -200,
+                cleansable: true,
+                debuff: true,
+                duration: 5000,
+                explanation: "Armor is reduced by 200 for 5 seconds.",
+                name: "Sundered",
+                skin: "condition_sundered",
                 ui: true,
             },
             tangled: {

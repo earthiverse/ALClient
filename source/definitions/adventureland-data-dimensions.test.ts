@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
  * It is used to confirm type correctness
  */
 
@@ -21,6 +21,7 @@ test("G.dimensions type validation", async () => {
             cave_sentinel: [30, 24, -1],
             cave_wolf: [60, 48, -3],
             cgoo: [23, 22, -3],
+            chestx: [36, 30, 4],
             crabx: [36, 26, -1],
             croc: [45, 32, -3],
             default_character: [26, 35],
@@ -52,6 +53,7 @@ test("G.dimensions type validation", async () => {
             kitty2: [20, 20, 0, 6, 5],
             kitty3: [20, 20, 0, 6, 5],
             kitty4: [20, 20, 0, 6, 5],
+            manyeye: [30, 40],
             mechagnome: [18, 26],
             minimush: [23, 22, -1],
             mole: [30, 20, -1],
