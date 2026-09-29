@@ -907,10 +907,10 @@ export type DoorInfo = [
     number,
     number,
     number,
-    MapName | "d1" | "d3", // TODO: "d1" and "d3" should be removed in game
+    MapName | `zone_${string}_${number}` | "d1" | "d3", // TODO: "d1" and "d3" should be removed in game
     number?,
     number?,
-    ("key" | "protected" | "ulocked")?,
+    ("key" | "ordinary" | "protected" | "ulocked")?,
     (ItemName | "complicated")?,
 ]
 

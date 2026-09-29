@@ -1,7 +1,7 @@
 import type { UIData } from "./adventureland-server"
 
 /**
- * The following is from socket events received 2021-04-22 to 2021-07-14
+ * The following is from socket events received 2021-04-22 to 2026-09-29
  * It is used to confirm type correctness
  */
 
@@ -16,6 +16,9 @@ test("UIData type validation", async () => {
         },
     }
     expect(buy).toBeDefined()
+
+    const cave_enter: UIData = {"type":"cave_enter","names":["TunnelSnake4"],"duration":1800,"key":"ad6ecf9cc7654d3cab882419"}
+    expect(cave_enter).toBeDefined()
 
     const mluck: UIData = {
         type: "mluck",

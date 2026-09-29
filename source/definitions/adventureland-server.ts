@@ -21,14 +21,18 @@ import type {
     CharacterType,
     ConditionName,
     CXData,
+    DoorInfo,
     EventName,
     GDropItem,
+    GGeometry,
+    GMap,
     ItemName,
     MapName,
     MonsterName,
     NPCName,
     ProjectileName,
     SkillName,
+    TilesetName,
     TitleName,
 } from "./adventureland-data.js"
 
@@ -997,6 +1001,75 @@ export type PullMerchantsCharData = {
     skin: string
 }
 
+export type MapChunkData = {
+    run: string
+    /** Chunk index (0-based) */
+    index: number
+    /** Total number of indexes */
+    count: number
+    /** The text content of the chunk. Combine all to get the full JSON */
+    text: string
+}
+
+export type MapChunkDataDecoded = {
+    run: string
+    floors: {
+        /** Map key string */
+        key: string
+        definition: Omit<GMap, "key"> & {
+            generated: {
+                run: string
+                floor: number
+                version: number
+                zone: string
+            }
+            items: {}
+            merchants: []
+            rooms: {
+                id: number
+                kind: string
+                x: number
+                y: number
+                bounds: [number, number, number, number]
+            }[]
+        }
+        geometry: GGeometry
+    }[]
+    manifest: {
+        key: string
+        definition: {
+            name: string
+            instance: true
+            irregular: true
+            pvp: false
+            spawns: [number, number][]
+            doors: DoorInfo[]
+            npcs: []
+            monsters: []
+            ref: {}
+            items: {}
+            merchants: []
+            on_death: [MapName, number]
+            on_exit: [MapName, number]
+            generated: {
+                run: string
+                floor: number
+                version: number
+                zone: string
+            }
+            rooms: {
+                id: number
+                kind: string
+                x: number
+                y: number
+                bounds: [number, number, number, number]
+            }[]
+            /** TODO: Add typings */
+            data?: unknown
+        }
+    }[]
+}
+
 export type NewMapData = {
     direction: number
     effect: number | "blink" | "magiport"
@@ -1277,6 +1350,8 @@ export type TrackerData = {
 /** [buy/sell, merchant name, item data, price] */
 export type TradeHistoryData = ["buy" | "sell", string, ItemDataTrade, number][]
 
+export type UIDataAOE = { type: "stomp" | "agitate" | "scare"; name: string; ids: string[] }
+
 export type UIDataBuySell = {
     type: "-$" | "+$"
     id: string | "basics" | "scrolls"
@@ -1284,6 +1359,16 @@ export type UIDataBuySell = {
     item: { name: ItemName; q: number }
     num?: string
 }
+
+export type UIDataCaveEnter = {
+    type: "cave_enter"
+    /** The names of the characters entering the cave */
+    names: string[]
+    /** Animation length (TODO: Confirm) */
+    duration: number
+    key: string
+}
+
 export type UIDataTrade = {
     type: "+$$"
     seller: string
@@ -1301,16 +1386,16 @@ export type UIDataFishingMining = {
 export type UIDataMassProduction = { type: "massproduction"; name: string }
 export type UIDataMLuck = { type: "mluck"; from: string; to: string }
 export type UIDataRspeed = { type: "rspeed"; from: string; to: string }
-export type UIDataAOE = { type: "stomp" | "agitate" | "scare"; name: string; ids: string[] }
 
 export type UIData =
+    | UIDataAOE
     | UIDataBuySell
-    | UIDataTrade
+    | UIDataCaveEnter
     | UIDataFishingMining
     | UIDataMassProduction
     | UIDataMLuck
-    | UIDataAOE
     | UIDataRspeed
+    | UIDataTrade
 
 export type UpgradeData = {
     type: string | "compound" | "exchange" | "upgrade"
