@@ -32,7 +32,6 @@ import type {
     NPCName,
     ProjectileName,
     SkillName,
-    TilesetName,
     TitleName,
 } from "./adventureland-data.js"
 
@@ -1023,7 +1022,7 @@ export type MapChunkDataDecoded = {
                 version: number
                 zone: string
             }
-            items: {}
+            items: object
             merchants: []
             rooms: {
                 id: number
@@ -1046,8 +1045,8 @@ export type MapChunkDataDecoded = {
             doors: DoorInfo[]
             npcs: []
             monsters: []
-            ref: {}
-            items: {}
+            ref: object
+            items: object
             merchants: []
             on_death: [MapName, number]
             on_exit: [MapName, number]

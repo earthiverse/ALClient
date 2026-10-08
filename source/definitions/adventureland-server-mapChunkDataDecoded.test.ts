@@ -1,4 +1,4 @@
-import type { MapChunkDataDecoded, MerritGiftData } from "./adventureland-server"
+import type { MapChunkDataDecoded } from "./adventureland-server"
 
 /**
  * The following is from socket events received 2026-09-29
