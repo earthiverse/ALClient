@@ -3274,7 +3274,7 @@ export class Character extends Observer implements CharacterData {
      *
      * @param items The inventory to look in
      */
-    public getEmptyInventorySlots(items = this.items): number[] {
+    public getEmptyInventorySlots(items: (ItemData | null)[] = this.items): number[] {
         const slots: number[] = []
         for (let i = 0; i < this.isize; i++) {
             const item = items[i]
@@ -3290,7 +3290,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {number} The index of the first empty slot
      * @memberof Character
      */
-    public getFirstEmptyInventorySlot(items = this.items): number {
+    public getFirstEmptyInventorySlot(items: (ItemData | null)[] = this.items): number {
         for (let i = 0; i < this.isize; i++) {
             const item = items[i]
             if (!item) return i
@@ -6162,7 +6162,11 @@ export class Character extends Observer implements CharacterData {
      * @param inventory Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public countItem(item: ItemName, inventory = this.items, filters?: LocateItemsFilters): number {
+    public countItem(
+        item: ItemName,
+        inventory: (ItemData | null)[] = this.items,
+        filters?: LocateItemsFilters,
+    ): number {
         let count = 0
         for (const index of this.locateItems(item, inventory, filters)) {
             const item = inventory[index]
@@ -6186,7 +6190,7 @@ export class Character extends Observer implements CharacterData {
      * Returns a boolean corresponding to whether or not we have a PvP marked item in our inventory
      * @param inv The inventory to look in
      */
-    public hasPvPMarkedItem(inv = this.items): boolean {
+    public hasPvPMarkedItem(inv: (ItemData | null)[] = this.items): boolean {
         for (let i = 0; i < inv.length; i++) {
             const item = inv[i]
             if (item?.v) return true
@@ -6314,7 +6318,11 @@ export class Character extends Observer implements CharacterData {
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItem(iN: ItemName | ItemName[], inv = this.items, filters?: LocateItemFilters): number {
+    public locateItem(
+        iN: ItemName | ItemName[],
+        inv: (ItemData | null)[] = this.items,
+        filters?: LocateItemFilters,
+    ): number {
         const located = this.locateItems(iN, inv, filters)
 
         if (located.length == 0) return undefined // No items found
@@ -6399,7 +6407,11 @@ export class Character extends Observer implements CharacterData {
      * @param inv Where to look for the item
      * @param filters Filters to help search for specific properties on items
      */
-    public locateItems(iN: ItemName | ItemName[], inv = this.items, filters?: LocateItemsFilters): number[] {
+    public locateItems(
+        iN: ItemName | ItemName[],
+        inv: (ItemData | null)[] = this.items,
+        filters?: LocateItemsFilters,
+    ): number[] {
         if (filters?.quantityGreaterThan <= 0) delete filters.quantityGreaterThan
         if (filters?.levelGreaterThan < 0) delete filters.levelGreaterThan
 
@@ -6472,7 +6484,7 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public locateItemsByLevel(
-        inventory = this.items,
+        inventory: (ItemData | null)[] = this.items,
         options?: {
             excludeLockedItems?: boolean
             excludeSpecialItems?: boolean
