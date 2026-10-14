@@ -32,8 +32,22 @@ export class Tools {
      * @param b Position 2
      */
     public static distance(
-        a: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
-        b: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
+        a: {
+            x: number
+            y: number
+            width?: number | undefined
+            height?: number | undefined
+            map?: MapName | undefined
+            in?: string | undefined
+        },
+        b: {
+            x: number
+            y: number
+            width?: number | undefined
+            height?: number | undefined
+            map?: MapName | undefined
+            in?: string | undefined
+        },
     ): number {
         // Inifinity if on a different map, instance, or we don't have data
         if (!a || !b) return Infinity
@@ -71,8 +85,22 @@ export class Tools {
      * @param b Position 2
      */
     public static squaredDistance(
-        a: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
-        b: { x: number; y: number; width?: number; height?: number; map?: MapName; in?: string },
+        a: {
+            x: number
+            y: number
+            width?: number | undefined
+            height?: number | undefined
+            map?: MapName | undefined
+            in?: string | undefined
+        },
+        b: {
+            x: number
+            y: number
+            width?: number | undefined
+            height?: number | undefined
+            map?: MapName | undefined
+            in?: string | undefined
+        },
     ): number {
         // Inifinity if on a different map, instance, or we don't have data
         if (!a || !b) return Infinity

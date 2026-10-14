@@ -3173,10 +3173,10 @@ export class Character extends Observer implements CharacterData {
      * Note the filters with the returnX pattern, as they are specific to `getEntity()`.
      *
      * @param {GetEntityFilters} [filters={}]
-     * @return {*}  {Entity}
+     * @return {*}  {(Entity | undefined)}
      * @memberof Character
      */
-    public getEntity(filters: GetEntityFilters = {}): Entity {
+    public getEntity(filters: GetEntityFilters = {}): Entity | undefined {
         const entities = this.getEntities(filters)
 
         // Warn if using more than one option
@@ -3508,7 +3508,7 @@ export class Character extends Observer implements CharacterData {
         return questGot
     }
 
-    public getPlayer(filters: GetPlayerFilters = {}): Player {
+    public getPlayer(filters: GetPlayerFilters = {}): Player | undefined {
         const players = this.getPlayers(filters)
 
         // Warn if using more than one option
@@ -3870,10 +3870,10 @@ export class Character extends Observer implements CharacterData {
     /**
      * Retrieves the entity our character is currently targeting.
      *
-     * @return {*}  {Entity}
+     * @return {*}  {(Entity | undefined)}
      * @memberof Character
      */
-    public getTargetEntity(): Entity {
+    public getTargetEntity(): Entity | undefined {
         return this.entities.get(this.target)
     }
 

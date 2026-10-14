@@ -55,6 +55,7 @@ export * from "./definitions/adventureland-data.js"
 
 // Export ALClient definitions
 export * from "./definitions/alclient.js"
+export * from "./definitions/pathfinder.js"
 
 export default {
     AchievementModel,

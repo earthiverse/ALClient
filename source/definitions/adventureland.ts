@@ -118,28 +118,28 @@ export type StatusInfo = {
 
 export type PositionReal = IPosition & {
     map: MapName
-    real_x?: number
-    real_y?: number
+    real_x?: number | undefined
+    real_y?: number | undefined
 }
 
 export type PositionMovable = PositionReal & {
-    from_x?: number
-    from_y?: number
+    from_x?: number | undefined
+    from_y?: number | undefined
     going_x: number
     going_y: number
 }
 
 export type PositionSmart = IPosition & {
     map: MapName
-    transport?: boolean
-    i?: number
-    s?: number
+    transport?: boolean | undefined
+    i?: number | undefined
+    s?: number | undefined
 }
 
 export type IPosition = {
-    map?: MapName
+    map?: MapName | undefined
     /** Instance ID */
-    in?: string
+    in?: string | undefined
     x: number
     y: number
 }

@@ -10,14 +10,16 @@ export type NodeData = {
 }
 
 export type PathfinderOptions = {
-    avoidTownWarps?: boolean
-    avoidMaps?: MapName[]
-    getWithin?: number
-    useBlink?: boolean
-    costs?: {
-        blink?: number
-    }
-    speed?: number
+    avoidTownWarps?: boolean | undefined
+    avoidMaps?: MapName[] | undefined
+    getWithin?: number | undefined
+    useBlink?: boolean | undefined
+    costs?:
+        | {
+              blink?: number | undefined
+          }
+        | undefined
+    speed?: number | undefined
     /** If set, we will console.log() messages */
-    showConsole?: boolean
+    showConsole?: boolean | undefined
 }
