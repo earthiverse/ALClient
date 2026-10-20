@@ -217,7 +217,7 @@ export class Player implements PlayerData {
      * @returns If the player is disabled
      */
     public isDisabled(): boolean {
-        return this.rip || (this.s.stunned || this.s.fingered || this.s.deepfreezed || this.s.sleeping) !== undefined
+        return Boolean(this.rip) || (this.s.stunned || this.s.fingered || this.s.deepfreezed || this.s.sleeping) !== undefined
     }
 
     /**
