@@ -62,7 +62,7 @@ export class Player implements PlayerData {
     pdps: number
     q: QInfo = {}
     range: number
-    rip: boolean
+    rip?: boolean | number
     skin: string
     slots: SlotInfo
     speed: number
