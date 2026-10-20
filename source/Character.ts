@@ -1115,7 +1115,7 @@ export class Character extends Observer implements CharacterData {
         return response
     }
 
-    public async buy(itemName: ItemName, quantity = 1): Promise<number> {
+    public async buy(itemName: ItemName, quantity = 1): Promise<number | undefined> {
         if (!this.ready) throw new Error("We aren't ready yet [buy].")
         const gData = this.G.items[itemName]
         if (!gData.s && quantity !== 1) {
@@ -1691,7 +1691,7 @@ export class Character extends Observer implements CharacterData {
     /**
      * @deprecated use `Item.calculateGrade()`
      */
-    public calculateItemGrade(item: ItemData): number {
+    public calculateItemGrade(item: ItemData): number | undefined {
         if (!item) return // No item to calculate grade
         const gInfo = this.G.items[item.name]
         if (!gInfo.grades) return // No information in G about this item
@@ -3290,7 +3290,7 @@ export class Character extends Observer implements CharacterData {
      * @return {*}  {number} The index of the first empty slot
      * @memberof Character
      */
-    public getFirstEmptyInventorySlot(items: (ItemData | null)[] = this.items): number {
+    public getFirstEmptyInventorySlot(items: (ItemData | null)[] = this.items): number | undefined {
         for (let i = 0; i < this.isize; i++) {
             const item = items[i]
             if (!item) return i
@@ -4891,7 +4891,7 @@ export class Character extends Observer implements CharacterData {
         ) {
             try {
                 await this.join(to as MonsterName | MapName)
-                return
+                return { map: this.map, x: this.x, y: this.y }
             } catch (e) {
                 if (options.showConsole) console.log(e)
             }
@@ -5360,7 +5360,7 @@ export class Character extends Observer implements CharacterData {
      * @param q The number of items to split in to the new stack
      * @returns The slot number of the new stack
      */
-    public async splitItem(pos: number, q: number): Promise<number> {
+    public async splitItem(pos: number, q: number): Promise<number | undefined> {
         if (!this.ready) throw new Error("We aren't ready yet [splitItem].")
         if (q <= 0) return undefined // Nothing to split
         const itemInfo = this.items[pos]
@@ -6322,7 +6322,7 @@ export class Character extends Observer implements CharacterData {
         iN: ItemName | ItemName[],
         inv: (ItemData | null)[] = this.items,
         filters?: LocateItemFilters,
-    ): number {
+    ): number | undefined {
         const located = this.locateItems(iN, inv, filters)
 
         if (located.length == 0) return undefined // No items found

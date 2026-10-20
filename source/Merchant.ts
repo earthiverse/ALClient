@@ -22,7 +22,7 @@ export class Merchant extends PingCompensatedCharacter {
      * @return {*}  {Promise<void>}
      * @memberof Merchant
      */
-    public async fish(): Promise<string> {
+    public async fish(): Promise<string | undefined> {
         if (!this.ready) throw new Error("We aren't ready yet [fish].")
         if (this.c.fishing) return // We're already fishing
         // TODO: Add area check if we can fish here
@@ -308,7 +308,7 @@ export class Merchant extends PingCompensatedCharacter {
         return response
     }
 
-    public async mine(): Promise<string> {
+    public async mine(): Promise<string | undefined> {
         if (!this.ready) throw new Error("We aren't ready yet [mine].")
         if (this.c.mining) return // We're already mining
         // TODO: Add area check if we can mine here

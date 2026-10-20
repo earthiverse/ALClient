@@ -138,7 +138,7 @@ export class Item implements ItemData, GItem {
         if (this.stat_type && this.stat) this[this.stat_type] = (this[this.stat_type] ?? 0) + this.stat
     }
 
-    public calculateGrade(): number {
+    public calculateGrade(): number | undefined {
         const gInfo = this.G.items[this.name]
         if (!gInfo.grades) return undefined // No information in G about this item
         let grade = 0
