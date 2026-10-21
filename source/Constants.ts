@@ -100,6 +100,7 @@ export class Constants {
         "dragold",
         "fvampire",
         "franky",
+        "gargoyle",
         "gbluepro",
         "ggreenpro",
         "goldenbat",
@@ -109,6 +110,7 @@ export class Constants {
         "greenjr",
         "grinch",
         "harpy", // Not really special, but the way they spawn makes tracking them important
+        "horseman",
         "icegolem",
         "jr",
         "manyeye",
