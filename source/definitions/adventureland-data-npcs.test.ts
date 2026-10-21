@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -933,7 +933,7 @@ test("G.npcs type validation", async () => {
                 type: "fullstatic",
             },
             dreamkeeper: {
-                cx: { back: "backpacks202", chin: "beard102", hair: "hairdo410", hat: "hat221", head: "mmakeup01" },
+                cx: { back: "backpacks201", chin: "beard102", hair: "hairdo410", hat: "hat221", head: "mmakeup01" },
                 id: "dreamkeeper",
                 interaction: ["You get 24 minutes inside. Stay together."],
                 name: "Dorr",

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -1947,13 +1947,8 @@ test("G.drops type validation", async () => {
                     [0.0000016666666666666667, "cryptkey"],
                 ],
                 global: [
-                    [0.0006666666666666666, "anniversarygift"],
-                    [0.00002, "slice_strawberry"],
-                    [0.00002, "slice_citrus"],
-                    [0.00002, "slice_honey"],
-                    [0.00002, "slice_mint"],
-                    [0.00002, "slice_blueberry"],
-                    [0.00002, "slice_nightberry"],
+                    [0.00005, "candy0"],
+                    [0.00125, "candy1"],
                 ],
                 global_static: [],
                 halloween: [
@@ -2168,8 +2163,6 @@ test("G.drops type validation", async () => {
                     [500, "cclaw"],
                     [10000, "cshell"],
                     [1000, "funtoken"],
-                    [1000, "funtoken"],
-                    [1000, "funtoken"],
                     [10, "funtoken"],
                     [10, "funtoken"],
                 ],
@@ -2185,16 +2178,12 @@ test("G.drops type validation", async () => {
                 dragold: [
                     [3, "goldenegg"],
                     [3, "goldenegg"],
-                    [3, "goldenegg"],
-                    [50, "essenceoffire"],
-                    [40, "essenceoffire"],
-                    [30, "essenceoffire"],
                     [20, "essenceoffire"],
                     [10, "essenceoffire"],
                     [10, "essenceoffire"],
-                    [1, "embercore", 5],
+                    [0.005, "embercore"],
                     [0.2, "offering"],
-                    [0.5, "lmace"],
+                    [0.2, "lmace"],
                     [5e-7, "cxjar", 1, "hat400"],
                     [3.333333333333333e-7, "chrysalis0"],
                     [1, "horsecapeg"],
@@ -2232,8 +2221,6 @@ test("G.drops type validation", async () => {
                     [200, "candy1"],
                     [200, "candy1"],
                     [10, "frankypants"],
-                    [0.0005, "mpxgloves"],
-                    [0.0002, "ukey"],
                     [0.000125, "cxjar", 1, "marmor3h"],
                 ],
                 frog: [
@@ -2252,6 +2239,13 @@ test("G.drops type validation", async () => {
                     [0.00002, "sanguine"],
                     [0.1, "voidthread"],
                 ],
+                gargoyle: [
+                    [100, "candy1", 6],
+                    [10, "witchparcel"],
+                    [1, "essenceofether", 2],
+                    [0.05, "ectoplasm"],
+                    [0.04, "bcandle"],
+                ],
                 gbluepro: [
                     [1, "orboffrost"],
                     [0.04, "spikedhelmet"],
@@ -2266,6 +2260,10 @@ test("G.drops type validation", async () => {
                     [0.0002, "pmace"],
                     [0.05, "drapes"],
                     [0.000003125, "graveglass"],
+                ],
+                ghoul: [
+                    [0.06, "bandages"],
+                    [0.0015, "ectoplasm"],
                 ],
                 goldenbat: [
                     [0.8, "handofmidas"],
@@ -2305,7 +2303,7 @@ test("G.drops type validation", async () => {
                     [1, "glolipop"],
                 ],
                 grinch: [
-                    [0.006, "ringhs"],
+                    [0.004, "ringhs"],
                     [10, "wbookhs"],
                     [20, "gcape"],
                     [0.0001, "northstar"],
@@ -2328,6 +2326,14 @@ test("G.drops type validation", async () => {
                     [1, "whiteegg"],
                     [0.1, "whiteegg"],
                 ],
+                horseman: [
+                    [100, "candy0", 5],
+                    [100, "candy1", 10],
+                    [10, "witchparcel", 5],
+                    [4, "pstem", 25],
+                    [0.5, "horsemanpumpkin"],
+                    [0.25, "bcandle"],
+                ],
                 icegolem: [
                     [5, "frozenkey"],
                     [10, "essenceoffrost"],
@@ -2336,6 +2342,10 @@ test("G.drops type validation", async () => {
                 iceroamer: [
                     [0.0001, "essenceoffrost"],
                     [0.00001, "frozenkey"],
+                ],
+                jackowalker: [
+                    [1, "pstem"],
+                    [0.05, "candy1"],
                 ],
                 jr: [
                     [0.1, "candy0"],
@@ -2543,7 +2553,7 @@ test("G.drops type validation", async () => {
                     [0.1, "candycane"],
                     [0.1, "candycane"],
                     [0.1, "mistletoe"],
-                    [0.00075, "offering"],
+                    [0.0008163265306122449, "offering"],
                     [1, "carrot"],
                     [1, "snowball"],
                     [1, "snowball"],
@@ -2678,16 +2688,42 @@ test("G.drops type validation", async () => {
                     [0.00008, "svenom"],
                     [0.0000035714285714285714, "scorpionseal"],
                 ],
+                zombie: [
+                    [0.02, "bandages"],
+                    [0.01, "mbones"],
+                ],
             },
             monsters_home_server: {
-                crabxx: [[1, "reefglass", 3]],
+                crabxx: [
+                    [1, "reefglass", 3],
+                    [0.001, "suckerpunch"],
+                    [1000, "funtoken"],
+                    [1000, "funtoken"],
+                    [1000, "funtoken"],
+                ],
                 dragold: [
+                    [3, "goldenegg"],
+                    [50, "essenceoffire"],
+                    [40, "essenceoffire"],
+                    [30, "essenceoffire"],
                     [1, "essenceoffire"],
-                    [0.005, "embercore"],
+                    [1, "embercore", 2],
+                    [0.75, "lmace"],
+                    [0.5, "lmace"],
                 ],
                 franky: [
+                    [0.0005, "mpxgloves"],
+                    [0.0002, "ukey"],
                     [1, "bandages", 10],
                     [0.005, "ectoplasm"],
+                ],
+                grinch: [
+                    [0.004, "ringhs"],
+                    [10, "wbookhs"],
+                    [5, "wbookhs"],
+                    [3, "wbookhs"],
+                    [20, "gcape"],
+                    [1, "sweaterhs"],
                 ],
                 icegolem: [
                     [1, "essenceoffrost", 2],
@@ -2714,6 +2750,13 @@ test("G.drops type validation", async () => {
                 rharpy: [
                     [0.05, "feather1"],
                     [0.2, "essenceoffrost"],
+                ],
+                snowman: [
+                    [0.1, "candycane"],
+                    [0.1, "candycane"],
+                    [0.1, "mistletoe"],
+                    [0.0008163265306122449, "offering"],
+                    [0.01, "wbookhs"],
                 ],
             },
             mysterybox: [
@@ -2872,6 +2915,30 @@ test("G.drops type validation", async () => {
                 [1, "pmaceofthedead"],
                 [1, "staffofthedead"],
                 [1, "daggerofthedead"],
+            ],
+            witchparcel: [
+                [28, "hpot1", 10],
+                [28, "mpot1", 10],
+                [20, "cscroll0", 4],
+                [14, "scroll0", 5],
+                [2, "scroll1", 2],
+                [2, "cscroll1"],
+                [1.4, "cipherdraught"],
+                [1.6, "gemfragment", 3],
+                [1.4, "goldnugget"],
+                [1.2, "funtoken", 4],
+                [0.25, "scroll2"],
+                [0.025, "cscroll2"],
+                [0.01, "platinumnugget"],
+                [0.01, "crookedkey"],
+                [0.01, "patchbuckler"],
+                [0.01, "blackcatbell"],
+                [0.01, "nightmarketsash"],
+                [0.004, "hexweavegloves"],
+                [0.004, "candleboots"],
+                [0.004, "witchlightmantle"],
+                [0.004, "laughingbook"],
+                [0.004, "cxjar", 1, "sinisterlaugh"],
             ],
             xbox: [
                 [1, "open", "armorx"],

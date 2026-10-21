@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -2715,6 +2715,53 @@ test("G.events type validation", async () => {
                 sprite: "rgoo",
                 type: "daily",
             },
+            graveyard: {
+                announcement: {
+                    accent: "#9FCF6D",
+                    color: "#9FA3A8",
+                    effect: "embers",
+                    text: "Zombies and Ghouls are rising in Spooky Town's graveyard.",
+                },
+                duration: 600,
+                gargoyle: [255, -1545],
+                graves: [
+                    [65, -1550],
+                    [127, -1550],
+                    [190, -1550],
+                    [320, -1550],
+                    [382, -1550],
+                    [447, -1550],
+                    [65, -1482],
+                    [127, -1482],
+                    [190, -1482],
+                    [320, -1482],
+                    [382, -1482],
+                    [447, -1482],
+                    [65, -1372],
+                    [127, -1372],
+                    [190, -1372],
+                    [320, -1372],
+                    [382, -1372],
+                    [447, -1372],
+                    [65, -1312],
+                    [127, -1312],
+                    [190, -1312],
+                    [320, -1312],
+                    [382, -1312],
+                    [447, -1312],
+                ],
+                join: true,
+                modal: "event-graveyard",
+                name: "Graveyard Rising",
+                season: "halloween",
+                sprite: "gargoyle",
+                type: "seasonal",
+                waves: [
+                    [0, { zombie: 12 }],
+                    [180, { ghoul: 3, zombie: 16 }],
+                    [360, { ghoul: 6, zombie: 20 }],
+                ],
+            },
             halloween: {
                 announcement: {
                     accent: "#AD91DC",
@@ -2741,6 +2788,21 @@ test("G.events type validation", async () => {
                 sprite: "grinch",
                 type: "seasonal",
             },
+            horseman: {
+                announcement: {
+                    accent: "#AD91DC",
+                    color: "#E8742A",
+                    effect: "embers",
+                    text: "The Headless Horseman rides out of Spooky Forest's graveyard.",
+                },
+                duration: 2400,
+                join: true,
+                modal: "event-horseman",
+                name: "Headless Horseman",
+                season: "halloween",
+                sprite: "horseman",
+                type: "nightly",
+            },
             icegolem: {
                 announcement: { accent: "#E0F6FF", color: "#8BD4F4", effect: "snow", text: "Face the Ice Golem." },
                 duration: 2400,
@@ -2763,6 +2825,43 @@ test("G.events type validation", async () => {
                 sprite: "redenvelopev4",
                 type: "seasonal",
             },
+            trickortreat: {
+                announcement: false,
+                costume_treat: 85,
+                costumes: ["phelmet", "gphelmet", "horsemanpumpkin"],
+                doors: [
+                    ["halloween", 331, -210],
+                    ["halloween", -228, -178],
+                    ["spookytown", -130, -60],
+                    ["spookytown", 70, -103],
+                    ["spookytown", 217, -27],
+                    ["spookytown", -170, 180],
+                    ["spookytown", 117, 133],
+                ],
+                ghost_time: 120,
+                knocks: 14,
+                modal: "event-trickortreat",
+                name: "Trick or Treat",
+                reveal: 0.75,
+                season: "halloween",
+                sprite: "phelmet",
+                stamps: { laugh: 40, parcel: 10 },
+                treat: 70,
+                treats: [
+                    [50, "candy1", 3],
+                    [20, "candy0", 1],
+                    [5, "verdantspore", 2],
+                    [5, "frostscale", 2],
+                    [5, "embercoal", 2],
+                    [5, "gloomfeather", 2],
+                    [10, "witchparcel", 1],
+                ],
+                tricks: [
+                    [1, "spooked"],
+                    [1, "ghost"],
+                ],
+                type: "seasonal",
+            },
             valentines: {
                 announcement: {
                     accent: "#F5C8D9",
@@ -2775,6 +2874,31 @@ test("G.events type validation", async () => {
                 name: "Valentines",
                 sprite: "cupid",
                 type: "seasonal",
+            },
+            witchcipher: {
+                announcement: {
+                    accent: "#F59A3C",
+                    color: "#AF6AE2",
+                    effect: "sparks",
+                    text: "Gather ingredients and crack the Witch's lost recipe.",
+                },
+                board: 30,
+                duration: 1680,
+                gathering: 1200,
+                ingredients: [
+                    ["verdantspore", ["goo", "bee", "spider", "croc"]],
+                    ["frostscale", ["arcticbee", "boar", "wolfie", "iceroamer"]],
+                    ["embercoal", ["plantoid", "porcupine", "fireroamer", "gscorpion"]],
+                    ["gloomfeather", ["snake", "osnake", "minimush", "ghost"]],
+                ],
+                loot: 0.003,
+                mixes: 5,
+                modal: "event-witchcipher",
+                name: "Witch's Cipher",
+                payout: { crack: 50, right: 1 },
+                slots: 5,
+                sprite: "brewingwitch",
+                type: "daily",
             },
         },
     }

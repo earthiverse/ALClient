@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -327,6 +327,18 @@ test("G.conditions type validation", async () => {
                 name: "Hard Shell",
                 set_speed: 10,
                 skin: "skill_hardshell",
+            },
+            hexed: {
+                cleansable: true,
+                debuff: true,
+                duration: 5000,
+                explanation: "Reduces damage output by 20% and movement speed by 20. Increases damage taken by 20%.",
+                incdmgamp: 20,
+                name: "Hexed",
+                output: -20,
+                skin: "mummyhex",
+                speed: -20,
+                ui: true,
             },
             holidayspirit: {
                 buff: true,
@@ -661,6 +673,7 @@ test("G.conditions type validation", async () => {
                 skin: "rimeglass",
                 ui: true,
             },
+            rising: { duration: 1500, name: "Rising", skin: "condition_bad", ui: false },
             rspeed: {
                 buff: true,
                 duration: 2700000,
@@ -710,6 +723,15 @@ test("G.conditions type validation", async () => {
                 speed: -40,
                 ui: true,
             },
+            spooked: {
+                buff: true,
+                duration: 3000,
+                explanation: "Boo! Speed increased by 40 for 3 seconds.",
+                name: "Spooked!",
+                skin: "condition_spooked",
+                speed: 40,
+                ui: true,
+            },
             stack: {
                 debuff: true,
                 explanation: "Bonus damage for each rogue attack.",
@@ -738,7 +760,7 @@ test("G.conditions type validation", async () => {
                 debuff: true,
                 defense: "phresistance",
                 duration: 3200,
-                explanation: "Cannot move, attack, heal, or use skills.",
+                explanation: "Cannot move, attack, heal, use skills, or use items.",
                 name: "Stunned",
                 skin: "condition_bad",
                 ui: true,

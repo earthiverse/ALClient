@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -574,6 +574,7 @@ test("G.sprites type validation", async () => {
                 type: "head",
             },
             franky: { columns: 1, file: "/images/tiles/monsters/frankenstein.png", matrix: [["franky"]], rows: 1 },
+            gargoyle: { columns: 1, file: "/images/tiles/monsters/gargoyle_1.png", matrix: [["gargoyle"]], rows: 1 },
             gcandle: {
                 columns: 1,
                 file: "/images/cosmetics/hats/gcandle_anim.png",
@@ -581,6 +582,7 @@ test("G.sprites type validation", async () => {
                 rows: 1,
                 type: "a_hat",
             },
+            ghoul: { columns: 1, file: "/images/tiles/monsters/mghoulA_1.png", matrix: [["ghoul"]], rows: 1 },
             gking: { columns: 1, file: "/images/tiles/monsters/goblinkingb.png", matrix: [["gking"]], rows: 1 },
             goblinos: {
                 columns: 4,
@@ -1002,7 +1004,14 @@ test("G.sprites type validation", async () => {
                 rows: 1,
                 type: "hat",
             },
+            horseman: { columns: 1, file: "/images/misc/horseman_c_1.png", matrix: [["horseman"]], rows: 1 },
             icegolem: { columns: 1, file: "/images/tiles/monsters/iceGolem.png", matrix: [["icegolem"]], rows: 1 },
+            jackowalker: {
+                columns: 1,
+                file: "/images/tiles/monsters/jacko_a_1.png",
+                matrix: [["jackowalker"]],
+                rows: 1,
+            },
             jpa: {
                 columns: 4,
                 file: "/images/tiles/characters/winners_jpa.png",
@@ -1158,7 +1167,7 @@ test("G.sprites type validation", async () => {
                         "makeup117",
                         "makeup118",
                         "makeup119",
-                        "makeup120",
+                        null,
                         "makeup121",
                         "makeup122",
                         "makeup123",
@@ -1187,6 +1196,14 @@ test("G.sprites type validation", async () => {
                         "lanternhead0",
                     ],
                 ],
+                rows: 1,
+                type: "head",
+            },
+            makeup120: {
+                columns: 1,
+                file: "/images/cosmetics/makeup/makeup120_anim.png?v=1",
+                frames: 3,
+                matrix: [["makeup120"]],
                 rows: 1,
                 type: "head",
             },
@@ -2027,6 +2044,24 @@ test("G.sprites type validation", async () => {
                 rows: 2,
                 size: "xxsmall",
                 type: "character",
+            },
+            zombies: {
+                columns: 4,
+                file: "/images/tiles/monsters/mzombies_1.png",
+                matrix: [
+                    ["zombie", "zombie1", "zombie2", "zombie3"],
+                    ["zombie4", "zombie5", "zombie6", "zombie7"],
+                ],
+                rows: 2,
+            },
+            zombies_rise: {
+                columns: 4,
+                file: "/images/tiles/monsters/mzombies_ground_a_1.png",
+                matrix: [
+                    ["grave_mound", null, null, "grave_hand"],
+                    [null, null, null, null],
+                ],
+                rows: 2,
             },
         },
     }

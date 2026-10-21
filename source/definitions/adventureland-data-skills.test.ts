@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -1058,11 +1058,12 @@ test("G.skills type validation", async () => {
             },
             purify: {
                 class: ["paladin"],
+                condition_damage: 400,
                 cooldown: 24000,
                 damage: 2000,
                 damage_type: "pure",
                 explanation:
-                    "Deals 2000 pure damage purifying the target, removes all buffs and debuffs dealing additional 400 damage for each and receive the Purifier buff if the target is defeated!",
+                    "Deals 2000 pure damage, plus 400 for each eligible nonpersistent buff or debuff. These effects are removed, except Rogue stacks and burning on monsters. Rogue stacks add 400 plus 1 per stack, up to 800 damage in total. Innate poison and persistent conditions are unaffected. Defeating the target grants the Purifier buff.",
                 hostile: true,
                 kill_buff: "purifier",
                 level: 60,
@@ -1071,6 +1072,8 @@ test("G.skills type validation", async () => {
                 projectile: "purify",
                 range: 480,
                 skin: "skill_purify",
+                stack_bonus_cap: 400,
+                stack_damage: 1,
                 target: true,
                 type: "skill",
             },
@@ -1274,6 +1277,15 @@ test("G.skills type validation", async () => {
                 target: true,
                 type: "skill",
                 use_range: true,
+            },
+            sinisterlaugh: {
+                cooldown: 12000,
+                emote: "sinisterlaugh",
+                explanation: "A wicked laugh to scare your friends.",
+                mp: 20,
+                name: "Sinister Laugh",
+                skin: "emote_sinisterlaugh",
+                type: "skill",
             },
             smash: {
                 class: ["paladin"],

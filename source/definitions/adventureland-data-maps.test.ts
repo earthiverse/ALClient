@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -517,8 +517,8 @@ test("G.maps type validation", async () => {
                 ],
                 outside: true,
                 quirks: [
-                    [-228, -178, 32, 40, "log", "Locked but there are noises coming from inside"],
-                    [331, -210, 32, 40, "log", "Locked"],
+                    [-228, -178, 32, 40, "knock", "Locked but there are noises coming from inside"],
+                    [331, -210, 32, 40, "knock", "Locked"],
                     [128, -251, 20, 16, "sign", "Beware! Don't fall down!"],
                 ],
                 spawns: [
@@ -1403,7 +1403,14 @@ test("G.maps type validation", async () => {
                     { boundary: [-283, -222, 289, 234], id: "citizen14", position: [0, 0] },
                 ],
                 outside: true,
-                quirks: [[-63, -44, 30, 24, "invisible_statue"]],
+                quirks: [
+                    [-63, -44, 30, 24, "invisible_statue"],
+                    [-130, -60, 32, 40, "knock", "Locked"],
+                    [70, -103, 32, 40, "knock", "Locked"],
+                    [217, -27, 32, 40, "knock", "Locked"],
+                    [-170, 180, 32, 40, "knock", "Locked"],
+                    [117, 133, 32, 40, "knock", "Locked"],
+                ],
                 ref: { poof: { in: "spookytown", map: "spookytown", x: -63, y: -44 } },
                 spawns: [
                     [0, 0],

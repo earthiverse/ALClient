@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -62,6 +62,15 @@ test("G.craft type validation", async () => {
                     [5000, "bwing"],
                 ],
             },
+            blackcatbell: {
+                cost: 2000000,
+                items: [
+                    [40, "witchparcel"],
+                    [1, "goldingot"],
+                    [100, "bwing"],
+                ],
+                quest: "witch",
+            },
             bogcrown: {
                 cost: 220000,
                 items: [
@@ -97,6 +106,15 @@ test("G.craft type validation", async () => {
             },
             bronzeingot: { cost: 360000, items: [[16, "bronzenugget"]] },
             cake: { cost: 5, items: [[10, "whiteegg"]] },
+            candleboots: {
+                cost: 4000000,
+                items: [
+                    [50, "witchparcel"],
+                    [1, "goldingot"],
+                    [2, "bcandle"],
+                ],
+                quest: "witch",
+            },
             candleward: {
                 cost: 2000000,
                 items: [
@@ -141,7 +159,7 @@ test("G.craft type validation", async () => {
             cave_deepaxe: {
                 cost: 480000,
                 items: [
-                    [400, "cave_amber"],
+                    [200, "cave_amber"],
                     [1, "cave_tunnelaxe", 0],
                     [10, "gemfragment"],
                     [20, "leather"],
@@ -220,6 +238,17 @@ test("G.craft type validation", async () => {
                     [40, "ashleaf"],
                 ],
             },
+            cipherdraught: {
+                cost: 20000,
+                items: [
+                    [1, "verdantspore"],
+                    [1, "frostscale"],
+                    [1, "embercoal"],
+                    [1, "gloomfeather"],
+                    [1, "hpot0"],
+                ],
+                quest: "witch",
+            },
             cloverstud: {
                 cost: 280000,
                 items: [
@@ -249,6 +278,15 @@ test("G.craft type validation", async () => {
                     [4, "feather1"],
                     [1, "cape", 0],
                 ],
+            },
+            crookedkey: {
+                cost: 2000000,
+                items: [
+                    [30, "witchparcel"],
+                    [1, "goldingot"],
+                    [20, "mbones"],
+                ],
+                quest: "witch",
             },
             ctristone: {
                 cost: 20000,
@@ -456,6 +494,15 @@ test("G.craft type validation", async () => {
                     [1, "nheart"],
                 ],
             },
+            hexweavegloves: {
+                cost: 4000000,
+                items: [
+                    [50, "witchparcel"],
+                    [1, "goldingot"],
+                    [100, "spidersilk"],
+                ],
+                quest: "witch",
+            },
             homecomingcape: {
                 cost: 2000000,
                 items: [
@@ -513,6 +560,15 @@ test("G.craft type validation", async () => {
                     [1, "embercore"],
                     [1, "bronzeingot"],
                 ],
+            },
+            laughingbook: {
+                cost: 4000000,
+                items: [
+                    [50, "witchparcel"],
+                    [1, "goldingot"],
+                    [1, "ectoplasm"],
+                ],
+                quest: "witch",
             },
             lbelt: {
                 cost: 0,
@@ -576,6 +632,15 @@ test("G.craft type validation", async () => {
                     [2, "smush"],
                 ],
             },
+            nightmarketsash: {
+                cost: 2000000,
+                items: [
+                    [30, "witchparcel"],
+                    [1, "goldingot"],
+                    [50, "pstem"],
+                ],
+                quest: "witch",
+            },
             oathplate: {
                 cost: 180000,
                 items: [
@@ -631,6 +696,15 @@ test("G.craft type validation", async () => {
                     [40, "leather"],
                 ],
                 quest: "anniversary_baker",
+            },
+            patchbuckler: {
+                cost: 2000000,
+                items: [
+                    [30, "witchparcel"],
+                    [1, "goldingot"],
+                    [20, "bandages"],
+                ],
+                quest: "witch",
             },
             pickaxe: {
                 cost: 100,
@@ -996,6 +1070,25 @@ test("G.craft type validation", async () => {
                     [1, "shoes"],
                     [20, "feather0"],
                 ],
+            },
+            witchlightmantle: {
+                cost: 4000000,
+                items: [
+                    [50, "witchparcel"],
+                    [1, "goldingot"],
+                    [20, "essenceofether"],
+                ],
+                quest: "witch",
+            },
+            witchparcel: {
+                cost: 10000,
+                items: [
+                    [5, "verdantspore"],
+                    [5, "frostscale"],
+                    [5, "embercoal"],
+                    [5, "gloomfeather"],
+                ],
+                quest: "witch",
             },
             worldrootcrook: {
                 cost: 250000000,

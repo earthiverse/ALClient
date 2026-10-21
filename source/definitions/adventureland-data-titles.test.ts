@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -12,9 +12,10 @@ test("G.titles type validation", async () => {
             cavefound: {
                 manual: true,
                 misc: true,
+                resistance: 5,
                 source: "dreams",
                 stackable: true,
-                title: "Cave-found",
+                title: "Cave",
                 type: "all_items",
             },
             critmonger: { str: 2, title: "Monger's", type: "mainhand" },

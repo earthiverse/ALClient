@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17397 (2026-09-27)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -18,6 +18,12 @@ test("G.sets type validation", async () => {
                 explanation: "An Easter / Bunny themed set!",
                 items: ["eears", "ecape", "epyjamas", "eslippers", "pinkie", "carrotsword"],
                 name: "Bunny Set",
+            },
+            crookedkeys: {
+                "1": {},
+                "2": { apiercing: 80, rpiercing: 80 },
+                items: ["crookedkey", "crookedkey"],
+                name: "Skeleton Keys",
             },
             fury: {
                 "1": {},

@@ -1,7 +1,7 @@
 import type { GData } from "./adventureland-data"
 
 /**
- * The following is from http://adventure.land/data.js, version 17120 (2026-09-21)
+ * The following is from http://adventure.land/data.js, version 18183 (2026-10-21)
  * It is used to confirm type correctness
  */
 
@@ -372,7 +372,7 @@ test("G.cosmetics type validation", async () => {
                 smakeup00: ["sskin1a", "mskin1a", "lskin1a", -1],
                 stormhead0: ["sskin1d", "mskin1d", "lskin1d", 0],
             },
-            head_animation: { lavaglasshead0: 160, stormhead0: 220 },
+            head_animation: { lavaglasshead0: 160, makeup120: 160, stormhead0: 220 },
             head_y: { mbody4b: 1 },
             map: { old: "new" },
             no_upper: [],
