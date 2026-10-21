@@ -19,6 +19,7 @@ import type {
     ConditionName,
     CXData,
     DamageType,
+    EventName,
     GData,
     GMap,
     ItemName,
@@ -3984,7 +3985,7 @@ export class Character extends Observer implements CharacterData {
      *
      * @param eventName
      */
-    public async join(eventName: MapName | MonsterName): Promise<unknown> {
+    public async join(eventName: MapName | MonsterName | EventName): Promise<unknown> {
         if (!this.S[eventName]) throw new Error(`Can't join because '${eventName}' is not active.`)
         if (this.ctype == "merchant") throw new Error("Merchants can't join events.")
         if (this.s.hopsickness) throw new Error("Can't join events with hopsickness.")

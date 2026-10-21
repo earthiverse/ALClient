@@ -86,6 +86,7 @@ export class Constants {
         "dragold",
         "franky",
         "grinch",
+        "horseman",
         "icegolem",
         "mrgreen",
         "mrpumpkin",

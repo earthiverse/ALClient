@@ -227,7 +227,7 @@ export type GData = {
         }
     }
     dimensions: {
-        /** 
+        /**
          * TODO: Make SkinName
          * TODO: Figure out these. [width, height, ???, base_w, base_w]
          */
@@ -321,7 +321,7 @@ export type GData = {
         graveyard: {
             gargoyle: [number, number]
             graves: [number, number][]
-            waves: [number, {[T in MonsterName]?: number}][]
+            waves: [number, { [T in MonsterName]?: number }][]
         }
         trickortreat: {
             /** Chance to get a treat with a costume */
@@ -334,7 +334,7 @@ export type GData = {
             /** How many knocks you can do account-wide per day */
             knocks: number
             reveal: number
-            stamps: {[T in string]: number}
+            stamps: { [T in string]: number }
             treat: number
             treats: [number, ItemName, number][]
             tricks: [number, string][]
@@ -1008,7 +1008,21 @@ export type GItem = {
 } & {
     /** (TODO: Obsolete?) Related to 'announce'? */
     a?: boolean | number
-    ability?: "burn" | "freeze" | "frenzy" | "hex" | "petrify" | "poison" | "poke" | "restore_mp" | "secondchance" | "shatter" | "sugarrush" | "sunder" | "weave" | SkillName
+    ability?:
+        | "burn"
+        | "freeze"
+        | "frenzy"
+        | "hex"
+        | "petrify"
+        | "poison"
+        | "poke"
+        | "restore_mp"
+        | "secondchance"
+        | "shatter"
+        | "sugarrush"
+        | "sunder"
+        | "weave"
+        | SkillName
     /** (GUI related) Item border accent color */
     acolor?: string
     /** TODO: ??? What is this? Is this related to special items? */
@@ -2022,6 +2036,7 @@ export type EventName =
     | "graveyard"
     | "halloween"
     | "holidayseason"
+    | "horseman"
     | "lunarnewyear"
     | "trickortreat"
     | "valentines"

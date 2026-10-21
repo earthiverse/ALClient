@@ -604,6 +604,36 @@ export type UpgradeCompoundGRDataObject = {
     num: number
 }
 
+export type MailGRDataObject = {
+    response: "mail_sent" | "mail_failed"
+    cevent?: "mail_sent" | "mail_failed"
+    to: string
+    request_id?: string
+    success?: true
+    failed?: true
+    reason?: "mailbox_full" | "mail_sender_limit" | "nocharacter" | "coms_failure" | string
+}
+export type ExchangeDataGRDataObject = {
+    response: "data"
+    place: "exchange"
+    request_id?: string
+    success?: boolean
+    failed?: boolean
+    reason?: string
+    reward?: ItemName
+    num?: number
+}
+export type InteractionGRDataObject = {
+    response: "data"
+    place: "interaction"
+    interaction: "witchcipher" | "knock" | "cave" | "cavalry" | string
+    request_id?: string
+    success?: boolean
+    failed?: boolean
+    reason?: string
+    [key: string]: unknown
+}
+
 // TODO: split these in to other objects
 export type GameResponseDataObject =
     | AttackFailedGRDataObject
@@ -645,6 +675,9 @@ export type GameResponseDataObject =
     | UpgradeCompoundGRDataObject
     | BankOperationGRDataObject
     | SetHomeGRDataObject
+    | MailGRDataObject
+    | ExchangeDataGRDataObject
+    | InteractionGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -1111,6 +1144,20 @@ export type PartyData = {
     }
 }
 
+export type WitchCipherCharacterData = {
+    day?: string
+    mixes: number
+    mixes_left: number
+    parcels: number
+    server?: string
+}
+
+export type TrickOrTreatCharacterData = {
+    doors: number[]
+    doors_left: number
+    stamps: number
+}
+
 export type PlayerData = {
     id: string
     ctype: CharacterType | NPCName
@@ -1164,6 +1211,8 @@ export type PlayerData = {
     target?: string | null
     tp?: boolean
     xp?: number
+    witchcipher?: WitchCipherCharacterData
+    trickortreat?: TrickOrTreatCharacterData
 }
 
 /**
@@ -1224,6 +1273,55 @@ export type QInfo = {
     }
 }
 
+export type EventScheduleOccurrence = {
+    id: string
+    event: EventName | MonsterName | string
+    at: number
+    status: "scheduled" | "live" | "missed" | "done" | string
+    season?: string
+    started?: number
+    ended?: number
+    repeat?: boolean
+    every?: number
+}
+
+export type EventScheduleData = {
+    realm: string
+    server_time: number
+    events: EventScheduleOccurrence[]
+    repeats: EventScheduleOccurrence[]
+}
+
+export type ServerInfoWitchCipher = {
+    live: boolean
+    phase?: "gathering" | "brewing"
+    id?: string
+    start?: number
+    gather_end?: number
+    end?: number
+    board?: { mix: ItemName[]; right: number }[]
+    possible?: number
+    mixes?: number
+    cracks?: number
+    cracked?: { by: string; recipe: ItemName[] }
+}
+
+export type ServerInfoGraveyard = {
+    live: boolean
+    map: MapName
+    x: number
+    y: number
+    start: number
+    wave: number
+    waves: number
+    left: number
+    gargoyle?: boolean
+    hp?: number
+    max_hp?: number
+    target?: string
+    end?: number
+}
+
 export type ScheduleData = { dailies: number[]; night: boolean; nightlies: number[]; time_offset: number }
 
 export type ServerData = {
@@ -1240,8 +1338,13 @@ export type ServerData = {
 
 export type ServerInfoData = {
     [T in MonsterName]?: ServerInfoDataLive | ServerInfoDataNotLive | ServerInfoDataEvent
-} & { schedule?: ScheduleData } & {
-    [T in Exclude<EventName, "anniversary">]?: boolean
+} & { schedule?: ScheduleData & Partial<EventScheduleData> } & {
+    [T in Exclude<EventName, "anniversary" | "graveyard" | "horseman" | "witchcipher" | MonsterName>]?: boolean
+} & {
+    event_ends?: Record<string, number>
+    event_flags?: Record<string, boolean>
+    witchcipher?: ServerInfoWitchCipher
+    graveyard?: ServerInfoGraveyard
 } & { goobrawl?: ServerInfoDataEvent } & {
     abtesting?:
         | ServerInfoDataEvent
