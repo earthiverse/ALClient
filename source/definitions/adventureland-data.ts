@@ -227,8 +227,11 @@ export type GData = {
         }
     }
     dimensions: {
-        /** TODO: Figure out these. [width, height, ???, base_w, base_w] */
-        [T in MonsterName | "default_character" | `goo${number | "D"}` | "harpy_fly" | "rharpy_fly"]?: [
+        /** 
+         * TODO: Make SkinName
+         * TODO: Figure out these. [width, height, ???, base_w, base_w]
+         */
+        [T in MonsterName | "default_character" | "chestx" | `goo${number | "D"}` | "harpy_fly" | "rharpy_fly"]?: [
             number,
             number,
             number?,
@@ -291,6 +294,7 @@ export type GData = {
             modal: string
             /** Event name */
             name: string
+            season?: "halloween"
             sprite: string // TODO: SpriteKey?
             type: "daily" | "seasonal" | "nightly"
         }
@@ -313,6 +317,39 @@ export type GData = {
             rare: unknown // TODO: add typings
             rewards: unknown // TODO: add typings
             travelers: unknown[] // TODO: add typings
+        }
+        graveyard: {
+            gargoyle: [number, number]
+            graves: [number, number][]
+            waves: [number, {[T in MonsterName]?: number}][]
+        }
+        trickortreat: {
+            /** Chance to get a treat with a costume */
+            costume_treat: number
+            /** Items you can equip to increase your treat chance */
+            costumes: ItemName[]
+            /** Which doors you can knock on to trick-or-treat */
+            doors: [MapName, number, number][]
+            ghost_time: number
+            /** How many knocks you can do account-wide per day */
+            knocks: number
+            reveal: number
+            stamps: {[T in string]: number}
+            treat: number
+            treats: [number, ItemName, number][]
+            tricks: [number, string][]
+        }
+        witchcipher: {
+            board: number
+            gathering: number
+            ingredients: [ItemName, MonsterName[]][]
+            loot: number
+            mixes: number
+            payout: {
+                crack: number
+                right: number
+            }
+            slots: number
         }
     }
     games: {
@@ -619,6 +656,7 @@ export type GData = {
             /** Additional */
             complementary?: string
             condition?: ConditionName
+            condition_damage?: number
             consume?: ItemName
             /** If set, this cooldown is shared with all other skills of the same group */
             cooldown_group?: string
@@ -706,6 +744,8 @@ export type GData = {
             skins?: string[]
             /** The item(s) required to use this skill */
             slot?: [SlotType, ItemName][]
+            stack_bonus_cap?: number
+            stack_damage?: number
             states?: {
                 [T in string]: {
                     condition: ConditionName
@@ -968,7 +1008,7 @@ export type GItem = {
 } & {
     /** (TODO: Obsolete?) Related to 'announce'? */
     a?: boolean | number
-    ability?: "burn" | "freeze" | "poison" | "poke" | "restore_mp" | "secondchance" | "sugarrush" | "weave" | SkillName
+    ability?: "burn" | "freeze" | "frenzy" | "hex" | "petrify" | "poison" | "poke" | "restore_mp" | "secondchance" | "shatter" | "sugarrush" | "sunder" | "weave" | SkillName
     /** (GUI related) Item border accent color */
     acolor?: string
     /** TODO: ??? What is this? Is this related to special items? */
@@ -1979,10 +2019,13 @@ export type EventName =
     | "anniversary"
     | "dreams"
     | "egghunt"
+    | "graveyard"
     | "halloween"
     | "holidayseason"
     | "lunarnewyear"
+    | "trickortreat"
     | "valentines"
+    | "witchcipher"
 
 export type ImageSetName =
     | "community"
