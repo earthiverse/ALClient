@@ -1581,10 +1581,6 @@ test("Character.knock", async () => {
     await expect(priest.knock(0)).rejects.toThrow("We can't knock while dead [knock].")
     priest.rip = false
 
-    // In bank
-    priest.map = "bank"
-    await expect(priest.knock(0)).rejects.toThrow("We can't knock while in a bank [knock].")
-
     // Invalid door
     priest.map = "halloween"
     priest.x = 331

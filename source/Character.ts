@@ -4072,7 +4072,6 @@ export class Character extends Observer implements CharacterData {
     public async knock(door?: number, options?: { timeoutMs?: number }): Promise<KnockInteractionGRDataObject> {
         if (!this.ready) throw new Error("We aren't ready yet [knock].")
         if (this.rip) throw new Error("We can't knock while dead [knock].")
-        if (this.user || this.map.startsWith("bank")) throw new Error("We can't knock while in a bank [knock].")
 
         const doors = this.G.events.trickortreat?.doors
         if (door !== undefined) {
