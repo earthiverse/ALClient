@@ -119,4 +119,39 @@ test("GameEventData type validation", async () => {
         response: "sh_time",
     }
     expect(setHomeFail).toBeDefined()
+
+    const knockTrick: GameResponseData = {
+        response: "data",
+        place: "interaction",
+        interaction: "knock",
+        request_id: "XqXZhqbGSd5sAdub7B6obWc5bHZ4T8",
+        success: true,
+        door: 1,
+        stamps: 8,
+        trick: "ghost",
+    }
+    expect(knockTrick).toBeDefined()
+
+    const knockTreat: GameResponseData = {
+        response: "data",
+        place: "interaction",
+        interaction: "knock",
+        request_id: "HcOtF3p7uFEUW4APaLZViIQ8Ruazxb",
+        success: true,
+        door: 3,
+        stamps: 10,
+        treat: { name: "frostscale", q: 2 },
+        parcel: true,
+    }
+    expect(knockTreat).toBeDefined()
+
+    const knockFail: GameResponseData = {
+        response: "data",
+        place: "interaction",
+        interaction: "knock",
+        request_id: "QoSQ81Ko8yfJQ4ZlIgoJK4Gdm28GCu",
+        failed: true,
+        reason: "trickortreat_limit",
+    }
+    expect(knockFail).toBeDefined()
 })

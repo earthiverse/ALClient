@@ -188,6 +188,9 @@ export type CharacterData = PlayerData & {
     user?: BankInfo
     /** (GUI Related) Set if you move inventory items. Flag for reopening player's inventory. */
     reopen?: boolean
+    encouragement: unknown // TODO: Add typings
+    trickortreat?: TrickOrTreatCharacterData
+    witchcipher?: WitchCipherCharacterData
 }
 
 export type CharacterListData = IPosition & {
@@ -878,7 +881,7 @@ export type ItemData = {
     /** The item name */
     name: ItemName
     /** The title applied to the item */
-    p?: TitleName
+    p?: TitleName | null
     /** TODO: What is this? A list of available titles for the item?  */
     ps?: TitleName[]
     /** The quantity of the item for stackable items */
@@ -1184,7 +1187,7 @@ export type PlayerData = {
     heal?: number
     x: number
     y: number
-    guild?: string
+    guild?: string | null
     hp: number
     level: number
     max_hp: number
@@ -1211,8 +1214,6 @@ export type PlayerData = {
     target?: string | null
     tp?: boolean
     xp?: number
-    witchcipher?: WitchCipherCharacterData
-    trickortreat?: TrickOrTreatCharacterData
 }
 
 /**
@@ -1293,6 +1294,7 @@ export type EventScheduleData = {
 }
 
 export type ServerInfoWitchCipher = {
+    fit?: string
     live: boolean
     phase?: "gathering" | "brewing"
     id?: string
@@ -1343,9 +1345,6 @@ export type ServerInfoData = {
 } & {
     event_ends?: Record<string, number>
     event_flags?: Record<string, boolean>
-    witchcipher?: ServerInfoWitchCipher
-    graveyard?: ServerInfoGraveyard
-} & { goobrawl?: ServerInfoDataEvent } & {
     abtesting?:
         | ServerInfoDataEvent
         | {
@@ -1358,7 +1357,6 @@ export type ServerInfoData = {
               /** The event ID. TODO: Do we need this? */
               id: string
           }
-} & {
     anniversary?: {
         active?: boolean
         live?: boolean
@@ -1375,6 +1373,9 @@ export type ServerInfoData = {
         skin?: string
         cx?: CXData
     } & Partial<IPosition>
+    goobrawl?: ServerInfoDataEvent
+    graveyard?: ServerInfoGraveyard
+    witchcipher?: ServerInfoWitchCipher
 }
 
 export type ServerInfoDataEvent = {
@@ -1387,7 +1388,7 @@ export type ServerInfoDataLive = {
     live: true
     map: MapName
     max_hp: number
-    target?: string
+    target?: string | null
     /** NOTE: Some event monsters don't have x and y (e.g.: Slenderman) */
     x?: number
     y?: number
@@ -1406,7 +1407,7 @@ export type SkillTimeoutData = { name: SkillName; ms: number; penalty: number }
 
 export type StartData = CharacterData & {
     info?: MapInfo
-    code_slot: number
+    code_slot: string
     code_version: number
     /** The home server for this character, formatted as <REGION><IDENTIFIER> (e.g.: ASIAI) */
     home: string
@@ -1511,10 +1512,11 @@ export type WelcomeData = {
     region: ServerRegion
     in: string
     map: MapName
+    version?: number // TODO: Is this guaranteed to be there now?
     // TODO: Find out if this is "hardcore" on a hardcore server
     gameplay: string | "normal"
     // TODO: Find out what this is
-    info: object
+    info: unknown
     name: ServerIdentifier
     pvp: boolean
     x: number

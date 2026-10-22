@@ -301,6 +301,14 @@ test("Player.isFriendly", async () => {
 
     // Random players should not be friendly
     expect(randomPlayer.isFriendly(character)).toBe(false)
+
+    // Players in our guild should be friendly
+    randomPlayer.guild = "test_guild"
+    character.guild = "test_guild"
+    expect(randomPlayer.isFriendly(character)).toBe(true)
+    character.guild = undefined
+    expect(randomPlayer.isFriendly(character)).toBe(false)
+    randomPlayer.guild = undefined
 })
 
 test("Player.isScared", async () => {

@@ -101,6 +101,9 @@ export type StatusInfo = {
         ability: true
         ms: number
     }
+    realmfatigue?: {
+        until: number
+    }
     rspeed?: {
         f: string
     }

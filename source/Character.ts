@@ -71,6 +71,8 @@ import type {
     DisappearNotThereData,
     TradeHistoryData,
     DestroyGRDataObject,
+    TrickOrTreatCharacterData,
+    WitchCipherCharacterData,
 } from "./definitions/adventureland-server.js"
 import type { PathNode } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
@@ -150,6 +152,10 @@ export class Character extends Observer implements CharacterData {
     public npc?: NPCName
     public owner: string
     public party?: string
+    public guild?: string
+    public encouragement: unknown = {}
+    public trickortreat?: TrickOrTreatCharacterData
+    public witchcipher?: WitchCipherCharacterData
     public pdps: number
     public q: QInfo = {}
     public range = 1
