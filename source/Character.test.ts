@@ -1514,3 +1514,98 @@ test("Character.locateItemsByLevel", () => {
 
     priest.items = itemsBackup
 })
+
+test("Character.canKnock", () => {
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+    const ripBackup = priest.rip
+    const trickBackup = priest.trickortreat
+
+    // Move next to door 0 (["halloween", 331, -210])
+    priest.map = "halloween"
+    priest.x = 331
+    priest.y = -210
+    priest.rip = false
+    priest.trickortreat = undefined
+
+    // Near door 0
+    expect(priest.canKnock(0)).toBe(true)
+    expect(priest.canKnock()).toBe(true)
+
+    // Far from door 1
+    expect(priest.canKnock(1)).toBe(false)
+    expect(priest.canKnock(1, { ignoreLocation: true })).toBe(true)
+
+    // Door 2 is on spookytown
+    expect(priest.canKnock(2)).toBe(false)
+    expect(priest.canKnock(2, { ignoreLocation: true })).toBe(true)
+
+    // Invalid door index
+    expect(priest.canKnock(99)).toBe(false)
+
+    // When dead
+    priest.rip = true
+    expect(priest.canKnock(0)).toBe(false)
+    priest.rip = false
+
+    // Already knocked door 0 today
+    priest.trickortreat = { doors: [0], doors_left: 6, stamps: 1 }
+    expect(priest.canKnock(0)).toBe(false)
+    expect(priest.canKnock()).toBe(false) // door 0 already knocked, no other doors nearby
+    expect(priest.canKnock(1, { ignoreLocation: true })).toBe(true)
+
+    // No doors left today
+    priest.trickortreat = { doors: [0, 1, 2, 3, 4, 5, 6], doors_left: 0, stamps: 7 }
+    expect(priest.canKnock(1, { ignoreLocation: true })).toBe(false)
+
+    // Restore
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+    priest.rip = ripBackup
+    priest.trickortreat = trickBackup
+})
+
+test("Character.knock", async () => {
+    const locationBackup = { map: priest.map, x: priest.x, y: priest.y }
+    const ripBackup = priest.rip
+    const readyBackup = priest.ready
+
+    // Not ready
+    priest.ready = false
+    await expect(priest.knock(0)).rejects.toThrow("We aren't ready yet [knock].")
+
+    priest.ready = true
+
+    // Dead
+    priest.rip = true
+    await expect(priest.knock(0)).rejects.toThrow("We can't knock while dead [knock].")
+    priest.rip = false
+
+    // In bank
+    priest.map = "bank"
+    await expect(priest.knock(0)).rejects.toThrow("We can't knock while in a bank [knock].")
+
+    // Invalid door
+    priest.map = "halloween"
+    priest.x = 331
+    priest.y = -210
+    await expect(priest.knock(99)).rejects.toThrow("Invalid door index '99' [knock].")
+
+    // Wrong map
+    await expect(priest.knock(2)).rejects.toThrow("Door 2 is on 'spookytown', but we are on 'halloween' [knock].")
+
+    // Too far
+    await expect(priest.knock(1)).rejects.toThrow("Too far from door 1 [knock].")
+
+    // Not near any door when door is omitted
+    priest.x = 0
+    priest.y = 0
+    await expect(priest.knock()).rejects.toThrow("We are not near any door to knock on [knock].")
+
+    // Restore
+    priest.map = locationBackup.map
+    priest.x = locationBackup.x
+    priest.y = locationBackup.y
+    priest.rip = ripBackup
+    priest.ready = readyBackup
+})

@@ -636,6 +636,27 @@ export type InteractionGRDataObject = {
     reason?: string
     [key: string]: unknown
 }
+export type KnockInteractionGRDataObject = {
+    response: "data"
+    place: "interaction"
+    interaction: "knock"
+    request_id?: string
+    success?: boolean
+    failed?: boolean
+    reason?:
+        | "cant_in_bank"
+        | "trickortreat_door"
+        | "trickortreat_knocked"
+        | "trickortreat_limit"
+        | "trickortreat_season"
+        | string
+    door?: number
+    stamps?: number
+    treat?: { name: ItemName; q: number }
+    trick?: "ghost" | "spooked"
+    parcel?: boolean
+    laugh?: boolean
+}
 
 // TODO: split these in to other objects
 export type GameResponseDataObject =
@@ -681,6 +702,7 @@ export type GameResponseDataObject =
     | MailGRDataObject
     | ExchangeDataGRDataObject
     | InteractionGRDataObject
+    | KnockInteractionGRDataObject
 
 export type GameResponseDataString =
     | "bank_restrictions"
@@ -1735,7 +1757,7 @@ export type ClientToServerEvents = {
     ) => void
     equip_batch: (data: { num: number; slot: SlotType }[]) => void
     eval: (data: { command: string }) => void
-    exchange: (data: { item_num: number; q?: number }) => void
+    exchange: (data: { item_num: number; q?: number; request_id?: string }) => void
     // TODO: Create ExchangeBuyData type
     exchange_buy: (data: { name: ItemName; num: number; q: number }) => void
     // TODO: Create FriendData type
@@ -1745,13 +1767,22 @@ export type ClientToServerEvents = {
     harakiri: () => void
     heal: (data: { id: string }) => void
     imove: (data: { a: number; b: number }) => void
-    interaction: (data: { key: string } | { type: "newyear_tree" }) => void
+    interaction: (
+        data:
+            | { key: string }
+            | { type: "newyear_tree" }
+            | { type: "knock"; door?: number; request_id?: string }
+            | { type: "witchcipher"; action: "info" | "brew"; items?: ItemName[]; request_id?: string }
+            | { type: "cave"; request_id?: string; [key: string]: unknown }
+            | { type: "cavalry"; [key: string]: unknown }
+            | { type: string; [key: string]: unknown },
+    ) => void
     join: (data: { name: string }) => void
     join_giveaway: (data: { slot: TradeSlotType; id: string; rid: string }) => void
     leave: () => void
     loaded: (data: LoadedData) => void
     lostandfound: (reserveInfo?: "info") => void
-    mail: (data: { item: boolean; message: string; subject: string; to: string }) => void
+    mail: (data: { item?: boolean; message: string; subject: string; to: string; request_id?: string }) => void
     mail_take_item: (data: { id: string }) => void
     magiport: (data: { name: string }) => void
     merchant: (data: { close: number } | { num: number }) => void

@@ -186,4 +186,18 @@ export class Tools {
             y: from.y + t * abY,
         }
     }
+
+    /**
+     * Generates a random alphanumeric string of the given length.
+     *
+     * @param length The length of the string to generate (default: 30)
+     */
+    public static randomString(length = 30): string {
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        let result = ""
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length))
+        }
+        return result
+    }
 }

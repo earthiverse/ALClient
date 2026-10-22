@@ -99,3 +99,15 @@ test("Tools.getClosestPointOnSegment", () => {
     const diagTo = { x: 100, y: 100 }
     expect(Tools.getClosestPointOnSegment({ x: 0, y: 100 }, diagFrom, diagTo)).toEqual({ x: 50, y: 50 })
 })
+
+test("Tools.randomString", () => {
+    const str30 = Tools.randomString()
+    expect(str30.length).toBe(30)
+    expect(/^[A-Za-z0-9]+$/.test(str30)).toBe(true)
+
+    const str10 = Tools.randomString(10)
+    expect(str10.length).toBe(10)
+    expect(/^[A-Za-z0-9]+$/.test(str10)).toBe(true)
+
+    expect(Tools.randomString()).not.toBe(Tools.randomString())
+})

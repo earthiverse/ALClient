@@ -73,6 +73,7 @@ import type {
     DestroyGRDataObject,
     TrickOrTreatCharacterData,
     WitchCipherCharacterData,
+    KnockInteractionGRDataObject,
 } from "./definitions/adventureland-server.js"
 import type { PathNode } from "./definitions/pathfinder.js"
 import { Constants } from "./Constants.js"
@@ -1963,6 +1964,47 @@ export class Character extends Observer implements CharacterData {
         }
 
         return true
+    }
+
+    /**
+     * Returns true if we can knock on the specified door (or any door nearby if no door specified).
+     *
+     * @param door The door index to check (0-6)
+     * @param options.ignoreLocation If set to true, ignores distance / location checks
+     */
+    public canKnock(door?: number, options?: { ignoreLocation?: boolean }): boolean {
+        if (this.rip) return false
+
+        // Check if halloween is active if known in S
+        if (this.S && this.S.halloween !== undefined && !this.S.halloween) return false
+
+        // Check daily knock / doors limits if known
+        if (this.trickortreat) {
+            if (this.trickortreat.doors_left !== undefined && this.trickortreat.doors_left <= 0) return false
+            if (door !== undefined && this.trickortreat.doors?.includes(door)) return false
+        }
+
+        const doors = this.G.events.trickortreat?.doors
+        if (!doors) return true
+
+        if (door !== undefined) {
+            const doorData = doors[door]
+            if (!doorData) return false
+            if (options?.ignoreLocation) return true
+            if (doorData[0] !== this.map) return false
+            return Tools.distance(this, { x: doorData[1], y: doorData[2] }) <= 80
+        }
+
+        if (options?.ignoreLocation) {
+            if (!this.trickortreat?.doors) return true
+            return doors.some((_, i) => !this.trickortreat.doors.includes(i))
+        }
+
+        return doors.some((doorData, i) => {
+            if (this.trickortreat?.doors?.includes(i)) return false
+            if (doorData[0] !== this.map) return false
+            return Tools.distance(this, { x: doorData[1], y: doorData[2] }) <= 80
+        })
     }
 
     /**
@@ -4018,6 +4060,88 @@ export class Character extends Observer implements CharacterData {
         const response = this.getResponsePromise("jump")
         this.socket.emit("skill", { name: "jump" })
         return response
+    }
+
+    /**
+     * Knocks on a door for Trick or Treat during Halloween.
+     * If no door index is provided, knocks on the nearest door within distance 80 on the current map.
+     *
+     * @param door The index of the door to knock on (0-6)
+     * @param options.timeoutMs Maximum time to wait for server response in ms (default: Constants.TIMEOUT)
+     */
+    public async knock(door?: number, options?: { timeoutMs?: number }): Promise<KnockInteractionGRDataObject> {
+        if (!this.ready) throw new Error("We aren't ready yet [knock].")
+        if (this.rip) throw new Error("We can't knock while dead [knock].")
+        if (this.user || this.map.startsWith("bank")) throw new Error("We can't knock while in a bank [knock].")
+
+        const doors = this.G.events.trickortreat?.doors
+        if (door !== undefined) {
+            if (!Number.isInteger(door) || door < 0 || (doors && door >= doors.length)) {
+                throw new Error(`Invalid door index '${door}' [knock].`)
+            }
+            if (doors) {
+                const doorData = doors[door]
+                if (doorData[0] !== this.map) {
+                    throw new Error(`Door ${door} is on '${doorData[0]}', but we are on '${this.map}' [knock].`)
+                }
+                if (Tools.distance(this, { x: doorData[1], y: doorData[2] }) > 80) {
+                    throw new Error(`Too far from door ${door} [knock].`)
+                }
+            }
+        } else if (doors) {
+            let closestDoor: number | undefined
+            let minDistance = 80
+            for (let i = 0; i < doors.length; i++) {
+                const doorData = doors[i]
+                if (doorData[0] !== this.map) continue
+                const dist = Tools.distance(this, { x: doorData[1], y: doorData[2] })
+                if (dist <= minDistance) {
+                    minDistance = dist
+                    closestDoor = i
+                }
+            }
+            if (closestDoor === undefined) {
+                throw new Error("We are not near any door to knock on [knock].")
+            }
+            door = closestDoor
+        }
+
+        const requestId = Tools.randomString(30)
+        const timeoutMs = options?.timeoutMs ?? Constants.TIMEOUT
+
+        return new Promise<KnockInteractionGRDataObject>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("game_response", responseCheck)
+                this.socket.off("disconnect", disconnectCheck)
+                clearTimeout(timeout)
+            }
+
+            const responseCheck = (data: GameResponseData) => {
+                if (typeof data !== "object") return
+                if ((data as any).place !== "interaction" || (data as any).request_id !== requestId) return
+
+                cleanup()
+                if ((data as any).failed) {
+                    reject(new Error(`'knock' failed (${(data as any).reason ?? "failed"}).`))
+                } else {
+                    resolve(data as KnockInteractionGRDataObject)
+                }
+            }
+
+            const disconnectCheck = () => {
+                cleanup()
+                reject(new Error("'knock' failed (disconnected)."))
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(new Error(`'knock' timed out (${timeoutMs}ms)`))
+            }, timeoutMs)
+
+            this.socket.on("game_response", responseCheck)
+            this.socket.on("disconnect", disconnectCheck)
+            this.socket.emit("interaction", { door, request_id: requestId, type: "knock" })
+        })
     }
 
     /**
