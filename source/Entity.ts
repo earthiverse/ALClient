@@ -164,29 +164,119 @@ export class Entity implements MonsterData, Partial<GMonster> {
         for (const key in data) this[key] = data[key]
     }
 
-    public calculateDamageRange(defender: Character | Entity | Player): [number, number] {
-        if (defender["1hp"]) return [1, 1]
+    public calculateDamageRange(
+        defender: Character | Entity | Player,
+        skill: SkillName = "attack",
+        baseAttack?: number,
+    ): [number, number] {
+        const gSkill = this.G.skills[skill]
 
-        let baseDamage: number = this.attack
+        // If the entity is immune, most skills won't do damage
+        if ((defender as Entity).immune && skill !== "attack" && !gSkill?.pierces_immunity) return [0, 0]
 
-        // TODO: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
-        if (defender.s.cursed) baseDamage *= 1.2
-        if (defender.s.marked) baseDamage *= 1.1
+        const isHeal = Boolean(gSkill?.heal)
+        if (!isHeal && defender.s?.invincible) return [0, 0]
 
-        if (this.damage_type == "physical") baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing)
-        else if (this.damage_type == "magical")
-            baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing)
-
-        if (this.crit) {
-            if (this.crit >= 100) {
-                // Guaranteed crit
-                return [baseDamage * 0.9 * (2 + this.critdamage / 100), baseDamage * 1.1 * (2 + this.critdamage / 100)]
-            } else {
-                return [baseDamage * 0.9, baseDamage * 1.1 * (2 + this.critdamage / 100)]
-            }
-        } else {
-            return [baseDamage * 0.9, baseDamage * 1.1]
+        if (
+            gSkill &&
+            !gSkill.heal &&
+            skill !== "attack" &&
+            gSkill.damage === undefined &&
+            gSkill.damage_multiplier === undefined
+        ) {
+            return [0, 0]
         }
+
+        // Monsters proc crits on all attacks except rimeshatter (and heals)
+        const canCrit = !isHeal && skill !== "rimeshatter" && Boolean(this.crit)
+
+        if (defender["1hp"] && !isHeal) {
+            if (!canCrit) return [1, 1]
+            if (this.crit >= 100) return [2, 2]
+            return [1, 2]
+        }
+
+        const damage_type = skill !== "attack" && gSkill?.damage_type ? gSkill.damage_type : this.damage_type
+
+        let baseDamage: number = baseAttack ?? this.attack
+        if (baseAttack === undefined) {
+            if (gSkill?.damage !== undefined) baseDamage = gSkill.damage
+            if (gSkill?.levels && isHeal) {
+                for (const [level, output] of gSkill.levels) {
+                    if (this.level >= level) baseDamage = output
+                }
+            }
+            if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
+        }
+
+        if (isHeal) {
+            let defMult = 1
+            if (defender.id !== this.id && damage_type !== "pure") {
+                if (damage_type == "magical") {
+                    const effectiveRes = Math.max(0, (defender.resistance ?? 0) - (this.rpiercing ?? 0)) / 2
+                    defMult = Tools.damage_multiplier(effectiveRes)
+                } else {
+                    const effectiveArmor = Math.max(0, (defender.armor ?? 0) - (this.apiercing ?? 0)) / 2
+                    defMult = Tools.damage_multiplier(effectiveArmor)
+                }
+            }
+            let condMult = 1
+            if (defender.s) {
+                for (const conditionName in defender.s) {
+                    const gCondition = this.G.conditions[conditionName as ConditionName]
+                    if (gCondition?.healm !== undefined) condMult *= gCondition.healm
+                }
+            }
+            return [baseDamage * 0.9 * defMult * condMult, baseDamage * 1.1 * defMult * condMult]
+        }
+
+        if (damage_type == "pure") {
+            return [Math.ceil(baseDamage), Math.ceil(baseDamage)]
+        }
+
+        let lowerBase = baseDamage
+        let upperBase = baseDamage
+        if (canCrit) {
+            const critMult = 2 + (this.critdamage ?? 0) / 100
+            if (this.crit >= 100) lowerBase *= critMult
+            upperBase *= critMult
+        }
+
+        let lowerLimit = lowerBase * 0.9
+        let upperLimit = upperBase * 1.1
+
+        if (defender.id !== this.id) {
+            if (damage_type == "magical") {
+                const additionalRpiercing = gSkill?.rpiercing ?? 0
+                const defMult = Tools.damage_multiplier(
+                    (defender.resistance ?? 0) - (this.rpiercing ?? 0) - additionalRpiercing,
+                )
+                lowerLimit *= defMult
+                upperLimit *= defMult
+            } else if (damage_type == "physical") {
+                const additionalApiercing = gSkill?.apiercing ?? 0
+                const defMult = Tools.damage_multiplier(
+                    (defender.armor ?? 0) - (this.apiercing ?? 0) - additionalApiercing,
+                )
+                lowerLimit *= defMult
+                upperLimit *= defMult
+            }
+        }
+
+        let incdmgamp = 0
+        if (defender.s) {
+            for (const conditionName in defender.s) {
+                const gCondition = this.G.conditions[conditionName as ConditionName]
+                if (gCondition?.incdmgamp) incdmgamp += gCondition.incdmgamp
+            }
+        }
+        if (incdmgamp) {
+            const ampMult = (100 + incdmgamp) / 100
+            lowerLimit *= ampMult
+            upperLimit *= ampMult
+        }
+
+        return [lowerLimit, upperLimit]
     }
 
     /**
@@ -224,10 +314,18 @@ export class Entity implements MonsterData, Partial<GMonster> {
                 continue
             }
 
-            if (attacker.damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
-            if (attacker.damage_type == "magical" && this.reflection >= 100) continue // It will reflect the attack
+            const gSkill = this.G.skills[projectile.type]
+            const attackerMainhand = (attacker as Character | Player).slots?.mainhand?.name
+            const damage_type =
+                (projectile.type !== "attack" && gSkill?.damage_type) ||
+                (attackerMainhand && this.G.items[attackerMainhand]?.damage_type) ||
+                attacker.damage_type
 
-            const maximumDamage = attacker.calculateDamageRange(this, projectile.type)[1]
+            if (damage_type == "physical" && this.evasion >= 100) continue // It will avoid the attack
+            if (damage_type == "magical" && !gSkill?.no_reflection && this.reflection >= 100) continue // It will reflect the attack
+
+            const projectileDamage = (projectile as ActionData & { reflect?: number }).reflect ?? projectile.damage
+            const maximumDamage = attacker.calculateDamageRange(this, projectile.type, projectileDamage)[1]
 
             incomingProjectileDamage += maximumDamage
             if (incomingProjectileDamage >= this.hp) return true
@@ -286,7 +384,12 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @returns If the entity is disabled
      */
     public isDisabled(): boolean {
-        return (this.s.stunned || this.s.fingered || this.s.sleeping) !== undefined
+        if (this.s?.sleeping) return true
+        for (const conditionName in this.s) {
+            const gCondition = this.G.conditions[conditionName as ConditionName]
+            if (gCondition?.blocked) return true
+        }
+        return false
     }
 
     // TODO: Check if we can taunt when the entity is attacking another player we control (i.e. same account), but we're not partied.
@@ -316,6 +419,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
     public willBurnToDeath(): boolean {
         if (this.lifesteal) return false // Could heal itself
         if (this.abilities?.self_healing) return false // Could heal itself
+        if (this.s.eheal && !this.immune) return false // Could heal itself
         if (!this.s.burned) return false // Not burning
 
         const numIntervals = Math.floor(this.s.burned.ms / this.G.conditions.burned.interval) - 1
@@ -325,7 +429,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
             return numIntervals >= this.hp
         }
 
-        const burnDamage = numIntervals * (this.s.burned.intensity / 5)
+        const burnDamage = numIntervals * Math.ceil(this.s.burned.intensity / 5)
         return burnDamage >= this.hp
     }
 
@@ -357,10 +461,18 @@ export class Entity implements MonsterData, Partial<GMonster> {
             if (!attacker) attacker = entities.get(projectile.attacker)
             if (!attacker) continue // Couldn't find attacker, assume it will do no damage
 
-            if (attacker.damage_type == "magical" && this.reflection) continue // Entity could reflect the damage
-            if (attacker.damage_type == "physical" && this.evasion) continue // Entity could avoid the damage
+            const gSkill = this.G.skills[projectile.type]
+            const attackerMainhand = (attacker as Character | Player).slots?.mainhand?.name
+            const damage_type =
+                (projectile.type !== "attack" && gSkill?.damage_type) ||
+                (attackerMainhand && this.G.items[attackerMainhand]?.damage_type) ||
+                attacker.damage_type
 
-            const minimumDamage = attacker.calculateDamageRange(this, projectile.type)[0]
+            if (damage_type == "magical" && !gSkill?.no_reflection && this.reflection) continue // Entity could reflect the damage
+            if (damage_type == "physical" && this.evasion) continue // Entity could avoid the damage
+
+            const projectileDamage = (projectile as ActionData & { reflect?: number }).reflect ?? projectile.damage
+            const minimumDamage = attacker.calculateDamageRange(this, projectile.type, projectileDamage)[0]
 
             incomingProjectileDamage += minimumDamage
             if (incomingProjectileDamage >= this.hp) return true

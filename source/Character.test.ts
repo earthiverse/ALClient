@@ -3,6 +3,7 @@ import { Character } from "./Character"
 import type { ServerData } from "./definitions/adventureland-server"
 import { Entity } from "./Entity"
 import { Pathfinder } from "./Pathfinder"
+import { Tools } from "./Tools"
 import type { MapName } from "./definitions/adventureland-data"
 import type { IPosition } from "./definitions/adventureland"
 
@@ -914,7 +915,16 @@ test("Character.canUse", () => {
     // Make character dead
     priest.rip = true
     expect(priest.canUse("attack")).toBe(false)
+    expect(priest.canUse("heal")).toBe(false)
     priest.rip = false
+
+    // Not enough MP
+    priest.mp = 0
+    expect(priest.canUse("attack")).toBe(false)
+    expect(priest.canUse("heal")).toBe(false)
+    expect(priest.canUse("attack", { ignoreMP: true })).toBe(true)
+    expect(priest.canUse("heal", { ignoreMP: true })).toBe(true)
+    priest.mp = priest.max_mp
 
     priest.s.dampened = { ms: 1000 }
     expect(priest.canUse("attack")).toBe(true)
@@ -946,6 +956,133 @@ test("Character.canUse", () => {
     warrior.items.push({ name: "snowball", q: 200 })
     expect(warrior.canUse("snowball")).toBe(true)
     warrior.items.pop()
+
+    // Shield Slam requires a shield in offhand
+    const ctypeBackup = warrior.ctype
+    const offhandBackup = warrior.slots.offhand
+    const mpBackup = warrior.mp
+    warrior.ctype = "paladin"
+    warrior.mp = 2500
+    warrior.slots.offhand = null
+    expect(warrior.canUse("shield_slam")).toBe(false)
+    warrior.slots.offhand = { level: 0, name: "wbook1" }
+    expect(warrior.canUse("shield_slam")).toBe(false)
+    warrior.slots.offhand = { level: 0, name: "shield" }
+    expect(warrior.canUse("shield_slam")).toBe(true)
+    warrior.ctype = ctypeBackup
+    warrior.slots.offhand = offhandBackup
+    warrior.mp = mpBackup
+})
+
+test("Character.calculateDamageRange", () => {
+    const healBackup = priest.heal
+    priest.heal = 3800
+
+    // 1. Self heal ignores resistance (and never crits even when crit > 0)
+    const selfHeal = priest.calculateDamageRange(priest, "heal")
+    expect(selfHeal[0]).toBeCloseTo(priest.heal * 0.9)
+    expect(selfHeal[1]).toBeCloseTo(priest.heal * 1.1)
+
+    // Fallback to attack when heal is 0
+    priest.heal = 0
+    const fallbackHeal = priest.calculateDamageRange(priest, "heal")
+    expect(fallbackHeal[0]).toBeCloseTo(priest.attack * 0.9)
+    expect(fallbackHeal[1]).toBeCloseTo(priest.attack * 1.1)
+    priest.heal = 3800
+
+    // 2. Ally heal uses half effective resistance
+    const allyHeal = priest.calculateDamageRange(warrior, "heal")
+    const effectiveRes = Math.max(0, (warrior.resistance ?? 0) - (priest.rpiercing ?? 0)) / 2
+    const expectedAllyBase = priest.heal * Tools.damage_multiplier(effectiveRes)
+    expect(allyHeal[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    expect(allyHeal[1]).toBeCloseTo(expectedAllyBase * 1.1)
+
+    // 3. Poisoned target reduces heal by 75% (via G.conditions.poisoned.healm)
+    warrior.s.poisoned = { ms: 5000 }
+    const poisonedHeal = priest.calculateDamageRange(warrior, "heal")
+    expect(poisonedHeal[0]).toBeCloseTo(expectedAllyBase * 0.25 * 0.9)
+    expect(poisonedHeal[1]).toBeCloseTo(expectedAllyBase * 0.25 * 1.1)
+    delete warrior.s.poisoned
+
+    // 4. Cursed/marked/hexed does not amplify heal
+    warrior.s.cursed = { ms: 5000 }
+    warrior.s.marked = { ms: 5000 }
+    const cursedHeal = priest.calculateDamageRange(warrior, "heal")
+    expect(cursedHeal[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    expect(cursedHeal[1]).toBeCloseTo(expectedAllyBase * 1.1)
+    delete warrior.s.cursed
+    delete warrior.s.marked
+
+    // 5. 1hp does not reduce heal to [1, 1]
+    warrior["1hp"] = true
+    const heal1hp = priest.calculateDamageRange(warrior, "heal")
+    expect(heal1hp[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    expect(heal1hp[1]).toBeCloseTo(expectedAllyBase * 1.1)
+    delete warrior["1hp"]
+
+    // 6. Tiered partyheal uses G.skills.partyheal.levels (800 at level 86)
+    const selfPartyHeal = priest.calculateDamageRange(priest, "partyheal")
+    expect(selfPartyHeal[0]).toBeCloseTo(800 * 0.9)
+    expect(selfPartyHeal[1]).toBeCloseTo(800 * 1.1)
+
+    // 7. Invincible target takes [0, 0] damage on attacks, but still receives heals
+    warrior.s.invincible = { ms: 5000 }
+    expect(priest.calculateDamageRange(warrior, "attack")).toEqual([0, 0])
+    expect(priest.calculateDamageRange(warrior, "heal")[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    delete warrior.s.invincible
+
+    // 8. Non-damaging skills (e.g. curse) deal [0, 0]
+    expect(priest.calculateDamageRange(warrior, "curse")).toEqual([0, 0])
+
+    // 9. Fortitude (for) & programmatic incdmgamp (cursed + hexed + marked = +50%)
+    const baseAttackOnWarrior =
+        priest.attack *
+        Tools.damage_multiplier(warrior.for * 5) *
+        Tools.damage_multiplier(warrior.resistance - priest.rpiercing)
+    const normalHit = priest.calculateDamageRange(warrior, "attack")
+    expect(normalHit[0]).toBeCloseTo(baseAttackOnWarrior * 0.9)
+    expect(normalHit[1]).toBeCloseTo(baseAttackOnWarrior * 2 * 1.1) // priest.crit > 0
+
+    warrior.s.cursed = { ms: 5000 }
+    warrior.s.hexed = { ms: 5000 }
+    warrior.s.marked = { ms: 5000 }
+    const ampHit = priest.calculateDamageRange(warrior, "attack")
+    expect(ampHit[0]).toBeCloseTo(baseAttackOnWarrior * 0.9 * 1.5)
+    expect(ampHit[1]).toBeCloseTo(baseAttackOnWarrior * 2 * 1.1 * 1.5)
+    delete warrior.s.cursed
+    delete warrior.s.hexed
+    delete warrior.s.marked
+
+    // 10. Arcane Needle applies rpiercing (500) and 0.75x damage_multiplier
+    const needleBase =
+        priest.attack *
+        0.75 *
+        Tools.damage_multiplier(warrior.for * 5) *
+        Tools.damage_multiplier(warrior.resistance - priest.rpiercing - 500)
+    const needleRange = priest.calculateDamageRange(warrior, "arcane_needle")
+    expect(needleRange[0]).toBeCloseTo(needleBase * 0.9)
+    expect(needleRange[1]).toBeCloseTo(needleBase * 2 * 1.1)
+
+    // 11. Pure damage skills: burst and purify ignore defense, variance, crit, for, and incdmgamp
+    warrior.s.cursed = { ms: 5000 }
+    const expectedBurst = Math.ceil(priest.mp * Game.G.skills.burst.ratio)
+    expect(priest.calculateDamageRange(warrior, "burst")).toEqual([expectedBurst, expectedBurst])
+    // Warrior has mlifesteal (buff), mluck (buff, persistent), monsterhunt (persistent), plus cursed (debuff) = 2 eligible conditions -> 2000 + 800 = 2800
+    expect(priest.calculateDamageRange(warrior, "purify")).toEqual([2800, 2800])
+    delete warrior.s.cursed
+
+    // 12. Shield Slam adds 12 * min(armor, 1000) and never crits (procs: false)
+    const warCritBackup = warrior.crit
+    warrior.crit = 50
+    const slamRaw = warrior.attack * 3 + Math.min(warrior.armor, 1000) * 12
+    const slamExpected =
+        slamRaw * Tools.damage_multiplier(priest.for * 5) * Tools.damage_multiplier(priest.armor - warrior.apiercing)
+    const slamRange = warrior.calculateDamageRange(priest, "shield_slam")
+    expect(slamRange[0]).toBeCloseTo(slamExpected * 0.9)
+    expect(slamRange[1]).toBeCloseTo(slamExpected * 1.1)
+    warrior.crit = warCritBackup
+
+    priest.heal = healBackup
 })
 
 test("Character.countItem", () => {

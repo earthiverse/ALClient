@@ -1,6 +1,7 @@
 import { Game } from "./Game"
 import { Character } from "./Character"
 import { Player } from "./Player"
+import { Tools } from "./Tools"
 import type { GData } from "./definitions/adventureland-data"
 
 let G: GData
@@ -313,4 +314,56 @@ test("Player.isFriendly", async () => {
 
 test("Player.isScared", async () => {
     expect(character.isScared()).toBe(false)
+})
+
+test("Player.calculateDamageRange", () => {
+    randomPlayer.heal = 150
+
+    // 1. Self heal ignores resistance
+    const selfHeal = randomPlayer.calculateDamageRange(randomPlayer, "heal")
+    expect(selfHeal[0]).toBeCloseTo(randomPlayer.heal * 0.9)
+    expect(selfHeal[1]).toBeCloseTo(randomPlayer.heal * 1.1)
+
+    // 2. Ally heal uses half effective resistance
+    const allyHeal = randomPlayer.calculateDamageRange(sameOwner, "heal")
+    const effectiveRes = Math.max(0, (sameOwner.resistance ?? 0) - (randomPlayer.rpiercing ?? 0)) / 2
+    const expectedAllyBase = randomPlayer.heal * Tools.damage_multiplier(effectiveRes)
+    expect(allyHeal[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    expect(allyHeal[1]).toBeCloseTo(expectedAllyBase * 1.1)
+
+    // 3. Poisoned target reduces heal by 75%
+    sameOwner.s.poisoned = { ms: 5000 }
+    const poisonedHeal = randomPlayer.calculateDamageRange(sameOwner, "heal")
+    expect(poisonedHeal[0]).toBeCloseTo(expectedAllyBase * 0.25 * 0.9)
+    expect(poisonedHeal[1]).toBeCloseTo(expectedAllyBase * 0.25 * 1.1)
+    delete sameOwner.s.poisoned
+
+    // 4. Cursed/marked does not amplify heal
+    sameOwner.s.cursed = { ms: 5000 }
+    sameOwner.s.marked = { ms: 5000 }
+    const cursedHeal = randomPlayer.calculateDamageRange(sameOwner, "heal")
+    expect(cursedHeal[0]).toBeCloseTo(expectedAllyBase * 0.9)
+    expect(cursedHeal[1]).toBeCloseTo(expectedAllyBase * 1.1)
+    delete sameOwner.s.cursed
+    delete sameOwner.s.marked
+
+    // 5. Invincible, non-damaging skills, pure damage, and incdmgamp
+    sameOwner.s.invincible = { ms: 5000 }
+    expect(randomPlayer.calculateDamageRange(sameOwner, "attack")).toEqual([0, 0])
+    delete sameOwner.s.invincible
+
+    expect(randomPlayer.calculateDamageRange(sameOwner, "curse")).toEqual([0, 0])
+
+    const expectedBurst = Math.ceil(randomPlayer.mp * G.skills.burst.ratio)
+    expect(randomPlayer.calculateDamageRange(sameOwner, "burst")).toEqual([expectedBurst, expectedBurst])
+
+    sameOwner.s.cursed = { ms: 5000 }
+    sameOwner.s.hexed = { ms: 5000 }
+    const expectedAttack =
+        randomPlayer.attack * Tools.damage_multiplier(sameOwner.resistance - randomPlayer.rpiercing) * 1.4
+    const ampRange = randomPlayer.calculateDamageRange(sameOwner, "attack")
+    expect(ampRange[0]).toBeCloseTo(expectedAttack * 0.9)
+    expect(ampRange[1]).toBeCloseTo(expectedAttack * 1.1)
+    delete sameOwner.s.cursed
+    delete sameOwner.s.hexed
 })

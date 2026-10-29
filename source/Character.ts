@@ -353,8 +353,13 @@ export class Character extends Observer implements CharacterData {
             this.partyData = undefined
         }
 
-        // Set damage type if not set
-        if (!this.damage_type && this.ctype) this.damage_type = this.G.classes[this.ctype].damage_type
+        // Update damage type based on equipped mainhand or class
+        if (this.ctype) {
+            const mainhandDamageType = this.slots?.mainhand
+                ? this.G.items[this.slots.mainhand.name]?.damage_type
+                : undefined
+            this.damage_type = mainhandDamageType ?? this.G.classes[this.ctype]?.damage_type
+        }
 
         // Update database with latest information
         if (!Database.connection) return
@@ -1597,52 +1602,227 @@ export class Character extends Observer implements CharacterData {
         return upgradeChance
     }
 
-    public calculateDamageRange(defender: Character | Entity | Player, skill: SkillName = "attack"): [number, number] {
+    public calculateDamageRange(
+        defender: Character | Entity | Player,
+        skill: SkillName = "attack",
+        baseAttack?: number,
+    ): [number, number] {
         const gSkill = this.G.skills[skill]
+        if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
 
         // If the entity is immune, most skills won't do damage
         if ((defender as Entity).immune && skill !== "attack" && !gSkill?.pierces_immunity) return [0, 0]
 
-        if (defender["1hp"] || skill == "taunt") return this.crit ? [1, 2] : [1, 1]
+        const isHeal = Boolean(gSkill?.heal || this.slots?.mainhand?.name == "cupid")
+        if (!isHeal && defender.s?.invincible) return [0, 0]
 
-        let baseDamage: number = this.attack
-        if (skill == "heal") baseDamage = this.heal
-        if (!gSkill) console.debug(`calculateDamageRange DEBUG: '${skill}' isn't a skill!?`)
-        if (gSkill?.damage) baseDamage = gSkill.damage
-
-        // NOTE: I asked Wizard to add something to G.conditions.cursed and .marked so we don't need these hardcoded.
-        if (defender.s.cursed) baseDamage *= 1.2
-        if (defender.s.marked) baseDamage *= 1.1
-
-        const damage_type = gSkill[skill]?.damage_type ?? this.damage_type
-
-        let additionalApiercing = 0
-        if (gSkill?.apiercing) additionalApiercing = gSkill.apiercing
-        // NOTE: currently no skills with rpiercing
-        // let additionalRpiercing = 0
-        // if (gSkill?.rpiercing) additionalRpiercing = gSkill.rpiercing
-        if (damage_type == "physical")
-            baseDamage *= Tools.damage_multiplier(defender.armor - this.apiercing - additionalApiercing)
-        else if (damage_type == "magical")
-            baseDamage *= Tools.damage_multiplier(defender.resistance - this.rpiercing /** - additionalRpiercing */)
-
-        if (gSkill?.damage_multiplier) baseDamage *= gSkill.damage_multiplier
-
-        let lowerLimit = baseDamage * 0.9
-        let upperLimit = baseDamage * 1.1
-
-        if (this.crit) {
-            if (this.crit >= 100) {
-                lowerLimit *= 2 + this.critdamage / 100
-            }
-            upperLimit *= 2 + this.critdamage / 100
+        // Non-damaging / non-healing skills (e.g. curse, stomp, huntersmark, agitate, buffs)
+        if (
+            gSkill &&
+            !gSkill.heal &&
+            skill !== "attack" &&
+            skill !== "cleave" &&
+            skill !== "shadowstrike" &&
+            gSkill.damage === undefined &&
+            gSkill.damage_multiplier === undefined &&
+            !(gSkill.ratio && gSkill.hostile)
+        ) {
+            return [0, 0]
         }
 
-        // NOTE: This information is from @Wizard on Discord on May 1st, 2020
-        // https://discord.com/channels/238332476743745536/243707345887166465/705722706250694737
-        if (skill == "cleave") {
-            lowerLimit *= 0.1
-            upperLimit *= 0.9
+        // Merchants can only use merchant_use skills or attack with a dartgun
+        if (
+            this.ctype == "merchant" &&
+            !gSkill?.merchant_use &&
+            !(skill == "attack" && this.slots?.mainhand && this.G.items[this.slots.mainhand.name]?.wtype == "dartgun")
+        ) {
+            return [0, 0]
+        }
+
+        const canCrit = !isHeal && Boolean(gSkill?.procs) && Boolean(this.crit)
+
+        if (defender["1hp"] && !isHeal) {
+            if (!canCrit) return [1, 1]
+            if (this.crit >= 100) return [2, 2]
+            return [1, 2]
+        }
+
+        const mainhandDamageType = this.slots?.mainhand
+            ? this.G.items[this.slots.mainhand.name]?.damage_type
+            : undefined
+        let damage_type =
+            mainhandDamageType ?? this.damage_type ?? (this.ctype ? this.G.classes[this.ctype]?.damage_type : undefined)
+        if (skill !== "attack" && gSkill?.damage_type) damage_type = gSkill.damage_type
+
+        let lowerBase: number
+        let upperBase: number
+
+        if (baseAttack !== undefined) {
+            lowerBase = baseAttack
+            upperBase = baseAttack
+        } else if (skill == "burst") {
+            if ((this.mp ?? 0) < 1) return [0, 0]
+            const burstDamage = this.mp * (gSkill?.ratio ?? 0.555)
+            lowerBase = burstDamage
+            upperBase = burstDamage
+        } else if (skill == "cburst") {
+            const mpReduction = (100 - (this.mp_reduction ?? 0)) / 100
+            const availableMp = Math.floor(Math.max(0, (this.mp ?? 0) - (gSkill?.mp ?? 0) * mpReduction))
+            if (availableMp < 1) return [0, 0]
+            const ratio = gSkill?.ratio ?? 0.5
+            lowerBase = 1 * ratio
+            upperBase = availableMp * ratio
+        } else {
+            let baseDamage: number = this.attack
+            if (skill == "heal") baseDamage = this.heal || this.attack
+            if (gSkill?.damage !== undefined) baseDamage = gSkill.damage
+            if (gSkill?.levels && isHeal) {
+                for (const [level, output] of gSkill.levels) {
+                    if (this.level >= level) baseDamage = output
+                }
+            }
+            if (gSkill?.armor_multiplier !== undefined) {
+                baseDamage =
+                    baseDamage * (gSkill.damage_multiplier ?? 1) +
+                    Math.min(Math.max(this.armor ?? 0, 0), gSkill.armor_cap ?? Infinity) * gSkill.armor_multiplier
+            } else if (gSkill?.damage_multiplier) {
+                baseDamage *= gSkill.damage_multiplier
+            }
+
+            if (this.ctype == "merchant" && this.gold !== undefined) {
+                baseDamage = Math.floor(Math.min(baseDamage, this.gold / 2))
+            }
+
+            lowerBase = baseDamage
+            upperBase = baseDamage
+
+            // NOTE: This information is from @Wizard on Discord on May 1st, 2020
+            // https://discord.com/channels/238332476743745536/243707345887166465/705722706250694737
+            if (skill == "cleave") {
+                lowerBase *= 0.1
+                upperBase *= 0.9
+            } else if (skill == "shadowstrike") {
+                lowerBase *= 0.2
+                upperBase *= 1.4 * 12
+            }
+        }
+
+        if (skill == "purify" && defender.s) {
+            const isMonster = Boolean((defender as Entity).type && this.G.monsters[(defender as Entity).type])
+            for (const conditionName in defender.s) {
+                if (
+                    conditionName == "poisonous" &&
+                    isMonster &&
+                    ((defender as Entity).poisonous || this.G.monsters[(defender as Entity).type]?.poisonous)
+                ) {
+                    continue
+                }
+                const gCondition = this.G.conditions[conditionName as ConditionName]
+                const statusData = defender.s[conditionName as keyof typeof defender.s] as {
+                    s?: number
+                    citizens?: unknown
+                }
+                if (
+                    (gCondition && (gCondition.buff || gCondition.debuff) && !gCondition.persistent) ||
+                    statusData?.citizens
+                ) {
+                    let bonus = gSkill?.condition_damage ?? 400
+                    if (conditionName === "stack") {
+                        const rawStacks = statusData?.s
+                        const stacks = Number.isFinite(rawStacks)
+                            ? Math.max(0, Math.min(this.G.skills.stack?.max ?? 2000, Math.floor(rawStacks)))
+                            : 0
+                        bonus = stacks
+                            ? bonus + Math.min(stacks * (gSkill?.stack_damage ?? 1), gSkill?.stack_bonus_cap ?? 400)
+                            : 0
+                    }
+                    lowerBase += bonus
+                    upperBase += bonus
+                }
+            }
+        }
+
+        if (isHeal) {
+            const healMultiplier =
+                this.serverData?.name === "HARDCORE" || this.server?.gameplay === "hardcore" ? 0.6 : 1
+            let defMult = 1
+            if (defender.id !== this.id && damage_type !== "pure") {
+                if (damage_type == "magical") {
+                    const effectiveRes = Math.max(0, (defender.resistance ?? 0) - (this.rpiercing ?? 0)) / 2
+                    defMult = Tools.damage_multiplier(effectiveRes)
+                } else {
+                    const effectiveArmor = Math.max(0, (defender.armor ?? 0) - (this.apiercing ?? 0)) / 2
+                    defMult = Tools.damage_multiplier(effectiveArmor)
+                }
+            }
+            let condMult = 1
+            if (defender.s) {
+                for (const conditionName in defender.s) {
+                    const gCondition = this.G.conditions[conditionName as ConditionName]
+                    if (gCondition?.healm !== undefined) condMult *= gCondition.healm
+                }
+            }
+            const mult = healMultiplier * defMult * condMult
+            return [lowerBase * 0.9 * mult, upperBase * 1.1 * mult]
+        }
+
+        if (damage_type == "pure") {
+            return [Math.ceil(lowerBase), Math.ceil(upperBase)]
+        }
+
+        if (canCrit) {
+            const critMult = 2 + (this.critdamage ?? 0) / 100
+            if (this.crit >= 100) lowerBase *= critMult
+            upperBase *= critMult
+        }
+
+        if (this.ctype == "rogue") {
+            const maxStack = this.G.skills.stack?.max ?? 2000
+            const nextStack = Math.min(maxStack, (defender.s?.stack?.s ?? 0) + 1)
+            lowerBase += nextStack
+            upperBase += nextStack
+        }
+
+        let lowerLimit = lowerBase * 0.9
+        let upperLimit = upperBase * 1.1
+
+        let defMult = 1
+        if ((defender as Character)["for"]) {
+            defMult *= Tools.damage_multiplier((defender as Character)["for"] * 5)
+        }
+        if (defender.id !== this.id) {
+            if (damage_type == "magical") {
+                const additionalRpiercing = gSkill?.rpiercing ?? 0
+                defMult *= Tools.damage_multiplier(
+                    (defender.resistance ?? 0) - (this.rpiercing ?? 0) - additionalRpiercing,
+                )
+            } else {
+                const additionalApiercing = gSkill?.apiercing ?? 0
+                defMult *= Tools.damage_multiplier((defender.armor ?? 0) - (this.apiercing ?? 0) - additionalApiercing)
+            }
+        }
+
+        lowerLimit *= defMult
+        upperLimit *= defMult
+
+        let incdmgamp = 0
+        if (defender.s) {
+            for (const conditionName in defender.s) {
+                const gCondition = this.G.conditions[conditionName as ConditionName]
+                if (gCondition?.incdmgamp) incdmgamp += gCondition.incdmgamp
+            }
+        }
+        if (incdmgamp) {
+            const ampMult = (100 + incdmgamp) / 100
+            lowerLimit *= ampMult
+            upperLimit *= ampMult
+        }
+
+        if (skill == "taunt") {
+            const ampMult = incdmgamp ? (100 + incdmgamp) / 100 : 1
+            const minTaunt = Math.round(Math.ceil(Math.ceil(lowerBase * 0.9) * defMult) * ampMult)
+            const maxTaunt = Math.round(Math.ceil(Math.ceil(upperBase * 1.1) * defMult) * ampMult)
+            return [minTaunt, maxTaunt]
         }
 
         return [lowerLimit, upperLimit]
@@ -2016,17 +2196,23 @@ export class Character extends Observer implements CharacterData {
      * @memberof Character
      */
     public canKillInOneShot(entity: Entity, skill: SkillName = "attack"): boolean {
+        const gSkill = this.G.skills[skill]
+        if (gSkill?.heal || this.slots?.mainhand?.name == "cupid") return false
+
         // Check if it can heal
         if (entity.lifesteal) return false
         if (entity.abilities?.self_healing) return false
         if (entity.avoidance) return false // It has a chance to avoid our hit
 
-        if (entity.immune && !this.G.skills[skill].pierces_immunity) return false
+        if (entity.immune && skill !== "attack" && !gSkill?.pierces_immunity) return false
 
-        const damage_type = this.G.skills[skill].damage_type ?? this.damage_type
+        const damage_type =
+            (skill !== "attack" && gSkill?.damage_type) ||
+            (this.slots?.mainhand && this.G.items[this.slots.mainhand.name]?.damage_type) ||
+            this.damage_type
 
         // Check if it can avoid our shot
-        if (damage_type == "magical" && entity.reflection) return false
+        if (damage_type == "magical" && !gSkill?.no_reflection && entity.reflection) return false
         if (damage_type == "physical" && entity.evasion) return false
 
         return this.calculateDamageRange(entity, skill)[0] >= entity.hp
@@ -2227,16 +2413,17 @@ export class Character extends Observer implements CharacterData {
             ignoreMP?: boolean
         } = {},
     ): boolean {
-        if (this.rip) return false // We are dead
-        for (const conditionName in this.s) {
-            const gCondition = this.G.conditions[conditionName as ConditionName]
-            if (gCondition?.blocked) return false // We have a condition that prevents us from using skills
-        }
-        if (this.isOnCooldown(skill) && !options.ignoreCooldown) return false // Skill is on cooldown
+        if (this.isDisabled()) return false // We are dead or disabled
         const gInfoSkill = this.G.skills[skill]
+        if (!gInfoSkill) return false
+        if (gInfoSkill.passive || gInfoSkill.monster || gInfoSkill.type == "monster") return false
+        if (this.isOnCooldown(skill) && !options.ignoreCooldown) return false // Skill is on cooldown
         if (gInfoSkill.hostile && !options.ignoreLocation && (this.G.maps[this.map] as GMap).safe) return false // Can't use a hostile skill in a safe place
-        if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp && !options.ignoreMP) return false // Not enough MP
-        if (skill == "attack" && this.mp < this.mp_cost && !options.ignoreMP) return false // Not enough MP (attack)
+        const mpReduction = (100 - (this.mp_reduction ?? 0)) / 100
+        if (gInfoSkill.mp !== undefined && this.mp < gInfoSkill.mp * mpReduction && !options.ignoreMP) return false // Not enough MP
+        if ((skill == "attack" || skill == "heal") && this.mp < this.mp_cost && !options.ignoreMP) return false // Not enough MP (attack or heal)
+        if (skill == "cleave" && this.mp < this.mp_cost * 0.02 && !options.ignoreMP) return false // Not enough MP (cleave)
+        if (skill == "burst" && this.mp < 1 && !options.ignoreMP) return false // Not enough MP (burst)
         if (gInfoSkill.level !== undefined && this.level < gInfoSkill.level) return false // Not a high enough level
         if (gInfoSkill.wtype && !options.ignoreEquipped) {
             // The skill requires a certain weapon type
@@ -2255,6 +2442,16 @@ export class Character extends Observer implements CharacterData {
             } else {
                 // There's only one acceptable weapon type
                 if (gInfoWeapon.wtype !== gInfoSkill.wtype) return false // We don't have the right weapon type equipped
+            }
+        }
+        if (gInfoSkill.offhand_type && !options.ignoreEquipped) {
+            if (!this.slots.offhand) return false // We don't have an offhand equipped
+            const gInfoOffhand = this.G.items[this.slots.offhand.name]
+            if (
+                (gInfoOffhand.type as string) !== gInfoSkill.offhand_type &&
+                gInfoOffhand.wtype !== gInfoSkill.offhand_type
+            ) {
+                return false
             }
         }
         if (gInfoSkill.consume && !options.ignoreEquipped) {
@@ -2299,6 +2496,9 @@ export class Character extends Observer implements CharacterData {
         // Special circumstance -- fishing and mining can only be done in certain locations
         // TODO: Check fishing and mining zone
         // TODO: Include `!options.ignoreLocation`
+
+        // Special circumstance -- we can't use invis if we're marked
+        if (skill == "invis" && this.s.marked) return false
 
         // Special circumstance -- we can't use blink if we're being dampened
         if (this.s.dampened) {
@@ -4005,7 +4205,12 @@ export class Character extends Observer implements CharacterData {
      * @returns If we are disabled
      */
     public isDisabled(): boolean {
-        return this.rip || (this.s.stunned || this.s.fingered || this.s.deepfreezed) !== undefined
+        if (this.rip || this.s?.sleeping) return true
+        for (const conditionName in this.s) {
+            const gCondition = this.G.conditions[conditionName as ConditionName]
+            if (gCondition?.blocked) return true
+        }
+        return false
     }
 
     /**
@@ -6264,10 +6469,18 @@ export class Character extends Observer implements CharacterData {
                 continue
             }
 
-            if (attacker.damage_type == "physical" && this.evasion >= 100) continue // We will avoid the attack
-            if (attacker.damage_type == "magical" && this.reflection >= 100) continue // We will reflect the attack
+            const gSkill = this.G.skills[projectile.type]
+            const attackerMainhand = (attacker as Character | Player).slots?.mainhand?.name
+            const damage_type =
+                (projectile.type !== "attack" && gSkill?.damage_type) ||
+                (attackerMainhand && this.G.items[attackerMainhand]?.damage_type) ||
+                attacker.damage_type
 
-            const maximumDamage = attacker.calculateDamageRange(this, projectile.type)[1]
+            if (damage_type == "physical" && this.evasion >= 100) continue // We will avoid the attack
+            if (damage_type == "magical" && !gSkill?.no_reflection && this.reflection >= 100) continue // We will reflect the attack
+
+            const projectileDamage = (projectile as ActionData & { reflect?: number }).reflect ?? projectile.damage
+            const maximumDamage = attacker.calculateDamageRange(this, projectile.type, projectileDamage)[1]
 
             damage += maximumDamage
             if (damage >= this.hp) return true

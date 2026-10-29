@@ -1,6 +1,7 @@
 import type { GData } from "./definitions/adventureland-data"
 import { Entity } from "./Entity"
 import { Game } from "./Game"
+import { Tools } from "./Tools"
 
 let G: GData
 let burningToDeathHen: Entity
@@ -84,4 +85,48 @@ test("Entity.willBurnToDeath", () => {
 
     // Will burn to death
     expect(burningToDeathHen.willBurnToDeath()).toBe(true)
+})
+
+test("Entity.calculateDamageRange", () => {
+    // Normal physical/magical damage + programmatic incdmgamp (cursed + hexed + marked = +50%)
+    const defMult =
+        idleBBPompom.damage_type == "magical"
+            ? Tools.damage_multiplier(burningToDeathHen.resistance - idleBBPompom.rpiercing)
+            : Tools.damage_multiplier(burningToDeathHen.armor - idleBBPompom.apiercing)
+    const base = idleBBPompom.attack * defMult
+    const normal = idleBBPompom.calculateDamageRange(burningToDeathHen)
+    expect(normal[0]).toBeCloseTo(base * 0.9)
+    expect(normal[1]).toBeCloseTo(base * 1.1)
+
+    burningToDeathHen.s.cursed = { ms: 5000 }
+    burningToDeathHen.s.hexed = { ms: 5000 }
+    burningToDeathHen.s.marked = { ms: 5000 }
+    const amplified = idleBBPompom.calculateDamageRange(burningToDeathHen)
+    expect(amplified[0]).toBeCloseTo(base * 0.9 * 1.5)
+    expect(amplified[1]).toBeCloseTo(base * 1.1 * 1.5)
+    delete burningToDeathHen.s.cursed
+    delete burningToDeathHen.s.hexed
+    delete burningToDeathHen.s.marked
+
+    // Invincible defender takes [0, 0]
+    burningToDeathHen.s.invincible = { ms: 5000 }
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen)).toEqual([0, 0])
+    delete burningToDeathHen.s.invincible
+
+    // 1hp defender respects monster crit (0%, 50%, 100%) and rimeshatter non-crit
+    burningToDeathHen["1hp"] = true
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen)).toEqual([1, 1])
+    idleBBPompom.crit = 50
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen)).toEqual([1, 2])
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen, "rimeshatter")).toEqual([1, 1])
+    idleBBPompom.crit = 100
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen)).toEqual([2, 2])
+    idleBBPompom.crit = 0
+    burningToDeathHen["1hp"] = false
+
+    // Monster skills: zap (1200 pure) and fireball (4000 magical)
+    expect(idleBBPompom.calculateDamageRange(burningToDeathHen, "zap")).toEqual([1200, 1200])
+    const fireballRange = idleBBPompom.calculateDamageRange(burningToDeathHen, "fireball")
+    expect(fireballRange[0]).toBeCloseTo(4000 * 0.9)
+    expect(fireballRange[1]).toBeCloseTo(4000 * 1.1)
 })
