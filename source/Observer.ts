@@ -89,7 +89,7 @@ export class Observer {
         this.socket = socketio(`ws${this.serverData.secure ? "s" : ""}://${this.serverData.address}`, {
             autoConnect: false,
             path: this.serverData.path,
-            query: this.secret ? { secret: this.secret } : {},
+            query: this.secret ? { map_protocol: "1", secret: this.secret } : { map_protocol: "1" },
             reconnection: reconnect,
             transports: ["websocket"],
             secure: this.serverData.secure,
