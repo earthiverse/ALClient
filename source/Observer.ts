@@ -343,7 +343,7 @@ export class Observer {
 
                 data[mN] = goodData
 
-                if (Database.connection && Constants.SPECIAL_MONSTERS.includes(mN)) {
+                if (Database.connection && Constants.SPECIAL_MONSTERS_SET.has(mN)) {
                     const updateKey = `${this.serverData.name}${this.serverData.region}${mN}`
                     const nextUpdate = Database.nextUpdate.get(updateKey)
                     if (nextUpdate && now < nextUpdate) continue // We've updated this monster recently
@@ -474,7 +474,7 @@ export class Observer {
             if (this.S[entity.type] && death) delete this.S[entity.type]
 
             // Delete the entity from the database on death
-            if (Database.connection && Constants.SPECIAL_MONSTERS.includes(entity.type)) {
+            if (Database.connection && Constants.SPECIAL_MONSTERS_SET.has(entity.type)) {
                 const nextUpdate = Database.nextUpdate.get(
                     `${this.serverData.name}${this.serverData.region}${entity.id}`,
                 )
@@ -501,7 +501,7 @@ export class Observer {
                             .catch(console.error)
                     }
                     if (
-                        Constants.ONE_SPAWN_MONSTERS.includes(entity.type) &&
+                        Constants.ONE_SPAWN_MONSTERS_SET.has(entity.type) &&
                         this.G.monsters[entity.type].respawn > 10
                     ) {
                         // G.monsters time is in seconds. We need the time in ms.
@@ -551,44 +551,45 @@ export class Observer {
     }
 
     protected parseEntities(data: EntitiesData): void {
+        const now = Date.now()
+
         if (data.type == "all") {
-            this.lastAllEntities = Date.now()
+            this.lastAllEntities = now
 
             // Erase all of the entities
             this.entities.clear()
             this.players.clear()
-            this.lastPositionUpdate = Date.now()
-        } else {
-            // Update all positions
-            this.updatePositions()
+            this.lastPositionUpdate = now
+        } else if (!this.lastPositionUpdate || now - this.lastPositionUpdate >= 5) {
+            // Update all positions if not already updated recently
+            this.updatePositions(now)
         }
 
-        const visibleIDs = []
-        const entityUpdates = []
-        const npcUpdates = []
-        const playerUpdates = []
+        const visibleIDs = Database.connection && data.type == "all" ? [] : undefined
+        const entityUpdates = Database.connection ? [] : undefined
+        const npcUpdates = Database.connection ? [] : undefined
+        const playerUpdates = Database.connection ? [] : undefined
+        const serverPrefix = entityUpdates ? `${this.serverData.name}${this.serverData.region}` : ""
 
         for (const monster of data.monsters) {
-            let e: Entity
-            if (!this.entities.has(monster.id)) {
+            let e = this.entities.get(monster.id)
+            if (!e) {
                 // Create the entity and add it to our list
                 e = new Entity(monster, data.map, data.in, this.G)
                 this.entities.set(monster.id, e)
             } else {
                 // Update everything
-                e = this.entities.get(monster.id)
                 e.updateData(monster)
             }
-            visibleIDs.push(e.id)
+            if (visibleIDs) visibleIDs.push(e.id)
 
             // Update our database
-            if (Database.connection && Constants.SPECIAL_MONSTERS.includes(e.type)) {
-                const now = Date.now()
-                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${e.id}`)
+            if (entityUpdates && Constants.SPECIAL_MONSTERS_SET.has(e.type)) {
+                const nextUpdate = Database.nextUpdate.get(`${serverPrefix}${e.id}`)
                 if (!nextUpdate || now > nextUpdate) {
                     const firstSeen = Tools.estimateSpawnedDate(e.level, this.G.monsters[e.type].hp)
 
-                    if (Constants.ONE_SPAWN_MONSTERS.includes(e.type)) {
+                    if (Constants.ONE_SPAWN_MONSTERS_SET.has(e.type)) {
                         // Don't include the id in the filter, so it overwrites the last one
                         entityUpdates.push({
                             updateOne: {
@@ -613,10 +614,7 @@ export class Observer {
                                 upsert: true,
                             },
                         })
-                        Database.nextUpdate.set(
-                            `${this.serverData.name}${this.serverData.region}${e.type}`,
-                            now + Constants.MONGO_UPDATE_MS,
-                        )
+                        Database.nextUpdate.set(`${serverPrefix}${e.type}`, now + Constants.MONGO_UPDATE_MS)
                     } else {
                         // Include the id in the filter
                         entityUpdates.push({
@@ -644,30 +642,25 @@ export class Observer {
                             },
                         })
                     }
-                    Database.nextUpdate.set(
-                        `${this.serverData.name}${this.serverData.region}${e.id}`,
-                        now + Constants.MONGO_UPDATE_MS,
-                    )
+                    Database.nextUpdate.set(`${serverPrefix}${e.id}`, now + Constants.MONGO_UPDATE_MS)
                 }
             }
         }
 
         for (const player of data.players) {
-            let p: Player
-            if (!this.players.has(player.id)) {
+            let p = this.players.get(player.id)
+            if (!p) {
                 // Create the player and add it to our list
                 p = new Player(player, data.map, data.in, this.G)
                 this.players.set(player.id, p)
             } else {
                 // Update everything
-                p = this.players.get(player.id)
                 p.updateData(player)
             }
 
             // Update our database
-            if (Database.connection) {
-                const now = Date.now()
-                const nextUpdate = Database.nextUpdate.get(`${this.serverData.name}${this.serverData.region}${p.id}`)
+            if (playerUpdates && npcUpdates) {
+                const nextUpdate = Database.nextUpdate.get(`${serverPrefix}${p.id}`)
                 if (!nextUpdate || now > nextUpdate) {
                     if (p.isNPC()) {
                         npcUpdates.push({
@@ -748,18 +741,15 @@ export class Observer {
                         if (p.owner) updateData.owner = p.owner
                         playerUpdates.push({ updateOne: { filter: { name: p.id }, update: updateData, upsert: true } })
                     }
-                    Database.nextUpdate.set(
-                        `${this.serverData.name}${this.serverData.region}${p.id}`,
-                        Date.now() + Constants.MONGO_UPDATE_MS,
-                    )
+                    Database.nextUpdate.set(`${serverPrefix}${p.id}`, now + Constants.MONGO_UPDATE_MS)
                 }
             }
         }
 
         if (Database.connection) {
-            if (entityUpdates.length) EntityModel.bulkWrite(entityUpdates).catch(console.error)
-            if (npcUpdates.length) NPCModel.bulkWrite(npcUpdates).catch(console.error)
-            if (playerUpdates.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
+            if (entityUpdates?.length) EntityModel.bulkWrite(entityUpdates).catch(console.error)
+            if (npcUpdates?.length) NPCModel.bulkWrite(npcUpdates).catch(console.error)
+            if (playerUpdates?.length) PlayerModel.bulkWrite(playerUpdates).catch(console.error)
 
             if (data.type == "all") {
                 // Get live special monsters so we can exclude deleting them

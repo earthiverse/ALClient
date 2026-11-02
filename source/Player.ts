@@ -94,7 +94,7 @@ export class Player implements PlayerData {
         if (this.id !== undefined && this.id !== data.id) throw new Error("The entity's ID does not match")
 
         // Set everything
-        for (const key in data) this[key] = data[key]
+        Object.assign(this, data)
 
         if (!this.npc && this.ctype) {
             const mainhandDamageType = this.slots?.mainhand

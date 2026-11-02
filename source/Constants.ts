@@ -153,4 +153,6 @@ export class Constants {
         "xmagen",
         "xmagex",
     ]
+    static ONE_SPAWN_MONSTERS_SET = new Set<MonsterName>(Constants.ONE_SPAWN_MONSTERS)
+    static SPECIAL_MONSTERS_SET = new Set<MonsterName>(Constants.SPECIAL_MONSTERS)
 }

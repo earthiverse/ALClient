@@ -161,7 +161,7 @@ export class Entity implements MonsterData, Partial<GMonster> {
         if (this.id !== undefined && this.id !== data.id) throw new Error("The entity's ID does not match")
 
         // Set everything
-        for (const key in data) this[key] = data[key]
+        Object.assign(this, data)
     }
 
     public calculateDamageRange(
