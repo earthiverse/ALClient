@@ -577,49 +577,58 @@ export class Character extends Observer implements CharacterData {
         if (this.G.skills[skill].share) this.nextSkill.set(this.G.skills[skill].share, next)
     }
 
-    protected updatePositions(): void {
+    protected updatePositions(now = Date.now()): void {
         if (this.lastPositionUpdate) {
-            const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
-            if (msSinceLastUpdate == 0) return
+            const msSinceLastUpdate = now - this.lastPositionUpdate
+            if (msSinceLastUpdate <= 0) return
 
             // Update character
             if (this.moving) {
+                const dx = this.going_x - this.x
+                const dy = this.going_y - this.y
+                const distanceToGoal = Math.hypot(dx, dy)
                 const distanceTraveled = (this.speed * msSinceLastUpdate) / 1000
-                const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
-                const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
-                if (distanceTraveled > distanceToGoal) {
+
+                if (distanceTraveled >= distanceToGoal) {
                     this.moving = false
                     this.x = this.going_x
                     this.y = this.going_y
                 } else {
-                    this.x = this.x + Math.cos(angle) * distanceTraveled
-                    this.y = this.y + Math.sin(angle) * distanceTraveled
+                    const ratio = distanceTraveled / distanceToGoal
+                    this.x += dx * ratio
+                    this.y += dy * ratio
                 }
             }
 
             // Update conditions
             for (const condition in this.s) {
-                const newCooldown = this.s[condition as ConditionName].ms - msSinceLastUpdate
-                if (newCooldown <= 0) delete this.s[condition as ConditionName]
-                else this.s[condition as ConditionName].ms = newCooldown
+                const s = this.s[condition as ConditionName]
+                if (s?.ms !== undefined) {
+                    s.ms -= msSinceLastUpdate
+                    if (s.ms <= 0) delete this.s[condition as ConditionName]
+                }
             }
 
             // Update processes
             for (const process in this.q) {
-                const newCooldown = this.q[process as keyof QInfo].ms - msSinceLastUpdate
-                if (newCooldown <= 0) delete this.q[process as keyof QInfo]
-                else this.q[process as keyof QInfo].ms = newCooldown
+                const q = this.q[process as keyof QInfo]
+                if (q?.ms !== undefined) {
+                    q.ms -= msSinceLastUpdate
+                    if (q.ms <= 0) delete this.q[process as keyof QInfo]
+                }
             }
 
             // Update channels
             for (const channel in this.c) {
-                const newCooldown = this.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
-                if (newCooldown <= 0) delete this.c[channel as keyof ChannelInfo]
-                else this.c[channel as keyof ChannelInfo].ms = newCooldown
+                const c = this.c[channel as keyof ChannelInfo]
+                if (c?.ms !== undefined) {
+                    c.ms -= msSinceLastUpdate
+                    if (c.ms <= 0) delete this.c[channel as keyof ChannelInfo]
+                }
             }
         }
 
-        super.updatePositions()
+        super.updatePositions(now)
     }
 
     /**

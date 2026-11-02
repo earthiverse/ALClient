@@ -9,7 +9,6 @@ import type {
 } from "./definitions/adventureland-server.js"
 import { Constants } from "./Constants.js"
 import { Character } from "./Character.js"
-import { Tools } from "./Tools.js"
 import type { ConditionName, GData, SkillName } from "./definitions/adventureland-data.js"
 
 export class PingCompensatedCharacter extends Character {
@@ -39,16 +38,19 @@ export class PingCompensatedCharacter extends Character {
 
         // Compensate movement
         if (this.moving) {
+            const dx = this.going_x - this.x
+            const dy = this.going_y - this.y
+            const distanceToGoal = Math.hypot(dx, dy)
             const distanceTraveled = (this.speed * pingCompensation) / 1000
-            const angle = Math.atan2(this.going_y - this.y, this.going_x - this.x)
-            const distanceToGoal = Tools.distance({ x: this.x, y: this.y }, { x: this.going_x, y: this.going_y })
-            if (distanceTraveled > distanceToGoal) {
+
+            if (distanceTraveled >= distanceToGoal) {
                 this.moving = false
                 this.x = this.going_x
                 this.y = this.going_y
             } else {
-                this.x = this.x + Math.cos(angle) * distanceTraveled
-                this.y = this.y + Math.sin(angle) * distanceTraveled
+                const ratio = distanceTraveled / distanceToGoal
+                this.x += dx * ratio
+                this.y += dy * ratio
             }
         }
 
@@ -93,19 +95,19 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.entities.get(monster.id)
             if (!entity || !entity.moving) continue
+            const dx = entity.going_x - entity.x
+            const dy = entity.going_y - entity.y
+            const distanceToGoal = Math.hypot(dx, dy)
             const distanceTraveled = (entity.speed * pingCompensation) / 1000
-            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance(
-                { x: entity.x, y: entity.y },
-                { x: entity.going_x, y: entity.going_y },
-            )
+
             if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
             } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTraveled
-                entity.y = entity.y + Math.sin(angle) * distanceTraveled
+                const ratio = distanceTraveled / distanceToGoal
+                entity.x += dx * ratio
+                entity.y += dy * ratio
             }
 
             // Compensate conditions
@@ -122,19 +124,19 @@ export class PingCompensatedCharacter extends Character {
             // Compensate position
             const entity = this.players.get(player.id)
             if (!entity || !entity.moving) continue
+            const dx = entity.going_x - entity.x
+            const dy = entity.going_y - entity.y
+            const distanceToGoal = Math.hypot(dx, dy)
             const distanceTraveled = (entity.speed * pingCompensation) / 1000
-            const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-            const distanceToGoal = Tools.distance(
-                { x: entity.x, y: entity.y },
-                { x: entity.going_x, y: entity.going_y },
-            )
+
             if (distanceTraveled >= distanceToGoal) {
                 entity.moving = false
                 entity.x = entity.going_x
                 entity.y = entity.going_y
             } else {
-                entity.x = entity.x + Math.cos(angle) * distanceTraveled
-                entity.y = entity.y + Math.sin(angle) * distanceTraveled
+                const ratio = distanceTraveled / distanceToGoal
+                entity.x += dx * ratio
+                entity.y += dy * ratio
             }
 
             // Compensate conditions

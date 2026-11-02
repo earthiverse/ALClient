@@ -40,6 +40,7 @@ export class Observer {
 
     protected lastAllEntities: number
     protected lastPositionUpdate: number
+    protected lastCleanup = 0
 
     public G: GData
 
@@ -901,103 +902,115 @@ export class Observer {
         this.parseEntities(data.entities)
     }
 
-    protected updatePositions(): void {
+    protected updatePositions(now = Date.now()): void {
         if (this.lastPositionUpdate) {
-            const msSinceLastUpdate = Date.now() - this.lastPositionUpdate
-            if (msSinceLastUpdate == 0) return
+            const msSinceLastUpdate = now - this.lastPositionUpdate
+            if (msSinceLastUpdate <= 0) return
 
             // Update entities
-            for (const [, entity] of this.entities) {
+            for (const entity of this.entities.values()) {
                 if (!entity.moving) continue
 
-                const speed = entity.speed
+                const dx = entity.going_x - entity.x
+                const dy = entity.going_y - entity.y
+                const distanceToGoal = Math.hypot(dx, dy)
+                const distanceTraveled = (entity.speed * msSinceLastUpdate) / 1000
 
-                const distanceTraveled = (speed * msSinceLastUpdate) / 1000
-                const angle = Math.atan2(entity.going_y - entity.y, entity.going_x - entity.x)
-                const distanceToGoal = Tools.distance(
-                    { x: entity.x, y: entity.y },
-                    { x: entity.going_x, y: entity.going_y },
-                )
-                if (distanceTraveled > distanceToGoal) {
+                if (distanceTraveled >= distanceToGoal) {
                     entity.moving = false
                     entity.x = entity.going_x
                     entity.y = entity.going_y
                 } else {
-                    entity.x = entity.x + Math.cos(angle) * distanceTraveled
-                    entity.y = entity.y + Math.sin(angle) * distanceTraveled
+                    const ratio = distanceTraveled / distanceToGoal
+                    entity.x += dx * ratio
+                    entity.y += dy * ratio
                 }
 
                 // Update conditions
                 for (const condition in entity.s) {
-                    const newCooldown = entity.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0) delete entity.s[condition as ConditionName]
-                    else entity.s[condition as ConditionName].ms = newCooldown
+                    const s = entity.s[condition as ConditionName]
+                    if (s?.ms !== undefined) {
+                        s.ms -= msSinceLastUpdate
+                        if (s.ms <= 0) delete entity.s[condition as ConditionName]
+                    }
                 }
             }
 
             // Update players
-            for (const [, player] of this.players) {
+            for (const player of this.players.values()) {
                 if (!player.moving) continue
+
+                const dx = player.going_x - player.x
+                const dy = player.going_y - player.y
+                const distanceToGoal = Math.hypot(dx, dy)
                 const distanceTraveled = (player.speed * msSinceLastUpdate) / 1000
-                const angle = Math.atan2(player.going_y - player.y, player.going_x - player.x)
-                const distanceToGoal = Tools.distance(
-                    { x: player.x, y: player.y },
-                    { x: player.going_x, y: player.going_y },
-                )
-                if (distanceTraveled > distanceToGoal) {
+
+                if (distanceTraveled >= distanceToGoal) {
                     player.moving = false
                     player.x = player.going_x
                     player.y = player.going_y
                 } else {
-                    player.x = player.x + Math.cos(angle) * distanceTraveled
-                    player.y = player.y + Math.sin(angle) * distanceTraveled
+                    const ratio = distanceTraveled / distanceToGoal
+                    player.x += dx * ratio
+                    player.y += dy * ratio
                 }
 
                 // Update conditions
                 for (const condition in player.s) {
-                    const newCooldown = player.s[condition as ConditionName].ms - msSinceLastUpdate
-                    if (newCooldown <= 0) delete player.s[condition as ConditionName]
-                    else player.s[condition as ConditionName].ms = newCooldown
+                    const s = player.s[condition as ConditionName]
+                    if (s?.ms !== undefined) {
+                        s.ms -= msSinceLastUpdate
+                        if (s.ms <= 0) delete player.s[condition as ConditionName]
+                    }
                 }
 
                 // Update processes
                 for (const process in player.q) {
-                    const newCooldown = player.q[process as keyof QInfo].ms - msSinceLastUpdate
-                    if (newCooldown <= 0) delete player.q[process as keyof QInfo]
-                    else player.q[process as keyof QInfo].ms = newCooldown
+                    const q = player.q[process as keyof QInfo]
+                    if (q?.ms !== undefined) {
+                        q.ms -= msSinceLastUpdate
+                        if (q.ms <= 0) delete player.q[process as keyof QInfo]
+                    }
                 }
 
                 // Update channels
                 for (const channel in player.c) {
-                    const newCooldown = player.c[channel as keyof ChannelInfo].ms - msSinceLastUpdate
-                    if (newCooldown <= 0) delete player.c[channel as keyof ChannelInfo]
-                    else player.c[channel as keyof ChannelInfo].ms = newCooldown
+                    const c = player.c[channel as keyof ChannelInfo]
+                    if (c?.ms !== undefined) {
+                        c.ms -= msSinceLastUpdate
+                        if (c.ms <= 0) delete player.c[channel as keyof ChannelInfo]
+                    }
                 }
             }
         }
 
-        // Erase all entities that are far away
-        let toDelete: string[] = []
-        for (const [id, entity] of this.entities) {
-            if (Tools.squaredDistance(this, entity) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete) this.deleteEntity(id)
+        // Periodically clean up entities, players, and projectiles
+        if (now - this.lastCleanup > 1000) {
+            this.lastCleanup = now
 
-        // Erase all players that are far away
-        toDelete = []
-        for (const [id, player] of this.players) {
-            if (Tools.squaredDistance(this, player) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
-            toDelete.push(id)
-        }
-        for (const id of toDelete) this.players.delete(id)
+            // Erase all entities that are far away
+            let toDelete: string[] = []
+            for (const [id, entity] of this.entities) {
+                if (Tools.squaredDistance(this, entity) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
+                toDelete.push(id)
+            }
+            for (const id of toDelete) this.deleteEntity(id)
 
-        // Erase all stale projectiles
-        for (const [id, projectile] of this.projectiles) {
-            if (Date.now() - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
+            // Erase all players that are far away
+            toDelete = []
+            for (const [id, player] of this.players) {
+                if (Tools.squaredDistance(this, player) < Constants.MAX_VISIBLE_RANGE_SQUARED) continue
+                toDelete.push(id)
+            }
+            for (const id of toDelete) this.players.delete(id)
+
+            // Erase all stale projectiles
+            for (const [id, projectile] of this.projectiles) {
+                if (now - projectile.date.getTime() > Constants.STALE_PROJECTILE_MS) this.projectiles.delete(id)
+            }
         }
 
-        this.lastPositionUpdate = Date.now()
+        this.lastPositionUpdate = now
     }
 
     public async sendPing(log = true): Promise<number> {
