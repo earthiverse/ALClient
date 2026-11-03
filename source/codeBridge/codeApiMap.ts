@@ -129,7 +129,8 @@ export const CODE_API_MAP: Record<string, CodeApiHandler> = {
         return q
     },
     sleep: (_host, args) => {
-        const ms = Math.max(0, asNumber(args[0] ?? 0))
+        // Cap so a remote snippet cannot stall the process indefinitely.
+        const ms = Math.min(5_000, Math.max(0, asNumber(args[0] ?? 0)))
         return new Promise((resolve) => {
             const timer = setTimeout(resolve, ms)
             timer.unref?.()
@@ -163,6 +164,38 @@ export const EMIT_HANDLERS: Record<
         host.sellToMerchant(String(data.id), String(data.slot), String(data.rid), asNumber(data.q ?? 1)),
     join_giveaway: (host, data) => {
         host.socket.emit("join_giveaway", { id: data.id, slot: data.slot, rid: data.rid })
+    },
+    /** Personal trade UI show/hide (`{ event: "show" | "hide" }`). */
+    trade: (host, data) => {
+        const event = String(data.event ?? "")
+        if (event !== "show" && event !== "hide") {
+            throw new Error(`[codeBridge] trade emit requires event "show" or "hide"`)
+        }
+        host.socket.emit("trade", { event })
+    },
+    /**
+     * Item-for-item trade offer fallback (`equip` with `want`).
+     * Plain equip goes through CODE `equip()` → Character.equip.
+     */
+    equip: (host, data) => {
+        if (data.want === undefined) {
+            throw new Error(`[codeBridge] socket.emit("equip") only allowed for trade offers (needs want)`)
+        }
+        host.socket.emit("equip", {
+            q: data.q,
+            slot: data.slot,
+            num: data.num,
+            want: data.want,
+        })
+    },
+    trade_swap: (host, data) => {
+        host.socket.emit("trade_swap", {
+            slot: data.slot,
+            id: data.id,
+            rid: data.rid,
+            num: data.num,
+            item: data.item,
+        })
     },
 }
 

@@ -192,6 +192,41 @@ try{await equip(__slot,"helmet");}catch(__e){game_log("fail");}
         warn.mockRestore()
     })
 
+    test("blocks raw socket.emit for unrestricted events like send", async () => {
+        const host = createMockHost()
+        const warn = jest.spyOn(console, "warn").mockImplementation(() => undefined)
+        const result = await translateCodeEval(
+            `(async function(){get_socket().emit("send",{name:"Eve",gold:999});})();`,
+            host,
+        )
+        expect(result.ok).toBe(false)
+        expect(host.socket.emit).not.toHaveBeenCalled()
+        warn.mockRestore()
+    })
+
+    test("character view hides auth fields", async () => {
+        const host = createMockHost({
+            // @ts-expect-error intentional secret on mock host
+            userAuth: "secret-auth-token",
+            characterID: "CH_secret",
+        })
+        const result = await translateCodeEval(
+            `(async function(){say(""+character.userAuth+":"+character.characterID+":"+character.map);})();`,
+            host,
+        )
+        expect(result.ok).toBe(true)
+        expect(host.calls).toEqual([{ name: "say", args: ["undefined:undefined:main"] }])
+    })
+
+    test("blocks mutating array methods on character.items", async () => {
+        const host = createMockHost()
+        const before = (host.items ?? []).length
+        const result = await translateCodeEval(`(async function(){character.items.splice(0,1);say("done");})();`, host)
+        expect(result.ok).toBe(false)
+        expect(host.items?.length).toBe(before)
+        expect(host.calls).toEqual([])
+    })
+
     test("early return skips later calls", async () => {
         const host = createMockHost()
         const result = await translateCodeEval(`(async function(){if(true){return;}say("nope");})();`, host)

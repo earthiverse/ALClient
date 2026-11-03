@@ -8,6 +8,8 @@ import type { CodeBridgeHost } from "./types.js"
  */
 export class CodeBridge {
     private enabled = false
+    /** Bumped on disable so already-queued snippets are dropped. */
+    private generation = 0
     private queue: Promise<void> = Promise.resolve()
     private readonly onCodeEval: (data: string | { code?: string }) => void
 
@@ -39,12 +41,14 @@ export class CodeBridge {
     public disable(): void {
         if (!this.enabled) return
         this.enabled = false
+        this.generation++
         this.character.socket?.off("code_eval", this.onCodeEval)
         console.warn("[codeBridge] disabled")
     }
 
     /** Run a snippet through the translator (also used by unit/playtest). */
     public async handle(code: string): Promise<void> {
+        if (!this.enabled) return
         const result = await translateCodeEval(code, this.character as unknown as CodeBridgeHost)
         if (!result.ok) {
             console.warn(`[codeBridge] snippet finished with errors: ${result.warnings.join("; ")}`)
@@ -52,8 +56,12 @@ export class CodeBridge {
     }
 
     private enqueue(code: string): void {
+        const gen = this.generation
         this.queue = this.queue
-            .then(() => this.handle(code))
+            .then(() => {
+                if (!this.enabled || gen !== this.generation) return
+                return this.handle(code)
+            })
             .catch((e) => {
                 console.warn(`[codeBridge] queue error: ${e instanceof Error ? e.message : String(e)}`)
             })

@@ -344,8 +344,35 @@ async function evalExpression(expr: Expression | Node, ctx: WalkContext): Promis
     }
 }
 
+/** Public game-state fields CODE scripts may read. Never expose auth / socket / methods. */
+const CHARACTER_VIEW_KEYS = [
+    "id",
+    "name",
+    "map",
+    "x",
+    "y",
+    "real_x",
+    "real_y",
+    "items",
+    "slots",
+    "bank",
+    "stand",
+    "esize",
+] as const
+
 function hostAsCharacter(host: CodeBridgeHost): Record<string, unknown> {
-    return host as unknown as Record<string, unknown>
+    const src = host as unknown as Record<string, unknown>
+    const view: Record<string, unknown> = {}
+    for (const key of CHARACTER_VIEW_KEYS) {
+        const value = src[key]
+        if (key === "items" && Array.isArray(value)) {
+            // Shallow copy so mutating array methods cannot rewrite host inventory.
+            view[key] = value.slice()
+        } else {
+            view[key] = value
+        }
+    }
+    return view
 }
 
 function makeSocketProxy(host: CodeBridgeHost) {
@@ -355,6 +382,32 @@ function makeSocketProxy(host: CodeBridgeHost) {
         },
     }
 }
+
+const SAFE_PRIMITIVE_METHODS = new Set([
+    // string
+    "charAt",
+    "includes",
+    "indexOf",
+    "slice",
+    "substring",
+    "toLowerCase",
+    "toUpperCase",
+    "trim",
+    // array (read-only / non-mutating)
+    "every",
+    "filter",
+    "find",
+    "findIndex",
+    "includes",
+    "indexOf",
+    "join",
+    "map",
+    "slice",
+    "some",
+    // number
+    "toFixed",
+    "toString",
+])
 
 async function evalMember(expr: MemberExpression, ctx: WalkContext): Promise<unknown> {
     const obj = await evalExpression(expr.object, ctx)
@@ -392,11 +445,7 @@ async function dispatchEmit(host: CodeBridgeHost, event: string, data: unknown):
     const payload = (data && typeof data === "object" ? data : {}) as Record<string, unknown>
     const handler = EMIT_HANDLERS[event]
     if (handler) return handler(host, payload)
-    const rawAllow = new Set(["trade", "equip", "merchant", "bank", "send", "say"])
-    if (rawAllow.has(event)) {
-        host.socket.emit(event, data)
-        return
-    }
+    // No raw socket passthrough — only EMIT_HANDLERS (typed → Character APIs).
     const msg = `${LOG_PREFIX} blocked socket.emit(${JSON.stringify(event)}) — not on allowlist`
     console.warn(msg)
     throw new TranslateAbort(msg)
@@ -425,11 +474,15 @@ async function evalCall(expr: CallExpression, ctx: WalkContext): Promise<unknown
 
         const obj = await evalExpression(member.object, ctx)
         const args = await evalArgs(expr.arguments, ctx)
-        if (methodName && obj != null && typeof (obj as Record<string, unknown>)[methodName] === "function") {
+        if (
+            methodName &&
+            SAFE_PRIMITIVE_METHODS.has(methodName) &&
+            obj != null &&
+            (typeof obj === "string" || Array.isArray(obj) || typeof obj === "number") &&
+            typeof (obj as Record<string, unknown>)[methodName] === "function"
+        ) {
             const fn = (obj as Record<string, unknown>)[methodName] as (...a: unknown[]) => unknown
-            if (typeof obj === "string" || Array.isArray(obj) || typeof obj === "number") {
-                return fn.apply(obj, args)
-            }
+            return fn.apply(obj, args)
         }
 
         throw new TranslateAbort(`${LOG_PREFIX} unsupported method call: ${methodName ?? "?"}`)
