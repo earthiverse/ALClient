@@ -99,11 +99,13 @@ import type {
 } from "./definitions/alclient.js"
 import type { UpdateQuery } from "mongoose"
 import { TradeItem } from "./TradeItem.js"
+import { CodeBridge } from "./codeBridge/CodeBridge.js"
 
 export class Character extends Observer implements CharacterData {
     public userAuth: string
     public characterID: string
     public timeouts = new Map<string, ReturnType<typeof setTimeout>>()
+    private codeBridge?: CodeBridge
 
     public achievements = new Map<string, AchievementProgressData>()
     public get bank(): BankInfo {
@@ -879,6 +881,8 @@ export class Character extends Observer implements CharacterData {
      * Disconnects your bot from the server, cancels all timeouts that have been registered, and turns off all socket listeners.
      */
     public disconnect(): void {
+        this.disableCodeBridge()
+
         // Cancel all timeouts
         for (const [, timer] of this.timeouts) clearTimeout(timer)
 
@@ -890,6 +894,25 @@ export class Character extends Observer implements CharacterData {
             this.socket.disconnect()
             this.socket.off()
         }
+    }
+
+    /**
+     * Opt-in: translate inbound `code_eval` (e.g. `/comm` observer `o:command`) into ALClient calls.
+     * Off by default — observers can otherwise drive your character via stock CODE snippets.
+     */
+    public enableCodeBridge(): void {
+        if (!this.codeBridge) this.codeBridge = new CodeBridge(this)
+        this.codeBridge.enable()
+    }
+
+    /** Stop listening for `code_eval`. */
+    public disableCodeBridge(): void {
+        this.codeBridge?.disable()
+    }
+
+    /** Whether the code_eval → ALClient translator is active. */
+    public isCodeBridgeEnabled(): boolean {
+        return this.codeBridge?.isEnabled === true
     }
 
     private getTime(military: boolean): string {
