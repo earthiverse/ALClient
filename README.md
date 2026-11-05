@@ -122,3 +122,16 @@ async function run() {
 }
 run()
 ```
+
+## `/comm` + CODE snippets (`code_eval` / `o:command`)
+
+ALClient does **not** run in-game CODE. To let `/comm` observers (including Tampermonkey UIs such as enhance-comm-ui) drive a connected character via stock CODE calls (`equip`, `bank_store`, `say`, …), opt in after connect:
+
+```typescript
+const bot = await AL.Game.startMerchant("MyMerch", "US", "I")
+bot.enableCodeBridge()
+```
+
+Inbound `code_eval` strings are **parsed** (not executed in a VM) and allowlisted CODE / `socket.emit` calls are translated to ALClient methods. Unknown functions abort that snippet with a `console.warn`. Unsupported helpers such as `party_say` log a warning and are skipped (ALClient has no party-say API).
+
+Off by default. After enabling, observe the character on `/hub` or `/comm` and use stock **COMMAND** (same `o:command` → `code_eval` path as the vanilla client).
