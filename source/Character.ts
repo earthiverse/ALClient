@@ -5252,6 +5252,13 @@ export class Character extends Observer implements CharacterData {
         if (options.costs == undefined) options.costs = {}
         if (options.costs.blink == undefined) options.costs.blink = this.speed * 3.2 + 250 // We can't attack for 3.2 seconds after a blink, + it uses a lot of mana
 
+        if (!Pathfinder.canStand(this)) {
+            // If we can't stand where we are, try to move to nearby a walkable tile, or warp to town if there isn't one
+            const walkable = Pathfinder.findClosestWalkable(this, 5)
+            if (walkable) await this.move(walkable.x, walkable.y, { disableSafetyCheck: true })
+            else await this.warpToTown()
+        }
+
         let fixedTo: IPosition & { map: MapName }
         let path: PathNode[]
         if (typeof to == "string") {
@@ -5407,8 +5414,7 @@ export class Character extends Observer implements CharacterData {
         // If we don't have the path yet, get it
         this.smartMoving = fixedTo
         try {
-            if (!Pathfinder.canStand(this)) await this.warpToTown() // We're in an unwalkable position, so we need to warp to town
-            if (!path) path = await Pathfinder.getPath(this, fixedTo, options)
+            if (!path) path = Pathfinder.getPath(this, fixedTo, options)
         } catch (e) {
             this.smartMoving = undefined
             throw e

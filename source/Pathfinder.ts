@@ -30,6 +30,27 @@ export class Pathfinder {
     }
 
     /**
+     * Finds the closest walkable position within `maxDistance` if the given position is unwalkable.
+     * Returns the original location if it is already walkable, or `undefined` if no walkable spot is found.
+     */
+    public static findClosestWalkable(location: IPosition, maxDistance = 3, distanceStep = 0.5): IPosition | undefined {
+        if (!this.G || !this.prepared) throw new Error("Prepare pathfinding before querying findClosestWalkable()!")
+        if (this.canStand(location)) return location
+
+        for (let r = distanceStep; r <= maxDistance; r += distanceStep) {
+            for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+                const candidate: IPosition = {
+                    map: location.map,
+                    x: location.x + r * Math.cos(a),
+                    y: location.y + r * Math.sin(a),
+                }
+                if (this.canStand(candidate)) return candidate
+            }
+        }
+        return undefined
+    }
+
+    /**
      * Checks if we can walk from `from` to `to`. Useful for `move()`.
      */
     public static canWalkPath(from: IPosition, to: IPosition): boolean {

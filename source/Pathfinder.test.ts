@@ -146,3 +146,18 @@ test("Pathfinder.getSafeWalkTo", () => {
     expect(result.x).toBe(safeTarget.x)
     expect(result.y).toBe(safeTarget.y)
 })
+
+test("Pathfinder.findClosestWalkable", () => {
+    const walkableSpot: IPosition = { map: "main", x: 0, y: 0 }
+    expect(Pathfinder.findClosestWalkable(walkableSpot)).toEqual(walkableSpot)
+
+    const arenaEdge: IPosition = { map: "arena", x: -127.94, y: -218.74 }
+    if (!Pathfinder.canStand(arenaEdge)) {
+        const recovered = Pathfinder.findClosestWalkable(arenaEdge, 3)
+        expect(recovered).toBeDefined()
+        expect(Pathfinder.canStand(recovered!)).toBe(true)
+    }
+
+    const farAway: IPosition = { map: "main", x: 10000, y: 10000 }
+    expect(Pathfinder.findClosestWalkable(farAway, 3)).toBeUndefined()
+})
