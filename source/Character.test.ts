@@ -1122,6 +1122,34 @@ test("Character.getEntities", () => {
 
     const originalLength = warrior.entities.size
     expect(warrior.getEntities({ ignoreIDs: ["3522746"] }).length).toBe(originalLength - 1)
+
+    expect(warrior.getEntities({ couldBurnToDeath: true }).length).toBe(0)
+    expect(warrior.getEntities({ couldBurnToDeath: false }).length).toBe(3)
+    expect(warrior.getEntities({ willBurnToDeath: true }).length).toBe(0)
+    expect(warrior.getEntities({ willBurnToDeath: false }).length).toBe(3)
+})
+
+test("Character.couldBurnToDeath", () => {
+    // Not burned
+    expect(warrior.couldBurnToDeath()).toBe(false)
+
+    // Burned, but burn damage is not enough to kill
+    warrior.s.burned = {
+        ms: 1000,
+        intensity: 5,
+        f: "someone",
+        fid: "someone",
+        last: new Date().toISOString(),
+    }
+    expect(warrior.couldBurnToDeath()).toBe(false)
+
+    // Burned, and burn damage is enough to kill
+    warrior.hp = 3
+    expect(warrior.couldBurnToDeath()).toBe(true)
+
+    // Clean up
+    delete warrior.s.burned
+    warrior.hp = warrior.max_hp
 })
 
 test("Character.getEntity", () => {

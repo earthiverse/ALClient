@@ -3362,8 +3362,11 @@ export class Character extends Observer implements CharacterData {
             }
             if (filters.canWalkTo !== undefined) {
                 const canWalkTo = Pathfinder.canWalkPath(this, entity)
-                if (filters.canWalkTo && !canWalkTo) continue
-                if (!filters.canWalkTo && canWalkTo) continue
+                if (filters.canWalkTo !== canWalkTo) continue
+            }
+            if (filters.couldBurnToDeath !== undefined) {
+                const couldBurnToDeath = entity.couldBurnToDeath()
+                if (filters.couldBurnToDeath !== couldBurnToDeath) continue
             }
             if (filters.couldDieToProjectiles !== undefined) {
                 const couldDieToProjectiles = entity.couldDieToProjectiles(
@@ -3372,18 +3375,15 @@ export class Character extends Observer implements CharacterData {
                     this.players,
                     this.entities,
                 )
-                if (filters.couldDieToProjectiles && !couldDieToProjectiles) continue
-                if (!filters.couldDieToProjectiles && couldDieToProjectiles) continue
+                if (filters.couldDieToProjectiles !== couldDieToProjectiles) continue
             }
             if (filters.couldGiveCredit !== undefined) {
                 const couldGiveCredit = entity.couldGiveCreditForKill(this)
-                if (filters.couldGiveCredit && !couldGiveCredit) continue
-                if (!filters.couldGiveCredit && couldGiveCredit) continue
+                if (filters.couldGiveCredit !== couldGiveCredit) continue
             }
             if (filters.willBurnToDeath !== undefined) {
                 const willBurnToDeath = entity.willBurnToDeath()
-                if (filters.willBurnToDeath && !willBurnToDeath) continue
-                if (!filters.willBurnToDeath && willBurnToDeath) continue
+                if (filters.willBurnToDeath !== willBurnToDeath) continue
             }
             if (filters.willDieToProjectiles !== undefined) {
                 const willDieToProjectiles = entity.willDieToProjectiles(
@@ -3392,8 +3392,7 @@ export class Character extends Observer implements CharacterData {
                     this.players,
                     this.entities,
                 )
-                if (filters.willDieToProjectiles && !willDieToProjectiles) continue
-                if (!filters.willDieToProjectiles && willDieToProjectiles) continue
+                if (filters.willDieToProjectiles !== willDieToProjectiles) continue
             }
             if (filters.hasIncomingProjectile !== undefined) {
                 let hasIncomingProjectile = false
@@ -3407,8 +3406,7 @@ export class Character extends Observer implements CharacterData {
                     hasIncomingProjectile = true
                     break
                 }
-                if (filters.hasIncomingProjectile && !hasIncomingProjectile) continue
-                if (!filters.hasIncomingProjectile && hasIncomingProjectile) continue
+                if (filters.hasIncomingProjectile !== hasIncomingProjectile) continue
             }
 
             entities.push(entity)
@@ -6449,10 +6447,23 @@ export class Character extends Observer implements CharacterData {
     }
 
     /**
-     * Returns true if the entity has a >0% chance to die from projectiles already cast.
+     * Returns true if the character could burn to death without taking any additional damage
+     * @return {*}  {boolean}
+     * @memberof Character
+     */
+    public couldBurnToDeath(): boolean {
+        if (!this.s.burned) return false // Not burning
+
+        const numIntervals = Math.floor(this.s.burned.ms / this.G.conditions.burned.interval)
+        const damagePerInterval = this["1hp"] ? 1 : Math.ceil(this.s.burned.intensity / 5)
+        return numIntervals * damagePerInterval >= this.hp
+    }
+
+    /**
+     * Returns true if the character has a >0% chance to die from projectiles already cast.
      *
      * @return {*}  {boolean}
-     * @memberof Entity
+     * @memberof Character
      */
     public couldDieToProjectiles(): boolean {
         // if (this.avoidance >= 100) return false

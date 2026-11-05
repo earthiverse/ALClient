@@ -280,6 +280,19 @@ export class Entity implements MonsterData, Partial<GMonster> {
     }
 
     /**
+     * Returns true if the entity could burn to death without taking any additional damage
+     * @return {*}  {boolean}
+     * @memberof Entity
+     */
+    public couldBurnToDeath(): boolean {
+        if (!this.s.burned) return false // Not burning
+
+        const numIntervals = Math.floor(this.s.burned.ms / this.G.conditions.burned.interval)
+        const damagePerInterval = this["1hp"] ? 1 : Math.ceil(this.s.burned.intensity / 5)
+        return numIntervals * damagePerInterval >= this.hp
+    }
+
+    /**
      * Returns true if the entity has a >0% chance to die from projectiles already cast.
      *
      * TODO: Consider `blast` and `explosion`
@@ -417,20 +430,12 @@ export class Entity implements MonsterData, Partial<GMonster> {
      * @memberof Entity
      */
     public willBurnToDeath(): boolean {
-        if (this.lifesteal) return false // Could heal itself
-        if (this.abilities?.self_healing) return false // Could heal itself
-        if (this.s.eheal && !this.immune) return false // Could heal itself
+        if (this.lifesteal || this.abilities?.self_healing || (this.s.eheal && !this.immune)) return false // Could heal itself
         if (!this.s.burned) return false // Not burning
 
         const numIntervals = Math.floor(this.s.burned.ms / this.G.conditions.burned.interval) - 1
-
-        // It will proc for 1 damage every interval
-        if (this["1hp"]) {
-            return numIntervals >= this.hp
-        }
-
-        const burnDamage = numIntervals * Math.ceil(this.s.burned.intensity / 5)
-        return burnDamage >= this.hp
+        const damagePerInterval = this["1hp"] ? 1 : Math.ceil(this.s.burned.intensity / 5)
+        return numIntervals * damagePerInterval >= this.hp
     }
 
     /**

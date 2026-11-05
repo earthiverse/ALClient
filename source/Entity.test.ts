@@ -79,6 +79,32 @@ test("Entity.level", () => {
     expect(idleBBPompom.level).toBe(19)
 })
 
+test("Entity.couldBurnToDeath", () => {
+    // Won't burn to death
+    expect(idleBBPompom.couldBurnToDeath()).toBe(false)
+
+    // Could burn to death
+    expect(burningToDeathHen.couldBurnToDeath()).toBe(true)
+
+    // Monster with lifesteal won't definitely burn to death, but could burn to death
+    burningToDeathHen.lifesteal = 10
+    expect(burningToDeathHen.willBurnToDeath()).toBe(false)
+    expect(burningToDeathHen.couldBurnToDeath()).toBe(true)
+    delete burningToDeathHen.lifesteal
+
+    // Monster with self_healing won't definitely burn to death, but could burn to death
+    burningToDeathHen.abilities = { self_healing: { heal: 100 } }
+    expect(burningToDeathHen.willBurnToDeath()).toBe(false)
+    expect(burningToDeathHen.couldBurnToDeath()).toBe(true)
+    delete burningToDeathHen.abilities
+
+    // Monster with eheal won't definitely burn to death, but could burn to death
+    burningToDeathHen.s.eheal = { ms: 5000 }
+    expect(burningToDeathHen.willBurnToDeath()).toBe(false)
+    expect(burningToDeathHen.couldBurnToDeath()).toBe(true)
+    delete burningToDeathHen.s.eheal
+})
+
 test("Entity.willBurnToDeath", () => {
     // Won't burn to death
     expect(idleBBPompom.willBurnToDeath()).toBe(false)

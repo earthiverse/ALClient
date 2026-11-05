@@ -8,6 +8,8 @@ export type GetEntitiesFilters = {
     canDamage?: boolean | SkillName | undefined
     canKillInOneShot?: SkillName | undefined
     canWalkTo?: boolean | undefined
+    /** NOTE: Don't confuse this with `willBurnToDeath`! */
+    couldBurnToDeath?: boolean | undefined
     /** NOTE: Don't confuse this with `willDieToProjectiles`! */
     couldDieToProjectiles?: boolean | undefined
     couldGiveCredit?: boolean | undefined
@@ -38,6 +40,7 @@ export type GetEntitiesFilters = {
     level?: number | undefined
     levelGreaterThan?: number | undefined
     levelLessThan?: number | undefined
+    /** NOTE: Don't confuse this with `couldBurnToDeath`! */
     willBurnToDeath?: boolean | undefined
     /** NOTE: Don't confuse this with `couldDieToProjectiles`! */
     willDieToProjectiles?: boolean | undefined
