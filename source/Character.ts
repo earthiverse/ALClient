@@ -4171,6 +4171,40 @@ export class Character extends Observer implements CharacterData {
         return gotTradeHistoryData
     }
 
+    /**
+     * Commits harakiri (seppuku), which automatically kills the character
+     *
+     * @return {*}  {Promise<void>}
+     * @memberof Character
+     */
+    public async harakiri(): Promise<void> {
+        if (!this.ready) throw new Error("We aren't ready yet [harakiri].")
+        if (this.rip) return // Already dead
+
+        const dead = new Promise<void>((resolve, reject) => {
+            const cleanup = () => {
+                this.socket.off("player", checkRip)
+                clearTimeout(timeout)
+            }
+
+            const checkRip = (data: CharacterData) => {
+                if (!data.rip) return
+                cleanup()
+                resolve()
+            }
+
+            const timeout = setTimeout(() => {
+                cleanup()
+                reject(new Error(`harakiri timeout (${Constants.TIMEOUT}ms)`))
+            }, Constants.TIMEOUT)
+
+            this.socket.on("player", checkRip)
+        })
+
+        this.socket.emit("harakiri")
+        return dead
+    }
+
     // NOTE: UNTESTED
     public async headWiggle(): Promise<unknown> {
         if (!this.ready) throw new Error("We aren't ready yet [headWiggle].")
