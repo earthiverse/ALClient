@@ -816,7 +816,6 @@ export class Character extends Observer implements CharacterData {
                 auth: this.userAuth,
                 character: this.characterID,
                 height: 1080,
-                no_graphics: "True",
                 no_html: "1",
                 passphrase: "",
                 scale: 2,

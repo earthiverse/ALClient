@@ -87,10 +87,14 @@ export class Observer {
     }
 
     public async connect(reconnect = false, start = true): Promise<void> {
+        const query: Record<string, string> = {
+            no_graphics: "1",
+        };
+        if (this.secret) query.secret = this.secret;
         this.socket = socketio(`ws${this.serverData.secure ? "s" : ""}://${this.serverData.address}`, {
             autoConnect: false,
             path: this.serverData.path,
-            query: this.secret ? { secret: this.secret } : {},
+            query,
             reconnection: reconnect,
             transports: ["websocket"],
             secure: this.serverData.secure,

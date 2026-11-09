@@ -71,7 +71,6 @@ export type AuthData = {
     scale: number
 
     no_html: "" | "1"
-    no_graphics: "" | "True"
 
     code_slot?: number
 }
