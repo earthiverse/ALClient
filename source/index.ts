@@ -57,6 +57,9 @@ export * from "./definitions/adventureland-data.js"
 export * from "./definitions/alclient.js"
 export * from "./definitions/pathfinder.js"
 
+// CODE / o:command translator (opt-in via Character.enableCodeBridge)
+export * from "./codeBridge/index.js"
+
 export default {
     AchievementModel,
     BankModel,

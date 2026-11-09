@@ -96,6 +96,9 @@ export class Observer {
             path: this.serverData.path,
             query,
             reconnection: reconnect,
+            // Local mkcert / self-signed HTTPS (e.g. play.al.local) needs this; Node's
+            // NODE_TLS_REJECT_UNAUTHORIZED alone is not enough for engine.io websockets.
+            ...(process.env.NODE_TLS_REJECT_UNAUTHORIZED === "0" ? { rejectUnauthorized: false } : {}),
             transports: ["websocket"],
             secure: this.serverData.secure,
         })
